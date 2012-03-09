@@ -290,14 +290,16 @@ li.searchbars {
 
 .alertbar {
     border-top: 1px solid #CB7772;
-    padding: 3px 0px 2px 0px;
-    background-color: #0261a3;
+    padding: 15px 0px 2px 0px;
+    background-color: #FF0000; //#0261a3;
     text-align: center;
     font-weight: bold;
-    color: #32475F;
+    color: white;
+    height: 30px;
 }
 .alertbar a {
     text-decoration: underline;
+    color: white;
 }
 .alertbar a:hover {
     text-decoration: none;
@@ -305,7 +307,12 @@ li.searchbars {
 
 .blend {
     border-top: 1px solid #98AAB1;
-    background-color: #ee9e9e;
+    background-color: #0261a3;
+    color: white;
+}
+
+.blend a {
+    color: white;
 }
 
 /* IE doesn't appear to like a simple display:none in our header. Random things start fucking up pretty badly. */

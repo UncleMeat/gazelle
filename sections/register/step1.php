@@ -45,7 +45,7 @@ if(empty($Sent)) {
 		</tr>
 		<tr valign="top">
 			<td></td>
-			<td align="left"><input type="checkbox" name="agereq" id="agereq" value="1"<? if (!empty($_REQUEST['agereq'])) { ?> checked="checked"<? } ?> /> <label for="agereq">I am 13 years of age or older.</label></td>
+			<td align="left"><input type="checkbox" name="agereq" id="agereq" value="1"<? if (!empty($_REQUEST['agereq'])) { ?> checked="checked"<? } ?> /> <label for="agereq">I am 18 years of age or older.</label></td>
 		</tr>
 		<tr>
 			<td colspan="2" height="10"></td>
