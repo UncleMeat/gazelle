@@ -17,7 +17,7 @@ show_header('Rule Index');
 				One account per person per lifetime. Anyone creating additional accounts will be banned.
 			</li>
 			<li>
-				Avatars must not exceed 256kB or be vertically longer than 400px. Avatars must be safe for work, be entirely unoffensive and not contain any nudity or religious imagery. Use common sense.
+				Avatars must not exceed 512kB or be vertically longer than 400px. Avatars must be safe for work, be entirely unoffensive and not contain any nudity or religious imagery. Use common sense.
 			</li>
 			<li>
 				Do not post our .torrent files on other sites. Every .torrent file has your personal passkey embedded in it. The tracker will automatically disable your account if you share your torrent files with others. You will not get your account back. This doesn't prohibit you sharing the content on other sites, just the .torrent file.
