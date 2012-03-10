@@ -235,6 +235,7 @@ else {
 				AND Username<>''");
 			list($UserID,$PermissionID,$CustomPermissions,$PassHash,$Secret,$Enabled)=$DB->next_record(MYSQLI_NUM, array(2));
 			if (strtotime($BannedUntil)<time()) {
+                            //die("{$_POST['password']}, PassHash: $PassHash, Secret: $Secret, Generated PassHash:".make_hash($_POST['password'],$Secret));
 				if ($UserID && $PassHash==make_hash($_POST['password'],$Secret)) {
 					if ($Enabled == 1) {
 						$SessionID = make_secret();

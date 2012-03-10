@@ -1035,8 +1035,12 @@ function make_secret($Length = 32) {
 */
 
 // Password hashes, feel free to make your own algorithm here
-function make_hash($Str,$Secret) {
-	return sha1(md5($Secret).$Str.sha1($Secret).SITE_SALT);
+function make_hash($Str,$Secret) {	
+    // Lanz: we will be using tbdevs way for passwords instead of gazelles
+    // we are also using the salt field from tbdev that contains a shorter
+    // salt than what gazelle generates, but new accounts will use gazelles
+    // generated salt.
+    return md5( md5( $Secret ) . md5($Str) );
 }
 
 /*
