@@ -164,12 +164,10 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 	//------------- Promote users -------------------------------------------//
 	sleep(5);
 	$Criteria = array();
-	$Criteria[]=array('From'=>USER, 'To'=>MEMBER, 'MinUpload'=>10*1024*1024*1024, 'MinRatio'=>0.7, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7));
-	$Criteria[]=array('From'=>MEMBER, 'To'=>POWER, 'MinUpload'=>25*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>5, 'MaxTime'=>time_minus(3600*24*7*2));
-	$Criteria[]=array('From'=>POWER, 'To'=>ELITE, 'MinUpload'=>100*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>50, 'MaxTime'=>time_minus(3600*24*7*4));
-	$Criteria[]=array('From'=>ELITE, 'To'=>TORRENT_MASTER, 'MinUpload'=>500*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>500, 'MaxTime'=>time_minus(3600*24*7*8));
-	$Criteria[]=array('From'=>TORRENT_MASTER, 'To'=>POWER_TM, 'MinUpload'=>500*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>500, 'MaxTime'=>time_minus(3600*24*7*8), 'Extra'=>'(SELECT COUNT(DISTINCT GroupID) FROM torrents WHERE UserID=users_main.ID) >= 500');
-	$Criteria[]=array('From'=>24, 'To'=>25, 'MinUpload'=>500*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>500, 'MaxTime'=>time_minus(3600*24*7*8), 'Extra'=>"(SELECT COUNT(ID) FROM torrents WHERE ((LogScore = 100 AND Format = 'FLAC') OR (Media = 'Vinyl' AND Format = 'FLAC') OR (Media = 'WEB' AND Format = 'FLAC') OR (Media = 'DVD' AND Format = 'FLAC') OR (Media = 'Soundboard' AND Format = 'FLAC') OR (Media = 'Cassette' AND Format = 'FLAC') OR (Media = 'SACD' AND Format = 'FLAC') OR (Media = 'Blu-ray' AND Format = 'FLAC') OR (Media = 'DAT' AND Format = 'FLAC')) AND UserID = users_main.ID) >= 500");
+	$Criteria[]=array('From'=>APPRENTICE, 'To'=>PERV, 'MinUpload'=>10*1024*1024*1024, 'MinRatio'=>0.7, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7));
+	$Criteria[]=array('From'=>PERV, 'To'=>GOOD_PERV, 'MinUpload'=>25*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7*4));
+	$Criteria[]=array('From'=>GOOD_PERV, 'To'=>SEXTREME_PERV, 'MinUpload'=>500*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7*26));
+	$Criteria[]=array('From'=>SEXTREME_PERV, 'To'=>SMUT_PEDDLER, 'MinUpload'=>10*1024*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7*52));
 
 	 foreach($Criteria as $L){ // $L = Level
 		$Query = "SELECT ID FROM users_main JOIN users_info ON users_main.ID = users_info.UserID
@@ -536,7 +534,7 @@ if($Day != next_day() || $_GET['runday']){
 	sleep(5);
 	// Send email
 	$DB->query("SELECT um.Username, um.Email FROM  users_info AS ui JOIN users_main AS um ON um.ID=ui.UserID
-		WHERE um.PermissionID IN ('".USER."', '".MEMBER	."')
+		WHERE um.PermissionID IN ('".APPRENTICE."', '".PERV	."')
 		AND um.LastAccess<'".time_minus(3600*24*110, true)."'
 		AND um.LastAccess>'".time_minus(3600*24*111, true)."'
 		AND um.LastAccess!='0000-00-00 00:00:00'
@@ -547,7 +545,7 @@ if($Day != next_day() || $_GET['runday']){
 		send_email($Email, 'Your '.SITE_NAME.' account is about to be disabled', $Body);
 	}
 	$DB->query("SELECT um.ID FROM  users_info AS ui JOIN users_main AS um ON um.ID=ui.UserID
-		WHERE um.PermissionID IN ('".USER."', '".MEMBER	."')
+		WHERE um.PermissionID IN ('".APPRENTICE."', '".PERV."')
 		AND um.LastAccess<'".time_minus(3600*24*30*4)."' 
 		AND um.LastAccess!='0000-00-00 00:00:00'
 		AND ui.Donor='0'
@@ -576,26 +574,26 @@ if($Day != next_day() || $_GET['runday']){
 	
 	//------------- Demote users --------------------------------------------//
 	sleep(10);
-	$DB->query('SELECT um.ID FROM users_main AS um WHERE PermissionID IN('.POWER.', '.ELITE.', '.TORRENT_MASTER.') AND Uploaded/Downloaded < 0.95 OR PermissionID IN('.POWER.', '.ELITE.', '.TORRENT_MASTER.') AND Uploaded < 25*1024*1024*1024');
+	$DB->query('SELECT um.ID FROM users_main AS um WHERE PermissionID IN('.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded/Downloaded < 0.95 OR PermissionID IN('.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded < 25*1024*1024*1024');
 	
 	echo "demoted 1\n";
 	
 	while(list($UserID) = $DB->next_record()) {
 		$Cache->begin_transaction('user_info_'.$UserID);
-		$Cache->update_row(false, array('PermissionID'=>MEMBER));
+		$Cache->update_row(false, array('PermissionID'=>PERV));
 		$Cache->commit_transaction(2592000);
 	}
-	$DB->query('UPDATE users_main SET PermissionID='.MEMBER.' WHERE PermissionID IN('.POWER.', '.ELITE.', '.TORRENT_MASTER.') AND Uploaded/Downloaded < 0.95 OR PermissionID IN('.POWER.', '.ELITE.', '.TORRENT_MASTER.') AND Uploaded < 25*1024*1024*1024');
+	$DB->query('UPDATE users_main SET PermissionID='.PERV.' WHERE PermissionID IN('.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded/Downloaded < 0.95 OR PermissionID IN('.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded < 25*1024*1024*1024');
 	echo "demoted 2\n";
 	
-	$DB->query('SELECT um.ID FROM users_main AS um WHERE PermissionID IN('.MEMBER.', '.POWER.', '.ELITE.', '.TORRENT_MASTER.') AND Uploaded/Downloaded < 0.65');
+	$DB->query('SELECT um.ID FROM users_main AS um WHERE PermissionID IN('.PERV.', '.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded/Downloaded < 0.65');
 	echo "demoted 3\n";
 	while(list($UserID) = $DB->next_record()) {
 		$Cache->begin_transaction('user_info_'.$UserID);
-		$Cache->update_row(false, array('PermissionID'=>USER));
+		$Cache->update_row(false, array('PermissionID'=>APPRENTICE));
 		$Cache->commit_transaction(2592000);
 	}
-	$DB->query('UPDATE users_main SET PermissionID='.USER.' WHERE PermissionID IN('.MEMBER.', '.POWER.', '.ELITE.', '.TORRENT_MASTER.') AND Uploaded/Downloaded < 0.65');
+	$DB->query('UPDATE users_main SET PermissionID='.APPRENTICE.' WHERE PermissionID IN('.PERV.', '.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded/Downloaded < 0.65');
 	echo "demoted 4\n";
 
 	//------------- Lock old threads ----------------------------------------//
@@ -970,7 +968,7 @@ if($BiWeek != next_biweek() || $_GET['runbiweek']) {
 				FROM users_main AS um 
 				JOIN users_info AS ui on ui.UserID=um.ID
 				WHERE um.Enabled='1' AND ui.DisableInvites = '0'
-					AND ((um.PermissionID = ".POWER." AND um.Invites < 2) OR (um.PermissionID = ".ELITE." AND um.Invites < 4))");
+					AND ((um.PermissionID = ".GOOD_PERV." AND um.Invites < 2) OR (um.PermissionID = ".SEXTREME_PERV." AND um.Invites < 4))");
 	$UserIDs = $DB->collect('ID');
 	if (count($UserIDs) > 0) {
 		foreach($UserIDs as $UserID) {
@@ -1001,7 +999,7 @@ if($BiWeek != next_biweek() || $_GET['runbiweek']) {
 					JOIN temp_sections_schedule_index AS u ON u.Inviter = um.ID
 					WHERE u.Upload>$Upload AND u.Upload/u.Download>$Ratio 
 						AND um.Enabled = '1' AND ui.DisableInvites = '0' 
-						AND ((um.PermissionID = ".POWER." AND um.Invites < 2) OR (um.PermissionID = ".ELITE." AND um.Invites < 4))");
+						AND ((um.PermissionID = ".GOOD_PERV." AND um.Invites < 2) OR (um.PermissionID = ".SEXTREME_PERV." AND um.Invites < 4))");
 		$UserIDs = $DB->collect('ID');
 		if (count($UserIDs) > 0) {
 			foreach($UserIDs as $UserID) {

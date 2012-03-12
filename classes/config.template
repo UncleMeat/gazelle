@@ -62,14 +62,14 @@ define('DONOR_INVITES', 2);
 
 // User class IDs needed for automatic promotions. Found in the 'permissions' table
 // Name of class	Class ID (NOT level)
-define('USER',		'2');
-define('MEMBER',	'3');
-define('POWER',		'4');
+define('APPRENTICE',    '2');
+define('PERV',          '3');
+define('GOOD_PERV',	'4');
 define('ARTIST',	'19');
 define('DONOR',		'20');
-define('ELITE',		'5');
+define('SEXTREME_PERV',	'5');
 define('VIP',		'6');
-define('TORRENT_MASTER','7');
+define('SMUT_PEDDLER',  '7');
 define('LEGEND',	'8');
 define('CELEB',		'9');
 define('MOD',		'11');

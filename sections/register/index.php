@@ -75,7 +75,7 @@ if(!empty($_REQUEST['confirm'])) {
 				$Enabled = '1';
 			} else {
 				$NewInstall = false;
-				$Class = USER;
+				$Class = APPRENTICE;
 				$Enabled = '0';
 			}
 

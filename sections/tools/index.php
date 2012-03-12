@@ -222,7 +222,7 @@ switch ($_REQUEST['action']){
 		} else {
 			if (!empty($_REQUEST['removeid'])) {
 				$DB->query("DELETE FROM permissions WHERE ID='".db_string($_REQUEST['removeid'])."'");
-				$DB->query("UPDATE users_main SET PermissionID='".USER."' WHERE PermissionID='".db_string($_REQUEST['removeid'])."'");
+				$DB->query("UPDATE users_main SET PermissionID='".APPRENTICE."' WHERE PermissionID='".db_string($_REQUEST['removeid'])."'");
 
 				$Cache->delete_value('classes');
 			}

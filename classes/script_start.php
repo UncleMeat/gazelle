@@ -148,9 +148,8 @@ if(isset($LoginCookie)) {
 	$LightInfo = user_info($LoggedUser['ID']);
 	$HeavyInfo = user_heavy_info($LoggedUser['ID']);
 
-	// Get user permissions
+        // Get user permissions
 	$Permissions = get_permissions($LightInfo['PermissionID']);
-
 	// Create LoggedUser array
 	$LoggedUser = array_merge($HeavyInfo, $LightInfo, $Permissions, $UserStats);
 
@@ -264,8 +263,6 @@ function user_info($UserID) {
 	$UserInfo = $Cache->get_value('user_info_'.$UserID);
 	// the !isset($UserInfo['Paranoia']) can be removed after a transition period
 	if(empty($UserInfo) || empty($UserInfo['ID']) || !isset($UserInfo['Paranoia'])) {
-
-
 		$DB->query("SELECT
 			m.ID,
 			m.Username,

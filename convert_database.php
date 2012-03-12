@@ -14,20 +14,19 @@ $time_start = microtime(true);
 
 echo "connecting to database\n";
 mysql_connect('localhost', 'root', 'password');
-mysql_select_db('gazelle');
 
 echo "creating new authkey strings. (this will take a long time)\n";
-$result = mysql_query('select count(*) as c from users_info');
+$result = mysql_query('select count(*) as c from gazelle.users_info');
 $count = mysql_result($result, 0);
 
-$result = mysql_query('select userid from users_info');
+$result = mysql_query('select userid from gazelle.users_info');
 $i = 0;
 echo "0.00% ";
 while ($row = mysql_fetch_assoc($result))
 {
     $auth_key = make_secret();
     
-    mysql_query("update users_info set AuthKey='$auth_key' where userid={$row['userid']}");
+    mysql_query("update gazelle.users_info set AuthKey='$auth_key' where userid={$row['userid']}");
     
     $i++;
     if ($i % 1000 == 0) echo "\n".number_format ($i/$count*100, 2)."% ";
