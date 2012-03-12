@@ -51,7 +51,7 @@ if(isset($_GET['avatar'])) {
 		} else {
 			$Data2 = $Data;
 		}
-		if(strlen($Data2)>256*1024 || image_height($Type, $Data2)>400) {
+		if(strlen($Data2)>512*1024 || image_height($Type, $Data2)>400) {
 			require_once(SERVER_ROOT.'/classes/class_mysql.php');
 			require_once(SERVER_ROOT.'/classes/class_time.php'); //Require the time class
 

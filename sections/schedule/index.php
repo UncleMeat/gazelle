@@ -166,7 +166,7 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 	$Criteria = array();
 	$Criteria[]=array('From'=>APPRENTICE, 'To'=>PERV, 'MinUpload'=>10*1024*1024*1024, 'MinRatio'=>0.7, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7));
 	$Criteria[]=array('From'=>PERV, 'To'=>GOOD_PERV, 'MinUpload'=>25*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7*4));
-	$Criteria[]=array('From'=>GOOD_PERV, 'To'=>SEXTREME_PERV, 'MinUpload'=>500*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7*26));
+	$Criteria[]=array('From'=>GOOD_PERV, 'To'=>SEXTREME_PERV, 'MinUpload'=>1*1024*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7*26));
 	$Criteria[]=array('From'=>SEXTREME_PERV, 'To'=>SMUT_PEDDLER, 'MinUpload'=>10*1024*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7*52));
 
 	 foreach($Criteria as $L){ // $L = Level
@@ -200,6 +200,9 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 			$DB->query("UPDATE users_main SET PermissionID=".$L['To']." WHERE ID IN(".implode(',',$UserIDs).")");
 		}
 
+/*
+ * Lanz: Lets not demote anyone that doesn't have the required upload today but perhaps unfairly got promoted earlier.
+ *                 
 		// Demote users with less than the required uploads
 		
 		$Query = "SELECT ID FROM users_main JOIN users_info ON users_main.ID = users_info.UserID
@@ -218,9 +221,6 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 		
 		if (count($UserIDs) > 0) {
 			foreach($UserIDs as $UserID) {
-				/*$Cache->begin_transaction('user_info_'.$UserID);
-				$Cache->update_row(false, array('PermissionID'=>$L['From']));
-				$Cache->commit_transaction(0);*/
 				$Cache->delete_value('user_info_'.$UserID);
 				$Cache->delete_value('user_info_heavy_'.$UserID);
 				$Cache->delete_value('user_stats_'.$UserID);
@@ -229,6 +229,7 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 			}
 			$DB->query("UPDATE users_main SET PermissionID=".$L['From']." WHERE ID IN(".implode(',',$UserIDs).")");
 		}
+*/                
 	}
 
 
@@ -270,7 +271,7 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 	}
 	
 	
-	$DB->query("DELETE FROM users_sesions WHERE LastUpdate<'$AgoDays' AND KeepLogged='1'");
+	$DB->query("DELETE FROM users_sessions WHERE LastUpdate<'$AgoDays' AND KeepLogged='1'");
 	
 	
 	$AgoMins = time_minus(60*30);
@@ -561,9 +562,7 @@ if($Day != next_day() || $_GET['runday']){
 		SET um.Enabled='2',
 		ui.BanDate='$sqltime',
 		ui.BanReason='3',
-		ui.AdminComment=CONCAT('$sqltime - Disabled for inactivity (never logged in)
-
-', ui.AdminComment)
+		ui.AdminComment=CONCAT('$sqltime - Disabled for inactivity (never logged in)', ui.AdminComment)
 		WHERE um.LastAccess='0000-00-00 00:00:00'
 		AND ui.JoinDate<'".time_minus(60*60*24*7)."'
 		AND um.Enabled!='2'

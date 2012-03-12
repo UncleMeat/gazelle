@@ -13,6 +13,7 @@ ini_set('max_file_uploads','100');
 show_header('Upload','upload');
 
 if(empty($Properties) && !empty($_GET['groupid']) && is_number($_GET['groupid'])) {
+    die('here');
 	$DB->query("SELECT 
 		tg.ID as GroupID,
 		tg.CategoryID,

@@ -32,12 +32,48 @@ select `Id`, '1', `avatar`, from_unixtime(`added`), '0' from `emtest`.`users`;
 -- set gazelle.users_main.enabled to 1 where emtest.users.enabled='yes'
 
 UPDATE `gazelle`.`users_main`
-SET `enabled` = (SELECT '1' from `emtest`.`users` WHERE `emtest`.`users`.`id`=`gazelle`.`users_main`.`id` and `enabled`='yes')
+SET `enabled` = '1'
 WHERE EXISTS (SELECT 1 from `emtest`.`users` WHERE `emtest`.`users`.`id`=`gazelle`.`users_main`.`id` and `enabled`='yes');
 
 -- set gazelle.users_main.enabled to 0 where emtest.users.enabled='no'
 
 UPDATE `gazelle`.`users_main`
-SET `enabled` = (SELECT '0' from `emtest`.`users` WHERE `emtest`.`users`.`id`=`gazelle`.`users_main`.`id` and `enabled`='no')
+SET `enabled` = '0'
 WHERE EXISTS (SELECT 1 from `emtest`.`users` WHERE `emtest`.`users`.`id`=`gazelle`.`users_main`.`id` and `enabled`='no');
 
+-- set the correct class for the user
+
+-- Apprentice
+UPDATE `gazelle`.`users_main`
+SET `PermissionID` = '2'
+WHERE EXISTS (SELECT 1 from `emtest`.`users` WHERE `emtest`.`users`.`id`=`gazelle`.`users_main`.`id` and `class`='0');
+
+-- Good Perv
+UPDATE `gazelle`.`users_main`
+SET `PermissionID` = '4'
+WHERE EXISTS (SELECT 1 from `emtest`.`users` WHERE `emtest`.`users`.`id`=`gazelle`.`users_main`.`id` and `class`='1');
+
+-- Sextreme Perv
+UPDATE `gazelle`.`users_main`
+SET `PermissionID` = '5'
+WHERE EXISTS (SELECT 1 from `emtest`.`users` WHERE `emtest`.`users`.`id`=`gazelle`.`users_main`.`id` and `class`='2');
+
+-- Smut Peddler
+UPDATE `gazelle`.`users_main`
+SET `PermissionID` = '6'
+WHERE EXISTS (SELECT 1 from `emtest`.`users` WHERE `emtest`.`users`.`id`=`gazelle`.`users_main`.`id` and `class`='3');
+
+--  MODS
+UPDATE `gazelle`.`users_main`
+SET `PermissionID` = '11'
+WHERE EXISTS (SELECT 1 from `emtest`.`users` WHERE `emtest`.`users`.`id`=`gazelle`.`users_main`.`id` and `class`='4');
+
+-- ADMINS
+UPDATE `gazelle`.`users_main`
+SET `PermissionID` = '1'
+WHERE EXISTS (SELECT 1 from `emtest`.`users` WHERE `emtest`.`users`.`id`=`gazelle`.`users_main`.`id` and `class`='5');
+
+-- SYSOP
+UPDATE `gazelle`.`users_main`
+SET `PermissionID` = '15'
+WHERE EXISTS (SELECT 1 from `emtest`.`users` WHERE `emtest`.`users`.`id`=`gazelle`.`users_main`.`id` and `class`='6');
