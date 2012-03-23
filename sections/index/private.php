@@ -174,18 +174,6 @@ if(($TorrentCount = $Cache->get_value('stats_torrent_count')) === false) {
 	$Cache->cache_value('stats_torrent_count', $TorrentCount, 0); //inf cache
 }
 
-if(($AlbumCount = $Cache->get_value('stats_album_count')) === false) {
-	$DB->query("SELECT COUNT(ID) FROM torrents_group WHERE CategoryID='1'");
-	list($AlbumCount) = $DB->next_record();
-	$Cache->cache_value('stats_album_count', $AlbumCount, 0); //inf cache
-}
-
-if(($ArtistCount = $Cache->get_value('stats_artist_count')) === false) {
-	$DB->query("SELECT COUNT(ArtistID) FROM artists_group");
-	list($ArtistCount) = $DB->next_record();
-	$Cache->cache_value('stats_artist_count', $ArtistCount, 0); //inf cache
-}
-
 if (($PerfectCount = $Cache->get_value('stats_perfect_count')) === false) {
 	$DB->query("SELECT COUNT(ID) FROM torrents WHERE ((LogScore = 100 AND Format = 'FLAC') OR (Media = 'Vinyl' AND Format = 'FLAC') OR (Media = 'WEB' AND Format = 'FLAC') OR (Media = 'DVD' AND Format = 'FLAC') OR (Media = 'Soundboard' AND Format = 'FLAC'))");
 	list($PerfectCount) = $DB->next_record();
@@ -193,9 +181,6 @@ if (($PerfectCount = $Cache->get_value('stats_perfect_count')) === false) {
 }
 ?>
 				<li>Torrents: <?=number_format($TorrentCount)?></li>
-				<li>Releases: <?=number_format($AlbumCount)?></li>
-				<li>Artists: <?=number_format($ArtistCount)?></li>
-				<li>"Perfect" FLACs: <?=number_format($PerfectCount)?></li>
 <?
 //End Torrent Stats
 

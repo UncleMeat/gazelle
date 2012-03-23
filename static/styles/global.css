@@ -159,7 +159,7 @@ div#AddArtists a {
 }
 
 #torrents .scale_image {
-	max-width: 400px;
+	max-width: 100%;
 }
 
 .sidebar .scale_image {

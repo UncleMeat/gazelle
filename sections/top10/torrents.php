@@ -62,16 +62,6 @@ if(check_perms('site_advanced_top10')) {
 					</td>
 				</tr>
 				<tr>
-					<td class="label">Format</td>
-					<td>
-						<select name="format" style="width:auto;">
-							<option value="">Any</option>
-<?	foreach ($Formats as $FormatName) { ?>
-							<option value="<?=display_str($FormatName)?>" <? if(isset($_GET['format']) && $FormatName==$_GET['format']) { ?>selected="selected"<? } ?>><?=display_str($FormatName)?></option>
-<?	} ?>					</select>
-					</td>
-				</tr>
-				<tr>
 					<td colspan="2" class="center">
 						<input type="submit" value="Filter torrents" />
 					</td>
@@ -124,6 +114,7 @@ $BaseQuery = "SELECT
 	g.ID,
 	g.Name,
 	g.CategoryID,
+        g.NewCategoryID,
 	g.TagList,
 	t.Format,
 	t.Encoding,
@@ -247,7 +238,7 @@ show_footer();
 
 // generate a table based on data from most recent query to $DB
 function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
-	global $LoggedUser,$Categories,$Debug,$ReleaseTypes;
+	global $LoggedUser,$Categories, $NewCategories, $Debug,$ReleaseTypes;
 ?>
 		<h3>Top <?=$Limit.' '.$Caption?>
 <?	if(empty($_GET['advanced'])){ ?> 
@@ -288,7 +279,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 	$Artists = get_artists($GroupIDs);
 
 	foreach ($Details as $Detail) {
-		list($TorrentID,$GroupID,$GroupName,$GroupCategoryID,$TorrentTags,
+		list($TorrentID,$GroupID,$GroupName,$GroupCategoryID, $NewCategoryID, $TorrentTags,
 			$Format,$Encoding,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
 			$RemasterTitle,$Snatched,$Seeders,$Leechers,$Data,$ReleaseType) = $Detail;
 
@@ -353,7 +344,10 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 			$GroupCatOffset = $GroupCategoryID - 1;
 		}
 ?>
-		<td class="center cats_col"><div title="<?=ucfirst(str_replace('_',' ',$PrimaryTag))?>" class="cats_<?=strtolower(str_replace(array('-',' '),array('',''),$Categories[$GroupCatOffset]))?> tags_<?=str_replace('.','_',$PrimaryTag)?>"></div></td>
+		<td class="center cats_col">
+                    <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
+                    <div title="<?=$NewCategories[$NewCategoryID]['cat_desc']?>"><img src="<?=$CatImg?>" />
+                </td>
 		<td>
 		<span>[<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>]</span>
 			<strong><?=$DisplayName?></strong> <?=$ExtraInfo?>

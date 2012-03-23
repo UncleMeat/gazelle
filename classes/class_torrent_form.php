@@ -29,9 +29,10 @@ class TORRENT_FORM {
 		$this->Torrent = $Torrent;
 		$this->Error = $Error;
 		
-		global $Categories, $Formats, $Bitrates, $Media, $TorrentID;
+		global $Categories, $NewCategories, $Formats, $Bitrates, $Media, $TorrentID;
 		
 		$this->Categories = $Categories;
+                $this->NewCategories = $NewCategories;
 		$this->Formats = $Formats;
 		$this->Bitrates = $Bitrates;
 		$this->Media = $Media;
@@ -83,24 +84,20 @@ class TORRENT_FORM {
 				</td>
 				<td>
 					<input id="file" type="file" name="file_input" size="50" />
+                                        <input type="hidden" name="type" value="1" />
 				</td>
-			</tr>
-			<tr>
-				<td class="label">
-					Type
-				</td>
-				<td>
-				<select id="categories" name="type" onchange="Categories()"<?=$this->Disabled?>>
-<?			foreach(display_array($this->Categories) as $Index => $Cat) {
-				echo "<option value='$Index'";
-				if($Cat == $this->Torrent['CategoryName']) { echo " selected='selected'"; }
-				echo ">";
-				echo $Cat;
-				echo "</option>\n";
-			} 
-?>
-				</select>
-				</td>
+                        </tr>
+                        <tr>
+                                <td class="label">
+                                    Category
+                                </td>
+                                <td>
+                                    <select name="category">
+                                    <? foreach($this->NewCategories as $category) { ?>
+                                    <option value="<?=$category['id']?>"><?=$category['name']?></option>
+                                    <? } ?>
+                                    </select>
+                                </td>
 			</tr>
 		</table>
 <?		}//if ?>
@@ -673,7 +670,7 @@ class TORRENT_FORM {
 
 	
 
-	function simple_form($CategoryID) {
+	function simple_form($CategoryID, $OfficialTags = '') {
 		$Torrent = $this->Torrent; 
 ?>		<table cellpadding="3" cellspacing="1" border="0" class="border slice" width="100%">
 			<tr id="name">
@@ -690,11 +687,31 @@ class TORRENT_FORM {
 			<tr>
 				<td class="label">Tags</td>
 				<td>
-					<input type="text" id="tags" name="tags" size="60" value="<?=display_str($Torrent['TagList']) ?>" />
+<?			if($OfficialTags) { ?>
+					<select id="genre_tags" name="genre_tags" onchange="add_tag();return false;" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>>
+						<option>---</option>
+<?				foreach(display_array($OfficialTags) as $Tag) { ?>
+						<option value="<?=$Tag ?>"><?=$Tag ?></option>
+<?				} ?>
+					</select>
+<?			} ?> 
+					<input type="text" id="tags" name="tags" size="40" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>/>
+					<br />
+					Tags should be comma separated, and you should use a period ('.') to separate words inside a tag.
+					<br /><br />
+					There is a list of official tags to the left of the text box. Please use these tags instead of 'unofficial' tags.  <strong>Please note that the '2000s' tag refers to produced between 2000 and 2009.</strong>
+					<br /><br />
+					Avoid abbreviations if at all possible. So instead of tagging an album as '<strong style="color:red;">hc</strong>', tag it as '<strong style="color:green;">hardcore</strong>'. Make sure that you use correct spelling. 
+					<br /><br />
+					Avoid using multiple synonymous tags.  
+					<br /><br />
+					Don't use 'useless' tags, such as '<strong style="color:red;">awesome</strong>', etc.
+					<br /><br />
+					<strong>You should be able to build up a list of tags using only the official tags to the left of the text box besides porn star names. If you are in any doubt about whether or not a tag is acceptable, do not add it.</strong>
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Image (optional)</td>
+				<td class="label">Cover Image (optional)</td>
 				<td>
 					<input type="text" id="image" name="image" size="60" value="<?=display_str($Torrent['Image']) ?>" <?=$this->Disabled?>/>
 				</td>

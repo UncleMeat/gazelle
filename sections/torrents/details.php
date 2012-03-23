@@ -103,9 +103,6 @@ show_header($Title,'browse,comments,torrent,bbcode');
 <?	}
 	if($Categories[$GroupCategoryID-1] == 'Music') { ?>
 		<a href="upload.php?groupid=<?=$GroupID?>">[Add format]</a>
-<?	} 
-	if(check_perms('site_submit_requests')) { ?>
-		<a href="requests.php?action=new&amp;groupid=<?=$GroupID?>">[Request format]</a>
 <?	}?>
 	<a href="torrents.php?action=grouplog&amp;groupid=<?=$GroupID?>">[View log]</a>
 	</div>
@@ -362,7 +359,7 @@ if(count($Tags) > 0) {
 	<div class="main_column">
 		<table class="torrent_table">
 			<tr class="colhead_dark">
-				<td width="80%"><strong>Torrents</strong></td>
+				<td width="80%"><strong>Torrent Info</strong></td>
 				<td><strong>Size</strong></td>
 				<td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
 				<td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>
@@ -381,17 +378,11 @@ $LastRemasterCatalogueNumber = '';
 
 $EditionID = 0;
 
-foreach ($TorrentList as $Torrent) {
-	
-		//t.ID,	t.Media, t.Format, t.Encoding, t.Remastered, t.RemasterYear, t.RemasterTitle, t.RemasterRecordLabel,t.RemasterCatalogueNumber,
-		//t.Scene, t.HasLog, t.HasCue, t.LogScore, t.FileCount, t.Size, t.Seeders, t.Leechers, t.Snatched, t.FreeTorrent, t.Time, t.Description,
-		//t.FileList, t.FilePath, t.UserID, um.Username, t.last_action,
-	    //(bad tags), (bad folders), (bad filenames), (cassette approved), (lossy master approved), t.LastReseedRequest, LogInDB
 	
 	list($TorrentID, $Media, $Format, $Encoding, $Remastered, $RemasterYear, $RemasterTitle, $RemasterRecordLabel, $RemasterCatalogueNumber, 
 		$Scene, $HasLog, $HasCue, $LogScore, $FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $TorrentTime, $Description, 
 		$FileList, $FilePath, $UserID, $Username, $LastActive,
-		$BadTags, $BadFolders, $BadFiles, $CassetteApproved, $LossymasterApproved, $LastReseedRequest, $LogInDB, $HasFile) = $Torrent;
+		$BadTags, $BadFolders, $BadFiles, $CassetteApproved, $LossymasterApproved, $LastReseedRequest, $LogInDB, $HasFile) = $TorrentList[0];
 
 	if($Remastered && !$RemasterYear) {
 		$FirstUnknown = !isset($FirstUnknown);
@@ -588,7 +579,6 @@ foreach ($TorrentList as $Torrent) {
 					?>
 				</td>
 			</tr>
-<? } ?>
 		</table>
 <?
 $Requests = get_group_requests($GroupID);
@@ -707,7 +697,7 @@ if(count($PersonalCollages)>0) {
 }
 ?>
 		<div class="box">
-			<div class="head"><strong><?=(!empty($ReleaseType) ? $ReleaseTypes[$ReleaseType].' info' : 'Info' )?></strong></div>
+			<div class="head"><strong>Description</strong></div>
 			<div class="body"><? if ($WikiBody!="") { echo $WikiBody; } else { echo "There is no information on this torrent."; } ?></div>
 		</div>
 <?

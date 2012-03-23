@@ -68,6 +68,7 @@ if(!is_array($TorrentList)) {
 	$DB->query("SELECT ct.GroupID,
 			tg.WikiImage,
 			tg.CategoryID,
+                        tg.NewCategoryID,
 			um.ID,
 			um.Username
 			FROM collages_torrents AS ct
@@ -100,9 +101,9 @@ $Number = 0;
 
 foreach ($TorrentList as $GroupID=>$Group) {
 	list($GroupID, $GroupName, $GroupYear, $GroupRecordLabel, $GroupCatalogueNumber, $TagList, $ReleaseType, $GroupVanityHouse, $Torrents, $GroupArtists, $ExtendedArtists) = array_values($Group);
-	list($GroupID2, $Image, $GroupCategoryID, $UserID, $Username) = array_values($CollageDataList[$GroupID]);
-	
-	// Handle stats and stuff
+	list($GroupID2, $Image, $GroupCategoryID, $NewCategoryID, $UserID, $Username) = array_values($CollageDataList[$GroupID]);
+
+        // Handle stats and stuff
 	$Number++;
 	$NumGroups++;
 	if($UserID == $LoggedUser['ID']) {
@@ -276,7 +277,8 @@ foreach ($TorrentList as $GroupID=>$Group) {
 	<tr class="torrent" id="group_<?=$GroupID?>">
 		<td></td>
 		<td class="center">
-			<div title="<?=ucfirst(str_replace('_',' ',$PrimaryTag))?>" class="cats_<?=strtolower(str_replace(array('-',' '),array('',''),$Categories[$GroupCategoryID-1]))?> tags_<?=str_replace('.','_',$PrimaryTag)?>">
+                    <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
+			<div title="<?=$NewCategories[$NewCategoryID]['cat_desc']?>"><img src="<?=$CatImg?>" />
 			</div>
 		</td>
 		<td>
@@ -407,6 +409,7 @@ if(check_perms('zip_downloader')){
 		$ZIPPrefs = 1;
 	}
 ?>
+             
 		<div class="box">
 			<div class="head colhead_dark"><strong>Collector</strong></div>
 			<div class="pad">

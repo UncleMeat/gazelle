@@ -143,7 +143,7 @@ switch ($UploadForm) {
 		$TorrentForm->simple_form($Properties['CategoryID']);
 		break;
 	default:
-		$TorrentForm->music_form($GenreTags);
+		$TorrentForm->simple_form($Properties['CategoryID'], $GenreTags);
 }
 $TorrentForm->foot();
 ?>

@@ -62,7 +62,6 @@ class TEXT {
 	
 	function full_format($Str) {
 		$Str = display_str($Str);
-
 		//Inline links
 		$URLPrefix = '(\[url\]|\[url\=|\[img\=|\[img\])';
 		$Str = preg_replace('/'.$URLPrefix.'\s+/i', '$1', $Str);
@@ -536,17 +535,10 @@ EXPLANATION OF PARSER LOGIC
 						$Str.='<a rel="noreferrer" target="_blank" href="'.$Block['Val'].'">'.$Block['Val'].'</a> (image)';
 						break;
 					}
-					if(!$this->valid_url($Block['Val'], '\.(jpe?g|gif|png|bmp|tiff)')) {
+					if(!$this->valid_url($Block['Val'])) {
 						$Str.='[img]'.$Block['Val'].'[/img]';
 					} else {
-						$LocalURL = $this->local_url($Block['Val']);
-						if($LocalURL) {
-							$Str.='<img class="scale_image" onclick="lightbox.init(this,500);" alt="'.$Block['Val'].'" src="'.$LocalURL.'" />';
-						} elseif(check_perms('site_proxy_images')) {
-							$Str.='<img class="scale_image" onclick="lightbox.init(this,500);" alt="'.$Block['Val'].'" src="http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?i='.urlencode($Block['Val']).'" />';
-						} else {
-							$Str.='<img class="scale_image" onclick="lightbox.init(this,500);" alt="'.$Block['Val'].'" src="'.$Block['Val'].'" />';
-						}
+						$Str.='<img class="scale_image" onclick="lightbox.init(this,500);" alt="'.$Block['Val'].'" src="'.$Block['Val'].'" />';
 					}
 					break;
 					

@@ -34,6 +34,7 @@ $DB->query("SELECT
 	WHERE tg.ID='$GroupID'");
 if($DB->record_count() == 0) { error(404); }
 list($Name, $Image, $Body, $WikiImage, $WikiBody, $Year, $RecordLabel, $CatalogueNumber, $ReleaseType, $CategoryID, $VanityHouse) = $DB->next_record();
+$Type = $Categories[(int)$CategoryID];
 
 if(!$Body) { $Body = $WikiBody; $Image = $WikiImage; }
 
@@ -77,14 +78,15 @@ show_header('Edit torrent group');
 <?	$DB->query("SELECT UserID FROM torrents WHERE GroupID = ".$GroupID);
 	//Users can edit the group info if they've uploaded a torrent to the group or have torrents_edit
 	if(in_array($LoggedUser['ID'], $DB->collect('UserID')) || check_perms('torrents_edit')) { ?> 
-	<h2>Non-wiki group editing</h2>
+	<h2>Other</h2>
 	<div class="box pad">
 		<form action="torrents.php" method="post">
 			<input type="hidden" name="action" value="nonwikiedit" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 			<input type="hidden" name="groupid" value="<?=$GroupID?>" />
 			<table cellpadding="3" cellspacing="1" border="0" class="border" width="100%">
-				<tr>
+<? if($Type == "Music") { ?>
+                                <tr>
 					<td colspan="2" class="center">This is for editing the information related to the <strong>original release</strong> only.</td>
 				</tr>
 				<tr>
@@ -104,10 +106,11 @@ show_header('Edit torrent group');
 					<td>
 						<input type="text" name="catalogue_number" size="40" value="<?=$CatalogueNumber?>" />
 					</td>
-				</tr>								
+				</tr>
+<? } ?>                                
 <? if(check_perms('torrents_freeleech')) { ?>
 				<tr>
-					<td class="label">Freeleech <strong>Group</strong></td>
+					<td class="label">Freeleech</td>
 					<td>
 						<input type="checkbox" name="unfreeleech" /> Reset
 						<input type="checkbox" name="freeleech" /> Freeleech
@@ -130,7 +133,7 @@ show_header('Edit torrent group');
 	}
 	if(check_perms('torrents_edit')) { 
 ?> 
-	<h2>Rename (won't merge)</h2>
+	<h2>Rename Title</h2>
 	<div class="box pad">
 		<form action="torrents.php" method="post">
 			<div>
@@ -145,6 +148,7 @@ show_header('Edit torrent group');
 			</div>
 		</form>
 	</div>
+<? if($Type == "Music") { ?>        
 	<h2>Merge with another group</h2>
 	<div class="box pad">
 		<form action="torrents.php" method="post">
@@ -161,6 +165,7 @@ show_header('Edit torrent group');
 			</div>
 		</form>
 	</div>
+<?          } ?>
 <?	} ?> 
 </div>
 <?

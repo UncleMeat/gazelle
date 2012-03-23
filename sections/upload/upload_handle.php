@@ -31,6 +31,7 @@ define('QUERY_EXCEPTION',true); // Shut up debugging
 
 $Properties=array();
 $Type = $Categories[(int)$_POST['type']];
+$NewCategory = $_POST['category'];
 $TypeID = $_POST['type'] + 1;
 $Properties['CategoryName'] = $Type;
 $Properties['Title'] = $_POST['title'];
@@ -84,6 +85,7 @@ $RequestID = $_POST['requestid'];
 //--------------- Validate data in upload form ---------------------------------//
 
 $Validate->SetFields('type','1','inarray','Please select a valid type.',array('inarray'=>array_keys($Categories)));
+
 switch ($Type) {
 	case 'Music':
 		if(!$_POST['groupid']) {
@@ -227,6 +229,9 @@ switch ($Type) {
 		break;
 }
 
+$Validate->SetFields('category',
+			'1','inarray','Please select a valid format.',array('inarray'=>array_keys($NewCategories)));
+
 $Validate->SetFields('rules',
 	'1','require','Your torrent must abide by the rules.');
 
@@ -340,6 +345,7 @@ $SearchText = db_string(trim($Properties['Artist']).' '.trim($Properties['Title'
 $File = fopen($TorrentName, 'rb'); // open file for reading
 $Contents = fread($File, 10000000);
 $Tor = new TORRENT($Contents); // New TORRENT object
+fclose($File);
 
 // Remove uploader's passkey from the torrent.
 // We put the downloader's passkey in on download, so it doesn't matter what's in there now,
@@ -550,8 +556,8 @@ if(!$GroupID) {
 	// Create torrent group
 	$DB->query("
 		INSERT INTO torrents_group
-		(ArtistID, CategoryID, Name, Year, RecordLabel, CatalogueNumber, Time, WikiBody, WikiImage, SearchText, ReleaseType, VanityHouse) VALUES
-		(0, ".$TypeID.", ".$T['Title'].", $T[Year], $T[RecordLabel], $T[CatalogueNumber], '".sqltime()."', '".db_string($Body)."', $T[Image], '$SearchText', $T[ReleaseType], $T[VanityHouse])");
+		(ArtistID, CategoryID, NewCategoryID, Name, Year, RecordLabel, CatalogueNumber, Time, WikiBody, WikiImage, SearchText, ReleaseType, VanityHouse) VALUES
+		(0, ".$TypeID.", ".$NewCategory.", ".$T['Title'].", $T[Year], $T[RecordLabel], $T[CatalogueNumber], '".sqltime()."', '".db_string($Body)."', $T[Image], '$SearchText', $T[ReleaseType], $T[VanityHouse])");
 	$GroupID = $DB->inserted_id();
 	if($Type == 'Music') {
 		foreach($ArtistForm as $Importance => $Artists) {

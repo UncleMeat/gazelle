@@ -265,7 +265,7 @@ foreach(array('hascue','scene','vanityhouse','freetorrent','releasetype') as $Se
 
 
 if(!empty($_GET['filter_cat'])) {
-	$SS->set_filter('categoryid', array_keys($_GET['filter_cat']));
+	$SS->set_filter('newcategoryid', array_keys($_GET['filter_cat']));
 }
 
 
@@ -336,15 +336,14 @@ if(!empty($Results['matches'])) { // Fetch the artists for groups
 // These ones were not found in the cache, run SQL
 if(!empty($Results['notfound'])) {
 	$SQLResults = get_groups($Results['notfound']);
-	
-	if(is_array($SQLResults['notfound'])) { // Something wasn't found in the db, remove it from results
+
+        if(is_array($SQLResults['notfound'])) { // Something wasn't found in the db, remove it from results
 		reset($SQLResults['notfound']);
 		foreach($SQLResults['notfound'] as $ID) {
 			unset($SQLResults['matches'][$ID]);
 			unset($Results['matches'][$ID]);
 		}
 	}
-	
 	// Merge SQL results with sphinx/memcached results
 	foreach($SQLResults['matches'] as $ID=>$SQLResult) {
 		$Results['matches'][$ID] = array_merge($Results['matches'][$ID], $SQLResult);
@@ -386,65 +385,9 @@ $Pages=get_pages($Page,$TorrentCount,TORRENTS_PER_PAGE);
 		<table>
 <? if($AdvancedSearch) { ?>
 			<tr>
-				<td class="label">Artist Name:</td>
-				<td colspan="3">
-					<input type="text" spellcheck="false" size="40" name="artistname" class="inputtext smaller" value="<?form('artistname')?>" />
-					<input type="hidden" name="action" value="advanced" />
-				</td>
-			</tr>
-			<tr>
-				<td class="label">Album/Torrent Name:</td>
+				<td class="label">Search Term:</td>
 				<td colspan="3">
 					<input type="text" spellcheck="false" size="40" name="groupname" class="inputtext smaller" value="<?form('groupname')?>" />
-				</td>
-			</tr>
-			<tr>
-				<td class="label">Record Label:</td>
-				<td colspan="3">
-					<input type="text" spellcheck="false" size="40" name="recordlabel" class="inputtext smaller" value="<?form('recordlabel')?>" />
-				</td>
-			</tr>
-			<tr>
-				<td class="label">Catalogue Number:</td>
-				<td>
-					<input type="text" size="40" name="cataloguenumber" class="inputtext smallest" value="<?form('"cataloguenumber"')?>"  />
-				</td>
-				<td class="label">Year:</td>
-				<td>
-					<input type="text" name="year" class="inputtext smallest" value="<?form('year')?>" size="4" />
-				</td>
-			</tr>
-			<tr id="edition_expand">
-				<td colspan="4" class="center">[<a href="#" onclick="ToggleEditionRows();return false;">Click here to toggle searching for specific remaster information</a>]</td>
-			</tr>
-<?
-if(form('remastertitle', true) == "" && form('remasteryear', true) == "" && 
-	form('remasterrecordlabel', true) == "" && form('remastercataloguenumber', true) == "") {
-		$Hidden = 'hidden';
-} else {
-	$Hidden = '';
-}
-?>
-			<tr id="edition_title" class="<?=$Hidden?>">
-				<td class="label">Edition Title:</td>
-				<td>
-					<input type="text" spellcheck="false" size="40" name="remastertitle" class="inputtext smaller" value="<?form('remastertitle')?>" />
-				</td>
-				<td class="label">Edition Year:</td>
-				<td>
-					<input type="text" name="remasteryear" class="inputtext smallest" value="<?form('remasteryear')?>" size="4" />
-				</td>
-			</tr>
-			<tr id="edition_label" class="<?=$Hidden?>">
-				<td class="label">Edition Release Label:</td>
-				<td colspan="3">
-					<input type="text" spellcheck="false" size="40" name="remasterrecordlabel" class="inputtext smaller" value="<?form('remasterrecordlabel')?>" />
-				</td>
-			</tr>
-			<tr id="edition_catalogue" class="<?=$Hidden?>">
-				<td class="label">Edition Catalogue Number:</td>
-				<td colspan="3">
-					<input type="text" size="40" name="remastercataloguenumber" class="inputtext smallest" value="<?form('remastercataloguenumber')?>" />
 				</td>
 			</tr>
 			<tr>
@@ -453,69 +396,7 @@ if(form('remastertitle', true) == "" && form('remasteryear', true) == "" &&
 					<input type="text" spellcheck="false" size="40" name="filelist" class="inputtext" value="<?form('filelist')?>" />
 				</td>
 			</tr>
-			<tr>
-				<td class="label">Rip Specifics:</td>
-				<td class="nobr" colspan="3">
-					<select id="bitrate" name="encoding">
-						<option value="">Bitrate</option>
-<?	foreach($Bitrates as $BitrateName) { ?>
-						<option value="<?=display_str($BitrateName); ?>" <?selected('encoding', $BitrateName)?>><?=display_str($BitrateName); ?></option>
-<?	} ?>			</select>
-					
-					<select name="format">
-						<option value="">Format</option>
-<?	foreach($Formats as $FormatName) { ?>
-						<option value="<?=display_str($FormatName); ?>" <?selected('format', $FormatName)?>><?=display_str($FormatName); ?></option>
-<?	} ?>			</select>
-					<select name="media">
-						<option value="">Media</option>
-<?	foreach($Media as $MediaName) { ?>
-						<option value="<?=display_str($MediaName); ?>" <?selected('media',$MediaName)?>><?=display_str($MediaName); ?></option>
-<?	} ?>
-					</select>
-					<select name="releasetype">
-						<option value="">Release type</option>
-<?	foreach($ReleaseTypes as $ID=>$Type) { ?>
-						<option value="<?=display_str($ID); ?>" <?selected('releasetype',$ID)?>><?=display_str($Type); ?></option>
-<?	} ?>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td class="label">Misc:</td>
-				<td class="nobr" colspan="3">
-					<select name="haslog">
-						<option value="">Has Log</option>
-						<option value="1" <?selected('haslog','1')?>>Yes</option>
-						<option value="0" <?selected('haslog','0')?>>No</option>
-						<option value="100" <?selected('haslog','100')?>>100% only</option>
-						<option value="-1" <?selected('haslog','-1')?>>&lt;100%/Unscored</option>
-					</select>
-					<select name="hascue">
-						<option value="">Has Cue</option>
-						<option value="1" <?selected('hascue',1)?>>Yes</option>
-						<option value="0" <?selected('hascue',0)?>>No</option>
-					</select>
-					<select name="scene">
-						<option value="">Scene</option>
-						<option value="1" <?selected('scene',1)?>>Yes</option>
-						<option value="0" <?selected('scene',0)?>>No</option>
-					</select>
-					<select name="vanityhouse">
-						<option value="">Vanity House</option>
-						<option value="1" <?selected('vanityhouse',1)?>>Yes</option>
-						<option value="0" <?selected('vanityhouse',0)?>>No</option>
-					</select>
-					<select name="freetorrent">
-						<option value="">Leech Status</option>
-						<option value="1" <?selected('freetorrent',1)?>>Freeleech</option>
-						<option value="2" <?selected('freetorrent',2)?>>Neutral Leech</option>
-						<option value="3" <?selected('freetorrent',3)?>>Either</option>
-						<option value="0" <?selected('freetorrent',0)?>>Normal</option>
-					</select>
-				</td>
-			</tr>
-<? } else { // BASIC SEARCH ?>
+ <? } else { // BASIC SEARCH ?>
 			<tr>
 				<td class="label">Search terms:</td>
 				<td colspan="3">
@@ -562,8 +443,8 @@ if(form('remastertitle', true) == "" && form('remasteryear', true) == "" &&
 		<table class="cat_list">
 <?
 $x=0;
-reset($Categories);
-foreach($Categories as $CatKey => $CatName) {
+reset($NewCategories);
+foreach($NewCategories as $Cat) {
 	if($x%7==0) {
 		if($x > 0) {
 ?>
@@ -575,13 +456,12 @@ foreach($Categories as $CatKey => $CatName) {
 	$x++;
 ?>
 				<td>
-					<input type="checkbox" name="filter_cat[<?=($CatKey+1)?>]" id="cat_<?=($CatKey+1)?>" value="1" <? if(isset($_GET['filter_cat'][$CatKey+1])) { ?>checked="checked"<? } ?> />
-					<label for="cat_<?=($CatKey+1)?>"><?=$CatName?></label>
+					<input type="checkbox" name="filter_cat[<?=($Cat['id'])?>]" id="cat_<?=($Cat['id'])?>" value="1" <? if(isset($_GET['filter_cat'][$Cat['id']])) { ?>checked="checked"<? } ?>/>
+					<label for="cat_<?=($Cat['id'])?>"><?=$Cat['name']?></label>
 				</td>
-<?
-}
-?>
-			</tr>
+<?}?>                           
+                                <td colspan="<?=7-($x%7)?>"></td>
+                        </tr>
 		</table>
 		<table class="cat_list <? if(empty($LoggedUser['ShowTags'])) { ?>hidden<? } ?>" id="taglist">
 			<tr>
@@ -676,7 +556,7 @@ $Bookmarks = all_bookmarks('torrent');
 	<tr class="colhead">
 		<td class="small"></td>
 		<td class="small cats_col"></td>
-		<td width="100%">Name / <a href="<?=header_link('year')?>">Year</a></td>
+		<td width="100%">Name</td>
 		<td>Files</td>
 		<td><a href="<?=header_link('time')?>">Time</a></td>
 		<td><a href="<?=header_link('size')?>">Size</a></td>
@@ -688,7 +568,7 @@ $Bookmarks = all_bookmarks('torrent');
 // Start printing torrent list
 
 foreach($Results as $GroupID=>$Data) {
-	list($Artists, $GroupCatalogueNumber, $ExtendedArtists, $GroupID2, $GroupName, $GroupRecordLabel, $ReleaseType, $TagList, $Torrents, $GroupVanityHouse, $GroupYear, $CategoryID, $FreeTorrent, $HasCue, $HasLog, $TotalLeechers, $LogScore, $ReleaseType, $ReleaseType, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
+	list($Artists, $GroupCatalogueNumber, $ExtendedArtists, $GroupID2, $GroupName, $GroupRecordLabel, $ReleaseType, $TagList, $Torrents, $GroupVanityHouse, $GroupYear, $CategoryID, $FreeTorrent, $HasCue, $HasLog, $TotalLeechers, $LogScore, $NewCategoryID, $ReleaseType, $ReleaseType, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 	
 	$TagList = explode(' ',str_replace('_','.',$TagList));
 	
@@ -724,7 +604,7 @@ $ShowGroups = !(!empty($LoggedUser['TorrentGrouping']) && $LoggedUser['TorrentGr
 			</div>
 		</td>
 		<td class="center cats_col">
-			<div title="<?=ucfirst(str_replace('_',' ',$TagList[0]))?>" class="cats_<?=strtolower(str_replace(array('-',' '),array('',''),$Categories[$CategoryID-1]))?> tags_<?=str_replace('.','_',$TagList[0])?>">
+                        <div title="<?=ucfirst(str_replace('_',' ',$TagList[0]))?>" class="cats_<?=strtolower(str_replace(array('-',' '),array('',''),$Categories[$CategoryID-1]))?> tags_<?=str_replace('.','_',$TagList[0])?>">
 			</div>
 		</td>
 		<td colspan="2">
@@ -935,7 +815,8 @@ $ShowGroups = !(!empty($LoggedUser['TorrentGrouping']) && $LoggedUser['TorrentGr
 	<tr class="torrent">
 		<td></td>
 		<td class="center cats_col">
-			<div title="<?=ucfirst(str_replace('.',' ',$TagList[0]))?>" class="cats_<?=strtolower(str_replace(array('-',' '),array('',''),$Categories[$CategoryID-1]))?> tags_<?=str_replace('.','_',$TagList[0])?>"></div>
+                    <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
+			<div title="<?=$NewCategories[$NewCategoryID]['cat_desc']?>"><img src="<?=$CatImg?>" />
 		</td>
 		<td>
 			<span>

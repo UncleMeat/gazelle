@@ -17,7 +17,6 @@ $HTTPS = ($_SERVER['SERVER_PORT'] == 443) ? 'ssl_' : '';
 	<link rel="search" type="application/opensearchdescription+xml" title="<?=SITE_NAME?> Forums" href="opensearch.php?type=forums" />
 	<link rel="search" type="application/opensearchdescription+xml" title="<?=SITE_NAME?> Log" href="opensearch.php?type=log" />
 	<link rel="search" type="application/opensearchdescription+xml" title="<?=SITE_NAME?> Users" href="opensearch.php?type=users" />
-	<link rel="search" type="application/opensearchdescription+xml" title="<?=SITE_NAME?> Wiki" href="opensearch.php?type=wiki" />
 	<link rel="alternate" type="application/rss+xml" href="feeds.php?feed=feed_news&amp;user=<?=$LoggedUser['ID']?>&amp;auth=<?=$LoggedUser['RSS_Auth']?>&amp;passkey=<?=$LoggedUser['torrent_pass']?>&amp;authkey=<?=$LoggedUser['AuthKey']?>" title="<?=SITE_NAME?> - News" />
 	<link rel="alternate" type="application/rss+xml" href="feeds.php?feed=feed_blog&amp;user=<?=$LoggedUser['ID']?>&amp;auth=<?=$LoggedUser['RSS_Auth']?>&amp;passkey=<?=$LoggedUser['torrent_pass']?>&amp;authkey=<?=$LoggedUser['AuthKey']?>" title="<?=SITE_NAME?> - Blog" />
 	<link rel="alternate" type="application/rss+xml" href="feeds.php?feed=torrents_notify_<?=$LoggedUser['torrent_pass']?>&amp;user=<?=$LoggedUser['ID']?>&amp;auth=<?=$LoggedUser['RSS_Auth']?>&amp;passkey=<?=$LoggedUser['torrent_pass']?>&amp;authkey=<?=$LoggedUser['AuthKey']?>" title="<?=SITE_NAME?> - P.T.N." />
@@ -170,7 +169,6 @@ if($NewSubscriptions === FALSE) {
 			<li id="nav_irc"><a href="chat.php">IRC</a></li>
 			<li id="nav_top10"><a href="top10.php">Top 10</a></li>
 			<li id="nav_rules"><a href="rules.php">Rules</a></li>
-			<li id="nav_wiki"><a href="wiki.php">Wiki</a></li>
 			<li id="nav_staff"><a href="staff.php">Staff</a></li>
 		</ul>
 	</div>
@@ -392,21 +390,6 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					/>
 				</form>
 			</li>
-			<li id="searchbar_artists">
-				<span class="hidden">Artist: </span>
-				<form action="artist.php" method="get">
-					<script type="text/javascript" src="static/functions/autocomplete.js?v=<?=filemtime(SERVER_ROOT.'/static/functions/autocomplete.js')?>"></script>
-					<input id="artistsearch" 
-						onkeyup="autocomp.keyup(event);"
-						onkeydown="autocomp.keydown(event);"
-						accesskey="a" spellcheck="false" autocomplete="off"
-						onfocus="if (this.value == 'Artists') this.value=''; autocomp.start('artist');"
-						onblur="if (this.value == '') this.value='Artists';"
-						value="Artists" type="text" name="artistname" size="17"
-					/>
-					<ul id="artistcomplete" style="visibility: hidden;"><li/></ul>
-				</form>
-			</li>
 			<li id="searchbar_requests">
 				<span class="hidden">Requests: </span>
 				<form action="requests.php" method="get">
@@ -429,19 +412,6 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					/>
 				</form>
 			</li>
-<!--
-			<li id="searchbar_wiki">
-				<span class="hidden">Wiki: </span>
-				<form action="wiki.php" method="get">
-					<input type="hidden" name="action" value="search">
-					<input 
-						onfocus="if (this.value == 'Wiki') this.value='';"
-						onblur="if (this.value == '') this.value='Wiki';"
-						value="Wiki" type="text" name="search" size="17"
-					/>
-				</form>
-			</li>
--->
 			<li id="searchbar_log">
 				<span class="hidden">Log: </span>
 				<form action="log.php" method="get">

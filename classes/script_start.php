@@ -80,6 +80,14 @@ if(!$Classes || !$ClassLevels) {
 }
 $Debug->set_flag('Loaded permissions');
 
+$NewCategories = $Cache->get_value('new_categories');
+if (!$NewCategories) {
+    $DB->query('SELECT id, name, image, cat_desc FROM categories ORDER BY id');
+    $NewCategories = $DB->to_array('id');
+    $Cache->cache_value('new_categories', $NewCategories);
+}
+$Debug->set_flag('Loaded new categories');
+
 //-----------------------------------------------------------------------------------
 /////////////////////////////////////////////////////////////////////////////////////
 //-- Load user information ----------------------------------------------------------
@@ -1337,13 +1345,14 @@ function update_hash($GroupID) {
 		GROUP BY t.GroupID)
 		WHERE ID='$GroupID'");
 
-	$DB->query("REPLACE INTO sphinx_delta (ID, GroupName, TagList, Year, CategoryID, Time, ReleaseType, CatalogueNumber, Size, Snatched, Seeders, Leechers, LogScore, Scene, HasLog, HasCue, FreeTorrent, Media, Format, Encoding, RemasterTitle, FileList)
+	$DB->query("REPLACE INTO sphinx_delta (ID, GroupName, TagList, Year, CategoryID, NewCategoryID, Time, ReleaseType, CatalogueNumber, Size, Snatched, Seeders, Leechers, LogScore, Scene, HasLog, HasCue, FreeTorrent, Media, Format, Encoding, RemasterTitle, FileList)
 		SELECT
 		g.ID AS ID,
 		g.Name AS GroupName,
 		g.TagList,
 		g.Year,
 		g.CategoryID,
+                g.NewCategoryID,
 		UNIX_TIMESTAMP(g.Time) AS Time,
 		g.ReleaseType,
 		g.CatalogueNumber,
@@ -1832,7 +1841,6 @@ function get_groups($GroupIDs, $Return = true, $GetArtists = true, $Torrents = t
 				$Found[$GroupID]['ExtendedArtists'] = false;
 			}
 		}
-
 		$Matches = array('matches'=>$Found, 'notfound'=>array_flip($NotFound));
 
 		return $Matches;

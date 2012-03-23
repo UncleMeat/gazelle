@@ -1,5 +1,6 @@
 /* Layout (Torrents page) */
 
+.cats_col { padding: 0; }
 /* We're going to opt for the category icon method for now, tags_* is also available */
 .cats_applications { width: 28px; height: 28px; background: url('images/apps.png') no-repeat center center; }
 .cats_audiobooks { width: 28px; height: 28px; background: url('images/audiobook.png') no-repeat center center; }
@@ -7,8 +8,10 @@
 .cats_comics { width: 28px; height: 28px; background: url('images/comics.png') no-repeat center center; }
 .cats_ebooks { width: 28px; height: 28px; background: url('images/ebook.png') no-repeat center center; }
 .cats_elearningvideos { width: 28px; height: 28px; background: url('images/elearning.png') no-repeat center center; }
-
 .cats_music { width: 28px; height: 28px; background: url('images/music.png') no-repeat center center; }
+
+.category { width: 28px; height: 28px; margin: 0; padding: 0; }
+
 /* Global */
 * {
     padding: 0;
@@ -554,7 +557,7 @@ ul.poll li.graph {
 }
 
 .filter_torrents {
-    width:750px;
+    width:850px;
     margin-left:auto;
     margin-right:auto;
     margin-bottom:15px;
@@ -595,6 +598,10 @@ ul.poll li.graph {
 
 .torrent_table tr {
     vertical-align:top;
+}
+
+.torrent_table td {
+    padding: 5px;
 }
 
 .group {
