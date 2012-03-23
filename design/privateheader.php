@@ -178,7 +178,7 @@ $Alerts = array();
 $ModBar = array();
 
 // News
-$MyNews = $LoggedUser['LastReadNews'];
+$MyNews = $LoggedUser['LastReadNews']+0;
 $CurrentNews = $Cache->get_value('news_latest_id');
 if ($CurrentNews === false) {
 	$DB->query("SELECT ID FROM news ORDER BY Time DESC LIMIT 1");
@@ -189,6 +189,7 @@ if ($CurrentNews === false) {
 	}
 	$Cache->cache_value('news_latest_id', $CurrentNews, 0);
 }
+
 if ($MyNews < $CurrentNews) {
 	$Alerts[] = '<a href="index.php">'.'New Announcement!'.'</a>';
 }

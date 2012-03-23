@@ -579,7 +579,7 @@ foreach($Results as $GroupID=>$Data) {
 	$TorrentTags = implode(', ', $TorrentTags);
 	
 	if(count($Torrents)>1 || $CategoryID==1) {
-		// These torrents are in a group
+            // These torrents are in a group
 		if (!empty($ExtendedArtists[1]) || !empty($ExtendedArtists[4]) || !empty($ExtendedArtists[5]) || !empty($ExtendedArtists[6])) {
 			unset($ExtendedArtists[2]);
 			unset($ExtendedArtists[3]);

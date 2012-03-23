@@ -37,7 +37,7 @@ $count = mysql_result($result, 0);
 
 echo "creating new authkey strings and the invite_tree table for $count users (this will take a long time)\n";
 
-$result = mysql_query('select userid from gazelle.users_info) or die(mysql_error());
+$result = mysql_query('select userid from gazelle.users_info') or die(mysql_error());
 $i = 0;
 $TreeIndex = 2;
 echo "0.00% ";
@@ -54,8 +54,6 @@ while ($row = mysql_fetch_assoc($result)) {
     elseif ($i % 100 == 0)
         echo ".";
 }
-
-die();
 
 
 $result = mysql_query("select count(*) as c from " . EMDB . ".torrents") or die(mysql_error());
@@ -89,7 +87,7 @@ while ($row = mysql_fetch_assoc($result)) {
 
     mysql_query("INSERT INTO gazelle.torrents_group
 		(ID, CategoryID, NewCategoryID, Name, TagList, Time, WikiBody, SearchText) VALUES
-		(" . $row['id'] . ", 1, " . $row['category'] . ", '" . mysql_real_escape_string($row['name']) . "', '" . mysql_real_escape_string($row['tags']) . "', from_unixtime('" . $row['added'] . "'), '" . mysql_real_escape_string($row['descr']) . "', '" . mysql_real_escape_string($row['name']) . "')") or die(mysql_error());
+		(" . $row['id'] . ", 2, " . $row['category'] . ", '" . mysql_real_escape_string($row['name']) . "', '" . mysql_real_escape_string($row['tags']) . "', from_unixtime('" . $row['added'] . "'), '" . mysql_real_escape_string($row['descr']) . "', '" . mysql_real_escape_string($row['name']) . "')") or die(mysql_error());
 
     $Tags = explode(' ', $row['tags']);
     foreach ($Tags as $Tag) {

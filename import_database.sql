@@ -238,11 +238,11 @@ from emtest.forums;
 insert into gazelle.forums_last_read_topics (UserID, TopicID, PostID)
 select userid, topicid, lastpostread
 from emtest.readposts
-group by userid, topicid
+group by userid, topicid;
 
 -- Import PM's
 insert into gazelle.pm_conversations (ID, Subject)
-select id, if(subject<>'', subject, 'no subject') as subject from emtest.messages
+select id, if(subject<>'', subject, 'no subject') as subject from emtest.messages;
 
 insert into gazelle.pm_messages (ConvID, SentDate, SenderID, Body)
 select id, from_unixtime(added), sender, msg from emtest.messages;

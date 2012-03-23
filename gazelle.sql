@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: localhost
--- Skapad: 22 mars 2012 kl 01:30
+-- Skapad: 22 mars 2012 kl 22:30
 -- Serverversion: 5.1.61
 -- PHP-version: 5.3.6-13ubuntu3.6
 
@@ -19,6 +19,9 @@ SET time_zone = "+00:00";
 --
 -- Databas: `gazelle`
 --
+CREATE DATABASE IF NOT EXISTS gazelle;
+
+USE gazelle;
 
 -- --------------------------------------------------------
 
@@ -504,9 +507,7 @@ INSERT INTO forums_categories (ID, Sort, Name) VALUES (5,5,'Community');
 
 INSERT INTO forums_categories (ID, Sort, Name) VALUES (10,10,'Help');
 
-INSERT INTO forums_categories (ID, Sort, Name) VALUES (8,8,'Music');
-
-INSERT INTO forums_categories (ID, Sort, Name) VALUES (20,20,'Trash');
+INSERT INTO forums_categories (ID, Sort, Name) VALUES (15,15,'Trash');
 
 -- --------------------------------------------------------
 
