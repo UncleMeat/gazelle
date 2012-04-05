@@ -361,18 +361,6 @@ $RequestsVotedListChecked = checked(!in_array('requestsvoted_list', $Paranoia));
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Unique groups</td>
-				<td>
-<? display_paranoia('uniquegroups'); ?>
-				</td>
-			</tr>
-			<tr>
-				<td class="label">"Perfect" FLACs</td>
-				<td>
-<? display_paranoia('perfectflacs'); ?>
-				</td>
-			</tr>
-			<tr>
 				<td class="label">Seeding</td>
 				<td>
 <? display_paranoia('seeding'); ?>
@@ -403,7 +391,6 @@ list($Invited) = $DB->next_record();
 $DB->query("SELECT COUNT(ta.ArtistID) FROM torrents_artists AS ta WHERE ta.UserID = ".$UserID);
 list($ArtistsAdded) = $DB->next_record();
 ?>
-					<br /><label><input type="checkbox" name="p_artistsadded" <?=checked(!in_array('artistsadded', $Paranoia))?>> Number of artists added</label>
 				</td>
 			</tr>
 			<tr class="colhead_dark">

@@ -50,7 +50,7 @@ function add_tag() {
 		$('#tags').raw().value = $('#genre_tags').raw().options[$('#genre_tags').raw().selectedIndex].value;
 	} else if($('#genre_tags').raw().options[$('#genre_tags').raw().selectedIndex].value == '---') {
 	} else {
-		$('#tags').raw().value = $('#tags').raw().value + ', ' + $('#genre_tags').raw().options[$('#genre_tags').raw().selectedIndex].value;
+		$('#tags').raw().value = $('#tags').raw().value + ' ' + $('#genre_tags').raw().options[$('#genre_tags').raw().selectedIndex].value;
 	}
 }
 

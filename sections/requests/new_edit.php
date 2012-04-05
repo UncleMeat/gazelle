@@ -6,7 +6,6 @@
  * maintaining 2 copies of almost identical files. 
  */
 
-
 $NewRequest = ($_GET['action'] == "new" ? true : false);
 
 if(!$NewRequest) {
@@ -88,7 +87,7 @@ if(!$NewRequest) {
 			}
 		}
 		
-		$Tags = implode(", ", $Request['Tags']);
+		$Tags = implode(" ", $Request['Tags']);
 	}
 }
 
@@ -139,83 +138,23 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests');
 <?	if($NewRequest || $CanEdit) { ?>
 				<tr>
 					<td class="label">
-						Type
+						Category
 					</td>
 					<td>
-						<select id="categories" name="type" onchange="Categories()">
-<?		foreach(display_array($Categories) as $Cat){ ?>
-							<option value='<?=$Cat?>' <?=(!empty($CategoryName) && ($CategoryName ==  $Cat) ? 'selected="selected"' : '')?>><?=$Cat?></option>
+						<select id="categories" name="category">
+<? foreach($NewCategories as $Cat){ $Cat = display_array($Cat); ?>
+							<option value='<?=$Cat['id']?>' <?=(!empty($CategoryName) && ($CategoryName ==  $Cat['name']) ? 'selected="selected"' : '')?>><?=$Cat['name']?></option>
 <?		} ?>
 						</select>
 					</td>
 				</tr>
-				<tr id="artist_tr">
-					<td class="label">Artist(s)</td>		
-					<td id="artistfields">
-						<p id="vawarning" class="hidden">Please use the multiple artists feature rather than adding 'Various Artists' as an artist, read <a href='wiki.php?action=article&id=369'>this</a> for more information on why.</p>
-<?
-
-		if(!empty($ArtistForm)) {
-			$First = true;
-			foreach($ArtistForm as $Importance => $ArtistNames) {
-				foreach($ArtistNames as $Artist) {
-?>
-						<input type="text" id="artist" name="artists[]" size="45" value="<?=display_str($Artist['name']) ?>" />
-						<select id="importance" name="importance[]" >
-							<option value="1"<?=($Importance == '1' ? ' selected="selected"' : '')?>>Main</option>
-							<option value="2"<?=($Importance == '2' ? ' selected="selected"' : '')?>>Guest</option>
-							<option value="4"<?=($Importance == '4' ? ' selected="selected"' : '')?>>Composer</option>
-							<option value="5"<?=($Importance == '5' ? ' selected="selected"' : '')?>>Conductor</option>
-							<option value="6"<?=($Importance == '6' ? ' selected="selected"' : '')?>>DJ / Compiler</option>
-							<option value="3"<?=($Importance == '3' ? ' selected="selected"' : '')?>>Remixer</option>
-							<option value="3"<?=($Importance == '7' ? ' selected="selected"' : '')?>>Producer</option>
-						</select>
-						<?if($First) { ?>[<a href="#" onclick="AddArtistField();return false;">+</a>] [<a href="#" onclick="RemoveArtistField();return false;">-</a>] <? } $First = false;?>
-						<br />
-<?				}
-			}
-		} else {
-?>						<input type="text" id="artist" name="artists[]" size="45" onblur="CheckVA();" />
-						<select id="importance" name="importance[]" >
-							<option value="1">Main</option>
-							<option value="2">Guest</option>
-							<option value="4">Composer</option>
-							<option value="5">Conductor</option>
-							<option value="6">DJ / Compiler</option>
-							<option value="3">Remixer</option>
-						</select>
-						[<a href="#" onclick="AddArtistField();return false;">+</a>] [<a href="#" onclick="RemoveArtistField();return false;">-</a>]
-<?
-		}
-?>	
-					</td>
-				</tr>
-
 				<tr>
 					<td class="label">Title</td>
 					<td>
 						<input type="text" name="title" size="45" value="<?=(!empty($Title) ? display_str($Title) : '')?>" />
 					</td>
 				</tr>
-				<tr id="cataloguenumber_tr">
-					<td class="label">Record Label</td>
-					<td>
-						<input type="text" name="recordlabel" size="45" value="<?=(!empty($RecordLabel) ? display_str($RecordLabel) : '')?>" />
-					</td>
-				</tr>
-				<tr id="cataloguenumber_tr">
-					<td class="label">Catalogue Number</td>
-					<td>
-						<input type="text" name="cataloguenumber" size="15" value="<?=(!empty($CatalogueNumber) ? display_str($CatalogueNumber) : '')?>" />
-					</td>
-				</tr>
 <?	} ?>
-				<tr id="year_tr">
-					<td class="label">Year</td>
-					<td>
-						<input type="text" name="year" size="5" value="<?=(!empty($Year) ? display_str($Year) : '')?>" />
-					</td>
-				</tr>
 <?	if($NewRequest || $CanEdit) { ?>
 				<tr id="image_tr">
 					<td class="label">Image</td>
@@ -243,104 +182,19 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests');
 						</select>
 						<input type="text" id="tags" name="tags" size="45" value="<?=(!empty($Tags) ? display_str($Tags) : '')?>" />
 						<br />
-						Tags should be comma separated, and you should use a period ('.') to separate words inside a tag - eg. '<strong style="color:green;">hip.hop</strong>'. 
+						Tags should be separated by a space, and you should use a period ('.') to bind words inside a tag - eg. '<strong style="color:green;">big.breast</strong>'. 
 						<br /><br />
 						There is a list of official tags to the left of the text box. Please use these tags instead of 'unofficial' tags (eg. use the official '<strong style="color:green;">drum.and.bass</strong>' tag, instead of an unofficial '<strong style="color:red;">dnb</strong>' tag.)
 					</td>
 				</tr>
-<?	if($NewRequest || $CanEdit) { ?>
-				<tr id="releasetypes_tr">
-					<td class="label">Release Type</td>
-					<td>
-						<select id="releasetype" name="releasetype">
-							<option value='0'>---</option>
-<?		
-		foreach ($ReleaseTypes as $Key => $Val) {
-							//echo '<h1>'.$ReleaseType.'</h1>'; die();
-?>							<option value='<?=$Key?>' <?=(!empty($ReleaseType) ? ($Key == $ReleaseType ?" selected='selected'" : "") : '') ?>><?=$Val?></option>
-<?			
-		}
-?>
-						</select>
-					</td>
-				</tr>
-				<tr id="formats_tr">
-					<td class="label">Allowed Formats</td>
-					<td>
-						<input type="checkbox" name="all_formats" id="toggle_formats" onchange="Toggle('formats', <?=($NewRequest ? 1 : 0)?>);"<?=(!empty($FormatArray) && (count($FormatArray) == count($Formats)) ? ' checked="checked"' : '')?> /><label for="toggle_formats"> All</label>
-						<span style="float: right;"><strong>NB: You cannot require a log or cue unless FLAC is an allowed format</strong></span>
-<?		foreach ($Formats as $Key => $Val) {
-			if($Key % 8 == 0) echo "<br />";?>
-						<input type="checkbox" name="formats[]" value="<?=$Key?>" onchange="ToggleLogCue(); if(!this.checked) { $('#toggle_formats').raw().checked = false; }" id="format_<?=$Key?>"
-							<?=(!empty($FormatArray) && in_array($Key, $FormatArray) ? ' checked="checked" ' : '')?>
-						/><label for="format_<?=$Key?>"> <?=$Val?></label>
-<?		}?>
-					</td>
-				</tr>
-				<tr id="bitrates_tr">
-					<td class="label">Allowed Bitrates</td>
-					<td>
-						<input type="checkbox" name="all_bitrates" id="toggle_bitrates" onchange="Toggle('bitrates', <?=($NewRequest ? 1 : 0)?>);"<?=(!empty($BitrateArray) && (count($BitrateArray) == count($Bitrates)) ? ' checked="checked"' : '')?> /><label for="toggle_bitrates"> All</label>
-<?		foreach ($Bitrates as $Key => $Val) {
-			if($Key % 8 == 0) echo "<br />";?>
-						<input type="checkbox" name="bitrates[]" value="<?=$Key?>" id="bitrate_<?=$Key?>" 
-							<?=(!empty($BitrateArray) && in_array($Key, $BitrateArray) ? ' checked="checked" ' : '')?>
-						onchange="if(!this.checked) { $('#toggle_bitrates').raw().checked = false; }"/><label for="bitrate_<?=$Key?>"> <?=$Val?></label>
-<?		}?>
-					</td>
-				</tr>
-				<tr id="media_tr">
-					<td class="label">Allowed Media</td>
-					<td>
-						<input type="checkbox" name="all_media" id="toggle_media" onchange="Toggle('media', <?=($NewRequest ? 1 : 0)?>);"<?=(!empty($MediaArray) && (count($MediaArray) == count($Media)) ? ' checked="checked"' : '')?> /><label for="toggle_media"> All</label>
-<?		foreach ($Media as $Key => $Val) { 
-			if($Key % 8 == 0) echo "<br />";?>	
-						<input type="checkbox" name="media[]" value="<?=$Key?>" id="media_<?=$Key?>" 
-							<?=(!empty($MediaArray) && in_array($Key, $MediaArray) ? ' checked="checked" ' : '')?>
-						onchange="if(!this.checked) { $('#toggle_media').raw().checked = false; }"/><label for="media_<?=$Key?>"> <?=$Val?></label>
-<?		}?>
-					</td>
-				</tr>
-				<tr id="logcue_tr" class="hidden">
-					<td class="label">Log / Cue (FLAC only)</td>
-					<td>
-						<input type="checkbox" id="needlog" name="needlog" onchange="ToggleLogScore()" <?=(!empty($NeedLog) ? 'checked="checked" ' : '')?>/><label for="needlog"> Require Log</label>
-						<span id="minlogscore_span" class="hidden">&nbsp;<input type="text" name="minlogscore" id="minlogscore"  size="4" value="<?=(!empty($MinLogScore) ? $MinLogScore : '')?>"/> Minimum Log Score</span>
-						<br />
-						<input type="checkbox" id="needcue" name="needcue" <?=(!empty($NeedCue) ? 'checked="checked" ' : '')?>/><label for="needcue"> Require Cue</label>
-						<br />
-					</td>
-				</tr>
-<?	} ?>
 				<tr>
 					<td class="label">Description</td>
 					<td>
 						<textarea name="description" cols="70" rows="7"><?=(!empty($Description) ? $Description : '')?></textarea> <br />
 					</td>
 				</tr>
-<?	if(check_perms('site_moderate_requests')) { ?>			
-				<tr>
-					<td class="label">Torrent Group</td>
-					<td>
-						http://what.cd/torrents.php?id=<input type="text" name="groupid" value="<?=$GroupID?>" size="15"><br />
-						If this request matches a torrent group <span style="font-weight: bold;">already existing</span> on the site, please indicate that here.
-					</td>
-				</tr>
-<?	} elseif ($GroupID && ($CategoryID == 1)) {
-?>
-				<tr>
-					<td class="label">Torrent Group</td>
-					<td>
-						<a href="torrents.php?id=<?=$GroupID?>">http://what.cd/torrents.php?id=<?=$GroupID?></a><br />
-						This request <?=($NewRequest?'will be':'is')?> associated with the above torrent group.
-<?		if (!$NewRequest) { 	?>
-						If this is incorrect, please <a href="reports.php?action=report&type=request&id=<?=$RequestID?>">report this request</a> so that staff can fix it.
-<? 		}	?>
-						<input type="hidden" name="groupid" value="<?=$GroupID?>" />
-					</td>
-				</tr>
-<?	}
-	if($NewRequest) { ?>
+
+<?	if($NewRequest) { ?>
 				<tr id="voting">
 					<td class="label">Bounty (MB)</td>
 					<td>
@@ -366,7 +220,7 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests');
 				</tr>
 				<tr>
 					<td colspan="2" class="center">
-						<input type="submit" id="button" value="Create request" disabled="disabled" />
+						<input type="submit" id="button" value="Create request" />
 					</td>
 				</tr>
 <?	} else { ?>		
@@ -378,8 +232,6 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests');
 <?	} ?>
 			</table>
 		</form>
-		<script type="text/javascript" >ToggleLogCue(); <?=$NewRequest ? "Calculate();" : '' ?></script>
-		<script type="text/javascript">Categories();</script>
 	</div>
 </div>
 <?

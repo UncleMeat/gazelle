@@ -30,47 +30,13 @@ $IsFilled = !empty($TorrentID);
 $CanVote = (empty($TorrentID) && check_perms('site_vote'));
 
 if($CategoryID == 0) {
-	$CategoryName = "Unknown";
+    $CategoryName = 'unknown';
 } else {
-	$CategoryName = $Categories[$CategoryID - 1];
+    $CategoryName = $NewCategories[$CategoryID]['name'];
 }
 
-//Do we need to get artists?
-if($CategoryName == "Music") {
-	$ArtistForm = get_request_artists($RequestID);
-	$ArtistName = display_artists($ArtistForm, false, true);
-	$ArtistLink = display_artists($ArtistForm, true, true);
-	
-	if($IsFilled) {
-		$DisplayLink = $ArtistLink."<a href='torrents.php?torrentid=".$TorrentID."'>".$Title."</a> [".$Year."]";
-	} else {
-		$DisplayLink = $ArtistLink.$Title." [".$Year."]";
-	}
-	$FullName = $ArtistName.$Title." [".$Year."]";
-	
-	if($BitrateList != "") {
-		$BitrateString = implode(", ", explode("|", $BitrateList));
-		$FormatString = implode(", ", explode("|", $FormatList));
-		$MediaString = implode(", ", explode("|", $MediaList));
-	} else {
-		$BitrateString = "Unknown, please read the description.";
-		$FormatString = "Unknown, please read the description.";
-		$MediaString = "Unknown, please read the description.";
-	}
-	
-	if(empty($ReleaseType)) {
-		$ReleaseName = "Unknown";
-	} else {
-		$ReleaseName = $ReleaseTypes[$ReleaseType];
-	}
-	
-} else if($CategoryName == "Audiobooks" || $CategoryName == "Comedy") {
-	$FullName = $Title." [".$Year."]";
-	$DisplayLink = $Title." [".$Year."]";
-} else {
-	$FullName = $Title;
-	$DisplayLink = $Title;
-}
+$FullName = $Title;
+$DisplayLink = $Title;
 
 //Votes time
 $RequestVotes = get_votes_array($RequestID);
@@ -110,7 +76,7 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 <?	if (!empty($Image)) { ?>
 			<p align="center"><img style="max-width: 220px;" src="<?=$Image?>" alt="<?=$FullName?>" onclick="lightbox.init(this,220);" /></p>
 <?	} else { ?>
-			<p align="center"><img src="<?=STATIC_SERVER?>common/noartwork/<?=$CategoryIcons[$CategoryID-1]?>" alt="<?=$CategoryName?>" title="<?=$CategoryName?>" width="220" height="220" border="0" /></p>
+			<p align="center"><img src="<?=STATIC_SERVER?>common/noartwork/noimage.png" alt="<?=$CategoryName?>" title="<?=$CategoryName?>" width="220" height="220" border="0" /></p>
 <?	} ?>
 		</div>
 <? } 
@@ -389,7 +355,8 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 							<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 							<input type="hidden" name="requestid" value="<?=$RequestID?>" />
 							<input type="text" size="50" name="link" <?=(!empty($Link) ? "value='$Link' " : '')?>/>
-							<strong>Should be the permalink (PL) to the torrent (e.g. http://<?=NONSSL_SITE_URL?>/torrents.php?torrentid=xxxx).</strong>
+							<br />
+                                                        <strong>Should be the permalink (PL) to the torrent (e.g. http://<?=NONSSL_SITE_URL?>/torrents.php?torrentid=xxxx).</strong>
 							<br />
 							<br />
 							<? if(check_perms('site_moderate_requests')) { ?> For User: <input type="text" size="25" name="user" <?=(!empty($FillerUsername) ? "value='$FillerUsername' " : '')?>/>

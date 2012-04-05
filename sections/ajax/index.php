@@ -36,7 +36,8 @@ switch ($_GET['action']){
 	
 	// things not yet used on the site
 	case 'torrentgroup':
-		require('torrentgroup.php');
+		// Lanz: disabled, get_group_info() is broken for this code.
+                //require('torrentgroup.php');
 		break;
 	case 'user':
 		require(SERVER_ROOT.'/sections/ajax/user.php');

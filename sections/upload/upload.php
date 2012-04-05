@@ -4,7 +4,7 @@
 // This page relies on the TORRENT_FORM class. All it does is call	 //
 // the necessary functions.											//
 //---------------------------------------------------------------------//
-// $Properties, $Err and $UploadForm are set in takeupload.php, and	//
+// $Properties, $Err are set in takeupload.php, and                     //
 // are only used when the form doesn't validate and this page must be  //
 // called again.													   //
 //*********************************************************************//
@@ -13,7 +13,6 @@ ini_set('max_file_uploads','100');
 show_header('Upload','upload');
 
 if(empty($Properties) && !empty($_GET['groupid']) && is_number($_GET['groupid'])) {
-    die('here');
 	$DB->query("SELECT 
 		tg.ID as GroupID,
 		tg.CategoryID,
@@ -31,7 +30,6 @@ if(empty($Properties) && !empty($_GET['groupid']) && is_number($_GET['groupid'])
 		GROUP BY tg.ID");
 	if ($DB->record_count()) {	
 		list($Properties) = $DB->to_array(false,MYSQLI_BOTH);
-		$UploadForm = $Categories[$Properties['CategoryID']-1];
 		$Properties['CategoryName'] = $Categories[$Properties['CategoryID']-1];
 		$Properties['Artists'] = get_artist($_GET['groupid']);
 		
@@ -62,7 +60,6 @@ if(empty($Properties) && !empty($_GET['groupid']) && is_number($_GET['groupid'])
 		WHERE r.ID=".$_GET['requestid']);
 	
 	list($Properties) = $DB->to_array(false,MYSQLI_BOTH);
-	$UploadForm = $Categories[$Properties['CategoryID']-1];
 	$Properties['CategoryName'] = $Categories[$Properties['CategoryID']-1];
 	$Properties['Artists'] = get_request_artists($_GET['requestid']);
 	$Properties['TagList'] = implode(", ", get_request_tags($_GET['requestid']));
@@ -126,25 +123,7 @@ $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
 </div><?=($HideDNU?'<br />':'')?>
 <?
 $TorrentForm->head();
-switch ($UploadForm) {
-	case 'Music':
-		$TorrentForm->music_form($GenreTags);
-		break;
-		
-	case 'Audiobooks':
-	case 'Comedy':
-		$TorrentForm->audiobook_form();
-		break;
-	
-	case 'Applications':
-	case 'Comics':
-	case 'E-Books':
-	case 'E-Learning Videos':
-		$TorrentForm->simple_form($Properties['CategoryID']);
-		break;
-	default:
-		$TorrentForm->simple_form($Properties['CategoryID'], $GenreTags);
-}
+$TorrentForm->simple_form($Properties['CategoryID'], $GenreTags);
 $TorrentForm->foot();
 ?>
 <script type="text/javascript">

@@ -501,16 +501,6 @@ list($PerfectFLACs) = $DB->next_record();
 <? } elseif (check_paranoia_here('uploads+')) { ?>
 				<li>Uploaded: <?=number_format($Uploads)?></li>
 <? } ?>
-<? if (check_paranoia_here('uniquegroups')) { ?>
-				<li>Unique Groups: <?=number_format($UniqueGroups)?> [<a href="torrents.php?type=uploaded&amp;userid=<?=$UserID?>&amp;filter=uniquegroup">View</a>]</li>
-<? } elseif (check_paranoia_here('uniquegroups+')) { ?>
-				<li>Unique Groups: <?=number_format($UniqueGroups)?></li>
-<? } ?>
-<? if (check_paranoia_here('perfectflacs')) { ?>
-				<li>"Perfect" FLACs: <?=number_format($PerfectFLACs)?> [<a href="torrents.php?type=uploaded&amp;userid=<?=$UserID?>&amp;filter=perfectflac">View</a>]</li>
-<? } elseif (check_paranoia_here('perfectflacs+')) { ?>
-				<li>"Perfect" FLACs: <?=number_format($PerfectFLACs)?></li>
-<? } ?>
 <?
 
 if (check_paranoia_here('seeding+') || check_paranoia_here('leeching+')) {

@@ -47,7 +47,7 @@ function Vote(amount, requestid) {
 function Calculate() {
 	var mul = (($('#unit').raw().options[$('#unit').raw().selectedIndex].value == 'mb') ? (1024*1024) : (1024*1024*1024));
 	var amt = Math.floor($('#amount_box').raw().value * mul);
-	if(amt > $('#current_uploaded').raw().value) {
+        if(amt > $('#current_uploaded').raw().value) {
 		$('#new_uploaded').raw().innerHTML = "You can't afford that request!";
 		$('#new_bounty').raw().innerHTML = "0.00 MB";
 		$('#button').raw().disabled = true;
@@ -142,7 +142,7 @@ function add_tag() {
 		$('#tags').raw().value = $('#genre_tags').raw().options[$('#genre_tags').raw().selectedIndex].value;
 	} else if ($('#genre_tags').raw().options[$('#genre_tags').raw().selectedIndex].value == "---") {
 	} else {
-		$('#tags').raw().value = $('#tags').raw().value + ", " + $('#genre_tags').raw().options[$('#genre_tags').raw().selectedIndex].value;
+		$('#tags').raw().value = $('#tags').raw().value + " " + $('#genre_tags').raw().options[$('#genre_tags').raw().selectedIndex].value;
 	}
 }
 

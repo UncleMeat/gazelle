@@ -6,11 +6,12 @@ if(!empty($_GET['advanced']) && check_perms('site_advanced_top10')) {
 	$Limit = 10;
 	
 	if($_GET['tags']) {
-		$Tags = explode(',', str_replace(".","_",trim($_GET['tags'])));
+                $Tags = cleanup_tags($_GET['tags']);
+		$Tags = explode(' ', str_replace(".","_",trim($Tags)));
 		foreach ($Tags as $Tag) {
-			$Tag = preg_replace('/[^a-z0-9_]/', '', $Tag);
+			$Tag = sanitize_tag($Tag);
 			if($Tag != '') {
-				$Where[]="g.TagList REGEXP '[[:<:]]".db_string($Tag)."[[:>:]]'";
+				$Where[]="g.TagList REGEXP '[[:<:]]".$Tag."[[:>:]]'";
 			}
 		}
 	}
@@ -56,7 +57,7 @@ if(check_perms('site_advanced_top10')) {
 			<input type="hidden" name="advanced" value="1" />
 			<table cellpadding="6" cellspacing="1" border="0" class="border" width="100%">
 				<tr>
-					<td class="label">Tags (comma-separated):</td>
+					<td class="label">Tags:</td>
 					<td>
 						<input type="text" name="tags" size="75" value="<? if(!empty($_GET['tags'])) { echo display_str($_GET['tags']);} ?>" />
 					</td>

@@ -182,16 +182,6 @@ if (check_paranoia_here(array('collagecontribs', 'collagecontribs+'))) {
 	list($NumCollageContribs) = $DB->next_record();
 }
 
-if (check_paranoia_here(array('uniquegroups', 'uniquegroups+'))) {
-	$DB->query("SELECT COUNT(DISTINCT GroupID) FROM torrents WHERE UserID = '$UserID'");
-	list($UniqueGroups) = $DB->next_record();
-}
-
-if (check_paranoia_here(array('perfectflacs', 'perfectflacs+'))) {
-	$DB->query("SELECT COUNT(ID) FROM torrents WHERE ((LogScore = 100 AND Format = 'FLAC') OR (Media = 'Vinyl' AND Format = 'FLAC') OR (Media = 'WEB' AND Format = 'FLAC') OR (Media = 'DVD' AND Format = 'FLAC') OR (Media = 'Soundboard' AND Format = 'FLAC') OR (Media = 'Cassette' AND Format = 'FLAC') OR (Media = 'SACD' AND Format = 'FLAC') OR (Media = 'Blu-ray' AND Format = 'FLAC') OR (Media = 'DAT' AND Format = 'FLAC')) AND UserID = '$UserID'");
-	list($PerfectFLACs) = $DB->next_record();
-}
-
 if (check_paranoia_here('seeding+')) {
 	$DB->query("SELECT COUNT(x.uid) FROM xbt_files_users AS x INNER JOIN torrents AS t ON t.ID=x.fid WHERE x.uid='$UserID' AND x.remaining=0");
 	list($Seeding) = $DB->next_record();

@@ -46,10 +46,6 @@ if($GroupVanityHouse){
 	$DisplayName.=' [Vanity House]';
 	$AltName.=' [Vanity House]';
 }
-if($GroupCategoryID == 1) {
-	$DisplayName.=' ['.$ReleaseTypes[$ReleaseType].']';
-	$AltName.=' ['.$ReleaseTypes[$ReleaseType].']';
-}
 
 $Tags = array();
 if ($TorrentTags != '') {
@@ -100,10 +96,7 @@ show_header($Title,'browse,comments,torrent,bbcode');
 		<a href="#" id="bookmarklink_torrent_<?=$GroupID?>" onclick="Unbookmark('torrent', <?=$GroupID?>,'[Bookmark]');return false;">[Remove bookmark]</a>
 <?	} else { ?>
 		<a href="#" id="bookmarklink_torrent_<?=$GroupID?>" onclick="Bookmark('torrent', <?=$GroupID?>,'[Remove bookmark]');return false;">[Bookmark]</a>
-<?	}
-	if($Categories[$GroupCategoryID-1] == 'Music') { ?>
-		<a href="upload.php?groupid=<?=$GroupID?>">[Add format]</a>
-<?	}?>
+<?	} ?>
 	<a href="torrents.php?action=grouplog&amp;groupid=<?=$GroupID?>">[View log]</a>
 	</div>
 
@@ -120,190 +113,12 @@ if ($WikiImage!="") {
 <?
 } else {
 ?>
-			<p align="center"><img src="<?=STATIC_SERVER?>common/noartwork/<?=$CategoryIcons[$GroupCategoryID-1]?>" alt="<?=$Categories[$GroupCategoryID-1]?>" title="<?=$Categories[$GroupCategoryID-1]?>" width="220" height="220" border="0" /></p>
+			<p align="center"><img src="<?=STATIC_SERVER?>common/noartwork/noimage.png" alt="<?=$Categories[$GroupCategoryID-1]?>" title="<?=$Categories[$GroupCategoryID-1]?>" width="220" height="220" border="0" /></p>
 <?
 }
 ?>
 		</div>
-<?
-if($Categories[$GroupCategoryID-1] == 'Music') {
-	$ShownWith = false;
-?>
-		<div class="box box_artists">
-			<div class="head"><strong>Artists</strong>
-			<?=(check_perms('torrents_edit')) ? '<span style="float:right;"><a onclick="ArtistManager(); return false;" href="#">[Edit]</a></span>' : ''?>
-			</div>
-			<ul class="stats nobullet" id="artist_list">
-<?	if(!empty($Artists[4]) && count($Artists[4]) > 0) {
-		print '				<li class="artists_composers"><strong>Composers:</strong></li>';
-		foreach($Artists[4] as $Artist) {
-?>
-				<li class="artists_composers">
-					<?=display_artist($Artist).'&lrm;'?>
-<?			if(check_perms('torrents_edit')){
-				$DB->query("SELECT AliasID FROM artists_alias WHERE ArtistID = ".$Artist['id']." AND ArtistID != AliasID AND Name = '".db_string($Artist['name'])."'");
-				list($AliasID) = $DB->next_record();
-				if (empty($AliasID)) {
-					$AliasID = $Artist['id'];
-				}
-?>
-				&nbsp;(<?=$AliasID?>)&nbsp;
-					<span class="remove_artist"><a href="javascript:void(0);" onclick="ajax.get('torrents.php?action=delete_alias&amp;auth=' + authkey + '&amp;groupid=<?=$GroupID?>&amp;artistid=<?=$Artist['id']?>&amp;importance=4');this.parentNode.parentNode.style.display = 'none';">[X]</a></span>
-<?			} ?>
-				</li>
-<?		}
-	}
-	if (!empty($Artists[6]) && count($Artists[6]) > 0) {
-		print '				<li class="artists_dj"><strong>DJ / Compiler:</strong></li>';
-		foreach($Artists[6] as $Artist) {
-?>
-				<li class="artists_dj">
-					<?=display_artist($Artist).'&lrm;'?>
-<?		      if(check_perms('torrents_edit')){
-			        $DB->query("SELECT AliasID FROM artists_alias WHERE ArtistID = ".$Artist['id']." AND ArtistID != AliasID AND Name = '".db_string($Artist['name'])."'");
-                                list($AliasID) = $DB->next_record();
-                                if (empty($AliasID)) {
-                                        $AliasID = $Artist['id'];
-                                }
-?>
-				&nbsp;(<?=$AliasID?>)&nbsp;
-					<span class="remove_artist"><a href="javascript:void(0);" onclick="ajax.get('torrents.php?action=delete_alias&amp;auth=' + authkey + '&amp;groupid=<?=$GroupID?>&amp;artistid=<?=$Artist['id']?>&amp;importance=6');this.parentNode.parentNode.style.display = 'none';">[X]</a></span>
-<?		      } ?>
-				</li>
-<?
-		}
-	}
-	if ((count($Artists[6]) > 0) && (count($Artists[1]) > 0)) {
-		print '				<li class="artists_main"><strong>Artists:</strong></li>';
-	} elseif ((count($Artists[4]) > 0) && (count($Artists[1]) > 0)) {
-		print '				<li class="artists_main"><strong>Performers:</strong></li>';
-	}
-	foreach($Artists[1] as $Artist) {
-?>
-				<li class="artist_main">
-					<?=display_artist($Artist).'&lrm;'?>
-<?		if(check_perms('torrents_edit')){
-			$AliasID = $Artist['aliasid'];
-			if (empty($AliasID)) {
-				$AliasID = $Artist['id'];
-			}
-?>
-			&nbsp;(<?=$AliasID?>)&nbsp;
-				<span class="remove_artist"><a href="javascript:void(0);" onclick="ajax.get('torrents.php?action=delete_alias&amp;auth=' + authkey + '&amp;groupid=<?=$GroupID?>&amp;artistid=<?=$Artist['id']?>&amp;importance=1');this.parentNode.parentNode.style.display = 'none';">[X]</a></span>
-<?		} ?>
-				</li>
-<?
-	}
-	if(!empty($Artists[2]) && count($Artists[2]) > 0) {
-		print '				<li class="artists_with"><strong>With:</strong></li>';
-		foreach($Artists[2] as $Artist) {
-?>
-				<li class="artist_guest">
-					<?=display_artist($Artist).'&lrm;'?>
-<?			if(check_perms('torrents_edit')){
-				$DB->query("SELECT AliasID FROM artists_alias WHERE ArtistID = ".$Artist['id']." AND ArtistID != AliasID AND Name = '".db_string($Artist['name'])."'");
-				list($AliasID) = $DB->next_record();
-				if (empty($AliasID)) {
-					$AliasID = $Artist['id'];
-				}
-?>
-				&nbsp;(<?=$AliasID?>)&nbsp;
-					<span class="remove_artist"><a href="javascript:void(0);" onclick="ajax.get('torrents.php?action=delete_alias&amp;auth=' + authkey + '&amp;groupid=<?=$GroupID?>&amp;artistid=<?=$Artist['id']?>&amp;importance=2');this.parentNode.parentNode.style.display = 'none';">[X]</a></span>
-<?			} ?>
-				</li>
-<?
-		}
-	}
-	if(!empty($Artists[5]) && count($Artists[5]) > 0) {
-		print '				<li class="artists_conductors"><strong>Conducted by:</strong></li>';
-		foreach($Artists[5] as $Artist) {
-?>
-				<li class="artists_conductors">
-					<?=display_artist($Artist).'&lrm;'?>
-<?			if(check_perms('torrents_edit')){
-				$DB->query("SELECT AliasID FROM artists_alias WHERE ArtistID = ".$Artist['id']." AND ArtistID != AliasID AND Name = '".db_string($Artist['name'])."'");
-				list($AliasID) = $DB->next_record();
-				if (empty($AliasID)) {
-					$AliasID = $Artist['id'];
-				}
-?>
-				&nbsp;(<?=$AliasID?>)&nbsp;
-					<span class="remove_artist"><a href="javascript:void(0);" onclick="ajax.get('torrents.php?action=delete_alias&amp;auth=' + authkey + '&amp;groupid=<?=$GroupID?>&amp;artistid=<?=$Artist['id']?>&amp;importance=5');this.parentNode.parentNode.style.display = 'none';">[X]</a></span>
-<?			} ?>
-				</li>
-<?
-		}
-	}
-	if (!empty($Artists[3]) && count($Artists[3]) > 0) {
-		print '				<li class="artists_remix"><strong>Remixed By:</strong></li>';
-		foreach($Artists[3] as $Artist) {
-?>
-				<li class="artists_remix">
-					<?=display_artist($Artist).'&lrm;'?>
-<?		      if(check_perms('torrents_edit')){
-			        $DB->query("SELECT AliasID FROM artists_alias WHERE ArtistID = ".$Artist['id']." AND ArtistID != AliasID AND Name = '".db_string($Artist['name'])."'");
-                                list($AliasID) = $DB->next_record();
-                                if (empty($AliasID)) {
-                                        $AliasID = $Artist['id'];
-                                }
-?>
-				&nbsp;(<?=$AliasID?>)&nbsp;
-					<span class="remove_artist"><a href="javascript:void(0);" onclick="ajax.get('torrents.php?action=delete_alias&amp;auth=' + authkey + '&amp;groupid=<?=$GroupID?>&amp;artistid=<?=$Artist['id']?>&amp;importance=3');this.parentNode.parentNode.style.display = 'none';">[X]</a></span>
-<?		      } ?>
-				</li>
-<?
-		}
-	}
-	if (!empty($Artists[7]) && count($Artists[7]) > 0) {
-		print '				<li class="artists_producer"><strong>Produced By:</strong></li>';
-		foreach($Artists[7] as $Artist) {
-?>
-				<li class="artists_producer">
-					<?=display_artist($Artist).'&lrm;'?>
-<?		      if(check_perms('torrents_edit')){
-			        $DB->query("SELECT AliasID FROM artists_alias WHERE ArtistID = ".$Artist['id']." AND ArtistID != AliasID AND Name = '".db_string($Artist['name'])."'");
-                                list($AliasID) = $DB->next_record();
-                                if (empty($AliasID)) {
-                                        $AliasID = $Artist['id'];
-                                }
-?>
-				&nbsp;(<?=$AliasID?>)&nbsp;
-					<span class="remove_artist"><a href="javascript:void(0);" onclick="ajax.get('torrents.php?action=delete_alias&amp;auth=' + authkey + '&amp;groupid=<?=$GroupID?>&amp;artistid=<?=$Artist['id']?>&amp;importance=7');this.parentNode.parentNode.style.display = 'none';">[X]</a></span>
-<?		      } ?>
-				</li>
-<?
-		}
-	}
-?>
-			</ul>
-		</div>
-<? 
-		if(check_perms('torrents_add_artist')) { ?>
-		<div class="box box_addartists">
-			<div class="head"><strong>Add artist</strong><span style="float:right;"><a onclick="AddArtistField(); return false;" href="#">[+]</a></span></div>
-			<div class="body">
-				<form action="torrents.php" method="post">
-					<div id="AddArtists">
-						<input type="hidden" name="action" value="add_alias" />
-						<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-						<input type="hidden" name="groupid" value="<?=$GroupID?>" />
-						<input type="text" name="aliasname[]" size="17" />
-						<select name="importance[]">
-							<option value="1">Main</option>
-							<option value="2">Guest</option>
-							<option value="4">Composer</option>
-							<option value="5">Conductor</option>
-							<option value="6">DJ / Compiler</option>
-							<option value="3">Remixer</option>
-							<option value="7">Producer</option>
-						</select>
-					</div>
-					<input type="submit" value="Add" />
-				</form>
-			</div>
-		</div>
-<?		}
-	}?>
+
 		<div class="box box_tags">
 			<div class="head"><strong>Tags</strong></div>
 <?
@@ -461,46 +276,6 @@ $EditionID = 0;
 	if(!empty($LossymasterApproved)) { $ExtraInfo.=$AddExtra.'<strong>Lossy Master Approved</strong>'; $AddExtra=' / '; }
 	if(!empty($BadFiles)) { $ExtraInfo.=$AddExtra.'<strong>Bad File Names</strong>'; $AddExtra=' / '; }
 	
-	if($GroupCategoryID == 1 
-		&& ($RemasterTitle != $LastRemasterTitle
-		|| $RemasterYear != $LastRemasterYear
-		|| $RemasterRecordLabel != $LastRemasterRecordLabel 
-		|| $RemasterCatalogueNumber != $LastRemasterCatalogueNumber
-		|| $FirstUnknown
-		|| $Media != $LastMedia)) {
-		
-		$EditionID++;
-
-		if($Remastered && $RemasterYear != 0){
-		
-			$RemasterName = $RemasterYear;
-			$AddExtra = " - ";
-			if($RemasterRecordLabel) { $RemasterName .= $AddExtra.display_str($RemasterRecordLabel); $AddExtra=' / '; }
-			if($RemasterCatalogueNumber) { $RemasterName .= $AddExtra.display_str($RemasterCatalogueNumber); $AddExtra=' / '; }
-			if($RemasterTitle) { $RemasterName .= $AddExtra.display_str($RemasterTitle); $AddExtra=' / '; }			
-			$RemasterName .= $AddExtra.display_str($Media);
-?>
-			<tr class="releases_<?=$ReleaseType?> groupid_<?=$GroupID?> edition group_torrent">
-				<td colspan="5" class="edition_info"><strong><a href="#" onclick="toggle_edition(<?=$GroupID?>, <?=$EditionID?>, this, event)" title="Collapse this edition">&minus;</a> <?=$RemasterName?></strong></td>
-			</tr>
-<?
-		} else {
-			$AddExtra = " / ";
-			if(!$Remastered) {
-				$MasterName = "Original Release";
-				if($GroupRecordLabel) { $MasterName .= $AddExtra.$GroupRecordLabel; $AddExtra=' / '; }
-				if($GroupCatalogueNumber) { $MasterName .= $AddExtra.$GroupCatalogueNumber; $AddExtra=' / '; }
-			} else {
-				$MasterName = "Unknown Release(s)";
-			}
-			$MasterName .= $AddExtra.display_str($Media);
-?>
-		<tr class="releases_<?=$ReleaseType?> groupid_<?=$GroupID?> edition group_torrent">
-			<td colspan="5" class="edition_info"><strong><a href="#" onclick="toggle_edition(<?=$GroupID?>, <?=$EditionID?>, this, event)" title="Collapse this edition">&minus;</a> <?=$MasterName?></strong></td>
-		</tr>
-<?
-		}
-	}
 	$LastRemasterTitle = $RemasterTitle;
 	$LastRemasterYear = $RemasterYear;
 	$LastRemasterRecordLabel = $RemasterRecordLabel;

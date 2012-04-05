@@ -2,7 +2,7 @@
 
 $Queries = array();
 
-$OrderWays = array('year', 'votes', 'bounty', 'created', 'lastvote', 'filled');
+$OrderWays = array('votes', 'bounty', 'created', 'lastvote', 'filled');
 list($Page,$Limit) = page_limit(REQUESTS_PER_PAGE);
 $Submitted = !empty($_GET['submit']);
 					
@@ -82,7 +82,8 @@ if(!empty($_GET['search'])) {
 }
 
 if(!empty($_GET['tags'])){
-	$Tags = explode(',', $_GET['tags']);
+        $Tags = cleanup_tags($_GET['tags']);
+	$Tags = array_unique(explode(' ', $Tags));
 	$TagNames = array();
 	foreach ($Tags as $Tag) {
 		$Tag = sanitize_tag($Tag);
@@ -109,81 +110,9 @@ if(!empty($_GET['filter_cat'])) {
 	$SS->set_filter('categoryid', $Keys);
 }
 
-if(!empty($_GET['releases'])) {
-	$ReleaseArray = $_GET['releases'];
-	if(count($ReleaseArray) != count($ReleaseTypes)) {
-		foreach($ReleaseArray as $Index => $Value) {
-			if(!is_number($Value)) {
-				error(0);
-			}
-		}
-		
-		$SS->set_filter('releasetype', $ReleaseArray);
-	}
-}
-
-if(!empty($_GET['formats'])) {
-	$FormatArray = $_GET['formats'];
-	if(count($FormatArray) != count($Formats)) {
-		$FormatNameArray = array();
-		foreach($FormatArray as $Index => $MasterIndex) {
-			if(array_key_exists($Index, $Formats)) {
-				$FormatNameArray[$Index] = $Formats[$MasterIndex];
-			} else {
-				//Hax
-				error(0);
-			}
-		}
-		
-		$Queries[]='@formatlist '.implode(' | ', $FormatNameArray);
-	}
-}
-
-if(!empty($_GET['media'])) {
-	$MediaArray = $_GET['media'];
-	if(count($MediaArray) != count($Media)) {
-		$MediaNameArray = array();
-		foreach($MediaArray as $Index => $MasterIndex) {
-			if(array_key_exists($Index, $Media)) {
-				$MediaNameArray[$Index] = $Media[$MasterIndex];
-			} else {
-				//Hax
-				error(0);
-			}
-		}
-
-		$Queries[]='@medialist '.implode(' | ', $MediaNameArray);
-	}
-}
-
-if(!empty($_GET['bitrates'])) {
-	$BitrateArray = $_GET['bitrates'];
-	if(count($BitrateArray) != count($Bitrates)) {
-		$BitrateNameArray = array();
-		foreach($BitrateArray as $Index => $MasterIndex) {
-			if(array_key_exists($Index, $Bitrates)) {
-				$BitrateNameArray[$Index] = $SS->EscapeString($Bitrates[$MasterIndex]);
-			} else {
-				//Hax
-				error(0);
-			}
-		}
-
-		$Queries[]='@bitratelist '.implode(' | ', $BitrateNameArray);
-	}
-}
-
 if(!empty($_GET['requestor']) && check_perms('site_see_old_requests')) {
 	if(is_number($_GET['requestor'])) {
 		$SS->set_filter('userid', array($_GET['requestor']));
-	} else {
-		error(404);
-	}
-}
-
-if(isset($_GET['year'])) {
-	if(is_number($_GET['year']) || $_GET['year'] == 0) {
-		$SS->set_filter('year', array($_GET['year']));
 	} else {
 		error(404);
 	}
@@ -232,9 +161,6 @@ switch($CurrentOrder) {
 		break;
 	case 'filled' :
 		$OrderBy = "TimeFilled";
-		break;
-	case 'year' :
-		$OrderBy = "Year";
 		break;
 	default :
 		$OrderBy = "TimeAdded";
@@ -322,9 +248,9 @@ show_header($Title, 'requests');
 					</td>
 				</tr>
 				<tr>
-					<td class="label">Tags (comma-separated):</td>
+					<td class="label">Tags:</td>
 					<td>
-						<input type="text" name="tags" size="60" value="<?= (!empty($TagNames) ? display_str(implode(', ', $TagNames)) : '') ?>" />&nbsp;
+						<input type="text" name="tags" size="60" value="<?= (!empty($TagNames) ? display_str(implode(' ', $TagNames)) : '') ?>" />&nbsp;
 						<input type="radio" name="tags_type" id="tags_type0" value="0" <?selected('tags_type',0,'checked')?> /><label for="tags_type0"> Any</label>&nbsp;&nbsp;
 						<input type="radio" name="tags_type" id="tags_type1" value="1"  <?selected('tags_type',1,'checked')?> /><label for="tags_type1"> All</label>
 					</td>
@@ -353,79 +279,28 @@ show_header($Title, 'requests');
 			</table>
 			<table class="cat_list">
 <?
-$x=1;
-reset($Categories);
-foreach($Categories as $CatKey => $CatName) {
-	if($x%8==0 || $x==1) {
-?>
-					<tr class="cat_list">
-<?	} ?>
-						<td>
-							<input type="checkbox" name="filter_cat[<?=($CatKey+1)?>]" id="cat_<?=($CatKey+1)?>" value="1" <? if(isset($_GET['filter_cat'][$CatKey+1])) { ?>checked="checked"<? } ?> />
-							<label for="cat_<?=($CatKey+1)?>"><?=$CatName?></label>
-						</td>
-<?
+$x=0;
+reset($NewCategories);
+foreach($NewCategories as $Cat) {
 	if($x%7==0) {
+		if($x > 0) {
 ?>
-					</tr>
+			</tr>
+<?		} ?>
+			<tr>
 <?
 	}
 	$x++;
-}
 ?>
-			</table>
-			<table>
-				<tr id="release_list">
-					<td class="label">Release Types</td>
-					<td>
-						<input type="checkbox" id="toggle_releases" onchange="Toggle('releases', 0)" <?=(!$Submitted || !empty($ReleaseArray) && count($ReleaseArray) == count($ReleaseTypes) ? ' checked="checked"' : '')?>/> <label for="toggle_releases">All</label>
-<?		$i = 0;
-		foreach ($ReleaseTypes as $Key => $Val) {
-			if($i % 8 == 0) echo "<br />";?>
-						<input type="checkbox" name="releases[]" value="<?=$Key?>" id="release_<?=$Key?>"
-							<?=(((!$Submitted) || !empty($ReleaseArray) && in_array($Key, $ReleaseArray)) ? ' checked="checked" ' : '')?>
-						/> <label for="release_<?=$Key?>"><?=$Val?></label>
-<?			$i++;
-		}?>
-					</td>
-				</tr>
-				<tr id="format_list">
-					<td class="label">Formats</td>
-					<td>
-						<input type="checkbox" id="toggle_formats" onchange="Toggle('formats', 0);" <?=(!$Submitted || !empty($FormatArray) && count($FormatArray) == count($Formats) ? ' checked="checked"' : '')?>/> <label for="toggle_formats">All</label>
-<?		foreach ($Formats as $Key => $Val) {
-			if($Key % 8 == 0) echo "<br />";?>
-						<input type="checkbox" name="formats[]" value="<?=$Key?>" id="format_<?=$Key?>"
-							<?=(((!$Submitted) || !empty($FormatArray) && in_array($Key, $FormatArray)) ? ' checked="checked" ' : '')?>
-						/> <label for="format_<?=$Key?>"><?=$Val?></label>
-<?		}?>
-					</td>
-				</tr>				
-				<tr id="bitrate_list">
-					<td class="label">Bitrates</td>
-					<td>
-						<input type="checkbox" id="toggle_bitrates" onchange="Toggle('bitrates', 0);"<?=(!$Submitted || !empty($BitrateArray) && count($BitrateArray) == count($Bitrates) ? ' checked="checked"' : '')?> /> <label for="toggle_bitrates">All</label>
-<?		foreach ($Bitrates as $Key => $Val) {
-			if($Key % 8 == 0) echo "<br />";?>
-						<input type="checkbox" name="bitrates[]" value="<?=$Key?>" id="bitrate_<?=$Key?>"
-							<?=(((!$Submitted) || !empty($BitrateArray) && in_array($Key, $BitrateArray)) ? ' checked="checked" ' : '')?>
-						/> <label for="bitrate_<?=$Key?>"><?=$Val?></label>
-<?		}?>
-					</td>
-				</tr>
-				<tr id="media_list">
-					<td class="label">Media</td>
-					<td>
-						<input type="checkbox" id="toggle_media" onchange="Toggle('media', 0);"<?=(!$Submitted || !empty($MediaArray) && count($MediaArray) == count($Media) ? ' checked="checked"' : '')?> /> <label for="toggle_media">All</label>
-<?		foreach ($Media as $Key => $Val) {
-			if($Key % 8 == 0) echo "<br />";?>
-						<input type="checkbox" name="media[]" value="<?=$Key?>" id="media_<?=$Key?>"
-							<?=(((!$Submitted) || !empty($MediaArray) && in_array($Key, $MediaArray)) ? ' checked="checked" ' : '')?>
-						/> <label for="media_<?=$Key?>"><?=$Val?></label>
-<?		}?>
-					</td>
-				</tr>
-			</table>
+				<td>
+					<input type="checkbox" name="filter_cat[<?=($Cat['id'])?>]" id="cat_<?=($Cat['id'])?>" value="1" <? if(isset($_GET['filter_cat'][$Cat['id']])) { ?>checked="checked"<? } ?>/>
+					<label for="cat_<?=($Cat['id'])?>"><?=$Cat['name']?></label>
+				</td>
+<?}?>                           
+                                <td colspan="<?=7-($x%7)?>"></td>
+                        </tr>
+        		</table>
+
 			<table>
 				<tr>
 					<td colspan="2" class="center">
@@ -442,7 +317,7 @@ foreach($Categories as $CatKey => $CatName) {
 	<table id="request_table" cellpadding="6" cellspacing="1" border="0" class="border" width="100%">
 		<tr class="colhead_dark">
 			<td style="width: 38%;" class="nobr">
-				<strong>Request Name</strong> / <a href="?order=year&amp;sort=<?=(($CurrentOrder == 'year') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>"><strong>Year</strong></a>
+				<strong>Request Name</strong>
 			</td>
 			<td class="nobr">
 				<a href="?order=votes&amp;sort=<?=(($CurrentOrder == 'votes') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>"><strong>Votes</strong></a>

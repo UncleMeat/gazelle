@@ -170,7 +170,6 @@ if(!empty($_GET['filter'])) {
 			$ExtraWhere .= " AND t.LogScore = 100";
 		}
 	} elseif($_GET['filter'] == "uniquegroup") {
-		if (!check_paranoia('uniquegroups', $User['Paranoia'], $UserClass, $UserID)) { error(403); }
 		$GroupBy = "tg.ID";
 	}
 }

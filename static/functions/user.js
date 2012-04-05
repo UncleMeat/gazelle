@@ -45,8 +45,6 @@ function AlterParanoia() {
 	$('input[name=p_requestsfilled_list]').raw().disabled = !($('input[name=p_requestsfilled_count]').raw().checked && $('input[name=p_requestsfilled_bounty]').raw().checked);
 	$('input[name=p_requestsvoted_list]').raw().disabled = !($('input[name=p_requestsvoted_count]').raw().checked && $('input[name=p_requestsvoted_bounty]').raw().checked);
 	$('input[name=p_uploads_l]').raw().disabled = !$('input[name=p_uploads_c]').raw().checked;
-	$('input[name=p_uniquegroups_l]').raw().disabled = !$('input[name=p_uniquegroups_c]').raw().checked;
-	$('input[name=p_perfectflacs_l]').raw().disabled = !$('input[name=p_perfectflacs_c]').raw().checked;
 	$('input[name=p_seeding_l]').raw().disabled = !$('input[name=p_seeding_c]').raw().checked;
 	$('input[name=p_leeching_l]').raw().disabled = !$('input[name=p_leeching_c]').raw().checked;
 	$('input[name=p_snatched_l]').raw().disabled = !$('input[name=p_snatched_c]').raw().checked;
@@ -55,29 +53,14 @@ function AlterParanoia() {
 	UncheckIfDisabled($('input[name=p_requestsfilled_list]').raw());
 	UncheckIfDisabled($('input[name=p_requestsvoted_list]').raw());
 	UncheckIfDisabled($('input[name=p_uploads_l]').raw());
-	UncheckIfDisabled($('input[name=p_uniquegroups_l]').raw());
-	UncheckIfDisabled($('input[name=p_perfectflacs_l]').raw());
 	UncheckIfDisabled($('input[name=p_seeding_l]').raw());
 	UncheckIfDisabled($('input[name=p_leeching_l]').raw());
 	UncheckIfDisabled($('input[name=p_snatched_l]').raw());
 	
-	// unique groups, "Perfect" FLACs and artists added are deducible from the list of uploads
 	if ($('input[name=p_uploads_l]').raw().checked) {
-		$('input[name=p_uniquegroups_c]').raw().checked = true;
-		$('input[name=p_uniquegroups_l]').raw().checked = true;
-		$('input[name=p_uniquegroups_c]').raw().disabled = true;
-		$('input[name=p_uniquegroups_l]').raw().disabled = true;			
-		$('input[name=p_perfectflacs_c]').raw().checked = true;
-		$('input[name=p_perfectflacs_l]').raw().checked = true;
-		$('input[name=p_perfectflacs_c]').raw().disabled = true;
-		$('input[name=p_perfectflacs_l]').raw().disabled = true;			
 		$('input[type=checkbox][name=p_artistsadded]').raw().checked = true;
 		$('input[type=checkbox][name=p_artistsadded]').raw().disabled = true;
 	} else {
-		$('input[name=p_uniquegroups_c]').raw().disabled = false;
-		$('input[name=p_uniquegroups_l]').raw().checked = false;
-		$('input[name=p_uniquegroups_l]').raw().disabled = true;
-		$('input[name=p_perfectflacs_c]').raw().disabled = false;
 		$('input[type=checkbox][name=p_artistsadded]').raw().disabled = false;
 	}
 	if ($('input[name=p_collagecontribs_l]').raw().checked) {

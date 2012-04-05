@@ -311,7 +311,6 @@ if(empty($Properties['GroupID']) && empty($ArtistForm) && $Type == "Music") {
 
 
 if($Err) { // Show the upload form, with the data the user entered
-	$UploadForm=$Type;
 	include(SERVER_ROOT.'/sections/upload/upload.php');
 	die();
 }
