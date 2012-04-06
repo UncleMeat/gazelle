@@ -55,7 +55,6 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		i.DisableForums,
 		i.DisableTagging,
 		i.DisableUpload,
-		i.DisableWiki,
 		i.DisablePM,
 		i.DisableIRC,
 		i.DisableRequests,
@@ -73,7 +72,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username,	$Email,	$LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Artist, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisableWiki, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash) = $DB->next_record(MYSQLI_NUM, array(8,11));
+	list($Username,	$Email,	$LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Artist, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash) = $DB->next_record(MYSQLI_NUM, array(8,11));
 } else { // Person viewing is a normal user
 	$DB->query("SELECT
 		m.Username,
@@ -969,14 +968,6 @@ if (check_perms('users_mod', $Class)) { ?>
 			</tr>
 <?
 	}
-	if (check_perms('users_promote_below') || check_perms('users_promote_to')) {
-?>
-			<tr>
-				<td class="label">Artist:</td>
-				<td><input type="checkbox" name="Artist" <? if ($Artist == 1) { ?>checked="checked" <? } ?> /></td>
-			</tr>
-<?
-	}
 	if (check_perms('users_make_invisible')) {
 ?>
 			<tr>
@@ -1053,20 +1044,6 @@ if (check_perms('users_mod', $Class)) { ?>
 <?
 	}
 
-	if (check_perms('users_mod')) {
-?>
-		<tr>
-			<td class="label">Reset all EAC v0.95 Logs To:</td>
-			<td>
-				<select name="095logs">
-					<option value=""></option>
-					<option value="99">99</option>
-					<option value="100">100</option>
-				</select>
-			</td>
-		</tr>
-<?	}
-
 	if (check_perms('users_edit_password')) {
 ?>
 			<tr>
@@ -1142,8 +1119,7 @@ if (check_perms('users_mod', $Class)) { ?>
 					<input type="checkbox" name="DisableTagging" id="DisableTagging"<? if ($DisableTagging==1) { ?>checked="checked"<? } ?> /> <label for="DisableTagging">Tagging</label> |
 					<input type="checkbox" name="DisableRequests" id="DisableRequests"<? if ($DisableRequests==1) { ?>checked="checked"<? } ?> /> <label for="DisableRequests">Requests</label>
 					<br />
-					 <input type="checkbox" name="DisableUpload" id="DisableUpload"<? if ($DisableUpload==1) { ?>checked="checked"<? } ?> /> <label for="DisableUpload">Upload</label> |
-					<input type="checkbox" name="DisableWiki" id="DisableWiki"<? if ($DisableWiki==1) { ?>checked="checked"<? } ?> /> <label for="DisableWiki">Wiki</label> |
+					<input type="checkbox" name="DisableUpload" id="DisableUpload"<? if ($DisableUpload==1) { ?>checked="checked"<? } ?> /> <label for="DisableUpload">Upload</label> |
 					<input type="checkbox" name="DisableLeech" id="DisableLeech"<? if ($DisableLeech==0) { ?>checked="checked"<? } ?> /> <label for="DisableLeech">Leech</label> |
 					<input type="checkbox" name="DisablePM" id="DisablePM"<? if ($DisablePM==1) { ?>checked="checked"<? } ?> /> <label for="DisablePM">PM</label> |
 					<input type="checkbox" name="DisableIRC" id="DisableIRC"<? if ($DisableIRC==1) { ?>checked="checked"<? } ?> /> <label for="DisableIRC">IRC</label>

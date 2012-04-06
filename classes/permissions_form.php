@@ -81,6 +81,7 @@
 	'torrents_freeleech' => 'Can make torrents freeleech.',
 	'torrents_search_fast' => 'Rapid search (for scripts).',
 	'torrents_hide_dnu' => 'Hide the Do Not Upload list by default.',
+        'admin_manage_categories' => 'Can manage categories.',
 	'admin_manage_news' => 'Can manage news.',
 	'admin_manage_blog' => 'Can manage blog.',
 	'admin_manage_polls' => 'Can manage polls.',
@@ -235,6 +236,7 @@ function permissions_form(){ ?>
 			</tr>
 			<tr>
 				<td>
+                                        <? display_perm('admin_manage_categories', 'Can manage categories.'); ?>
 					<? display_perm('admin_manage_news', 'Can manage news'); ?>
 					<? display_perm('admin_manage_blog', 'Can manage blog'); ?>
 					<? display_perm('admin_manage_polls', 'Can manage polls'); ?>

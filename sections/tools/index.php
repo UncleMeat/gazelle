@@ -105,7 +105,15 @@ switch ($_REQUEST['action']){
 	case 'dnu_alter':
 		include('managers/dnu_alter.php');
 		break;
-
+       
+        case 'categories':
+                include('managers/categories_list.php');
+                break;
+       
+        case 'categories_alter':
+                include('managers/categories_alter.php');
+                break;
+        
 	case 'editnews':
 	case 'news':
 		include('managers/news.php');

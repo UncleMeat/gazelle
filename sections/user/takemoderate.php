@@ -23,13 +23,11 @@ $Username = db_string($_POST['Username']);
 $Title = db_string($_POST['Title']);
 $AdminComment = db_string($_POST['AdminComment']);
 $Donor = (isset($_POST['Donor']))? 1 : 0;
-$Artist = (isset($_POST['Artist']))? 1 : 0;
 $Visible = (isset($_POST['Visible']))? 1 : 0;
 $Invites = (int)$_POST['Invites'];
 $SupportFor = db_string($_POST['SupportFor']);
 $Pass = db_string($_POST['ChangePassword']);
 $Warned = (isset($_POST['Warned']))? 1 : 0;
-$Logs095 = (int)$_POST['095logs']; 
 if(isset($_POST['Uploaded']) && isset($_POST['Downloaded'])) {
 	$Uploaded = ($_POST['Uploaded']  == "" ? 0 : $_POST['Uploaded']);
 	if($Arithmetic = strpbrk($Uploaded, '+-')) {
@@ -58,7 +56,6 @@ $DisablePosting = (isset($_POST['DisablePosting']))? 1 : 0;
 $DisableForums = (isset($_POST['DisableForums']))? 1 : 0;
 $DisableTagging = (isset($_POST['DisableTagging']))? 1 : 0;
 $DisableUpload = (isset($_POST['DisableUpload']))? 1 : 0;
-$DisableWiki = (isset($_POST['DisableWiki']))? 1 : 0;
 $DisablePM = (isset($_POST['DisablePM']))? 1 : 0;
 $DisableIRC = (isset($_POST['DisableIRC']))? 1 : 0;
 $DisableRequests = (isset($_POST['DisableRequests']))? 1 : 0;
@@ -113,7 +110,6 @@ $DB->query("SELECT
 	DisableForums,
 	DisableTagging,
 	DisableUpload,
-	DisableWiki,
 	DisablePM,
 	DisableIRC,
 	m.RequiredRatio,
@@ -217,26 +213,6 @@ if (($_POST['ResetSession'] || $_POST['LogOut']) && check_perms('users_logout'))
 	}
 }
 
-if ($Logs095 !== 0) {
-	$TargetScore = $Logs095 === 100 ? 99 : 100;
-	$Logs = $DB->query("SELECT DISTINCT TorrentID FROM torrents_logs_new JOIN torrents ON ID = TorrentID WHERE Log LIKE 'EAC extraction logfile%' AND UserID = ".$UserID." AND Score = ".$TargetScore." AND (Adjusted = '0' OR Adjusted = '')");
-	while (list($TorrentID) = $DB->next_record()) {
-		$Results = array();
-		if ($Logs095 === 100) {
-			$Details = "";
-		} else {
-			$Results[] = "The original uploader has chosen to allow this log to be deducted one point for using EAC v0.95., -1 point [1]";
-			$Details = db_string(serialize($Results));
-		}
-
-		$DB->query("UPDATE torrents SET LogScore = ".$Logs095." WHERE ID = ".$TorrentID);
-		$DB->query("UPDATE torrents_logs_new SET Score = ".$Logs095.", Details = '".$Details."' WHERE TorrentID = ".$TorrentID);
-		$DB->set_query_id($Logs);
-	}
-	$EditSummary[] = 'EAC v0.95 logs rescored to '.$Logs095;
-}
-
-
 
 // Start building SQL query and edit summary
 if ($Classes[$Class]['Level']!=$Cur['Class'] && (
@@ -286,18 +262,6 @@ if ($Donor!=$Cur['Donor']  && check_perms('users_give_donor')) {
 	$UpdateSet[]="Donor='$Donor'";
 	$EditSummary[]="donor status changed";
 	$LightUpdates['Donor']=$Donor;
-}
-
-if ($Artist!=$Cur['Artist']  && (check_perms('users_promote_below') || check_perms('users_promote_to'))) {
-	$UpdateSet[]="Artist='$Artist'";
-	$EditSummary[]="artist status changed";
-	$LightUpdates['Artist']=$Artist;
-	if($Artist == 1) {
-		send_pm($UserID, 0, db_string("Artist Class"), db_string("Hi,\n\nCongratulations on your promotion to the artist class. 
-			To add a recommendation, please go to [url=http://".NONSSL_SITE_URL."/tools.php?action=recommend]this tool[/url] (for the first time, you may have to go to [url=http://".NONSSL_SITE_URL."/tools.php?action=recommend&resetsession=1]this link[/url]) instead.
-			Please only recommend albums that you created yourself, or albums where you officially represent the artist in question.
-			\n\nThanks,\n	".SITE_NAME." staff"),'');
-	}
 }
 
 
@@ -463,17 +427,6 @@ if ($DisableUpload!=$Cur['DisableUpload'] && check_perms('users_disable_any')) {
 	if ($DisableUpload == 1) {
 		send_pm($UserID, 0, db_string('Your upload privileges have been disabled'),db_string("Your upload privileges have been disabled. The reason given was: $UserReason. If you would like to discuss this please join ".BOT_DISABLED_CHAN." on our IRC network. Instructions can be found [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&name=IRC+-+How+to+join]here[/url]."));
 	}
-}
-
-if ($DisableWiki!=$Cur['DisableWiki'] && check_perms('users_disable_any')) {
-	$UpdateSet[]="DisableWiki='$DisableWiki'";
-	$EditSummary[]="wiki status changed";	
-	$HeavyUpdates['DisableWiki']=$DisableWiki;
-	$HeavyUpdates['site_edit_wiki']=0;
-	if (!empty($UserReason)) {
-		send_pm($UserID, 0, db_string('Your site editing privileges have been disabled'),db_string("Your site editing privileges have been disabled. The reason given was: $UserReason. If you would like to discuss this please join ".BOT_DISABLED_CHAN." on our IRC network. Instructions can be found [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&name=IRC+-+How+to+join]here[/url]."));
-	}
-	
 }
 
 if ($DisablePM!=$Cur['DisablePM'] && check_perms('users_disable_any')) {

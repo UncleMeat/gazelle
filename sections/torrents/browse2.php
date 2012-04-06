@@ -222,37 +222,6 @@ foreach (array('artistname', 'groupname', 'recordlabel', 'cataloguenumber',
     }
 }
 
-if (!empty($_GET['year'])) {
-    $Years = explode('-', $_GET['year']);
-    if (is_number($Years[0]) || (empty($Years[0]) && !empty($Years[1]) && is_number($Years[1]))) {
-        if (count($Years) == 1) {
-            $SS->set_filter('year', array((int) $Years[0]));
-        } else {
-            if (empty($Years[1]) || !is_number($Years[1])) {
-                $Years[1] = PHP_INT_MAX;
-            } elseif ($Years[0] > $Years[1]) {
-                $Years = array_reverse($Years);
-            }
-            $SS->set_filter_range('year', (int) $Years[0], (int) $Years[1]);
-        }
-    }
-}
-if (!empty($_GET['encoding'])) {
-    $Queries[] = '@encoding "' . $SS->EscapeString($_GET['encoding']) . '"'; // Note the quotes, for 24bit lossless
-}
-
-if (isset($_GET['haslog']) && $_GET['haslog'] !== '') {
-    if ($_GET['haslog'] == 100) {
-        $SS->set_filter('logscore', array(100));
-    } elseif ($_GET['haslog'] < 0) {
-        // Exclude torrents with log score equal to 100 
-        $SS->set_filter('logscore', array(100), true);
-        $SS->set_filter('haslog', array(1));
-    } else {
-        $SS->set_filter('haslog', array(1));
-    }
-}
-
 foreach (array('hascue', 'scene', 'vanityhouse', 'freetorrent', 'releasetype') as $Search) {
     if (isset($_GET[$Search]) && $_GET[$Search] !== '') {
         if ($Search == 'freetorrent') {
@@ -425,7 +394,6 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                     <td colspan="<?= ($AdvancedSearch) ? '3' : '1' ?>">
                         <select name="order_by" style="width:auto;">
                             <option value="time"<? selected('order_by', 'time') ?>>Time added</option>
-                            <option value="year"<? selected('order_by', 'year') ?>>Year</option>
                             <option value="size"<? selected('order_by', 'size') ?>>Size</option>
                             <option value="snatched"<? selected('order_by', 'snatched') ?>>Snatched</option>
                             <option value="seeders"<? selected('order_by', 'seeders') ?>>Seeders</option>
