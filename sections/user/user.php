@@ -114,6 +114,13 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(9,11));
 }
 
+
+if (empty($Avatar)){
+    //$Avatar = "http://".NONSSL_SITE_URL."/sections/image/default_avatar.gif"; 
+    $Avatar = "http://".NONSSL_SITE_URL."/static/common/avatars/default.png";
+}
+
+
 // Image proxy CTs
 $DisplayCustomTitle = $CustomTitle;
 if(check_perms('site_proxy_images') && !empty($CustomTitle)) {
