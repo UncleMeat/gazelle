@@ -113,13 +113,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 
 	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(9,11));
 }
-
-
-if (empty($Avatar)){
-    //$Avatar = "http://".NONSSL_SITE_URL."/sections/image/default_avatar.gif"; 
-    $Avatar = "http://".NONSSL_SITE_URL."/static/common/avatars/default.png";
-}
-
+ 
 
 // Image proxy CTs
 $DisplayCustomTitle = $CustomTitle;
@@ -197,17 +191,21 @@ if (check_perms('users_mod')) {
 		[<a href="userhistory.php?action=token_history&amp;userid=<?=$UserID?>">FL Tokens</a>]
 <? } ?>
 	</div>
-
+      
 	<div class="sidebar">
-<?	if ($Avatar && empty($HeavyInfo['DisableAvatars'])) {
+<?	if (empty($HeavyInfo['DisableAvatars'])) {
 		if(check_perms('site_proxy_images') && !empty($Avatar)) {
 			$Avatar = 'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?c=1&avatar='.$UserID.'&i='.urlencode($Avatar);
-		}
-?>
+		}  
+?> 
 		<div class="box">
 			<div class="head colhead_dark">Avatar</div>
-			<div align="center"><img src="<?=display_str($Avatar)?>" width="150" style="max-height:400px;" alt="<?=$Username?>'s avatar" /></div>
-		</div>
+			<div align="center"><? if ($Avatar) { ?>
+                                        <img src="<?=$Avatar?>" width="150" style="max-height:400px;" alt="<?=$Username ?>'s avatar" />
+                                      <? } else { ?>
+                                                  <img src="<?=STATIC_SERVER?>common/avatars/default.png" width="150" alt="Default avatar" />
+                                      <? } ?></div>
+            </div>
 <? } ?>
 		<div class="box">
 			<div class="head colhead_dark">Stats</div>
@@ -1207,7 +1205,7 @@ if (check_perms('users_mod', $Class)) { ?>
 			<tr>
 				<td class="label">Reason:</td>
 				<td>
-				   <textarea rows="1" cols="50" name="Reason" id="Reason" onkeyup="resize('Reason');"></textarea>
+				   <textarea rows="8" class="long" name="Reason" id="Reason" onkeyup="resize('Reason');"></textarea>
 				</td>
 			</tr>
 

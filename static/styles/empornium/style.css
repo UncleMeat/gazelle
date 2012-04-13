@@ -490,13 +490,13 @@ td.colhead, .colhead td {
 td.label {
     font-weight: bold;
     text-align: right;
-    width: 120px;
+    width: 100px;
 }
  
 
-input.long { 
+.long { 
     text-align: left;
-    width: 96%;
+    width: 98%;
 }
 
 table.slice {
