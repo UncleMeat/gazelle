@@ -73,33 +73,165 @@ class VALIDATE {
 					if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=10; }
 
 					if(!preg_match('/^(https?):\/\/([a-z0-9\-\_]+\.)+([a-z]{1,5}[^\.])(\/[^<>]+)*$/i', $ValidateVar)) { return $Field['ErrorMessage']; }
-					elseif(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
-					elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
+					elseif(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']." (must be < $MaxLength)"; }
+					elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']." (must be > $MinLength)"; }
 
 				} elseif($Field['Type']=="username") {
-					if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=20; }
-					if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
+                                if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=20; }
+                                if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
 
-					if(preg_match('/[^a-z0-9_\-?]/i', $ValidateVar)) { return $Field['ErrorMessage']; }
-					elseif(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
-					elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
+                                if(preg_match('/[^a-z0-9_\-?]/i', $ValidateVar)) { return $Field['ErrorMessage']; }
+                                elseif(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
+                                elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
 
 				} elseif($Field['Type']=="checkbox") {
-					if(!isset($ValidateArray[$FieldKey])) { return $Field['ErrorMessage']; }
+                                if(!isset($ValidateArray[$FieldKey])) { return $Field['ErrorMessage']; }
 
 				} elseif($Field['Type']=="compare") {
-					if($ValidateArray[$Field['CompareField']]!=$ValidateVar) { return $Field['ErrorMessage']; }
+                                if($ValidateArray[$Field['CompareField']]!=$ValidateVar) { return $Field['ErrorMessage']; }
 
 				} elseif($Field['Type']=="inarray") {
-					if(array_search($ValidateVar, $Field['InArray'])===false) { return $Field['ErrorMessage']; }
+                                if(array_search($ValidateVar, $Field['InArray'])===false) { return $Field['ErrorMessage']; }
 
 				} elseif($Field['Type']=="regex") {
-					if(!preg_match($Field['Regex'], $ValidateVar)) { return $Field['ErrorMessage']; }
-				}
-			}
-		} // while
+                                if(!preg_match($Field['Regex'], $ValidateVar)) { return $Field['ErrorMessage']; }
+                         
+                                
+                                
+				} elseif($Field['Type']=="image") {
+                            
+                            // Validate an imageurl : 1) valid url form 2)length 3)whilelist
+                                // Get parameters to validate against from fields set  
+                                if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
+                                if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=10; }
+
+                                if(isset($Field['Regex'])) { $WLRegex=$Field['Regex']; } else { $WLRegex='/nohost.com/'; }
+                              
+                                // get validation result
+                                $result = $this->ValidateImageUrl($ValidateVar, $MinLength, $MaxLength, $WLRegex); 
+                                if ($result !== TRUE){ return $result; } 
+                              
+                              
+                         
+				} elseif($Field['Type']=="desc") {
+                        
+                                // desc Type gets 3 checks for the price of one 
+                                // 1)desc length 2)imglink as valid url 3)imglinks against whitelist
+                                // this kind of breaks the pattern of this class but screw it... 
+                                // we will hardcode changes to return messages as this class matches fields by 
+                                // name (so one check per field only) and I dont want to redesign it
+                            
+                                if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
+                                if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
+
+                                if(strlen($ValidateVar)>$MaxLength) { 
+                                    $Field['ErrorMessage'] =  "Your description must be less than $MaxLength characters long.";  
+                                    return $Field['ErrorMessage'];
+                                }
+                                elseif(strlen($ValidateVar)<$MinLength) { 
+                                    $Field['ErrorMessage'] =  "Your description must be more than $MinLength characters long.";  
+                                    return $Field['ErrorMessage'];
+                                }
+                              
+                              
+                                //  Check image urls inside the desc text against the whitelist.
+                                //  the whitelist is set inside the $Field['Regex'] var (in options arrary in ->SetFields)
+                            
+                                if(isset($Field['Regex'])) { $WLRegex=$Field['Regex']; } else { $WLRegex='/nohost.com/'; }
+                              
+                                // get all the image urls in the field ; inside [img][/img] 
+                                $num = preg_match_all('#\[img\](.*?)\[/img\]#ism', $ValidateVar, $imageurls);
+                            
+                                if($num) { // if there are no img tags then it validates 
+                                    for ($j=0;$j<$num;$j++) {  
+                                         // validate each image url  
+                                         // (for the moment use hardcoded image lengths but ideally they should
+                                         // probably be taken from some new option fields).
+                                        $result = $this->ValidateImageUrl($imageurls[1][$j], 12, 255, $WLRegex); 
+                                        if ($result !== TRUE){ return $result; } 
+                                     }
+                                } /*else {  // if there are no img tags then it validates unless required flag is set
+                                    if (!empty($Field['Required'])) {   
+                                        // this kind of breaks the pattern of this class but screw it... 
+                                        // we will hardcode a change to return message to avoid having to do the 
+                                        // preg_match_all(regex) again or adding another return msg variable
+                                        $Field['ErrorMessage'] = "You are required to have screenshots for every scene";
+                                        return $Field['ErrorMessage'];
+                                    } 
+                                }*/
+                        
+                        }
+			}  // if (dovalidation)
+		} // foreach
 	} // function
 
+     
+     
+     
+     /* --------------------------------
+      * Validates the passed imageurl with the passed parameters
+        Returns TRUE if it validates and a user readable error message if it fails 
+      ----------------------------------- */
+     private function ValidateImageUrl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
+          
+        $ErrorMessage = "$Imageurl is not a valid url.";
+                                  
+        if(!preg_match('/^(https?):\/\/([a-z0-9\-\_]+\.)+([a-z]{1,5}[^\.])(\/[^<>]+)*$/i', $Imageurl)) {  
+            return $ErrorMessage;  
+        } 
+        elseif(strlen($Imageurl)>$MaxLength) { 
+            return "$ErrorMessage (must be < $MaxLength)";  
+        }
+        elseif(strlen($Imageurl)<$MinLength) { 
+            return "$ErrorMessage (must be > $MinLength)";  
+        } 
+        elseif(!preg_match($WhitelistRegex, $Imageurl)) { 
+            return "$Imageurl is not on an approved pichost."; 
+        }
+        else { // hooray it validated
+            return TRUE;
+        }
+     }
+   
+     
+     
+     
+     
+     /* --------------------------------
+      * Returns a regex string in the form '/imagehost.com|otherhost.com|imgbox.com/i'
+       for fast whitelist checking
+      ----------------------------------- */
+     function GetWhitelistRegex() {
+           /*  wont work because we need to preg escape the host names
+        $DB->query("SELECT 
+                   GROUP_CONCAT(w.Imagehost SEPARATOR '|') AS Whitelist 
+                   FROM imagehost_whitelist as w");
+		*/
+        global $DB; 
+        $DB->query("SELECT w.Imagehost
+                      FROM imagehost_whitelist as w");  
+        if($DB->record_count()>0) {
+            $pattern = '@'; 
+            $div = '';
+            while(list($host)=$DB->next_record()){
+                $pattern .= $div . preg_quote($host, '@');
+                $div = '|';
+            } 
+            $pattern .= '@i'; 
+         }  else  {
+             $pattern = '/nohost.com/i';
+         }
+         
+         return $pattern; 
+     }
+     
+     
+     
+     
+     
+     
+     
+     
 	function GenerateJS($FormID) {
 		$ReturnJS="<script type=\"text/javascript\" language=\"javascript\">\r\n";
 		$ReturnJS.="//<![CDATA[\r\n";
