@@ -942,7 +942,7 @@ if (check_perms('users_mod', $Class)) { ?>
 ?>
 			<tr>
 				<td class="label">CustomTitle:</td>
-				<td><input type="text" size="50" name="Title" value="<?=display_str($CustomTitle)?>" /></td>
+				<td><input class="long" type="text" name="Title" value="<?=display_str($CustomTitle)?>" /></td>
 			</tr>
 <?
 	}
@@ -1003,7 +1003,7 @@ if (check_perms('users_mod', $Class)) { ?>
 			<tr>
 				<td class="label">Merge Stats <strong>From:</strong></td>
 				<td>
-					<input type="text" size="40" name="MergeStatsFrom" />
+					<input class="long" type="text" name="MergeStatsFrom" />
 				</td>
 			</tr>
 			<tr>
@@ -1028,7 +1028,7 @@ if (check_perms('users_mod', $Class)) { ?>
 ?>
 			<tr>
 				<td class="label">First Line Support:</td>
-				<td><input type="text" size="50" name="SupportFor" value="<?=display_str($SupportFor)?>" /></td>
+				<td><input class="long" type="text" name="SupportFor" value="<?=display_str($SupportFor)?>" /></td>
 			</tr>
 <?
 	}
@@ -1056,7 +1056,7 @@ if (check_perms('users_mod', $Class)) { ?>
 			<tr>
 				<td class="label">New Password:</td>
 				<td>
-					<input type="text" size="30" id="change_password" name="ChangePassword" />
+					<input class="long" type="text" id="change_password" name="ChangePassword" />
 				</td>
 			</tr>
 <?	} ?>
@@ -1103,7 +1103,7 @@ if (check_perms('users_mod', $Class)) { ?>
 			<tr>
 				<td class="label">Reason:</td>
 				<td>
-					<input type="text" size="60" name="WarnReason" />
+					<input class="long" type="text" name="WarnReason" />
 				</td>
 			</tr>
 <?	} ?>
@@ -1170,19 +1170,19 @@ if (check_perms('users_mod', $Class)) { ?>
 			<tr>
 				<td class="label">User Reason:</td>
 				<td>
-					<input type="text" size="60" name="UserReason" />
+					<input class="long" type="text" name="UserReason" />
 				</td>
 			</tr>
 			<tr>
 				<td class="label">Restricted Forums (comma-delimited):</td>
 				<td>
-						<input type="text" size="60" name="RestrictedForums" value="<?=display_str($RestrictedForums)?>" />
+                            <input class="long" type="text" name="RestrictedForums" value="<?=display_str($RestrictedForums)?>" />
 				</td>
 			</tr>
 			<tr>
 				<td class="label">Extra Forums (comma-delimited):</td>
 				<td>
-						<input type="text" size="60" name="PermittedForums" value="<?=display_str($PermittedForums)?>" />
+                            <input class="long" type="text" name="PermittedForums" value="<?=display_str($PermittedForums)?>" />
 				</td>
 			</tr>
 
@@ -1207,7 +1207,7 @@ if (check_perms('users_mod', $Class)) { ?>
 			<tr>
 				<td class="label">Reason:</td>
 				<td>
-					<textarea rows="1" cols="50" name="Reason" id="Reason" onkeyup="resize('Reason');"></textarea>
+				   <textarea rows="1" cols="50" name="Reason" id="Reason" onkeyup="resize('Reason');"></textarea>
 				</td>
 			</tr>
 
