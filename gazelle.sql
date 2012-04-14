@@ -677,6 +677,7 @@ INSERT INTO `group_log` (`ID`, `GroupID`, `TorrentID`, `UserID`, `Info`, `Time`,
 CREATE TABLE IF NOT EXISTS `imagehost_whitelist` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
   `Imagehost` varchar(255) NOT NULL,
+  `Link` varchar(255) NOT NULL,
   `Comment` varchar(255) NOT NULL,
   `UserID` int(10) NOT NULL,
   `Time` datetime NOT NULL,

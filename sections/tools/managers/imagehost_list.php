@@ -5,6 +5,7 @@ show_header('Manage imagehost whitelist');
 $DB->query("SELECT 
 	w.ID,
 	w.Imagehost, 
+	w.Link, 
 	w.Comment, 
 	w.UserID, 
 	um.Username, 
@@ -17,12 +18,13 @@ $DB->query("SELECT
 <div>
 <table>
 	<tr class="colhead">
-		<td>Imagehost</td>
-		<td>Comment</td>
-		<td>Added</td>
-		<td width="120">Submit</td>
+		<td width="25%">Imagehost</td>
+		<td width="20%">Link</td>
+		<td width="30%">Comment</td>
+		<td width="10%">Added</td>
+		<td width="15%">Submit</td>
 	</tr>
-<? while(list($ID, $Host, $Comment, $UserID, $Username, $WLTime) = $DB->next_record()){ ?>
+<? while(list($ID, $Host, $Link, $Comment, $UserID, $Username, $WLTime) = $DB->next_record()){ ?>
 	<tr>
 		<form action="tools.php" method="post">
 			<td>
@@ -30,6 +32,9 @@ $DB->query("SELECT
 				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 				<input type="hidden" name="id" value="<?=$ID?>" />
 				<input class="long" type="text" name="host" value="<?=display_str($Host)?>" />
+			</td>
+			<td>
+				<input class="long"  type="text" name="link" value="<?=display_str($Link)?>" />
 			</td>
 			<td>
 				<input class="long"  type="text" name="comment" value="<?=display_str($Comment)?>" />
@@ -47,6 +52,12 @@ $DB->query("SELECT
 <tr>
 	<td colspan="4" class="colhead">Add Imagehost</td>
 </tr>
+	<tr class="rowb">
+		<td>this field is matched against image urls. displayed on the upload page.</td>
+		<td>optional, if a valid url is present then it appears as an icon that can be clicked to take you to the link in a new page.</td>
+		<td colspan="2">displayed to users on the upload page.</td>
+		<td></td> 
+	</tr>
 <tr class="rowa">
 	<form action="tools.php" method="post">
 		<input type="hidden" name="action" value="iw_alter" />
@@ -54,6 +65,9 @@ $DB->query("SELECT
 		<td>
 			<input class="long"  type="text" name="host" />
 		</td>
+			<td>
+				<input class="long"  type="text" name="link" />
+			</td>
 		<td colspan="2">
 			<input class="long"  type="text" name="comment" />
 		</td>

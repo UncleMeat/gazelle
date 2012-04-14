@@ -129,6 +129,7 @@ $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
 
 $DB->query("SELECT 
             w.Imagehost, 
+            w.Link,
             w.Comment,
             w.Time
             FROM imagehost_whitelist as w
@@ -139,33 +140,38 @@ reset($Whitelist);
 
 $DB->query("SELECT IF(MAX(t.Time) < '$Updated' OR MAX(t.Time) IS NULL,1,0) FROM torrents AS t
 			WHERE UserID = ".$LoggedUser['ID']);
-list($NewDNU) = $DB->next_record(); 
+list($NewWL) = $DB->next_record(); 
  
-$HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
+$HideWL = check_perms('torrents_hide_dnu') && !$NewWL;
 ?>
 <div class="box pad" style="margin:10px auto;">
-	<span style="float:right;clear:right"><p><?=$NewDNU?'<strong class="important_text">':''?>Last Updated: <?=time_diff($Updated)?><?=$NewDNU?'</strong>':''?></p></span>
+	<span style="float:right;clear:right"><p><?=$NewWL?'<strong class="important_text">':''?>Last Updated: <?=time_diff($Updated)?><?=$NewDNU?'</strong>':''?></p></span>
 	<h3 id="dnu_header">Approved Imagehosts</h3> 
       <p>You must use one of the following approved imagehosts for all images. 
-<? if ($HideDNU) { ?>
+<? if ($HideWL) { ?>
    <span id="showdnu"><a href="#" <a href="#" onclick="$('#whitelist').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
 <? } ?>
 	</p>
-	<table id="whitelist" class="<?=($HideDNU?'hidden':'')?>" style="">
+	<table id="whitelist" class="<?=($HideWL?'hidden':'')?>" style="">
 		<tr class="colhead">
 			<td width="50%"><strong>Imagehost</strong></td>
 			<td><strong>Comment</strong></td>
 		</tr>
 <? foreach($Whitelist as $ImageHost) { 
-		list($Host, $Comment, $Updated) = $ImageHost;
+		list($Host, $Link, $Comment, $Updated) = $ImageHost;
 ?>		
 		<tr>
-			<td><?=$Text->full_format($Host)?></td>
+			<td><?=$Text->full_format($Host)?>
+               <?  // if a goto link is supplied and is a validly formed url make a link icon for it
+               if ( !empty($Link) && $Text->valid_url($Link)) { 
+                   ?><a href="<?=$Link?>"  target="_blank"><img src="<?=STATIC_SERVER?>common/symbols/offsite.gif" width="16" height="16" style="" alt="Goto <?=$Host?>" /></a>
+               <? } // endif has a link to imagehost ?>
+                  </td>
 			<td><?=$Text->full_format($Comment)?></td>
 		</tr>
 <? } ?>
 	</table> 
-</div></div><?=($HideDNU?'<br />':'')?>
+</div></div><?=($HideWL?'<br />':'')?>
 
 <?
 $TorrentForm->head();
