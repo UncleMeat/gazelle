@@ -97,7 +97,7 @@ show_header('IP Bans');
 		</table>	
 	</form>
 </div>
-<br / >
+<br />
 
 <h3>Manage</h3>
 <?=$PageLinks?>

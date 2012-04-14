@@ -25,12 +25,13 @@ show_header('Staff Tools');
 			<tr><td><a href="tools.php?action=news">News</a></td></tr>
 <? } if (check_perms('admin_dnu')) { ?>
 			<tr><td><a href="tools.php?action=dnu">Do not upload list</a></td></tr>
+			<tr><td><a href="tools.php?action=imghost_whitelist">Imagehost Whitelist</a></td></tr>
 <? } if (check_perms('site_recommend_own') || check_perms('site_manage_recommendations')) { ?>
 			<tr><td><a href="tools.php?action=recommend">Vanity House additions</a></td></tr>
 <? } if (check_perms('users_mod')) { ?>
 			<tr><td><a href="tools.php?action=email_blacklist">Email Blacklist</a></td></tr>
 			<tr><td><a href="tools.php?action=tokens">Manage freeleech tokens</a></td></tr>
-			<tr><td><a href="tools.php?action=official_tags">Official Tags Manager</a></td></tr>
+			<tr><td><a href="tools.php?action=official_tags">Official Tags Manager</a></td></tr> 
 
 <? } ?>
 		</table>

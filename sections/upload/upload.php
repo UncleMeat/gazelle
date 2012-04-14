@@ -97,8 +97,9 @@ $DB->query("SELECT IF(MAX(t.Time) < '$Updated' OR MAX(t.Time) IS NULL,1,0) FROM 
 			WHERE UserID = ".$LoggedUser['ID']);
 list($NewDNU) = $DB->next_record();
 $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
-?>
-<div class="<?=(check_perms('torrents_hide_dnu')?'box pad':'')?>" style="margin:0px auto;width:700px">
+/*  class="<?=(check_perms('torrents_hide_dnu')?'box pad':'')?>"   */
+?><div class="thin">
+<div class="box pad" style="margin:10px auto">
 	<span style="float:right;clear:right"><p><?=$NewDNU?'<strong class="important_text">':''?>Last Updated: <?=time_diff($Updated)?><?=$NewDNU?'</strong>':''?></p></span>
 	<h3 id="dnu_header">Do not upload from the following list</h3> 
 	<p>The following releases are currently forbidden from being uploaded to the site. Do not upload them unless your torrent meets a condition specified in the comment.
@@ -129,9 +130,9 @@ $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
 $DB->query("SELECT 
             w.Imagehost, 
             w.Comment,
-            w.DateAdded
+            w.Time
             FROM imagehost_whitelist as w
-            ORDER BY w.DateAdded");
+            ORDER BY w.Time");
 $Whitelist = $DB->to_array();
 list($Host,$Comment,$Updated) = end($Whitelist);
 reset($Whitelist);
@@ -142,7 +143,7 @@ list($NewDNU) = $DB->next_record();
  
 $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
 ?>
-<div class="<?=(check_perms('torrents_hide_dnu')?'box pad':'')?>" style="margin:0px auto;width:700px">
+<div class="box pad" style="margin:10px auto;">
 	<span style="float:right;clear:right"><p><?=$NewDNU?'<strong class="important_text">':''?>Last Updated: <?=time_diff($Updated)?><?=$NewDNU?'</strong>':''?></p></span>
 	<h3 id="dnu_header">Approved Imagehosts</h3> 
       <p>You must use one of the following approved imagehosts for all images. 
@@ -164,7 +165,7 @@ $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
 		</tr>
 <? } ?>
 	</table> 
-</div><?=($HideDNU?'<br />':'')?>
+</div></div><?=($HideDNU?'<br />':'')?>
 
 <?
 $TorrentForm->head();

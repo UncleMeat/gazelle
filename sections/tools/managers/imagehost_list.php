@@ -1,42 +1,42 @@
 <?
 if(!check_perms('admin_dnu')) { error(403); }
 
-show_header('Manage do not upload list');
+show_header('Manage imagehost whitelist');
 $DB->query("SELECT 
-	d.ID,
-	d.Name, 
-	d.Comment, 
-	d.UserID, 
+	w.ID,
+	w.Imagehost, 
+	w.Comment, 
+	w.UserID, 
 	um.Username, 
-	d.Time 
-	FROM do_not_upload as d
-	LEFT JOIN users_main AS um ON um.ID=d.UserID
-	ORDER BY d.Time DESC");
+	w.Time 
+	FROM imagehost_whitelist as w
+	LEFT JOIN users_main AS um ON um.ID=w.UserID
+	ORDER BY w.Time DESC");
 ?>
-<h2>Do Not Upload List</h2>
+<h2>Imagehost Whitelist</h2>
 <div>
 <table>
 	<tr class="colhead">
-		<td>Name</td>
+		<td>Imagehost</td>
 		<td>Comment</td>
 		<td>Added</td>
 		<td width="120">Submit</td>
 	</tr>
-<? while(list($ID, $Name, $Comment, $UserID, $Username, $DNUTime) = $DB->next_record()){ ?>
+<? while(list($ID, $Host, $Comment, $UserID, $Username, $WLTime) = $DB->next_record()){ ?>
 	<tr>
 		<form action="tools.php" method="post">
 			<td>
-				<input type="hidden" name="action" value="dnu_alter" />
+				<input type="hidden" name="action" value="iw_alter" />
 				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 				<input type="hidden" name="id" value="<?=$ID?>" />
-				<input class="long" type="text" name="name" value="<?=display_str($Name)?>" />
+				<input class="long" type="text" name="host" value="<?=display_str($Host)?>" />
 			</td>
 			<td>
 				<input class="long"  type="text" name="comment" value="<?=display_str($Comment)?>" />
 			</td>
 			<td>
 				<?=format_username($UserID, $Username)?><br />
-				<?=time_diff($DNUTime, 1)?></td>
+				<?=time_diff($WLTime, 1)?></td>
 			<td>
 				<input type="submit" name="submit" value="Edit" />
 				<input type="submit" name="submit" value="Delete" />
@@ -45,14 +45,14 @@ $DB->query("SELECT
 	</tr>
 <? } ?>
 <tr>
-	<td colspan="4" class="colhead">Add Do Not Upload</td>
+	<td colspan="4" class="colhead">Add Imagehost</td>
 </tr>
 <tr class="rowa">
 	<form action="tools.php" method="post">
-		<input type="hidden" name="action" value="dnu_alter" />
+		<input type="hidden" name="action" value="iw_alter" />
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 		<td>
-			<input class="long"  type="text" name="name" />
+			<input class="long"  type="text" name="host" />
 		</td>
 		<td colspan="2">
 			<input class="long"  type="text" name="comment" />

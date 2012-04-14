@@ -671,7 +671,7 @@ INSERT INTO `group_log` (`ID`, `GroupID`, `TorrentID`, `UserID`, `Info`, `Time`,
 -- --------------------------------------------------------
 
 --
---   `imagehost_whitelist`  
+-- Table structure for table `imagehost_whitelist`
 --
 
 CREATE TABLE IF NOT EXISTS `imagehost_whitelist` (
@@ -679,9 +679,9 @@ CREATE TABLE IF NOT EXISTS `imagehost_whitelist` (
   `Imagehost` varchar(255) NOT NULL,
   `Comment` varchar(255) NOT NULL,
   `UserID` int(10) NOT NULL,
-  `DateAdded` datetime NOT NULL,
+  `Time` datetime NOT NULL,
   PRIMARY KEY (`ID`),
-  KEY `DateAdded` (`DateAdded`)
+  KEY `Time` (`Time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
