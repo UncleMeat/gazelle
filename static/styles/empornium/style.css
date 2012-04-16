@@ -494,10 +494,16 @@ td.label {
 }
  
 
+.medium { 
+    text-align: left;
+    width: 92%;
+}
+
 .long { 
     text-align: left;
-    width: 96%;
+    width: 97%;
 }
+ 
 
 table.slice {
     margin-top: -1px;

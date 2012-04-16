@@ -227,7 +227,7 @@ function permissions_form(){ ?>
 					<? display_perm('artist_edit_vanityhouse', 'Can mark Artists as part of Vanity House.'); ?>
 					<? display_perm('site_add_logs', 'Can add logs to torrents after upload'); ?>
 					<? display_perm('torrents_hide_dnu', 'Hide the Do Not Upload list by default.'); ?>
-					<? display_perm('torrents_hide_imagehosts', 'Hide the Imagehost Whitelist by default.'); ?>
+					    <? display_perm('torrents_hide_imagehosts', 'Hide the Imagehost Whitelist by default.'); ?>
 				</td> 
 			</tr>
 		</table>
@@ -251,7 +251,7 @@ function permissions_form(){ ?>
 					<? display_perm('admin_donor_log', 'Can view the donor log'); ?>
 					<? display_perm('admin_manage_ipbans', 'Can manage IP bans'); ?>
 					<? display_perm('admin_dnu', 'Can manage do not upload list'); ?> 
-					<? display_perm('admin_imagehosts', 'Can manage Imagehosts Whitelist'); ?> 
+					    <? display_perm('admin_imagehosts', 'Can manage Imagehosts Whitelist'); ?> 
 					<? display_perm('admin_clear_cache', 'Can clear cached pages'); ?>
 					<? display_perm('admin_whitelist', 'Can manage the list of allowed clients.'); ?>
 					<? display_perm('admin_manage_permissions', 'Can edit permission classes/user permissions.'); ?>
