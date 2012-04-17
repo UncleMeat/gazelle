@@ -81,6 +81,7 @@
 	'torrents_freeleech' => 'Can make torrents freeleech.',
 	'torrents_search_fast' => 'Rapid search (for scripts).',
 	'torrents_hide_dnu' => 'Hide the Do Not Upload list by default.',
+	  'torrents_hide_imagehosts' => 'Hide the Imagehost Whitelist list by default.',
         'admin_manage_categories' => 'Can manage categories.',
 	'admin_manage_news' => 'Can manage news.',
 	'admin_manage_blog' => 'Can manage blog.',
@@ -93,6 +94,7 @@
 	'admin_donor_log' => 'Can view the donor log.',
 	'admin_manage_ipbans' => 'Can manage IP bans.',
 	'admin_dnu' => 'Can manage do not upload list.',
+	  'admin_imagehosts' => 'Can manage Imagehost Whitelist.',
 	'admin_clear_cache' => 'Can clear cached.',
 	'admin_whitelist' => 'Can manage the list of allowed clients.',
 	'admin_manage_permissions' => 'Can edit permission classes/user permissions.',
@@ -225,7 +227,8 @@ function permissions_form(){ ?>
 					<? display_perm('artist_edit_vanityhouse', 'Can mark Artists as part of Vanity House.'); ?>
 					<? display_perm('site_add_logs', 'Can add logs to torrents after upload'); ?>
 					<? display_perm('torrents_hide_dnu', 'Hide the Do Not Upload list by default.'); ?>
-				</td>
+					    <? display_perm('torrents_hide_imagehosts', 'Hide the Imagehost Whitelist by default.'); ?>
+				</td> 
 			</tr>
 		</table>
 	</div>
@@ -247,7 +250,8 @@ function permissions_form(){ ?>
 					<? display_perm('admin_create_users', 'Can create users through an administrative form'); ?>
 					<? display_perm('admin_donor_log', 'Can view the donor log'); ?>
 					<? display_perm('admin_manage_ipbans', 'Can manage IP bans'); ?>
-					<? display_perm('admin_dnu', 'Can manage do not upload list'); ?>
+					<? display_perm('admin_dnu', 'Can manage do not upload list'); ?> 
+					    <? display_perm('admin_imagehosts', 'Can manage Imagehosts Whitelist'); ?> 
 					<? display_perm('admin_clear_cache', 'Can clear cached pages'); ?>
 					<? display_perm('admin_whitelist', 'Can manage the list of allowed clients.'); ?>
 					<? display_perm('admin_manage_permissions', 'Can edit permission classes/user permissions.'); ?>

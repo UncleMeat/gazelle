@@ -118,8 +118,9 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 
 #content {
-    width: 94%;
-    min-width:740px;
+    width: 90%;
+    /* min-width:740px; */
+    min-width: 820px;
     background-color: #e0e8eb;
     margin: 0px auto 0px auto;
     padding: 0.6em;
@@ -333,7 +334,9 @@ input.hidden {
 
 
 .thin {
-    width: 850px;
+    /* width: 850px; */
+    width: 80%;
+    min-width: 760px;
     margin-left:auto;
     margin-right:auto;
 }
@@ -381,7 +384,8 @@ p.min_padding {
 
 .sidebar {
     float: right;
-    width: 250px;
+/*    width: 250px; */
+    width: 29%;
     height: 100%;
 }
 
@@ -406,7 +410,8 @@ p.min_padding {
 
 .main_column {
     margin: 0px 255px 10px 0px;
-    width: 590px;
+    /* width: 590px; */ 
+    width: 70%;  
 }
 
 .main_column .box, .main_column table {
@@ -485,8 +490,20 @@ td.colhead, .colhead td {
 td.label {
     font-weight: bold;
     text-align: right;
-    width: 180px;
+    width: 100px;
 }
+ 
+
+.medium { 
+    text-align: left;
+    width: 92%;
+}
+
+.long { 
+    text-align: left;
+    width: 97%;
+}
+ 
 
 table.slice {
     margin-top: -1px;

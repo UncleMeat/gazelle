@@ -5,6 +5,7 @@ show_header('Whitelist Management');
 $DB->query('SELECT id, vstring, peer_id FROM xbt_client_whitelist ORDER BY peer_id ASC');
 ?>
 <h2>Allowed Clients</h2>
+<div>
 <table width="100%">
 	<tr class="colhead">
 		<td>Client</td>
@@ -24,7 +25,7 @@ while(list($ID, $Client, $Peer_ID) = $DB->next_record()){
 		<tr class="row<?=$Row?>">
 			<td>
 				<input type="hidden" name="id" value="<?=$ID?>" />
-				<input type="text" size="100" name="client" value="<?=$Client?>" />
+				<input type="text" name="client" value="<?=$Client?>" />
 			</td>
 			<td>
 				<input type="text" size="10" name="peer_id" value="<?=$Peer_ID?>" />
@@ -47,7 +48,7 @@ while(list($ID, $Client, $Peer_ID) = $DB->next_record()){
 		<tr class="rowa">		
 			
 			<td>
-				<input type="text" size="100" name="client" />
+				<input type="text" name="client" />
 			</td>
 			<td>
 				<input type="text" size="10" name="peer_id" />

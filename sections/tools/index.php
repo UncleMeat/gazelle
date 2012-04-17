@@ -106,6 +106,16 @@ switch ($_REQUEST['action']){
 		include('managers/dnu_alter.php');
 		break;
        
+	case 'imghost_whitelist':
+		include('managers/imagehost_list.php');
+		break;
+        
+	case 'iw_alter':
+		include('managers/imagehost_alter.php');
+		break;
+        
+        
+      
         case 'categories':
                 include('managers/categories_list.php');
                 break;

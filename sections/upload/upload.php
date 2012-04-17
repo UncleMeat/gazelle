@@ -84,6 +84,7 @@ if(!$GenreTags) {
 	$Cache->cache_value('genre_tags', $GenreTags, 3600*6);
 }
 
+/* -------  Draw a box with do_not_upload list  ------- */   
 $DB->query("SELECT 
 	d.Name, 
 	d.Comment,
@@ -97,10 +98,11 @@ $DB->query("SELECT IF(MAX(t.Time) < '$Updated' OR MAX(t.Time) IS NULL,1,0) FROM 
 			WHERE UserID = ".$LoggedUser['ID']);
 list($NewDNU) = $DB->next_record();
 $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
-?>
-<div class="<?=(check_perms('torrents_hide_dnu')?'box pad':'')?>" style="margin:0px auto;width:700px">
-	<h3 id="dnu_header">Do not upload</h3>
-	<p><?=$NewDNU?'<strong class="important_text">':''?>Last Updated: <?=time_diff($Updated)?><?=$NewDNU?'</strong>':''?></p>
+/*  class="<?=(check_perms('torrents_hide_dnu')?'box pad':'')?>"   */
+?><div class="thin">
+<div class="box pad" style="margin:10px auto">
+	<span style="float:right;clear:right"><p><?=$NewDNU?'<strong class="important_text">':''?>Last Updated: <?=time_diff($Updated)?><?=$NewDNU?'</strong>':''?></p></span>
+	<h3 id="dnu_header">Do not upload from the following list</h3> 
 	<p>The following releases are currently forbidden from being uploaded to the site. Do not upload them unless your torrent meets a condition specified in the comment.
 <? if ($HideDNU) { ?>
    <span id="showdnu"><a href="#" <a href="#" onclick="$('#dnulist').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
@@ -121,7 +123,55 @@ $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
 <? } ?>
 	</table>
 </div><?=($HideDNU?'<br />':'')?>
+<?   
+/* -------  Draw a box with imagehost whitelist  ------- */   
+$DB->query("SELECT 
+            w.Imagehost, 
+            w.Link,
+            w.Comment,
+            w.Time
+            FROM imagehost_whitelist as w
+            ORDER BY w.Time");
+$Whitelist = $DB->to_array();
+list($Host, $Link, $Comment,$Updated) = end($Whitelist);
+reset($Whitelist);
+
+$DB->query("SELECT IF(MAX(t.Time) < '$Updated' OR MAX(t.Time) IS NULL,1,0) FROM torrents AS t
+			WHERE UserID = ".$LoggedUser['ID']);
+list($NewWL) = $DB->next_record();  
+$HideWL = check_perms('torrents_hide_imagehosts') && !$NewWL;
+?>
+<div class="box pad" style="margin:10px auto;">
+	<span style="float:right;clear:right"><p><?=$NewWL?'<strong class="important_text">':''?>Last Updated: <?=time_diff($Updated)?><?=$NewWL?'</strong>':''?></p></span>
+	<h3 id="dnu_header">Approved Imagehosts</h3> 
+      <p>You must use one of the following approved imagehosts for all images. 
+<? if ($HideWL) { ?>
+   <span id="showdnu"><a href="#" <a href="#" onclick="$('#whitelist').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
+<? } ?>
+	</p>
+	<table id="whitelist" class="<?=($HideWL?'hidden':'')?>" style="">
+		<tr class="colhead">
+			<td width="50%"><strong>Imagehost</strong></td>
+			<td><strong>Comment</strong></td>
+		</tr>
+<? foreach($Whitelist as $ImageHost) { 
+		list($Host, $Link, $Comment, $Updated) = $ImageHost;
+?>		
+		<tr>
+			<td><?=$Text->full_format($Host)?>
+               <?  // if a goto link is supplied and is a validly formed url make a link icon for it
+               if ( !empty($Link) && $Text->valid_url($Link)) { 
+                   ?><a href="<?=$Link?>"  target="_blank"><img src="<?=STATIC_SERVER?>common/symbols/offsite.gif" width="16" height="16" style="" alt="Goto <?=$Host?>" /></a>
+               <? } // endif has a link to imagehost ?>
+                  </td>
+			<td><?=$Text->full_format($Comment)?></td>
+		</tr>
+<? } ?>
+	</table> 
+</div></div><?=($HideWL?'<br />':'')?>
+
 <?
+/* -------  Draw upload torrent form  ------- */   
 $TorrentForm->head();
 $TorrentForm->simple_form($Properties['CategoryID'], $GenreTags);
 $TorrentForm->foot();

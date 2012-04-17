@@ -667,6 +667,26 @@ INSERT INTO `group_log` (`ID`, `GroupID`, `TorrentID`, `UserID`, `Info`, `Time`,
 (3, 11821, 15, 1243, 'marked as freeleech type 2!', '2012-03-19 10:37:15', 0),
 (4, 11821, 15, 1243, 'marked as freeleech type 0!', '2012-03-19 10:38:06', 0);
 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `imagehost_whitelist`
+--
+
+CREATE TABLE IF NOT EXISTS `imagehost_whitelist` (
+  `ID` int(10) NOT NULL AUTO_INCREMENT,
+  `Imagehost` varchar(255) NOT NULL,
+  `Link` varchar(255) NOT NULL,
+  `Comment` varchar(255) NOT NULL,
+  `UserID` int(10) NOT NULL,
+  `Time` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `Time` (`Time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+
+
 -- --------------------------------------------------------
 
 --

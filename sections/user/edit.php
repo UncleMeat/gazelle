@@ -207,24 +207,24 @@ echo $Val->GenerateJS('userform');
 			<tr>
 				<td class="label"><strong>Avatar URL</strong></td>
 				<td>
-					<input type="text" size="50" name="avatar" id="avatar" value="<?=display_str($Avatar)?>" />
+					<input class="long" type="text" name="avatar" id="avatar" value="<?=display_str($Avatar)?>" />
 					<p class="min_padding">Width should be 150 pixels (will be resized if necessary)</p>
 				</td>
 			</tr>
 			<tr>
 				<td class="label"><strong>Email</strong></td>
-				<td><input type="text" size="50" name="email" id="email" value="<?=display_str($Email)?>" />
+				<td><input class="long" type="text" name="email" id="email" value="<?=display_str($Email)?>" />
 					<p class="min_padding">If changing this field you must enter your current password in the "Current password" field before saving your changes.</p>
 				</td>
 			</tr>
 			<tr>
 				<td class="label"><strong>Info</strong></td>
-				<td><textarea name="info" cols="50" rows="8"><?=display_str($Info)?></textarea></td>
+				<td><textarea name="info" cols="70" rows="8"><?=display_str($Info)?></textarea></td>
 			</tr>
 			<tr>
 				<td class="label"><strong>IRCKey</strong></td>
 				<td>
-					<input type="text" size="50" name="irckey" id="irckey" value="<?=display_str($IRCKey)?>" />
+					<input class="long" type="text" name="irckey" id="irckey" value="<?=display_str($IRCKey)?>" />
 					<p class="min_padding">This field, if set will be used in place of the password in the IRC login.</p>
 					<p class="min_padding">Note: This value is stored in plaintext and should not be your password.</p>
 					<p class="min_padding">Note: In order to be accepted as correct, your IRCKey must be between 6 and 32 characters.</p>
@@ -358,15 +358,15 @@ list($ArtistsAdded) = $DB->next_record();
 			</tr>
 			<tr>
 				<td class="label"><strong>Current password</strong></td>
-				<td><input type="password" size="40" name="cur_pass" id="cur_pass" value="" /></td>
+				<td><input class="long" type="password" name="cur_pass" id="cur_pass" value="" /></td>
 			</tr>
 			<tr>
 				<td class="label"><strong>New password</strong></td>
-				<td><input type="password" size="40" name="new_pass_1" id="new_pass_1" value="" /></td>
+				<td><input class="long" type="password" name="new_pass_1" id="new_pass_1" value="" /></td>
 			</tr>
 			<tr>
 				<td class="label"><strong>Re-type new password</strong></td>
-				<td><input type="password" size="40" name="new_pass_2" id="new_pass_2" value="" /></td>
+				<td><input class="long" type="password" name="new_pass_2" id="new_pass_2" value="" /></td>
 			</tr>
 			<tr>
 				<td class="label"><strong>Reset passkey</strong></td>

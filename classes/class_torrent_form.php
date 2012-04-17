@@ -681,7 +681,7 @@ class TORRENT_FORM {
 				<td class="label">Title</td>
 <?			} ?>
 				<td>
-					<input type="text" id="title" name="title" size="60" value="<?=display_str($Torrent['Title']) ?>" />
+					<input type="text" id="title" name="title" class="long" value="<?=display_str($Torrent['Title']) ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -695,7 +695,7 @@ class TORRENT_FORM {
 <?				} ?>
 					</select>
 <?			} ?> 
-					<input type="text" id="tags" name="tags" size="40" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>/>
+					<input type="text" id="tags" name="tags" class="long" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>/>
 					<br />
 					Tags should be comma separated, and you should use a period ('.') to separate words inside a tag.
 					<br /><br />
@@ -713,13 +713,13 @@ class TORRENT_FORM {
 			<tr>
 				<td class="label">Cover Image (optional)</td>
 				<td>
-					<input type="text" id="image" name="image" size="60" value="<?=display_str($Torrent['Image']) ?>" <?=$this->Disabled?>/>
+					<input type="text" id="image" class="long" name="image" value="<?=display_str($Torrent['Image']) ?>" <?=$this->Disabled?>/>
 				</td>
 			</tr>
 			<tr>
 				<td class="label">Description</td>
 				<td>
-					<textarea name="desc" id="desc" cols="60" rows="8"><?=display_str($Torrent['GroupDescription']); ?></textarea>
+					<textarea name="desc" id="desc" class="long" rows="36"><?=display_str($Torrent['GroupDescription']); ?></textarea>
 				</td>
 			</tr>
 <?		} ?>
