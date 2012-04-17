@@ -112,10 +112,10 @@ while ($row = mysql_fetch_assoc($result)) {
 
     $r = mysql_query("
 	INSERT INTO gazelle.torrents
-		(GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time) 
+		(GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action) 
 	VALUES
 		(" . $row['id'] . ", " . $row['owner'] . ", 
-		'" . mysql_real_escape_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'))"
+		'" . mysql_real_escape_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'))"
             ) or die(mysql_error());
 
     $TorrentID = mysql_insert_id();

@@ -294,7 +294,7 @@ li.searchbars {
 .alertbar {
     border-top: 1px solid #CB7772;
     padding: 15px 0px 2px 0px;
-    background-color: #FF0000; //#0261a3;
+    background-color: #FF0000;
     text-align: center;
     font-weight: bold;
     color: white;
@@ -810,4 +810,18 @@ ul .invitetree {
     margin: 25px 0;
     font-size: 1.25em;
     font-weight: bold;
+}
+
+.tboverlib {
+    background-color: black; //#265582;
+    border: 1px solid grey;    
+    min-width: 600px;
+    width: 350px;
+}
+
+.tdoverlib {
+    background-color: black;// #265582;
+    border: 1px solid grey;
+    color: white;
+    vertical-align: top;
 }

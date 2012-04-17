@@ -201,7 +201,7 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 		}
 
 /*
- * Lanz: Lets not demote anyone that doesn't have the required upload today but perhaps unfairly got promoted earlier.
+ * Lanz: Lets not demote anyone that doesn't have the required upload today but perhaps "unfairly" got promoted earlier.
  *                 
 		// Demote users with less than the required uploads
 		

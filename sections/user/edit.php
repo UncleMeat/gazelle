@@ -133,48 +133,6 @@ echo $Val->GenerateJS('userform');
 					</select>
 				</td>
 			</tr>
-			<tr>
-				<td class="label"><strong>Hide release types</strong></td>
-				<td>
-					<table style="border:none;">
-<?
-	$ReleaseTypes[1024] = "Guest Appearance";
-	$ReleaseTypes[1023] = "Remixed By";
-	$ReleaseTypes[1022] = "Composition";
-	for($i = 0; list($Key,$Val) = each($ReleaseTypes); $i++) {
-		if(!($i % 7)) {
-			if($i) {
-?>
-						</tr>
-<?
-			}
-?>
-						<tr style="border:none;">
-<?
-		}
-		if(!empty($SiteOptions['HideTypes']) && in_array($Key, $SiteOptions['HideTypes'])) {
-			$Checked = 'checked="checked" ';
-		} else {
-			$Checked='';
-		}
-?>
-							<td style="border:none;">
-								<label><input type="checkbox" id="hide_type_<?=$Key?>" name="hidetypes[]=" value="<?=$Key?>" <?=$Checked?>/>
-								<?=$Val?></label>
-							</td>
-<?
-	}
-	if($i % 7) {
-?>
-							<td style="border:none;" colspan="<?=7 - ($i % 7)?>"></td>
-<?
-	}
-	unset($ReleaseTypes[1023], $ReleaseTypes[1024], $ReleaseTypes[1022]);
-?>
-						</tr>
-					</table>
-				</td>
-			</tr>
 <!--			<tr>
 				<td class="label"><strong>Collage album art view</strong></td>
 				<td>
