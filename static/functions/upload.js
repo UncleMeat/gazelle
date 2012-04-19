@@ -279,3 +279,24 @@ function GroupRemaster() {
 		$('#remaster_catalogue_number').raw().value = remasters[index][4];
 	}
 }
+
+
+
+function Upload_Quick_Preview() {
+	var quickreplybuttons;
+	$('#post_preview').raw().value = "Make changes";
+	$('#post_preview').raw().preview = true;
+	ajax.post("ajax.php?action=preview_upload","upload_table", function(response){
+		$('#quickreplypreview').show();
+		$('#contentpreview').raw().innerHTML = response;
+		$('#quickreplytext').hide();
+	});
+}
+
+function Upload_Quick_Edit() {
+	var quickreplybuttons;
+	$('#post_preview').raw().value = "Preview";
+	$('#post_preview').raw().preview = false;
+	$('#quickreplypreview').hide();
+	$('#quickreplytext').show();
+}

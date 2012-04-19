@@ -21,6 +21,9 @@ switch ($_GET['action']){
 	case 'preview':
 		require('preview.php');
 		break;
+	case 'preview_upload':
+		require('preview_upload.php');
+		break;
 	case 'torrent_info':
 		require('torrent_info.php');
 		break;
