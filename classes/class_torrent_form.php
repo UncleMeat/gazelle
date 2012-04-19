@@ -196,19 +196,23 @@ class TORRENT_FORM {
 			</tr>
 			<tr>
 				<td class="label">Cover Image</td>
-				<td>
-					<input type="text" id="image" class="long" name="image" value="<?=display_str($Torrent['Image']) ?>" <?=$this->Disabled?>/>
-				</td>
-			</tr>
+				<td> 
+					<div id="uploadpreviewimage">
+							<div id="imagepreview" style="text-align:left;"></div>
+                              </div>
+					<div id="uploadimage">
+                                    <input type="text" id="image" class="long" name="image" value="<?=display_str($Torrent['Image']) ?>" <?=$this->Disabled?>/>
+                              </div>
+                       </td>
+			</tr> 
 			<tr>
 				<td class="label">Description</td>
 				<td>
-					<div id="quickreplypreview">
+					<div id="uploadpreviewbody">
 							<div id="contentpreview" style="text-align:left;"></div>
                               </div>
-					<div id="quickreplytext">
-					<textarea name="desc" id="desc" class="long" rows="36"><?=display_str($Torrent['GroupDescription']); ?></textarea>
-				
+					<div id="uploadbody">
+                                    <textarea name="desc" id="desc" class="long" rows="36"><?=display_str($Torrent['GroupDescription']); ?></textarea>
                               </div>
                         </td>
 			</tr>

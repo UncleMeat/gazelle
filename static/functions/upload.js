@@ -283,20 +283,27 @@ function GroupRemaster() {
 
 
 function Upload_Quick_Preview() {
-	var quickreplybuttons;
+	//var quickreplybuttons;
 	$('#post_preview').raw().value = "Make changes";
 	$('#post_preview').raw().preview = true;
 	ajax.post("ajax.php?action=preview_upload","upload_table", function(response){
-		$('#quickreplypreview').show();
+		$('#uploadpreviewbody').show();
 		$('#contentpreview').raw().innerHTML = response;
-		$('#quickreplytext').hide();
+		$('#uploadbody').hide();
+	});
+	ajax.post("ajax.php?action=preview_image","upload_table", function(response){
+		$('#uploadpreviewimage').show();
+		$('#imagepreview').raw().innerHTML = response;
+		$('#uploadimage').hide();
 	});
 }
 
 function Upload_Quick_Edit() {
-	var quickreplybuttons;
+	//var quickreplybuttons;
 	$('#post_preview').raw().value = "Preview";
 	$('#post_preview').raw().preview = false;
-	$('#quickreplypreview').hide();
-	$('#quickreplytext').show();
+	$('#uploadpreviewbody').hide();
+	$('#uploadbody').show();
+	$('#uploadpreviewimage').hide();
+	$('#uploadimage').show();
 }
