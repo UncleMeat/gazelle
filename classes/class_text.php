@@ -224,7 +224,7 @@ class TEXT {
 	
 	function __construct() {
 		foreach($this->Smileys as $Key=>$Val) {
-			$this->Smileys[$Key] = '<img src="'.STATIC_SERVER.'common/smileys/'.$Val.'" alt="'.$Key.'" width="16" height="16" />';
+			$this->Smileys[$Key] = '<img src="'.STATIC_SERVER.'common/smileys/'.$Val.'" alt="'.$Key.'" />';
 		}
 		reset($this->Smileys);
 	}
