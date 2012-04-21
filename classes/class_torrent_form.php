@@ -194,6 +194,28 @@ class TORRENT_FORM {
 					<strong>You should be able to build up a list of tags using only the official tags to the left of the text box besides porn star names. If you are in any doubt about whether or not a tag is acceptable, do not add it.</strong>
 				</td>
 			</tr>
+		</table> 
+        <div id="uploadpreviewbody">
+		<div id="contentpreview" style="text-align:left;"></div>
+        </div>
+        <div id="uploadbody"> 
+ 		<table cellpadding="3" cellspacing="1" border="0" class="border slice" width="100%">
+                 
+			<tr>
+				<td class="label">Cover Image</td>
+				<td>  
+                             <input type="text" id="image" class="long" name="image" value="<?=display_str($Torrent['Image']) ?>" <?=$this->Disabled?>/>
+                        </td>
+			</tr> 
+			<tr>
+				<td class="label">Description</td>
+				<td> 
+                             <textarea name="desc" id="desc" class="long" rows="36"><?=display_str($Torrent['GroupDescription']); ?></textarea>
+                        </td>
+			</tr>
+                  
+    
+                  <? /*
 			<tr>
 				<td class="label">Cover Image</td>
 				<td> 
@@ -216,9 +238,13 @@ class TORRENT_FORM {
                               </div>
                         </td>
 			</tr>
+                   
+                   */ ?>
+                  
 <?		} ?>
 
 		</table>
+         </div>
 <?	}//function simple_form
 }//class
 ?>
