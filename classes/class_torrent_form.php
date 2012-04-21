@@ -84,7 +84,7 @@ class TORRENT_FORM {
 					Torrent file
 				</td>
 				<td>
-					<input id="file" type="file" name="file_input" size="50" />
+					<input id="file" type="file" name="file_input" size="60" />
                                         <input type="hidden" name="type" value="1" />
 				</td>
                         </tr>
@@ -179,7 +179,7 @@ class TORRENT_FORM {
 <?				} ?>
 					</select>
 <?			} ?> 
-					<input type="text" id="tags" name="tags" class="long" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>/>
+					<input type="text" id="tags" name="tags" class="medium" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>/>
 					<br />
 					Tags should be comma separated, and you should use a period ('.') to separate words inside a tag.
 					<br /><br />

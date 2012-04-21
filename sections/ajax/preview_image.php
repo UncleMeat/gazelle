@@ -9,9 +9,9 @@ if (!empty($Imageurl)) {
     if ($Text->valid_url($Imageurl)){ 
         echo $Text->full_format('[align=center][img]'.$Imageurl.'[/img][/align]');
     } else {
-        echo "<strong class=\"important_text\">Not a valid url</strong>";
+        echo "<div style=\"text-align: center;\"><strong class=\"important_text\">Not a valid url</strong></div>";
     }
 }  else {
-    echo "<strong class=\"important_text\">No Cover Image</strong>";
+    echo "<div style=\"text-align: center;\"><strong class=\"important_text\">No Cover Image</strong></div>";
 }
 ?>
