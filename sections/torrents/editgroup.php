@@ -38,7 +38,11 @@ $Type = $Categories[(int)$CategoryID];
 
 if(!$Body) { $Body = $WikiBody; $Image = $WikiImage; }
 
-show_header('Edit torrent group');
+include(SERVER_ROOT.'/classes/class_text.php');
+
+$Text = new TEXT;
+
+show_header('Edit torrent group','bbcode');
 
 // Start printing form
 ?>
@@ -53,7 +57,8 @@ show_header('Edit torrent group');
 				<h3>Image</h3>
 				<input type="text" name="image" size="92" value="<?=$Image?>" /><br />
 				<h3>Description</h3>
-				<textarea name="body" cols="91" rows="20"><?=$Body?></textarea><br />
+                            <? $Text->display_bbcode_assistant("textbody"); ?>
+				<textarea id="textbody" name="body" cols="91" rows="20"><?=$Body?></textarea><br />
 <? if($CategoryID == 1) { ?>
 				<select id="releasetype" name="releasetype">
 <?	foreach ($ReleaseTypes as $Key => $Val) { ?>

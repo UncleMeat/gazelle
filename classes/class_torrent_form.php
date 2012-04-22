@@ -159,6 +159,7 @@ class TORRENT_FORM {
 	
 
 	function simple_form($OfficialTags = '') {
+            global $Text; 
 		$Torrent = $this->Torrent; 
 ?>		<table cellpadding="3" cellspacing="1" border="0" class="border slice" width="100%">
 			<tr id="name">
@@ -210,6 +211,7 @@ class TORRENT_FORM {
 			<tr>
 				<td class="label">Description</td>
 				<td> 
+                            <? $Text->display_bbcode_assistant("desc"); ?>
                              <textarea name="desc" id="desc" class="long" rows="36"><?=display_str($Torrent['GroupDescription']); ?></textarea>
                         </td>
 			</tr>

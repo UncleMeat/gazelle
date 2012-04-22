@@ -2237,6 +2237,15 @@ function freeleech_groups($GroupIDs, $FreeNeutral = 1, $FreeLeechType = 0) {
 }
 
 
+
+
+      /* Just a way to get a image url from the symbols folder*/
+      function get_symbol_url($image) {
+            return STATIC_SERVER.'common/symbols/'.$image;
+      }
+      
+      
+
 $Debug->set_flag('ending function definitions');
 //Include /sections/*/index.php
 $Document = basename(parse_url($_SERVER['SCRIPT_FILENAME'], PHP_URL_PATH), '.php');

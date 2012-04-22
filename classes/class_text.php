@@ -314,8 +314,8 @@ class TEXT {
 		}
 		
 	}
-	
-	
+	 
+         
 /* How parsing works
 
 Parsing takes $Str, breaks it into blocks, and builds it into $Array. 
@@ -843,6 +843,102 @@ EXPLANATION OF PARSER LOGIC
 		$Str = strtr($Str, $this->Smileys);
 		return $Str;
 	}
+      
+            
+      /*
+       * --------------------- BBCode assistant -----------------------------
+       * added 2012.04.21 - mifune
+       * --------------------------------------------------------------------
+       * This is in the text class because it makes it simpler to access smilies
+       * I suspect a text object will already be instantiated wherever the assistant is needed...
+       * If not this could be moved to a better place maybe?
+       */
+      
+      function display_bbcode_assistant($textarea){
+          
+        ?>
+        <script type="text/javascript">
+                var textBBcode = '<?=$textarea; ?>';
+        </script>
+
+        <div id="hover_pick" style="width: auto; height: auto; position: absolute; border: 0px solid rgb(51, 51, 51); display: none; z-index: 20;"></div>
+
+        <table class="bb_holder">
+          <tbody><tr>
+            <td class="colhead" style="padding: 2px 6px">
+                <div style="float: left; text-align: left; margin-top: 0px;">
+                    <a class="bb_icon1" onclick="tag('b')" title="Bold" alt="B">Bold</a>
+                    <a class="bb_icon1" onclick="tag('i')" title="Italic" alt="I">Italic</a>
+                    <a class="bb_icon1" onclick="tag('u')" title="Underline" alt="U">UL</a>
+                    <a class="bb_icon1" onclick="tag('s')" title="Strike" alt="S">Strike</a>
+                    <a class="bb_icon1" onclick="clink()" title="Link" alt="Link">Link</a>
+                    <a class="bb_icon1" onclick="tag('img')" title="Image" alt="Image">Img</a>
+                    <a class="bb_icon1" onclick="cimage()" title="Image prompt" alt="Image">Image</a>
+
+                    <a class="bb_icon1" onclick="tag('quote')" title="Quote" alt="Quote">Quote</a>
+
+                    <a class="bb_icon1" onclick="tag('mcom')" title="Staff Comment" alt="Mod comment">Mod</a>
+                  
+                <select name="fontsize" id="fontsize" onchange="font('size',this.value);" title="Font size">
+                  <option value="0" selected="selected">Font size</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                </select>
+                     <a style="font-weight: bold;" class="bb_icon1" onclick="colorpicker();" title="Select Color" alt="Colors">Colors</a>
+              </div> 
+
+              <div style="float: right; margin-top: 3px;"> 
+                  <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center')" title="Align - center" alt="Center" /> 
+                  <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left')" title="Align - left" alt="Left" /> 
+                  <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify')" title="Align - justify" alt="justify" /> 
+                  <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right')" title="Align - right" alt="Right" /> 
+                  <img class="bb_icon" src="<?=get_symbol_url('text_uppercase.png') ?>" onclick="text('up')" title="To Uppercase" alt="Up" /> 
+                  <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low')" title="To Lowercase" alt="Low" />
+              </div>
+                
+              </td>
+          </tr> 
+          <tr>
+            <td>
+                <div id="pickerholder"></div>
+                <div class="bb_smiley_holder">
+                    <? 
+                    $count=0;
+                    foreach($this->Smileys as $Key=>$Val) {  
+                        echo '<a class="bb_smiley" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
+                        $count++;
+                        if ($count == 64){
+                            echo "</div>\n<div class='bb_smiley_holder' id='slickbox'>";
+                        }
+                    }
+                    reset($this->Smileys); 
+                    ?> 
+                </div> 
+               
+                  <div style="padding: 2px; margin:8px auto 1px; font-weight: bold; text-align: center; border: 1px solid rgb(123, 163, 193); background: none repeat scroll 0% 0% rgb(186, 203, 216);">
+                       <a href="#" onclick="$('#slickbox').toggle(); this.innerHTML=(this.innerHTML=='Hide smilies'?'Show all smilies':'Hide smilies'); return false;">Show all smilies</a>
+                  </div> 
+        <script type="text/javascript">
+          addDOMLoadEvent(function() {
+         // hides the slickbox as soon as the DOM is ready (a little sooner that page load)
+          $('#slickbox').hide(); 
+        });
+       </script>
+      </td></tr></tbody></table><br/>
+
+        <?
+
+      }
+      
+      
+      
+      
+      
 }
 /*
 

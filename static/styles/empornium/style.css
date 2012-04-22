@@ -828,3 +828,86 @@ ul .invitetree {
     font-size: 1.25em;
     font-weight: bold;
 }
+
+
+
+/*
+ Stuff for the bbcode assistant
+ */
+
+
+.bb_holder { 
+	/*border: 1px solid #222; */
+	border-collapse:collapse; 
+	background:	#808080; 
+      width: 100%;
+}
+
+/*
+.em_holder td, .em_holder td:hover, .em_holder { border:1px solid #333333; 	border-collapse:separate}
+
+.em_holder td:hover { background:#dddddd; border:1px solid #2B60DE;}
+ 
+.bb_holder textarea, .bb_holder textarea:hover, .bb_holder textarea:focus { 
+	background:#CCCCCC; 
+	border:1px solid #333333; 
+	padding:0px; 
+	font-size:12px; 
+}
+
+.bb_holder textarea:hover, .bb_holder textarea:focus { 
+	background:#FFF8C6; 
+}
+*/
+
+.bb_smiley_holder {
+    text-align: center; 
+    padding: 0px; 
+}
+
+a.bb_icon1 { 
+    padding:3px; 
+    background:white;
+    color: #000000; 
+    cursor:pointer;
+}
+
+a.bb_icon1:hover { 
+    text-decoration:none; 
+    background:orange;
+    color: #ffffff; 
+}
+
+.bb_icon { 
+    padding:2px; 
+    margin:0px 1px; 
+    background:white;
+    cursor:pointer; 
+}
+
+.bb_smiley img {
+    padding: 0px 1px; 
+}
+
+.bb_icon:hover { 
+	background:orange; 
+}
+
+.color_pick td { 
+	padding:2px; 
+	width:10px; 
+	height:10px; 
+	cursor:pointer; 
+}
+
+.color_pick { 
+	border-collapse:collapse; 
+}
+
+.color_pick, .color_pick td { 
+	border:1px solid #333333; 
+}
+
+.color_pick td:hover { 
+    border:1px solid #333333; 
+}

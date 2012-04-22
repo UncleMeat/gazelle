@@ -485,6 +485,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 					<input type="hidden" name="thread" value="<?=$ThreadID?>" />
 
 					<div id="quickreplytext">
+                            <? $Text->display_bbcode_assistant("quickpost"); ?>
 						<textarea id="quickpost" style="width: 95%;" tabindex="1" onkeyup="resize('quickpost');" name="body" cols="90" rows="8"></textarea> <br />
 					</div>
 					<div>
