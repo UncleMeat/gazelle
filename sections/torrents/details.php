@@ -622,7 +622,7 @@ if(!$LoggedUser['DisablePosting']) { ?>
 						<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 						<input type="hidden" name="groupid" value="<?=$GroupID?>" />
                             <? $Text->display_bbcode_assistant("quickpost"); ?>
-						<textarea id="quickpost" name="body"  cols="70"  rows="8"></textarea> <br />
+						<textarea id="quickpost" name="body" class="long"  rows="8"></textarea> <br />
 					</div>
 					<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit();}else{Quick_Preview();}" />
 					<input type="submit" value="Post reply" />

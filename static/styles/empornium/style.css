@@ -455,6 +455,13 @@ td {
     text-align: left;
 }
 
+table.wid740 {
+    margin: auto;
+    width: 740px; 
+    border-collapse: collapse;
+    border: 1px solid #98AAB1;
+}
+
 .colhead {
     background: #C6D3E4 url(images/colhead-grad.gif) repeat-x;
     font-weight: bold;
@@ -864,15 +871,22 @@ ul .invitetree {
     text-align: center; 
     padding: 0px; 
 }
-
-a.bb_icon1 { 
-    padding:3px; 
+ 
+select.bb_button { 
+    padding:0px; 
     background:white;
-    color: #000000; 
     cursor:pointer;
+    color: #000000; 
 }
 
-a.bb_icon1:hover { 
+a.bb_button { 
+    padding:3px; 
+    background:white;
+    cursor:pointer;
+    color: #000000; 
+}
+
+a.bb_button:hover { 
     text-decoration:none; 
     background:orange;
     color: #ffffff; 

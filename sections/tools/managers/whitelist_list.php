@@ -6,57 +6,61 @@ $DB->query('SELECT id, vstring, peer_id FROM xbt_client_whitelist ORDER BY peer_
 ?>
 <h2>Allowed Clients</h2>
 <div>
-<table width="100%">
-	<tr class="colhead">
-		<td>Client</td>
-		<td>Peer ID</td>
-		<td>Submit</td>
-	</tr>
+<table class="wid740">
+    <tr>
+        <td colspan="3" class="colhead">Add a client</td>
+    </tr>
+    <tr class="colhead">
+        <td width="40%">Client</td>
+        <td width="40%">Peer ID</td>
+        <td width="20%">Submit</td>
+    </tr> 
+    <tr class="rowa">	 
+    <form action="" method="post"> 
+        <td>
+            <input type="hidden" name="action" value="whitelist_alter" />
+            <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" /> 
+		<input class="long" type="text" name="client" />
+        </td>
+        <td>
+		<input class="long" type="text" size="10" name="peer_id" />
+        </td>
+        <td>
+		<input type="submit" value="Create" />
+        </td>
+    </form>
+    </tr>
 </table>
+<br />
+<table class="wid740">
+    <tr class="colhead">
+        <td width="40%">Client</td>
+        <td width="40%">Peer ID</td>
+        <td width="20%">Submit</td>
+    </tr> 
 <?
 $Row = 'b';
 while(list($ID, $Client, $Peer_ID) = $DB->next_record()){
 	$Row = ($Row === 'a' ? 'b' : 'a');
 ?>
-<form action="" method="post">
-	<input type="hidden" name="action" value="whitelist_alter" />
-	<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-	<table>
-		<tr class="row<?=$Row?>">
-			<td>
-				<input type="hidden" name="id" value="<?=$ID?>" />
-				<input type="text" name="client" value="<?=$Client?>" />
-			</td>
-			<td>
-				<input type="text" size="10" name="peer_id" value="<?=$Peer_ID?>" />
-			</td>
-			<td>
-				<input type="submit" name="submit" value="Edit" />
-				<input type="submit" name="submit" value="Delete" />
-			</td>
-		</tr>
-	</table>
-</form>
+    <tr class="row<?=$Row?>">
+    <form action="" method="post">
+        <td>
+            <input type="hidden" name="action" value="whitelist_alter" />
+            <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+		<input type="hidden" name="id" value="<?=$ID?>" />
+		<input class="long" type="text" name="client" value="<?=$Client?>" />
+        </td>
+        <td>
+		<input class="long" type="text" size="10" name="peer_id" value="<?=$Peer_ID?>" />
+        </td>
+        <td>
+		<input type="submit" name="submit" value="Edit" />
+		<input type="submit" name="submit" value="Delete" />
+        </td>
+    </form>
+    </tr> 
 <? } ?>
-<form action="" method="post">
-	<input type="hidden" name="action" value="whitelist_alter" />
-	<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-	<table>
-		<tr>
-			<td colspan="4" class="colhead">Add Client</td>
-		</tr>
-		<tr class="rowa">		
-			
-			<td>
-				<input type="text" name="client" />
-			</td>
-			<td>
-				<input type="text" size="10" name="peer_id" />
-			</td>
-			<td>
-				<input type="submit" value="Create" />
-			</td>
-		</tr>
-	</table>
-</form>
+</table>
+</div>
 <? show_footer(); ?>

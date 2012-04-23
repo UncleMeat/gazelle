@@ -175,7 +175,7 @@ $HideWL = check_perms('torrents_hide_imagehosts') && !$NewWL;
 /* -------  Draw upload torrent form  ------- */   
 $TorrentForm->head();
 //$TorrentForm->simple_form($Properties['CategoryID'], $GenreTags);
-$TorrentForm->simple_form($GenreTags);
+$TorrentForm->simple_form($GenreTags, 32);
 $TorrentForm->foot();
 ?>
 <script type="text/javascript">

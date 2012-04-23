@@ -854,7 +854,7 @@ EXPLANATION OF PARSER LOGIC
        * If not this could be moved to a better place maybe?
        */
       
-      function display_bbcode_assistant($textarea){
+      function display_bbcode_assistant($textarea, $default_num_smilies = 26){
           
         ?>
         <script type="text/javascript">
@@ -867,19 +867,20 @@ EXPLANATION OF PARSER LOGIC
           <tbody><tr>
             <td class="colhead" style="padding: 2px 6px">
                 <div style="float: left; text-align: left; margin-top: 0px;">
-                    <a class="bb_icon1" onclick="tag('b')" title="Bold" alt="B">Bold</a>
-                    <a class="bb_icon1" onclick="tag('i')" title="Italic" alt="I">Italic</a>
-                    <a class="bb_icon1" onclick="tag('u')" title="Underline" alt="U">UL</a>
-                    <a class="bb_icon1" onclick="tag('s')" title="Strike" alt="S">Strike</a>
-                    <a class="bb_icon1" onclick="clink()" title="Link" alt="Link">Link</a>
-                    <a class="bb_icon1" onclick="tag('img')" title="Image" alt="Image">Img</a>
-                    <a class="bb_icon1" onclick="cimage()" title="Image prompt" alt="Image">Image</a>
+             
+                    <a class="bb_button" onclick="tag('b')" title="Bold text: [b]text[/b]" alt="B"><b>&nbsp;B&nbsp;</b></a>
+                    <a class="bb_button" onclick="tag('i')" title="Italic text: [i]text[/i]" alt="I"><i>&nbsp;I&nbsp;</i></a>
+                    <a class="bb_button" onclick="tag('u')" title="Underline text: [u]text[/u]" alt="U"><u>&nbsp;U&nbsp;</u></a>
+                    <a class="bb_button" onclick="tag('s')" title="Strikethrough text: [s]text[/s]" alt="S"><s>&nbsp;S&nbsp;</s></a>
+                    <a class="bb_button" onclick="clink()" title="Insert URL: [url]http://url[/url] or [url=http://url]URL text[/url]" alt="Url">Url</a>
+                <!-- <a class="bb_button" onclick="tag('img')" title="Insert image: [img]http://image_url[/img]" alt="Img">Img</a>-->
+                    <a class="bb_button" onclick="cimage()" title="Insert image: [img]http://image_url[/img]" alt="Image">img</a>
+                    <a class="bb_button" onclick="tag('code')" title="Code display: [code]code[/code]" alt="Code">Code</a>
+                    <a class="bb_button" onclick="tag('quote')" title="Quote text: [quote]text[/quote]" alt="Quote">Quote</a>
 
-                    <a class="bb_icon1" onclick="tag('quote')" title="Quote" alt="Quote">Quote</a>
-
-                    <a class="bb_icon1" onclick="tag('mcom')" title="Staff Comment" alt="Mod comment">Mod</a>
-                  
-                <select name="fontsize" id="fontsize" onchange="font('size',this.value);" title="Font size">
+                 <!-- <a class="bb_button" onclick="tag('mcom')" title="Staff Comment" alt="Mod comment">Mod</a> -->
+                 
+                <select  class="bb_button" name="fontsize" id="fontsize" onchange="font('size',this.value);" title="Font size">
                   <option value="0" selected="selected">Font size</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -888,14 +889,18 @@ EXPLANATION OF PARSER LOGIC
                   <option value="5">5</option>
                   <option value="6">6</option>
                   <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
                 </select>
-                     <a style="font-weight: bold;" class="bb_icon1" onclick="colorpicker();" title="Select Color" alt="Colors">Colors</a>
+                    
+                     <a class="bb_button" onclick="colorpicker();" title="Select Color" alt="Colors">Colors</a>
               </div> 
 
               <div style="float: right; margin-top: 3px;"> 
                   <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center')" title="Align - center" alt="Center" /> 
                   <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left')" title="Align - left" alt="Left" /> 
-                  <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify')" title="Align - justify" alt="justify" /> 
+               <!-- <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify')" title="Align - justify" alt="justify" />  -->
                   <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right')" title="Align - right" alt="Right" /> 
                   <img class="bb_icon" src="<?=get_symbol_url('text_uppercase.png') ?>" onclick="text('up')" title="To Uppercase" alt="Up" /> 
                   <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low')" title="To Lowercase" alt="Low" />
@@ -907,14 +912,15 @@ EXPLANATION OF PARSER LOGIC
             <td>
                 <div id="pickerholder"></div>
                 <div class="bb_smiley_holder">
-                    <? 
+                    <?   //  IF this becomes too much of a strain drawing all the smilies everytime 
+                        // the bbcode assistant is used it could be put behind an ajax call for when smilies are opened
                     $count=0;
                     foreach($this->Smileys as $Key=>$Val) {  
-                        echo '<a class="bb_smiley" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
-                        $count++;
-                        if ($count == 64){
+                        if ($count == $default_num_smilies){
                             echo "</div>\n<div class='bb_smiley_holder' id='slickbox'>";
                         }
+                        echo '<a class="bb_smiley" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
+                        $count++;
                     }
                     reset($this->Smileys); 
                     ?> 
@@ -929,10 +935,8 @@ EXPLANATION OF PARSER LOGIC
           $('#slickbox').hide(); 
         });
        </script>
-      </td></tr></tbody></table><br/>
-
-        <?
-
+      </td></tr></tbody></table>
+        <? 
       }
       
       

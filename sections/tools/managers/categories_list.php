@@ -35,7 +35,7 @@ function change_image(display_image, cat_image) {
         <td width="39%">Description</td>
         <td width="13%">Submit</td>
 </tr>
-
+<tr>
         <form action="tools.php" method="post">
             <td>
                     <input type="hidden" name="action" value="categories_alter" />
