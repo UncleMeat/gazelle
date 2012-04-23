@@ -144,11 +144,11 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 
 #logo {
-    width: 23%;
-    height: 75px;
+    width: 180px; 
+    height: 70px;
     background: url('images/logo.png') no-repeat center center;
     position: absolute;
-    left: 0px;
+    left: 40px;
 }
 
 #logo a {
@@ -164,6 +164,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
 
 #menu {
     height: 22px;  /* 47 */
+    width: 45%;
     text-align: center;
     font-size: 9pt;
     margin: 0px auto;
@@ -173,6 +174,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
 
 #menu ul {
     position: relative;
+    /* z-index: 1; */
     z-index: 1;
 }
 
@@ -183,8 +185,9 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 
 #menu ul li a {
- /* padding: 1.1em 1.0% 0.5em 1.0%;  */
-    padding: 0.2em 0.5% 0.2em 0.5%;
+ /* padding: 1.1em 1.0% 0.5em 1.0%;  
+    padding: 0.2em 0.5% 0.2em 0.5%; */
+    padding: 2px 6px;
 }
 #menu ul li a:active {
     outline: none;
@@ -203,24 +206,24 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 
 #userinfo {
-    float: right; 
     text-align: right;
-    padding: 5px 15px 5px 0px;
     color: white;
-   /* position: absolute; 
+   /* 
+    float: right; 
+   position: absolute; 
     right: 0px; */
 }
 
 #userinfo img {
     margin-top: -5px;
-}
+}  
 
 #userinfo ul li {
-    position: relative;
+  /*  position: relative;
+    margin: 0 0.1em; */
+    margin: 0;
     display: inline;
-    margin: 0 0.1em;
-    line-height: 20px;
-    vertical-align: middle;
+    /* line-height: 20px; */
     padding: 0px;
 }
 
@@ -230,7 +233,8 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 #userinfo a:hover {
     text-decoration: none;
-    color: #839FBC;
+   /*  color: #839FBC; */
+    color: #FF6600;
 }
 
 #userinfo_username {
@@ -238,7 +242,9 @@ ul.thin li { margin:0px 0px; padding:0px; }
     margin-right: 10px;
     left: -300px; */
     position: absolute;
-    right: 180px;
+    /*   right: 70%;
+    top: 6px;  */
+    right: 20px;
     top: 46px;
 }
 
@@ -246,21 +252,21 @@ ul.thin li { margin:0px 0px; padding:0px; }
    /*  display:inline;
    clear: right; */
     position: absolute;
-    right: 20px;
-    top: 46px;
+    right: 145px;
+    top: 46px; 
 }
 
 #userinfo_stats {
-   position: absolute;
+    position: absolute; 
     right: 20px;
-    top: 26px;
+    top: 26px; 
 }
  
 #userinfo_minor {
    /*  display:inline; */
     position: absolute;
-    top: 6px; 
     right: 20px;
+    top: 6px; 
 }
  
 span.stat {
@@ -303,11 +309,9 @@ span.stat {
     position: absolute;
     top: 1em;
     left: 0;
-    z-index: 1000;
     border: 1px solid #98AAB1;
     background: #F4F6FB;
     width: 12em;
-    margin-top: 12px;
 }
 
 #searchbars ul li ul li {
