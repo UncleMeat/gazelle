@@ -1323,13 +1323,14 @@ CREATE TABLE IF NOT EXISTS `stylesheets` (
   `Default` enum('0','1') NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
-
+ 
 --
--- Dumpning av Data i tabell `stylesheets`
+-- Dumping data for table `stylesheets`
 --
 
 INSERT INTO `stylesheets` (`ID`, `Name`, `Description`, `Default`) VALUES
-(1, 'empornium', 'The new stylesheet', '1');
+(1, 'empornium', 'The new stylesheet', '0'),
+(2, 'empornium2', 'high contrast variation', '1');
 
 -- --------------------------------------------------------
 

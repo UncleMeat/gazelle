@@ -384,9 +384,9 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 						onfocus="if (this.value == 'Torrents') this.value='';"
 						onblur="if (this.value == '') this.value='Torrents';"
 <? if(isset($LoggedUser['SearchType']) && $LoggedUser['SearchType']) { // Advanced search ?> 
-						value="Torrents" type="text" name="groupname" size="17"
+						value="Torrents" type="text" name="groupname" size="17" title="Search Torrents"
 <? } else { ?>
-						value="Torrents" type="text" name="searchstr" size="17"
+						value="Torrents" type="text" name="searchstr" size="17" title="Search Torrents"
 <? } ?>
 					/>
 				</form>
@@ -398,7 +398,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 						spellcheck="false"
 						onfocus="if (this.value == 'Requests') this.value='';"
 						onblur="if (this.value == '') this.value='Requests';"
-						value="Requests" type="text" name="search" size="17"
+						value="Requests" type="text" name="search" size="17" title="Search Requests"
 					/>
 				</form>
 			</li>
@@ -409,7 +409,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					<input
 						onfocus="if (this.value == 'Forums') this.value='';"
 						onblur="if (this.value == '') this.value='Forums';"
-						value="Forums" type="text" name="search" size="17"
+						value="Forums" type="text" name="search" size="17" title="Search Forums"
 					/>
 				</form>
 			</li>
@@ -419,7 +419,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					<input
 						onfocus="if (this.value == 'Log') this.value='';"
 						onblur="if (this.value == '') this.value='Log';"
-						value="Log" type="text" name="search" size="17"
+						value="Log" type="text" name="search" size="17" title="Search Logs"
 					/>
 				</form>
 			</li>
@@ -430,7 +430,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					<input
 						onfocus="if (this.value == 'Users') this.value='';"
 						onblur="if (this.value == '') this.value='Users';"
-						value="Users" type="text" name="search" size="20"
+						value="Users" type="text" name="search" size="20" title="Search Users"
 					/>
 				</form>
 			</li>
