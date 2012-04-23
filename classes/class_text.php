@@ -919,14 +919,14 @@ EXPLANATION OF PARSER LOGIC
                         if ($count == $default_num_smilies){
                             echo "</div>\n<div class='bb_smiley_holder' id='slickbox'>";
                         }
-                        echo '<a class="bb_smiley" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
+                        echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
                         $count++;
                     }
                     reset($this->Smileys); 
                     ?> 
                 </div> 
                
-                  <div style="padding: 2px; margin:8px auto 1px; font-weight: bold; text-align: center; border: 1px solid rgb(123, 163, 193); background: none repeat scroll 0% 0% rgb(186, 203, 216);">
+                  <div style="padding: 2px; margin:1px auto 1px; font-weight: bold; text-align: center; border: 1px solid rgb(123, 163, 193); background: none repeat scroll 0% 0% rgb(186, 203, 216);">
                        <a href="#" onclick="$('#slickbox').toggle(); this.innerHTML=(this.innerHTML=='Hide smilies'?'Show all smilies':'Hide smilies'); return false;">Show all smilies</a>
                   </div> 
         <script type="text/javascript">

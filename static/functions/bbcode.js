@@ -11,6 +11,23 @@ var BBCode = {
 };
 
 
+function Quick_Preview_Blog() { 
+	$('#post_preview').raw().value = "Make changes";
+	$('#post_preview').raw().preview = true;
+	ajax.post("ajax.php?action=preview_blog","quickpostform", function(response){
+		$('#quickreplypreview').show();
+		$('#contentpreview').raw().innerHTML = response;
+		$('#quickreplytext').hide();
+	});
+}
+
+function Quick_Edit_Blog() { 
+	$('#post_preview').raw().value = "Preview";
+	$('#post_preview').raw().preview = false;
+	$('#quickreplypreview').hide();
+	$('#quickreplytext').show();
+}
+
 //made by putyn@tbdev.net lastupdate 28/12/2009
 
 function wrap(v, r, e) {

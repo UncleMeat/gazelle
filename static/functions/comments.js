@@ -104,7 +104,7 @@ function Delete(post) {
 }
 
 function Quick_Preview() {
-	var quickreplybuttons;
+	//var quickreplybuttons;
 	$('#post_preview').raw().value = "Make changes";
 	$('#post_preview').raw().preview = true;
 	ajax.post("ajax.php?action=preview","quickpostform", function(response){
@@ -115,7 +115,7 @@ function Quick_Preview() {
 }
 
 function Quick_Edit() {
-	var quickreplybuttons;
+	//var quickreplybuttons;
 	$('#post_preview').raw().value = "Preview";
 	$('#post_preview').raw().preview = false;
 	$('#quickreplypreview').hide();

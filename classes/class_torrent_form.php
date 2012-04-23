@@ -214,35 +214,7 @@ class TORRENT_FORM {
                             <? $Text->display_bbcode_assistant("desc", $num_smilies); ?>
                              <textarea name="desc" id="desc" class="long" rows="36"><?=display_str($Torrent['GroupDescription']); ?></textarea>
                         </td>
-			</tr>
-                  
-    
-                  <? /*
-			<tr>
-				<td class="label">Cover Image</td>
-				<td> 
-					<div id="uploadpreviewimage">
-							<div id="imagepreview" style="text-align:left;"></div>
-                              </div>
-					<div id="uploadimage">
-                                    <input type="text" id="image" class="long" name="image" value="<?=display_str($Torrent['Image']) ?>" <?=$this->Disabled?>/>
-                              </div>
-                       </td>
 			</tr> 
-			<tr>
-				<td class="label">Description</td>
-				<td>
-					<div id="uploadpreviewbody">
-							<div id="contentpreview" style="text-align:left;"></div>
-                              </div>
-					<div id="uploadbody">
-                                    <textarea name="desc" id="desc" class="long" rows="36"><?=display_str($Torrent['GroupDescription']); ?></textarea>
-                              </div>
-                        </td>
-			</tr>
-                   
-                   */ ?>
-                  
 <?		} ?>
 
 		</table>
