@@ -22,6 +22,15 @@ html {
     width: 100%;
 }
 
+
+/* ------------------------------------
+ Main darkish blue (content bg, base for colhead colors etc)
+    #0261A3; 
+darker shade (very top of header):
+    #024a7c;  
+*/
+
+
 body {
     width: 100%;
     background: #0261a3;
@@ -33,13 +42,13 @@ body {
 /* Common elements */
 
 a {
-    color: #32475F;
+    color:#225de1;        /* #32475F;  */
     text-decoration: none;
     border: none;
 }
 a:hover {
     text-decoration: underline;
-    color: #839FBC;
+    color:#121dd4;  /* #839FBC;  */
 }
 
 h1,h2,h3,h4 {
@@ -149,7 +158,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
     background: url('images/logo.png') no-repeat center center;
     position: absolute;
     left: 30px;
-    top: 34px;
+    top: 44px;
 }
 
 #logo a {
@@ -248,7 +257,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
 #userinfo_stats {
     position: absolute;
     right: 20px;
-    top: 34px;   
+    top: 44px;   
 }
 span.inside_stat {
     display: block;
@@ -326,14 +335,25 @@ li.searchbars {
     margin: 16px 0px 12px 25px;
 }
 
+
+#alerts {
+    margin: 0px auto;
+    text-align: center;
+} 
+
 .alertbar {
-    border-top: 1px solid #CB7772;
-    padding: 6px 0px 4px 0px;
+    display: inline;
+    border: 1px solid #b80000;
+    border-bottom: 1px solid #CB7772;
+    padding: 2px 80px 2px;
     background-color: #c00; /* #0261a3; */
     text-align: center;
     font-weight: bold;
     color: white;
-    height: 16px;
+    margin: 0px auto;
+    border-radius: 10px;       /* FF9+ IE9+ */
+    -moz-border-radius: 10px; /* for FF5 */
+    -webkit-border-radius: 10px; /* for opera */
 }
 .alertbar a {
     text-decoration: underline;
@@ -344,9 +364,10 @@ li.searchbars {
 }
 
 .blend {
-    border: 0;
-    background-color: #060606; 
-   /*  background-color: transparent; */
+    display: inline;
+    padding: 2px 20px 2px;
+    border: 1px solid #555;
+    background-color: #024a7c;  /*  #0261A3;   #060606;  */
     color: white;
 }
 
@@ -374,6 +395,7 @@ li.searchbars {
     border: 1px solid #005488;
     border-radius: 4px;       /* FF9+ IE9+ */
     -moz-border-radius: 4px; /* for FF5 */
+    -webkit-border-radius: 10px; /* for opera */
     padding: 1px 5px;
     margin: 0px;
     color: #000;
@@ -483,7 +505,7 @@ p.min_padding {
 
 .head {
     padding: 4px;
-    background: #C6D3E4 url(images/colhead-grad.gif) repeat-x;
+    background: #0261A3 url(images/colhead-grad.gif) repeat-x;  /* #C6D3E4   */
     color: #eee;
     border-bottom: 1px solid #98AAB1;
     font-weight:bold;
@@ -551,7 +573,7 @@ table.wid740 {
 }
 
 .colhead {
-    background: #C6D3E4 url(images/colhead-grad.gif) repeat-x;
+    background: #0261A3 url(images/colhead-grad.gif) repeat-x;  /*  #0261A3  #C6D3E4   */
     font-weight: bold;
     color: #eee;
 }
@@ -574,7 +596,7 @@ td.colhead, .colhead td {
 }
 
 .colhead_dark {
-    background: #C6D3E4 url(images/colhead-grad.gif) repeat-x;
+    background: #0261A3 url(images/colhead-grad.gif) repeat-x;/*  #0261A3  #C6D3E4   */
     color: #eee;
 }
 
@@ -760,7 +782,7 @@ ul.poll li.graph {
 
 .torrent_table table .colhead_dark {
     background-image: none;
-    background-color: #C6D3E4;
+    background-color: #0261A3;  /* #C6D3E4; #0261A3 */
 }
 
 .nobr {
