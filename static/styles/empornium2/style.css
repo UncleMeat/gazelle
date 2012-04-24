@@ -248,11 +248,10 @@ ul.thin li { margin:0px 0px; padding:0px; }
 #userinfo_stats {
     position: absolute;
     right: 20px;
-    top: 42px;   
+    top: 34px;   
 }
 span.inside_stat {
     display: block;
-    margin-top: 1px;
 }
  
 #userinfo_minor {

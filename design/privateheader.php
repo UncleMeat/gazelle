@@ -160,6 +160,7 @@ if($NewSubscriptions === FALSE) {
 			<li id="nav_subscriptions"><a onmousedown="Stats('subscriptions');" href="userhistory.php?action=subscriptions"<?=($NewSubscriptions ? ' class="new-subscriptions"' : '')?>>Subscriptions</a></li>
 			<li id="nav_comments"><a onmousedown="Stats('comments');" href="comments.php">Comments</a></li>
 			<li id="nav_friends"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>
+			<li id="nav_logs"><a onmousedown="Stats('logs');" href="log.php">Logs</a></li>
 		</ul>
 	</div>
 	<div id="menu">
