@@ -118,12 +118,12 @@ if ($DB->record_count() == 0) {
 <? 				if ($ViewString != 'Resolved' && $IsStaff) { ?>
 					<td width="10"><input type="checkbox" onclick="toggleChecks('messageform',this)" /></td>
 <? 				} ?>
-					<td width="50%">Subject</td>
-					<td>Sender</td>
+					<td width="35%">Subject</td>
+					<td width="18%">Sender</td>
 					<td>Date</td>
-					<td>Assigned to</td>
+					<td width="15%">Assigned to</td>
 <?				if ($ViewString == 'Resolved') { ?>
-					<td>Resolved by</td>
+					<td width="13%">Resolved by</td>
 <?				} ?>
 				</tr>
 <?

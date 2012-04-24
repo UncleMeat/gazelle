@@ -145,16 +145,17 @@ ul.thin li { margin:0px 0px; padding:0px; }
 
 #logo {
     width: 180px; 
-    height: 70px;
+    height: 34px;
     background: url('images/logo.png') no-repeat center center;
     position: absolute;
-    left: 40px;
+    left: 30px;
+    top: 34px;
 }
 
 #logo a {
     border: none;
     width: 100%;
-    height: 60px;
+    height: 36px;
     display: block;
 }
 
@@ -163,18 +164,16 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 
 #menu {
-    height: 22px;  /* 47 */
-    width: 45%;
+    height: 24px;
+    width: 55%;
     text-align: center;
     font-size: 9pt;
     margin: 0px auto;
-  /* margin: 0px 320px 0px 210px; */
-    padding-top: 46px;
+    padding-top: 44px;
 }
 
 #menu ul {
     position: relative;
-    /* z-index: 1; */
     z-index: 1;
 }
 
@@ -185,8 +184,6 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 
 #menu ul li a {
- /* padding: 1.1em 1.0% 0.5em 1.0%;  
-    padding: 0.2em 0.5% 0.2em 0.5%; */
     padding: 2px 6px;
 }
 #menu ul li a:active {
@@ -208,10 +205,6 @@ ul.thin li { margin:0px 0px; padding:0px; }
 #userinfo {
     text-align: right;
     color: white;
-   /* 
-    float: right; 
-   position: absolute; 
-    right: 0px; */
 }
 
 #userinfo img {
@@ -219,62 +212,64 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }  
 
 #userinfo ul li {
-  /*  position: relative;
-    margin: 0 0.1em; */
-    margin: 0;
-    display: inline;
-    /* line-height: 20px; */
+    margin: 0 0.1em;
+    line-height: 18px;
     padding: 0px;
+    display:inline;
 }
 
 #userinfo a, #userinfo a:visited {
     text-decoration: underline;
-    color: #eee;
+    color: #fff;
 }
 #userinfo a:hover {
     text-decoration: none;
-   /*  color: #839FBC; */
     color: #FF6600;
 }
 
 #userinfo_username {
-  /*  display:inline;
-    margin-right: 10px;
-    left: -300px; */
     position: absolute;
-    /*   right: 70%;
-    top: 6px;  */
     right: 20px;
-    top: 46px;
+    top: 4px;
+} 
+#userinfo_username li {
+    display:inline;
 }
 
 #userinfo_major {
-   /*  display:inline;
-   clear: right; */
     position: absolute;
     right: 145px;
-    top: 46px; 
+    top: 4px;
+}
+#userinfo_major li {
+    display:inline;
 }
 
 #userinfo_stats {
-    position: absolute; 
+    position: absolute;
     right: 20px;
-    top: 26px; 
+    top: 42px;   
+}
+span.inside_stat {
+    display: block;
+    margin-top: 1px;
 }
  
 #userinfo_minor {
-   /*  display:inline; */
     position: absolute;
-    right: 20px;
-    top: 6px; 
+    left: 20px;
+    top: 4px;
+}
+#userinfo_minor li {
+    display:inline;
 }
  
 span.stat {
-    font-weight: bold;
+    font-weight: bold; 
 }
 #searchbars {
     border-top: 1px solid black;
-    border-bottom: 1px solid black;
+    /* border-bottom: 1px solid black; */
     padding: 6px 0px 0px 0px;
     background: url(images/hbg1.png) repeat-x;
     text-align: center;
@@ -334,12 +329,12 @@ li.searchbars {
 
 .alertbar {
     border-top: 1px solid #CB7772;
-    padding: 10px 0px 2px 0px;
-    background-color: #990000; /* #0261a3; */
+    padding: 6px 0px 4px 0px;
+    background-color: #c00; /* #0261a3; */
     text-align: center;
     font-weight: bold;
     color: white;
-    height: 20px;
+    height: 16px;
 }
 .alertbar a {
     text-decoration: underline;
@@ -350,15 +345,57 @@ li.searchbars {
 }
 
 .blend {
-   /*  border-top: 1px solid #98AAB1; */
-    border-top: 1px solid #000000;
-    background-color: #0261a3;
+    border: 0;
+    background-color: #060606; 
+   /*  background-color: transparent; */
     color: white;
 }
 
 .blend a {
     color: white;
+    padding: 2px 2px;
+} 
+
+.blend a:hover {
+   background-color: #FF6600;
+   color: #fff;
+   text-decoration: none;
 }
+/*
+#modbar {
+    position: absolute;
+    right: 20px;
+    top: 66px;
+} */
+
+/* user classes */
+.user_name { 
+    font-weight: normal;
+    background-color:#e3eefd;
+    border: 1px solid #005488;
+    border-radius: 4px;       /* FF9+ IE9+ */
+    -moz-border-radius: 4px; /* for FF5 */
+    padding: 1px 5px;
+    margin: 0px;
+    color: #000;
+}
+span.user_name a { 
+    color: #000;
+}
+.rank {  /* rank applies to all the following styles */
+    font-weight: bold; 
+}  
+.Apprentice { color:#92a5c2; }  /*#839FBC 
+.Perv { color:#0E558B; }*/
+.Perv { color:#4Ec89B; }
+.GoodPerv { color:#3c3; }
+.SextremePerv { color:orange; }
+.SmutPeddler { color:#00f; }
+.ModPerv { color:#000; }
+.Admin { color:#606; }
+.Sysop { color:#8B0000; }  /* PINK: #b93dd6 */
+.Donor { color:#DAA520; }  /* #F4E649; */
+
 
 /* IE doesn't appear to like a simple display:none in our header. Random things start fucking up pretty badly. */
 .hidden {
@@ -381,6 +418,17 @@ input.hidden {
     margin-left:auto;
     margin-right:auto;
 }
+
+ h2 {
+    margin: 0px 0px 20px;
+    background: #000 url(images/colhead-grad.gif) repeat-x;
+    text-align: center;
+    height: 24px;
+    color: #fff;
+} 
+ h2 a {
+    color: #eee;
+}  
 
 div.linkbox {
     text-align:center;
@@ -771,18 +819,17 @@ blockquote {
     border: 1px dashed #98AAB1;
 }
 
-/* div.forum_post_container  {
-    position: relative;
-}  */ 
+/* Signatures layout */ 
 div.post_content  {
-    min-height: 135px;  
+    min-height: 95px;  
 }  
 div.post_footer  { 
     margin-top: 8px; 
 }  
 div.sig { 
-    margin-top: 16px; 
-    border-top: 2px solid black;  
+    margin-top: 12px; 
+    border-top: 1px solid #98AAB1;  
+    padding-top: 6px;
 }
 
 /* Layout (Inbox) */

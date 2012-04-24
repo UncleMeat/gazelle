@@ -295,7 +295,7 @@ li.searchbars {
 .alertbar {
     border-top: 1px solid #CB7772;
     padding: 15px 0px 2px 0px;
-    background-color: #FF0000; //#0261a3;
+    background-color: #FF0000; /* #0261a3; */
     text-align: center;
     font-weight: bold;
     color: white;
@@ -318,6 +318,38 @@ li.searchbars {
 .blend a {
     color: white;
 }
+
+
+
+/* user classes */
+.user_name { 
+    font-weight: normal;
+    background-color:#e3eefd;
+    border: 1px solid #005488;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    padding: 1px 5px;
+    margin: 0px;
+    color: #000;
+}
+span.user_name a { 
+    color: #000;
+}
+.rank {  /* rank applies to all the following styles */
+    font-weight: bold; 
+}  
+.Apprentice { color:#b2c5dD; }  /*#839FBC 
+.Perv { color:#0E558B; }*/
+.Perv { color:#4Ec89B; }
+.GoodPerv { color:#3c3; }
+.SextremePerv { color:orange; }
+.SmutPeddler { color:#00f; }
+.ModPerv { color:#000; }
+.Admin { color:#606; }
+.Sysop { color:#8B0000; }  /* PINK: #b93dd6 */
+.Donor { color:#DAA520; }  /* #F4E649; */
+
+
 
 /* IE doesn't appear to like a simple display:none in our header. Random things start fucking up pretty badly. */
 .hidden {
@@ -728,6 +760,18 @@ blockquote {
     margin: 10px;
     padding: 10px;
     border: 1px dashed #98AAB1;
+}
+
+/* Signatures layout */ 
+div.post_content  {
+    min-height: 95px;  
+}  
+div.post_footer  { 
+    margin-top: 8px; 
+}  
+div.sig { 
+    margin-top: 16px; 
+    border-top: 1px solid black;  
 }
 
 /* Layout (Inbox) */

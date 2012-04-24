@@ -12,6 +12,7 @@ $DB->query("SELECT
 			m.Email,
 			m.IRCKey,
 			m.Paranoia,
+                  m.Signature,
 			i.Info,
 			i.Avatar,
 			i.Country,
@@ -24,7 +25,7 @@ $DB->query("SELECT
 			JOIN users_info AS i ON i.UserID = m.ID
 			LEFT JOIN permissions AS p ON p.ID=m.PermissionID
 			WHERE m.ID = '".db_string($UserID)."'");
-list($Username,$Email,$IRCKey,$Paranoia,$Info,$Avatar,$Country,$StyleID,$StyleURL,$SiteOptions,$UnseededAlerts,$Class)=$DB->next_record(MYSQLI_NUM, array(3,9));
+list($Username,$Email,$IRCKey,$Paranoia,$Signature,$Info,$Avatar,$Country,$StyleID,$StyleURL,$SiteOptions,$UnseededAlerts,$Class)=$DB->next_record(MYSQLI_NUM, array(3,9));
 
 
 if($UserID != $LoggedUser['ID'] && !check_perms('users_edit_profiles', $Class)) {
@@ -261,7 +262,11 @@ echo $Val->GenerateJS('userform');
 			</tr>
 			<tr>
 				<td class="label"><strong>Info</strong></td>
-				<td><textarea name="info" cols="70" rows="8"><?=display_str($Info)?></textarea></td>
+				<td><textarea name="info" class="long" rows="8"><?=display_str($Info)?></textarea></td>
+			</tr>
+			<tr>
+				<td class="label"><strong>Signature</strong></td>
+				<td><textarea name="signature" class="long" rows="8"><?=display_str($Signature)?></textarea></td>
 			</tr>
 			<tr>
 				<td class="label"><strong>IRCKey</strong></td>

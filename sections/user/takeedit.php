@@ -240,7 +240,8 @@ $SQL="UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET
 	i.DownloadAlt='$DownloadAlt',
 	i.UnseededAlerts='$UnseededAlerts',
 	m.Email='".db_string($_POST['email'])."',
-	m.IRCKey='".db_string($_POST['irckey'])."',";
+	m.IRCKey='".db_string($_POST['irckey'])."',
+	m.Signature='".db_string($_POST['signature'])."',";
 
 $SQL .= "m.Paranoia='".db_string(serialize($Paranoia))."'";
 
