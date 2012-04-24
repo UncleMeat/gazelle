@@ -511,9 +511,11 @@ if($Catalogue === false) {
 			c.Body,
 			c.EditedUserID,
 			c.EditedTime,
-			u.Username
+			u.Username,
+            a.Signature
 			FROM torrents_comments as c
 			LEFT JOIN users_main AS u ON u.ID=c.EditedUserID
+            LEFT JOIN users_main AS a ON a.ID = c.AuthorID
 			WHERE c.GroupID = '$GroupID'
 			ORDER BY c.ID
 			LIMIT $CatalogueLimit");
@@ -534,7 +536,7 @@ echo $Pages;
 
 //---------- Begin printing
 foreach($Thread as $Key => $Post){
-	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername) = array_values($Post);
+	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature) = array_values($Post);
 	list($AuthorID, $Username, $PermissionID, $Paranoia, $Artist, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
 ?>
 <table class="forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>" id="post<?=$PostID?>">
@@ -566,17 +568,23 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 }
 ?>
 		<td class="body" valign="top">
-			<div id="content<?=$PostID?>">
-<?=$Text->full_format($Body)?>
-<? if($EditedUserID){ ?>
-				<br />
-				<br />
+			<div id="content<?=$PostID?>" class="post_container">
+                      <div class="post_content"><?=$Text->full_format($Body) ?> </div>
+                <?  
+           if( !empty($Signature)) { // TODO: && setting is set to view sigs
+                        
+                        echo '<div class="sig post_footer">' . $Text->full_format($Signature) . '</div>';
+           }      ?>
+                      
+<? if($EditedUserID){ ?>  
+                        <div class="post_footer">
 <?	if(check_perms('site_admin_forums')) { ?>
-				<a href="#content<?=$PostID?>" onclick="LoadEdit('torrents', <?=$PostID?>, 1); return false;">&laquo;</a> 
+				<a href="#content<?=$PostID?>" onclick="LoadEdit('forums', <?=$PostID?>, 1); return false;">&laquo;</a> 
 <? 	} ?>
 				Last edited by
 				<?=format_username($EditedUserID, $EditedUsername) ?> <?=time_diff($EditedTime,2,true,true)?>
-<? } ?>
+                        </div>
+        <? }   ?>  
 			</div>
 		</td>
 	</tr>

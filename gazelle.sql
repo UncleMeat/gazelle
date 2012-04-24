@@ -1994,6 +1994,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `ipcc` varchar(2) NOT NULL DEFAULT '',
   `FLTokens` int(10) NOT NULL DEFAULT '0',
   `Credits` int(11) NOT NULL DEFAULT '0',
+  `Signature` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Username` (`Username`),
   KEY `Email` (`Email`),

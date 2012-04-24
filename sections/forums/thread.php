@@ -80,9 +80,11 @@ if(!$Catalogue = $Cache->get_value('thread_'.$ThreadID.'_catalogue_'.$CatalogueI
 		p.Body,
 		p.EditedUserID,
 		p.EditedTime,
-		ed.Username
+		ed.Username,
+            a.Signature
 		FROM forums_posts as p
 		LEFT JOIN users_main AS ed ON ed.ID = p.EditedUserID
+		LEFT JOIN users_main AS a ON a.ID = p.AuthorID
 		WHERE p.TopicID = '$ThreadID' AND p.ID != '".$ThreadInfo['StickyPostID']."'
 		LIMIT $CatalogueLimit");
 	$Catalogue = $DB->to_array(false,MYSQLI_ASSOC);
@@ -361,10 +363,9 @@ if($ThreadInfo['StickyPostID']) {
 	if($ThreadInfo['StickyPostID'] != $Thread[count($Thread)-1]['ID']) {
 		$Thread[] = $ThreadInfo['StickyPost'];
 	}
-}
-
+} 
 foreach($Thread as $Key => $Post){
-	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername) = array_values($Post);
+	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature) = array_values($Post);
 	list($AuthorID, $Username, $PermissionID, $Paranoia, $Artist, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
 	
 	// Image proxy CTs
@@ -420,17 +421,23 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
 	</td>
 <? } ?>
 		<td class="body" valign="top"<? if(!empty($HeavyInfo['DisableAvatars'])) { echo ' colspan="2"'; } ?>>
-			<div id="content<?=$PostID?>">
-				<?=$Text->full_format($Body) ?>
-<? if($EditedUserID){ ?>
-				<br />
-				<br />
+			<div id="content<?=$PostID?>" class="post_container">
+                      <div class="post_content"><?=$Text->full_format($Body) ?> </div>
+                <?  
+           if( !empty($Signature)) { // TODO: && setting is set to view sigs
+                        
+                        echo '<div class="sig post_footer">' . $Text->full_format($Signature) . '</div>';
+           }      ?>
+                      
+<? if($EditedUserID){ ?>  
+                        <div class="post_footer">
 <?	if(check_perms('site_admin_forums')) { ?>
 				<a href="#content<?=$PostID?>" onclick="LoadEdit('forums', <?=$PostID?>, 1); return false;">&laquo;</a> 
 <? 	} ?>
 				Last edited by
 				<?=format_username($EditedUserID, $EditedUsername) ?> <?=time_diff($EditedTime,2,true,true)?>
-<? } ?>
+                        </div>
+        <? }   ?>  
 			</div>
 		</td>
 	</tr>

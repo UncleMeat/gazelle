@@ -771,6 +771,20 @@ blockquote {
     border: 1px dashed #98AAB1;
 }
 
+/* div.forum_post_container  {
+    position: relative;
+}  */ 
+div.post_content  {
+    min-height: 135px;  
+}  
+div.post_footer  { 
+    margin-top: 8px; 
+}  
+div.sig { 
+    margin-top: 16px; 
+    border-top: 2px solid black;  
+}
+
 /* Layout (Inbox) */
 
 tr.unreadpm {
