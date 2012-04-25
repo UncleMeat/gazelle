@@ -423,11 +423,23 @@ function update_site_options($UserID, $NewOptions) {
 	}
 }
 
+
+function get_avatar_css($MaxAvatarWidth,$MaxAvatarHeight){
+    $css = 'max-width:'.$MaxAvatarWidth.'px; max-height:'.$MaxAvatarHeight.'px;';
+    //if($MaxAvatarHeight < 150) { $css=$css.' margin-top: '.round((150 - $MaxAvatarHeight) / 2).'px;'; }
+    return $css;
+}
+
 function get_permissions($PermissionID) {
 	global $DB, $Cache;
 	$Permission = $Cache->get_value('perm_'.$PermissionID);
 	if(empty($Permission)) {
-		$DB->query("SELECT p.Level AS Class, p.Values as Permissions FROM permissions AS p WHERE ID='$PermissionID'");
+		$DB->query("SELECT p.Level AS Class, 
+                               p.Values as Permissions, 
+                               p.MaxSigLength,
+                               p.MaxAvatarWidth,
+                               p.MaxAvatarHeight
+                               FROM permissions AS p WHERE ID='$PermissionID'");
 		$Permission = $DB->next_record(MYSQLI_ASSOC, array('Permissions'));
 		$Permission['Permissions'] = unserialize($Permission['Permissions']);
 		$Cache->cache_value('perm_'.$PermissionID, $Permission, 2592000);

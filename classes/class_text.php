@@ -854,7 +854,7 @@ EXPLANATION OF PARSER LOGIC
        * If not this could be moved to a better place maybe?
        */
       
-      function display_bbcode_assistant($textarea, $default_num_smilies = 26){
+      function display_bbcode_assistant($textarea, $start_num_smilies = 0, $extra_num_smilies = 86){
           
         ?>
         <script type="text/javascript">
@@ -911,36 +911,42 @@ EXPLANATION OF PARSER LOGIC
           <tr>
             <td>
                 <div id="pickerholder"></div>
-                <div class="bb_smiley_holder">
+                <div id="smiley_overflow" class="bb_smiley_holder">
                     <?   //  IF this becomes too much of a strain drawing all the smilies everytime 
                         // the bbcode assistant is used it could be put behind an ajax call for when smilies are opened
                     $count=0;
                     foreach($this->Smileys as $Key=>$Val) {  
-                        if ($count == $default_num_smilies){
-                            echo "</div>\n<div class='bb_smiley_holder' id='slickbox'>";
+                        if ($count == $start_num_smilies){
+                            break;
                         }
                         echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
                         $count++;
                     }
                     reset($this->Smileys); 
                     ?> 
-                </div> 
+                </div>  
+                <!-- <div id="smiley_overflow" class="bb_smiley_holder"></div>  -->
                
-                  <div style="padding: 2px; margin:1px auto 1px; font-weight: bold; text-align: center; border: 1px solid rgb(123, 163, 193); background: none repeat scroll 0% 0% rgb(186, 203, 216);">
-                       <a href="#" onclick="$('#slickbox').toggle(); this.innerHTML=(this.innerHTML=='Hide smilies'?'Show all smilies':'Hide smilies'); return false;">Show all smilies</a>
-                  </div> 
-        <script type="text/javascript">
-          addDOMLoadEvent(function() {
-         // hides the slickbox as soon as the DOM is ready (a little sooner that page load)
-          $('#slickbox').hide(); 
-        });
-       </script>
+                  <div class="overflow_button">
+                       <a href="#" id="open_overflow" onclick="if(this.isopen){Close_Smilies();}else{Open_Smilies(<?="$start_num_smilies,$extra_num_smilies"?>);};return false;">Show smilies</a>
+                       <a href="#" id="open_overflow_more" onclick="Open_Smilies(<?=$extra_num_smilies?>,9999);return false;"></a>
+                  </div>  
       </td></tr></tbody></table>
         <? 
       }
       
       
-      
+      function draw_smilies_from($indexfrom = 0, $indexto = -1){
+            $count=0;
+            foreach($this->Smileys as $Key=>$Val) { 
+                if ($indexto >= 0 && $count > $indexto) { break; }
+                if ($count >= $indexfrom){
+                    echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
+                }
+                $count++;
+            }
+            reset($this->Smileys); 
+      }
       
       
 }

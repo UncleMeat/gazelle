@@ -178,7 +178,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
     text-align: center;
     font-size: 9pt;
     margin: 0px auto;
-    padding-top: 44px;
+    padding-top: 40px;
 }
 
 #menu ul {
@@ -339,14 +339,16 @@ li.searchbars {
 #alerts {
     margin: 0px auto;
     text-align: center;
+    max-width: 800px;
+    max-height: 16px;
 } 
 
 .alertbar {
     display: inline;
-    border: 1px solid #b80000;
-    border-bottom: 1px solid #CB7772;
-    padding: 2px 80px 2px;
-    background-color: #c00; /* #0261a3; */
+    border: 1px solid #955;
+  /*  border-bottom: 1px solid #CB7772;*/
+    padding: 2px 70px 2px;
+    background-color: #e00; /* #0261a3; */
     text-align: center;
     font-weight: bold;
     color: white;
@@ -395,7 +397,7 @@ li.searchbars {
     border: 1px solid #005488;
     border-radius: 4px;       /* FF9+ IE9+ */
     -moz-border-radius: 4px; /* for FF5 */
-    -webkit-border-radius: 10px; /* for opera */
+    -webkit-border-radius: 4px; /* for opera */
     padding: 1px 5px;
     margin: 0px;
     color: #000;
@@ -406,8 +408,7 @@ span.user_name a {
 .rank {  /* rank applies to all the following styles */
     font-weight: bold; 
 }  
-.Apprentice { color:#92a5c2; }  /*#839FBC 
-.Perv { color:#0E558B; }*/
+.Apprentice { color:#92a5c2; }
 .Perv { color:#4Ec89B; }
 .GoodPerv { color:#3c3; }
 .SextremePerv { color:orange; }
@@ -430,7 +431,6 @@ input.hidden {
 }
 
 /* Layout (Any page) */
-
 
 .thin {
     /* width: 850px; */
@@ -827,12 +827,15 @@ table.forum_unread {
 
 td.avatar {
     width: 150px;
+    min-height: 150px; 
     padding: 0px;
+    text-align: center;
 }
 
-table.forum_post td.body {
-    width:690px;
+/* td.avatar img.avatar {
+    float: right;
 }
+*/
 
 blockquote {
     margin: 10px;
@@ -842,13 +845,13 @@ blockquote {
 
 /* Signatures layout */ 
 div.post_content  {
-    min-height: 95px;  
+    min-height: 100px;  
 }  
 div.post_footer  { 
-    margin-top: 8px; 
+    margin-top: 4px; 
 }  
 div.sig { 
-    margin-top: 12px; 
+    margin-top: 6px; 
     border-top: 1px solid #98AAB1;  
     padding-top: 6px;
 }
@@ -990,6 +993,10 @@ ul .invitetree {
 }
 */
 
+table.bb_holder td {
+    padding:0px;
+}
+
 .bb_smiley_holder {
     text-align: center; 
     padding: 0px; 
@@ -1027,7 +1034,19 @@ a.bb_button:hover {
 }
 
 .bb_icon:hover { 
-	background:orange; 
+    background:orange; 
+}
+
+.overflow_button {
+    padding: 1px; 
+    margin:3px 1px 2px; 
+    font-weight: bold; 
+    text-align: center; 
+    border: 1px solid rgb(123, 163, 193); 
+    background: none repeat scroll 0% 0% rgb(186, 203, 216);
+}
+.overflow_button a {
+	padding:0px 8px; 
 }
 
 .color_pick td { 

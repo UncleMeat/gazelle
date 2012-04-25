@@ -749,8 +749,10 @@ table.forum_unread {
 
 td.avatar {
     width: 150px;
+    min-height: 150px; 
+    width: 150px;
     padding: 0px;
-}
+}  
 
 table.forum_post td.body {
     width:690px;
@@ -949,6 +951,18 @@ a.bb_button:hover {
 
 .bb_icon:hover { 
 	background:orange; 
+}
+
+.overflow_button {
+        padding: 1px; 
+        margin:0px auto 1px; 
+        font-weight: bold; 
+        text-align: center; 
+        border: 1px solid rgb(123, 163, 193); 
+        background: none repeat scroll 0% 0% rgb(186, 203, 216);
+}
+.overflow_button a {
+	padding:0px 8px; 
 }
 
 .color_pick td { 

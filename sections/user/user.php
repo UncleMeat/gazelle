@@ -73,7 +73,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username,	$Email,	$LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Artist, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash) = $DB->next_record(MYSQLI_NUM, array(8,11));
+	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Artist, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash) = $DB->next_record(MYSQLI_NUM, array(8,11));
 } else { // Person viewing is a normal user
 	$DB->query("SELECT
 		m.Username,
@@ -202,11 +202,13 @@ if (check_perms('users_mod')) {
 ?> 
 		<div class="box">
 			<div class="head colhead_dark">Avatar</div>
-			<div align="center"><? if ($Avatar) { ?>
-                                        <img src="<?=$Avatar?>" width="150" style="max-height:400px;" alt="<?=$Username ?>'s avatar" />
-                                      <? } else { ?>
-                                                  <img src="<?=STATIC_SERVER?>common/avatars/default.png" width="150" alt="Default avatar" />
-                                      <? } ?></div>
+			<div align="center">
+			<? if ($Avatar) { 
+                              $PermissionsInfo = get_permissions($ClassID) ; ?>
+					<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($PermissionsInfo['MaxAvatarWidth'], $PermissionsInfo['MaxAvatarHeight'])?>" alt="<?=$LoggedUser['Username']?>'s avatar" />
+			<? } else { ?>
+					<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
+			<? } ?></div>
             </div>
 <? } ?>
 		<div class="box">

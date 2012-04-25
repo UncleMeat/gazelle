@@ -29,6 +29,7 @@ $Val->SetFields('postsperpage',1,"number","You forgot to select your posts per p
 $Val->SetFields('collagecovers',1,"number","You forgot to select your collage option.");
 $Val->SetFields('showtags',1,"number","You forgot to select your show tags option.",array('minlength'=>0,'maxlength'=>1));
 $Val->SetFields('avatar',0,"regex","You did not enter a valid avatar url.",array('regex'=>"/^".IMAGE_REGEX."$/i"));
+$Val->SetFields('signature',0,'desc','Signature',array('regex'=>$whitelist_regex,'minlength'=>0,'maxlength'=>$Permissions['MaxSigLength']));	
 $Val->SetFields('email',1,"email","You did not enter a valid email address.");
 $Val->SetFields('irckey',0,"string","You did not enter a valid IRCKey, must be between 6 and 32 characters long.",array('minlength'=>6,'maxlength'=>32));
 $Val->SetFields('cur_pass',0,"string","You did not enter a valid password, must be between 6 and 40 characters long.",array('minlength'=>6,'maxlength'=>40));
@@ -180,7 +181,7 @@ $Options['AutoSubscribe'] = (!empty($_POST['autosubscribe']) ? 1 : 0);
 $Options['DisableSmileys'] = (!empty($_POST['disablesmileys']) ? 1 : 0);
 $Options['DisableAvatars'] = (!empty($_POST['disableavatars']) ? 1 : 0);
 $Options['DisablePMAvatars'] = (!empty($_POST['disablepmavatars']) ? 1 : 0);
-
+$Options['DisableSignatures'] = (!empty($_POST['disablesignatures']) ? 1 : 0);
 
 if(isset($LoggedUser['DisableFreeTorrentTop10'])) {
 	$Options['DisableFreeTorrentTop10'] = $LoggedUser['DisableFreeTorrentTop10'];

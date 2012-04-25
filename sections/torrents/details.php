@@ -538,6 +538,7 @@ echo $Pages;
 foreach($Thread as $Key => $Post){
 	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature) = array_values($Post);
 	list($AuthorID, $Username, $PermissionID, $Paranoia, $Artist, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
+      list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values(get_permissions($PermissionID));
 ?>
 <table class="forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>" id="post<?=$PostID?>">
 	<tr class="colhead_dark">
@@ -557,9 +558,9 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 <? if(empty($HeavyInfo['DisableAvatars'])) { ?>
 		<td class="avatar" valign="top">
 	<? if ($Avatar) { ?>
-			<img src="<?=$Avatar?>" width="150" alt="<?=$Username ?>'s avatar" />
+			<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$Username ?>'s avatar" />
 	<? } else { ?>
-			<img src="<?=STATIC_SERVER?>common/avatars/default.png" width="150" alt="Default avatar" />
+			<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 	<?
 	}
 	?>
@@ -571,7 +572,7 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 			<div id="content<?=$PostID?>" class="post_container">
                       <div class="post_content"><?=$Text->full_format($Body) ?> </div>
                 <?  
-           if( !empty($Signature)) { // TODO: && setting is set to view sigs
+           if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength>0) && !empty($Signature) ) {
                         
                         echo '<div class="sig post_footer">' . $Text->full_format($Signature) . '</div>';
            }      ?>

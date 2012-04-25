@@ -12,7 +12,6 @@ Things to expect in $_GET:
 //---------- Things to sort out before it can start printing/generating content
 
 include(SERVER_ROOT.'/classes/class_text.php');
-
 $Text = new TEXT;
 
 // Check for lame SQL injection attempts
@@ -367,7 +366,8 @@ if($ThreadInfo['StickyPostID']) {
 foreach($Thread as $Key => $Post){
 	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature) = array_values($Post);
 	list($AuthorID, $Username, $PermissionID, $Paranoia, $Artist, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
-	
+	list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values(get_permissions($PermissionID));
+
 	// Image proxy CTs
 	if(check_perms('site_proxy_images') && !empty($UserTitle)) {
 		$UserTitle = preg_replace_callback('~src=("?)(http.+?)(["\s>])~', function($Matches) {
@@ -414,17 +414,17 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
 <? if(empty($HeavyInfo['DisableAvatars'])) { ?>
 		<td class="avatar" valign="top">
 	<? if ($Avatar) { ?>
-			<img src="<?=$Avatar?>" width="150" style="max-height:400px;" alt="<?=$Username ?>'s avatar" />
+			<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$Username ?>'s avatar" />
 	<? } else { ?>
-			<img src="<?=STATIC_SERVER?>common/avatars/default.png" width="150" alt="Default avatar" />
+			<img src="<?=STATIC_SERVER?>common/avatars/default.png"  class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 	<? } ?>
-	</td>
+            </td>
 <? } ?>
 		<td class="body" valign="top"<? if(!empty($HeavyInfo['DisableAvatars'])) { echo ' colspan="2"'; } ?>>
 			<div id="content<?=$PostID?>" class="post_container">
                       <div class="post_content"><?=$Text->full_format($Body) ?> </div>
                 <?  
-           if( !empty($Signature)) { // TODO: && setting is set to view sigs
+           if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength > 0) && !empty($Signature) ) {
                         
                         echo '<div class="sig post_footer">' . $Text->full_format($Signature) . '</div>';
            }      ?>
@@ -474,13 +474,16 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 						</td>
 					</tr>
 					<tr>
-						<td class="avatar" valign="top">
-				<? if (!empty($LoggedUser['Avatar'])) { ?>
-							<img src="<?=$LoggedUser['Avatar']?>" width="150" alt="<?=$LoggedUser['Username']?>'s avatar" />
-				<? } else { ?>
-							<img src="<?=STATIC_SERVER?>common/avatars/default.png" width="150" alt="Default avatar" />
-				<? } ?>
-						</td>
+                        <? if(empty($HeavyInfo['DisableAvatars'])) { ?>
+                                    <td class="avatar" valign="top">
+                              <? if (!empty($LoggedUser['Avatar'])) { 
+                                    $PermissionsInfo = get_permissions($LoggedUser['PermissionID']) ; ?>
+                                            <img src="<?=$LoggedUser['Avatar']?>" class="avatar" style="<?=get_avatar_css($PermissionsInfo['MaxAvatarWidth'], $PermissionsInfo['MaxAvatarHeight'])?>" alt="<?=$LoggedUser['Username']?>'s avatar" />
+                               <? } else { ?>
+                                          <img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
+                              <? } ?>
+                                    </td>
+                        <? } ?>  
 						<td class="body" valign="top">
 							<div id="contentpreview" style="text-align:left;"></div>
 						</td>
@@ -493,7 +496,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 
 					<div id="quickreplytext">
                             <? $Text->display_bbcode_assistant("quickpost"); ?>
-						<textarea id="quickpost" style="width: 95%;" tabindex="1" onkeyup="resize('quickpost');" name="body" cols="90" rows="8"></textarea> <br />
+						<textarea id="quickpost" class="long" tabindex="1" onkeyup="resize('quickpost');" name="body" rows="8"></textarea> <br />
 					</div>
 					<div>
 <? if(!in_array($ThreadID, $UserSubscriptions)) { ?>

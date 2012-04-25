@@ -17,7 +17,8 @@ $Forum = get_forum_info($ForumID);
 if($Forum === false) {
 	error(404);
 }
-
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = NEW TEXT;
 
 if(!check_forumperm($ForumID, 'Write') || !check_forumperm($ForumID, 'Create')) { error(403); }
 show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode');
@@ -46,7 +47,7 @@ show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode');
 			<tr class="colhead_dark">
 				<td colspan="2">
 					<span style="float:left;"><a href='#newthreadpreview'>#XXXXXX</a>
-						by <strong><?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'])?></strong> <? if (!empty($LoggedUser['Title'])) { echo '('.$LoggedUser['Title'].')'; }?>
+						by <strong><?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'], false, true)?></strong> <? if (!empty($LoggedUser['Title'])) { echo '('.$LoggedUser['Title'].')'; }?>
 					Just now
 					</span>
 					<span id="barpreview" style="float:right;">
@@ -58,10 +59,11 @@ show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode');
 			</tr>
 			<tr>
 				<td class="avatar" valign="top">
-			<? if (!empty($LoggedUser['Avatar'])) { ?>
-					<img src="<?=$LoggedUser['Avatar']?>" width="150" alt="<?=$LoggedUser['Username']?>'s avatar" />
+			<? if (!empty($LoggedUser['Avatar'])) { 
+                              $PermissionsInfo = get_permissions($LoggedUser['PermissionID']) ; ?>
+					<img src="<?=$LoggedUser['Avatar']?>" class="avatar" style="<?=get_avatar_css($PermissionsInfo['MaxAvatarWidth'], $PermissionsInfo['MaxAvatarHeight'])?>" alt="<?=$LoggedUser['Username']?>'s avatar" />
 			<? } else { ?>
-					<img src="<?=STATIC_SERVER?>common/avatars/default.png" width="150" alt="Default avatar" />
+					<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 			<? } ?>
 				</td>
 				<td class="body" valign="top">
@@ -82,7 +84,9 @@ show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode');
 				</tr>
 				<tr>
 					<td class="label">Body</td>
-					<td><textarea id="posttext" style="width: 98%;" onkeyup="resize('posttext');" name="body" cols="90" rows="8"></textarea></td>
+					<td> <? $Text->display_bbcode_assistant("posttext"); ?>
+                                   <textarea id="posttext" style="width: 98%;" onkeyup="resize('posttext');" name="body" cols="90" rows="8"></textarea>
+                              </td>
 				</tr>
 				<tr>
 					<td></td>

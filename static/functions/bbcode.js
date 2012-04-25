@@ -28,6 +28,39 @@ function Quick_Edit_Blog() {
 	$('#quickreplytext').show();
 }
 
+
+numLoaded = 0;
+function Open_Smilies(openfrom, opento) {
+	$('#open_overflow').raw().isopen = true; 
+      if (numLoaded < opento) {
+          if ($('#open_overflow_more').raw().isopen) { $('#open_overflow_more').raw().innerHTML = "Loading smilies"; }
+          else { $('#open_overflow').raw().innerHTML = "Loading smilies"; }
+          ajax.get("ajax.php?action=get_smilies&indexfrom=" + openfrom + "&indexto=" + opento, function(response){
+                $('#smiley_overflow').show();
+                $('#smiley_overflow').raw().innerHTML += response;
+                $('#open_overflow').raw().innerHTML = "Hide smilies";
+                if (opento < 9999) {
+                    $('#open_overflow_more').raw().isopen = true; 
+                    $('#open_overflow_more').raw().innerHTML = "Load more smilies";
+                    $('#open_overflow_more').show();
+                } else {
+                    $('#open_overflow_more').raw().innerHTML = "";
+                    $('#open_overflow_more').hide();
+                }
+                numLoaded = opento;
+          });
+      } else {
+          $('#smiley_overflow').show();
+          $('#open_overflow').raw().innerHTML = "Hide smilies";
+      }
+} 
+function Close_Smilies() { 
+	$('#open_overflow').raw().isopen = false;
+	$('#smiley_overflow').hide();
+	$('#open_overflow').raw().innerHTML = "Show smilies";
+} 
+
+
 //made by putyn@tbdev.net lastupdate 28/12/2009
 
 function wrap(v, r, e) {

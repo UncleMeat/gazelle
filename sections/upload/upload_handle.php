@@ -86,137 +86,7 @@ $RequestID = $_POST['requestid'];
 
 $Validate->SetFields('type','1','inarray','Please select a valid type.',array('inarray'=>array_keys($Categories)));
 
-switch ($Type) {
-	case 'Music':
-		if(!$_POST['groupid']) {
-			$Validate->SetFields('title',
-				'1','string','Title must be between 1 and 200 characters.',array('maxlength'=>200, 'minlength'=>1));
 
-			$Validate->SetFields('year',
-				'1','number','The year of the original release must be entered.',array('length'=>40));
-
-			$Validate->SetFields('releasetype',
-				'1','inarray','Please select a valid release type.',array('inarray'=>array_keys($ReleaseTypes)));
-
-			$Validate->SetFields('tags',
-				'1','string','You must enter at least one tag. Maximum length is 200 characters.',array('maxlength'=>200, 'minlength'=>2));
-
-			$Validate->SetFields('record_label',
-				'0','string','Record label must be between 2 and 80 characters.',array('maxlength'=>80, 'minlength'=>2));
-
-			$Validate->SetFields('catalogue_number',
-				'0','string','Catalogue Number must be between 2 and 80 characters.',array('maxlength'=>80, 'minlength'=>2));
-
-			$Validate->SetFields('album_desc',
-				'1','string','The album description has a minimum length of 10 characters.',array('maxlength'=>1000000, 'minlength'=>10));
-
-			if ($Properties['Media'] == 'CD' && !$Properties['Remastered']) {
-				$Validate->SetFields('year', '1', 'number', 'You have selected a year for an album that predates the media you say it was created on.', array('minlength'=>1982));
-			}
-		}
-
-		if($Properties['Remastered'] && !$Properties['UnknownRelease']){
-			$Validate->SetFields('remaster_year',
-				'1','number','Year of remaster/re-issue must be entered.');
-		} else {
-			$Validate->SetFields('remaster_year',
-				'0','number','Invalid remaster year.');
-		}
-
-		if ($Properties['Media'] == 'CD' && $Properties['Remastered']) {
-			$Validate->SetFields('remaster_year', '1', 'number', 'You have selected a year for an album that predates the media you say it was created on.', array('minlength'=>1982));
-		}
-
-		$Validate->SetFields('remaster_title',
-			'0','string','Remaster title must be between 2 and 80 characters.',array('maxlength'=>80, 'minlength'=>2));
-		if ($Properties['RemasterTitle'] == 'Original Release') {
-			$Validate->SetFields('remaster_title', '0', 'string', '"Orginal Release" is not a valid remaster title.');
-		}
-
-		$Validate->SetFields('remaster_record_label',
-			'0','string','Remaster record label must be between 2 and 80 characters.',array('maxlength'=>80, 'minlength'=>2));
-
-		$Validate->SetFields('remaster_catalogue_number',
-			'0','string','Remaster catalogue number must be between 2 and 80 characters.',array('maxlength'=>80, 'minlength'=>2));
-
-		$Validate->SetFields('format',
-			'1','inarray','Please select a valid format.',array('inarray'=>$Formats));
-
-		// Handle 'other' bitrates
-		if($Properties['Encoding'] == 'Other') {
-			if ($Properties['Format'] == 'FLAC') {
-				$Validate->SetFields('bitrate',
-					'1','string','FLAC bitrate must be lossless.', array('regex'=>'/Lossless/'));
-			}
-
-			$Validate->SetFields('other_bitrate',
-				'1','string','You must enter the other bitrate (max length: 9 characters).', array('maxlength'=>9));
-			$enc = trim($_POST['other_bitrate']);
-			if(isset($_POST['vbr'])) { $enc.=' (VBR)'; }
-
-			$Properties['Encoding'] = $enc;
-			$Properties['Bitrate'] = $enc;
-		} else {
-			$Validate->SetFields('bitrate',
-				'1','inarray','You must choose a bitrate.', array('inarray'=>$Bitrates));
-		}
-
-		$Validate->SetFields('media',
-			'1','inarray','Please select a valid media.',array('inarray'=>$Media));
-
-		$Validate->SetFields('image',
-			'0','link','The image URL you entered was invalid.',array('maxlength'=>255, 'minlength'=>12));
-
-		$Validate->SetFields('release_desc',
-			'0','string','The release description has a minimum length of 10 characters.',array('maxlength'=>1000000, 'minlength'=>10));
-
-		$Validate->SetFields('groupid', '0', 'number', 'Group ID was not numeric');
-
-		break;
-
-	case 'Audiobooks':
-	case 'Comedy':
-		$Validate->SetFields('title',
-			'1','string','Title must be between 2 and 200 characters.',array('maxlength'=>200, 'minlength'=>2));
-
-		$Validate->SetFields('year',
-			'1','number','The year of the release must be entered.');
-
-		$Validate->SetFields('format',
-			'1','inarray','Please select a valid format.',array('inarray'=>$Formats));
-
-		if($Properties['Encoding'] == 'Other') {
-			$Validate->SetFields('other_bitrate',
-				'1','string','You must enter the other bitrate (max length: 9 characters).', array('maxlength'=>9));
-			$enc = trim($_POST['other_bitrate']);
-			if(isset($_POST['vbr'])) { $enc.=' (VBR)'; }
-
-			$Properties['Encoding'] = $enc;
-			$Properties['Bitrate'] = $enc;
-		} else {
-			$Validate->SetFields('bitrate',
-				'1','inarray','You must choose a bitrate.', array('inarray'=>$Bitrates));
-		}
-
-		$Validate->SetFields('album_desc',
-			'1','string','You must enter a proper audiobook description.',array('maxlength'=>1000000, 'minlength'=>10));
-
-		$Validate->SetFields('tags',
-			'1','string','You must enter at least one tag. Maximum length is 200 characters.',array('maxlength'=>200, 'minlength'=>2));
-
-		$Validate->SetFields('release_desc',
-			'0','string','The release description has a minimum length of 10 characters.',array('maxlength'=>1000000, 'minlength'=>10));
-
-		$Validate->SetFields('image',
-			'0','link','The image URL you entered was invalid.',array('maxlength'=>255, 'minlength'=>12));
-          
-		break;
-
-	case 'Applications':
-	case 'Comics':
-	case 'E-Books':
-	case 'E-Learning Videos':
-         
          $whitelist_regex = $Validate->GetWhitelistRegex();
          
          $Validate->SetFields('title',
@@ -238,11 +108,9 @@ switch ($Type) {
 		//	'1','string','The description has a minimum length of 100 characters.',array('maxlength'=>1000000, 'minlength'=>100));
 		 
          $Validate->SetFields('desc',
-			'1','desc','The image URL you entered was not an approved pichost.',array('regex'=>$whitelist_regex, 'maxlength'=>1000000, 'minlength'=>20));
+			'1','desc','Description',array('regex'=>$whitelist_regex, 'maxlength'=>1000000, 'minlength'=>20));
 		
-          
-          break;
-}
+         
 
 $Validate->SetFields('category',
 			'1','inarray','Please select a valid format.',array('inarray'=>array_keys($NewCategories)));
