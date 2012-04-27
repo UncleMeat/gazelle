@@ -30,7 +30,7 @@ switch($_GET['action']) {
     <h2><?= ($_GET['action'] == 'news')? 'Create a news post' : 'Edit news post';?></h2> 
     <div id="quickreplypreview">
         <div id="contentpreview" style="text-align:left;"></div>
-    </div> 
+    </div>
     <form  id="quickpostform" action="tools.php" method="post">
         <div class="box pad">
             <div id="quickreplytext">
@@ -53,7 +53,7 @@ switch($_GET['action']) {
             </div> 
         </div>
     </form>
-
+<br /><br />
 	<h2>News archive</h2>
 	
 <?

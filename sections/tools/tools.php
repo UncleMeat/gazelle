@@ -11,7 +11,7 @@ show_header('Staff Tools');
 <?   if (check_perms('admin_manage_categories')) { ?>
 			<tr><td><a href="tools.php?action=categories">Categories</a></td></tr>                    
 <? } if (check_perms('admin_manage_permissions')) { ?>
-			<tr><td><a href="tools.php?action=permissions">Permissions</a></td></tr>
+			<tr><td><a href="tools.php?action=permissions">User Classes<!--Permissions--></a></td></tr>
 <? } if (check_perms('admin_whitelist')) { ?>
 			<tr><td><a href="tools.php?action=whitelist">Client Whitelist</a></td></tr>
 <? } if (check_perms('admin_manage_ipbans')) { ?>

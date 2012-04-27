@@ -16,8 +16,10 @@ list($FrontLineSupport, $ForumStaff, $Staff) = $SupportStaff;
 		<h3>Contact Staff</h3>
 		<div id="below_box">
 			<p>If you are looking for help with a general question, we appreciate it if you would only message through the staff inbox, where we can all help you.</p>
-			<p>You can do that by <strong><a href="#" onClick="$('#compose').toggle();">sending a message to the Staff Inbox</a></strong>.</p>
-		</div>
+                  <p>You can do that by
+                              <a href="#"  class="contact_link" onClick="$('#compose').toggle();">sending a message to the Staff Inbox</a>
+                              <em>Please do not PM individual staff members for support!</em> </p>
+            </div>
 		<? print_compose_staff_pm(true); ?>
 		<br />
 		<h3>First-line Support</h3>
@@ -50,8 +52,9 @@ list($FrontLineSupport, $ForumStaff, $Staff) = $SupportStaff;
 	</div>
 	<br />
 	<div class="box pad" style="padding:0px 10px 10px 10px;">
-		<h3>Forum Moderators</h3>
-		<p>Forum Mods are users who have been promoted to help moderate the forums. They can only help with forum oriented questions</p>
+		<br /><h3><!--Forum -->Mod Pervs</h3>
+	<!--<p>Forum Mods are users who have been promoted to help moderate the forums. They can only help with forum oriented questions</p>-->
+		<p>Mods are staff members and have wide ranging powers.</p>
 		<table class="staff" width="100%">
 			<tr class="colhead">
 				<td style="width:130px;">Username</td>

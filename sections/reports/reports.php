@@ -84,7 +84,7 @@ $DB->set_query_id($Reports);
 	echo $Pages;
 ?>
 </div>
-<?
+<?  
 while(list($ReportID, $SnitchID, $SnitchName, $ThingID, $Short, $ReportedTime, $Reason, $Status) = $DB->next_record()) {
 	$Type = $Types[$Short];
 	$Reference = "reports.php?id=".$ReportID."#report".$ReportID;
@@ -97,12 +97,11 @@ while(list($ReportID, $SnitchID, $SnitchName, $ThingID, $Short, $ReportedTime, $
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 	</div>
 	<table cellpadding="5" id="report_<?=$ReportID?>">
-		<tr>
-			<td><strong><a href="<?=$Reference?>">Report</a></strong></td>
+            <tr class="colhead_dark">
+			<td width="16%"><strong><a href="<?=$Reference?>">Report</a></strong></td>
 			<td><strong><?=$Type['title']?></strong> was reported by <a href="user.php?id=<?=$SnitchID?>"><?=$SnitchName?></a> <?=time_diff($ReportedTime)?></td>
 		</tr>
-		<tr>
-			
+            <tr class="rowa"> 
 			<td class="center" colspan="2">
 				<strong>
 <?
@@ -150,12 +149,22 @@ while(list($ReportID, $SnitchID, $SnitchName, $ThingID, $Short, $ReportedTime, $
 			} else {
 				$PerPage = POSTS_PER_PAGE;
 			}
-			$DB->query("SELECT p.ID, p.Body, p.TopicID, (SELECT COUNT(ID) FROM forums_posts WHERE forums_posts.TopicID = p.TopicID AND forums_posts.ID<=p.ID) AS PostNum FROM forums_posts AS p WHERE ID=".$ThingID);
+			//$DB->query("SELECT p.ID, p.Body, p.TopicID, (SELECT COUNT(ID) FROM forums_posts WHERE forums_posts.TopicID = p.TopicID AND forums_posts.ID<=p.ID) AS PostNum FROM forums_posts AS p WHERE ID=".$ThingID);
+			$DB->query("SELECT p.ID, 
+                                     p.Body, 
+                                     p.TopicID, 
+                                     (SELECT COUNT(ID) FROM forums_posts 
+                                                       WHERE forums_posts.TopicID = p.TopicID 
+                                                       AND forums_posts.ID<=p.ID) AS PostNum, 
+                                     f.Title,
+                                     u.Username FROM forums_posts AS p 
+                                                JOIN forums_topics AS f ON f.ID = p.TopicID 
+                                                JOIN users_main AS u ON u.ID = p.AuthorID WHERE p.ID=".$ThingID);
 			if($DB->record_count() < 1) {
 				echo "No post with the reported ID found";
 			} else {
-				list($PostID,$Body,$TopicID,$PostNum) = $DB->next_record();
-				echo "<a href='forums.php?action=viewthread&amp;threadid=".$TopicID."&post=".$PostNum."#post".$PostID."'>POST</a>";
+				list($PostID,$Body,$TopicID,$PostNum,$Title,$Username) = $DB->next_record();
+				echo "<a href='forums.php?action=viewthread&amp;threadid=".$TopicID."&post=".$PostNum."#post".$PostID."'>Post#$PostID by $Username in thread $Title</a>";
 			}
 			break;
 		case "requests_comment" :
@@ -194,11 +203,11 @@ while(list($ReportID, $SnitchID, $SnitchName, $ThingID, $Short, $ReportedTime, $
 				</strong>
 			</td>
 		</tr>
-		<tr>
+            <tr class="rowb">
 			<td colspan="2"><?=$Text->full_format($Reason)?></td>
 		</tr>
 <? if($Status != "Resolved") { ?>
-		<tr>
+            <tr class="rowa">
 			<td class="center" colspan="2">
 				<input type="submit" name="submit" value="Resolved" />
 			</td>

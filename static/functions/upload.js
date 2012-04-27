@@ -290,26 +290,11 @@ function Upload_Quick_Preview() {
 		$('#contentpreview').raw().innerHTML = response;
 		$('#uploadbody').hide(); 
 	});
-      /*
-	ajax.post("ajax.php?action=preview_upload","upload_table", function(response){
-		$('#uploadpreviewbody').show();
-		$('#contentpreview').raw().innerHTML = response;
-		$('#uploadbody').hide();
-	});
-	ajax.post("ajax.php?action=preview_image","upload_table", function(response){
-		$('#uploadpreviewimage').show();
-		$('#imagepreview').raw().innerHTML = response;
-		$('#uploadimage').hide();
-	});
-      */
 }
 
 function Upload_Quick_Edit() {
-	//var quickreplybuttons;
 	$('#post_preview').raw().value = "Preview";
 	$('#post_preview').raw().preview = false;
 	$('#uploadpreviewbody').hide();
 	$('#uploadbody').show(); 
-	/* $('#uploadpreviewimage').hide();
-	$('#uploadimage').show(); */
 }

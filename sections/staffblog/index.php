@@ -78,13 +78,14 @@ if(check_perms('admin_manage_blog')) {
                 <div id="quickreplytext">
 					<input type="hidden" name="action" value="<?=((empty($_GET['action'])) ? 'takenewblog' : 'takeeditblog')?>" />
 					<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+					<input type="hidden" name="author" value="<?=$LoggedUser['Username']; ?>" />
 	<? if(!empty($_GET['action']) && $_GET['action'] == 'editblog'){?> 
-					<input type="hidden" name="blogid" value="<?=$BlogID; ?>" />
+					<input type="hidden" name="blogid" value="<?=$BlogID; ?>" /> 
 	<? }?> 
 					<h3>Title</h3>
 					<input type="text" name="title" class="long" <? if(!empty($Title)) { echo 'value="'.display_str($Title).'"'; } ?> /><br />
 					<h3>Body</h3>
-                           <? $Text->display_bbcode_assistant('textbody', 0)  ?>
+                           <? $Text->display_bbcode_assistant('textbody', 0, 180 , 36)  ?>
 					<textarea id="textbody" name="body" class="long" rows="15"><? if(!empty($Body)) { echo display_str($Body); } ?></textarea> <br />
 					
                 </div>

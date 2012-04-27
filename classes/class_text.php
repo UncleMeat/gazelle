@@ -16,6 +16,9 @@ class TEXT {
            ':sad:'           => 'sad.gif',
            ':cry:'           => 'cry.gif',
            ':weep:'           => 'weep.gif',
+           ':voodoo:'           => 'voodoo.gif',
+           ':yaydance:'           => 'yaydance.gif',
+           ':lol:'           => 'lol.gif',
            ':ohmy:'           => 'ohmy.gif',
            ':cool1:'           => 'cool1.gif',
            ':sleeping:'           => 'sleeping.gif',
@@ -86,30 +89,28 @@ class TEXT {
            ':beer2:'           => 'beer2.gif',
            ':drunk:'           => 'drunk.gif',
            ':rant:'           => 'rant.gif',
-           ':jump:'           => 'jump.gif',
-           ':stupid:'           => 'stupid.gif',
-           ':dots:'           => 'dots.gif',
-           ':offtopic:'           => 'offtopic.gif',
-           ':spam:'           => 'spam.gif',
-           ':oops:'           => 'oops.gif',
-           ':lttd:'           => 'lttd.gif',
-           ':please:'           => 'please.gif',
-           ':sorry:'           => 'sorry.gif',
-           ':hi:'           => 'hi.gif',
-           ':yay:'           => 'yay.gif',
-           ':hbd:'           => 'hbd.gif',
-           ':band:'           => 'band.gif',
-           ':punk:'           => 'punk.gif',
-           ':rofl:'           => 'rofl.gif',
-           ':bounce:'           => 'bounce.gif',
-           ':mbounce:'           => 'mbounce.gif',
-           ':thankyou:'           => 'thankyou.gif',
-           ':gathering:'           => 'gathering.gif',
-           ':whip:'           => 'whip.gif',
-           ':judge:'           => 'judge.gif',
-           ':chair:'           => 'chair.gif',
            ':tease:'           => 'tease.gif',
-           ':box:'           => 'box.gif',
+           /* ':box:'           => 'box.gif', */
+          
+           ':daisy:'           => 'daisy.gif',
+           ':demon:'           => 'demon.gif',
+           ':fdevil:'           => 'flamingdevil.gif',
+           ':flipa:'           => 'flipa.gif',
+           ':flirty:'           => 'flirtysmile1.gif',
+           ':lollol:'           => 'lolalot.gif',
+           ':lovelove:'           => 'lovelove.gif',
+           ':ninja1:'           => 'ninja1.gif',
+           ':nom:'           => 'nom.gif',
+           ':samurai:'           => 'samurai.gif',
+           ':sasmokin:'           => 'sasmokin.gif',
+          
+           ':sigh:'           => 'facepalm.gif',
+           ':happydancing:'           => 'happydancing.gif',
+           ':emperor:'           => 'emperor.gif',
+           ':argh:'           => 'frustrated.gif',
+           ':mad:'           => 'mad2.gif',
+           ':tumble:'           => 'tumbleweed.gif',
+          
            ':boxing:'           => 'boxing.gif',
            ':shoot:'           => 'shoot.gif',
            ':shoot2:'           => 'shoot2.gif',
@@ -171,6 +172,34 @@ class TEXT {
            ':fishing:'           => 'fishing.gif',
            ':clover:'           => 'clover.gif',
            ':shit:'           => 'shit.gif',
+           ':cheer:'           => 'cheerlead.gif',
+           ':whip:'           => 'whip.gif',
+           ':judge:'           => 'judge.gif',
+           ':chair:'           => 'chair.gif',
+          
+           ':stupid:'           => 'stupid.gif',
+           ':dots:'           => 'dots.gif',
+           ':offtopic:'           => 'offtopic.gif',
+           ':spam:'           => 'spam.gif',
+           ':oops:'           => 'oops.gif',
+           ':lttd:'           => 'lttd.gif',
+           ':please:'           => 'please.gif',
+           ':sorry:'           => 'sorry.gif',
+           ':hi:'           => 'hi.gif',
+           ':yay:'           => 'yay.gif',
+           ':hbd:'           => 'hbd.gif',
+           ':band:'           => 'band.gif',
+           ':punk:'           => 'punk.gif',
+           ':rofl:'           => 'rofl.gif',
+           ':bounce:'           => 'bounce.gif',
+           ':mbounce:'           => 'mbounce.gif',
+           ':thankyou:'           => 'thankyou.gif',
+           ':gathering:'           => 'gathering.gif',
+           ':colors:'           => 'colors.gif',
+           ':jump:'           => 'jump.gif',
+          
+           ':atomic:'           => 'atomic.gif',
+          
           
           /*
 		':angry:'			=> 'angry.gif',
@@ -853,9 +882,13 @@ EXPLANATION OF PARSER LOGIC
        * I suspect a text object will already be instantiated wherever the assistant is needed...
        * If not this could be moved to a better place maybe?
        */
-      
-      function display_bbcode_assistant($textarea, $start_num_smilies = 0, $extra_num_smilies = 86){
-          
+      // pass in the id of the textarea this bbcode helper affects
+      // start_num == num of smilies to load when created
+      // $load_increment == number of smilies to add each time user presses load button
+      // $load_increment_first == if passed this number of smilies are added the first time user presses load button
+      function display_bbcode_assistant($textarea, $start_num_smilies = 0, $load_increment = 100, $load_increment_first = 28){
+        
+          if ($load_increment_first == -1) { $load_increment_first = $load_increment; }
         ?>
         <script type="text/javascript">
                 var textBBcode = '<?=$textarea; ?>';
@@ -895,8 +928,7 @@ EXPLANATION OF PARSER LOGIC
                 </select>
                     
                      <a class="bb_button" onclick="colorpicker();" title="Select Color" alt="Colors">Colors</a>
-              </div> 
-
+              </div>  
               <div style="float: right; margin-top: 3px;"> 
                   <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center')" title="Align - center" alt="Center" /> 
                   <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left')" title="Align - left" alt="Left" /> 
@@ -904,42 +936,46 @@ EXPLANATION OF PARSER LOGIC
                   <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right')" title="Align - right" alt="Right" /> 
                   <img class="bb_icon" src="<?=get_symbol_url('text_uppercase.png') ?>" onclick="text('up')" title="To Uppercase" alt="Up" /> 
                   <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low')" title="To Lowercase" alt="Low" />
-              </div>
-                
+              </div> 
               </td>
           </tr> 
           <tr>
             <td>
                 <div id="pickerholder"></div>
                 <div id="smiley_overflow" class="bb_smiley_holder">
-                    <?   //  IF this becomes too much of a strain drawing all the smilies everytime 
-                        // the bbcode assistant is used it could be put behind an ajax call for when smilies are opened
-                    $count=0;
-                    foreach($this->Smileys as $Key=>$Val) {  
-                        if ($count == $start_num_smilies){
-                            break;
-                        }
-                        echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
-                        $count++;
-                    }
-                    reset($this->Smileys); 
-                    ?> 
+                    <? if ($start_num_smilies>0) { $this->draw_smilies_from(0, $start_num_smilies); }  ?> 
+                </div>
+                <div class="overflow_button">
+                       <a href="#" id="open_overflow" onclick="if(this.isopen){Close_Smilies();}else{Open_Smilies(<?="$start_num_smilies,$load_increment_first"?>);};return false;">Show smilies</a>
+                       <a href="#" id="open_overflow_more" onclick="Open_Smilies(<?="$start_num_smilies,$load_increment"?>);return false;"></a>
                 </div>  
-                <!-- <div id="smiley_overflow" class="bb_smiley_holder"></div>  -->
-               
-                  <div class="overflow_button">
-                       <a href="#" id="open_overflow" onclick="if(this.isopen){Close_Smilies();}else{Open_Smilies(<?="$start_num_smilies,$extra_num_smilies"?>);};return false;">Show smilies</a>
-                       <a href="#" id="open_overflow_more" onclick="Open_Smilies(<?=$extra_num_smilies?>,9999);return false;"></a>
-                  </div>  
       </td></tr></tbody></table>
         <? 
       }
       
+      // output smiley data in xml (we dont just draw the html because we want maxsmilies in js)
+      function draw_smilies_from_XML($indexfrom = 0, $indexto = -1){
+            $count=0;
+            echo "<smilies>";
+            foreach($this->Smileys as $Key=>$Val) { 
+                if ($indexto >= 0 && $count >= $indexto) { break; }
+                if ($count >= $indexfrom){
+                    echo '    <smiley>
+        <bbcode>'.$Key.'</bbcode>
+        <url>'. htmlentities($Val) .'</url>
+    </smiley>';
+                }
+                $count++;
+            }
+            reset($this->Smileys); 
+            echo '    <maxsmilies>' . count ($this->Smileys).'</maxsmilies>
+</smilies>';
+      }
       
       function draw_smilies_from($indexfrom = 0, $indexto = -1){
             $count=0;
             foreach($this->Smileys as $Key=>$Val) { 
-                if ($indexto >= 0 && $count > $indexto) { break; }
+                if ($indexto >= 0 && $count >= $indexto) { break; }
                 if ($count >= $indexfrom){
                     echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
                 }
@@ -948,10 +984,10 @@ EXPLANATION OF PARSER LOGIC
             reset($this->Smileys); 
       }
       
+
       
 }
 /*
-
 //Uncomment this part to test the class via command line: 
 function display_str($Str) {return $Str;}
 function check_perms($Perm) {return true;}

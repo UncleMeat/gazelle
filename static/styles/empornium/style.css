@@ -325,7 +325,7 @@ li.searchbars {
 .user_name { 
     font-weight: normal;
     background-color:#e3eefd;
-    border: 1px solid #005488;
+    border: 1px solid #0244a8;
     border-radius: 3px;
     -moz-border-radius: 3px;
     padding: 1px 5px;
@@ -373,6 +373,26 @@ input.hidden {
     margin-right:auto;
 }
 
+.contact_link {
+    display: inline;
+    padding: 5px;
+    margin: 0px 20px 0px 10px;
+    font-weight: bold;
+    background-color: #d00;
+    border: 1px solid #005488;
+    border-radius: 6px;       /* FF9+ IE9+ */
+    -moz-border-radius: 6px; /* for FF5 */
+    -webkit-border-radius: 6px; /* for opera */
+}
+
+a.contact_link {
+    color: white;
+    text-decoration: underline;
+}
+a.contact_link:hover {
+    text-decoration: none;
+}
+
 div.linkbox {
     text-align:center;
     padding: 5px;
@@ -384,6 +404,20 @@ div.linkbox {
 
 .right {
     text-align: right;
+}
+
+.medium { 
+    text-align: left;
+    width: 86%;
+}
+
+.long {  
+    text-align: left;
+    width: 97%;
+}
+ 
+.wid35 {
+    width: 35%;
 }
 
 .min_padding {
@@ -531,18 +565,6 @@ td.label {
     text-align: right;
     width: 100px;
 }
- 
-
-.medium { 
-    text-align: left;
-    width: 86%;
-}
-
-.long {  
-    text-align: left;
-    width: 97%;
-}
- 
 
 table.slice {
     margin-top: -1px;
@@ -785,9 +807,21 @@ tr.unreadpm {
 /* Layout (Permission Page) */
 
 .permission_head {
-    width:400px;
+    width: 350px;
     margin-left:auto;
     margin-right:auto;
+}
+
+.permission_head input {
+    width: 200px;
+}
+.permission_head input.wid35 {
+    width: 83px;
+}
+.permission_head td.label {
+    font-weight: bold;
+    text-align: right;
+    width: 130px;
 }
 
 .permissions {

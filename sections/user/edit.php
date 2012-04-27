@@ -64,8 +64,10 @@ if ($SiteOptions) {
 } else { 
 	$SiteOptions = array();
 }
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
 
-show_header($Username.' > Settings','user,validate');
+show_header($Username.' > Settings','user,validate,bbcode');
 echo $Val->GenerateJS('userform');
 ?>
 <div class="thin">
@@ -272,7 +274,8 @@ echo $Val->GenerateJS('userform');
 			</tr>
 			<tr>
 				<td class="label"><strong>Info</strong></td>
-				<td><textarea name="info" class="long" rows="8"><?=display_str($Info)?></textarea></td>
+				<td> <? $Text->display_bbcode_assistant("info"); ?>
+                            <textarea id="info" name="info" class="long" rows="8"><?=display_str($Info)?></textarea></td>
 			</tr>
        <?    $maxsig = get_permissions($PermissionID); 
              $maxsig = $maxsig['MaxSigLength'];     ?>
