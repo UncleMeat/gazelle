@@ -150,7 +150,7 @@ if($NewSubscriptions === FALSE) {
 
 		<ul id="userinfo_minor"<?=$NewSubscriptions ? ' class="highlite"' : ''?>>
 			<li id="nav_inbox"><a onmousedown="Stats('inbox');" href="inbox.php">Inbox</a></li>
-			<li id="nav_staffinbox"><a onmousedown="Stats('staffpm');" href="staffpm.php">Contact Staff</a></li>
+			<li id="nav_staffinbox"><a onmousedown="Stats('staffpm');" href="staffpm.php">Staff Messages</a></li>
 			<li id="nav_uploaded"><a onmousedown="Stats('uploads');" href="torrents.php?type=uploaded&amp;userid=<?=$LoggedUser['ID']?>">Uploads</a></li>
 			<li id="nav_bookmarks"><a onmousedown="Stats('bookmarks');" href="bookmarks.php?type=torrents">Bookmarks</a></li>
 <? if (check_perms('site_torrents_notify')) { ?>
