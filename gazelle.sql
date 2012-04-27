@@ -1334,8 +1334,8 @@ CREATE TABLE IF NOT EXISTS `stylesheets` (
 --
 
 INSERT INTO `stylesheets` (`ID`, `Name`, `Description`, `Default`) VALUES
-(1, 'empornium2', 'The new stylesheet mk2', '1');
-(2, 'empornium', 'The new stylesheet', '0'),
+(1, 'empornium2', 'The new stylesheet mk2', '1'),
+(2, 'empornium', 'The new stylesheet', '0');
 
 -- --------------------------------------------------------
 
