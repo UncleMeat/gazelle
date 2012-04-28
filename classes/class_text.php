@@ -19,6 +19,27 @@ class TEXT {
            ':voodoo:'           => 'voodoo.gif',
            ':yaydance:'           => 'yaydance.gif',
            ':lol:'           => 'lol.gif',
+          
+          
+           ':mad:'           => 'mad2.gif',
+           ':banghead:'           => 'banghead.gif',
+           ':gunshot:'           => 'gunshot.gif',
+           ':no2:'           => 'no2.gif',
+           ':yes2:'           => 'yes2.gif',
+           ':wanker:'           => 'wanker.gif',
+           ':sorry:'           => 'sorry.gif',
+          
+          
+          //===========================================
+          
+           ':borg:'           => 'borg.gif',
+           ':nasher:'           => 'gnasher.gif',
+           ':panic:'           => 'panic.gif',
+           ':worm:'           => 'worm2.gif',
+          
+          
+          //=============================================
+          
            ':ohmy:'           => 'ohmy.gif',
            ':cool1:'           => 'cool1.gif',
            ':sleeping:'           => 'sleeping.gif',
@@ -104,12 +125,21 @@ class TEXT {
            ':samurai:'           => 'samurai.gif',
            ':sasmokin:'           => 'sasmokin.gif',
           
+          
+          
+          //----------------------------
+          
            ':sigh:'           => 'facepalm.gif',
            ':happydancing:'           => 'happydancing.gif',
            ':emperor:'           => 'emperor.gif',
            ':argh:'           => 'frustrated.gif',
-           ':mad:'           => 'mad2.gif',
            ':tumble:'           => 'tumbleweed.gif',
+          
+           ':popcorn:'           => 'popcorn.gif',
+          
+          
+           ':lsvader:'           => 'lsvader.gif',
+          
           
            ':boxing:'           => 'boxing.gif',
            ':shoot:'           => 'shoot.gif',
@@ -177,6 +207,17 @@ class TEXT {
            ':judge:'           => 'judge.gif',
            ':chair:'           => 'chair.gif',
           
+           ':pythfoot:'           => 'pythfoot.gif',
+           ':rain:'           => 'rain.gif',
+          
+           ':blind:'           => 'blind.gif',
+           ':blah:'           => 'blah.gif',
+           ':boner:'           => 'boner.gif',
+           ':goodjob:'           => 'gjob.gif',
+           ':dist:'           => 'dist.gif',
+           ':urock:'           => 'urock.gif',
+          
+          
            ':stupid:'           => 'stupid.gif',
            ':dots:'           => 'dots.gif',
            ':offtopic:'           => 'offtopic.gif',
@@ -184,8 +225,25 @@ class TEXT {
            ':oops:'           => 'oops.gif',
            ':lttd:'           => 'lttd.gif',
            ':please:'           => 'please.gif',
-           ':sorry:'           => 'sorry.gif',
+           ':imsorry:'           => 'imsorry.gif',
            ':hi:'           => 'hi.gif',
+          
+          
+           ':punish:'           => 'punish.gif',
+           ':puppykisses:'           => 'puppykisses.gif',
+          
+           ':allbetter:'           => 'allbetter.gif',
+           ':bitchfight:'           => 'bitchfight.gif',
+           ':buddies:'           => 'buddies.gif',
+           ':chase:'           => 'chase.gif',
+          
+           ':hello:'           => 'hellopink.gif',
+           ':lmao:'           => 'lmao.gif',
+          
+           ':rules:'           => 'rules.gif',
+           ':tobi:'           => 'tobi.gif',
+          
+           ':jump:'           => 'jump.gif',
            ':yay:'           => 'yay.gif',
            ':hbd:'           => 'hbd.gif',
            ':band:'           => 'band.gif',
@@ -196,8 +254,15 @@ class TEXT {
            ':thankyou:'           => 'thankyou.gif',
            ':gathering:'           => 'gathering.gif',
            ':colors:'           => 'colors.gif',
-           ':jump:'           => 'jump.gif',
+           ':oddoneout:'           => 'oddoneout.gif',
           
+           ':tank:'           => 'tank.gif',
+           ':guillotine:'           => 'guillotine.gif',
+          
+           ':yesno:'           => 'yesno.gif',
+           ':erection:'           => 'erection1.gif',
+           ':fucku:'           => 'fucku.gif',
+           ':spamhammer:'           => 'spamhammer.gif',
            ':atomic:'           => 'atomic.gif',
           
           
@@ -887,7 +952,7 @@ EXPLANATION OF PARSER LOGIC
       // start_num == num of smilies to load when created
       // $load_increment == number of smilies to add each time user presses load button
       // $load_increment_first == if passed this number of smilies are added the first time user presses load button
-      function display_bbcode_assistant($textarea, $start_num_smilies = 0, $load_increment = 100, $load_increment_first = 28){
+      function display_bbcode_assistant($textarea, $start_num_smilies = 0, $load_increment = 110, $load_increment_first = 30){
         
           if ($load_increment_first == -1) { $load_increment_first = $load_increment; }
         ?>
