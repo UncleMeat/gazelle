@@ -24,12 +24,12 @@ $StaffPMs = $DB->query("
 ?>
 <div class="thin">
 	<h2>Staff PMs</h2>
-	<div class="linkbox">
-		<a href="#" onClick="$('#compose').toggle();">[Compose New]</a>
-		<br />
-		<br />
-	</div>
-	<? print_compose_staff_pm(true); ?>
+	<div class="box pad">
+          <div class="linkbox">
+                <a href="#" onClick="$('#compose').toggle();">[Compose New]</a>
+          </div>
+          <? print_compose_staff_pm(true); ?>
+      </div>
 	<div class="box pad" id="inbox">
 <?
 

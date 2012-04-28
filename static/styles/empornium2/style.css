@@ -275,6 +275,10 @@ span.inside_stat {
 span.stat {
     font-weight: bold; 
 }
+.highlight {
+    font-weight: bold; 
+}
+
 #searchbars {
     border-top: 1px solid black;
     /* border-bottom: 1px solid black; */
@@ -389,6 +393,15 @@ li.searchbars {
     right: 20px;
     top: 66px;
 } */
+
+
+/* Compose Staff Message form */
+
+#compose {
+    margin: 20px auto;
+}
+
+
 
 /* user classes */
 .user_name { 
@@ -536,6 +549,10 @@ p.min_padding {
 
 .sidebar .box {
     margin: 0px 5px 10px 5px;
+}
+
+.thin .box {
+    margin: 0 auto 10px;
 }
 
 .head {

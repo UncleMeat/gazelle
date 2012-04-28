@@ -230,6 +230,13 @@ ul.thin li { margin:0px 0px; padding:0px; }
     clear: right;
 }
 
+span.stat {
+    font-weight: normal;  
+}
+.highlight {
+    font-weight: bold; 
+}
+
 #searchbars {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
