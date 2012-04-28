@@ -256,6 +256,7 @@ class TEXT {
 			$this->Smileys[$Key] = '<img src="'.STATIC_SERVER.'common/smileys/'.$Val.'" alt="'.$Key.'" />';
 		}
 		reset($this->Smileys);
+            // asort($this->Smileys, SORT_STRING | SORT_FLAG_CASE); // do not uncomment - just for printing in a-z order in dev
 	}
 	
 	function full_format($Str) {
@@ -976,15 +977,13 @@ EXPLANATION OF PARSER LOGIC
             $count=0;
             foreach($this->Smileys as $Key=>$Val) { 
                 if ($indexto >= 0 && $count >= $indexto) { break; }
-                if ($count >= $indexfrom){
+                if ($count >= $indexfrom){  // ' &nbsp;' .$Key. - jsut for printing in dev
                     echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
                 }
                 $count++;
             }
             reset($this->Smileys); 
       }
-      
-
       
 }
 /*

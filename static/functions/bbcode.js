@@ -32,145 +32,69 @@ function Quick_Edit_Blog() {
 numLoaded = 0;
 maxSmilies = 9999;
 function Open_Smilies(alreadyloaded, loadincrement) {
-      /*  if (numLoaded < alreadyloaded) { numLoaded = alreadyloaded; }
-      if ($('#open_overflow').raw().isopen == true || numLoaded == 0) { opento = numLoaded + loadincrement; }
-      
-      if (numLoaded == 0 && alreadyloaded > 0) { numLoaded = alreadyloaded; }
-      if ($('#open_overflow').raw().isopen == true || numLoaded == 0) { opento = numLoaded + loadincrement; }
-      */
+      // first call inspect alreadyloaded param to allow for preloaded smilies in php
       if (numLoaded == 0) { 
           if (alreadyloaded > 0) { numLoaded = alreadyloaded; }
           opento = numLoaded + loadincrement;
       } else if ($('#open_overflow').raw().isopen == true) {
           opento = numLoaded + loadincrement;
       }
-      if (opento > maxSmilies) { opento = maxSmilies; }
-    /*  if (numLoaded >= maxSmilies) {
-          return; //
-      } */
-	$('#open_overflow').raw().isopen = true; 
+      if (opento > maxSmilies) { opento = maxSmilies; } 
+	$('#open_overflow').raw().isopen = true; // track first button status
       if (numLoaded < opento && numLoaded < maxSmilies) {
+          // depending on which buttons are visible display loading status in one of them
           if ($('#open_overflow_more').raw().isopen) {$('#open_overflow_more').raw().innerHTML = "Loading smilies";}
           else {$('#open_overflow').raw().innerHTML = "Loading smilies";}
+          // get the requested smiley data as xml;
+          // <smilies><smiley><bbcode>: code :</bbcode><url>http://url</url></smiley></smilies><maxsmilies>num</maxsmilies>
           ajax.getXML("ajax.php?action=get_smilies&indexfrom=" + numLoaded + "&indexto=" + opento, function(responseXML){
-                //$('#smiley_overflow').show();
                 txt='';
+                // construct the html from the xml data
                 x=responseXML.documentElement.getElementsByTagName("smiley");
-                for (i=0;i<x.length;i++)
-                  {
-                  //txt=txt + "<tr>";
-                   xx=x[i].getElementsByTagName("bbcode");
-                    {
-                    try
-                      {
-                          //<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
-                          txt=txt +'<a class="bb_smiley" title="' + xx[0].firstChild.nodeValue + '" href="javascript:em(\' ' + xx[0].firstChild.nodeValue + ' \');">';
-                      }
-                      //txt=txt + "<td>" + xx[0].firstChild.nodeValue + "</td>";
-                    catch (er)
-                      {
-                      txt=txt + "";
-                      }
-                    }
-                  xx=x[i].getElementsByTagName("url");
-                  {
-                    try
-                      {
+                for (i=0;i<x.length;i++) {
+                    xx=x[i].getElementsByTagName("bbcode"); 
+                    try {
+                        txt=txt +'<a class="bb_smiley" title="' + xx[0].firstChild.nodeValue + '" href="javascript:em(\' ' + xx[0].firstChild.nodeValue + ' \');">';
+                    }  catch (er) { }
+                    xx=x[i].getElementsByTagName("url"); 
+                    try {
                         txt=txt + xx[0].firstChild.nodeValue + '</a>';
-                      //txt=txt + "<td>" + xx[0].firstChild.nodeValue + "</td>";
-                      }
-                    catch (er)
-                      {
-                      txt=txt + "";
-                      }
-                    }
-                  //txt=txt + "</tr>";
-                  }
+                    }  catch (er) { }
+                }
                 x=responseXML.documentElement.getElementsByTagName("maxsmilies");
-                    {
-                    try
-                      {
-                          maxSmilies = x[0].firstChild.nodeValue;
-                      }
-                    catch (er)
-                      {}
-                    }
-                
-    //txt=txt + "</table>";
-    //document.getElementById('txtCDInfo').innerHTML=txt;
-                    
+                try {
+                    maxSmilies = x[0].firstChild.nodeValue;
+                } catch (er) {}
                 $('#smiley_overflow').raw().innerHTML += txt;
-    
-                //$('#smiley_overflow').raw().innerHTML += response;
-                //'<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
                 $('#smiley_overflow').show();
                 $('#open_overflow').raw().innerHTML = "Hide smilies";
-              /*  if (opento < maxSmilies) {
-                    $('#open_overflow_more').raw().isopen = true; 
-                    $('#open_overflow_more').raw().innerHTML = "Load more smilies";
-                    $('#open_overflow_more').show();
-                } else {
-                    $('#open_overflow_more').raw().isopen = false; 
-                    $('#open_overflow_more').raw().innerHTML = "";
-                    $('#open_overflow_more').hide();
-                } */
                 numLoaded = opento;
-                if (numLoaded < maxSmilies) {
-                    $('#open_overflow_more').raw().isopen = true; 
-                    $('#open_overflow_more').raw().innerHTML = "Load more smilies";
-                    $('#open_overflow_more').show();
-                } else {
-                    $('#open_overflow_more').raw().isopen = false; 
-                    $('#open_overflow_more').raw().innerHTML = "";
-                    $('#open_overflow_more').hide();
-                }
+                Toggle_Load_Button(numLoaded < maxSmilies);
           });
-      } else {
+      } else { 
           $('#smiley_overflow').show();
           $('#open_overflow').raw().innerHTML = "Hide smilies";
-                if (numLoaded < maxSmilies) {
-                    $('#open_overflow_more').raw().isopen = true; 
-                    $('#open_overflow_more').raw().innerHTML = "Load more smilies";
-                    $('#open_overflow_more').show();
-                } else {
-                    $('#open_overflow_more').raw().isopen = false; 
-                    $('#open_overflow_more').raw().innerHTML = "";
-                    $('#open_overflow_more').hide();
-                }
+          Toggle_Load_Button(numLoaded < maxSmilies);
       }
+}
+function Toggle_Load_Button(show){
+    if (show) {
+        $('#open_overflow_more').raw().isopen = true; 
+        $('#open_overflow_more').raw().innerHTML = "Load more smilies";
+        $('#open_overflow_more').show();
+    } else {
+        $('#open_overflow_more').raw().isopen = false; 
+        $('#open_overflow_more').raw().innerHTML = "";
+        $('#open_overflow_more').hide();
+    } 
 }
 function Close_Smilies() { 
 	$('#smiley_overflow').hide();
 	$('#open_overflow').raw().isopen = false;
 	$('#open_overflow').raw().innerHTML = "Show smilies";
-                    $('#open_overflow_more').raw().isopen = false; 
-                    $('#open_overflow_more').raw().innerHTML = "";
-                    $('#open_overflow_more').hide();
-}
-function Open_Smilies22(openfrom, opento) {
-	$('#open_overflow').raw().isopen = true; 
-      if (numLoaded < opento) {
-          if ($('#open_overflow_more').raw().isopen) {$('#open_overflow_more').raw().innerHTML = "Loading smilies";}
-          else {$('#open_overflow').raw().innerHTML = "Loading smilies";}
-          ajax.get("ajax.php?action=get_smilies&indexfrom=" + openfrom + "&indexto=" + opento, function(response){
-                $('#smiley_overflow').show();
-                $('#smiley_overflow').raw().innerHTML += response;
-                $('#open_overflow').raw().innerHTML = "Hide smilies";
-                if (opento < 9999) {
-                    $('#open_overflow_more').raw().isopen = true; 
-                    $('#open_overflow_more').raw().innerHTML = "Load more smilies";
-                    $('#open_overflow_more').show();
-                } else {
-                    $('#open_overflow_more').raw().isopen = false; 
-                    $('#open_overflow_more').raw().innerHTML = "";
-                    $('#open_overflow_more').hide();
-                }
-                numLoaded = opento;
-          });
-      } else {
-          $('#smiley_overflow').show();
-          $('#open_overflow').raw().innerHTML = "Hide smilies";
-      }
+      $('#open_overflow_more').raw().isopen = false; 
+      $('#open_overflow_more').raw().innerHTML = "";
+      $('#open_overflow_more').hide();
 }
 
 //made by putyn@tbdev.net lastupdate 28/12/2009
