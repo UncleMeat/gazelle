@@ -128,7 +128,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
     width: 100%;
     min-width:740px; 
     padding: 0;
-    background: url('images/header.png') repeat-x;  
+    background: #000 url('images/header.png') repeat-x;  
     font-weight: normal;
     margin-bottom: 25px; 
 }
@@ -337,22 +337,22 @@ li.searchbars {
 
 
 #alerts {
-    margin: 6px auto;
+    margin: 0 auto;
     text-align: center;
-    max-width: 800px;
-    max-height: 16px;
+    max-width: 600px;
+  /*  max-height: 16px; */
 } 
 
 .alertbar {
-    display: inline;
+    /*display: inline;*/
+    height: 16px;
     border: 1px solid #955;
-  /*  border-bottom: 1px solid #CB7772;*/
     padding: 2px 70px 2px;
     background-color: #e00; /* #0261a3; */
     text-align: center;
     font-weight: bold;
     color: white;
-    margin: 0px auto;
+    margin: 4px auto;
     border-radius: 10px;       /* FF9+ IE9+ */
     -moz-border-radius: 10px; /* for FF5 */
     -webkit-border-radius: 10px; /* for opera */
@@ -366,8 +366,8 @@ li.searchbars {
 }
 
 .blend {
-    display: inline;
-    padding: 2px 20px 2px;
+    /*display: inline;*/
+    padding: 2px 40px 2px;
     border: 1px solid #555;
     background-color: #024a7c;  /*  #0261A3;   #060606;  */
     color: white;
