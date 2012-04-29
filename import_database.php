@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL);
 
 define('SERVER_ROOT', '/home/lanz/www/gazelle');
 define('EMDB', 'emtest');
@@ -31,7 +32,7 @@ $time_start = microtime(true);
 echo "connecting to database\n";
 mysql_connect('localhost', 'root', 'password');
 
-
+/*
 $result = mysql_query('select count(*) as c from gazelle.users_info') or die(mysql_error());
 $count = mysql_result($result, 0);
 
@@ -54,7 +55,7 @@ while ($row = mysql_fetch_assoc($result)) {
     elseif ($i % 100 == 0)
         echo ".";
 }
-
+*/
 
 $result = mysql_query("select count(*) as c from " . EMDB . ".torrents") or die(mysql_error());
 $count = mysql_result($result, 0);
@@ -186,4 +187,5 @@ mysql_query("INSERT INTO gazelle.torrents_comments (GroupID, AuthorID, AddedTime
 
 $time = microtime(true) - $time_start;
 echo "\nexecution time: $time seconds\n";
+
 ?>
