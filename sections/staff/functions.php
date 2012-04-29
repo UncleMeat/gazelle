@@ -23,6 +23,12 @@ function get_fls() {
 	return $FLS;
 }
 
+/* -----------------------------------------------
+ * 26th April: changed functions to return Mod Pervs in 'forum staff' (and not in 'staff')
+ * this assumes we will not have a layer of FLS (user/helpers) then a layer of 'forum mods' who 
+ * are not staff then a layer of 'Mods' who are staff then senior staff... can easily change
+ * back if we go that way though
+*/
 function get_forum_staff() {
 	global $Cache, $DB;
 	static $ForumStaff;
@@ -41,11 +47,11 @@ function get_forum_staff() {
 			JOIN users_info AS i ON m.ID=i.UserID
 			JOIN permissions AS p ON p.ID=m.PermissionID
 			WHERE p.DisplayStaff='1'
-				AND p.Level < 700
+				AND p.Level < 600
 			ORDER BY p.Level, m.LastAccess ASC");
 		$ForumStaff = $DB->to_array(false, MYSQLI_BOTH, array(3,'Paranoia'));
 		$Cache->cache_value('forum_staff', $ForumStaff, 180);
-	}
+	}  //	AND p.Level < 700
 	return $ForumStaff;
 }
 
@@ -68,11 +74,11 @@ function get_staff() {
 			JOIN users_info AS i ON m.ID=i.UserID
 			JOIN permissions AS p ON p.ID=m.PermissionID
 			WHERE p.DisplayStaff='1'
-				AND p.Level >= 700
+				AND p.Level >= 600
 			ORDER BY p.Level, m.LastAccess ASC");
 		$Staff = $DB->to_array(false, MYSQLI_BOTH, array(4,'Paranoia'));
 		$Cache->cache_value('staff', $Staff, 180);
-	}
+	} //	AND p.Level >= 700
 	return $Staff;
 }
 

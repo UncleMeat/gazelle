@@ -119,6 +119,7 @@ $Validate->SetFields('rules', '1', 'require', 'Your torrent must abide by the ru
 $Err = $Validate->ValidateForm($_POST); // Validate the form
 
 
+
 $File = $_FILES['file_input']; // This is our torrent file
 $TorrentName = $File['tmp_name'];
 

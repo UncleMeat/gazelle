@@ -187,14 +187,15 @@ switch ($_REQUEST['action']){
 
 			$Values=array();
 			if (is_numeric($_REQUEST['id'])) {
-				$DB->query("SELECT p.ID,p.Name,p.Level,p.Values,p.DisplayStaff,COUNT(u.ID) FROM permissions AS p LEFT JOIN users_main AS u ON u.PermissionID=p.ID WHERE p.ID='".db_string($_REQUEST['id'])."' GROUP BY p.ID");
-				list($ID,$Name,$Level,$Values,$DisplayStaff,$UserCount)=$DB->next_record(MYSQLI_NUM, array(3));
+				$DB->query("SELECT p.ID,p.Name,p.Level,p.Values,p.DisplayStaff,
+                                    p.MaxSigLength,p.MaxAvatarWidth,p.MaxAvatarHeight,COUNT(u.ID) 
+                                    FROM permissions AS p LEFT JOIN users_main AS u ON u.PermissionID=p.ID WHERE p.ID='".db_string($_REQUEST['id'])."' GROUP BY p.ID");
+				list($ID,$Name,$Level,$Values,$DisplayStaff,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight,$UserCount)=$DB->next_record(MYSQLI_NUM, array(3));
 
 				if($Level > $LoggedUser['Class']  || $_REQUEST['level'] > $LoggedUser['Class']) {
 					error(403);
 				}
-
-
+ 
 				$Values=unserialize($Values);
 			}
 			
@@ -220,13 +221,18 @@ switch ($_REQUEST['action']){
 				$Name=$_REQUEST['name'];
 				$Level=$_REQUEST['level'];
 				$DisplayStaff=$_REQUEST['displaystaff'];
+                        $MaxSigLength=$_REQUEST['maxsiglength'];
+                        $MaxAvatarWidth=$_REQUEST['maxavatarwidth'];
+                        $MaxAvatarHeight=$_REQUEST['maxavatarheight'];
 				$Values['MaxCollages']=$_REQUEST['maxcollages'];
 
 				if (!$Err) {
 					if (!is_numeric($_REQUEST['id'])) {
-						$DB->query("INSERT INTO permissions (Level,Name,`Values`,DisplayStaff) VALUES ('".db_string($Level)."','".db_string($Name)."','".db_string(serialize($Values))."','".db_string($DisplayStaff)."')");
+						$DB->query("INSERT INTO permissions 
+                                            (Level,Name,`Values`,DisplayStaff,MaxSigLength,MaxAvatarWidth,MaxAvatarHeight) 
+                                     VALUES ('".db_string($Level)."','".db_string($Name)."','".db_string(serialize($Values))."','".db_string($DisplayStaff)."','".db_string($MaxSigLength)."','".db_string($MaxAvatarWidth)."','".db_string($MaxAvatarHeight)."')");
 					} else {
-						$DB->query("UPDATE permissions SET Level='".db_string($Level)."',Name='".db_string($Name)."',`Values`='".db_string(serialize($Values))."',DisplayStaff='".db_string($DisplayStaff)."' WHERE ID='".db_string($_REQUEST['id'])."'");
+						$DB->query("UPDATE permissions SET Level='".db_string($Level)."',Name='".db_string($Name)."',`Values`='".db_string(serialize($Values))."',DisplayStaff='".db_string($DisplayStaff)."',MaxSigLength='".db_string($MaxSigLength)."',MaxAvatarWidth='".db_string($MaxAvatarWidth)."',MaxAvatarHeight='".db_string($MaxAvatarHeight)."' WHERE ID='".db_string($_REQUEST['id'])."'");
 						$Cache->delete_value('perm_'.$_REQUEST['id']);
 					}
 					$Cache->delete_value('classes');

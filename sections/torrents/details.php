@@ -511,9 +511,11 @@ if($Catalogue === false) {
 			c.Body,
 			c.EditedUserID,
 			c.EditedTime,
-			u.Username
+			u.Username,
+            a.Signature
 			FROM torrents_comments as c
 			LEFT JOIN users_main AS u ON u.ID=c.EditedUserID
+            LEFT JOIN users_main AS a ON a.ID = c.AuthorID
 			WHERE c.GroupID = '$GroupID'
 			ORDER BY c.ID
 			LIMIT $CatalogueLimit");
@@ -534,14 +536,15 @@ echo $Pages;
 
 //---------- Begin printing
 foreach($Thread as $Key => $Post){
-	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername) = array_values($Post);
+	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature) = array_values($Post);
 	list($AuthorID, $Username, $PermissionID, $Paranoia, $Artist, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
+      list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values(get_permissions($PermissionID));
 ?>
 <table class="forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>" id="post<?=$PostID?>">
 	<tr class="colhead_dark">
 		<td colspan="2">
 			<span style="float:left;"><a class="post_id" href='torrents.php?id=<?=$GroupID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>'>#<?=$PostID?></a>
-				<strong><?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID)?></strong> <?=time_diff($AddedTime)?> <a href="reports.php?action=report&amp;type=torrents_comment&amp;id=<?=$PostID?>">[Report]</a>
+				<strong><?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, false, true)?></strong> <?=time_diff($AddedTime)?> <a href="reports.php?action=report&amp;type=torrents_comment&amp;id=<?=$PostID?>">[Report]</a>
 				- <a href="#quickpost" onclick="Quote('<?=$PostID?>','<?=$Username?>');">[Quote]</a>
 <?if ($AuthorID == $LoggedUser['ID'] || check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" onclick="Edit_Form('<?=$PostID?>','<?=$Key?>');">[Edit]</a><? }
 if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" onclick="Delete('<?=$PostID?>');">[Delete]</a> <? } ?>
@@ -555,9 +558,9 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 <? if(empty($HeavyInfo['DisableAvatars'])) { ?>
 		<td class="avatar" valign="top">
 	<? if ($Avatar) { ?>
-			<img src="<?=$Avatar?>" width="150" alt="<?=$Username ?>'s avatar" />
+			<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$Username ?>'s avatar" />
 	<? } else { ?>
-			<img src="<?=STATIC_SERVER?>common/avatars/default.png" width="150" alt="Default avatar" />
+			<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 	<?
 	}
 	?>
@@ -566,17 +569,23 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 }
 ?>
 		<td class="body" valign="top">
-			<div id="content<?=$PostID?>">
-<?=$Text->full_format($Body)?>
-<? if($EditedUserID){ ?>
-				<br />
-				<br />
+			<div id="content<?=$PostID?>" class="post_container">
+                      <div class="post_content"><?=$Text->full_format($Body) ?> </div>
+                <?  
+           if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength>0) && !empty($Signature) ) {
+                        
+                        echo '<div class="sig post_footer">' . $Text->full_format($Signature) . '</div>';
+           }      ?>
+                      
+<? if($EditedUserID){ ?>  
+                        <div class="post_footer">
 <?	if(check_perms('site_admin_forums')) { ?>
-				<a href="#content<?=$PostID?>" onclick="LoadEdit('torrents', <?=$PostID?>, 1); return false;">&laquo;</a> 
+				<a href="#content<?=$PostID?>" onclick="LoadEdit('forums', <?=$PostID?>, 1); return false;">&laquo;</a> 
 <? 	} ?>
 				Last edited by
 				<?=format_username($EditedUserID, $EditedUsername) ?> <?=time_diff($EditedTime,2,true,true)?>
-<? } ?>
+                        </div>
+        <? }   ?>  
 			</div>
 		</td>
 	</tr>
@@ -594,7 +603,7 @@ if(!$LoggedUser['DisablePosting']) { ?>
 					<tr class="colhead_dark">
 						<td colspan="2">
 							<span style="float:left;"><a href='#quickreplypreview'>#XXXXXX</a>
-								by <strong><?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'])?></strong>
+								by <strong><?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'], false, true)?></strong>
 							Just now
 							<a href="#quickreplypreview">[Report Comment]</a>
 							</span>
@@ -621,7 +630,8 @@ if(!$LoggedUser['DisablePosting']) { ?>
 						<input type="hidden" name="action" value="reply" />
 						<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 						<input type="hidden" name="groupid" value="<?=$GroupID?>" />
-						<textarea id="quickpost" name="body"  cols="70"  rows="8"></textarea> <br />
+                            <? $Text->display_bbcode_assistant("quickpost"); ?>
+						<textarea id="quickpost" name="body" class="long"  rows="8"></textarea> <br />
 					</div>
 					<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit();}else{Quick_Preview();}" />
 					<input type="submit" value="Post reply" />

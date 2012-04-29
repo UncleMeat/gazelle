@@ -27,9 +27,13 @@ switch($_GET['action']) {
 }
 ?>
 <div class="thin">
-	<h2><?= ($_GET['action'] == 'news')? 'Create a news post' : 'Edit news post';?></h2>
-	<form action="tools.php" method="post">
-		<div class="box pad">
+    <h2><?= ($_GET['action'] == 'news')? 'Create a news post' : 'Edit news post';?></h2> 
+    <div id="quickreplypreview">
+        <div id="contentpreview" style="text-align:left;"></div>
+    </div>
+    <form  id="quickpostform" action="tools.php" method="post">
+        <div class="box pad">
+            <div id="quickreplytext">
 			<input type="hidden" name="action" value="<?= ($_GET['action'] == 'news')? 'takenewnews' : 'takeeditnews';?>" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 <? if($_GET['action'] == 'editnews'){?> 
@@ -37,16 +41,19 @@ switch($_GET['action']) {
 <? }?> 
 			<h3>Title</h3>
 			<input type="text" name="title" size="95" <? if(!empty($Title)) { echo 'value="'.display_str($Title).'"'; } ?> />
-<!-- Why did someone add this?	<input type="datetime" name="datetime" value="<?=sqltime()?>"/> -->
 			<br />
 			<h3>Body</h3>
-			<textarea name="body" cols="95" rows="15"><? if(!empty($Body)) { echo display_str($Body); } ?></textarea> <br /><br />
-			<div class="center">
-				<input type="submit" value="<?= ($_GET['action'] == 'news')? 'Create news post' : 'Edit news post';?>" />
-			</div>
-		</div>
-	</form>
-
+                  <? $Text->display_bbcode_assistant('textbody', 0)  ?>
+                  <textarea id="textbody" name="body" class="long" rows="15"><? if(!empty($Body)) { echo display_str($Body); } ?></textarea> 
+            </div>
+            <br />
+           <div class="center">
+			<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit_Blog();}else{Quick_Preview_Blog();}" />
+                  <input type="submit" value="<?= ($_GET['action'] == 'news')? 'Create news post' : 'Edit news post';?>" />
+            </div> 
+        </div>
+    </form>
+<br /><br />
 	<h2>News archive</h2>
 	
 <?

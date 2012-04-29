@@ -113,16 +113,20 @@ if(check_perms('site_send_unlimited_invites')) {
 			<li id="nav_donate" class="brackets"><a href="donate.php">Donate</a></li>
 		</ul>
 		<ul id="userinfo_stats">
-			<li id="stats_seeding"><a href="torrents.php?type=seeding&amp;userid=<?=$LoggedUser['ID']?>">Up</a>: <span class="stat"><?=get_size($LoggedUser['BytesUploaded'])?></span></li>
+		<span class="inside_stat">
+                  <li id="stats_seeding"><a href="torrents.php?type=seeding&amp;userid=<?=$LoggedUser['ID']?>">Up</a>: <span class="stat"><?=get_size($LoggedUser['BytesUploaded'])?></span></li>
 			<li id="stats_leeching"><a href="torrents.php?type=leeching&amp;userid=<?=$LoggedUser['ID']?>">Down</a>: <span class="stat"><?=get_size($LoggedUser['BytesDownloaded'])?></span></li>
-			<li id="stats_ratio">Ratio: <span class="stat"><?=ratio($LoggedUser['BytesUploaded'], $LoggedUser['BytesDownloaded'])?></span></li>
+            </span>
+            <span class="inside_stat">
+                  <li id="stats_ratio"><a href="rules.php?p=ratio">Ratio</a>: <span class="stat"><?=ratio($LoggedUser['BytesUploaded'], $LoggedUser['BytesDownloaded'])?></span></li>
 <?	if(!empty($LoggedUser['RequiredRatio'])) {?>
 			<li id="stats_required"><a href="rules.php?p=ratio">Required</a>: <span class="stat"><?=number_format($LoggedUser['RequiredRatio'], 2)?></span></li>
 <?	} 
     if($LoggedUser['FLTokens'] > 0) { ?>
 			<li id="fl_tokens">Tokens: <span class="stat"><?=$LoggedUser['FLTokens']?></span></li>
 <?	} ?>
-		</ul>
+            </span>
+            </ul>
 <?
 $NewSubscriptions = $Cache->get_value('subscriptions_user_new_'.$LoggedUser['ID']);
 if($NewSubscriptions === FALSE) {
@@ -143,37 +147,40 @@ if($NewSubscriptions === FALSE) {
                         AND f.ID NOT IN ('".$RestrictedForums."')" : ""));
         list($NewSubscriptions) = $DB->next_record();
         $Cache->cache_value('subscriptions_user_new_'.$LoggedUser['ID'], $NewSubscriptions, 0);
-} ?>
+} 
 
-		<ul id="userinfo_minor"<?=$NewSubscriptions ? ' class="highlite"' : ''?>>
-			<li id="nav_inbox"><a onmousedown="Stats('inbox');" href="inbox.php">Inbox</a></li>
-			<li id="nav_staffinbox"><a onmousedown="Stats('staffpm');" href="staffpm.php">Staff Inbox</a></li>
-			<li id="nav_uploaded"><a onmousedown="Stats('uploads');" href="torrents.php?type=uploaded&amp;userid=<?=$LoggedUser['ID']?>">Uploads</a></li>
-			<li id="nav_bookmarks"><a onmousedown="Stats('bookmarks');" href="bookmarks.php?type=torrents">Bookmarks</a></li>
-<? if (check_perms('site_torrents_notify')) { ?>
-			<li id="nav_notifications"><a onmousedown="Stats('notifications');" href="user.php?action=notify">Notifications</a></li>
-<? }
-?>
-			<li id="nav_subscriptions"><a onmousedown="Stats('subscriptions');" href="userhistory.php?action=subscriptions"<?=($NewSubscriptions ? ' class="new-subscriptions"' : '')?>>Subscriptions</a></li>
-			<li id="nav_comments"><a onmousedown="Stats('comments');" href="comments.php">Comments</a></li>
-			<li id="nav_friends"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>
-		</ul>
-	</div>
-	<div id="menu">
-		<h4 class="hidden">Site Menu</h4>
-		<ul>
-			<li id="nav_index"><a href="index.php">Home</a></li>
-			<li id="nav_torrents"><a href="torrents.php">Torrents</a></li>
-			<li id="nav_collages"><a href="collages.php">Collages</a></li>
-			<li id="nav_requests"><a href="requests.php">Requests</a></li>
-			<li id="nav_forums"><a href="forums.php">Forums</a></li>
-			<li id="nav_irc"><a href="chat.php">IRC</a></li>
-			<li id="nav_top10"><a href="top10.php">Top 10</a></li>
-			<li id="nav_rules"><a href="rules.php">Rules</a></li>
-			<li id="nav_staff"><a href="staff.php">Staff</a></li>
-		</ul>
-	</div>
-<?
+ 
+/*
+if (check_perms('users_mod')) {
+    //Staff PM (staff pov)
+    $NumStaffPMs = $Cache->get_value('num_staff_pms_'.$LoggedUser['ID']);
+    if ($NumStaffPMs === false) {
+        $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE Status='Unanswered' AND (AssignedToUser=".$LoggedUser['ID']." OR (Level >= ".max(700,$Classes[MOD]['Level'])." AND Level <=".$LoggedUser['Class']."))");
+        list($NumStaffPMs) = $DB->next_record();
+        $Cache->cache_value('num_staff_pms_'.$LoggedUser['ID'], $NumStaffPMs , 1000);
+    }
+    $NumStaffPMsDisplay = $NumStaffPMs;
+} else {
+    //Staff PM (user pov)
+    $NewStaffPMs = $Cache->get_value('staff_pm_new_'.$LoggedUser['ID']);
+    if ($NewStaffPMs === false) {
+          $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE UserID='".$LoggedUser['ID']."' AND Unread = '1'");
+          list($NewStaffPMs) = $DB->next_record();
+          $Cache->cache_value('staff_pm_new_'.$LoggedUser['ID'], $NewStaffPMs, 0);
+    }
+    $NumStaffPMsDisplay = $NewStaffPMs;
+} 
+//Inbox
+$NewMessages = $Cache->get_value('inbox_new_'.$LoggedUser['ID']);
+if ($NewMessages === false) {
+	$DB->query("SELECT COUNT(UnRead) FROM pm_conversations_users WHERE UserID='".$LoggedUser['ID']."' AND UnRead = '1' AND InInbox = '1'");
+	list($NewMessages) = $DB->next_record();
+	$Cache->cache_value('inbox_new_'.$LoggedUser['ID'], $NewMessages, 0);
+}
+
+*/
+// Moved alert bar handling to before we draw minor stats to allow showing alert status in links too
+
 //Start handling alert bars
 $Alerts = array();
 $ModBar = array();
@@ -201,7 +208,8 @@ if ($NewStaffPMs === false) {
 	$DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE UserID='".$LoggedUser['ID']."' AND Unread = '1'");
 	list($NewStaffPMs) = $DB->next_record();
 	$Cache->cache_value('staff_pm_new_'.$LoggedUser['ID'], $NewStaffPMs, 0);
-}
+    $NumStaffPMsDisplay = $NewStaffPMs;
+}  
 
 if ($NewStaffPMs > 0) {
 	$Alerts[] = '<a href="staffpm.php">'.'You have '.$NewStaffPMs.(($NewStaffPMs > 1) ? ' new staff messages' : ' new staff message').'</a>';
@@ -230,10 +238,189 @@ if (check_perms('site_torrents_notify')) {
 	if ($NewNotifications === false) {
 		$DB->query("SELECT COUNT(UserID) FROM users_notify_torrents WHERE UserID='$LoggedUser[ID]' AND UnRead='1'");
 		list($NewNotifications) = $DB->next_record();
-		/* if($NewNotifications && !check_perms('site_torrents_notify')) {
-			$DB->query("DELETE FROM users_notify_torrents WHERE UserID='$LoggedUser[ID]'");
-			$DB->query("DELETE FROM users_notify_filters WHERE UserID='$LoggedUser[ID]'");
-		} */
+		//  if($NewNotifications && !check_perms('site_torrents_notify')) {
+		//	$DB->query("DELETE FROM users_notify_torrents WHERE UserID='$LoggedUser[ID]'");
+		//	$DB->query("DELETE FROM users_notify_filters WHERE UserID='$LoggedUser[ID]'");
+		//} 
+		$Cache->cache_value('notifications_new_'.$LoggedUser['ID'], $NewNotifications, 0);
+	}
+	if ($NewNotifications > 0) {
+		$Alerts[] = '<a href="torrents.php?action=notify">'.'You have '.$NewNotifications.(($NewNotifications > 1) ? ' new torrent notifications' : ' new torrent notification').'</a>';
+	}
+}
+
+// Collage subscriptions
+if(check_perms('site_collages_subscribe')) { 
+	$NewCollages = $Cache->get_value('collage_subs_user_new_'.$LoggedUser['ID']);
+	if($NewCollages === FALSE) {
+			$DB->query("SELECT COUNT(DISTINCT s.CollageID)
+					FROM users_collage_subs as s
+					JOIN collages as c ON s.CollageID = c.ID
+					JOIN collages_torrents as ct on ct.CollageID = c.ID
+					WHERE s.UserID = ".$LoggedUser['ID']." AND ct.AddedOn > s.LastVisit AND c.Deleted = '0'");
+			list($NewCollages) = $DB->next_record();
+			$Cache->cache_value('collage_subs_user_new_'.$LoggedUser['ID'], $NewCollages, 0);
+	}
+	if ($NewCollages > 0) {
+		$Alerts[] = '<a href="userhistory.php?action=subscribed_collages">'.'You have '.$NewCollages.(($NewCollages > 1) ? ' new collage updates' : ' new collage update').'</a>';
+	}
+}
+
+if (check_perms('users_mod')) {
+	$ModBar[] = '<a href="tools.php">'.'Toolbox'.'</a>';
+
+	$NumStaffPMs = $Cache->get_value('num_staff_pms_'.$LoggedUser['ID']);
+	if ($NumStaffPMs === false) {
+		$DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE Status='Unanswered' AND (AssignedToUser=".$LoggedUser['ID']." OR (Level >= ".max(700,$Classes[MOD]['Level'])." AND Level <=".$LoggedUser['Class']."))");
+		list($NumStaffPMs) = $DB->next_record();
+		$Cache->cache_value('num_staff_pms_'.$LoggedUser['ID'], $NumStaffPMs , 1000);
+	}
+    $NumStaffPMsDisplay = $NumStaffPMs;
+	
+	if ($NumStaffPMs > 0) {
+		$ModBar[] = '<a href="staffpm.php">'.$NumStaffPMs.' Staff PMs</a>';
+	}
+}
+if(check_perms('admin_reports')) {
+	$NumTorrentReports = $Cache->get_value('num_torrent_reportsv2');
+	if ($NumTorrentReports === false) {
+		$DB->query("SELECT COUNT(ID) FROM reportsv2 WHERE Status='New'");
+		list($NumTorrentReports) = $DB->next_record();
+		$Cache->cache_value('num_torrent_reportsv2', $NumTorrentReports, 0);
+	}
+	
+	$ModBar[] = '<a href="reportsv2.php">'.$NumTorrentReports.(($NumTorrentReports == 1) ? ' Report' : ' Reports').'</a>';
+}
+
+if(check_perms('admin_reports')) {
+	$NumOtherReports = $Cache->get_value('num_other_reports');
+	if ($NumOtherReports === false) {
+		$DB->query("SELECT COUNT(ID) FROM reports WHERE Status='New'");
+		list($NumOtherReports) = $DB->next_record();
+		$Cache->cache_value('num_other_reports', $NumOtherReports, 0);
+	}
+	
+	if ($NumOtherReports > 0) {
+		$ModBar[] = '<a href="reports.php">'.$NumOtherReports.(($NumTorrentReports == 1) ? ' Other Report' : ' Other Reports').'</a>';
+	}
+} else if(check_perms('project_team')) {
+	$NumUpdateReports = $Cache->get_value('num_update_reports');
+	if ($NumUpdateReports === false) {
+		$DB->query("SELECT COUNT(ID) FROM reports WHERE Status='New' AND Type = 'request_update'");
+		list($NumUpdateReports) = $DB->next_record();
+		$Cache->cache_value('num_update_reports', $NumUpdateReports, 0);
+	}
+	
+	if ($NumUpdateReports > 0) {
+		$ModBar[] = '<a href="reports.php">'.'Request update reports'.'</a>';
+	}
+} else if(check_perms('site_moderate_forums')) {
+	$NumForumReports = $Cache->get_value('num_forum_reports');
+	if ($NumForumReports === false) {
+		$DB->query("SELECT COUNT(ID) FROM reports WHERE Status='New' AND Type IN('collages_comment', 'Post', 'requests_comment', 'thread', 'torrents_comment')");
+		list($NumForumReports) = $DB->next_record();
+		$Cache->cache_value('num_forum_reports', $NumForumReports, 0);
+	}
+	
+	if ($NumForumReports > 0) {
+		$ModBar[] = '<a href="reports.php">'.'Forum reports'.'</a>';
+	}
+}
+
+		// <ul id="userinfo_minor"<?=$NewSubscriptions ? ' class="highlite"' : '' ? >> // why is thsi like this? seems like an unused and useable css... i hate deleting stuff i dont understand though...
+      ?>
+ 
+		<ul id="userinfo_minor">
+			<li id="nav_inbox"<?=$NewMessages ? ' class="highlight"' : ''?>><a onmousedown="Stats('inbox');" href="inbox.php">Inbox<?=$NewMessages ? "($NewMessages)" : ''?></a></li>
+			<li id="nav_staffinbox"<?=$NumStaffPMsDisplay ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffpm');" href="staffpm.php">Staff Messages<?=$NumStaffPMsDisplay ? "($NumStaffPMsDisplay)" : ''?></a></li>
+			<li id="nav_uploaded"><a onmousedown="Stats('uploads');" href="torrents.php?type=uploaded&amp;userid=<?=$LoggedUser['ID']?>">Uploads</a></li>
+			<li id="nav_bookmarks"><a onmousedown="Stats('bookmarks');" href="bookmarks.php?type=torrents">Bookmarks</a></li>
+<? if (check_perms('site_torrents_notify')) { ?>
+			<li id="nav_notifications"<?=($NewNotifications ? ' class="highlight"' : '')?>><a onmousedown="Stats('notifications');" href="user.php?action=notify">Notifications<?=$NewNotifications ? "($NewNotifications)" : ''?></a></li>
+<? } 
+?>
+			<li id="nav_subscriptions"<?=($NewSubscriptions ? ' class="highlight"' : '')?>><a onmousedown="Stats('subscriptions');" href="userhistory.php?action=subscriptions"<?=($NewSubscriptions ? ' class="new-subscriptions"' : '')?>>Subscriptions<?=$NewSubscriptions ? "($NewSubscriptions)" : ''?></a></li>
+			<li id="nav_comments"><a onmousedown="Stats('comments');" href="comments.php">Comments</a></li>
+			<li id="nav_friends"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>
+			<li id="nav_logs"><a onmousedown="Stats('logs');" href="log.php">Logs</a></li>
+		</ul>
+	</div>
+	<div id="menu">
+		<h4 class="hidden">Site Menu</h4>
+		<ul>
+			<li id="nav_index"><a href="index.php">Home</a></li>
+			<li id="nav_torrents"><a href="torrents.php">Torrents</a></li>
+			<li id="nav_collages"><a href="collages.php">Collages</a></li>
+			<li id="nav_requests"><a href="requests.php">Requests</a></li>
+			<li id="nav_forums"><a href="forums.php">Forums</a></li>
+			<li id="nav_irc"><a href="chat.php">IRC</a></li>
+			<li id="nav_top10"><a href="top10.php">Top 10</a></li>
+			<li id="nav_rules"><a href="rules.php">Rules</a></li>
+			<li id="nav_staff"><a href="staff.php">Staff</a></li>
+		</ul>
+	</div>
+<?
+/*
+//Start handling alert bars
+$Alerts = array();
+$ModBar = array();
+
+// News
+$MyNews = $LoggedUser['LastReadNews']+0;
+$CurrentNews = $Cache->get_value('news_latest_id');
+if ($CurrentNews === false) {
+	$DB->query("SELECT ID FROM news ORDER BY Time DESC LIMIT 1");
+	if ($DB->record_count() == 1) {
+		list($CurrentNews) = $DB->next_record();
+	} else {
+		$CurrentNews = -1;
+	}
+	$Cache->cache_value('news_latest_id', $CurrentNews, 0);
+}
+
+if ($MyNews < $CurrentNews) {
+	$Alerts[] = '<a href="index.php">'.'New Announcement!'.'</a>';
+}
+
+//Staff PM
+$NewStaffPMs = $Cache->get_value('staff_pm_new_'.$LoggedUser['ID']);
+if ($NewStaffPMs === false) {
+	$DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE UserID='".$LoggedUser['ID']."' AND Unread = '1'");
+	list($NewStaffPMs) = $DB->next_record();
+	$Cache->cache_value('staff_pm_new_'.$LoggedUser['ID'], $NewStaffPMs, 0);
+}  
+
+if ($NewStaffPMs > 0) {
+	$Alerts[] = '<a href="staffpm.php">'.'You have '.$NewStaffPMs.(($NewStaffPMs > 1) ? ' new staff messages' : ' new staff message').'</a>';
+}
+
+//Inbox
+$NewMessages = $Cache->get_value('inbox_new_'.$LoggedUser['ID']);
+if ($NewMessages === false) {
+	$DB->query("SELECT COUNT(UnRead) FROM pm_conversations_users WHERE UserID='".$LoggedUser['ID']."' AND UnRead = '1' AND InInbox = '1'");
+	list($NewMessages) = $DB->next_record();
+	$Cache->cache_value('inbox_new_'.$LoggedUser['ID'], $NewMessages, 0);
+}
+
+if ($NewMessages > 0) {
+	$Alerts[] = '<a href="inbox.php">'.'You have '.$NewMessages.(($NewMessages > 1) ? ' new messages' : ' new message').'</a>';
+}
+
+if($LoggedUser['RatioWatch']) {
+	$Alerts[] = '<a href="rules.php?p=ratio">'.'Ratio Watch'.'</a>: '.'You have '.time_diff($LoggedUser['RatioWatchEnds'], 3).' to get your ratio over your required ratio or your leeching abilities will be disabled.';
+} else if($LoggedUser['CanLeech'] != 1) {
+	$Alerts[] = '<a href="rules.php?p=ratio">'.'Ratio Watch'.'</a>: '.'Your downloading privileges are disabled until you meet your required ratio.';
+}
+
+if (check_perms('site_torrents_notify')) {
+	$NewNotifications = $Cache->get_value('notifications_new_'.$LoggedUser['ID']);
+	if ($NewNotifications === false) {
+		$DB->query("SELECT COUNT(UserID) FROM users_notify_torrents WHERE UserID='$LoggedUser[ID]' AND UnRead='1'");
+		list($NewNotifications) = $DB->next_record();
+		//  if($NewNotifications && !check_perms('site_torrents_notify')) {
+		//	$DB->query("DELETE FROM users_notify_torrents WHERE UserID='$LoggedUser[ID]'");
+		//	$DB->query("DELETE FROM users_notify_filters WHERE UserID='$LoggedUser[ID]'");
+		//} 
 		$Cache->cache_value('notifications_new_'.$LoggedUser['ID'], $NewNotifications, 0);
 	}
 	if ($NewNotifications > 0) {
@@ -318,7 +505,7 @@ if(check_perms('admin_reports')) {
 	}
 }
 
-
+*/
 
 if (!empty($Alerts) || !empty($ModBar)) {
 ?>
@@ -327,7 +514,7 @@ if (!empty($Alerts) || !empty($ModBar)) {
 		<div class="alertbar"><?=$Alert?></div>
 	<? }
 	if (!empty($ModBar)) { ?>
-		<div class="alertbar blend"><?=implode(' | ',$ModBar)?></div>
+		<div id="modbar" class="alertbar blend"><?=implode(' | ',$ModBar)?></div>
 	<? } ?>
 	</div>
 <?
@@ -385,9 +572,9 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 						onfocus="if (this.value == 'Torrents') this.value='';"
 						onblur="if (this.value == '') this.value='Torrents';"
 <? if(isset($LoggedUser['SearchType']) && $LoggedUser['SearchType']) { // Advanced search ?> 
-						value="Torrents" type="text" name="groupname" size="17"
+						value="Torrents" type="text" name="groupname" size="17" title="Search Torrents"
 <? } else { ?>
-						value="Torrents" type="text" name="searchstr" size="17"
+						value="Torrents" type="text" name="searchstr" size="17" title="Search Torrents"
 <? } ?>
 					/>
 				</form>
@@ -399,7 +586,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 						spellcheck="false"
 						onfocus="if (this.value == 'Requests') this.value='';"
 						onblur="if (this.value == '') this.value='Requests';"
-						value="Requests" type="text" name="search" size="17"
+						value="Requests" type="text" name="search" size="17" title="Search Requests"
 					/>
 				</form>
 			</li>
@@ -410,7 +597,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					<input
 						onfocus="if (this.value == 'Forums') this.value='';"
 						onblur="if (this.value == '') this.value='Forums';"
-						value="Forums" type="text" name="search" size="17"
+						value="Forums" type="text" name="search" size="17" title="Search Forums"
 					/>
 				</form>
 			</li>
@@ -420,7 +607,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					<input
 						onfocus="if (this.value == 'Log') this.value='';"
 						onblur="if (this.value == '') this.value='Log';"
-						value="Log" type="text" name="search" size="17"
+						value="Log" type="text" name="search" size="17" title="Search Logs"
 					/>
 				</form>
 			</li>
@@ -431,7 +618,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					<input
 						onfocus="if (this.value == 'Users') this.value='';"
 						onblur="if (this.value == '') this.value='Users';"
-						value="Users" type="text" name="search" size="20"
+						value="Users" type="text" name="search" size="20" title="Search Users"
 					/>
 				</form>
 			</li>

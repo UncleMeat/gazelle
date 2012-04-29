@@ -4,6 +4,269 @@ class TEXT {
 	private $ValidTags = array('b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, '#'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
 	);
 	private $Smileys = array(
+           ':smile1:'           => 'smile1.gif',
+           ':smile2:'           => 'smile2.gif',
+           ':grin:'           => 'grin.gif',
+           ':laugh:'           => 'laugh.gif',
+           ':w00t:'           => 'w00t.gif',
+           ':tongue:'           => 'tongue.gif',
+           ':wink:'           => 'wink.gif',
+           ':noexpression:'           => 'noexpression.gif',
+           ':confused:'           => 'confused.gif',
+           ':sad:'           => 'sad.gif',
+           ':cry:'           => 'cry.gif',
+           ':weep:'           => 'weep.gif',
+           ':voodoo:'           => 'voodoo.gif',
+           ':yaydance:'           => 'yaydance.gif',
+           ':lol:'           => 'lol.gif',
+          
+          
+           ':mad:'           => 'mad2.gif',
+           ':banghead:'           => 'banghead.gif',
+           ':gunshot:'           => 'gunshot.gif',
+           ':no2:'           => 'no2.gif',
+           ':yes2:'           => 'yes2.gif',
+           ':wanker:'           => 'wanker.gif',
+           ':sorry:'           => 'sorry.gif',
+          
+          
+          //===========================================
+          
+           ':borg:'           => 'borg.gif',
+           ':nasher:'           => 'gnasher.gif',
+           ':panic:'           => 'panic.gif',
+           ':worm:'           => 'worm2.gif',
+          
+          
+          //=============================================
+          
+           ':ohmy:'           => 'ohmy.gif',
+           ':cool1:'           => 'cool1.gif',
+           ':sleeping:'           => 'sleeping.gif',
+           ':innocent:'           => 'innocent.gif',
+           ':whistle:'           => 'whistle.gif',
+           ':unsure:'           => 'unsure.gif',
+           ':closedeyes:'           => 'closedeyes.gif',
+           ':cool2:'           => 'cool2.gif',
+           ':fun:'           => 'fun.gif',
+           ':thumbsup:'           => 'thumbsup.gif',
+           ':thumbsdown:'           => 'thumbsdown.gif',
+           ':blush:'           => 'blush.gif',
+           ':yes:'           => 'yes.gif',
+           ':no:'           => 'no.gif',
+           ':love:'           => 'love.gif',
+           ':question:'           => 'question.gif',
+           ':excl:'           => 'excl.gif',
+           ':idea:'           => 'idea.gif',
+           ':arrow:'           => 'arrow.gif',
+           ':arrow2:'           => 'arrow2.gif',
+           ':hmm:'           => 'hmm.gif',
+           ':hmmm:'           => 'hmmm.gif',
+           ':huh:'           => 'huh.gif',
+           ':geek:'           => 'geek.gif',
+           ':look:'           => 'look.gif',
+           ':rolleyes:'           => 'rolleyes.gif',
+           ':punk:'           => 'punk.gif',
+           ':shifty:'           => 'shifty.gif',
+           ':blink:'           => 'blink.gif',
+           ':smartass:'           => 'smartass.gif',
+           ':sick:'           => 'sick.gif',
+           ':crazy:'           => 'crazy.gif',
+           ':wacko:'           => 'wacko.gif',
+           ':wave:'           => 'wave.gif',
+           ':wavecry:'           => 'wavecry.gif',
+           ':baby:'           => 'baby.gif',
+           ':angry:'           => 'angry.gif',
+           ':ras:'           => 'ras.gif',
+           ':sly:'           => 'sly.gif',
+           ':devil:'           => 'devil.gif',
+           ':evil:'           => 'evil.gif',
+           ':evilmad:'           => 'evilmad.gif',
+           ':sneaky:'           => 'sneaky.gif',
+           ':icecream:'           => 'icecream.gif',
+           ':hooray:'           => 'hooray.gif',
+           ':slap:'           => 'slap.gif',
+           ':wall:'           => 'wall.gif',
+           ':yucky:'           => 'yucky.gif',
+           ':nugget:'           => 'nugget.gif',
+           ':smart:'           => 'smart.gif',
+           ':shutup:'           => 'shutup.gif',
+           ':shutup2:'           => 'shutup2.gif',
+           ':weirdo:'           => 'weirdo.gif',
+           ':yawn:'           => 'yawn.gif',
+           ':snap:'           => 'snap.gif',
+           ':strongbench:'           => 'strongbench.gif',
+           ':weakbench:'           => 'weakbench.gif',
+           ':dumbells:'           => 'dumbells.gif',
+           ':music:'           => 'music.gif',
+           ':guns:'           => 'guns.gif',
+           ':clap2:'           => 'clap2.gif',
+           ':kiss:'           => 'kiss.gif',
+           ':clown:'           => 'clown.gif',
+           ':cake:'           => 'cake.gif',
+           ':alien:'           => 'alien.gif',
+           ':wizard:'           => 'wizard.gif',
+           ':beer:'           => 'beer.gif',
+           ':beer2:'           => 'beer2.gif',
+           ':drunk:'           => 'drunk.gif',
+           ':rant:'           => 'rant.gif',
+           ':tease:'           => 'tease.gif',
+           /* ':box:'           => 'box.gif', */
+          
+           ':daisy:'           => 'daisy.gif',
+           ':demon:'           => 'demon.gif',
+           ':fdevil:'           => 'flamingdevil.gif',
+           ':flipa:'           => 'flipa.gif',
+           ':flirty:'           => 'flirtysmile1.gif',
+           ':lollol:'           => 'lolalot.gif',
+           ':lovelove:'           => 'lovelove.gif',
+           ':ninja1:'           => 'ninja1.gif',
+           ':nom:'           => 'nom.gif',
+           ':samurai:'           => 'samurai.gif',
+           ':sasmokin:'           => 'sasmokin.gif',
+          
+          
+          
+          //----------------------------
+          
+           ':sigh:'           => 'facepalm.gif',
+           ':happydancing:'           => 'happydancing.gif',
+           ':emperor:'           => 'emperor.gif',
+           ':argh:'           => 'frustrated.gif',
+           ':tumble:'           => 'tumbleweed.gif',
+          
+           ':popcorn:'           => 'popcorn.gif',
+          
+          
+           ':lsvader:'           => 'lsvader.gif',
+          
+          
+           ':boxing:'           => 'boxing.gif',
+           ':shoot:'           => 'shoot.gif',
+           ':shoot2:'           => 'shoot2.gif',
+           ':flowers:'           => 'flowers.gif',
+           ':wub:'           => 'wub.gif',
+           ':lovers:'           => 'lovers.gif',
+           ':kissing:'           => 'kissing.gif',
+           ':kissing2:'           => 'kissing2.gif',
+           ':console:'           => 'console.gif',
+           ':group:'           => 'group.gif',
+           ':hump:'           => 'hump.gif',
+           ':happy2:'           => 'happy2.gif',
+           ':clap:'           => 'clap.gif',
+           ':crockett:'           => 'crockett.gif',
+           ':zorro:'           => 'zorro.gif',
+           ':bow:'           => 'bow.gif',
+           ':dawgie:'           => 'dawgie.gif',
+           ':cylon:'           => 'cylon.gif',
+           ':book:'           => 'book.gif',
+           ':fish:'           => 'fish.gif',
+           ':mama:'           => 'mama.gif',
+           ':pepsi:'           => 'pepsi.gif',
+           ':medieval:'           => 'medieval.gif',
+           ':rambo:'           => 'rambo.gif',
+           ':ninja:'           => 'ninja.gif',
+           ':party:'           => 'party.gif',
+           ':snorkle:'           => 'snorkle.gif',
+           ':king:'           => 'king.gif',
+           ':chef:'           => 'chef.gif',
+           ':mario:'           => 'mario.gif',
+           ':fez:'           => 'fez.gif',
+           ':cap:'           => 'cap.gif',
+           ':cowboy:'           => 'cowboy.gif',
+           ':pirate:'           => 'pirate.gif',
+           ':pirate2:'           => 'pirate2.gif',
+           ':rock:'           => 'rock.gif',
+           ':cigar:'           => 'cigar.gif',
+           ':oldtimer:'           => 'oldtimer.gif',
+           ':trampoline:'           => 'trampoline.gif',
+           ':bananadance:'           => 'bananadance.gif',
+           ':smurf:'           => 'smurf.gif',
+           ':yikes:'           => 'yikes.gif',
+           ':santa:'           => 'santa.gif',
+           ':indian:'           => 'indian.gif',
+           ':pimp:'           => 'pimp.gif',
+           ':nuke:'           => 'nuke.gif',
+           ':jacko:'           => 'jacko.gif',
+           ':greedy:'           => 'greedy.gif',
+           ':super:'           => 'super.gif',
+           ':wolverine:'           => 'wolverine.gif',
+           ':spidey:'           => 'spidey.gif',
+           ':spider:'           => 'spider.gif',
+           ':bandana:'           => 'bandana.gif',
+           ':construction:'           => 'construction.gif',
+           ':sheep:'           => 'sheep.gif',
+           ':police:'           => 'police.gif',
+           ':detective:'           => 'detective.gif',
+           ':bike:'           => 'bike.gif',
+           ':fishing:'           => 'fishing.gif',
+           ':clover:'           => 'clover.gif',
+           ':shit:'           => 'shit.gif',
+           ':cheer:'           => 'cheerlead.gif',
+           ':whip:'           => 'whip.gif',
+           ':judge:'           => 'judge.gif',
+           ':chair:'           => 'chair.gif',
+          
+           ':pythfoot:'           => 'pythfoot.gif',
+           ':rain:'           => 'rain.gif',
+          
+           ':blind:'           => 'blind.gif',
+           ':blah:'           => 'blah.gif',
+           ':boner:'           => 'boner.gif',
+           ':goodjob:'           => 'gjob.gif',
+           ':dist:'           => 'dist.gif',
+           ':urock:'           => 'urock.gif',
+          
+          
+           ':stupid:'           => 'stupid.gif',
+           ':dots:'           => 'dots.gif',
+           ':offtopic:'           => 'offtopic.gif',
+           ':spam:'           => 'spam.gif',
+           ':oops:'           => 'oops.gif',
+           ':lttd:'           => 'lttd.gif',
+           ':please:'           => 'please.gif',
+           ':imsorry:'           => 'imsorry.gif',
+           ':hi:'           => 'hi.gif',
+          
+          
+           ':punish:'           => 'punish.gif',
+           ':puppykisses:'           => 'puppykisses.gif',
+          
+           ':allbetter:'           => 'allbetter.gif',
+           ':bitchfight:'           => 'bitchfight.gif',
+           ':buddies:'           => 'buddies.gif',
+           ':chase:'           => 'chase.gif',
+          
+           ':hello:'           => 'hellopink.gif',
+           ':lmao:'           => 'lmao.gif',
+          
+           ':rules:'           => 'rules.gif',
+           ':tobi:'           => 'tobi.gif',
+          
+           ':jump:'           => 'jump.gif',
+           ':yay:'           => 'yay.gif',
+           ':hbd:'           => 'hbd.gif',
+           ':band:'           => 'band.gif',
+           ':punk:'           => 'punk.gif',
+           ':rofl:'           => 'rofl.gif',
+           ':bounce:'           => 'bounce.gif',
+           ':mbounce:'           => 'mbounce.gif',
+           ':thankyou:'           => 'thankyou.gif',
+           ':gathering:'           => 'gathering.gif',
+           ':colors:'           => 'colors.gif',
+           ':oddoneout:'           => 'oddoneout.gif',
+          
+           ':tank:'           => 'tank.gif',
+           ':guillotine:'           => 'guillotine.gif',
+          
+           ':yesno:'           => 'yesno.gif',
+           ':erection:'           => 'erection1.gif',
+           ':fucku:'           => 'fucku.gif',
+           ':spamhammer:'           => 'spamhammer.gif',
+           ':atomic:'           => 'atomic.gif',
+          
+          
+          /*
 		':angry:'			=> 'angry.gif',
 		':-D'				=> 'biggrin.gif',
 		':D'				=> 'biggrin.gif',
@@ -47,7 +310,7 @@ class TEXT {
 		':creepy:'			=> 'creepy.gif',
 		':worried:'			=> 'worried.gif',
 		':wtf:'				=> 'wtf.gif',
-		':wub:'				=> 'wub.gif',
+		':wub:'				=> 'wub.gif', */
 	);
 	
 	private $NoImg = 0; // If images should be turned into URLs
@@ -55,9 +318,10 @@ class TEXT {
 	
 	function __construct() {
 		foreach($this->Smileys as $Key=>$Val) {
-			$this->Smileys[$Key] = '<img border="0" src="'.STATIC_SERVER.'common/smileys/'.$Val.'" alt="" />';
+			$this->Smileys[$Key] = '<img src="'.STATIC_SERVER.'common/smileys/'.$Val.'" alt="'.$Key.'" />';
 		}
 		reset($this->Smileys);
+            // asort($this->Smileys, SORT_STRING | SORT_FLAG_CASE); // do not uncomment - just for printing in a-z order in dev
 	}
 	
 	function full_format($Str) {
@@ -145,8 +409,8 @@ class TEXT {
 		}
 		
 	}
-	
-	
+	 
+         
 /* How parsing works
 
 Parsing takes $Str, breaks it into blocks, and builds it into $Array. 
@@ -674,9 +938,120 @@ EXPLANATION OF PARSER LOGIC
 		$Str = strtr($Str, $this->Smileys);
 		return $Str;
 	}
+      
+            
+      /*
+       * --------------------- BBCode assistant -----------------------------
+       * added 2012.04.21 - mifune
+       * --------------------------------------------------------------------
+       * This is in the text class because it makes it simpler to access smilies
+       * I suspect a text object will already be instantiated wherever the assistant is needed...
+       * If not this could be moved to a better place maybe?
+       */
+      // pass in the id of the textarea this bbcode helper affects
+      // start_num == num of smilies to load when created
+      // $load_increment == number of smilies to add each time user presses load button
+      // $load_increment_first == if passed this number of smilies are added the first time user presses load button
+      function display_bbcode_assistant($textarea, $start_num_smilies = 0, $load_increment = 110, $load_increment_first = 30){
+        
+          if ($load_increment_first == -1) { $load_increment_first = $load_increment; }
+        ?>
+        <script type="text/javascript">
+                var textBBcode = '<?=$textarea; ?>';
+        </script>
+
+        <div id="hover_pick" style="width: auto; height: auto; position: absolute; border: 0px solid rgb(51, 51, 51); display: none; z-index: 20;"></div>
+
+        <table class="bb_holder">
+          <tbody><tr>
+            <td class="colhead" style="padding: 2px 6px">
+                <div style="float: left; text-align: left; margin-top: 0px;">
+             
+                    <a class="bb_button" onclick="tag('b')" title="Bold text: [b]text[/b]" alt="B"><b>&nbsp;B&nbsp;</b></a>
+                    <a class="bb_button" onclick="tag('i')" title="Italic text: [i]text[/i]" alt="I"><i>&nbsp;I&nbsp;</i></a>
+                    <a class="bb_button" onclick="tag('u')" title="Underline text: [u]text[/u]" alt="U"><u>&nbsp;U&nbsp;</u></a>
+                    <a class="bb_button" onclick="tag('s')" title="Strikethrough text: [s]text[/s]" alt="S"><s>&nbsp;S&nbsp;</s></a>
+                    <a class="bb_button" onclick="clink()" title="Insert URL: [url]http://url[/url] or [url=http://url]URL text[/url]" alt="Url">Url</a>
+                <!-- <a class="bb_button" onclick="tag('img')" title="Insert image: [img]http://image_url[/img]" alt="Img">Img</a>-->
+                    <a class="bb_button" onclick="cimage()" title="Insert image: [img]http://image_url[/img]" alt="Image">img</a>
+                    <a class="bb_button" onclick="tag('code')" title="Code display: [code]code[/code]" alt="Code">Code</a>
+                    <a class="bb_button" onclick="tag('quote')" title="Quote text: [quote]text[/quote]" alt="Quote">Quote</a>
+
+                 <!-- <a class="bb_button" onclick="tag('mcom')" title="Staff Comment" alt="Mod comment">Mod</a> -->
+                 
+                <select  class="bb_button" name="fontsize" id="fontsize" onchange="font('size',this.value);" title="Font size">
+                  <option value="0" selected="selected">Font size</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+                    
+                     <a class="bb_button" onclick="colorpicker();" title="Select Color" alt="Colors">Colors</a>
+              </div>  
+              <div style="float: right; margin-top: 3px;"> 
+                  <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center')" title="Align - center" alt="Center" /> 
+                  <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left')" title="Align - left" alt="Left" /> 
+               <!-- <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify')" title="Align - justify" alt="justify" />  -->
+                  <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right')" title="Align - right" alt="Right" /> 
+                  <img class="bb_icon" src="<?=get_symbol_url('text_uppercase.png') ?>" onclick="text('up')" title="To Uppercase" alt="Up" /> 
+                  <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low')" title="To Lowercase" alt="Low" />
+              </div> 
+              </td>
+          </tr> 
+          <tr>
+            <td>
+                <div id="pickerholder"></div>
+                <div id="smiley_overflow" class="bb_smiley_holder">
+                    <? if ($start_num_smilies>0) { $this->draw_smilies_from(0, $start_num_smilies); }  ?> 
+                </div>
+                <div class="overflow_button">
+                       <a href="#" id="open_overflow" onclick="if(this.isopen){Close_Smilies();}else{Open_Smilies(<?="$start_num_smilies,$load_increment_first"?>);};return false;">Show smilies</a>
+                       <a href="#" id="open_overflow_more" onclick="Open_Smilies(<?="$start_num_smilies,$load_increment"?>);return false;"></a>
+                </div>  
+      </td></tr></tbody></table>
+        <? 
+      }
+      
+      // output smiley data in xml (we dont just draw the html because we want maxsmilies in js)
+      function draw_smilies_from_XML($indexfrom = 0, $indexto = -1){
+            $count=0;
+            echo "<smilies>";
+            foreach($this->Smileys as $Key=>$Val) { 
+                if ($indexto >= 0 && $count >= $indexto) { break; }
+                if ($count >= $indexfrom){
+                    echo '    <smiley>
+        <bbcode>'.$Key.'</bbcode>
+        <url>'. htmlentities($Val) .'</url>
+    </smiley>';
+                }
+                $count++;
+            }
+            reset($this->Smileys); 
+            echo '    <maxsmilies>' . count ($this->Smileys).'</maxsmilies>
+</smilies>';
+      }
+      
+      function draw_smilies_from($indexfrom = 0, $indexto = -1){
+            $count=0;
+            foreach($this->Smileys as $Key=>$Val) { 
+                if ($indexto >= 0 && $count >= $indexto) { break; }
+                if ($count >= $indexfrom){  // ' &nbsp;' .$Key. - jsut for printing in dev
+                    echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
+                }
+                $count++;
+            }
+            reset($this->Smileys); 
+      }
+      
 }
 /*
-
 //Uncomment this part to test the class via command line: 
 function display_str($Str) {return $Str;}
 function check_perms($Perm) {return true;}

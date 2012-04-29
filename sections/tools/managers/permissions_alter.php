@@ -21,12 +21,22 @@ echo $Val->GenerateJS('permform');
 	</div>
 	<table class="permission_head">
 		<tr>
-			<td class="label">Permission Name</td>
+			<td class="label">User Class<!--Permission Name--></td>
 			<td><input type="text" name="name" id="name" value="<?=(!empty($Name) ? display_str($Name) : '')?>" /></td>
 		</tr>
 		<tr>
 			<td class="label">Class Level</td>
 			<td><input type="text" name="level" id="level" value="<?=(!empty($Level) ? display_str($Level) : '')?>" /></td>
+		</tr>
+		<tr>
+			<td class="label">Max Sig length</td>
+			<td><input type="text" name="maxsiglength" value="<?=(!empty($MaxSigLength) ? display_str($MaxSigLength) : '')?>" /></td>
+		</tr>
+		<tr>
+			<td class="label">Max Avatar Size</td>
+			<td><input class="wid35" type="text" name="maxavatarwidth" value="<?=(!empty($MaxAvatarWidth) ? display_str($MaxAvatarWidth) : '')?>" />
+                      &nbsp;x&nbsp;
+                      <input type="text"  class="wid35" name="maxavatarheight" value="<?=(!empty($MaxAvatarHeight) ? display_str($MaxAvatarHeight) : '')?>" /></td>
 		</tr>
 		<tr>
 			<td class="label">Show on Staff page</td>

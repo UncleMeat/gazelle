@@ -10,7 +10,7 @@
 //*********************************************************************//
 
 ini_set('max_file_uploads','100');
-show_header('Upload','upload');
+show_header('Upload','upload,bbcode');
 
 if(empty($Properties) && !empty($_GET['groupid']) && is_number($_GET['groupid'])) {
 	$DB->query("SELECT 
@@ -105,7 +105,7 @@ $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
 	<h3 id="dnu_header">Do not upload from the following list</h3> 
 	<p>The following releases are currently forbidden from being uploaded to the site. Do not upload them unless your torrent meets a condition specified in the comment.
 <? if ($HideDNU) { ?>
-   <span id="showdnu"><a href="#" <a href="#" onclick="$('#dnulist').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
+   <span id="showdnu"><a href="#" onclick="$('#dnulist').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
 <? } ?>
 	</p>
 	<table id="dnulist" class="<?=($HideDNU?'hidden':'')?>" style="">
@@ -146,7 +146,7 @@ $HideWL = check_perms('torrents_hide_imagehosts') && !$NewWL;
 	<h3 id="dnu_header">Approved Imagehosts</h3> 
       <p>You must use one of the following approved imagehosts for all images. 
 <? if ($HideWL) { ?>
-   <span id="showdnu"><a href="#" <a href="#" onclick="$('#whitelist').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
+   <span><a href="#" onclick="$('#whitelist').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
 <? } ?>
 	</p>
 	<table id="whitelist" class="<?=($HideWL?'hidden':'')?>" style="">
@@ -171,9 +171,11 @@ $HideWL = check_perms('torrents_hide_imagehosts') && !$NewWL;
 </div></div><?=($HideWL?'<br />':'')?>
 
 <?
+ 
 /* -------  Draw upload torrent form  ------- */   
 $TorrentForm->head();
-$TorrentForm->simple_form($Properties['CategoryID'], $GenreTags);
+//$TorrentForm->simple_form($Properties['CategoryID'], $GenreTags);
+$TorrentForm->simple_form($GenreTags, 32);
 $TorrentForm->foot();
 ?>
 <script type="text/javascript">

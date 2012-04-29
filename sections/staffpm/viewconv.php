@@ -23,7 +23,7 @@ if ($ConvID = (int)$_GET['id']) {
 	show_header('Staff PM', 'staffpm,bbcode');
 
 	$UserInfo = user_info($UserID);
-	$UserStr = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID']);
+	$UserStr = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID'], false, true);
 
 	$OwnerID = $UserID;
 

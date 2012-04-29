@@ -21,6 +21,15 @@ switch ($_GET['action']){
 	case 'preview':
 		require('preview.php');
 		break;
+	case 'preview_upload':
+		require('preview_upload.php');
+		break;
+	case 'preview_image':
+		require('preview_image.php');
+		break;
+	case 'preview_blog':
+		require('preview_blog.php');
+		break;
 	case 'torrent_info':
 		require('torrent_info.php');
 		break;
@@ -33,6 +42,10 @@ switch ($_GET['action']){
 	case 'stats':
 		require(SERVER_ROOT.'/sections/ajax/stats.php');
 		break;
+        case 'get_smilies':
+		require('get_smilies.php');
+		break;
+            
 	
 	// things not yet used on the site
 	case 'torrentgroup':

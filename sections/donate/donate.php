@@ -67,8 +67,7 @@ show_header('Donate');
 			<input type="submit" value="PayPal Donate" />
 		</form>
 	</div>
-
-?>
+ 
 	<h3>What you will receive for a 5&euro; or 2 BTC minimum donation</h3>
 	<div class="box pad" style="padding:10px 10px 10px 20px;">
 		<ul>

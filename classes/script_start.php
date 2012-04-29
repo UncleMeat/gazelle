@@ -423,11 +423,23 @@ function update_site_options($UserID, $NewOptions) {
 	}
 }
 
+
+function get_avatar_css($MaxAvatarWidth,$MaxAvatarHeight){
+    $css = 'max-width:'.$MaxAvatarWidth.'px; max-height:'.$MaxAvatarHeight.'px;';
+    //if($MaxAvatarHeight < 150) { $css=$css.' margin-top: '.round((150 - $MaxAvatarHeight) / 2).'px;'; }
+    return $css;
+}
+
 function get_permissions($PermissionID) {
 	global $DB, $Cache;
 	$Permission = $Cache->get_value('perm_'.$PermissionID);
 	if(empty($Permission)) {
-		$DB->query("SELECT p.Level AS Class, p.Values as Permissions FROM permissions AS p WHERE ID='$PermissionID'");
+		$DB->query("SELECT p.Level AS Class, 
+                               p.Values as Permissions, 
+                               p.MaxSigLength,
+                               p.MaxAvatarWidth,
+                               p.MaxAvatarHeight
+                               FROM permissions AS p WHERE ID='$PermissionID'");
 		$Permission = $DB->next_record(MYSQLI_ASSOC, array('Permissions'));
 		$Permission['Permissions'] = unserialize($Permission['Permissions']);
 		$Cache->cache_value('perm_'.$PermissionID, $Permission, 2592000);
@@ -714,7 +726,7 @@ function get_ratio_color($Ratio) {
 
 function ratio($Dividend, $Divisor, $Color = true) {
 	if($Divisor == 0 && $Dividend == 0) {
-		return '--';
+		return '<span>--</span>';
 	} elseif($Divisor == 0) {
 		return '<span class="r99">∞</span>';
 	}
@@ -1059,7 +1071,7 @@ Returns a username string for display
 $Class and $Title can be omitted for an abbreviated version
 $IsDonor, $IsWarned and $IsEnabled can be omitted for a *very* abbreviated version
 */
-function format_username($UserID, $Username, $IsDonor = false, $IsWarned = '0000-00-00 00:00:00', $IsEnabled = true, $Class = false, $Title = false) {
+function format_username($UserID, $Username, $IsDonor = false, $IsWarned = '0000-00-00 00:00:00', $IsEnabled = true, $Class = false, $Title = false, $DrawInBox = false) {
 	if($UserID == 0) {
 		return 'System';
 	} elseif($Username == '') {
@@ -1072,14 +1084,19 @@ function format_username($UserID, $Username, $IsDonor = false, $IsWarned = '0000
 	$str.=($IsWarned!='0000-00-00 00:00:00') ? '<img src="'.STATIC_SERVER.'common/symbols/warned.png" alt="Warned" title="Warned" />' : '';
 	$str.=(!$IsEnabled) ? '<img src="'.STATIC_SERVER.'common/symbols/disabled.png" alt="Banned" title="Be good, and you won\'t end up like this user" />' : '';
 
-	$str.=($Class) ? ' ('.make_class_string($Class).')' : '';
+	$str.=($Class) ? ' ('.make_class_string($Class, TRUE).')' : '';
 	$str.=($Title) ? ' ('.$Title.')' : '';
+	if ($DrawInBox) ( $str = '<span class="user_name">'.$str.'</span>' );
 	return $str;
 }
 
-function make_class_string($ClassID) {
+function make_class_string($ClassID, $Usespan = false) {
 	global $Classes;
-	return $Classes[$ClassID]['Name'];
+      if ($Usespan === false){
+            return $Classes[$ClassID]['Name'];
+      }else {
+            return '<span alt="'.$ClassID.'" class="rank '. str_replace(" ", "", $Classes[$ClassID]['Name']) .'">'.$Classes[$ClassID]['Name'].'</span>';
+      }  
 }
 
 //Write to the group log
@@ -2236,6 +2253,15 @@ function freeleech_groups($GroupIDs, $FreeNeutral = 1, $FreeLeechType = 0) {
 	}
 }
 
+
+
+
+      /* Just a way to get a image url from the symbols folder*/
+      function get_symbol_url($image) {
+            return STATIC_SERVER.'common/symbols/'.$image;
+      }
+      
+      
 
 $Debug->set_flag('ending function definitions');
 //Include /sections/*/index.php

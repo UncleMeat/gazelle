@@ -16,14 +16,43 @@ $DB->query("SELECT
 <h2>Do Not Upload List</h2>
 <div>
 <table>
-	<tr class="colhead">
-		<td>Name</td>
-		<td>Comment</td>
-		<td>Added</td>
-		<td width="120">Submit</td>
-	</tr>
-<? while(list($ID, $Name, $Comment, $UserID, $Username, $DNUTime) = $DB->next_record()){ ?>
-	<tr>
+    <tr>
+        <td colspan="4" class="colhead">Add item to Do Not Upload List</td>
+    </tr>
+    <tr class="colhead">
+        <td width="37%">Name</td>
+        <td width="49%" colspan="2">Comment</td> 
+        <td width="14%">Submit</td>
+    </tr>
+    <tr class="rowa">
+          <form action="tools.php" method="post">
+                <input type="hidden" name="action" value="dnu_alter" />
+                <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+                <td>
+                      <input class="long"  type="text" name="name" />
+                </td>
+                <td colspan="2">
+                      <input class="long"  type="text" name="comment" />
+                </td>
+                <td>
+                      <input type="submit" value="Create" />
+                </td>
+          </form>
+    </tr>
+</table>
+<br/>
+<table> 
+    <tr class="colhead">
+        <td width="37%">Name</td>
+        <td width="37%">Comment</td>
+        <td width="12%">Added</td>
+        <td width="14%">Submit</td>
+    </tr>
+<? $Row = 'b';
+while(list($ID, $Name, $Comment, $UserID, $Username, $DNUTime) = $DB->next_record()){ 
+	$Row = ($Row === 'a' ? 'b' : 'a');
+?>
+    <tr class="row<?=$Row?>">
 		<form action="tools.php" method="post">
 			<td>
 				<input type="hidden" name="action" value="dnu_alter" />
@@ -44,23 +73,6 @@ $DB->query("SELECT
 		</form>
 	</tr>
 <? } ?>
-<tr>
-	<td colspan="4" class="colhead">Add Do Not Upload</td>
-</tr>
-<tr class="rowa">
-	<form action="tools.php" method="post">
-		<input type="hidden" name="action" value="dnu_alter" />
-		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-		<td>
-			<input class="long"  type="text" name="name" />
-		</td>
-		<td colspan="2">
-			<input class="long"  type="text" name="comment" />
-		</td>
-		<td>
-			<input type="submit" value="Create" />
-		</td>
-	</form>
-</tr>
-</table> </div>
+</table>
+</div>
 <? show_footer(); ?>

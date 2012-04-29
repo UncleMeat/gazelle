@@ -125,11 +125,11 @@ class VALIDATE {
                                 if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
 
                                 if(strlen($ValidateVar)>$MaxLength) { 
-                                    $Field['ErrorMessage'] =  "Your description must be less than $MaxLength characters long.";  
+                                    $Field['ErrorMessage'] =  "Your ".$Field['ErrorMessage']." must be less than $MaxLength characters long.";  
                                     return $Field['ErrorMessage'];
                                 }
                                 elseif(strlen($ValidateVar)<$MinLength) { 
-                                    $Field['ErrorMessage'] =  "Your description must be more than $MinLength characters long.";  
+                                    $Field['ErrorMessage'] =  "Your ".$Field['ErrorMessage']." must be more than $MinLength characters long.";  
                                     return $Field['ErrorMessage'];
                                 }
                               
@@ -148,7 +148,7 @@ class VALIDATE {
                                          // (for the moment use hardcoded image lengths but ideally they should
                                          // probably be taken from some new option fields).
                                         $result = $this->ValidateImageUrl($imageurls[1][$j], 12, 255, $WLRegex); 
-                                        if ($result !== TRUE){ return $result; } 
+                                        if ($result !== TRUE){ return $Field['ErrorMessage'].' field: ' .$result; } 
                                      }
                                 } /*else {  // if there are no img tags then it validates unless required flag is set
                                     if (!empty($Field['Required'])) {   
@@ -174,8 +174,8 @@ class VALIDATE {
       ----------------------------------- */
      private function ValidateImageUrl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
           
-        $ErrorMessage = "$Imageurl is not a valid url.";
-                                  
+        $ErrorMessage = "'$Imageurl' is not a valid url.";
+        
         if(!preg_match('/^(https?):\/\/([a-z0-9\-\_]+\.)+([a-z]{1,5}[^\.])(\/[^<>]+)*$/i', $Imageurl)) {  
             return $ErrorMessage;  
         } 

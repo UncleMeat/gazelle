@@ -230,6 +230,13 @@ ul.thin li { margin:0px 0px; padding:0px; }
     clear: right;
 }
 
+span.stat {
+    font-weight: normal;  
+}
+.highlight {
+    font-weight: bold; 
+}
+
 #searchbars {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
@@ -319,6 +326,38 @@ li.searchbars {
     color: white;
 }
 
+
+
+/* user classes */
+.user_name { 
+    font-weight: normal;
+    background-color:#e3eefd;
+    border: 1px solid #0244a8;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    padding: 1px 5px;
+    margin: 0px;
+    color: #000;
+}
+span.user_name a { 
+    color: #000;
+}
+.rank {  /* rank applies to all the following styles */
+    font-weight: bold; 
+}  
+.Apprentice { color:#b2c5dD; }  /*#839FBC 
+.Perv { color:#0E558B; }*/
+.Perv { color:#4Ec89B; }
+.GoodPerv { color:#3c3; }
+.SextremePerv { color:orange; }
+.SmutPeddler { color:#00f; }
+.ModPerv { color:#000; }
+.Admin { color:#606; }
+.Sysop { color:#8B0000; }  /* PINK: #b93dd6 */
+.Donor { color:#DAA520; }  /* #F4E649; */
+
+
+
 /* IE doesn't appear to like a simple display:none in our header. Random things start fucking up pretty badly. */
 .hidden {
     position: absolute;
@@ -341,6 +380,26 @@ input.hidden {
     margin-right:auto;
 }
 
+.contact_link {
+    display: inline;
+    padding: 5px;
+    margin: 0px 20px 0px 10px;
+    font-weight: bold;
+    background-color: #d00;
+    border: 1px solid #005488;
+    border-radius: 6px;       /* FF9+ IE9+ */
+    -moz-border-radius: 6px; /* for FF5 */
+    -webkit-border-radius: 6px; /* for opera */
+}
+
+a.contact_link {
+    color: white;
+    text-decoration: underline;
+}
+a.contact_link:hover {
+    text-decoration: none;
+}
+
 div.linkbox {
     text-align:center;
     padding: 5px;
@@ -352,6 +411,20 @@ div.linkbox {
 
 .right {
     text-align: right;
+}
+
+.medium { 
+    text-align: left;
+    width: 86%;
+}
+
+.long {  
+    text-align: left;
+    width: 97%;
+}
+ 
+.wid35 {
+    width: 35%;
 }
 
 .min_padding {
@@ -455,6 +528,13 @@ td {
     text-align: left;
 }
 
+table.wid740 {
+    margin: auto;
+    width: 740px; 
+    border-collapse: collapse;
+    border: 1px solid #98AAB1;
+}
+
 .colhead {
     background: #C6D3E4 url(images/colhead-grad.gif) repeat-x;
     font-weight: bold;
@@ -492,18 +572,6 @@ td.label {
     text-align: right;
     width: 100px;
 }
- 
-
-.medium { 
-    text-align: left;
-    width: 92%;
-}
-
-.long { 
-    text-align: left;
-    width: 97%;
-}
- 
 
 table.slice {
     margin-top: -1px;
@@ -710,8 +778,10 @@ table.forum_unread {
 
 td.avatar {
     width: 150px;
+    min-height: 150px; 
+    width: 150px;
     padding: 0px;
-}
+}  
 
 table.forum_post td.body {
     width:690px;
@@ -723,6 +793,18 @@ blockquote {
     border: 1px dashed #98AAB1;
 }
 
+/* Signatures layout */ 
+div.post_content  {
+    min-height: 95px;  
+}  
+div.post_footer  { 
+    margin-top: 8px; 
+}  
+div.sig { 
+    margin-top: 16px; 
+    border-top: 1px solid black;  
+}
+
 /* Layout (Inbox) */
 
 tr.unreadpm {
@@ -732,9 +814,21 @@ tr.unreadpm {
 /* Layout (Permission Page) */
 
 .permission_head {
-    width:400px;
+    width: 350px;
     margin-left:auto;
     margin-right:auto;
+}
+
+.permission_head input {
+    width: 200px;
+}
+.permission_head input.wid35 {
+    width: 83px;
+}
+.permission_head td.label {
+    font-weight: bold;
+    text-align: right;
+    width: 130px;
 }
 
 .permissions {
@@ -830,15 +924,111 @@ ul .invitetree {
 }
 
 .tboverlib {
-    background-color: black; //#265582;
+    background-color: black; 
     border: 1px solid grey;    
     min-width: 600px;
     width: 350px;
 }
 
-.tdoverlib {
-    background-color: black;// #265582;
-    border: 1px solid grey;
-    color: white;
-    vertical-align: top;
+
+
+/*
+ Stuff for the bbcode assistant
+ */
+
+
+.bb_holder { 
+	/*border: 1px solid #222; */
+	border-collapse:collapse; 
+	background:	#808080; 
+      width: 100%;
 }
+
+/*
+.em_holder td, .em_holder td:hover, .em_holder { border:1px solid #333333; 	border-collapse:separate}
+
+.em_holder td:hover { background:#dddddd; border:1px solid #2B60DE;}
+ 
+.bb_holder textarea, .bb_holder textarea:hover, .bb_holder textarea:focus { 
+	background:#CCCCCC; 
+	border:1px solid #333333; 
+	padding:0px; 
+	font-size:12px; 
+}
+
+.bb_holder textarea:hover, .bb_holder textarea:focus { 
+	background:#FFF8C6; 
+}
+*/
+
+.bb_smiley_holder {
+    text-align: center; 
+    padding: 0px; 
+}
+ 
+select.bb_button { 
+    padding:0px; 
+    background:white;
+    cursor:pointer;
+    color: #000000; 
+}
+
+a.bb_button { 
+    padding:3px; 
+    background:white;
+    cursor:pointer;
+    color: #000000; 
+}
+
+a.bb_button:hover { 
+    text-decoration:none; 
+    background:orange;
+    color: #ffffff; 
+}
+
+.bb_icon { 
+    padding:2px; 
+    margin:0px 1px; 
+    background:white;
+    cursor:pointer; 
+}
+
+.bb_smiley img {
+    padding: 1px 3px 4px; 
+}
+
+.bb_icon:hover { 
+	background:orange; 
+}
+
+.overflow_button {
+        padding: 1px; 
+        margin:0px auto 1px; 
+        font-weight: bold; 
+        text-align: center; 
+        border: 1px solid rgb(123, 163, 193); 
+        background: none repeat scroll 0% 0% rgb(186, 203, 216);
+}
+.overflow_button a {
+	padding:0px 8px; 
+}
+
+.color_pick td { 
+	padding:2px; 
+	width:10px; 
+	height:10px; 
+	cursor:pointer; 
+}
+
+.color_pick { 
+	border-collapse:collapse; 
+}
+
+.color_pick, .color_pick td { 
+	border:1px solid #333333; 
+}
+
+.color_pick td:hover { 
+    border:1px solid #333333; 
+}
+
