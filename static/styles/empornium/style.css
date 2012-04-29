@@ -923,11 +923,11 @@ ul .invitetree {
     font-weight: bold;
 }
 
-.tboverlib {
+.tdoverlib {
     background-color: black; 
     border: 1px solid grey;    
-    min-width: 600px;
     width: 350px;
+    color: white;
 }
 
 

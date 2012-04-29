@@ -361,7 +361,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                         </td>
                     </tr>
 <? } ?>
-                <tr>
+                <tr>                    
                     <td class="label">Tags:</td>
                     <td colspan="3">
                         <input type="text" size="40" id="tags" name="taglist" class="inputtext smaller" title="Use -tag to exclude tag" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />&nbsp;					<input type="radio" name="tags_type" id="tags_type0" value="0" <? selected('tags_type', 0, 'checked') ?> /><label for="tags_type0"> Any</label>&nbsp;&nbsp;
@@ -540,7 +540,7 @@ $Bookmarks = all_bookmarks('torrent');
         $OverName = strlen($GroupName) <= 60 ? $GroupName : substr($GroupName, 0, 56).'...';
 //        $OverName = display_str($GroupName);
         $SL = ($TotalSeeders == 0 ? "<span class=r00>".number_format($TotalSeeders)."</span>" : number_format($TotalSeeders)) . "/".number_format($TotalLeechers);
-        $DisplayName = '<a href="torrents.php?id=' . $GroupID . '"'. " onmouseover=\"return overlib('<table class=tboverlib><tr><td class=tdoverlib colspan=2>".$OverName."</td><tr><td class=tdoverlib width=1px><img style=\'max-width: 100px;\' src=".$OverImage."></td><td class=tdoverlib><strong>Uploader:</strong><br />xxxxxx<br /><br /><strong>Size:</strong><br />".get_size($Data['Size'])."<br /><br /><strong>Snatched:</strong><br />".number_format($TotalSnatched)."<br /><br /><strong>Seeders/Leechers:</strong><br />".$SL."</td></tr></table>', FULLHTML);\" onmouseout=\"return nd();\">" . $GroupName . '</a>';
+        $DisplayName = '<a href="torrents.php?id=' . $GroupID . '"'. " onmouseover=\"return overlib('<table class=tdoverlib><tr><td class=tdoverlib colspan=2>".$OverName."</td><tr><td class=tdoverlib style=width:1px><img style=\'max-width: 100px;\' src=".$OverImage."></td><td class=tdoverlib><strong>Uploader:</strong><br />xxxxxx<br /><br /><strong>Size:</strong><br />".get_size($Data['Size'])."<br /><br /><strong>Snatched:</strong><br />".number_format($TotalSnatched)."<br /><br /><strong>Seeders/Leechers:</strong><br />".$SL."</td></tr></table>', FULLHTML);\" onmouseout=\"return nd();\">" . $GroupName . '</a>';
         
         if ($Data['FreeTorrent'] == '1') {
             $DisplayName .= ' <strong>Freeleech!</strong>';

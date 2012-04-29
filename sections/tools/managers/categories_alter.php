@@ -32,6 +32,8 @@ if($_POST['submit'] == 'Delete') {
         
 }
 
+$Cache->delete('new_categories');
+
 // Go back
 header('Location: tools.php?action=categories');
 
