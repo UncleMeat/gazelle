@@ -21,20 +21,20 @@ if(strtotime($BannedUntil)<time() && !$BanID) {
 <? } ?>
 	<table>
 		<tr>
-			<td>Username&nbsp;</td>
-			<td colspan="2"><input type="text" name="username" id="username" class="inputtext" required="required" maxlength="20" pattern="[A-Za-z0-9_?]{1,20}" autofocus="autofocus" /></td>
+			<td width="70px">Username&nbsp;</td>
+			<td width="200px" colspan="2"><input style="width: 98%;" type="text" name="username" id="username" class="inputtext" required="required" maxlength="20" pattern="[A-Za-z0-9_?]{1,20}" autofocus="autofocus" /></td>
 		</tr>
 		<tr>
-			<td>Password&nbsp;</td>
-			<td colspan="2"><input type="password" name="password" id="password" class="inputtext" required="required" maxlength="40" pattern=".{6,40}" /></td>
+			<td width="70px">Password&nbsp;</td>
+			<td width="200px" colspan="2"><input style="width: 98%;" type="password" name="password" id="password" class="inputtext" required="required" maxlength="40" pattern=".{6,40}" /></td>
 		</tr>
 		<tr>
-			<td></td>
-			<td>
+			<td width="70px"></td>
+			<td width="150px">
 				<input type="checkbox" id="keeplogged" name="keeplogged" value="1"<? if(isset($_REQUEST['keeplogged']) && $_REQUEST['keeplogged']) { ?> checked="checked"<? } ?> />
 				<label for="keeplogged">Remember me</label>
 			</td>
-			<td><input type="submit" name="login" value="Login" class="submit" /></td>
+			<td width="50px"><input type="submit" name="login" value="Login" class="submit" /></td>
 		</tr>
 	</table>
 	</form>

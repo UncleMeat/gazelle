@@ -375,7 +375,7 @@ input.hidden {
 .thin {
     /* width: 850px; */
     width: 80%;
-    min-width: 760px;
+    min-width: 740px;
     margin-left:auto;
     margin-right:auto;
 }
@@ -534,6 +534,20 @@ table.wid740 {
     border-collapse: collapse;
     border: 1px solid #98AAB1;
 }
+
+/* Bonus SHop */
+
+.itembuy {
+    background: #6e6 url("images/bggreenfade.png") repeat scroll 0% 0%
+}
+.itemnotbuy {
+    background: #d33 url("images/bgredfade.png") repeat scroll 0% 0%
+}
+
+input.shopbutton {
+    width: 60px;
+}
+
 
 .colhead {
     background: #C6D3E4 url(images/colhead-grad.gif) repeat-x;

@@ -342,7 +342,9 @@ function user_heavy_info($UserID) {
 			i.LastReadNews,
 			i.RestrictedForums,
 			i.PermittedForums,
-			m.FLTokens
+			m.FLTokens,
+                  m.Credits,
+                  m.LastBonusTime
 			FROM users_main AS m
 			INNER JOIN users_info AS i ON i.UserID=m.ID
 			WHERE m.ID='$UserID'");

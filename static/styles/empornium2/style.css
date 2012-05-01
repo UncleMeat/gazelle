@@ -139,7 +139,8 @@ ul.thin li { margin:0px 0px; padding:0px; }
     min-width: 820px;
     background-color: #e0e8eb;
     margin: 0px auto 0px auto;
-    padding: 0.6em;
+  /*  padding: 0.6em;*/
+    padding: 0.6em 0.6em 30px;
     border: 1px solid #98AAB1;
     overflow: hidden;
 }
@@ -257,7 +258,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
 #userinfo_stats {
     position: absolute;
     right: 20px;
-    top: 44px;   
+    top: 34px;   
 }
 span.inside_stat {
     display: block;
@@ -448,19 +449,25 @@ input.hidden {
 .thin {
     /* width: 850px; */
     width: 80%;
-    min-width: 760px;
+    min-width: 740px;
     margin-left:auto;
     margin-right:auto;
 }
-
- h2 {
-    margin: 0px 0px 20px;
-    background: #000 url(images/colhead-grad.gif) repeat-x;
+ 
+h2 {
+    margin: 10px 0px 20px;
+    /* background: #000 url(images/colhead-grad.gif) repeat-x; 
+    height: 24px;*/
     text-align: center;
-    height: 24px;
     color: #fff;
+    background-color: #024a7c;
+    padding: 2px 40px;
+    border-radius: 16px;       /* FF9+ IE9+ */
+    -moz-border-radius: 16px; /* for FF5 */
+    -webkit-border-radius: 16px; /* for opera */
 } 
- h2 a {
+
+h2 a {
     color: #eee;
 }  
 
@@ -597,6 +604,17 @@ ul.nobullet {
     list-style-type: none;
 }
 
+
+span.red {
+    font-weight: bold;
+    color: red;
+}
+span.green {
+    font-weight: bold;
+    color: green;
+}
+
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -622,6 +640,43 @@ table.wid740 {
     width: 740px; 
     border-collapse: collapse;
     border: 1px solid #98AAB1;
+}
+
+/* Bonus SHop */
+
+.itembuy {
+    /* background: #6e6 url("images/bggreenfade.png") repeat scroll 0% 0%;  */
+}
+.itemnotbuy {
+   /*  background: #d33 url("images/bgredfade.png") repeat scroll 0% 0%;  */
+}
+
+input.shopbutton {
+    width: 60px;
+    background-color: white;
+    padding: 2px 10px 2px;
+    border: 2px solid;
+    border-color: #1a1;
+    color: #292;
+    cursor:pointer;
+}
+input.shopbutton:hover {
+    border-color: #6f6;
+}
+
+.itemnotbuy input.shopbutton {
+    background-color: #ddd;
+    border: 2px solid #944;
+    color: #966;
+    cursor:auto;
+}
+
+.itembuy td {
+    font-weight: bold;
+    color: #060;
+}
+.itemnotbuy td {
+    color: #700;
 }
 
 .colhead {

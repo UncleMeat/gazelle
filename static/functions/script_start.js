@@ -46,7 +46,7 @@ function html_entity_decode(str) {
     }
     return ret;
 }
-
+/*
 function get_size(size) {
 	var steps = 0;
 	while(size>=1024) {
@@ -55,42 +55,76 @@ function get_size(size) {
 	}
 	var ext;
 	switch(steps) {
-		case 1: ext = ' B';
+		case 0:ext = ' B';
 				break;
-		case 1: ext = ' KB';
+		case 1:ext = ' KB';
 				break;
-		case 2: ext = ' MB';
+		case 2:ext = ' MB';
 				break;
-		case 3: ext = ' GB';
+		case 3:ext = ' GB';
 				break;
-		case 4: ext = ' TB';
+		case 4:ext = ' TB';
 				break;
-		case 5: ext = ' PB';
+		case 5:ext = ' PB';
 				break;
-		case 6: ext = ' EB';
+		case 6:ext = ' EB';
 				break;
-		case 7: ext = ' ZB';
+		case 7:ext = ' ZB';
 				break;
-		case 8: ext = ' EB';
+		case 8:ext = ' EB';
 				break;
-		default: "0.00 MB";
+		default:"0.00 MB";
 	}
 	return (size.toFixed(2) + ext);
+} */
+
+function get_size(size) {
+    return get_size_fixed(size, 2)
+}
+function get_size_fixed(size,places){
+	var steps = 0;
+	while(size>=1024) {
+		steps++;
+		size=size/1024;
+	}
+	var ext;
+	switch(steps) {
+		case 0:ext = ' B';
+				break;
+		case 1:ext = ' KB';
+				break;
+		case 2:ext = ' MB';
+				break;
+		case 3:ext = ' GB';
+				break;
+		case 4:ext = ' TB';
+				break;
+		case 5:ext = ' PB';
+				break;
+		case 6:ext = ' EB';
+				break;
+		case 7:ext = ' ZB';
+				break;
+		case 8:ext = ' EB';
+				break;
+		default:"0.00 MB";
+	}
+	return (size.toFixed(places) + ext);
 }
 
 function get_ratio_color(ratio) {
-	if (ratio < 0.1) { return 'r00'; }
-	if (ratio < 0.2) { return 'r01'; }
-	if (ratio < 0.3) { return 'r02'; }
-	if (ratio < 0.4) { return 'r03'; }
-	if (ratio < 0.5) { return 'r04'; }
-	if (ratio < 0.6) { return 'r05'; }
-	if (ratio < 0.7) { return 'r06'; }
-	if (ratio < 0.8) { return 'r07'; }
-	if (ratio < 0.9) { return 'r08'; }
-	if (ratio < 1) { return 'r09'; }
-	if (ratio < 2) { return 'r10'; }
-	if (ratio < 5) { return 'r20'; }
+	if (ratio < 0.1) {return 'r00';}
+	if (ratio < 0.2) {return 'r01';}
+	if (ratio < 0.3) {return 'r02';}
+	if (ratio < 0.4) {return 'r03';}
+	if (ratio < 0.5) {return 'r04';}
+	if (ratio < 0.6) {return 'r05';}
+	if (ratio < 0.7) {return 'r06';}
+	if (ratio < 0.8) {return 'r07';}
+	if (ratio < 0.9) {return 'r08';}
+	if (ratio < 1) {return 'r09';}
+	if (ratio < 2) {return 'r10';}
+	if (ratio < 5) {return 'r20';}
 	return 'r50';
 }
 

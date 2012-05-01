@@ -61,7 +61,10 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		i.DisableRequests,
 		i.HideCountryChanges,
 		m.FLTokens,
-		SHA1(i.AdminComment)
+		SHA1(i.AdminComment),
+                  m.Credits,
+                  m.LastBonusTime,
+                  i.BonusLog
 		FROM users_main AS m
 		JOIN users_info AS i ON i.UserID = m.ID
 		LEFT JOIN users_main AS inviter ON i.Inviter = inviter.ID
@@ -73,7 +76,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Artist, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash) = $DB->next_record(MYSQLI_NUM, array(8,11));
+	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Artist, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash,$BonusCredits,$LastBonusTime,$BonusLog) = $DB->next_record(MYSQLI_NUM, array(8,11));
 } else { // Person viewing is a normal user
 	$DB->query("SELECT
 		m.Username,
@@ -113,7 +116,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(9,11));
+	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$LastBonusTime, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(9,11));
 }
  
 
@@ -587,6 +590,34 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 			</div>
 		</div>
 <?
+// TODO: Add proper perms for viewing user credits + bonus history
+// TODO: Add editing of bonus log (by admin/staff)... I am inclined to make this savable in frame + also teh staff notes edit could be the same..
+if (check_perms('users_view_email',$Class) || $OwnProfile) { ?>
+		<div class="box">
+			<div class="head">
+				<span style="float:left;">Bonus Credits</span>
+                        <span style="float:right;"><a href="#" onclick="$('#bonusdiv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+			</div>
+			<div class="pad" id="bonusdiv">
+                      <h4>Credits: <?=(!$BonusCredits ? '0' : $BonusCredits) ?></h4>
+                      <span style="float:left;">Next Update: <?=$LastBonusTime?></span>
+                      <span style="float:right;"><a href="#" onclick="$('#bonuslogdiv').toggle(); this.innerHTML=(this.innerHTML=='(Show Log)'?'(Hide Log)':'(Show Log)'); return false;">(Show Log)</a></span>&nbsp;
+
+                      <div class="hidden" id="bonuslogdiv" style="padding-top: 10px;">
+                         <!-- <textarea id="bonuslogedit" onkeyup="resize('bonuslog');"
+                                    class="box pad"  
+                                    style="max-height: 200px;height: 200px; width: 100%;"
+                                    name="bonuslogedit"><?//=(!$BonusLog ? 'no bonus history' :$Text->full_format($BonusLog))?></textarea>-->
+
+                          <div id="bonuslog" class="box pad">
+                                <?=(!$BonusLog ? 'no bonus history' :$Text->full_format($BonusLog))?>
+                          </div>
+                      </div>
+                  </div>
+		</div>
+<?
+}
+
 if ($Snatched > 4 && check_paranoia_here('snatched')) {
 	$RecentSnatches = $Cache->get_value('recent_snatches_'.$UserID);
 	if(!is_array($RecentSnatches)){
@@ -920,7 +951,7 @@ if (check_perms('users_mod', $Class)) { ?>
 			<div class="head">Staff Notes <a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">(Edit)</a></div>
 			<div class="pad">
 				<input type="hidden" name="comment_hash" value="<?=$CommentHash?>">
-				<div id="admincommentlinks" class="AdminComment box" style="width:98%;"><?=$Text->full_format($AdminComment)?></div>
+				<div id="admincommentlinks" class="AdminComment box pad"><?=$Text->full_format($AdminComment)?></div>
 				<textarea id="admincomment" onkeyup="resize('admincomment');" class="AdminComment hidden" name="AdminComment" cols="65" rows="26" style="width:98%;"><?=display_str($AdminComment)?></textarea>
 				<a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">Toggle Edit</a>
 				<script type="text/javascript">
@@ -989,19 +1020,36 @@ if (check_perms('users_mod', $Class)) { ?>
 	if (check_perms('users_edit_ratio',$Class) || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID'])) {
 ?>
 			<tr>
-				<td class="label">Uploaded:</td>
+				<td class="label">Adjust Upload:</td>
 				<td>
 					<input type="hidden" name="OldUploaded" value="<?=$Uploaded?>" />
-					<input type="text" size="20" name="Uploaded" value="<?=$Uploaded?>" />
+                              <input type="text" size="5" name="adjustupvalue" id="adjustupvalue" value="" onchange="CalculateAdjustUpload('adjustup', document.forms['form'].elements['adjustup'],<?=$Uploaded?>)" title="Use '-' to remove from Upload" /> &nbsp;&nbsp;
+                              <input name="adjustup" value="mb" type="radio"  onchange="CalculateAdjustUpload('adjustup', document.forms['form'].elements['adjustup'],<?=$Uploaded?>)" /> MB&nbsp;&nbsp;
+                              <input name="adjustup" value="gb" type="radio" onchange="CalculateAdjustUpload('adjustup', document.forms['form'].elements['adjustup'],<?=$Uploaded?>)" checked="checked" /> GB&nbsp;&nbsp;
+                              <input name="adjustup" value="tb" type="radio" onchange="CalculateAdjustUpload('adjustup', document.forms['form'].elements['adjustup'],<?=$Uploaded?>)" /> TB
+                              
+					<span style="margin-left:40px;" title="Current Upload"><?=get_size($Uploaded, 2)?></span>
+                              <span style="margin-left: 10px;" id="adjustupresult" name="adjustupresult" title="Preview of Total Upload after adjustment"></span>
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Downloaded:</td>
+				<td class="label">Adjust Download:</td>
 				<td>
 					<input type="hidden" name="OldDownloaded" value="<?=$Downloaded?>" />
-					<input type="text" size="20" name="Downloaded" value="<?=$Downloaded?>" />
+                              
+                              <input type="text" size="5" name="adjustdownvalue" id="adjustdownvalue" value="" onchange="CalculateAdjustUpload('adjustdown', document.forms['form'].elements['adjustdown'],<?=$Downloaded?>)" title="Use '-' to remove from Download" /> &nbsp;&nbsp;
+                              <input name="adjustdown" value="mb" type="radio"  onchange="CalculateAdjustUpload('adjustdown', document.forms['form'].elements['adjustdown'],<?=$Downloaded?>)" /> MB&nbsp;&nbsp;
+                              <input name="adjustdown" value="gb" type="radio" onchange="CalculateAdjustUpload('adjustdown', document.forms['form'].elements['adjustdown'],<?=$Downloaded?>)" checked="checked" /> GB&nbsp;&nbsp;
+                              <input name="adjustdown" value="tb" type="radio" onchange="CalculateAdjustUpload('adjustdown', document.forms['form'].elements['adjustdown'],<?=$Downloaded?>)" /> TB
+                              
+                              <span style="margin-left: 40px;" title="Current Download"><?=get_size($Downloaded, 2)?></span>
+				      <span style="margin-left: 10px;" id="adjustdownresult" name="adjustdownresult" title="Preview of Total Download after adjustment"></span>
 				</td>
 			</tr>
+                    <script type="text/javascript">
+                        CalculateAdjustUpload('adjustdown', document.forms['form'].elements['adjustdown'],<?=$Downloaded?>);
+                        CalculateAdjustUpload('adjustup', document.forms['form'].elements['adjustup'],<?=$Uploaded?>);
+                    </script>
 			<tr>
 				<td class="label">Merge Stats <strong>From:</strong></td>
 				<td>
@@ -1012,6 +1060,12 @@ if (check_perms('users_mod', $Class)) { ?>
 				<td class="label">Freeleech Tokens:</td>
 				<td>
 					<input type="text" size="5" name="FLTokens" value="<?=$FLTokens?>" />
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Bonus Credits</td>
+				<td>
+					<input type="text" size="5" name="BonusCredits" value="<?=$BonusCredits?>" />
 				</td>
 			</tr>
 <?
