@@ -21,9 +21,6 @@ if ($UserID != $LoggedUser['ID'] && !check_perms('users_edit_profiles', $Permiss
 
 $Val->SetFields('stylesheet',1,"number","You forgot to select a stylesheet.");
 $Val->SetFields('styleurl',0,"regex","You did not enter a valid stylesheet url.",array('regex'=>'/^https?:\/\/(localhost(:[0-9]{2,5})?|[0-9]{1,3}(\.[0-9]{1,3}){3}|([a-zA-Z0-9\-\_]+\.)+([a-zA-Z]{1,5}[^\.]))(:[0-9]{2,5})?(\/[^<>]+)+\.css$/i'));
-$Val->SetFields('disablegrouping',1,"number","You forgot to select your torrent grouping option.",array('minlength'=>0,'maxlength'=>1));
-$Val->SetFields('torrentgrouping',1,"number","You forgot to select your torrent grouping option.",array('minlength'=>0,'maxlength'=>1));
-$Val->SetFields('discogview',1,"number","You forgot to select your discography view option.",array('minlength'=>0,'maxlength'=>1));
 $Val->SetFields('postsperpage',1,"number","You forgot to select your posts per page option.",array('inarray'=>array(25,50,100)));
 //$Val->SetFields('hidecollage',1,"number","You forgot to select your collage option.",array('minlength'=>0,'maxlength'=>1));
 $Val->SetFields('collagecovers',1,"number","You forgot to select your collage option.");
@@ -170,9 +167,7 @@ if ($Err) {
 if(!empty($LoggedUser['DefaultSearch'])) {
 	$Options['DefaultSearch'] = $LoggedUser['DefaultSearch'];
 }
-$Options['DisableGrouping'] = (!empty($_POST['disablegrouping']) ? 1 : 0);
-$Options['TorrentGrouping'] = (!empty($_POST['torrentgrouping']) ? 1 : 0);
-$Options['DiscogView'] = (!empty($_POST['discogview']) ? 1 : 0);
+
 $Options['PostsPerPage'] = (int) $_POST['postsperpage'];
 //$Options['HideCollage'] = (!empty($_POST['hidecollage']) ? 1 : 0);
 $Options['CollageCovers'] = empty($_POST['collagecovers']) ? 0 : $_POST['collagecovers'];

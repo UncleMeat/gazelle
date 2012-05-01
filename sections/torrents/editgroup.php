@@ -42,7 +42,7 @@ include(SERVER_ROOT.'/classes/class_text.php');
 
 $Text = new TEXT;
 
-show_header('Edit torrent group','bbcode');
+show_header('Edit torrent','bbcode');
 
 // Start printing form
 ?>
