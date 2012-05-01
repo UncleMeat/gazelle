@@ -1089,6 +1089,12 @@ INSERT INTO `schedule` (`NextHour`, `NextDay`, `NextBiWeekly`) VALUES
 -- Tabellstruktur `sphinx_delta`
 --
 
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `sphinx_delta`
+--
+
 CREATE TABLE IF NOT EXISTS `sphinx_delta` (
   `ID` int(10) NOT NULL,
   `GroupName` varchar(255) DEFAULT NULL,
@@ -1099,6 +1105,7 @@ CREATE TABLE IF NOT EXISTS `sphinx_delta` (
   `RecordLabel` varchar(50) DEFAULT NULL,
   `CategoryID` tinyint(2) DEFAULT NULL,
   `NewCategoryID` int(11) NOT NULL,
+  `Image` varchar(255) NOT NULL,
   `Time` int(12) DEFAULT NULL,
   `ReleaseType` tinyint(2) DEFAULT NULL,
   `Size` bigint(20) DEFAULT NULL,
@@ -1122,6 +1129,7 @@ CREATE TABLE IF NOT EXISTS `sphinx_delta` (
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+
 -- --------------------------------------------------------
 
 --
@@ -1138,6 +1146,7 @@ CREATE TABLE IF NOT EXISTS `sphinx_hash` (
   `RecordLabel` varchar(50) DEFAULT NULL,
   `CategoryID` tinyint(2) DEFAULT NULL,
   `NewCategoryID` int(11) NOT NULL,
+  `Image` varchar(255) NOT NULL,
   `Time` int(12) DEFAULT NULL,
   `ReleaseType` tinyint(2) DEFAULT NULL,
   `Size` bigint(20) DEFAULT NULL,
@@ -1999,7 +2008,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `ipcc` varchar(2) NOT NULL DEFAULT '',
   `FLTokens` int(10) NOT NULL DEFAULT '0',
   `Credits` int(11) NOT NULL DEFAULT '0',
-  `Signature` varchar(4096) DEFAULT NULL,
+  `Signature` text DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Username` (`Username`),
   KEY `Email` (`Email`),

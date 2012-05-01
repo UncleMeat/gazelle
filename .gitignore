@@ -2,3 +2,4 @@ config.php
 release/*
 static/similar
 nbproject/
+*.save

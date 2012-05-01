@@ -105,16 +105,6 @@ if (!empty($_GET['setdefault'])) {
     }
 }
 
-array_pop($Bitrates); // remove 'other'
-$SearchBitrates = array_merge($Bitrates, array('v0', 'v1', 'v2', '24bit'));
-
-foreach ($SearchBitrates as $ID => $Val) {
-    $SearchBitrates[$ID] = strtolower($Val);
-}
-foreach ($Formats as $ID => $Val) {
-    $SearchFormats[$ID] = strtolower($Val);
-}
-
 $Queries = array();
 
 //Simple search
@@ -125,17 +115,6 @@ if (!empty($_GET['searchstr'])) {
         $Queries[] = '@encoding ' . implode(' ', $FilterBitrates);
     }
 
-    $FilterFormats = array_intersect($Words, $SearchFormats);
-    if (count($FilterFormats) > 0) {
-        $Queries[] = '@format ' . implode(' ', $FilterFormats);
-    }
-
-    if (in_array('100%', $Words)) {
-        $_GET['haslog'] = '100';
-        unset($Words[array_search('100%', $Words)]);
-    }
-
-    $Words = array_diff($Words, $FilterBitrates, $FilterFormats);
     if (!empty($Words)) {
         foreach ($Words as $Key => &$Word) {
             if ($Word[0] == '!' && strlen($Word) >= 3 && count($Words) >= 2) {
@@ -341,7 +320,7 @@ if (((!empty($_GET['action']) && strtolower($_GET['action']) == "advanced") || (
 
 
 
-show_header('Browse Torrents', 'browse');
+show_header('Browse Torrents', 'browse,overlib');
 
 // List of pages
 $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
@@ -382,7 +361,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                         </td>
                     </tr>
 <? } ?>
-                <tr>
+                <tr>                    
                     <td class="label">Tags:</td>
                     <td colspan="3">
                         <input type="text" size="40" id="tags" name="taglist" class="inputtext smaller" title="Use -tag to exclude tag" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />&nbsp;					<input type="radio" name="tags_type" id="tags_type0" value="0" <? selected('tags_type', 0, 'checked') ?> /><label for="tags_type0"> Any</label>&nbsp;&nbsp;
@@ -542,7 +521,7 @@ $Bookmarks = all_bookmarks('torrent');
 // Start printing torrent list
 
     foreach ($Results as $GroupID => $Data) {
-        list($Artists, $GroupCatalogueNumber, $ExtendedArtists, $GroupID2, $GroupName, $GroupRecordLabel, $ReleaseType, $TagList, $Torrents, $GroupVanityHouse, $GroupYear, $CategoryID, $FreeTorrent, $HasCue, $HasLog, $TotalLeechers, $LogScore, $NewCategoryID, $ReleaseType, $ReleaseType, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
+        list($Artists, $GroupCatalogueNumber, $ExtendedArtists, $GroupID2, $GroupName, $GroupRecordLabel, $ReleaseType, $TagList, $Torrents, $GroupVanityHouse, $GroupYear, $CategoryID, $FreeTorrent, $HasCue, $HasLog, $Image, $TotalLeechers, $LogScore, $NewCategoryID, $ReleaseType, $ReleaseType, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 
         $TagList = explode(' ', str_replace('_', '.', $TagList));
 
@@ -557,7 +536,12 @@ $Bookmarks = all_bookmarks('torrent');
 
         list($TorrentID, $Data) = each($Torrents);
 
-        $DisplayName = '<a href="torrents.php?id=' . $GroupID . '" title="View Torrent">' . $GroupName . '</a>';
+        $OverImage = $Image != '' ? $Image : '/static/common/noartwork/noimage.png';
+        $OverName = strlen($GroupName) <= 60 ? $GroupName : substr($GroupName, 0, 56).'...';
+//        $OverName = display_str($GroupName);
+        $SL = ($TotalSeeders == 0 ? "<span class=r00>".number_format($TotalSeeders)."</span>" : number_format($TotalSeeders)) . "/".number_format($TotalLeechers);
+        $DisplayName = '<a href="torrents.php?id=' . $GroupID . '"'. " onmouseover=\"return overlib('<table class=tdoverlib><tr><td class=tdoverlib colspan=2>".$OverName."</td><tr><td class=tdoverlib style=width:1px><img style=\'max-width: 100px;\' src=".$OverImage."></td><td class=tdoverlib><strong>Uploader:</strong><br />xxxxxx<br /><br /><strong>Size:</strong><br />".get_size($Data['Size'])."<br /><br /><strong>Snatched:</strong><br />".number_format($TotalSnatched)."<br /><br /><strong>Seeders/Leechers:</strong><br />".$SL."</td></tr></table>', FULLHTML);\" onmouseout=\"return nd();\">" . $GroupName . '</a>';
+        
         if ($Data['FreeTorrent'] == '1') {
             $DisplayName .= ' <strong>Freeleech!</strong>';
         } elseif ($Data['FreeTorrent'] == '2') {

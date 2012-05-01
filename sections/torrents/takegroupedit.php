@@ -47,7 +47,7 @@ if(!empty($_GET['action']) && $_GET['action'] == 'revert') { // if we're reverti
 	}
 
 	// Trickery
-	if(!preg_match("/^".IMAGE_REGEX."$/i", $Image)) {
+	if(!preg_match("/^".URL_REGEX."$/i", $Image)) {
 		$Image = '';
 	}
 	$Summary = db_string($_POST['summary']);
