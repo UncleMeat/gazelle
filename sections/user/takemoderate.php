@@ -28,7 +28,33 @@ $Invites = (int)$_POST['Invites'];
 $SupportFor = db_string($_POST['SupportFor']);
 $Pass = db_string($_POST['ChangePassword']);
 $Warned = (isset($_POST['Warned']))? 1 : 0;
+
+ 
+        $AdjustUpValue = ($_POST['adjustupvalue']  == "" ? 0 : $_POST['adjustupvalue']);
+        if ( isset($AdjustUpValue) && $AdjustUpValue[0]=='+') $AdjustUpValue = substr($AdjustUpValue, 1);
+        if (is_numeric($AdjustUpValue)){ 
+            $ByteMultiplier = isset($_POST['adjustup']) ? strtolower($_POST['adjustup']) : 'kb';
+            $AdjustUpValue = get_bytes($AdjustUpValue.$ByteMultiplier);
+        } else {
+            $AdjustUpValue = 0;
+        }
+        
+        $AdjustDownValue = ($_POST['adjustdownvalue']  == "" ? 0 : $_POST['adjustdownvalue']);
+        if ( isset($AdjustDownValue) && $AdjustDownValue[0]=='+') $AdjustDownValue = substr($AdjustDownValue, 1);
+        if (is_numeric($AdjustDownValue)){ 
+            $ByteMultiplier = isset($_POST['adjustdown']) ? strtolower($_POST['adjustdown']) : 'kb';
+            $AdjustDownValue = get_bytes($AdjustDownValue.$ByteMultiplier);
+        } else {
+            $AdjustDownValue = 0;
+        }
+      
+        if(!is_numeric($AdjustUpValue) || !is_numeric($AdjustDownValue)) {
+            error(0);
+        }
+ 
+/*
 if(isset($_POST['Uploaded']) && isset($_POST['Downloaded'])) {
+     
 	$Uploaded = ($_POST['Uploaded']  == "" ? 0 : $_POST['Uploaded']);
 	if($Arithmetic = strpbrk($Uploaded, '+-')) {
 		$Uploaded += max(-$Uploaded, get_bytes($Arithmetic));
@@ -40,7 +66,7 @@ if(isset($_POST['Uploaded']) && isset($_POST['Downloaded'])) {
 	if(!is_number($Uploaded) || !is_number($Downloaded)) {
 		error(0);
 	}
-}
+} */
 $FLTokens = isset($_POST['FLTokens'])?$_POST['FLTokens'] : 0;
 if(!is_number($FLTokens)) {
 	error(0);
@@ -271,6 +297,7 @@ if ($Visible!=$Cur['Visible']  && check_perms('users_make_invisible')) {
 	$LightUpdates['Visible']=$Visible;
 }
 
+/*
 if ($Uploaded!=$Cur['Uploaded'] && $Uploaded!=$_POST['OldUploaded'] && (check_perms('users_edit_ratio') 
  || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID']))) {
 	$UpdateSet[]="Uploaded='".$Uploaded."'";
@@ -284,6 +311,22 @@ if ($Downloaded!=$Cur['Downloaded'] && $Downloaded!=$_POST['OldDownloaded'] && (
 	$EditSummary[]="downloaded changed from ".get_size($Cur['Downloaded'])." to ".get_size($Downloaded);
 	$Cache->delete_value('users_stats_'.$UserID);
 }
+*/
+if ($AdjustUpValue != 0 && (check_perms('users_edit_ratio') 
+                        || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID']))){
+      $Uploaded = $Cur['Uploaded'] + $AdjustUpValue;
+	$UpdateSet[]="Uploaded='".$Uploaded."'";
+	$EditSummary[]="uploaded changed from ".get_size($Cur['Uploaded'])." to ".get_size($Uploaded);
+	$Cache->delete_value('users_stats_'.$UserID);
+}
+if ($AdjustDownValue != 0 && (check_perms('users_edit_ratio') 
+                        || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID']))){
+      $Downloaded = $Cur['Downloaded'] + $AdjustDownValue;
+	$UpdateSet[]="Downloaded='".$Downloaded."'";
+	$EditSummary[]="downloaded changed from ".get_size($Cur['Downloaded'])." to ".get_size($Downloaded);
+	$Cache->delete_value('users_stats_'.$UserID);
+}
+
 
 if ($FLTokens!=$Cur['FLTokens'] && (check_perms('users_edit_ratio') || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID']))) {
 	$UpdateSet[]="FLTokens=".$FLTokens;

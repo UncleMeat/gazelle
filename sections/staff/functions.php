@@ -39,6 +39,7 @@ function get_forum_staff() {
 		$DB->query("SELECT
 			m.ID,
 			p.Level,
+			p.Name,
 			m.Username,
 			m.Paranoia,
 			m.LastAccess,

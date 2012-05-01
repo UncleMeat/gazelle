@@ -363,7 +363,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 <?
 	}
 ?>
-	</table><br />
+	</table>
 <?
 }
 ?>

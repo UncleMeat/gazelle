@@ -20,6 +20,30 @@ function ChangeTo(to) {
 	}
 }
 
+function CalculateAdjustUpload(name, radioObj, currentvalue){
+    var adjustamount = Math.floor($('#' + name + 'value').raw().value); 
+    if (adjustamount != 0){
+        var mul = 1;
+	  var radioLength = radioObj.length;
+	  for(var i = 0; i < radioLength; i++) {
+		if(radioObj[i].checked) {
+                if (radioObj[i].value == 'mb') mul = 1024 * 1024;
+                 else if (radioObj[i].value == 'gb') mul = 1024 * 1024 * 1024;
+                 else if (radioObj[i].value == 'tb') mul = 1024 * 1024 * 1024 * 1024;
+                break;
+		}
+	  }
+        adjustamount = adjustamount * mul;
+        var newvalue = Math.max(currentvalue + adjustamount, 0); 
+        $('#' + name + 'result').raw().setAttribute('class', (adjustamount > 0 ? 'green' : 'red'));
+        $('#' + name + 'result').raw().innerHTML = (adjustamount > 0 ? '+ ' : '- ') + get_size_fixed(Math.abs(adjustamount),3) + ' => ' + get_size_fixed(newvalue, 3);
+    } else {
+        $('#' + name + 'result').raw().setAttribute('class', 'none');
+        $('#' + name + 'result').raw().innerHTML = '';
+    }
+}
+
+
 function UncheckIfDisabled(checkbox) {
 	if (checkbox.disabled) {
 		checkbox.checked = false;

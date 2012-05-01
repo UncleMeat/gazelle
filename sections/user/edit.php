@@ -24,7 +24,7 @@ $DB->query("SELECT
 			p.Level AS Class,
                   p.MaxSigLength,
                   p.MaxAvatarWidth,
-                  p.MaxAvatarHeight 
+                  p.MaxAvatarHeight
 			FROM users_main AS m
 			JOIN users_info AS i ON i.UserID = m.ID
 			LEFT JOIN permissions AS p ON p.ID=m.PermissionID
@@ -277,13 +277,11 @@ echo $Val->GenerateJS('userform');
 				<td> <? $Text->display_bbcode_assistant("info"); ?>
                             <textarea id="info" name="info" class="long" rows="8"><?=display_str($Info)?></textarea></td>
 			</tr>
-       <?    $maxsig = get_permissions($PermissionID); 
-             $maxsig = $maxsig['MaxSigLength'];     ?>
 			<tr>
-				<td class="label"><strong>Signature<br/>(max <?=$maxsig?> chars)</strong></td>
+				<td class="label"><strong>Signature<br/>(max <?=$MaxSigLength?> chars)</strong></td>
 				<td><textarea name="signature" class="long" 
-                                      rows="<?=($maxsig !== 0 ? round(3 + ($maxsig / 512)) : 2);?>" 
-                    <?=($maxsig == 0 ? 'disabled="disabled"' : ''); ?>><?=($maxsig == 0 ? 'You need to get promoted to Perv before you can have a signature!' : display_str($Signature));?></textarea></td>
+                                      rows="<?=($MaxSigLength !== 0 ? round(3 + ($MaxSigLength / 512)) : 2);?>" 
+                    <?=($MaxSigLength == 0 ? 'disabled="disabled"' : ''); ?>><?=($MaxSigLength == 0 ? 'You need to get promoted to Perv before you can have a signature!' : display_str($Signature));?></textarea></td>
 			</tr> 
 			<tr>
 				<td class="label"><strong>IRCKey</strong></td>
