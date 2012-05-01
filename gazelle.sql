@@ -178,6 +178,32 @@ CREATE TABLE IF NOT EXISTS `blog` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `bonus_shop_actions`
+--
+
+CREATE TABLE IF NOT EXISTS `bonus_shop_actions` (
+  `ID` int(5) unsigned NOT NULL AUTO_INCREMENT,
+  `Title` varchar(256) NOT NULL,
+  `Description` varchar(1024) NOT NULL,
+  `Action` varchar(32) NOT NULL,
+  `Value` int(9) NOT NULL DEFAULT '0',
+  `Cost` int(9) unsigned NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `bonus_shop_actions`
+--
+
+INSERT INTO `bonus_shop_actions` (`ID`, `Title`, `Description`, `Action`, `Value`, `Cost`) VALUES
+(3, 'Give Away 500 Credits', 'If you have more credit than you could possibly have a use for, then why not share it with a friend? Give away 500 credits.', 'givecredits', 500, 600),
+(4, 'Give Away 2000 Credits', 'If you have more credit than you could possibly have a use for, then why not share it with a friend? Give away 2000 credits.', 'givecredits', 2000, 2200),
+(5, '-10 GB', 'Do you have a bad ratio? Here you can improve it dramatically by buying 10GB away from what you''ve downloaded!', 'buygb', 10, 2500),
+(6, '-10 GB to other', 'Do you know a friend or perhaps someone else who has a shitty ratio? Here you can give someone a happy surprise by taking away 10GB from the person''s downloaded traffic!', 'buyothergb', 10, 3000);
+
+-- --------------------------------------------------------
+
+--
 -- Tabellstruktur `bookmarks_artists`
 --
 
@@ -1949,6 +1975,7 @@ CREATE TABLE IF NOT EXISTS `users_info` (
   `DisableRequests` enum('0','1') NOT NULL DEFAULT '0',
   `PermittedForums` varchar(150) NOT NULL DEFAULT '',
   `UnseededAlerts` enum('0','1') NOT NULL DEFAULT '0',
+  `BonusLog` text NOT NULL,
   UNIQUE KEY `UserID` (`UserID`),
   KEY `SupportFor` (`SupportFor`),
   KEY `DisableInvites` (`DisableInvites`),
@@ -2009,6 +2036,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `FLTokens` int(10) NOT NULL DEFAULT '0',
   `Credits` int(11) NOT NULL DEFAULT '0',
   `Signature` text DEFAULT NULL,
+  `LastBonusTime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Username` (`Username`),
   KEY `Email` (`Email`),
