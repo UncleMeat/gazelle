@@ -6,13 +6,11 @@ function get_shop_items(){
 		return $ShopItems;
 	}
 	if(($ShopItems = $Cache->get_value('shop_items')) === false) {
-          // SELECT `ID`, `Title`, `Description`, `Action`, `Value`, `Cost` FROM `bonus_shop_actions` WHERE 1
 		$DB->query("SELECT
-                        ID,
-                        Title,
+                        ID, 
+                        Title, 
                         Description, 
                         Action, 
-                        Value,
                         Cost
 			FROM bonus_shop_actions
 			ORDER BY ID");
@@ -21,5 +19,22 @@ function get_shop_items(){
 	}
 	return $ShopItems;
 }
-
+function get_shop_item($ItemID){
+	global $Cache, $DB;
+	if(!is_number($ItemID)) error(0);
+	if(($ShopItem = $Cache->get_value('shop_item_' + $ItemID)) === false) {
+		$DB->query("SELECT
+                        ID, 
+                        Title, 
+                        Description, 
+                        Action, 
+                        Value, 
+                        Cost
+			FROM bonus_shop_actions
+			WHERE ID='$ItemID'");
+		$ShopItem = $DB->to_array(false, MYSQLI_BOTH);     //, array(3,'Paranoia'));
+		$Cache->cache_value('shop_item_' + $ItemID, $ShopItem);
+	}
+	return $ShopItem;
+}
 ?>

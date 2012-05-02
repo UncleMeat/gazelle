@@ -28,6 +28,11 @@ define('QUERY_EXCEPTION', true); // Shut up debugging
 // This is used if the form doesn't validate, and when the time comes to enter  //
 // it into the database.														//
 
+// trim whitespace before setting/evaluating these fields
+$_POST['image'] = trim($_POST['image']);
+$_POST['desc'] = trim($_POST['desc']);
+$_POST['title'] = trim($_POST['title']);
+
 $Properties = array();
 $Type = $Categories[(int) $_POST['type']];
 $NewCategory = $_POST['category'];
@@ -59,8 +64,8 @@ $Properties['Media'] = $_POST['media'];
 $Properties['Bitrate'] = $_POST['bitrate'];
 $Properties['Encoding'] = $_POST['bitrate'];
 $Properties['TagList'] = $_POST['tags'];
-$Properties['Image'] = trim($_POST['image']);
-$Properties['GroupDescription'] = trim($_POST['album_desc']);
+$Properties['Image'] = $_POST['image'];
+$Properties['GroupDescription'] = $_POST['album_desc'];
 if ($_POST['vanity_house'] && check_perms('torrents_edit_vanityhouse')) {
     $Properties['VanityHouse'] = 1;
 } else {
@@ -68,9 +73,9 @@ if ($_POST['vanity_house'] && check_perms('torrents_edit_vanityhouse')) {
 }
 $Properties['TorrentDescription'] = $_POST['release_desc'];
 if ($_POST['album_desc']) {
-    $Properties['GroupDescription'] = trim($_POST['album_desc']);
+    $Properties['GroupDescription'] = $_POST['album_desc'];
 } elseif ($_POST['desc']) {
-    $Properties['GroupDescription'] = trim($_POST['desc']);
+    $Properties['GroupDescription'] = $_POST['desc'];
 }
 $Properties['GroupID'] = $_POST['groupid'];
 if (empty($_POST['artists'])) {
@@ -82,34 +87,22 @@ if (empty($_POST['artists'])) {
 $RequestID = $_POST['requestid'];
 //******************************************************************************//
 //--------------- Validate data in upload form ---------------------------------//
-
+//** note: if the same field is set to be validated more than once then each time it is set it overwrites the previous test
+//** ie.. one test per field max, last one set for a specific field is what is used
 $Validate->SetFields('title', '1', 'string', 'Title must be between 2 and 200 characters.', array('maxlength' => 200, 'minlength' => 2));
 
 $Validate->SetFields('tags', '1', 'string', 'You must enter at least one tag. Maximum length is 200 characters.', array('maxlength' => 200, 'minlength' => 2));
 
-$Validate->SetFields('release_desc', '0', 'string', 'The release description has a minimum length of 10 characters.', array('maxlength' => 1000000, 'minlength' => 10));
-
-$Validate->SetFields('image', '0', 'link', 'The image URL you entered was invalid.', array('maxlength' => 255, 'minlength' => 12));
-
-$Validate->SetFields('tags', '1', 'string', 'You must enter at least one tag. Maximum length is 200 characters.', array('maxlength' => 200, 'minlength' => 2));
+//$Validate->SetFields('release_desc', '0', 'string', 'The release description has a minimum length of 10 characters.', array('maxlength' => 1000000, 'minlength' => 10));
 
 $whitelist_regex = $Validate->GetWhitelistRegex();
 
-$Validate->SetFields('title', '1', 'string', 'Title must be between 2 and 200 characters.', array('maxlength' => 200, 'minlength' => 2));
-
-$Validate->SetFields('tags', '1', 'string', 'You must enter at least one tag. Maximum length is 200 characters.', array('maxlength' => 200, 'minlength' => 2));
-
-$Validate->SetFields('release_desc', '0', 'string', 'The release description has a minimum length of 10 characters.', array('maxlength' => 1000000, 'minlength' => 10));
-
-//$Validate->SetFields('image',
-//		'1','link','The image URL you entered was invalid.' ,array('maxlength'=>255, 'minlength'=>12));
-
-$Validate->SetFields('image', '1', 'image', 'The image URL you entered was not an approved pichost.', array('regex' => $whitelist_regex, 'maxlength' => 255, 'minlength' => 12));
+$Validate->SetFields('image', '0', 'image', 'The image URL you entered was not valid.', array('regex' => $whitelist_regex, 'maxlength' => 255, 'minlength' => 12));
 
 //$Validate->SetFields('desc',
 //	'1','string','The description has a minimum length of 100 characters.',array('maxlength'=>1000000, 'minlength'=>100));
 
-$Validate->SetFields('desc', '1', 'desc', 'The image URL you entered was not an approved pichost.', array('regex' => $whitelist_regex, 'maxlength' => 1000000, 'minlength' => 20));
+$Validate->SetFields('desc', '1', 'desc', 'Description', array('regex' => $whitelist_regex, 'maxlength' => 1000000, 'minlength' => 20));
 
 
 $Validate->SetFields('category', '1', 'inarray', 'Please select a valid format.', array('inarray' => array_keys($NewCategories)));

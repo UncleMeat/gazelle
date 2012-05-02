@@ -576,7 +576,7 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 		<div class="box">
 			<div class="head">
 				<span style="float:left;">Profile<? if ($CustomTitle) { echo " - ".html_entity_decode($DisplayCustomTitle); } ?></span>
-				<span style="float:right;"><?=!empty($Badges)?"$Badges&nbsp;&nbsp;":''?><a href="#" onclick="$('#profilediv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+				<span style="float:right;"><?=!empty($Badges)?"$Badges&nbsp;&nbsp;":''?><a href="#" onclick="$('#profilediv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
 			</div>
 			<div class="pad" id="profilediv">
 <? if (!$Info) { ?>
@@ -591,16 +591,16 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 		</div>
 <?
 // TODO: Add proper perms for viewing user credits + bonus history
-// TODO: Add editing of bonus log (by admin/staff)... I am inclined to make this savable in frame + also teh staff notes edit could be the same..
+// TODO: Add editing of bonus log (by admin/staff)... I am inclined to make this savable in frame + also teh staff notes edit could be the same.. dunno
 if (check_perms('users_view_email',$Class) || $OwnProfile) { ?>
 		<div class="box">
 			<div class="head">
 				<span style="float:left;">Bonus Credits</span>
-                        <span style="float:right;"><a href="#" onclick="$('#bonusdiv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+                        <span style="float:right;"><a href="#" onclick="$('#bonusdiv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
 			</div>
 			<div class="pad" id="bonusdiv">
                       <h4>Credits: <?=(!$BonusCredits ? '0' : $BonusCredits) ?></h4>
-                      <span style="float:left;">Next Update: <?=$LastBonusTime?></span>
+                      <span style="float:left;">Next Update: <?=get_next_bonus_update($LastBonusTime)?></span>
                       <span style="float:right;"><a href="#" onclick="$('#bonuslogdiv').toggle(); this.innerHTML=(this.innerHTML=='(Show Log)'?'(Hide Log)':'(Show Log)'); return false;">(Show Log)</a></span>&nbsp;
 
                       <div class="hidden" id="bonuslogdiv" style="padding-top: 10px;">
@@ -719,7 +719,7 @@ foreach ($Collages as $CollageInfo) {
 					<?=display_str($CName)?> - <a href="collages.php?id=<?=$CollageID?>">see full</a>
 				</span>
 				<span style="float:right;">
-					<a href="#" onclick="$('#collage<?=$CollageID?>').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;"><?=$FirstCol?'(Hide)':'(Show)'?></a>
+					<a href="#" onclick="$('#collage<?=$CollageID?>').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;"><?=$FirstCol?'(Hide)':'(View)'?></a>
 				</span>
 			</td>
 		</tr>
@@ -756,8 +756,12 @@ if ((check_perms('users_view_invites')) && $Invited > 0) {
 	$Tree = new INVITE_TREE($UserID, array('visible'=>false));
 ?>
 		<div class="box">
-			<div class="head">Invite Tree <a href="#" onclick="$('#invitetree').toggle();return false;">(View)</a></div>
-			<div id="invitetree" class="hidden">
+			<!--<div class="head">Invite Tree <a href="#" onclick="$('#invitetree').toggle();return false;">(View)</a></div>-->
+                  <div class="head">
+				<span style="float:left;">Invite Tree</span>
+                        <span style="float:right;"><a href="#" onclick="$('#invitetree').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+			</div>
+                  <div id="invitetree" class="hidden">
 				<? $Tree->make_tree(); ?>
 			</div>
 		</div>
@@ -786,8 +790,12 @@ if (check_paranoia_here('requestsvoted_list')) {
 		$Requests = $DB->to_array();
 ?>
 		<div class="box">
-			<div class="head">Requests <a href="#" onclick="$('#requests').toggle();return false;">(View)</a></div>
-			<div id="requests" class="hidden">
+			<!--<div class="head">Requests <a href="#" onclick="$('#requests').toggle();return false;">(View)</a></div>-->
+			<div class="head">
+				<span style="float:left;">Requests</span>
+                        <span style="float:right;"><a href="#" onclick="$('#requests').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+			</div>
+                  <div id="requests" class="hidden">
 				<table cellpadding="6" cellspacing="1" border="0" class="border" width="100%">
 					<tr class="colhead_dark">
 						<td style="width:48%;">
@@ -894,8 +902,12 @@ if (check_perms('users_mod', $Class) || $IsFLS) {
 		$StaffPMs = $DB->to_array();
 ?>
 		<div class="box">
-			<div class="head">Staff PMs <a href="#" onclick="$('#staffpms').toggle();return false;">(View)</a></div>
-			<table width="100%" class="hidden" id="staffpms">
+			<!--<div class="head">Staff PMs <a href="#" onclick="$('#staffpms').toggle();return false;">(View)</a></div>-->
+			<div class="head">
+				<span style="float:left;">Staff PMs</span>
+                        <span style="float:right;"><a href="#" onclick="$('#staffpms').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+			</div>
+                  <table width="100%" class="hidden" id="staffpms">
 				<tr class="colhead">
 					<td>Subject</td>
 					<td>Date</td>
@@ -937,7 +949,7 @@ if (check_perms('users_mod', $Class) || $IsFLS) {
 <?	}
 }
 ?>
-<br />
+<!--<br />-->
 <?
 
 
@@ -948,8 +960,13 @@ if (check_perms('users_mod', $Class)) { ?>
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 
 		<div class="box">
-			<div class="head">Staff Notes <a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">(Edit)</a></div>
-			<div class="pad">
+		<!--<div class="head">Staff Notes <a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">(Edit)</a></div>-->
+			<div class="head">
+				<span style="float:left;">Staff Notes</span>
+                        <!--<span style="float:left;"><a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">(Edit)</a></span>-->
+                        <span style="float:right;"><a href="#" onclick="$('#staffnotes').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+			</div>
+                  <div class="pad" id="staffnotes">
 				<input type="hidden" name="comment_hash" value="<?=$CommentHash?>">
 				<div id="admincommentlinks" class="AdminComment box pad"><?=$Text->full_format($AdminComment)?></div>
 				<textarea id="admincomment" onkeyup="resize('admincomment');" class="AdminComment hidden" name="AdminComment" cols="65" rows="26" style="width:98%;"><?=display_str($AdminComment)?></textarea>
@@ -1017,7 +1034,8 @@ if (check_perms('users_mod', $Class)) { ?>
 <?
 	}
 
-	if (check_perms('users_edit_ratio',$Class) || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID'])) {
+	if ((check_perms('users_edit_ratio',$Class) && $UserID != $LoggedUser['ID'])
+              || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID'])) {
 ?>
 			<tr>
 				<td class="label">Adjust Upload:</td>
@@ -1056,12 +1074,24 @@ if (check_perms('users_mod', $Class)) { ?>
 					<input class="long" type="text" name="MergeStatsFrom" />
 				</td>
 			</tr>
+<?
+	}
+
+	if ((check_perms('users_edit_tokens',$Class) && $UserID != $LoggedUser['ID'])
+              || (check_perms('users_edit_own_tokens') && $UserID == $LoggedUser['ID'])) {
+?>
 			<tr>
 				<td class="label">Freeleech Tokens:</td>
 				<td>
 					<input type="text" size="5" name="FLTokens" value="<?=$FLTokens?>" />
 				</td>
 			</tr>
+<?
+	}
+
+	if ((check_perms('users_edit_credits',$Class) && $UserID != $LoggedUser['ID'])
+              || (check_perms('users_edit_own_credits') && $UserID == $LoggedUser['ID'])) {
+?>
 			<tr>
 				<td class="label">Bonus Credits</td>
 				<td>
@@ -1116,7 +1146,7 @@ if (check_perms('users_mod', $Class)) { ?>
 				</td>
 			</tr>
 <?	} ?>
-		</table><br />
+		</table><!--<br />-->
 
 <?	if (check_perms('users_warn')) { ?>
 		<table>
@@ -1163,7 +1193,7 @@ if (check_perms('users_mod', $Class)) { ?>
 				</td>
 			</tr>
 <?	} ?>
-		</table><br />
+		</table><!--<br />-->
 		<table>
 			<tr class="colhead"><td colspan="2">User Privileges</td></tr>
 <?	if (check_perms('users_disable_posts') || check_perms('users_disable_any')) {
@@ -1243,7 +1273,7 @@ if (check_perms('users_mod', $Class)) { ?>
 			</tr>
 
 <?	} ?>
-		</table><br />
+		</table><!--<br />-->
 <?	if(check_perms('users_logout')) { ?>
 		<table>
 			<tr class="colhead"><td colspan="2">Session</td></tr>

@@ -47,6 +47,12 @@
 	'users_edit_usernames' => 'Can edit usernames.',
 	'users_edit_ratio' => 'Can edit anyone\'s upload/download amounts.',
 	'users_edit_own_ratio' => 'Can edit own upload/download amounts.',
+     
+      'users_edit_tokens' => 'Can edit anyone\'s FLTokens (Slots?)',
+      'users_edit_own_tokens' => 'Can edit own FLTokens (Slots?)',
+      'users_edit_credits' => 'Can edit anyone\'s Bonus Credits',
+      'users_edit_own_credits' => 'Can edit own Bonus Credits',
+     
 	'users_edit_titles' => 'Can edit titles.',
 	'users_edit_avatars' => 'Can edit avatars.',
 	'users_edit_invites' => 'Can edit invite numbers and cancel sent invites.',
@@ -175,7 +181,13 @@ function permissions_form(){ ?>
 					<? display_perm('users_edit_usernames', 'Can edit usernames.'); ?>
 					<? display_perm('users_edit_ratio', 'Can edit anyone\'s upload/download amounts.'); ?>
 					<? display_perm('users_edit_own_ratio', 'Can edit own upload/download amounts.'); ?>
-					<? display_perm('users_edit_titles', 'Can edit titles.'); ?>
+					
+                              <? display_perm('users_edit_tokens', 'Can edit anyone\'s FLTokens (Slots?)'); ?>
+					<? display_perm('users_edit_own_tokens', 'Can edit own FLTokens (Slots?)'); ?>
+					<? display_perm('users_edit_credits', 'Can edit anyone\'s Bonus Credits.'); ?>
+					<? display_perm('users_edit_own_credits', 'Can edit own Bonus Credits.'); ?>
+      					
+                              <? display_perm('users_edit_titles', 'Can edit titles.'); ?>
 					<? display_perm('users_edit_avatars', 'Can edit avatars.'); ?>
 					<? display_perm('users_edit_invites', 'Can edit invite numbers and cancel sent invites.'); ?>
 					<? display_perm('users_edit_watch_hours', 'Can edit contrib watch hours.'); ?>

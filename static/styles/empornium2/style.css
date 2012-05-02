@@ -584,7 +584,7 @@ p.min_padding {
 }
 
 .main_column .box, .main_column table {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .tags {
@@ -645,10 +645,10 @@ table.wid740 {
 /* Bonus SHop */
 
 .itembuy {
-    /* background: #6e6 url("images/bggreenfade.png") repeat scroll 0% 0%;  */
+     background: #6e6 url("images/bggreenfade.png") repeat scroll 0% 0%;  
 }
 .itemnotbuy {
-   /*  background: #d33 url("images/bgredfade.png") repeat scroll 0% 0%;  */
+     background: #d33 url("images/bgredfade.png") repeat scroll 0% 0%;  
 }
 
 input.shopbutton {
@@ -673,10 +673,10 @@ input.shopbutton:hover {
 
 .itembuy td {
     font-weight: bold;
-    color: #060;
+    /*color: #060;*/
 }
 .itemnotbuy td {
-    color: #700;
+    /*color: #700;*/
 }
 
 .colhead {
