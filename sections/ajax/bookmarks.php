@@ -103,66 +103,16 @@ foreach ($TorrentList as $GroupID=>$Group) {
 	
 	// Start an output buffer, so we can store this output in $TorrentTable
 	ob_start(); 
-	if(count($Torrents)>1 || $GroupCategoryID==1) {
-			// Grouped torrents
-			$ShowGroups = !(!empty($LoggedUser['TorrentGrouping']) && $LoggedUser['TorrentGrouping'] == 1);
-		$LastRemasterYear = '-';
-		$LastRemasterTitle = '';
-		$LastRemasterRecordLabel = '';
-		$LastRemasterCatalogueNumber = '';
-		$LastMedia = '';
-		
-		$EditionID = 0;
-		unset($FirstUnknown);
-		
-		foreach ($Torrents as $TorrentID => $Torrent) {
+        // Viewing a type that does not require grouping
 
-			if ($Torrent['Remastered'] && !$Torrent['RemasterYear']) {
-				$FirstUnknown = !isset($FirstUnknown);
-			}
-			
-			if($Torrent['RemasterTitle'] != $LastRemasterTitle || $Torrent['RemasterYear'] != $LastRemasterYear ||
-			$Torrent['RemasterRecordLabel'] != $LastRemasterRecordLabel || $Torrent['RemasterCatalogueNumber'] != $LastRemasterCatalogueNumber || $FirstUnknown || $Torrent['Media'] != $LastMedia) {
-				
-				$EditionID++;
-				if($Torrent['Remastered'] && $Torrent['RemasterYear'] != 0) {
-					
-					$RemasterName = $Torrent['RemasterYear'];
-					$AddExtra = " - ";
-					if($Torrent['RemasterRecordLabel']) { $RemasterName .= $AddExtra.display_str($Torrent['RemasterRecordLabel']); $AddExtra=' / '; }
-					if($Torrent['RemasterCatalogueNumber']) { $RemasterName .= $AddExtra.display_str($Torrent['RemasterCatalogueNumber']); $AddExtra=' / '; }
-					if($Torrent['RemasterTitle']) { $RemasterName .= $AddExtra.display_str($Torrent['RemasterTitle']); $AddExtra=' / '; }
-					$RemasterName .= $AddExtra.display_str($Torrent['Media']);
-					
-				} else {
-					$AddExtra = " / ";
-					if (!$Torrent['Remastered']) {
-						$MasterName = "Original Release";
-						if($GroupRecordLabel) { $MasterName .= $AddExtra.$GroupRecordLabel; $AddExtra=' / '; }
-						if($GroupCatalogueNumber) { $MasterName .= $AddExtra.$GroupCatalogueNumber; $AddExtra=' / '; }
-					} else {
-						$MasterName = "Unknown Release(s)";
-					}
-					$MasterName .= $AddExtra.display_str($Torrent['Media']);
-				}
-			}
-			$LastRemasterTitle = $Torrent['RemasterTitle'];
-			$LastRemasterYear = $Torrent['RemasterYear'];
-			$LastRemasterRecordLabel = $Torrent['RemasterRecordLabel'];
-			$LastRemasterCatalogueNumber = $Torrent['RemasterCatalogueNumber'];
-			$LastMedia = $Torrent['Media'];
-		}
-	} else {
-		// Viewing a type that does not require grouping
-		
-		list($TorrentID, $Torrent) = each($Torrents);
-		
-		$DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
-		
-		if(!empty($Torrent['FreeTorrent'])) {
-			$DisplayName .=' <strong>Freeleech!</strong>'; 
-		}
-	}
+        list($TorrentID, $Torrent) = each($Torrents);
+
+        $DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
+
+        if(!empty($Torrent['FreeTorrent'])) {
+                $DisplayName .=' <strong>Freeleech!</strong>'; 
+        }
+
 	$TorrentTable.=ob_get_clean();
 	
 	// Album art

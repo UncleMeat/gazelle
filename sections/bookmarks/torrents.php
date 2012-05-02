@@ -1,7 +1,7 @@
 <?
 set_time_limit(0);
 //~~~~~~~~~~~ Main bookmarks page ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-
+                        		
 function compare($X, $Y){
 	return($Y['count'] - $X['count']);
 }
@@ -112,153 +112,46 @@ foreach ($TorrentList as $GroupID=>$Group) {
 	
 	// Start an output buffer, so we can store this output in $TorrentTable
 	ob_start(); 
-	if(count($Torrents)>1 || $GroupCategoryID==1) {
-			// Grouped torrents
-			$ShowGroups = !(!empty($LoggedUser['TorrentGrouping']) && $LoggedUser['TorrentGrouping'] == 1);
-?>
-			<tr class="group discog" id="group_<?=$GroupID?>">
-				<td class="center">
-					<div title="View" id="showimg_<?=$GroupID?>" class="<?=($ShowGroups ? 'hide' : 'show')?>_torrents">
-						<a href="#" class="show_torrents_link" onclick="toggle_group(<?=$GroupID?>, this, event)" title="Collapse this group"></a>
-					</div>
-				</td>
-				<td class="center">
-					<div title="<?=ucfirst(str_replace('_',' ',$PrimaryTag))?>" class="cats_<?=strtolower(str_replace(array('-',' '),array('',''),$Categories[$GroupCategoryID-1]))?> tags_<?=str_replace('.','_',$PrimaryTag)?>"></div>
-				</td>
-				<td colspan="5">
-					<span style="float:left;"><strong><?=$DisplayName?></strong></span>
-					<span style="float:right;text-align:right">
-<? if(!$Sneaky){ ?>
-						<a href="#group_<?=$GroupID?>" onclick="Unbookmark('torrent', <?=$GroupID?>, '');return false;">Remove Bookmark</a>
-						<br />
-<? } ?>
-						<?=time_diff($AddedTime);?>
-					</span>
-					<br /><span style="float:left;"><?=$TorrentTags?></span>
-				</td>
-			</tr>
-<?
-		$LastRemasterYear = '-';
-		$LastRemasterTitle = '';
-		$LastRemasterRecordLabel = '';
-		$LastRemasterCatalogueNumber = '';
-		$LastMedia = '';
-		
-		$EditionID = 0;
-		unset($FirstUnknown);
-		
-		foreach ($Torrents as $TorrentID => $Torrent) {
 
-			if ($Torrent['Remastered'] && !$Torrent['RemasterYear']) {
-				$FirstUnknown = !isset($FirstUnknown);
-			}
-			
-			if (in_array($TorrentID, $TokenTorrents) && empty($Torrent['FreeTorrent'])) {
-				$Torrent['PersonalFL'] = 1;
-			}
-			
-			if($Torrent['RemasterTitle'] != $LastRemasterTitle || $Torrent['RemasterYear'] != $LastRemasterYear ||
-			$Torrent['RemasterRecordLabel'] != $LastRemasterRecordLabel || $Torrent['RemasterCatalogueNumber'] != $LastRemasterCatalogueNumber || $FirstUnknown || $Torrent['Media'] != $LastMedia) {
-				
-				$EditionID++;
-				if($Torrent['Remastered'] && $Torrent['RemasterYear'] != 0) {
-					
-					$RemasterName = $Torrent['RemasterYear'];
-					$AddExtra = " - ";
-					if($Torrent['RemasterRecordLabel']) { $RemasterName .= $AddExtra.display_str($Torrent['RemasterRecordLabel']); $AddExtra=' / '; }
-					if($Torrent['RemasterCatalogueNumber']) { $RemasterName .= $AddExtra.display_str($Torrent['RemasterCatalogueNumber']); $AddExtra=' / '; }
-					if($Torrent['RemasterTitle']) { $RemasterName .= $AddExtra.display_str($Torrent['RemasterTitle']); $AddExtra=' / '; }
-					$RemasterName .= $AddExtra.display_str($Torrent['Media']);
-					
+        list($TorrentID, $Torrent) = each($Torrents);
+
+        $DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
+
+        if(!empty($Torrent['FreeTorrent'])) {
+                $DisplayName .=' <strong>Freeleech!</strong>'; 
+        } elseif(in_array($TorrentID, $TokenTorrents)) { 
+                $DisplayName .= '<strong>Personal Freeleech!</strong>';
+        }
 ?>
-	<tr class="group_torrent groupid_<?=$GroupID?> edition<? if(!empty($LoggedUser['TorrentGrouping']) && $LoggedUser['TorrentGrouping']==1) { echo ' hidden'; } ?>">
-		<td colspan="7" class="edition_info"><strong><a href="#" onclick="toggle_edition(<?=$GroupID?>, <?=$EditionID?>, this, event)" title="Collapse this edition">&minus;</a> <?=$RemasterName?></strong></td>
-	</tr>
-<?
-				} else {
-					$AddExtra = " / ";
-					if (!$Torrent['Remastered']) {
-						$MasterName = "Original Release";
-						if($GroupRecordLabel) { $MasterName .= $AddExtra.$GroupRecordLabel; $AddExtra=' / '; }
-						if($GroupCatalogueNumber) { $MasterName .= $AddExtra.$GroupCatalogueNumber; $AddExtra=' / '; }
-					} else {
-						$MasterName = "Unknown Release(s)";
-					}
-					$MasterName .= $AddExtra.display_str($Torrent['Media']);
-?>
-	<tr class="group_torrent groupid_<?=$GroupID?> edition<? if (!empty($LoggedUser['TorrentGrouping']) && $LoggedUser['TorrentGrouping']==1) { echo ' hidden'; }?>">
-		<td colspan="7" class="edition_info"><strong><a href="#" onclick="toggle_edition(<?=$GroupID?>, <?=$EditionID?>, this, event)" title="Collapse this edition">&minus;</a> <?=$MasterName?></strong></td>
-	</tr>
-<?
-				}
-			}
-			$LastRemasterTitle = $Torrent['RemasterTitle'];
-			$LastRemasterYear = $Torrent['RemasterYear'];
-			$LastRemasterRecordLabel = $Torrent['RemasterRecordLabel'];
-			$LastRemasterCatalogueNumber = $Torrent['RemasterCatalogueNumber'];
-			$LastMedia = $Torrent['Media'];
-?>
-<tr class="group_torrent groupid_<?=$GroupID?> edition_<?=$EditionID?><? if(!empty($LoggedUser['TorrentGrouping']) && $LoggedUser['TorrentGrouping']==1) { echo ' hidden'; } ?>">
-		<td colspan="3">
-			<span>[ <a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>
-<?			if (($LoggedUser['FLTokens'] > 0)  && ($Torrent['Size'] < 1073741824) 
-				&& !in_array($TorrentID, $TokenTorrents) && empty($Torrent['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')) { ?>
-			| <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FL</a>
-<?			} ?>
-			| <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">RP</a> ]
-			</span>
-			&nbsp;&nbsp;&raquo;&nbsp; <a href="torrents.php?id=<?=$GroupID?>&amp;torrentid=<?=$TorrentID?>"><?=torrent_info($Torrent)?></a>
-		</td>
-		<td class="nobr"><?=get_size($Torrent['Size'])?></td>
-		<td><?=number_format($Torrent['Snatched'])?></td>
-		<td<?=($Torrent['Seeders']==0)?' class="r00"':''?>><?=number_format($Torrent['Seeders'])?></td>
-		<td><?=number_format($Torrent['Leechers'])?></td>
-	</tr>
-<?
-		}
-	} else {
-		// Viewing a type that does not require grouping
-		
-		list($TorrentID, $Torrent) = each($Torrents);
-		
-		$DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
-		
-		if(!empty($Torrent['FreeTorrent'])) {
-			$DisplayName .=' <strong>Freeleech!</strong>'; 
-		} elseif(in_array($TorrentID, $TokenTorrents)) { 
-			$DisplayName .= '<strong>Personal Freeleech!</strong>';
-		}
-?>
-	<tr class="torrent" id="group_<?=$GroupID?>">
-		<td></td>
-		<td class="center">
-			<div title="<?=ucfirst(str_replace('_',' ',$PrimaryTag))?>" class="cats_<?=strtolower(str_replace(array('-',' '),array('',''),$Categories[$GroupCategoryID-1]))?> tags_<?=str_replace('.','_',$PrimaryTag)?>">
-			</div>
-		</td>
-		<td>
-			<span>
-				[ <a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>
+<tr class="torrent" id="group_<?=$GroupID?>">
+        <td></td>
+        <td class="center">
+                <div title="<?=ucfirst(str_replace('_',' ',$PrimaryTag))?>" class="cats_<?=strtolower(str_replace(array('-',' '),array('',''),$Categories[$GroupCategoryID-1]))?> tags_<?=str_replace('.','_',$PrimaryTag)?>">
+                </div>
+        </td>
+        <td>
+                <span>
+                        [ <a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>
 <?		if (($LoggedUser['FLTokens'] > 0) && ($Torrent['Size'] < 1073741824) 
-			&& !in_array($TorrentID, $TokenTorrents) && empty($Torrent['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')) { ?>
-				| <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FL</a>
+                && !in_array($TorrentID, $TokenTorrents) && empty($Torrent['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')) { ?>
+                        | <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FL</a>
 <?		} ?>		
-				| <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">RP</a> ]
-			</span>
-			<strong><?=$DisplayName?></strong>
-			<?=$TorrentTags?>
+                        | <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">RP</a> ]
+                </span>
+                <strong><?=$DisplayName?></strong>
+                <?=$TorrentTags?>
 <? if(!$Sneaky){ ?>
-			<span style="float:left;"><a href="#group_<?=$GroupID?>" onclick="Unbookmark('torrent', <?=$GroupID?>, '');return false;">Remove Bookmark</a></span>
+                <span style="float:left;"><a href="#group_<?=$GroupID?>" onclick="Unbookmark('torrent', <?=$GroupID?>, '');return false;">Remove Bookmark</a></span>
 <? } ?>
-			<span style="float:right;"><?=time_diff($AddedTime);?></span>
+                <span style="float:right;"><?=time_diff($AddedTime);?></span>
 
-		</td>
-		<td class="nobr"><?=get_size($Torrent['Size'])?></td>
-		<td><?=number_format($Torrent['Snatched'])?></td>
-		<td<?=($Torrent['Seeders']==0)?' class="r00"':''?>><?=number_format($Torrent['Seeders'])?></td>
-		<td><?=number_format($Torrent['Leechers'])?></td>
-	</tr>
+        </td>
+        <td class="nobr"><?=get_size($Torrent['Size'])?></td>
+        <td><?=number_format($Torrent['Snatched'])?></td>
+        <td<?=($Torrent['Seeders']==0)?' class="r00"':''?>><?=number_format($Torrent['Seeders'])?></td>
+        <td><?=number_format($Torrent['Leechers'])?></td>
+</tr>
 <?
-	}
 	$TorrentTable.=ob_get_clean();
 	
 	// Album art
@@ -311,7 +204,6 @@ show_header($Title, 'browse,collage');
 	<h2><? if (!$Sneaky) { ?><a href="feeds.php?feed=torrents_bookmarks_t_<?=$LoggedUser['torrent_pass']?>&amp;user=<?=$LoggedUser['ID']?>&amp;auth=<?=$LoggedUser['RSS_Auth']?>&amp;passkey=<?=$LoggedUser['torrent_pass']?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;name=<?=urlencode(SITE_NAME.': Bookmarked Torrents')?>"><img src="<?=STATIC_SERVER?>/common/symbols/rss.png" alt="RSS feed" /></a>&nbsp;<? } ?><?=$Title?></h2>
 	<div class="linkbox">
 		<a href="bookmarks.php?type=torrents">[Torrents]</a>
-		<a href="bookmarks.php?type=artists">[Artists]</a>
 		<a href="bookmarks.php?type=collages">[Collages]</a>
 		<a href="bookmarks.php?type=requests">[Requests]</a>
 <? if (count($TorrentList) > 0) { ?>

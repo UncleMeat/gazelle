@@ -2034,7 +2034,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `Language` char(2) NOT NULL DEFAULT '',
   `ipcc` varchar(2) NOT NULL DEFAULT '',
   `FLTokens` int(10) NOT NULL DEFAULT '0',
-  `Credits` int(11) NOT NULL DEFAULT '0',
+  `Credits` DOUBLE( 11, 2 ) NOT NULL DEFAULT  '0',
   `Signature` text DEFAULT NULL,
   `LastBonusTime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`ID`),

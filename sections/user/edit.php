@@ -108,28 +108,6 @@ echo $Val->GenerateJS('userform');
 			</tr>
 <? } ?>
 			<tr>
-				<td class="label"><strong>Torrent Grouping</strong></td>
-				<td>
-					<select name="disablegrouping" id="disablegrouping">
-						<option value="0"<? if ($SiteOptions['DisableGrouping'] == 0) { ?>selected="selected"<? } ?>>Group torrents by default</option>
-						<option value="1"<? if ($SiteOptions['DisableGrouping'] == 1) { ?>selected="selected"<? } ?>>DO NOT Group torrents by default</option>
-					</select>&nbsp;
-					<select name="torrentgrouping" id="torrentgrouping">
-						<option value="0"<? if ($SiteOptions['TorrentGrouping'] == 0) { ?>selected="selected"<? } ?>>Groups are open by default</option>
-						<option value="1"<? if ($SiteOptions['TorrentGrouping'] == 1) { ?>selected="selected"<? } ?>>Groups are closed by default</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td class="label"><strong>Discography View</strong></td>
-				<td>
-					<select name="discogview" id="discogview">
-						<option value="0"<? if ($SiteOptions['DiscogView'] == 0) { ?>selected="selected"<? } ?>>Open by default</option>
-						<option value="1"<? if ($SiteOptions['DiscogView'] == 1) { ?>selected="selected"<? } ?>>Closed by default</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
 				<td class="label"><strong>Posts per page (Forum)</strong></td>
 				<td>
 					<select name="postsperpage" id="postsperpage">
