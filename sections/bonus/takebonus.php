@@ -94,13 +94,29 @@ if(!empty($ShopItem)){
             
             case 'slot':
                 
-                $Summary = sqltime().' - '.ucfirst("user bought $Value slot".($Value>1?'s':'').". Cost: $Cost credits");		
+                $Summary = sqltime().' - '.ucfirst("user bought $Value slot".($Value>1?'s':'').". Cost: $Cost credits");	
                 $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n\n', '$Summary', i.AdminComment)";
-                $Summary = sqltime().' - '.ucfirst("you bought $Value slot".($Value>1?'s':'').". Cost: $Cost credits");	
+                $Summary = sqltime().' - '.ucfirst("you bought $Value slot".($Value>1?'s':'').". Cost: $Cost credits");
                 $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                 $UpdateSet[]="m.FLTokens=(m.FLTokens+'$Value')";
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
                 $ResultMessage=$Summary;
+                break;
+            
+            case 'title':
+                
+                $NewTitle = empty($P['title']) ? '' : display_str($P['title']);
+                if(!$NewTitle){
+                    $ResultMessage = "Title was not set";
+                } else {
+                    $Summary = sqltime().' - '.ucfirst("user bought a new custom title ''$NewTitle''. Cost: $Cost credits");	
+                    $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n\n', '$Summary', i.AdminComment)";
+                    $Summary = sqltime().' - '.ucfirst("you bought a new custom title ''$NewTitle''. Cost: $Cost credits");
+                    $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
+                    $UpdateSet[]="m.Title='$NewTitle'";
+                    $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
+                    $ResultMessage=$Summary;
+                } 
                 break;
         }
 

@@ -43,11 +43,18 @@ $ShopItems = get_shop_items();
                                 <input type="hidden" name="userid" value="<?=$LoggedUser['ID']?>" />
                                 <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
                                 <input type="hidden" name="itemid" value="<?=$ItemID?>" />
-                                <input <?=(strpos($Action, 'give') !==false ? 'onclick="SetUsername(\'othername'.$ItemID.'\'); "':'')?>class="shopbutton<?=($CanAfford ? ' itembuy' : ' itemnotbuy')?>" name="submit" value="<?=($CanAfford?'Buy':'x')?>" type="submit"<?=($CanAfford ? '' : ' disabled="disabled"')?> />
+                                <input <?=(strpos($Action, 'give') !==false ? 'onclick="SetUsername(\'othername'.$ItemID.'\'); "':'')?><?=($Action == 'title' ? 'onclick="SetTitle(\'title'.$ItemID.'\'); "':'')?>class="shopbutton<?=($CanAfford ? ' itembuy' : ' itemnotbuy')?>" name="submit" value="<?=($CanAfford?'Buy':'x')?>" type="submit"<?=($CanAfford ? '' : ' disabled="disabled"')?> />
+                                <?=($Action == 'title' ? '<input type="hidden" id="title'.$ItemID.'" name="title" value="" />':'')?>
                             </form>
     <script type="text/javascript">
         function SetUsername(itemID){
             var name= prompt("Enter the username of the person you wish to give a gift to")
+            if (name!=null && name!="") {
+                $('#' + itemID).raw().value = name;
+            }
+        }
+        function SetTitle(itemID){
+            var name= prompt("Enter the custom title you want to have")
             if (name!=null && name!="") {
                 $('#' + itemID).raw().value = name;
             }

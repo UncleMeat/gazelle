@@ -409,10 +409,10 @@ li.searchbars {
     font-weight: normal;
     background-color:#e3eefd;
     border: 1px solid #005488;
-    border-radius: 4px;       /* FF9+ IE9+ */
-    -moz-border-radius: 4px; /* for FF5 */
-    -webkit-border-radius: 4px; /* for opera */
-    padding: 1px 5px;
+    border-radius: 8px;       /* FF9+ IE9+ */
+    -moz-border-radius: 8px; /* for FF5 */
+    -webkit-border-radius: 8px; /* for opera */
+    padding: 1px 8px;
     margin: 0px;
     color: #000;
 }
@@ -432,6 +432,10 @@ span.user_name a {
 .Sysop { color:#8B0000; }  /* PINK: #b93dd6 */
 .Donor { color:#DAA520; }  /* #F4E649; */
 
+span.user_title {
+    font-weight: bold; 
+    font-style: italic;
+}
 
 /* IE doesn't appear to like a simple display:none in our header. Random things start fucking up pretty badly. */
 .hidden {

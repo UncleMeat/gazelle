@@ -159,7 +159,7 @@ $Badges.=($Enabled == '1' || $Enabled == '0' || !$Enabled) ? '': '<img src="'.ST
 show_header($Username,'user,bbcode,requests');
 ?>
 <div class="thin">
-	<h2><?=format_username($UserID, $Username, false, $Warned, $Enabled == 2 ? false : true, $ClassID, false, true)?></h2>
+	<h2><?=format_username($UserID, $Username, false, $Warned, $Enabled == 2 ? false : true, $ClassID, $CustomTitle, true)?></h2>
 	<div class="linkbox">
 <? if (!$OwnProfile) { ?>
 		[<a href="inbox.php?action=compose&amp;to=<?=$UserID?>">Send Message</a>]
@@ -576,7 +576,7 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 <? } ?>
 		<div class="box">
 			<div class="head">
-				<span style="float:left;">Profile<? if ($CustomTitle) { echo " - ".html_entity_decode($DisplayCustomTitle); } ?></span>
+				<span style="float:left;">Profile<? if ($CustomTitle) { echo " - ".display_str(html_entity_decode($DisplayCustomTitle)); } ?></span>
 				<span style="float:right;"><?=!empty($Badges)?"$Badges&nbsp;&nbsp;":''?><a href="#" onclick="$('#profilediv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
 			</div>
 			<div class="pad" id="profilediv">
