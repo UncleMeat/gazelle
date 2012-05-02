@@ -644,10 +644,10 @@ table.wid740 {
 
 /* Bonus SHop */
 
-.itembuy {
+tr.itembuy {
      background: #6e6 url("images/bggreenfade.png") repeat scroll 0% 0%;  
 }
-.itemnotbuy {
+tr.itemnotbuy {
      background: #d33 url("images/bgredfade.png") repeat scroll 0% 0%;  
 }
 
@@ -660,11 +660,11 @@ input.shopbutton {
     color: #292;
     cursor:pointer;
 }
-input.shopbutton:hover {
+input.shopbutton.itembuy:hover {
     border-color: #6f6;
 }
 
-.itemnotbuy input.shopbutton {
+.itemnotbuy input.shopbutton, input.itemnotbuy {
     background-color: #ddd;
     border: 2px solid #944;
     color: #966;
