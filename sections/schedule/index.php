@@ -95,7 +95,11 @@ while (list($UserID,$InfoHash) = $DB->next_record(MYSQLI_NUM, false)) {
 }
 $DB->query("UPDATE users_freeleeches SET Expired = True WHERE Time < '$sqltime' - INTERVAL 4 DAY");
 
-
+// Gives credits to users with active torrents
+$DB->query("update users_main
+            set Credits = Credits +
+                (select if(count(*) <= 60, count(*), 60) * 0.25 from xbt_files_users
+                where users_main.ID = xbt_files_users.uid AND xbt_files_users.remaining = 0 AND xbt_files_users.active = 1)");
 
 
 /*************************************************************************\
