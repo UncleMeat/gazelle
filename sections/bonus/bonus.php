@@ -59,9 +59,9 @@ $ShopItems = get_shop_items();
 		</table>
             <div class="box pad" style="max-width: 100%; margin: 35px auto 5px;">
                 <h3>What is a credit?</h3>
-                <p>Credits are distributed on a weekly basis as a bonus to people who have seeded torrents during that week. You can find your total credit amount and the next credit update at the top of this page, or on your user details page.</p><br/>
+                <p>Credits are distributed as a bonus to people who are seeding torrents. You can find your total credit amount at the top of this page, or on your user details page.</p><br/>
                 <h4>How is the credit calculated?</h4>
-                <p>You get 1.0 credit for every 1 hour of every torrent you seed. Every torrent is counted, so 2 torrents seeded for 1 hour will give you 2 credits etc.<br/>No credits are awarded for leeching torrents.</p>
+                <p>You get 0.25 credits for every 15 minutes of every torrent you seed. Every torrent is counted, so 2 torrents seeded for 1 hour will give you 2 credits etc.<br/>No credits are awarded for leeching torrents.</p>
                 <h4>Okay!</h4>
                 If you seed...<br/>
                 ...1 torrent for 10 hours, you will get 10 credits.<br/>

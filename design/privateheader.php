@@ -126,7 +126,7 @@ if(check_perms('site_send_unlimited_invites')) {
             <span class="inside_stat"> 
 <?
     if($LoggedUser['FLTokens'] > 0) { ?>
-			<li id="fl_tokens">Tokens: <span class="stat"><?=$LoggedUser['FLTokens']?></span></li>
+			<li id="fl_tokens">Slots: <span class="stat"><?=$LoggedUser['FLTokens']?></span></li>
 <?	} ?>  
                   <li id="credits">Credits: <span class="stat"><?=$LoggedUser['Credits']?></span></li>
 

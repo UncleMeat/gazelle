@@ -194,7 +194,7 @@ if (check_perms('admin_reports')) {
 <? }
 if (check_perms('users_mod')) {
 ?>
-		[<a href="userhistory.php?action=token_history&amp;userid=<?=$UserID?>">FL Tokens</a>]
+		[<a href="userhistory.php?action=token_history&amp;userid=<?=$UserID?>">Slots</a>]
 <? } ?>
 	</div>
       
@@ -235,7 +235,7 @@ if (check_perms('users_mod')) {
 				<li>Required ratio: <?=number_format((double)$RequiredRatio, 2)?></li>
 <? } ?>
 <? if ($OwnProfile || check_paranoia_here(false)) { //if ($OwnProfile || check_perms('users_mod')) { ?>
-				<li><a href="userhistory.php?action=token_history&amp;userid=<?=$UserID?>">Tokens</a>: <?=number_format($FLTokens)?></li>
+				<li><a href="userhistory.php?action=token_history&amp;userid=<?=$UserID?>">Slots</a>: <?=number_format($FLTokens)?></li>
 <? } ?>
 			</ul>
 		</div>
@@ -1081,7 +1081,7 @@ if (check_perms('users_mod', $Class)) { ?>
               || (check_perms('users_edit_own_tokens') && $UserID == $LoggedUser['ID'])) {
 ?>
 			<tr>
-				<td class="label">Freeleech Tokens:</td>
+				<td class="label">Slots:</td>
 				<td>
 					<input type="text" size="5" name="FLTokens" value="<?=$FLTokens?>" />
 				</td>

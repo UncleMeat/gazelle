@@ -38,7 +38,7 @@ if (isset($_GET['expire'])) {
 	header("Location: userhistory.php?action=token_history&userid=$UserID");
 }
 
-show_header('Freeleech token history');
+show_header('Slots history');
 
 list($Page,$Limit) = page_limit(25);
 
@@ -65,7 +65,7 @@ list($NumResults) = $DB->next_record();
 $Pages=get_pages($Page, $NumResults, 25);
 
 ?>
-<h2>Freeleech token history for <?=format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'])?></h2>
+<h2>Slots history for <?=format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'])?></h2>
 
 <div class="linkbox"><?=$Pages?></div>
 <table>
@@ -75,7 +75,7 @@ $Pages=get_pages($Page, $NumResults, 25);
 		<td>Expired</td>
 <? if (check_perms('users_mod')) { ?>
 		<td>Downloaded</td>
-		<td>Tokens Used</td>
+		<td>Slots Used</td>
 <? } ?>
 	</tr>
 <?
