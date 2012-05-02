@@ -2,16 +2,11 @@
 enforce_login();
 show_header('Bonus Shop');
 
-//include(SERVER_ROOT.'/sections/bonus/functions.php');
 $ShopItems = get_shop_items();
-
 ?>
 <div class="thin">
 	<h2>Bonus Shop</h2>
- <?            
-            if(!empty($_REQUEST['result'])){  //  && !empty($_REQUEST['spent'])
-                //$ResultMessage = display_str($_REQUEST['result']);
-?>
+ <?         if(!empty($_REQUEST['result'])){  ?>
                 <div class="box pad">
                     <h3 class="center"><?=display_str($_REQUEST['result'])?></h3> 
                 </div>
@@ -19,8 +14,7 @@ $ShopItems = get_shop_items();
             
 		<div class="box pad">
                 <h3 class="center">You have <?=$LoggedUser['Credits']?> credits to spend</h3> 
-                <p class="center">Next bonus update: <?=get_next_bonus_update($LoggedUser['LastBonusTime'])?></p>
-           
+             <? //   <p class="center">Next bonus update: <?=get_next_bonus_update($LoggedUser['LastBonusTime'])?\></p> ?>
             </div>
             
 		<table>

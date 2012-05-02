@@ -63,7 +63,6 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		m.FLTokens,
 		SHA1(i.AdminComment),
                   m.Credits,
-                  m.LastBonusTime,
                   i.BonusLog
 		FROM users_main AS m
 		JOIN users_info AS i ON i.UserID = m.ID
@@ -76,7 +75,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Artist, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash,$BonusCredits,$LastBonusTime,$BonusLog) = $DB->next_record(MYSQLI_NUM, array(8,11));
+	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Artist, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash,$BonusCredits,$BonusLog) = $DB->next_record(MYSQLI_NUM, array(8,11));
 } else { // Person viewing is a normal user
 	$DB->query("SELECT
 		m.Username,
@@ -104,7 +103,9 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		COUNT(posts.id) AS ForumPosts,
 		i.Inviter,
 		i.DisableInvites,
-		inviter.username
+		inviter.username,
+                  m.Credits,
+                  i.BonusLog
 		FROM users_main AS m
 		JOIN users_info AS i ON i.UserID = m.ID
 		LEFT JOIN permissions AS p ON p.ID=m.PermissionID
@@ -116,7 +117,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$LastBonusTime, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(9,11));
+	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$BonusLog, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(9,11));
 }
  
 
@@ -600,7 +601,6 @@ if (check_perms('users_view_email',$Class) || $OwnProfile) { ?>
 			</div>
 			<div class="pad" id="bonusdiv">
                       <h4>Credits: <?=(!$BonusCredits ? '0' : $BonusCredits) ?></h4>
-                      <span style="float:left;">Next Update: <?=get_next_bonus_update($LastBonusTime)?></span>
                       <span style="float:right;"><a href="#" onclick="$('#bonuslogdiv').toggle(); this.innerHTML=(this.innerHTML=='(Show Log)'?'(Hide Log)':'(Show Log)'); return false;">(Show Log)</a></span>&nbsp;
 
                       <div class="hidden" id="bonuslogdiv" style="padding-top: 10px;">
