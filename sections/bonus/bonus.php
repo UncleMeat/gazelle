@@ -13,7 +13,7 @@ $ShopItems = get_shop_items();
 <?          }  ?>
             
 		<div class="box pad">
-                <h3 class="center">You have <?=$LoggedUser['Credits']?> credits to spend</h3> 
+                <h3 class="center">You have <?=number_format($LoggedUser['Credits'],2)?> credits to spend</h3> 
              <? //   <p class="center">Next bonus update: <?=get_next_bonus_update($LoggedUser['LastBonusTime'])?\></p> ?>
             </div>
             
