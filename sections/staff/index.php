@@ -6,7 +6,7 @@ include(SERVER_ROOT.'/sections/staff/functions.php');
 include(SERVER_ROOT.'/sections/staffpm/functions.php');
 $SupportStaff = get_support();
 
-list($FrontLineSupport, $ForumStaff, $Staff) = $SupportStaff;
+list($FrontLineSupport, $Staff, $Admins) = $SupportStaff;
 
 ?>
 <div class="thin">
@@ -27,19 +27,19 @@ list($FrontLineSupport, $ForumStaff, $Staff) = $SupportStaff;
 		<p><strong>These users are not official staff members</strong> - they're users who have volunteered their time to help people in need. Please treat them with respect and read <a href="wiki.php?action=article&amp;id=260">this</a> before contacting them. </p>
 		<table class="staff" width="100%">
 			<tr class="colhead">
-				<td width="150px">Username</td>
+				<td width="300px">Username</td>
 				<td width="150px">Last seen</td>
 				<td><strong>Support for</strong></td>
 			</tr>
 <?
 	$Row = 'a';
 	foreach($FrontLineSupport as $Support) {
-		list($ID, $Class, $Username, $Paranoia, $LastAccess, $SupportFor) = $Support;
+		list($ID, $Class, $Username, $Title, $Paranoia, $LastAccess, $SupportFor) = $Support;
 		$Row = ($Row == 'a') ? 'b' : 'a';
 ?>
 			<tr class="row<?=$Row?>">
 				<td class="nobr">
-					<?=format_username($ID, $Username)?>
+					<?=format_username($ID, $Username, false, false, true, false, $Title, false)?>
 				</td>
 				<td class="nobr">
 					<? if (check_paranoia('lastseen', $Paranoia, $Class)) { echo time_diff($LastAccess); } else { echo 'Hidden by user'; }?>
@@ -92,8 +92,8 @@ list($FrontLineSupport, $ForumStaff, $Staff) = $SupportStaff;
 <?
 	$CurClass = 0;
 	$CloseTable = false;
-	foreach($ForumStaff as $Support) {
-		list($ID, $Class, $ClassName, $Username, $Paranoia, $LastAccess, $SupportFor) = $Support;
+	foreach($Staff as $Support) {
+		list($ID, $Class, $ClassName, $Username, $Title, $Paranoia, $LastAccess, $SupportFor) = $Support;
 		if($Class!=$CurClass) { // Start new class of staff members
 			$Row = 'a';
 			if($CloseTable) {
@@ -106,7 +106,7 @@ list($FrontLineSupport, $ForumStaff, $Staff) = $SupportStaff;
 ?>
 		<table class="staff" width="100%">
 			<tr class="colhead">
-				<td width="150px">Username</td>
+				<td width="300px">Username</td>
 				<td width="150px">Last seen</td>
 				<td><strong>Remark</strong></td>
 			</tr>
@@ -118,7 +118,7 @@ list($FrontLineSupport, $ForumStaff, $Staff) = $SupportStaff;
 ?>
 			<tr class="row<?=$Row?>">
 				<td class="nobr">
-					<?=format_username($ID, $Username)?>
+					<?=format_username($ID, $Username, false, false, true, false, $Title, false)?>
 				</td>
 				<td class="nobr">
 					<? if (check_paranoia('lastseen', $Paranoia, $Class)) { echo time_diff($LastAccess); } else { echo 'Hidden by staff member'; }?>
@@ -138,8 +138,8 @@ list($FrontLineSupport, $ForumStaff, $Staff) = $SupportStaff;
 <?
 	$CurClass = 0;
 	$CloseTable = false;
-	foreach ($Staff as $StaffMember) {
-		list($ID, $Class, $ClassName, $Username, $Paranoia, $LastAccess, $Remark) = $StaffMember;
+	foreach ($Admins as $StaffMember) {
+		list($ID, $Class, $ClassName, $Username, $Title, $Paranoia, $LastAccess, $Remark) = $StaffMember;
 		if($Class!=$CurClass) { // Start new class of staff members
 			$Row = 'a';
 			if($CloseTable) {
@@ -152,7 +152,7 @@ list($FrontLineSupport, $ForumStaff, $Staff) = $SupportStaff;
 ?>
 		<table class="staff" width="100%">
 			<tr class="colhead">
-				<td width="150px">Username</td>
+				<td width="300px">Username</td>
 				<td width="150px">Last seen</td>
 				<td><strong>Remark</strong></td>
 			</tr>
@@ -164,7 +164,7 @@ list($FrontLineSupport, $ForumStaff, $Staff) = $SupportStaff;
 ?>
 			<tr class="row<?=$Row?>">
 				<td class="nobr">
-					<?=format_username($ID, $Username)?>
+					<?=format_username($ID, $Username, false, false, true, false, $Title, false)?>
 				</td>
 				<td class="nobr">
 					<? if (check_paranoia('lastseen', $Paranoia, $Class)) { echo time_diff($LastAccess); } else { echo 'Hidden by staff member'; }?>

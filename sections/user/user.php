@@ -63,7 +63,6 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		m.FLTokens,
 		SHA1(i.AdminComment),
                   m.Credits,
-                  m.LastBonusTime,
                   i.BonusLog
 		FROM users_main AS m
 		JOIN users_info AS i ON i.UserID = m.ID
@@ -76,7 +75,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Artist, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash,$BonusCredits,$LastBonusTime,$BonusLog) = $DB->next_record(MYSQLI_NUM, array(8,11));
+	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Artist, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash,$BonusCredits,$BonusLog) = $DB->next_record(MYSQLI_NUM, array(8,11));
 } else { // Person viewing is a normal user
 	$DB->query("SELECT
 		m.Username,
@@ -104,7 +103,9 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		COUNT(posts.id) AS ForumPosts,
 		i.Inviter,
 		i.DisableInvites,
-		inviter.username
+		inviter.username,
+                  m.Credits,
+                  i.BonusLog
 		FROM users_main AS m
 		JOIN users_info AS i ON i.UserID = m.ID
 		LEFT JOIN permissions AS p ON p.ID=m.PermissionID
@@ -116,7 +117,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$LastBonusTime, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(9,11));
+	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$BonusLog, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(9,11));
 }
  
 
@@ -158,7 +159,7 @@ $Badges.=($Enabled == '1' || $Enabled == '0' || !$Enabled) ? '': '<img src="'.ST
 show_header($Username,'user,bbcode,requests');
 ?>
 <div class="thin">
-	<h2><?=format_username($UserID, $Username, false, $Warned, $Enabled == 2 ? false : true, $ClassID, false, true)?></h2>
+	<h2><?=format_username($UserID, $Username, false, $Warned, $Enabled == 2 ? false : true, $ClassID, $CustomTitle, true)?></h2>
 	<div class="linkbox">
 <? if (!$OwnProfile) { ?>
 		[<a href="inbox.php?action=compose&amp;to=<?=$UserID?>">Send Message</a>]
@@ -193,7 +194,7 @@ if (check_perms('admin_reports')) {
 <? }
 if (check_perms('users_mod')) {
 ?>
-		[<a href="userhistory.php?action=token_history&amp;userid=<?=$UserID?>">FL Tokens</a>]
+		[<a href="userhistory.php?action=token_history&amp;userid=<?=$UserID?>">Slots</a>]
 <? } ?>
 	</div>
       
@@ -234,7 +235,7 @@ if (check_perms('users_mod')) {
 				<li>Required ratio: <?=number_format((double)$RequiredRatio, 2)?></li>
 <? } ?>
 <? if ($OwnProfile || check_paranoia_here(false)) { //if ($OwnProfile || check_perms('users_mod')) { ?>
-				<li><a href="userhistory.php?action=token_history&amp;userid=<?=$UserID?>">Tokens</a>: <?=number_format($FLTokens)?></li>
+				<li><a href="userhistory.php?action=token_history&amp;userid=<?=$UserID?>">Slots</a>: <?=number_format($FLTokens)?></li>
 <? } ?>
 			</ul>
 		</div>
@@ -575,8 +576,8 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 <? } ?>
 		<div class="box">
 			<div class="head">
-				<span style="float:left;">Profile<? if ($CustomTitle) { echo " - ".html_entity_decode($DisplayCustomTitle); } ?></span>
-				<span style="float:right;"><?=!empty($Badges)?"$Badges&nbsp;&nbsp;":''?><a href="#" onclick="$('#profilediv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+				<span style="float:left;">Profile<? if ($CustomTitle) { echo " - ".display_str(html_entity_decode($DisplayCustomTitle)); } ?></span>
+				<span style="float:right;"><?=!empty($Badges)?"$Badges&nbsp;&nbsp;":''?><a href="#" onclick="$('#profilediv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
 			</div>
 			<div class="pad" id="profilediv">
 <? if (!$Info) { ?>
@@ -591,24 +592,18 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 		</div>
 <?
 // TODO: Add proper perms for viewing user credits + bonus history
-// TODO: Add editing of bonus log (by admin/staff)... I am inclined to make this savable in frame + also teh staff notes edit could be the same..
+// TODO: Add editing of bonus log (by admin/staff)... I am inclined to make this savable in frame + also teh staff notes edit could be the same.. dunno
 if (check_perms('users_view_email',$Class) || $OwnProfile) { ?>
 		<div class="box">
 			<div class="head">
 				<span style="float:left;">Bonus Credits</span>
-                        <span style="float:right;"><a href="#" onclick="$('#bonusdiv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+                        <span style="float:right;"><a href="#" onclick="$('#bonusdiv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
 			</div>
 			<div class="pad" id="bonusdiv">
-                      <h4>Credits: <?=(!$BonusCredits ? '0' : $BonusCredits) ?></h4>
-                      <span style="float:left;">Next Update: <?=$LastBonusTime?></span>
+                      <h4 class="center">Credits: <?=(!$BonusCredits ? '0' : $BonusCredits) ?></h4>
                       <span style="float:right;"><a href="#" onclick="$('#bonuslogdiv').toggle(); this.innerHTML=(this.innerHTML=='(Show Log)'?'(Hide Log)':'(Show Log)'); return false;">(Show Log)</a></span>&nbsp;
 
                       <div class="hidden" id="bonuslogdiv" style="padding-top: 10px;">
-                         <!-- <textarea id="bonuslogedit" onkeyup="resize('bonuslog');"
-                                    class="box pad"  
-                                    style="max-height: 200px;height: 200px; width: 100%;"
-                                    name="bonuslogedit"><?//=(!$BonusLog ? 'no bonus history' :$Text->full_format($BonusLog))?></textarea>-->
-
                           <div id="bonuslog" class="box pad">
                                 <?=(!$BonusLog ? 'no bonus history' :$Text->full_format($BonusLog))?>
                           </div>
@@ -719,7 +714,7 @@ foreach ($Collages as $CollageInfo) {
 					<?=display_str($CName)?> - <a href="collages.php?id=<?=$CollageID?>">see full</a>
 				</span>
 				<span style="float:right;">
-					<a href="#" onclick="$('#collage<?=$CollageID?>').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;"><?=$FirstCol?'(Hide)':'(Show)'?></a>
+					<a href="#" onclick="$('#collage<?=$CollageID?>').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;"><?=$FirstCol?'(Hide)':'(View)'?></a>
 				</span>
 			</td>
 		</tr>
@@ -756,8 +751,12 @@ if ((check_perms('users_view_invites')) && $Invited > 0) {
 	$Tree = new INVITE_TREE($UserID, array('visible'=>false));
 ?>
 		<div class="box">
-			<div class="head">Invite Tree <a href="#" onclick="$('#invitetree').toggle();return false;">(View)</a></div>
-			<div id="invitetree" class="hidden">
+			<!--<div class="head">Invite Tree <a href="#" onclick="$('#invitetree').toggle();return false;">(View)</a></div>-->
+                  <div class="head">
+				<span style="float:left;">Invite Tree</span>
+                        <span style="float:right;"><a href="#" onclick="$('#invitetree').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+			</div>
+                  <div id="invitetree" class="hidden">
 				<? $Tree->make_tree(); ?>
 			</div>
 		</div>
@@ -786,8 +785,12 @@ if (check_paranoia_here('requestsvoted_list')) {
 		$Requests = $DB->to_array();
 ?>
 		<div class="box">
-			<div class="head">Requests <a href="#" onclick="$('#requests').toggle();return false;">(View)</a></div>
-			<div id="requests" class="hidden">
+			<!--<div class="head">Requests <a href="#" onclick="$('#requests').toggle();return false;">(View)</a></div>-->
+			<div class="head">
+				<span style="float:left;">Requests</span>
+                        <span style="float:right;"><a href="#" onclick="$('#requests').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+			</div>
+                  <div id="requests" class="hidden">
 				<table cellpadding="6" cellspacing="1" border="0" class="border" width="100%">
 					<tr class="colhead_dark">
 						<td style="width:48%;">
@@ -894,8 +897,12 @@ if (check_perms('users_mod', $Class) || $IsFLS) {
 		$StaffPMs = $DB->to_array();
 ?>
 		<div class="box">
-			<div class="head">Staff PMs <a href="#" onclick="$('#staffpms').toggle();return false;">(View)</a></div>
-			<table width="100%" class="hidden" id="staffpms">
+			<!--<div class="head">Staff PMs <a href="#" onclick="$('#staffpms').toggle();return false;">(View)</a></div>-->
+			<div class="head">
+				<span style="float:left;">Staff PMs</span>
+                        <span style="float:right;"><a href="#" onclick="$('#staffpms').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+			</div>
+                  <table width="100%" class="hidden" id="staffpms">
 				<tr class="colhead">
 					<td>Subject</td>
 					<td>Date</td>
@@ -937,7 +944,7 @@ if (check_perms('users_mod', $Class) || $IsFLS) {
 <?	}
 }
 ?>
-<br />
+<!--<br />-->
 <?
 
 
@@ -948,8 +955,13 @@ if (check_perms('users_mod', $Class)) { ?>
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 
 		<div class="box">
-			<div class="head">Staff Notes <a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">(Edit)</a></div>
-			<div class="pad">
+		<!--<div class="head">Staff Notes <a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">(Edit)</a></div>-->
+			<div class="head">
+				<span style="float:left;">Staff Notes</span>
+                        <!--<span style="float:left;"><a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">(Edit)</a></span>-->
+                        <span style="float:right;"><a href="#" onclick="$('#staffnotes').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+			</div>
+                  <div class="pad" id="staffnotes">
 				<input type="hidden" name="comment_hash" value="<?=$CommentHash?>">
 				<div id="admincommentlinks" class="AdminComment box pad"><?=$Text->full_format($AdminComment)?></div>
 				<textarea id="admincomment" onkeyup="resize('admincomment');" class="AdminComment hidden" name="AdminComment" cols="65" rows="26" style="width:98%;"><?=display_str($AdminComment)?></textarea>
@@ -1017,7 +1029,8 @@ if (check_perms('users_mod', $Class)) { ?>
 <?
 	}
 
-	if (check_perms('users_edit_ratio',$Class) || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID'])) {
+	if ((check_perms('users_edit_ratio',$Class) && $UserID != $LoggedUser['ID'])
+              || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID'])) {
 ?>
 			<tr>
 				<td class="label">Adjust Upload:</td>
@@ -1056,12 +1069,24 @@ if (check_perms('users_mod', $Class)) { ?>
 					<input class="long" type="text" name="MergeStatsFrom" />
 				</td>
 			</tr>
+<?
+	}
+
+	if ((check_perms('users_edit_tokens',$Class) && $UserID != $LoggedUser['ID'])
+              || (check_perms('users_edit_own_tokens') && $UserID == $LoggedUser['ID'])) {
+?>
 			<tr>
-				<td class="label">Freeleech Tokens:</td>
+				<td class="label">Slots:</td>
 				<td>
 					<input type="text" size="5" name="FLTokens" value="<?=$FLTokens?>" />
 				</td>
 			</tr>
+<?
+	}
+
+	if ((check_perms('users_edit_credits',$Class) && $UserID != $LoggedUser['ID'])
+              || (check_perms('users_edit_own_credits') && $UserID == $LoggedUser['ID'])) {
+?>
 			<tr>
 				<td class="label">Bonus Credits</td>
 				<td>
@@ -1116,7 +1141,7 @@ if (check_perms('users_mod', $Class)) { ?>
 				</td>
 			</tr>
 <?	} ?>
-		</table><br />
+		</table><!--<br />-->
 
 <?	if (check_perms('users_warn')) { ?>
 		<table>
@@ -1163,7 +1188,7 @@ if (check_perms('users_mod', $Class)) { ?>
 				</td>
 			</tr>
 <?	} ?>
-		</table><br />
+		</table><!--<br />-->
 		<table>
 			<tr class="colhead"><td colspan="2">User Privileges</td></tr>
 <?	if (check_perms('users_disable_posts') || check_perms('users_disable_any')) {
@@ -1243,7 +1268,7 @@ if (check_perms('users_mod', $Class)) { ?>
 			</tr>
 
 <?	} ?>
-		</table><br />
+		</table><!--<br />-->
 <?	if(check_perms('users_logout')) { ?>
 		<table>
 			<tr class="colhead"><td colspan="2">Session</td></tr>

@@ -426,6 +426,11 @@ function update_site_options($UserID, $NewOptions) {
 }
 
 
+function get_next_bonus_update($LastBonusTime){
+    //strftime("%e %b %Y  %r", strtotime("+1 week", $LoggedUser['LastBonusTime']))
+   return strftime("%e %b %Y  %r", strtotime("+1 week", $LastBonusTime));
+}
+
 function get_avatar_css($MaxAvatarWidth,$MaxAvatarHeight){
     $css = 'max-width:'.$MaxAvatarWidth.'px; max-height:'.$MaxAvatarHeight.'px;';
     //if($MaxAvatarHeight < 150) { $css=$css.' margin-top: '.round((150 - $MaxAvatarHeight) / 2).'px;'; }
@@ -1083,11 +1088,12 @@ function format_username($UserID, $Username, $IsDonor = false, $IsWarned = '0000
 	$str.=($IsDonor) ? '<a href="donate.php"><img src="'.STATIC_SERVER.'common/symbols/donor.png" alt="Donor" title="Donor" /></a>' : '';
 
 
-	$str.=($IsWarned!='0000-00-00 00:00:00') ? '<img src="'.STATIC_SERVER.'common/symbols/warned.png" alt="Warned" title="Warned" />' : '';
+	$str.=($IsWarned!='0000-00-00 00:00:00' && $IsWarned!==false) ? '<img src="'.STATIC_SERVER.'common/symbols/warned.png" alt="Warned" title="Warned" />' : '';
 	$str.=(!$IsEnabled) ? '<img src="'.STATIC_SERVER.'common/symbols/disabled.png" alt="Banned" title="Be good, and you won\'t end up like this user" />' : '';
 
 	$str.=($Class) ? ' ('.make_class_string($Class, TRUE).')' : '';
-	$str.=($Title) ? ' ('.$Title.')' : '';
+	$str.=($Title && $Class) ? '&nbsp;<span class="user_title">'.display_str($Title).'</span>' : '';
+	$str.=($Title && !$Class) ? '&nbsp;(<span class="user_title">'. display_str($Title) .'</span>)' : '';
 	if ($DrawInBox) ( $str = '<span class="user_name">'.$str.'</span>' );
 	return $str;
 }

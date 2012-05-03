@@ -19,13 +19,13 @@ $UserID = $_POST['userid'];
 
 // Variables for database input
 $Class = (int)$_POST['Class'];
-$Username = db_string($_POST['Username']);
-$Title = db_string($_POST['Title']);
-$AdminComment = db_string($_POST['AdminComment']);
+$Username = db_string(display_str( $_POST['Username']));
+$Title = db_string(display_str($_POST['Title']));
+$AdminComment = db_string(display_str($_POST['AdminComment']));
 $Donor = (isset($_POST['Donor']))? 1 : 0;
 $Visible = (isset($_POST['Visible']))? 1 : 0;
 $Invites = (int)$_POST['Invites'];
-$SupportFor = db_string($_POST['SupportFor']);
+$SupportFor = db_string(display_str($_POST['SupportFor']));
 $Pass = db_string($_POST['ChangePassword']);
 $Warned = (isset($_POST['Warned']))? 1 : 0;
 
@@ -47,7 +47,7 @@ $Warned = (isset($_POST['Warned']))? 1 : 0;
         } else {
             $AdjustDownValue = 0;
         }
-      
+        // if we use is_number here (a better function really) we get errors with integer overflow with >2b bytes
         if(!is_numeric($AdjustUpValue) || !is_numeric($AdjustDownValue)) {
             error(0);
         }
@@ -67,10 +67,8 @@ if(isset($_POST['Uploaded']) && isset($_POST['Downloaded'])) {
 		error(0);
 	}
 } */
-$FLTokens = isset($_POST['FLTokens'])?$_POST['FLTokens'] : 0;
-if(!is_number($FLTokens)) {
-	error(0);
-}
+$FLTokens = (int)$_POST['FLTokens'];
+$BonusCredits = (float)$_POST['BonusCredits'];
 
 $WarnLength = (int)$_POST['WarnLength'];
 $ExtendWarning = (int)$_POST['ExtendWarning'];
@@ -141,7 +139,8 @@ $DB->query("SELECT
 	m.RequiredRatio,
 	m.FLTokens,
 	i.RatioWatchEnds,
-	SHA1(i.AdminComment) AS CommentHash
+	SHA1(i.AdminComment) AS CommentHash,
+	m.Credits
 	FROM users_main AS m
 	JOIN users_info AS i ON i.UserID = m.ID
 	LEFT JOIN permissions AS p ON p.ID=m.PermissionID
@@ -312,14 +311,14 @@ if ($Downloaded!=$Cur['Downloaded'] && $Downloaded!=$_POST['OldDownloaded'] && (
 	$Cache->delete_value('users_stats_'.$UserID);
 }
 */
-if ($AdjustUpValue != 0 && (check_perms('users_edit_ratio') 
-                        || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID']))){
+if ($AdjustUpValue != 0 && ((check_perms('users_edit_ratio') && $UserID != $LoggedUser['ID'])
+                        || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID'])) ){
       $Uploaded = $Cur['Uploaded'] + $AdjustUpValue;
 	$UpdateSet[]="Uploaded='".$Uploaded."'";
 	$EditSummary[]="uploaded changed from ".get_size($Cur['Uploaded'])." to ".get_size($Uploaded);
 	$Cache->delete_value('users_stats_'.$UserID);
 }
-if ($AdjustDownValue != 0 && (check_perms('users_edit_ratio') 
+if ($AdjustDownValue != 0 && ((check_perms('users_edit_ratio') && $UserID != $LoggedUser['ID'])
                         || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID']))){
       $Downloaded = $Cur['Downloaded'] + $AdjustDownValue;
 	$UpdateSet[]="Downloaded='".$Downloaded."'";
@@ -327,12 +326,20 @@ if ($AdjustDownValue != 0 && (check_perms('users_edit_ratio')
 	$Cache->delete_value('users_stats_'.$UserID);
 }
 
-
-if ($FLTokens!=$Cur['FLTokens'] && (check_perms('users_edit_ratio') || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID']))) {
+if ($FLTokens!=$Cur['FLTokens'] && ((check_perms('users_edit_tokens')  && $UserID != $LoggedUser['ID'])
+                        || (check_perms('users_edit_own_tokens') && $UserID == $LoggedUser['ID']))) {
 	$UpdateSet[]="FLTokens=".$FLTokens;
 	$EditSummary[]="Freeleech Tokens changed from ".$Cur['FLTokens']." to ".$FLTokens;
 	$HeavyUpdates['FLTokens'] = $FLTokens;
 }
+
+if ($BonusCredits!=$Cur['Credits'] && ((check_perms('users_edit_credits') && $UserID != $LoggedUser['ID']) 
+                        || (check_perms('users_edit_own_credits') && $UserID == $LoggedUser['ID']))) {
+	$UpdateSet[]="Credits=".$BonusCredits;
+	$EditSummary[]="Bonus Credits changed from ".$Cur['Credits']." to ".$BonusCredits;
+	$HeavyUpdates['Credits'] = $BonusCredits;
+}
+
 
 if ($Invites!=$Cur['Invites'] && check_perms('users_edit_invites')) {
 	$UpdateSet[]="invites='$Invites'";

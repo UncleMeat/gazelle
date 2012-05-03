@@ -110,9 +110,7 @@ class VALIDATE {
                                 // get validation result
                                 $result = $this->ValidateImageUrl($ValidateVar, $MinLength, $MaxLength, $WLRegex); 
                                 if ($result !== TRUE){ return $result; } 
-                              
-                              
-                         
+                               
 				} elseif($Field['Type']=="desc") {
                         
                                 // desc Type gets 3 checks for the price of one 
@@ -176,14 +174,14 @@ class VALIDATE {
           
         $ErrorMessage = "'$Imageurl' is not a valid url.";
         
-        if(!preg_match('/^(https?):\/\/([a-z0-9\-\_]+\.)+([a-z]{1,5}[^\.])(\/[^<>]+)*$/i', $Imageurl)) {  
-            return $ErrorMessage;  
-        } 
-        elseif(strlen($Imageurl)>$MaxLength) { 
-            return "$ErrorMessage (must be < $MaxLength)";  
+        if(strlen($Imageurl)>$MaxLength) { 
+            return "$ErrorMessage (must be < $MaxLength characters)";  
         }
         elseif(strlen($Imageurl)<$MinLength) { 
-            return "$ErrorMessage (must be > $MinLength)";  
+            return "$ErrorMessage (must be > $MinLength characters)";  
+        } 
+        elseif(!preg_match('/^(https?):\/\/([a-z0-9\-\_]+\.)+([a-z]{1,5}[^\.])(\/[^<>]+)*$/i', $Imageurl)) {  
+            return $ErrorMessage;  
         } 
         elseif(!preg_match($WhitelistRegex, $Imageurl)) { 
             return "$Imageurl is not on an approved pichost."; 
