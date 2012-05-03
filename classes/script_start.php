@@ -1376,7 +1376,7 @@ function update_hash($GroupID) {
 		GROUP BY t.GroupID)
 		WHERE ID='$GroupID'");
 
-	$DB->query("REPLACE INTO sphinx_delta (ID, GroupName, TagList, Year, CategoryID, NewCategoryID, Time, ReleaseType, CatalogueNumber, Size, Snatched, Seeders, Leechers, LogScore, Scene, HasLog, HasCue, FreeTorrent, Media, Format, Encoding, RemasterTitle, FileList)
+	$DB->query("REPLACE INTO sphinx_delta (ID, GroupName, TagList, Year, CategoryID, NewCategoryID, Image, Time, ReleaseType, CatalogueNumber, Size, Snatched, Seeders, Leechers, LogScore, Scene, HasLog, HasCue, FreeTorrent, Media, Format, Encoding, RemasterTitle, FileList)
 		SELECT
 		g.ID AS ID,
 		g.Name AS GroupName,
@@ -1384,6 +1384,7 @@ function update_hash($GroupID) {
 		g.Year,
 		g.CategoryID,
                 g.NewCategoryID,
+                g.WikiImage,
 		UNIX_TIMESTAMP(g.Time) AS Time,
 		g.ReleaseType,
 		g.CatalogueNumber,

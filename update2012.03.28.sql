@@ -1,1 +1,0 @@
-ALTER TABLE  `users_main` CHANGE  `Credits`  `Credits` DOUBLE( 11, 2 ) NOT NULL DEFAULT  '0'
