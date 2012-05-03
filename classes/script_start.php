@@ -1092,8 +1092,8 @@ function format_username($UserID, $Username, $IsDonor = false, $IsWarned = '0000
 	$str.=(!$IsEnabled) ? '<img src="'.STATIC_SERVER.'common/symbols/disabled.png" alt="Banned" title="Be good, and you won\'t end up like this user" />' : '';
 
 	$str.=($Class) ? ' ('.make_class_string($Class, TRUE).')' : '';
-	$str.=($Title && $Class) ? ' <span class="user_title">'.display_str($Title).'</span>' : '';
-	$str.=($Title && !$Class) ? '&nbsp;&nbsp; (<span class="user_title">'. display_str($Title) .'</span>)' : '';
+	$str.=($Title && $Class) ? '&nbsp;<span class="user_title">'.display_str($Title).'</span>' : '';
+	$str.=($Title && !$Class) ? '&nbsp;(<span class="user_title">'. display_str($Title) .'</span>)' : '';
 	if ($DrawInBox) ( $str = '<span class="user_name">'.$str.'</span>' );
 	return $str;
 }

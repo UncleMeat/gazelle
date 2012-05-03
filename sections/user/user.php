@@ -600,15 +600,10 @@ if (check_perms('users_view_email',$Class) || $OwnProfile) { ?>
                         <span style="float:right;"><a href="#" onclick="$('#bonusdiv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
 			</div>
 			<div class="pad" id="bonusdiv">
-                      <h4>Credits: <?=(!$BonusCredits ? '0' : $BonusCredits) ?></h4>
+                      <h4 class="center">Credits: <?=(!$BonusCredits ? '0' : $BonusCredits) ?></h4>
                       <span style="float:right;"><a href="#" onclick="$('#bonuslogdiv').toggle(); this.innerHTML=(this.innerHTML=='(Show Log)'?'(Hide Log)':'(Show Log)'); return false;">(Show Log)</a></span>&nbsp;
 
                       <div class="hidden" id="bonuslogdiv" style="padding-top: 10px;">
-                         <!-- <textarea id="bonuslogedit" onkeyup="resize('bonuslog');"
-                                    class="box pad"  
-                                    style="max-height: 200px;height: 200px; width: 100%;"
-                                    name="bonuslogedit"><?//=(!$BonusLog ? 'no bonus history' :$Text->full_format($BonusLog))?></textarea>-->
-
                           <div id="bonuslog" class="box pad">
                                 <?=(!$BonusLog ? 'no bonus history' :$Text->full_format($BonusLog))?>
                           </div>

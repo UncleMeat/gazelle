@@ -72,7 +72,7 @@ foreach($Friends as $Friend) {
 	<table class="friends_table vertical_margin">
 		<tr>
 			<td class="colhead" colspan="3">
-				<span style="float:left;"><?=format_username($FriendID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $Class)?>
+				<span style="float:left;"><?=format_username($FriendID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $Class, $Title, true)?>
 <?	if(check_paranoia('ratio', $Paranoia, $Class, $FriendID)) { ?>
 				&nbsp;Ratio: <strong><?=ratio($Uploaded, $Downloaded)?></strong>
 <?	} ?>

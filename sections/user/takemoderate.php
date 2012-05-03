@@ -19,13 +19,13 @@ $UserID = $_POST['userid'];
 
 // Variables for database input
 $Class = (int)$_POST['Class'];
-$Username = db_string($_POST['Username']);
-$Title = db_string($_POST['Title']);
-$AdminComment = db_string($_POST['AdminComment']);
+$Username = db_string(display_str( $_POST['Username']));
+$Title = db_string(display_str($_POST['Title']));
+$AdminComment = db_string(display_str($_POST['AdminComment']));
 $Donor = (isset($_POST['Donor']))? 1 : 0;
 $Visible = (isset($_POST['Visible']))? 1 : 0;
 $Invites = (int)$_POST['Invites'];
-$SupportFor = db_string($_POST['SupportFor']);
+$SupportFor = db_string(display_str($_POST['SupportFor']));
 $Pass = db_string($_POST['ChangePassword']);
 $Warned = (isset($_POST['Warned']))? 1 : 0;
 
@@ -47,7 +47,7 @@ $Warned = (isset($_POST['Warned']))? 1 : 0;
         } else {
             $AdjustDownValue = 0;
         }
-      
+        // if we use is_number here (a better function really) we get errors with integer overflow with >2b bytes
         if(!is_numeric($AdjustUpValue) || !is_numeric($AdjustDownValue)) {
             error(0);
         }
@@ -67,14 +67,8 @@ if(isset($_POST['Uploaded']) && isset($_POST['Downloaded'])) {
 		error(0);
 	}
 } */
-$FLTokens = isset($_POST['FLTokens'])?$_POST['FLTokens'] : 0;
-if(!is_number($FLTokens)) {
-	error(0);
-}
-$BonusCredits = isset($_POST['BonusCredits'])?$_POST['BonusCredits'] : 0;
-if(!is_number($BonusCredits)) {
-	error(0);
-}
+$FLTokens = (int)$_POST['FLTokens'];
+$BonusCredits = (float)$_POST['BonusCredits'];
 
 $WarnLength = (int)$_POST['WarnLength'];
 $ExtendWarning = (int)$_POST['ExtendWarning'];
