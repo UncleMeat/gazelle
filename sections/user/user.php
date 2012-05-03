@@ -987,7 +987,7 @@ if (check_perms('users_mod', $Class)) { ?>
 ?>
 			<tr>
 				<td class="label">CustomTitle:</td>
-				<td><input class="long" type="text" name="Title" value="<?=display_str($CustomTitle)?>" /></td>
+				<td><input class="long" type="text" maxlength="32" name="Title" value="<?=display_str($CustomTitle)?>" /></td>
 			</tr>
 <?
 	}

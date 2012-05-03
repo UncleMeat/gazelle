@@ -28,7 +28,8 @@ $ShopItems = get_shop_items();
 	$Row = 'a';
 	foreach($ShopItems as $BonusItem) {
 		list($ItemID, $Title, $Description, $Action, $Cost) = $BonusItem;
-            $CanAfford = is_number($LoggedUser['Credits']) ? $LoggedUser['Credits'] >= $Cost: false;
+            //$CanAfford = is_number($LoggedUser['Credits']) ? $LoggedUser['Credits'] >= $Cost: false;
+            $CanAfford = is_float((float)$LoggedUser['Credits']) ? $LoggedUser['Credits'] >= $Cost: false;
 		$Row = ($Row == 'a') ? 'b' : 'a';
 ?> 
 			<tr class="row<?=$Row.($CanAfford ? ' itembuy' : ' itemnotbuy')?>">

@@ -82,7 +82,7 @@ if (isset($_POST['Username'])) {
 		<table cellpadding="2" cellspacing="1" border="0" align="center">
 		<tr valign="top">
 			<td align="right">Username&nbsp;</td>
-			<td align="left"><input type="text" name="Username" id="username" class="inputtext" /></td>
+			<td align="left"><input type="text" name="Username" id="username" class="inputtext"  maxlength="20" pattern="[A-Za-z0-9_?]{1,20}"  /></td>
 		</tr>
 		<tr valign="top">
 			<td align="right">Email&nbsp;</td>
