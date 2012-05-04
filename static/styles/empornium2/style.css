@@ -155,6 +155,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
 #header_top {
     position: relative;
 }
+
 #logo {
     width: 180px; 
     height: 34px;
@@ -281,10 +282,11 @@ span.stat {
 
 
 #searchbars {
-    padding: 4px 0px 0px 0px;
+    padding: 6px 0px 0px 0px;
     background: url(images/hbg1.png) repeat-x;
+    background-position: bottom;
     text-align: center;
-    height: 26px;
+    height: 33px;
 }
 
 #searchbars form {
@@ -347,7 +349,6 @@ li.searchbars {
 
 .alertbar {
     min-height: 16px;
-    border: 1px solid #955;
     padding: 2px 70px 2px;
     background-color: #e00; /* #0261a3; */
     text-align: center;
@@ -368,8 +369,7 @@ li.searchbars {
 
 .blend {
     padding: 2px 40px 2px;
-    border: 1px solid #555;
-    background-color: #024a7c;  /*  #0261A3;   #060606;  */
+    background-color: black;
     color: white;
 }
 
