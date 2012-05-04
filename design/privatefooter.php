@@ -29,7 +29,10 @@
 		<strong>Date:</strong> <?=date('M d Y, H:i')?>
 
 	</p>
-	</div>
+</div>
+<div id="footer_bottom">
+</div>
+    
 <? if (DEBUG_MODE || check_perms('site_debug')) { ?>
 	<!-- Begin Debugging -->
 	<div id="site_debug">
