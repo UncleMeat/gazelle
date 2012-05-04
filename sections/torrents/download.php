@@ -88,9 +88,6 @@ if ($_REQUEST['usetoken'] && $FreeTorrent == '0') {
 		if ($FLTokens <= 0) {
 			error("You do not have any freeleech tokens left.  Please use the regular DL link.");
 		}
-		if ($Size >= 1073741824) {
-			error("This torrent is too large.  Please use the regular DL link.");
-		}
 		
 		// Let the tracker know about this
 		if (!update_tracker('add_token', array('info_hash' => rawurlencode($InfoHash), 'userid' => $UserID))) {

@@ -1180,3 +1180,43 @@ a.bb_button:hover {
 .color_pick td:hover { 
     border:1px solid #333333; 
 }
+
+#torrent_buttons {
+    margin-left: 10px;
+}
+
+a.button {
+	display: inline-block;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	margin: 3px 6px 3px 0;
+	text-decoration: none;
+	color: #fff;	
+	border: none;
+	font-size: 11px;
+	vertical-align: top;
+	cursor: hand;
+	line-height: 11px;
+	text-align: center;
+	font-size: 12px;
+	line-height: 12px;
+	font-family: Verdana, Geneva, sans-serif;
+	padding: 7px 15px;
+}
+
+.greenButton {
+	background: #5da53a;
+}
+
+.greenButton:hover {
+	background: #48802d;
+}
+
+.blueButton {
+	background: #1f9db4;
+}
+
+.blueButton:hover {
+	background: #187b8c;
+}

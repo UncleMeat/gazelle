@@ -285,30 +285,32 @@ $EditionID = 0;
 
 			<tr class="releases_<?=$ReleaseType?> groupid_<?=$GroupID?> edition_<?=$EditionID?> group_torrent" style="font-weight: normal;" id="torrent<?=$TorrentID?>">
 				<td>
-					<span>[ <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download"><?=$HasFile ? 'DL' : 'Missing'?></a>
-<?	if (($LoggedUser['FLTokens'] > 0) && $HasFile && ($Size < 1073741824) 
-		&& !in_array($TorrentID, $TokenTorrents) && ($FreeTorrent == '0') && ($LoggedUser['CanLeech'] == '1')) { ?>
-						| <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FL</a>
-<?	} ?>					
-						| <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">RP</a>
+					<span>[
+                                                <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">Report</a>
 <?	if($CanEdit) { ?>
-						| <a href="torrents.php?action=edit&amp;id=<?=$TorrentID ?>" title="Edit">ED</a>
+						| <a href="torrents.php?action=edit&amp;id=<?=$TorrentID ?>" title="Edit">Edit</a>
 <?	} ?>
 <?	if(check_perms('torrents_delete') || $UserID == $LoggedUser['ID']) { ?>
-						| <a href="torrents.php?action=delete&amp;torrentid=<?=$TorrentID ?>" title="Remove">RM</a>
+						| <a href="torrents.php?action=delete&amp;torrentid=<?=$TorrentID ?>" title="Remove">Remove</a>
 <?	} ?>
 
-						| <a href="torrents.php?torrentid=<?=$TorrentID ?>" title="Permalink">PL</a>
 					]</span>
-					&raquo; <a href="#" onclick="$('#torrent_<?=$TorrentID?>').toggle(); return false;"><?=$ExtraInfo; ?></a>
+					<strong><?=$ExtraInfo; ?></strong>
 				</td>
 				<td class="nobr"><?=get_size($Size)?></td>
 				<td><?=number_format($Snatched)?></td>
 				<td><?=number_format($Seeders)?></td>
 				<td><?=number_format($Leechers)?></td>
 			</tr>
-			<tr class="releases_<?=$ReleaseType?> groupid_<?=$GroupID?> edition_<?=$EditionID?> torrentdetails pad <? if(!isset($_GET['torrentid']) || $_GET['torrentid']!=$TorrentID) { ?>hidden<? } ?>" id="torrent_<?=$TorrentID; ?>">
+			<tr class="releases_<?=$ReleaseType?> groupid_<?=$GroupID?> edition_<?=$EditionID?> torrentdetails pad" id="torrent_<?=$TorrentID; ?>">
 				<td colspan="5">
+                                        <span id="torrent_buttons">
+                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
+<?	if (($LoggedUser['FLTokens'] > 0) && $HasFile  && !in_array($TorrentID, $TokenTorrents) && ($FreeTorrent == '0') && ($LoggedUser['CanLeech'] == '1')) { ?>
+                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" class="button greenButton" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FREELEECH DOWNLOAD</a>
+<?	} ?>					
+                                            
+                                        </span>
 					<blockquote>
 						Uploaded by <?=format_username($UserID, $TorrentUploader)?> <?=time_diff($TorrentTime);?>
 <? if($Seeders == 0){ ?>
