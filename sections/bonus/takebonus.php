@@ -13,7 +13,7 @@ if($UserID != $LoggedUser['ID'])  error(0);
 
 $ShopItem = get_shop_item($ItemID);
 
-if(!empty($ShopItem)){
+if(!empty($ShopItem) && is_array($ShopItem)){
     
     list($ItemID, $Title, $Description, $Action, $Value, $Cost) = $ShopItem[0];
  
@@ -28,6 +28,7 @@ if(!empty($ShopItem)){
             $DB->query("SELECT ID From users_main WHERE Username='$Othername'"); 
             if(($DB->record_count()) > 0) {
                 list($OtherID) = $DB->next_record(); 
+                $OtherUserStats = get_user_stats($OtherID);
             } else {
                 $OtherID=false;
                 $ResultMessage = "Could not find user $Othername";
@@ -44,19 +45,19 @@ if(!empty($ShopItem)){
         $UpdateSet = array();
         $UpdateSetOther = array();
          
-        Switch($Action){  //  givecredits, givegb, gb, slot
+        Switch($Action){  // atm hardcoded in db:  givecredits, givegb, gb, slot, title
             case 'givecredits':
                 
                 $Summary = sqltime().' - '.ucfirst("user gave a gift of $Value credits to {$P['othername']} Cost: $Cost credits");
-                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n\n', '$Summary', i.AdminComment)";
+                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
                 
                 $Summary = sqltime().' - '.ucfirst("user recieved a gift of $Value credits from {$LoggedUser['Username']}");	
-                $UpdateSetOther[]="i.AdminComment=CONCAT_WS( '\n\n', '$Summary', i.AdminComment)";
+                $UpdateSetOther[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
                 
-                $Summary = sqltime().' - '.ucfirst("you recieved a gift of $Value credits from {$LoggedUser['Username']}");
+                $Summary = sqltime()." | +$Value credits | ".ucfirst("you recieved a gift of $Value credits from {$LoggedUser['Username']}");
                 $UpdateSetOther[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                 $UpdateSetOther[]="m.Credits=(m.Credits+'$Value')";
-                $Summary = sqltime().' - '.ucfirst("you gave a gift of $Value credits to {$P['othername']} Cost: $Cost credits");	
+                $Summary = sqltime()." | -$Cost credits | ".ucfirst("you gave a gift of $Value credits to {$P['othername']}");	
                 $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
                 $ResultMessage=$Summary;
@@ -65,9 +66,9 @@ if(!empty($ShopItem)){
             case 'gb':
                 
                 $Summary = sqltime().' - '.ucfirst("user bought -$Value gb. Cost: $Cost credits");	
-                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n\n', '$Summary', i.AdminComment)";
+                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
       
-                $Summary = sqltime().' - '.ucfirst("you bought -$Value gb. Cost: $Cost credits");	
+                $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought -$Value gb.");	
                 $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                 $Value = get_bytes($Value.'gb');
                 $UpdateSet[]="m.Downloaded=(m.Downloaded-'$Value')";
@@ -77,14 +78,14 @@ if(!empty($ShopItem)){
             
             case 'givegb':
                 $Summary = sqltime().' - '.ucfirst("user gave a gift of -$Value gb to {$P['othername']} Cost: $Cost credits");	
-                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n\n', '$Summary', i.AdminComment)";
+                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
                 
-                $Summary = sqltime().' - '.ucfirst("user recieved a gift of -$Value gb from {$LoggedUser['Username']}");	
-                $UpdateSetOther[]="i.AdminComment=CONCAT_WS( '\n\n', '$Summary', i.AdminComment)";
+                $Summary = sqltime().' - '.ucfirst("user recieved a gift of -$Value gb from {$LoggedUser['Username']}.");	
+                $UpdateSetOther[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
                 
-                $Summary = sqltime().' - '.ucfirst("you recieved a gift of -$Value gb from {$LoggedUser['Username']}");
+                $Summary = sqltime()." | ".ucfirst("you recieved a gift of -$Value gb from {$LoggedUser['Username']}.");
                 $UpdateSetOther[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
-                $Summary = sqltime().' - '.ucfirst("you gave a gift of -$Value gb to {$P['othername']} Cost: $Cost credits");	
+                $Summary = sqltime()." | -$Cost credits | ".ucfirst("you gave a gift of -$Value gb to {$P['othername']}.");	
                 $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
                 $Value = get_bytes($Value.'gb');
@@ -95,8 +96,8 @@ if(!empty($ShopItem)){
             case 'slot':
                 
                 $Summary = sqltime().' - '.ucfirst("user bought $Value slot".($Value>1?'s':'').". Cost: $Cost credits");	
-                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n\n', '$Summary', i.AdminComment)";
-                $Summary = sqltime().' - '.ucfirst("you bought $Value slot".($Value>1?'s':'').". Cost: $Cost credits");
+                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
+                $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought $Value slot".($Value>1?'s':'').".");
                 $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                 $UpdateSet[]="m.FLTokens=(m.FLTokens+'$Value')";
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
@@ -110,8 +111,8 @@ if(!empty($ShopItem)){
                     $ResultMessage = "Title was not set";
                 } else {
                     $Summary = sqltime().' - '.ucfirst("user bought a new custom title ''$NewTitle''. Cost: $Cost credits");	
-                    $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n\n', '$Summary', i.AdminComment)";
-                    $Summary = sqltime().' - '.ucfirst("you bought a new custom title ''$NewTitle''. Cost: $Cost credits");
+                    $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
+                    $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought a new custom title ''$NewTitle''.");
                     $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                     $UpdateSet[]="m.Title='$NewTitle'";
                     $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";

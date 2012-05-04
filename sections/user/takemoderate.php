@@ -272,8 +272,8 @@ if ($Username!=$Cur['Username'] && check_perms('users_edit_usernames', $Cur['Cla
 
 if ($Title!=db_string($Cur['Title']) && check_perms('users_edit_titles')) {
 	// Using the unescaped value for the test to avoid confusion
-	if (strlen($_POST['Title']) > 1024) {
-		error("Custom titles can be at most 1024 characters.");
+	if (strlen($_POST['Title']) > 32) {
+		error("Custom titles can be at most 32 characters.");
 		header("Location: user.php?id=".$UserID);
 		die();
 	} else {
@@ -296,21 +296,7 @@ if ($Visible!=$Cur['Visible']  && check_perms('users_make_invisible')) {
 	$LightUpdates['Visible']=$Visible;
 }
 
-/*
-if ($Uploaded!=$Cur['Uploaded'] && $Uploaded!=$_POST['OldUploaded'] && (check_perms('users_edit_ratio') 
- || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID']))) {
-	$UpdateSet[]="Uploaded='".$Uploaded."'";
-	$EditSummary[]="uploaded changed from ".get_size($Cur['Uploaded'])." to ".get_size($Uploaded);
-	$Cache->delete_value('users_stats_'.$UserID);
-}
 
-if ($Downloaded!=$Cur['Downloaded'] && $Downloaded!=$_POST['OldDownloaded'] && (check_perms('users_edit_ratio') 
- || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID']))) {
-	$UpdateSet[]="Downloaded='".$Downloaded."'";
-	$EditSummary[]="downloaded changed from ".get_size($Cur['Downloaded'])." to ".get_size($Downloaded);
-	$Cache->delete_value('users_stats_'.$UserID);
-}
-*/
 if ($AdjustUpValue != 0 && ((check_perms('users_edit_ratio') && $UserID != $LoggedUser['ID'])
                         || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID'])) ){
       $Uploaded = $Cur['Uploaded'] + $AdjustUpValue;
@@ -575,7 +561,7 @@ if ($MergeStatsFrom && check_perms('users_edit_ratio')) {
 	$DB->query("SELECT ID, Uploaded, Downloaded FROM users_main WHERE Username LIKE '".$MergeStatsFrom."'");
 	if($DB->record_count() > 0) {
 		list($MergeID, $MergeUploaded, $MergeDownloaded) = $DB->next_record();
-		$DB->query("UPDATE users_main AS um JOIN users_info AS ui ON um.ID=ui.UserID SET um.Uploaded = 0, um.Downloaded = 0, ui.AdminComment = CONCAT('".sqltime()." - Stats merged into http://".NONSSL_SITE_URL."/user.php?id=".$UserID." (".$Cur['Username'].") by ".$LoggedUser['Username']."\n\n', ui.AdminComment) WHERE ID = ".$MergeID);
+		$DB->query("UPDATE users_main AS um JOIN users_info AS ui ON um.ID=ui.UserID SET um.Uploaded = 0, um.Downloaded = 0, ui.AdminComment = CONCAT('".sqltime()." - Stats merged into http://".NONSSL_SITE_URL."/user.php?id=".$UserID." (".$Cur['Username'].") by ".$LoggedUser['Username']."\n', ui.AdminComment) WHERE ID = ".$MergeID);
 		$UpdateSet[]="Uploaded = Uploaded + '$MergeUploaded'";
 		$UpdateSet[]="Downloaded = Downloaded + '$MergeDownloaded'";
 		$EditSummary[]="stats merged from http://".NONSSL_SITE_URL."/user.php?id=".$MergeID." (".$MergeStatsFrom.")";
@@ -640,9 +626,9 @@ if ($EditSummary) {
 	
 	
 	
-	$Summary .= "\n\n".$AdminComment;
+	$Summary .= "\n".$AdminComment;
 } elseif (empty($UpdateSet) && empty($EditSummary) && $Cur['AdminComment']==$_POST['AdminComment']) {
-	$Summary = sqltime().' - '.'Comment added by '.$LoggedUser['Username'].': '.$Reason."\n\n";
+	$Summary = sqltime().' - '.'Comment added by '.$LoggedUser['Username'].': '.$Reason."\n";
 	
 	
 }
