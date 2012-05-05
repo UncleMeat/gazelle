@@ -22,7 +22,7 @@ if(strtotime($BannedUntil)<time() && !$BanID) {
 	<table>
 		<tr>
 			<td width="70px">Username&nbsp;</td>
-			<td width="200px" colspan="2"><input style="width: 98%;" type="text" name="username" id="username" class="inputtext" required="required" maxlength="20" pattern="[A-Za-z0-9_?]{1,20}" autofocus="autofocus" /></td>
+			<td width="200px" colspan="2"><input style="width: 98%;" type="text" name="username" id="username" class="inputtext" required="required" maxlength="20" pattern="[A-Za-z0-9_?-]{1,20}" autofocus="autofocus" /></td>
 		</tr>
 		<tr>
 			<td width="70px">Password&nbsp;</td>

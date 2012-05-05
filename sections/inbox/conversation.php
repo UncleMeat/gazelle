@@ -35,15 +35,15 @@ $DB->query("SELECT
 	WHERE c.ID='$ConvID' AND UserID='$UserID'");
 list($Subject, $Sticky, $UnRead, $ForwardedID, $ForwardedName) = $DB->next_record();
 
-$DB->query("SELECT UserID, Username, PermissionID, Enabled, Donor, Warned
+$DB->query("SELECT UserID, Username, PermissionID, Enabled, Donor, Warned, Title
 	FROM pm_messages AS pm
 	JOIN users_info AS ui ON ui.UserID=pm.SenderID
 	JOIN users_main AS um ON um.ID=pm.SenderID
 	WHERE pm.ConvID='$ConvID'");
 
-while(list($PMUserID, $Username, $PermissionID, $Enabled, $Donor, $Warned) = $DB->next_record()) {
+while(list($PMUserID, $Username, $PermissionID, $Enabled, $Donor, $Warned, $Title) = $DB->next_record()) {
 	$PMUserID = (int)$PMUserID;
-	$Users[$PMUserID]['UserStr'] = format_username($PMUserID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, false, true);
+	$Users[$PMUserID]['UserStr'] = format_username($PMUserID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, $Title, true);
 	$Users[$PMUserID]['Username'] = $Username;
 }
 $Users[0]['UserStr'] = 'System'; // in case it's a message from the system
@@ -94,7 +94,8 @@ if(!empty($ReceiverIDs) && (empty($LoggedUser['DisablePM']) || array_intersect($
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 			<input type="hidden" name="toid" value="<?=implode(',',$ReceiverIDs)?>" />
 			<input type="hidden" name="convid" value="<?=$ConvID?>" />
-			<textarea id="quickpost" name="body" cols="90" rows="10"></textarea> <br />
+                            <? $Text->display_bbcode_assistant("quickpost"); ?>
+			<textarea id="quickpost" name="body" class="long" rows="10"></textarea> <br />
 			<div id="preview" class="box vertical_space body hidden"></div>
 			<div id="buttons" class="center">
 				<input type="button" value="Preview" onclick="Quick_Preview();" /> 

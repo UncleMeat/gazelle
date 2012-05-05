@@ -45,7 +45,8 @@ $sql = "SELECT
 	ui.Warned,
 	um.Enabled,";
 $sql .= ($Section == 'sentbox')? ' cu.SentDate ' : ' cu.ReceivedDate ';
-$sql .= "AS Date
+$sql .= "AS Date, 
+      um.PermissionID
 	FROM pm_conversations AS c
 	LEFT JOIN pm_conversations_users AS cu ON cu.ConvID=c.ID AND cu.UserID='$UserID'
 	LEFT JOIN pm_conversations_users AS cu2 ON cu2.ConvID=c.ID AND cu2.UserID!='$UserID' AND cu2.ForwardedTo=0
@@ -121,7 +122,7 @@ echo $Pages;
 			<table>
 				<tr class="colhead">
 					<td width="10"><input type="checkbox" onclick="toggleChecks('messageform',this)" /></td>
-					<td width="50%">Subject</td>
+					<td width="45%">Subject</td>
 					<td><?=($Section == 'sentbox')? 'Receiver' : 'Sender' ?></td>
 					<td>Date</td>
 <?		if(check_perms('users_mod')) {?>
@@ -130,7 +131,7 @@ echo $Pages;
 				</tr>
 <?
 	$Row = 'a';
-	while(list($ConvID, $Subject, $Unread, $Sticky, $ForwardedID, $ForwardedName, $SenderID, $Username, $Donor, $Warned, $Enabled, $Date) = $DB->next_record()) {
+	while(list($ConvID, $Subject, $Unread, $Sticky, $ForwardedID, $ForwardedName, $SenderID, $Username, $Donor, $Warned, $Enabled, $Date, $ClassID) = $DB->next_record()) {
 		if($Unread === '1') {
 			$RowClass = 'unreadpm';
 		} else {
@@ -148,7 +149,7 @@ echo $Pages;
 <?
 		if($Unread) { echo '</strong>';} ?>
 					</td>
-					<td><?=format_username($SenderID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true)?></td>
+					<td><?=format_username($SenderID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $ClassID)?></td>
 					<td><?=time_diff($Date)?></td>
 <?		if(check_perms('users_mod')) { ?>
 					<td><?=($ForwardedID && $ForwardedID != $LoggedUser['ID'] ? format_username($ForwardedID, $ForwardedName):'')?></td>

@@ -23,12 +23,12 @@ if ($ConvID = (int)$_GET['id']) {
 	show_header('Staff PM', 'staffpm,bbcode');
 
 	$UserInfo = user_info($UserID);
-	$UserStr = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID'], false, true);
+	$UserStr = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID'], $UserInfo['Title'], true);
 
 	$OwnerID = $UserID;
 
 ?>
-<div id="thin">
+<div class="thin">
 	<h2>Staff PM - <?=display_str($Subject)?></h2>
 	<div class="linkbox">
 <?
@@ -70,16 +70,15 @@ if ($ConvID = (int)$_GET['id']) {
 		} else {
 			// Staff/FLS
 			$UserInfo = user_info($UserID);
-			$UserString = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID']);
+			$UserString = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID'], $UserInfo['Title'], true);
 
 		}
 ?>
 		<div class="box vertical_space">
 			<div class="head">
-				<strong>
+				<!--<strong>-->
 					<?=$UserString?>
-
-				</strong>
+				<!--</strong>-->
 				<?=time_diff($SentDate, 2, true)?>
 
 			</div>
@@ -127,12 +126,15 @@ if ($ConvID = (int)$_GET['id']) {
 ?>
 		<h3>Reply</h3>
 		<div class="box pad">
-			<div id="preview" class="hidden"></div>
+			<div id="preview" class="box pad hidden"></div>
 			<div id="buttons" class="center">
-				<form action="staffpm.php" method="post" id="messageform">
+				<form action="staffpm.php" method="post" class="staffpm" id="messageform">
 					<input type="hidden" name="action" value="takepost" />
 					<input type="hidden" name="convid" value="<?=$ConvID?>" id="convid" />
-					<textarea id="quickpost" name="message" cols="90" rows="10"></textarea> <br />
+                            <? $Text->display_bbcode_assistant("quickpost"); ?>
+					<textarea id="quickpost" name="message" class="long" rows="10"></textarea> 
+                              <br />
+					<input type="button" id="previewbtn" value="Preview" style="margin-right: 40px;" onclick="PreviewMessage();" />
 <?
 	// Assign to
 	if ($IsStaff) {
@@ -203,14 +205,13 @@ if ($ConvID = (int)$_GET['id']) {
 					<input type="button" value="Resolve" onClick="location.href='staffpm.php?action=resolve&id=<?=$ConvID?>';" />
 <?			if ($IsFLS) {  //Moved by request ?>
 					<input type="button" value="Common answers" onClick="$('#common_answers').toggle();" />
-					<input type="button" id="previewbtn" value="Preview" onclick="PreviewMessage();" />
 <?			} ?>
 					<input type="submit" value="Send message" />
 <?	} else { ?>
 					<input type="button" value="Unresolve" onClick="location.href='staffpm.php?action=unresolve&id=<?=$ConvID?>';" />
 <?	} 
 	if (check_perms('users_give_donor')) { ?>
-					<br />	
+					<!--<br />	 -->
 					<input type="button" value="Make Donor" onClick="location.href='staffpm.php?action=make_donor&id=<?=$ConvID?>';" />
 <?	} ?>
 				</form>

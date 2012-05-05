@@ -11,6 +11,16 @@ var BBCode = {
 };
 
 
+function Sandbox_Preview() { 
+    $('#preview_button').raw().value = "Updating...";
+    ajax.post("ajax.php?action=preview","messageform", function(response){
+        $('#preview_content').raw().innerHTML = response;
+        $('#preview').show();
+    $('#preview_button').raw().value = "Update Preview";
+    });
+}
+
+
 function Quick_Preview_Blog() { 
 	$('#post_preview').raw().value = "Make changes";
 	$('#post_preview').raw().preview = true;
@@ -29,22 +39,31 @@ function Quick_Edit_Blog() {
 }
 
 
-numLoaded = 0;
-maxSmilies = 9999;
-function Open_Smilies(alreadyloaded, loadincrement) {
+//numLoaded = 0;
+//maxSmilies = 9999;
+function Open_Smilies(alreadyloaded, loadincrement, textID) {
       // first call inspect alreadyloaded param to allow for preloaded smilies in php
+      var open_overflow_button = '#open_overflow' + textID;
+      var open_overflow_more_button = '#open_overflow_more' + textID;
+      var smiley_overflow_area = '#smiley_overflow' + textID;
+      if ($('#smiley_count' + textID).raw().innerHTML != "")
+            numLoaded = parseInt($('#smiley_count' + textID).raw().innerHTML);
+      else numLoaded=0;
+      if ($('#smiley_max' + textID).raw().innerHTML != "")
+            maxSmilies = parseInt($('#smiley_max' + textID).raw().innerHTML);
+      else maxSmilies=9999;
       if (numLoaded == 0) { 
           if (alreadyloaded > 0) { numLoaded = alreadyloaded; }
           opento = numLoaded + loadincrement;
-      } else if ($('#open_overflow').raw().isopen == true) {
+      } else if ($(open_overflow_button).raw().isopen == true) {
           opento = numLoaded + loadincrement;
       }
       if (opento > maxSmilies) { opento = maxSmilies; } 
-	$('#open_overflow').raw().isopen = true; // track first button status
+	$(open_overflow_button).raw().isopen = true; // track first button status
       if (numLoaded < opento && numLoaded < maxSmilies) {
           // depending on which buttons are visible display loading status in one of them
-          if ($('#open_overflow_more').raw().isopen) {$('#open_overflow_more').raw().innerHTML = "Loading smilies";}
-          else {$('#open_overflow').raw().innerHTML = "Loading smilies";}
+          if ($(open_overflow_more_button).raw().isopen) {$(open_overflow_more_button).raw().innerHTML = "Loading smilies";}
+          else {$(open_overflow_button).raw().innerHTML = "Loading smilies";}
           // get the requested smiley data as xml;
           // <smilies><smiley><bbcode>: code :</bbcode><url>http://url</url></smiley></smilies><maxsmilies>num</maxsmilies>
           ajax.getXML("ajax.php?action=get_smilies&indexfrom=" + numLoaded + "&indexto=" + opento, function(responseXML){
@@ -54,7 +73,7 @@ function Open_Smilies(alreadyloaded, loadincrement) {
                 for (i=0;i<x.length;i++) {
                     xx=x[i].getElementsByTagName("bbcode"); 
                     try {
-                        txt=txt +'<a class="bb_smiley" title="' + xx[0].firstChild.nodeValue + '" href="javascript:em(\' ' + xx[0].firstChild.nodeValue + ' \');">';
+                        txt=txt +'<a class="bb_smiley" title="' + xx[0].firstChild.nodeValue + '" href="javascript:em(\' ' + xx[0].firstChild.nodeValue + ' \', \'' + textID + '\' );">';
                     }  catch (er) { }
                     xx=x[i].getElementsByTagName("url"); 
                     try {
@@ -65,46 +84,48 @@ function Open_Smilies(alreadyloaded, loadincrement) {
                 try {
                     maxSmilies = x[0].firstChild.nodeValue;
                 } catch (er) {}
-                $('#smiley_overflow').raw().innerHTML += txt;
-                $('#smiley_overflow').show();
-                $('#open_overflow').raw().innerHTML = "Hide smilies";
+                $(smiley_overflow_area).raw().innerHTML += txt;
+                $(smiley_overflow_area).show();
+                $(open_overflow_button).raw().innerHTML = "Hide smilies";
                 numLoaded = opento;
-                Toggle_Load_Button(numLoaded < maxSmilies);
+                Toggle_Load_Button(numLoaded < maxSmilies, textID);
+                $('#smiley_max' + textID).raw().innerHTML = maxSmilies;
+                $('#smiley_count' + textID).raw().innerHTML = numLoaded;
           });
       } else { 
-          $('#smiley_overflow').show();
-          $('#open_overflow').raw().innerHTML = "Hide smilies";
-          Toggle_Load_Button(numLoaded < maxSmilies);
+          $(smiley_overflow_area).show();
+          $(open_overflow_button).raw().innerHTML = "Hide smilies";
+          Toggle_Load_Button(numLoaded < maxSmilies, textID);
       }
 }
-function Toggle_Load_Button(show){
+function Toggle_Load_Button(show, textID){
     if (show) {
-        $('#open_overflow_more').raw().isopen = true; 
-        $('#open_overflow_more').raw().innerHTML = "Load more smilies";
-        $('#open_overflow_more').show();
+        $('#open_overflow_more'+ textID).raw().isopen = true; 
+        $('#open_overflow_more'+ textID).raw().innerHTML = "Load more smilies";
+        $('#open_overflow_more'+ textID).show();
     } else {
-        $('#open_overflow_more').raw().isopen = false; 
-        $('#open_overflow_more').raw().innerHTML = "";
-        $('#open_overflow_more').hide();
+        $('#open_overflow_more'+ textID).raw().isopen = false; 
+        $('#open_overflow_more'+ textID).raw().innerHTML = "";
+        $('#open_overflow_more'+ textID).hide();
     } 
 }
-function Close_Smilies() { 
-	$('#smiley_overflow').hide();
-	$('#open_overflow').raw().isopen = false;
-	$('#open_overflow').raw().innerHTML = "Show smilies";
-      $('#open_overflow_more').raw().isopen = false; 
-      $('#open_overflow_more').raw().innerHTML = "";
-      $('#open_overflow_more').hide();
+function Close_Smilies(textID) { 
+	$('#smiley_overflow'+ textID).hide();
+	$('#open_overflow'+ textID).raw().isopen = false;
+	$('#open_overflow'+ textID).raw().innerHTML = "Show smilies";
+      $('#open_overflow_more'+ textID).raw().isopen = false; 
+      $('#open_overflow_more'+ textID).raw().innerHTML = "";
+      $('#open_overflow_more'+ textID).hide();
 }
 
 //made by putyn@tbdev.net lastupdate 28/12/2009
 
-function wrap(v, r, e) {
+function wrap(v, r, e, textID) {
   var r = r ? r : "";
   var v = v ? v : "";
   var e = e ? e : "";
 
-  var obj = document.getElementById(textBBcode);
+  var obj = document.getElementById(textID);    //textBBcode);      $('#' + textID).raw();    // 
 
   if (document.selection) {
     var str = document.selection.createRange().text;
@@ -123,18 +144,18 @@ function wrap(v, r, e) {
   obj.focus();
 }
 
-function clink() {
+function clink(textID) {
   var linkTitle;
   var linkAddr;
 
   linkAddr = prompt("Please enter the full URL", "http://");
   if (linkAddr && linkAddr != "http://") linkTitle = prompt("Please enter the title", " ");
 
-  if (linkAddr && linkTitle) wrap('url', linkTitle, linkAddr);
+  if (linkAddr && linkTitle) wrap('url', linkTitle, linkAddr, textID);
 
 }
 
-function cimage() {
+function cimage(textID) {
   var link;
   link = prompt("Please enter the full URL for your image\nOnly .png, .jpg, .gif images", "http://");
   var re_text = /\.jpg|\.gif|\.png|\.jpeg/i;
@@ -142,15 +163,15 @@ function cimage() {
     alert("Image not allowed only .jpg .gif .png .jpeg");
     link = prompt("Please enter the full URL for your image\nOnly .png, .jpg, .gif images", "http://");
   }
-  if (link != "http://" && link) wrap('img', link, '');
+  if (link != "http://" && link) wrap('img', link, '', textID);
 
 }
 
-function tag(v) {
-  wrap(v, '', '');
+function tag(v , textID) {
+  wrap(v, '', '', textID);
 }
 
-function mail() {
+function mail(textID) {
   var email = "";
   email = prompt("Plese enter the email addres", " ");
   var filter = /^[\w.-]+@([\w.-]+\.)+[a-z]{2,6}$/i;
@@ -158,11 +179,11 @@ function mail() {
     alert("Please provide a valid email address");
     email = prompt("Plese enter the email addres", " ");
   }
-  if (email.length > 1) wrap('mail', email, '');
+  if (email.length > 1) wrap('mail', email, '', textID);
 }
 
-function text(to) {
-  var obj = document.getElementById(textBBcode);
+function text(to, textID) {
+  var obj = document.getElementById(textID);        //textBBcode);
 
   if (document.selection) {
     var str = document.selection.createRange().text;
@@ -180,10 +201,10 @@ function text(to) {
 
 }
 
-function fonts(w) {
+function fonts(w, textID) {
   var fmin = 12;
   var fmax = 24;
-  var obj = document.getElementById(textBBcode);
+  var obj = document.getElementById(textID);    //textBBcode);
   var size = obj.style.fontSize;
   size = (parseInt(size));
   var nsize;
@@ -194,10 +215,10 @@ function fonts(w) {
   obj.focus();
 }
 
-function font(w, f) {
+function font(w, f, textID) {
   if (w == 'color') f = "#" + f;
 
-  var obj = document.getElementById(textBBcode);
+  var obj = document.getElementById(textID);
 
   if (document.selection) {
     var str = document.selection.createRange().text;
@@ -212,12 +233,12 @@ function font(w, f) {
     obj.value = obj.value.substring(0, start) + "[" + w + "=" + f + "]" + sel + "[/" + w + "]" + obj.value.substring(end, len);
     obj.selectionEnd = start + w.length + (1 + f.length) + sel.length + w.length + 5;
   }
-  if (w != "color") document.getElementById("font" + w).selectedIndex = 0;
+  if (w != "color") document.getElementById("font" + w + textID).selectedIndex = 0;
   obj.focus();
 }
 
-function em(f) {
-  var obj = document.getElementById(textBBcode);
+function em(f, textID) {
+  var obj = document.getElementById(textID);
 
   if (document.selection) {
     var str = document.selection.createRange().text;
@@ -238,9 +259,9 @@ document.onmousemove = MouseUpdate;
 var hX;
 var hY;
 
-function chover(obj, act) {
+function chover(obj, act, textID) {
   var color = obj.style.backgroundColor;
-  var obj2 = document.getElementById("hover_pick");
+  var obj2 = document.getElementById("hover_pick" + textID);
 
   if (act == "show") {
     obj2.style.left = hX + "px";
@@ -250,33 +271,39 @@ function chover(obj, act) {
   } else obj2.style.display = "none";
 
 }
-isBuild = false;
+//isBuild = false;
 
-function colorpicker() {
-  if (!isBuild) {
-    var myColors = new Array('000000', '000033', '000066', '000099', '0000CC', '0000FF', '003300', '003333', '003366', '003399', '0033CC', '0033FF', '006600', '006633', '006666', '006699', '0066CC', '0066FF', '009900', '009933', '009966', '009999', '0099CC', '0099FF', '00CC00', '00CC33', '00CC66', '00CC99', '00CCCC', '00CCFF', '00FF00', '00FF33', '00FF66', '00FF99', '00FFCC', '00FFFF', '330000', '330033', '330066', '330099', '3300CC', '3300FF', '333300', '333333', '333366', '333399', '3333CC', '3333FF', '336600', '336633', '336666', '336699', '3366CC', '3366FF', '339900', '339933', '339966', '339999', '3399CC', '3399FF', '33CC00', '33CC33', '33CC66', '33CC99', '33CCCC', '33CCFF', '33FF00', '33FF33', '33FF66', '33FF99', '33FFCC', '33FFFF', '660000', '660033', '660066', '660099', '6600CC', '6600FF', '663300', '663333', '663366', '663399', '6633CC', '6633FF', '666600', '666633', '666666', '666699', '6666CC', '6666FF', '669900', '669933', '669966', '669999', '6699CC', '6699FF', '66CC00', '66CC33', '66CC66', '66CC99', '66CCCC', '66CCFF', '66FF00', '66FF33', '66FF66', '66FF99', '66FFCC', '66FFFF', '990000', '990033', '990066', '990099', '9900CC', '9900FF', '993300', '993333', '993366', '993399', '9933CC', '9933FF', '996600', '996633', '996666', '996699', '9966CC', '9966FF', '999900', '999933', '999966', '999999', '9999CC', '9999FF', '99CC00', '99CC33', '99CC66', '99CC99', '99CCCC', '99CCFF', '99FF00', '99FF33', '99FF66', '99FF99', '99FFCC', '99FFFF', 'CC0000', 'CC0033', 'CC0066', 'CC0099', 'CC00CC', 'CC00FF', 'CC3300', 'CC3333', 'CC3366', 'CC3399', 'CC33CC', 'CC33FF', 'CC6600', 'CC6633', 'CC6666', 'CC6699', 'CC66CC', 'CC66FF', 'CC9900', 'CC9933', 'CC9966', 'CC9999', 'CC99CC', 'CC99FF', 'CCCC00', 'CCCC33', 'CCCC66', 'CCCC99', 'CCCCCC', 'CCCCFF', 'CCFF00', 'CCFF33', 'CCFF66', 'CCFF99', 'CCFFCC', 'CCFFFF', 'FF0000', 'FF0033', 'FF0066', 'FF0099', 'FF00CC', 'FF00FF', 'FF3300', 'FF3333', 'FF3366', 'FF3399', 'FF33CC', 'FF33FF', 'FF6600', 'FF6633', 'FF6666', 'FF6699', 'FF66CC', 'FF66FF', 'FF9900', 'FF9933', 'FF9966', 'FF9999', 'FF99CC', 'FF99FF', 'FFCC00', 'FFCC33', 'FFCC66', 'FFCC99', 'FFCCCC', 'FFCCFF', 'FFFF00', 'FFFF33', 'FFFF66', 'FFFF99', 'FFFFCC', 'FFFFFF');
-    var pickerBody = '';
+function colorpicker(textID) {
+   // if($('#smiley_overflow'+ textID).raw().innerHTML=="")
+   //     $('#smiley_overflow'+ textID).raw().innerHTML = "\n";
+    var obj2 = document.getElementById("pickerholder" + textID);
+    //if (!isBuild) {
+    if (obj2.innerHTML=="") {
+        var myColors = new Array('000000', '000033', '000066', '000099', '0000CC', '0000FF', '003300', '003333', '003366', '003399', '0033CC', '0033FF', '006600', '006633', '006666', '006699', '0066CC', '0066FF', '009900', '009933', '009966', '009999', '0099CC', '0099FF', '00CC00', '00CC33', '00CC66', '00CC99', '00CCCC', '00CCFF', '00FF00', '00FF33', '00FF66', '00FF99', '00FFCC', '00FFFF', '330000', '330033', '330066', '330099', '3300CC', '3300FF', '333300', '333333', '333366', '333399', '3333CC', '3333FF', '336600', '336633', '336666', '336699', '3366CC', '3366FF', '339900', '339933', '339966', '339999', '3399CC', '3399FF', '33CC00', '33CC33', '33CC66', '33CC99', '33CCCC', '33CCFF', '33FF00', '33FF33', '33FF66', '33FF99', '33FFCC', '33FFFF', '660000', '660033', '660066', '660099', '6600CC', '6600FF', '663300', '663333', '663366', '663399', '6633CC', '6633FF', '666600', '666633', '666666', '666699', '6666CC', '6666FF', '669900', '669933', '669966', '669999', '6699CC', '6699FF', '66CC00', '66CC33', '66CC66', '66CC99', '66CCCC', '66CCFF', '66FF00', '66FF33', '66FF66', '66FF99', '66FFCC', '66FFFF', '990000', '990033', '990066', '990099', '9900CC', '9900FF', '993300', '993333', '993366', '993399', '9933CC', '9933FF', '996600', '996633', '996666', '996699', '9966CC', '9966FF', '999900', '999933', '999966', '999999', '9999CC', '9999FF', '99CC00', '99CC33', '99CC66', '99CC99', '99CCCC', '99CCFF', '99FF00', '99FF33', '99FF66', '99FF99', '99FFCC', '99FFFF', 'CC0000', 'CC0033', 'CC0066', 'CC0099', 'CC00CC', 'CC00FF', 'CC3300', 'CC3333', 'CC3366', 'CC3399', 'CC33CC', 'CC33FF', 'CC6600', 'CC6633', 'CC6666', 'CC6699', 'CC66CC', 'CC66FF', 'CC9900', 'CC9933', 'CC9966', 'CC9999', 'CC99CC', 'CC99FF', 'CCCC00', 'CCCC33', 'CCCC66', 'CCCC99', 'CCCCCC', 'CCCCFF', 'CCFF00', 'CCFF33', 'CCFF66', 'CCFF99', 'CCFFCC', 'CCFFFF', 'FF0000', 'FF0033', 'FF0066', 'FF0099', 'FF00CC', 'FF00FF', 'FF3300', 'FF3333', 'FF3366', 'FF3399', 'FF33CC', 'FF33FF', 'FF6600', 'FF6633', 'FF6666', 'FF6699', 'FF66CC', 'FF66FF', 'FF9900', 'FF9933', 'FF9966', 'FF9999', 'FF99CC', 'FF99FF', 'FFCC00', 'FFCC33', 'FFCC66', 'FFCC99', 'FFCCCC', 'FFCCFF', 'FFFF00', 'FFFF33', 'FFFF66', 'FFFF99', 'FFFFCC', 'FFFFFF');
+        var pickerBody = '';
 
-    pickerBody += "<table class=\"color_pick\" id=\"color_pick\" style=\"border:0px solid black; margin:2px auto 8px; float:right;display:none;\"><tr>";
-    for (i = 0; i < myColors.length; i++) {
+        pickerBody += "<table class=\"color_pick\" id=\"color_pick"+ textID + "\" style=\"border:0px solid black; margin:2px auto 8px; float:right;display:none;\"><tr>";
+        for (i = 0; i < myColors.length; i++) {
 
-      if (i % 36 == 0 && i != 0) pickerBody += "<\/tr><tr>";
-      pickerBody += "<td onclick=\"font('color','" + myColors[i] + "');colorpicker();\" onmouseover=\"chover(this,'show');\" onmouseout=\"chover(this,'back');\" style=\"background:#" + myColors[i] + ";\"></td>"
+          if (i % 36 == 0 && i != 0) pickerBody += "<\/tr><tr>";
+          pickerBody += "<td onclick=\"font('color','" + myColors[i] + "','"+textID+"');colorpicker('"+textID+"');\" onmouseover=\"chover(this,'show','"+textID+"');\" onmouseout=\"chover(this,'back','"+textID+"');\" style=\"background:#" + myColors[i] + ";\"></td>"
 
+        }
+        pickerBody += "<\/tr><\/table>"; 
+        //document.getElementById('pickerholder'+ textID).innerHTML = pickerBody;
+        obj2.innerHTML = pickerBody;
+        //isBuild = true;
     }
-    pickerBody += "<\/tr><\/table>"; 
-    document.getElementById('pickerholder').innerHTML = pickerBody;
-    isBuild = true;
-  }
-  var obj = document.getElementById("color_pick");
+    var obj = document.getElementById("color_pick"+ textID );
 
-  if (obj.style.display == "block") obj.style.display = "none";
-  else {
-    obj.style.left = hX + "px";
-    obj.style.top = hY + "px";
-    obj.style.display = "block";
-  }
+    if (obj.style.display == "block") obj.style.display = "none";
+    else {
+        obj.style.left = hX + "px";
+        obj.style.top = hY + "px";
+        obj.style.display = "block";
+    }
 }
+
 //function to capture the mouse cords
 // http://www.howtocreate.co.uk/tutorials/javascript/eventinf
 

@@ -43,7 +43,7 @@ switch($_GET['action']) {
 			<input type="text" name="title" size="95" <? if(!empty($Title)) { echo 'value="'.display_str($Title).'"'; } ?> />
 			<br />
 			<h3>Body</h3>
-                  <? $Text->display_bbcode_assistant('textbody', 0)  ?>
+                  <? $Text->display_bbcode_assistant('textbody')  ?>
                   <textarea id="textbody" name="body" class="long" rows="15"><? if(!empty($Body)) { echo display_str($Body); } ?></textarea> 
             </div>
             <br />
