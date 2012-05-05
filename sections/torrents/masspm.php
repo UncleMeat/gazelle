@@ -15,7 +15,6 @@ $DB->query("SELECT
 		t.Dupable,
 		t.DupeReason,
 		t.Description AS TorrentDescription,
-		tg.CategoryID,
 		tg.Name AS Title,
 		tg.Year,
 		tg.ArtistID,

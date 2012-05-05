@@ -7,7 +7,7 @@ require(SERVER_ROOT.'/sections/torrents/functions.php');
 include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
 $Text = new TEXT;
 
-$GroupAllowed = array('WikiBody', 'WikiImage', 'ID', 'Name', 'Year', 'RecordLabel', 'CatalogueNumber', 'ReleaseType', 'CategoryID', 'Time', 'VanityHouse');
+$GroupAllowed = array('WikiBody', 'WikiImage', 'ID', 'Name', 'Year', 'RecordLabel', 'CatalogueNumber', 'ReleaseType', 'NewCategoryID', 'Time', 'VanityHouse');
 $TorrentAllowed = array('ID', 'Media', 'Format', 'Encoding', 'Remastered', 'RemasterYear', 'RemasterTitle', 'RemasterRecordLabel', 'RemasterCatalogueNumber', 'Scene', 'HasLog', 'HasCue', 'LogScore', 'FileCount', 'Size', 'Seeders', 'Leechers', 'Snatched', 'FreeTorrent', 'Time', 'Description', 'FileList', 'FilePath', 'UserID', 'Username');
 
 $GroupID = (int)$_GET['id'];
@@ -29,7 +29,7 @@ $JsonTorrentDetails = array(
 	'recordLabel' => $TorrentDetails['RecordLabel'],
 	'catalogueNumber' => $TorrentDetails['CatalogueNumber'],
 	'releaseType' => (int) $TorrentDetails['ReleaseType'],
-	'categoryId' => (int) $TorrentDetails['CategoryID'],
+	'categoryId' => (int) $TorrentDetails['NewCategoryID'],
 	'time' => $TorrentDetails['Time'],
 	'vanityHouse' => $TorrentDetails['VanityHouse'] == 1,
 	'artists' => get_artist($GroupID),

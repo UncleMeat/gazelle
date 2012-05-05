@@ -15,7 +15,7 @@ show_header('Upload','upload,bbcode');
 if(empty($Properties) && !empty($_GET['groupid']) && is_number($_GET['groupid'])) {
 	$DB->query("SELECT 
 		tg.ID as GroupID,
-		tg.CategoryID,
+		tg.NewCategoryID,
 		tg.Name AS Title,
 		tg.Year,
 		tg.RecordLabel,
@@ -30,7 +30,7 @@ if(empty($Properties) && !empty($_GET['groupid']) && is_number($_GET['groupid'])
 		GROUP BY tg.ID");
 	if ($DB->record_count()) {	
 		list($Properties) = $DB->to_array(false,MYSQLI_BOTH);
-		$Properties['CategoryName'] = $Categories[$Properties['CategoryID']-1];
+
 		$Properties['Artists'] = get_artist($_GET['groupid']);
 		
 		$DB->query("SELECT 
@@ -60,7 +60,6 @@ if(empty($Properties) && !empty($_GET['groupid']) && is_number($_GET['groupid'])
 		WHERE r.ID=".$_GET['requestid']);
 	
 	list($Properties) = $DB->to_array(false,MYSQLI_BOTH);
-	$Properties['CategoryName'] = $Categories[$Properties['CategoryID']-1];
 	$Properties['Artists'] = get_request_artists($_GET['requestid']);
 	$Properties['TagList'] = implode(", ", get_request_tags($_GET['requestid']));
 }

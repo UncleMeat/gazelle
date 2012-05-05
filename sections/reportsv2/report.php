@@ -11,8 +11,6 @@ if(!isset($_GET['id']) || !is_number($_GET['id'])) {
 	}
 } else {
 	$TorrentID = $_GET['id'];
-	$DB->query("SELECT tg.CategoryID FROM torrents_group AS tg LEFT JOIN torrents AS t ON t.GroupID=tg.ID WHERE t.ID=".$_GET['id']);
-	list($CategoryID) = $DB->next_record();
 }
 
 show_header('Report', 'reportsv2');
@@ -26,7 +24,6 @@ show_header('Report', 'reportsv2');
 			<input type="hidden" name="submit" value="true" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 			<input type="hidden" name="torrentid" value="<?=$TorrentID?>" />
-			<input type="hidden" name="categoryid" value="<?=$CategoryID?>" />
 		</div>
 		<table>
 			<tr>
@@ -34,16 +31,12 @@ show_header('Report', 'reportsv2');
 				<td>
 					<select id="type" name="type" onchange="ChangeReportType()">
 <?
-	if (!empty($Types[$CategoryID])) {
-		$TypeList = $Types['master'] + $Types[$CategoryID];
+		$TypeList = $Types;
 		$Priorities = array();
 		foreach ($TypeList as $Key => $Value) {
 			$Priorities[$Key] = $Value['priority'];
 		}
 		array_multisort($Priorities, SORT_ASC, $TypeList);
-	} else {
-		$TypeList = $Types['master'];
-	}
 	foreach($TypeList as $Type => $Data) {
 ?>
 						<option value="<?=$Type?>"><?=$Data['title']?></option>

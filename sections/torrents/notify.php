@@ -15,7 +15,7 @@ $Results = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 		t.ID,
 		g.ID,
 		g.Name,
-		g.CategoryID,
+		g.NewCategoryID,
 		g.TagList,
 		t.Size,
 		t.FileCount,
@@ -124,14 +124,7 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 			}
 			
 			$DisplayName.= "<a href='torrents.php?id=$GroupID&amp;torrentid=$TorrentID#torrent$TorrentID'  title='View Torrent'>".$GroupName."</a>";
-	
-			if($GroupCategoryID==1 && $GroupYear>0) {
-				$DisplayName.= " [$GroupYear]";
-			}
-			if($GroupCategoryID==1 && $ReleaseType>0) {
-				$DisplayName.= " [".$ReleaseTypes[$ReleaseType]."]";
-			}
-	
+		
 			// append extra info to torrent title
 			$ExtraInfo='';
 			$AddExtra='';
@@ -159,7 +152,7 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 				$TagLinks = implode(', ', $TagLinks);
 				$TorrentTags='<br /><div class="tags">'.$TagLinks.'</div>';
 			} else {
-				$MainTag = $Categories[$GroupCategoryID-1];
+				$MainTag = $NewCategories[$GroupCategoryID-1]['name'];
 			}
 
 		// print row

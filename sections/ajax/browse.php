@@ -323,7 +323,6 @@ $DB->query("SELECT
 	AND tt.TagID<>'13679'
 	AND tt.TagID<>'4820'
 	AND tt.TagID<>'2838'
-	AND g.CategoryID='1'
 	AND tags.Uses > '10'
 	GROUP BY tt.TagID
 	ORDER BY Score DESC
@@ -351,237 +350,31 @@ $Bookmarks = all_bookmarks('torrent');
 
 $JsonGroups = array();
 foreach($Results as $GroupID=>$Data) {
-	list($Artists, $GroupCatalogueNumber, $ExtendedArtists, $GroupID2, $GroupName, $GroupRecordLabel, $ReleaseType, $TagList, $Torrents, $GroupVanityHouse, $GroupYear, $CategoryID, $FreeTorrent, $HasCue, $HasLog, $TotalLeechers, $LogScore, $ReleaseType, $ReleaseType, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
+	list($Artists, $GroupCatalogueNumber, $ExtendedArtists, $GroupID2, $GroupName, $GroupRecordLabel, $ReleaseType, $TagList, $Torrents, $GroupVanityHouse, $GroupYear, $FreeTorrent, $HasCue, $HasLog, $TotalLeechers, $LogScore, $ReleaseType, $ReleaseType, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 	
 	$TagList = explode(' ',str_replace('_','.',$TagList));
-	
-	if(count($Torrents)>1 || $CategoryID==1) {
-		// These torrents are in a group
-		if (!empty($ExtendedArtists[1]) || !empty($ExtendedArtists[4]) || !empty($ExtendedArtists[5]) || !empty($ExtendedArtists[6])) {
-			unset($ExtendedArtists[2]);
-			unset($ExtendedArtists[3]);
-			$DisplayName = display_artists($ExtendedArtists, false, false, true);
-		} elseif(!empty($Artists)) {
-			$DisplayName = display_artists(array(1=>$Artists), false, false, true);
-		} else {
-			$DisplayName='';
-		}
-		
-		$LastRemasterYear = '-';
-		$LastRemasterTitle = '';
-		$LastRemasterRecordLabel = '';
-		$LastRemasterCatalogueNumber = '';
-		$LastMedia = '';
-		
-		$EditionID = 0;
-		unset($FirstUnknown);
+			
+        list($TorrentID, $Data) = each($Torrents);
 
-		$JsonTorrents = array();
-		foreach($Torrents as $TorrentID => $Data) {
-			// All of the individual torrents in the group
-			
-			// If they're using the advanced search and have chosen enabled grouping, we just skip the torrents that don't check out
-			
-			$Filter = false;
-			$Pass = false;
-			
-			if(!empty($FilterBitrates)) {
-				$Filter = true;
-				$Bitrate = strtolower(array_shift(explode(' ',$Data['Encoding'])));
-				if(in_array($Bitrate, $FilterBitrates)) {
-					$Pass = true;
-				}
-			}
-			if(!empty($FilterFormats)) {
-				$Filter = true;
-				if(in_array(strtolower($Data['Format']), $FilterFormats)) {
-					$Pass = true;
-				}
-			}
-			
-			if(!empty($_GET['encoding'])) {
-				$Filter = true;
-				if($Data['Encoding']==$_GET['encoding']) {
-					$Pass = true;
-				}
-			}
-			if(!empty($_GET['format'])) {
-				$Filter = true;
-				if($Data['Format']==$_GET['format']) {
-					$Pass = true;
-				}
-			}
-			
-			
-			if(!empty($_GET['media'])) {
-				$Filter = true;
-				if($Data['Media']==$_GET['media']) {
-					$Pass = true;
-				}
-			}
-			if(isset($_GET['haslog']) && $_GET['haslog']!=='') {
-				$Filter = true;
-				if($_GET['haslog'] == '100' && $Data['LogScore']==100) {
-					$Pass = true;
-				} elseif (($_GET['haslog'] == '-1') && ($Data['LogScore'] < 100) && ($Data['HasLog'] == '1')) {
- 					$Pass = true;
- 				} elseif(($_GET['haslog'] == '1' || $_GET['haslog'] == '0') && (int)$Data['HasLog']==$_GET['haslog']) {
-					$Pass = true;
-				}
-			}
-			if(isset($_GET['hascue']) && $_GET['hascue']!=='') {
-				$Filter = true;
-				if((int)$Data['HasCue']==$_GET['hascue']) {
-					$Pass = true;
-				}
-			}
-			if(isset($_GET['scene']) && $_GET['scene']!=='') {
-				$Filter = true;
-				if((int)$Data['Scene']==$_GET['scene']) {
-					$Pass = true;
-				}
-			}
-			if(isset($_GET['vanityhouse']) && $_GET['vanityhouse']!=='') {
-				$Filter = true;
-				if((int)$Data['VanityHouse']==$_GET['vanityhouse']) {
-					$Pass = true;
-				}
-			}
-			if(isset($_GET['freetorrent']) && $_GET['freetorrent']!=='') {
-				$Filter = true;
-				if((int)$Data['FreeTorrent'] & $_GET['freetorrent'] || (int)$Data['FreeTorrent'] == $_GET['freetorrent']) {
-					$Pass = true;
-				}
-			}
-			if(!empty($_GET['remastertitle'])) {
-				$Filter = true;
-				$Continue = false;
-				$RemasterParts = explode(' ', $_GET['remastertitle']);
-				foreach($RemasterParts as $RemasterPart) {
-					if(stripos($Data['RemasterTitle'],$RemasterPart) === false) {
-						$Continue = true;
-					}
-				}
-				if(!$Continue) {
-					$Pass = true;
-				}
-			}
-			if($Filter && !$Pass) {
-				continue;
-			}
-
-			if ($Data['Remastered'] && !$Data['RemasterYear']) {
-				$FirstUnknown = !isset($FirstUnknown);
-			}
-			
-			if (in_array($TorrentID, $TokenTorrents) && empty($Torrent['FreeTorrent'])) {
-				$Data['PersonalFL'] = 1;
-			}
-
-			if($CategoryID == 1 && ($Data['RemasterTitle'] != $LastRemasterTitle || $Data['RemasterYear'] != $LastRemasterYear ||
-			$Data['RemasterRecordLabel'] != $LastRemasterRecordLabel || $Data['RemasterCatalogueNumber'] != $LastRemasterCatalogueNumber) || $FirstUnknown || $Data['Media'] != $LastMedia) {
-				$EditionID++;
-
-				if($Data['Remastered'] && $Data['RemasterYear'] != 0) {
-					
-					$RemasterName = $Data['RemasterYear'];
-					$AddExtra = " - ";
-					if($Data['RemasterRecordLabel']) { $RemasterName .= $AddExtra.display_str($Data['RemasterRecordLabel']); $AddExtra=' / '; }
-					if($Data['RemasterCatalogueNumber']) { $RemasterName .= $AddExtra.display_str($Data['RemasterCatalogueNumber']); $AddExtra=' / '; }
-					if($Data['RemasterTitle']) { $RemasterName .= $AddExtra.display_str($Data['RemasterTitle']); $AddExtra=' / '; }
-					$RemasterName .= $AddExtra.display_str($Data['Media']);
-				} else {
-					$AddExtra = " / ";
-					if (!$Data['Remastered']) {
-						$MasterName = "Original Release";
-						if($GroupRecordLabel) { $MasterName .= $AddExtra.$GroupRecordLabel; $AddExtra=' / '; }
-						if($GroupCatalogueNumber) { $MasterName .= $AddExtra.$GroupCatalogueNumber; $AddExtra=' / '; }
-					} else {
-						$MasterName = "Unknown Release(s)";
-					}
-					$MasterName .= $AddExtra.display_str($Data['Media']);
-				}
-			}
-			$LastRemasterTitle = $Data['RemasterTitle'];
-			$LastRemasterYear = $Data['RemasterYear'];
-			$LastRemasterRecordLabel = $Data['RemasterRecordLabel'];
-			$LastRemasterCatalogueNumber = $Data['RemasterCatalogueNumber'];
-			$LastMedia = $Data['Media'];
-			
-			$JsonTorrents[] = array(
-				'torrentId' => (int) $TorrentID,
-				'editionId' => (int) $EditionID,
-				'remastered' => $Data['Remastered'] == '1',
-				'remasterYear' => (int) $Data['RemasterYear'],
-				'remasterCatalogueNumber' => $Data['RemasterCatalogueNumber'],
-				'remasterTitle' => $Data['RemasterTitle'],
-				'media' => $Data['Media'],
-				'encoding' => $Data['Encoding'],
-				'format' => $Data['Format'],
-				'hasLog' => $Data['HasLog'] == '1',
-				'logScore' => (int) $Data['LogScore'],
-				'hasCue' => $Data['HasCue'] == '1',
-				'scene' => $Data['Scene'] == '1',
-				'vanityHouse' => $Data['VanityHouse'] == '1',
-				'fileCount' => (int) $Data['FileCount'],
-				'time' => $Data['Time'],
-				'size' => (int) $Data['Size'],
-				'snatches' => (int) $Data['Snatched'],
-				'seeders' => (int) $Data['Seeders'],
-				'leechers' => (int) $Data['Leechers'],
-				'isFreeleech' => $Data['FreeTorrent'] == '1',
-				'isNeutralLeech' => $Data['FreeTorrent'] == '2',
-				'isPersonalFreeleech' => in_array($TorrentID, $TokenTorrents),
-				'canUseToken' => ($LoggedUser['FLTokens'] > 0)
-									&& $Data['HasFile'] && ($Data['Size'] < 1073741824)
-									&& !in_array($TorrentID, $TokenTorrents)
-									&& empty($Data['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')
-			);
-		}
-		
-		$JsonGroups[] = array(
-			'groupId' => (int) $GroupID,
-			'groupName' => $GroupName,
-			'artist' => $DisplayName,
-			'tags' => $TagList,
-			'bookmarked' => in_array($GroupID, $Bookmarks),
-			'vanityHouse' => $GroupVanityHouse == '1',
-			'groupYear' => (int) $GroupYear,
-			'releaseType' => $ReleaseTypes[$ReleaseType],
-			'groupTime' => $GroupTime,
-			'maxSize' => (int) $MaxSize,
-			'totalSnatched' => (int) $TotalSnatched,
-			'totalSeeders' => (int) $TotalSeeders,
-			'totalLeechers' => (int) $TotalLeechers,
-			'torrents' => $JsonTorrents
-		);
-	}
-	else {
-		// Viewing a type that does not require grouping
-		
-		list($TorrentID, $Data) = each($Torrents);
-		
-		$JsonGroups[] = array(
-			'groupId' => (int) $GroupID,
-			'groupName' => $GroupName,
-			'torrentId' => (int) $TorrentID,
-			'tags' => $TagList,
-			'category' => $Categories[$CategoryID-1],
-			'fileCount' => (int) $Data['FileCount'],
-			'groupTime' => $GroupTime,
-			'size' => (int) $Data['Size'],
-			'snatches' => (int) $TotalSnatched,
-			'seeders' => (int) $TotalSeeders,
-			'leechers' => (int) $TotalLeechers,
-			'isFreeleech' => $Data['FreeTorrent'] == '1',
-			'isNeutralLeech' => $Data['FreeTorrent'] == '2',
-			'isPersonalFreeleech' => in_array($TorrentID, $TokenTorrents),
-			'canUseToken' => ($LoggedUser['FLTokens'] > 0)
-								&& $Data['HasFile'] && ($Data['Size'] < 1073741824)
-								&& !in_array($TorrentID, $TokenTorrents)
-								&& empty($Data['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')
-		);
-	}
+        $JsonGroups[] = array(
+                'groupId' => (int) $GroupID,
+                'groupName' => $GroupName,
+                'torrentId' => (int) $TorrentID,
+                'tags' => $TagList,
+                'fileCount' => (int) $Data['FileCount'],
+                'groupTime' => $GroupTime,
+                'size' => (int) $Data['Size'],
+                'snatches' => (int) $TotalSnatched,
+                'seeders' => (int) $TotalSeeders,
+                'leechers' => (int) $TotalLeechers,
+                'isFreeleech' => $Data['FreeTorrent'] == '1',
+                'isNeutralLeech' => $Data['FreeTorrent'] == '2',
+                'isPersonalFreeleech' => in_array($TorrentID, $TokenTorrents),
+                'canUseToken' => ($LoggedUser['FLTokens'] > 0)
+                                                        && $Data['HasFile'] && ($Data['Size'] < 1073741824)
+                                                        && !in_array($TorrentID, $TokenTorrents)
+                                                        && empty($Data['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')
+        );
 }
 
 print

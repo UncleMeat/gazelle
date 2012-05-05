@@ -19,20 +19,12 @@ if(!is_number($_POST['torrentid'])) {
 	$TorrentID = $_POST['torrentid'];
 }
 
-if(!is_number($_POST['categoryid'])) {
-	error(404);
-} else {
-	$CategoryID = $_POST['categoryid'];
-}
 
 if(!isset($_POST['type'])) {
 	error(404);
-} else if (array_key_exists($_POST['type'], $Types[$CategoryID])) {
+} else if (array_key_exists($_POST['type'], $Types)) {
 	$Type = $_POST['type'];
-	$ReportType = $Types[$CategoryID][$Type];
-} else if(array_key_exists($_POST['type'],$Types['master'])) {
-	$Type = $_POST['type'];
-	$ReportType = $Types['master'][$Type];
+	$ReportType = $Types[$Type];
 } else {
 	//There was a type but it wasn't an option!
 	error(403);

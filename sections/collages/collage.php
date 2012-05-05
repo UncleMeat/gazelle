@@ -67,7 +67,6 @@ $DB->query("UPDATE users_collage_subs SET LastVisit=NOW() WHERE UserID = ".$Logg
 if(!is_array($TorrentList)) {
 	$DB->query("SELECT ct.GroupID,
 			tg.WikiImage,
-			tg.CategoryID,
                         tg.NewCategoryID,
 			um.ID,
 			um.Username
@@ -101,7 +100,7 @@ $Number = 0;
 
 foreach ($TorrentList as $GroupID=>$Group) {
 	list($GroupID, $GroupName, $GroupYear, $GroupRecordLabel, $GroupCatalogueNumber, $TagList, $ReleaseType, $GroupVanityHouse, $Torrents, $GroupArtists, $ExtendedArtists) = array_values($Group);
-	list($GroupID2, $Image, $GroupCategoryID, $NewCategoryID, $UserID, $Username) = array_values($CollageDataList[$GroupID]);
+	list($GroupID2, $Image, $NewCategoryID, $UserID, $Username) = array_values($CollageDataList[$GroupID]);
 
         // Handle stats and stuff
 	$Number++;

@@ -11,26 +11,16 @@ if(!is_number($RequestID)) {
 
 $DB->query("SELECT UserID,
 			Title,
-			CategoryID,
 			GroupID
 			FROM requests
 			WHERE ID = ".$RequestID);
-list($UserID, $Title, $CategoryID, $GroupID) = $DB->next_record();
+list($UserID, $Title, $GroupID) = $DB->next_record();
 
 if($LoggedUser['ID'] != $UserID && !check_perms('site_moderate_requests')) { 
 	error(403);
 }
 
-$CategoryName = $Categories[$CategoryID - 1];
-
-//Do we need to get artists?
-if($CategoryName == "Music") {
-	$ArtistForm = get_request_artists($RequestID);
-	$ArtistName = display_artists($ArtistForm, false, true);
-	$FullName = $ArtistName.$Title;	
-} else {
-	$FullName = $Title;
-}
+$FullName = $Title;
 
 
 

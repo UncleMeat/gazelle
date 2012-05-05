@@ -42,18 +42,18 @@ if (!list($Labels,$InFlow,$OutFlow,$NetFlow,$Max) = $Cache->get_value('torrents_
 }
 
 include_once(SERVER_ROOT.'/classes/class_charts.php');
-$DB->query("SELECT tg.CategoryID, COUNT(t.ID) AS Torrents FROM torrents AS t JOIN torrents_group AS tg ON tg.ID=t.GroupID GROUP BY tg.CategoryID ORDER BY Torrents DESC");
+$DB->query("SELECT tg.NewCategoryID, COUNT(t.ID) AS Torrents FROM torrents AS t JOIN torrents_group AS tg ON tg.ID=t.GroupID GROUP BY tg.NewCategoryID ORDER BY Torrents DESC");
 $Groups = $DB->to_array();
 $Pie = new PIE_CHART(750,400,array('Other'=>1,'Percentage'=>1));
 foreach($Groups as $Group) {
-	list($CategoryID, $Torrents) = $Group;
-	$CategoryName = $Categories[$CategoryID - 1];
-	$Pie->add($CategoryName,$Torrents);
+	list($NewCategoryID, $Torrents) = $Group;
+	$CategoryName = $NewCategories[$NewCategoryID]['name'];
+	$Pie->add($NewCategoryName,$Torrents);
 }
 $Pie->transparent();
 $Pie->color('FF33CC');
 $Pie->generate();
-$Categories = $Pie->url();
+$NewCategories = $Pie->url();
 
 show_header();
 ?>
@@ -64,7 +64,7 @@ show_header();
 </div>
 <div class="box pad center">
 	<h1>Torrents by category</h1>
-	<img src="<?=$Categories?>" />
+	<img src="<?=$NewCategories?>" />
 </div>
 <?
 show_footer();

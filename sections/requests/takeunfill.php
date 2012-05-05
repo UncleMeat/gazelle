@@ -10,7 +10,6 @@ if(!is_number($RequestID)){
 }
 
 $DB->query("SELECT
-		r.CategoryID,
 		r.UserID, 
 		r.FillerID, 
 		r.Title,
@@ -19,7 +18,7 @@ $DB->query("SELECT
 	FROM requests AS r 
 		LEFT JOIN users_main AS u ON u.ID=FillerID
 	WHERE r.ID= ".$RequestID);
-list($CategoryID, $UserID, $FillerID, $Title, $Uploaded, $GroupID) = $DB->next_record();
+list($UserID, $FillerID, $Title, $Uploaded, $GroupID) = $DB->next_record();
 
 if((($LoggedUser['ID'] != $UserID && $LoggedUser['ID'] != $FillerID) && !check_perms('site_moderate_requests')) || $FillerID == 0) {
 		error(403);
@@ -33,15 +32,7 @@ $DB->query("UPDATE requests SET
 			Visible = 1
 			WHERE ID = ".$RequestID);
 
-$CategoryName = $Categories[$CategoryID - 1];
-
-if($CategoryName == "Music") {
-	$ArtistForm = get_request_artists($RequestID);
-	$ArtistName = display_artists($ArtistForm, false, true);
-	$FullName = $ArtistName.$Title;
-} else {
-	$FullName = $Title;
-}
+$FullName = $Title;
 
 $RequestVotes = get_votes_array($RequestID);
 

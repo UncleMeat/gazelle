@@ -179,7 +179,7 @@ if(empty($GroupBy)) {
 }
 
 if((empty($_GET['search']) || trim($_GET['search']) == '') && $Order!='Name') {
-	$SQL = "SELECT SQL_CALC_FOUND_ROWS t.GroupID, t.ID AS TorrentID, $Time AS Time, tg.CategoryID, tg.NewCategoryID
+	$SQL = "SELECT SQL_CALC_FOUND_ROWS t.GroupID, t.ID AS TorrentID, $Time AS Time, tg.NewCategoryID
 		FROM $From
 		JOIN torrents_group AS tg ON tg.ID=t.GroupID
 		WHERE $UserField='$UserID' $ExtraWhere $SearchWhere
@@ -190,7 +190,6 @@ if((empty($_GET['search']) || trim($_GET['search']) == '') && $Order!='Name') {
 		GroupID int(10) unsigned not null,
 		TorrentID int(10) unsigned not null,
 		Time int(12) unsigned not null,
-		CategoryID int(3) unsigned,
                 NewCategoryID int(11) unsigned,
 		Seeders int(6) unsigned,
 		Leechers int(6) unsigned,
@@ -202,7 +201,6 @@ if((empty($_GET['search']) || trim($_GET['search']) == '') && $Order!='Name') {
 		t.GroupID, 
 		t.ID AS TorrentID, 
 		$Time AS Time, 
-		tg.CategoryID,
                 tg.NewCategoryID,
 		t.Seeders,
 		t.Leechers,
@@ -221,7 +219,7 @@ if((empty($_GET['search']) || trim($_GET['search']) == '') && $Order!='Name') {
 	}
 
 	$SQL = "SELECT SQL_CALC_FOUND_ROWS 
-		GroupID, TorrentID, Time, CategoryID, NewCategoryID
+		GroupID, TorrentID, Time, NewCategoryID
 		FROM temp_sections_torrents_user";
 	if(!empty($Words)) {
 		$SQL .= "
@@ -342,7 +340,7 @@ foreach($NewCategories as $Cat) {
 <?
 	$Results = $Results['matches'];
 	foreach($TorrentsInfo as $TorrentID=>$Info) {
-		list($GroupID,, $Time, $CategoryID, $NewCategoryID) = array_values($Info);
+		list($GroupID,, $Time, $NewCategoryID) = array_values($Info);
 		
 		list($GroupID, $GroupName, $GroupYear, $GroupRecordLabel, $GroupCatalogueNumber, $TagList, $ReleaseType, $GroupVanityHouse, $Torrents, $Artists, $ExtendedArtists) = array_values($Results[$GroupID]);
 		$Torrent = $Torrents[$TorrentID];

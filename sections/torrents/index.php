@@ -28,12 +28,7 @@ if(!empty($_REQUEST['action'])) {
 			enforce_login();
 			include(SERVER_ROOT.'/sections/torrents/editgroup.php');
 			break;
-		
-		case 'editgroupid':
-			enforce_login();
-			include(SERVER_ROOT.'/sections/torrents/editgroupid.php');
-			break;
-		
+				
 		case 'takeedit':
 			enforce_login();
 			include(SERVER_ROOT.'/sections/torrents/takeedit.php');
@@ -79,12 +74,7 @@ if(!empty($_REQUEST['action'])) {
 			enforce_login();
 			include(SERVER_ROOT.'/sections/torrents/rename.php');
 			break;
-		
-		case 'merge':
-			enforce_login();
-			include(SERVER_ROOT.'/sections/torrents/merge.php');
-			break;
-			
+					
 		case 'add_alias':
 			enforce_login();
 			include(SERVER_ROOT.'/sections/torrents/add_alias.php');
@@ -393,7 +383,7 @@ if(!empty($_REQUEST['action'])) {
 					header("Location: torrents.php?id=".$GroupID."&torrentid=".$_GET['torrentid']);
 				}
 			} else {
-				include(SERVER_ROOT.'/sections/torrents/browse2.php');
+				include(SERVER_ROOT.'/sections/torrents/browse.php');
 			}
 			break;
 	}
@@ -418,10 +408,10 @@ if(!empty($_REQUEST['action'])) {
 		if($GroupID) {
 			header("Location: torrents.php?id=".$GroupID);
 		} else {
-			include(SERVER_ROOT.'/sections/torrents/browse2.php');
+			include(SERVER_ROOT.'/sections/torrents/browse.php');
 		}
 	} else {
-		include(SERVER_ROOT.'/sections/torrents/browse2.php');
+		include(SERVER_ROOT.'/sections/torrents/browse.php');
 	}
 	
 }

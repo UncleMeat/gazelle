@@ -34,10 +34,7 @@ $_POST['desc'] = trim($_POST['desc']);
 $_POST['title'] = trim($_POST['title']);
 
 $Properties = array();
-$Type = $Categories[(int) $_POST['type']];
 $NewCategory = $_POST['category'];
-$TypeID = $_POST['type'] + 1;
-$Properties['CategoryName'] = $Type;
 $Properties['Title'] = $_POST['title'];
 $Properties['Remastered'] = (isset($_POST['remaster'])) ? 1 : 0;
 if ($Properties['Remastered'] || isset($_POST['unknown'])) {
@@ -143,60 +140,10 @@ if (!$Err && $Properties['Format'] == 'FLAC') {
       } */
 }
 
-
-
-//Multiple artists!
-
-$LogName = '';
-if (empty($Properties['GroupID']) && empty($ArtistForm) && $Type == "Music") {
-    $MainArtistCount = 0;
-    $ArtistNames = array();
-    $ArtistForm = array(
-        1 => array(),
-        2 => array(),
-        3 => array(),
-        4 => array(),
-        5 => array(),
-        6 => array()
-    );
-    for ($i = 0, $il = count($Artists); $i < $il; $i++) {
-        if (trim($Artists[$i]) != "") {
-            if (!in_array($Artists[$i], trim($ArtistNames))) {
-                $ArtistForm[$Importance[$i]][] = array('name' => normalise_artist_name($Artists[$i]));
-                if ($Importance[$i] == 1) {
-                    $MainArtistCount++;
-                }
-                $ArtistNames[] = trim($Artists[$i]);
-            }
-        }
-    }
-    if ($MainArtistCount < 1) {
-        $Err = "Please enter at least one main artist";
-        $ArtistForm = array();
-    }
-    $LogName .= display_artists($ArtistForm, false);
-} elseif ($Type == "Music" && empty($ArtistForm)) {
-    $DB->query("SELECT ta.ArtistID,aa.Name,ta.Importance FROM torrents_artists AS ta JOIN artists_alias AS aa ON ta.AliasID = aa.AliasID WHERE ta.GroupID = " . $Properties['GroupID'] . " ORDER BY ta.Importance ASC, aa.Name ASC;");
-    while (list($ArtistID, $ArtistName, $ArtistImportance) = $DB->next_record(MYSQLI_BOTH, false)) {
-        $ArtistForm[$ArtistImportance][] = array('id' => $ArtistID, 'name' => display_str($ArtistName));
-        $ArtistsUnescaped[$ArtistImportance][] = array('name' => $ArtistName);
-    }
-    $LogName .= display_artists($ArtistForm, false);
-}
-
-
 if ($Err) { // Show the upload form, with the data the user entered
     include(SERVER_ROOT . '/sections/upload/upload.php');
     die();
 }
-
-// Strip out amazon's padding
-$AmazonReg = '/(http:\/\/ecx.images-amazon.com\/images\/.+)(\._.*_\.jpg)/i';
-$Matches = array();
-if (preg_match($RegX, $Properties['Image'], $Matches)) {
-    $Properties['Image'] = $Matches[1] . '.jpg';
-}
-
 
 //******************************************************************************//
 //--------------- Make variables ready for database input ----------------------//
@@ -246,13 +193,6 @@ foreach ($FileList as $File) {
         $HasCue = "'1'";
     }
 
-    // Forbidden files
-    if ($Type == 'Music' && preg_match('/\.(mov|avi|mpg|exe|zip|rar|mkv|bat|iso|dat|torrent|!ut|nzb|wav)$/i', $Name)) {
-        $Err = 'The torrent contained one or more invalid files (' . $Name . ').';
-    }
-    if ($Type == 'Music' && preg_match('/demonoid.*\.txt$/i', $Name)) {
-        $Err = 'The torrent contained one or more forbidden files (' . $Name . ').';
-    }
     if (preg_match('/INCOMPLETE~\*/i', $Name)) {
         $Err = 'The torrent contained one or more forbidden files (' . $Name . ').';
     }
@@ -297,7 +237,6 @@ if ($DB->record_count() > 0) {
 
 
 if (!empty($Err)) { // Show the upload form, with the data the user entered
-    $UploadForm = $Type;
     include(SERVER_ROOT . '/sections/upload/upload.php');
     die();
 }
@@ -324,17 +263,9 @@ if (!$GroupID) {
     // Create torrent group
     $DB->query("
 		INSERT INTO torrents_group
-		(ArtistID, CategoryID, NewCategoryID, Name, Year, RecordLabel, CatalogueNumber, Time, WikiBody, WikiImage, SearchText, ReleaseType, VanityHouse) VALUES
-		(0, " . $TypeID . ", " . $NewCategory . ", " . $T['Title'] . ", $T[Year], $T[RecordLabel], $T[CatalogueNumber], '" . sqltime() . "', '" . db_string($Body) . "', $T[Image], '$SearchText', $T[ReleaseType], $T[VanityHouse])");
+		(ArtistID, NewCategoryID, Name, Year, RecordLabel, CatalogueNumber, Time, WikiBody, WikiImage, SearchText, ReleaseType, VanityHouse) VALUES
+		(0, " . $NewCategory . ", " . $T['Title'] . ", $T[Year], $T[RecordLabel], $T[CatalogueNumber], '" . sqltime() . "', '" . db_string($Body) . "', $T[Image], '$SearchText', $T[ReleaseType], $T[VanityHouse])");
     $GroupID = $DB->inserted_id();
-    if ($Type == 'Music') {
-        foreach ($ArtistForm as $Importance => $Artists) {
-            foreach ($Artists as $Num => $Artist) {
-                $DB->query("INSERT IGNORE INTO torrents_artists (GroupID, ArtistID, AliasID, UserID, Importance) VALUES (" . $GroupID . ", " . $Artist['id'] . ", " . $Artist['aliasid'] . ", " . $LoggedUser['ID'] . ", '" . $Importance . "')");
-                $Cache->increment('stats_album_count');
-            }
-        }
-    }
     $Cache->increment('stats_group_count');
 } else {
     $DB->query("UPDATE torrents_group SET
@@ -343,10 +274,6 @@ if (!$GroupID) {
     $Cache->delete_value('torrent_group_' . $GroupID);
     $Cache->delete_value('torrents_details_' . $GroupID);
     $Cache->delete_value('detail_files_' . $GroupID);
-    if ($Type == 'Music') {
-        $DB->query("SELECT ReleaseType FROM torrents_group WHERE ID='$GroupID'");
-        list($Properties['ReleaseType']) = $DB->next_record();
-    }
 }
 
 // Description
@@ -477,34 +404,7 @@ if (trim($Properties['Image']) != "") {
 //--------------- IRC announce and feeds ---------------------------------------//
 $Announce = "";
 
-if ($Type == 'Music') {
-    $Announce .= display_artists($ArtistForm, false);
-}
 $Announce .= trim($Properties['Title']) . " ";
-if ($Type == 'Music') {
-    $Announce .= '[' . trim($Properties['Year']) . ']';
-    if (($Type == 'Music') && ($Properties['ReleaseType'] > 0)) {
-        $Announce .= ' [' . $ReleaseTypes[$Properties['ReleaseType']] . ']';
-    }
-    $Announce .= " - ";
-    $Announce .= trim($Properties['Format']) . " / " . trim($Properties['Bitrate']);
-    if ($HasLog == "'1'") {
-        $Announce .= " / Log";
-    }
-    if ($LogInDB) {
-        $Announce .= " / " . $LogScoreAverage . '%';
-    }
-    if ($HasCue == "'1'") {
-        $Announce .= " / Cue";
-    }
-    $Announce .= " / " . trim($Properties['Media']);
-    if ($Properties['Scene'] == "1") {
-        $Announce .= " / Scene";
-    }
-    if ($Properties['FreeLeech'] == "1") {
-        $Announce .= " / Freeleech!";
-    }
-}
 $Title = $Announce;
 
 $AnnounceSSL = $Announce . " - https://" . SSL_SITE_URL . "/torrents.php?id=$GroupID / https://" . SSL_SITE_URL . "/torrents.php?action=download&id=$TorrentID";
@@ -599,7 +499,8 @@ $SQL.=implode(' OR ', $TagSQL);
 
 $SQL.= ") AND !(" . implode(' OR ', $NotTagSQL) . ")";
 
-$SQL.=" AND (Categories LIKE '%|" . db_string(trim($Type)) . "|%' OR Categories='') ";
+// TODO: Lanz: fix this! $Type was the old category id
+//$SQL.=" AND (Categories LIKE '%|" . db_string(trim($Type)) . "|%' OR Categories='') ";
 
 if ($Properties['ReleaseType']) {
     $SQL.=" AND (ReleaseTypes LIKE '%|" . db_string(trim($ReleaseTypes[$Properties['ReleaseType']])) . "|%' OR ReleaseTypes='') ";
@@ -696,42 +597,8 @@ while (list($UserID, $Passkey) = $DB->next_record()) {
 
 $Feed->populate('torrents_all', $Item);
 
-if ($Type == 'Music') {
-    $Feed->populate('torrents_music', $Item);
-    if ($Properties['Media'] == 'Vinyl') {
-        $Feed->populate('torrents_vinyl', $Item);
-    }
-    if ($Properties['Bitrate'] == 'Lossless') {
-        $Feed->populate('torrents_lossless', $Item);
-    }
-    if ($Properties['Bitrate'] == '24bit Lossless') {
-        $Feed->populate('torrents_lossless24', $Item);
-    }
-    if ($Properties['Format'] == 'MP3') {
-        $Feed->populate('torrents_mp3', $Item);
-    }
-    if ($Properties['Format'] == 'FLAC') {
-        $Feed->populate('torrents_flac', $Item);
-    }
-}
-if ($Type == 'Applications') {
-    $Feed->populate('torrents_apps', $Item);
-}
-if ($Type == 'E-Books') {
-    $Feed->populate('torrents_ebooks', $Item);
-}
-if ($Type == 'Audiobooks') {
-    $Feed->populate('torrents_abooks', $Item);
-}
-if ($Type == 'E-Learning Videos') {
-    $Feed->populate('torrents_evids', $Item);
-}
-if ($Type == 'Comedy') {
-    $Feed->populate('torrents_comedy', $Item);
-}
-if ($Type == 'Comics') {
-    $Feed->populate('torrents_comics', $Item);
-}
+// TODO: Lanz this needs to be looked in to more. The code had one for each of the old categories here, look over and clean up!
+$Feed->populate('torrents_apps', $Item);
 
 // Clear Cache
 $Cache->delete('torrents_details_' . $GroupID);

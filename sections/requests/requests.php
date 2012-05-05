@@ -366,20 +366,12 @@ foreach($NewCategories as $Cat) {
 			if($CategoryID == 0) {
 				$CategoryName = "Unknown";
 			} else {
-				$CategoryName = $Categories[$CategoryID - 1];
+				$CategoryName = $NewCategories[$CategoryID]['name'];
 			}
 			
 			$IsFilled = ($TorrentID != 0);
 			
-			if($CategoryName == "Music") {
-				$ArtistForm = get_request_artists($RequestID);
-				$ArtistLink = display_artists($ArtistForm, true, true);
-				$FullName = $ArtistLink."<a href='requests.php?action=view&amp;id=".$RequestID."'>".$Title." [".$Year."]</a>";
-			} else if($CategoryName == "Audiobooks" || $CategoryName == "Comedy") {
-				$FullName = "<a href='requests.php?action=view&amp;id=".$RequestID."'>".$Title." [".$Year."]</a>";
-			} else {
-				$FullName ="<a href='requests.php?action=view&amp;id=".$RequestID."'>".$Title."</a>";
-			}
+                        $FullName ="<a href='requests.php?action=view&amp;id=".$RequestID."'>".$Title."</a>";
 			
 			$Row = ($Row == 'a') ? 'b' : 'a';
 			

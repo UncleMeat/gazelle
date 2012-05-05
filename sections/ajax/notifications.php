@@ -26,7 +26,7 @@ $Results = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 		t.ID,
 		g.ID,
 		g.Name,
-		g.CategoryID,
+		g.NewCategoryID,
 		g.TagList,
 		t.Size,
 		t.FileCount,

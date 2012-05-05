@@ -13,27 +13,8 @@ if(!$GenreTags){
 	$Cache->cache_value('genre_tags', $GenreTags, 3600*24);
 }
 
-$UploadForm = $Categories[$_GET['categoryid']];
 
-switch($UploadForm) {
-	case 'Music':
-		$TorrentForm->music_form($GenreTags);
-		break;
-		
-	case 'Audiobooks':
-	case 'Comedy':
-		$TorrentForm->audiobook_form();
-		break;
-	
-	case 'Applications':
-	case 'Comics':
-	case 'E-Books':
-	case 'E-Learning Videos':
-		$TorrentForm->simple_form($_GET['categoryid']);
-		break;
-	default:
-		echo "Invalid action!";
-}
+$TorrentForm->simple_form($GenreTags);
 
 
 

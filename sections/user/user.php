@@ -624,18 +624,12 @@ if ($Snatched > 4 && check_paranoia_here('snatched')) {
 		INNER JOIN torrents AS t ON t.ID=s.fid
 		INNER JOIN torrents_group AS g ON t.GroupID=g.ID
 		WHERE s.uid='$UserID'
-		AND g.CategoryID='1'
 		AND g.WikiImage <> ''
 		GROUP BY g.ID
 		ORDER BY s.tstamp DESC
 		LIMIT 5");
 		$RecentSnatches = $DB->to_array();
-		
-		$Artists = get_artists($DB->collect('ID'));
-		foreach($RecentSnatches as $Key => $SnatchInfo) {
-			$RecentSnatches[$Key]['Artist'] = display_artists($Artists[$SnatchInfo['ID']], false, true);
-		}
-		$Cache->cache_value('recent_snatches_'.$UserID, $RecentSnatches, 0); //inf cache
+				$Cache->cache_value('recent_snatches_'.$UserID, $RecentSnatches, 0); //inf cache
 	}
 ?>
 	<table class="recent" cellpadding="0" cellspacing="0" border="0">
@@ -646,7 +640,7 @@ if ($Snatched > 4 && check_paranoia_here('snatched')) {
 <?		
 		foreach($RecentSnatches as $RS) { ?>
 			<td>
-				<a href="torrents.php?id=<?=$RS['ID']?>" title="<?=display_str($RS['Artist'])?><?=display_str($RS['Name'])?>"><img src="<?=$RS['WikiImage']?>" alt="<?=display_str($RS['Artist'])?><?=display_str($RS['Name'])?>" width="107" /></a>
+				<a href="torrents.php?id=<?=$RS['ID']?>" title="<?=display_str($RS['Name'])?>"><img src="<?=$RS['WikiImage']?>" alt="<?=display_str($RS['Artist'])?><?=display_str($RS['Name'])?>" width="107" /></a>
 			</td>
 <?		} ?>
 		</tr>
@@ -665,7 +659,6 @@ if ($Uploads > 4 && check_paranoia_here('uploads')) {
 		FROM torrents_group AS g
 		INNER JOIN torrents AS t ON t.GroupID=g.ID
 		WHERE t.UserID='$UserID'
-		AND g.CategoryID='1'
 		AND g.WikiImage <> ''
 		GROUP BY g.ID
 		ORDER BY t.Time DESC
@@ -700,7 +693,7 @@ foreach ($Collages as $CollageInfo) {
 	list($CollageID, $CName) = $CollageInfo;
 	$DB->query("SELECT ct.GroupID,
 		tg.WikiImage,
-		tg.CategoryID
+		tg.NewCategoryID
 		FROM collages_torrents AS ct
 		JOIN torrents_group AS tg ON tg.ID=ct.GroupID
 		WHERE ct.CollageID='$CollageID'
@@ -818,18 +811,8 @@ if (check_paranoia_here('requestsvoted_list')) {
 
 			list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Year, $Image, $Description, $CatalogueNumber, $ReleaseType,
 			$BitrateList, $FormatList, $MediaList, $LogCue, $FillerID, $FillerName, $TorrentID, $TimeFilled) = $Request;
-		
-			$CategoryName = $Categories[$CategoryID - 1];
-			
-			if($CategoryName == "Music") {
-				$ArtistForm = get_request_artists($RequestID);
-				$ArtistLink = display_artists($ArtistForm, true, true);
-				$FullName = $ArtistLink."<a href='requests.php?action=view&amp;id=".$RequestID."'>".$Title." [".$Year."]</a>";
-			} else if($CategoryName == "Audiobooks" || $CategoryName == "Comedy") {
-				$FullName = "<a href='requests.php?action=view&amp;id=".$RequestID."'>".$Title." [".$Year."]</a>";
-			} else {
-				$FullName ="<a href='requests.php?action=view&amp;id=".$RequestID."'>".$Title."</a>";
-			}
+					
+                        $FullName ="<a href='requests.php?action=view&amp;id=".$RequestID."'>".$Title."</a>";
 			
 			$Row = (empty($Row) || $Row == 'a') ? 'b' : 'a';
 ?>

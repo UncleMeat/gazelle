@@ -726,7 +726,6 @@ if($Day != next_day() || $_GET['runday']){
 				t.ID,
 				g.ID,
 				g.Name,
-				g.CategoryID,
 				g.TagList,
 				t.Format,
 				t.Encoding,
@@ -754,7 +753,7 @@ if($Day != next_day() || $_GET['runday']){
 
 	$i = 1;
 	foreach($Top10 as $Torrent) {
-		list($TorrentID,$GroupID,$GroupName,$GroupCategoryID,$TorrentTags,
+		list($TorrentID,$GroupID,$GroupName,$TorrentTags,
 			$Format,$Encoding,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
 			$RemasterTitle,$Snatched,$Seeders,$Leechers,$Data) = $Torrent;
 
@@ -767,10 +766,6 @@ if($Day != next_day() || $_GET['runday']){
 		}
 		
 		$DisplayName.= $GroupName;
-
-		if($GroupCategoryID==1 && $GroupYear>0) {
-			$DisplayName.= " [$GroupYear]";
-		}
 
 		// append extra info to torrent title
 		$ExtraInfo='';
@@ -811,7 +806,6 @@ if($Day != next_day() || $_GET['runday']){
 					t.ID,
 					g.ID,
 					g.Name,
-					g.CategoryID,
 					g.TagList,
 					t.Format,
 					t.Encoding,
@@ -839,7 +833,7 @@ if($Day != next_day() || $_GET['runday']){
 
 		$i = 1;
 		foreach($Top10 as $Torrent) {
-			list($TorrentID,$GroupID,$GroupName,$GroupCategoryID,$TorrentTags,
+			list($TorrentID,$GroupID,$GroupName,$TorrentTags,
 				$Format,$Encoding,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
 				$RemasterTitle,$Snatched,$Seeders,$Leechers,$Data) = $Torrent;
 
@@ -852,10 +846,6 @@ if($Day != next_day() || $_GET['runday']){
 			}
 			
 			$DisplayName.= $GroupName;
-
-			if($GroupCategoryID==1 && $GroupYear>0) {
-				$DisplayName.= " [$GroupYear]";
-			}
 
 			// append extra info to torrent title
 			$ExtraInfo='';

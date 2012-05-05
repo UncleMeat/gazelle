@@ -23,18 +23,6 @@ switch($Short) {
 		list($Username) = $DB->next_record();
 		break;
 
-	case "request_update" :
-		$NoReason = true;
-		$DB->query("SELECT Title, Description, TorrentID, CategoryID, Year FROM requests WHERE ID=".$ID);
-		if($DB->record_count() < 1) {
-			error(404);
-		}
-		list($Name, $Desc, $Filled, $CategoryID, $Year) = $DB->next_record();
-		if($Filled || ($CategoryID != 0 && ($Categories[$CategoryID-1] != "Music" || $Year != 0))) {
-			error(403);
-		}
-		break;
-
 	case "request" :
 		$DB->query("SELECT Title, Description, TorrentID FROM requests WHERE ID=".$ID);
 		if($DB->record_count() < 1) {

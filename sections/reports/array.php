@@ -20,15 +20,6 @@ $Types = array(
 				"In your report description below, please be specific and include as much information as possible that will help our staff resolve the issue."
 				)
 			),
-		"request_update" => array(
-			"title" => "Request (Update)",
-			"guidelines" => array(
-				"This option is for asking the moderators to update your request to the new system.",
-				"If your request has no other votes, you can just edit it yourself!",
-				"Please do not report every single request on the old system, but only those that you really want updated. That way we can move them over in an order that benefits you most.",
-				"If possible, please include a discogs link in the comments field."
-			)
-			),
 		"request" => array(
 			"title" => "Request",
 			"guidelines" => array(
