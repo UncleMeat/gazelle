@@ -956,13 +956,6 @@ EXPLANATION OF PARSER LOGIC
         
           if ($load_increment_first == -1) { $load_increment_first = $load_increment; }
         ?>
-        <script type="text/javascript">
-               // var textBBcode = '<?=$textarea;?>';
-               // var textID = '<?=$textarea;?>';
-               // var textBBcode = '<?=$textarea;?>';
-               // var textID = '<?=$textarea;?>';
-        </script>
-
         <div id="hover_pick<?=$textarea;?>" style="width: auto; height: auto; position: absolute; border: 0px solid rgb(51, 51, 51); display: none; z-index: 20;"></div>
 
         <table class="bb_holder">
