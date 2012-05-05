@@ -221,12 +221,9 @@ $Results = $DB->to_array();
 <?
 		foreach($Current as $Array) {
 			//Ugliness
-			foreach($Types as $Category) {
-				if(!empty($Category[$Array['Type']])) {
-					$Title = $Category[$Array['Type']]['title'];
-					break;
+				if(!empty($Types[$Array['Type']])) {
+					$Title = $Types[$Array['Type']]['title'];
 				}
-			}
 ?>
 			<tr>
 				<td>

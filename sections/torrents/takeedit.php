@@ -20,7 +20,6 @@ $Validate = new VALIDATE;
 //******************************************************************************//
 
 $Properties=array();
-$TypeID = (int)$_POST['type'];
 $Type = $Categories[$TypeID-1];
 $TorrentID = (int)$_POST['torrentid'];
 $Properties['Remastered'] = (isset($_POST['remaster']))? 1 : 0;
@@ -96,110 +95,6 @@ if($Properties['UnknownRelease'] && !($Remastered == '1' && !$RemasterYear) && !
 		//Hax
 		die();
 	}
-}
-
-$Validate->SetFields('type','1','number','Not a valid type.',array('maxlength'=>count($Categories), 'minlength'=>1));
-switch ($Type) {
-	case 'Music':
-		if(!empty($Properties['Remastered']) && !$Properties['UnknownRelease']){
-			$Validate->SetFields('remaster_year', '1', 'number', 'Year of remaster/re-issue must be entered.');
-		} else {
-			$Validate->SetFields('remaster_year', '0','number', 'Invalid remaster year.');
-		}
-
-		if (!empty($Properties['Remastered']) && !$Properties['UnknownRelease'] && $Properties['RemasterYear'] < 1982 && $Properties['Media'] == 'CD') {
-			error("You have selected a year for an album that predates the media you say it was created on.");
-			header("Location: torrents.php?action=edit&id=$TorrentID");
-			die();
-		}
-			
-		$Validate->SetFields('remaster_title',
-			'0','string','Remaster title must be between 2 and 80 characters.',array('maxlength'=>80, 'minlength'=>2));
-
-		if ($Properties['RemasterTitle'] == 'Original Release') {
-			error('"Original Release" is not a valid remaster title.');
-			header("Location: torrents.php?action=edit&id=$TorrentID");
-			die();
-		}
-			
-		$Validate->SetFields('remaster_record_label',
-			'0','string','Remaster record label must be between 2 and 80 characters.',array('maxlength'=>80, 'minlength'=>2));
-			
-		$Validate->SetFields('remaster_catalogue_number',
-			'0','string','Remaster catalogue number must be between 2 and 80 characters.',array('maxlength'=>80, 'minlength'=>2));
-			
-				
-		$Validate->SetFields('format',
-			'1','inarray','Not a valid format.',array('inarray'=>$Formats));
-		
-		$Validate->SetFields('bitrate',
-			'1','inarray','You must choose a bitrate.', array('inarray'=>$Bitrates));
-		
-		
-		// Handle 'other' bitrates
-		if($Properties['Encoding'] == 'Other') {
-			$Validate->SetFields('other_bitrate',
-				'1','text','You must enter the other bitrate (max length: 9 characters).', array('maxlength'=>9));
-			$enc = trim($_POST['other_bitrate']);
-			if(isset($_POST['vbr'])) { $enc.=' (VBR)'; }
-			
-			$Properties['Encoding'] = $enc;
-			$Properties['Bitrate'] = $enc;
-		} else {
-			$Validate->SetFields('bitrate',
-				'1','inarray','You must choose a bitrate.', array('inarray'=>$Bitrates));
-		}
-		
-		$Validate->SetFields('media',
-			'1','inarray','Not a valid media.',array('inarray'=>$Media));
-		
-		$Validate->SetFields('release_desc',
-			'0','string','Invalid release description.',array('maxlength'=>1000000, 'minlength'=>0));
-		
-		break;
-		
-	case 'Audiobooks':
-	case 'Comedy':
-		/*$Validate->SetFields('title',
-			'1','string','Title must be between 2 and 300 characters.',array('maxlength'=>300, 'minlength'=>2));
-		^ this is commented out because there is no title field on these pages*/
-		$Validate->SetFields('year',
-			'1','number','The year of the release must be entered.');
-		
-		$Validate->SetFields('format',
-			'1','inarray','Not a valid format.',array('inarray'=>$Formats));
-		
-		$Validate->SetFields('bitrate',
-			'1','inarray','You must choose a bitrate.', array('inarray'=>$Bitrates));
-		
-		
-		// Handle 'other' bitrates
-		if($Properties['Encoding'] == 'Other') {
-			$Validate->SetFields('other_bitrate',
-				'1','text','You must enter the other bitrate (max length: 9 characters).', array('maxlength'=>9));
-			$enc = trim($_POST['other_bitrate']);
-			if(isset($_POST['vbr'])) { $enc.=' (VBR)'; }
-			
-			$Properties['Encoding'] = $enc;
-			$Properties['Bitrate'] = $enc;
-		} else {
-			$Validate->SetFields('bitrate',
-				'1','inarray','You must choose a bitrate.', array('inarray'=>$Bitrates));
-		}
-		
-		$Validate->SetFields('release_desc',
-			'0','string','The release description has a minimum length of 10 characters.',array('maxlength'=>1000000, 'minlength'=>10));
-		
-		break;
-	
-	case 'Applications':
-	case 'Comics':
-	case 'E-Books':
-	case 'E-Learning Videos':
-		/*$Validate->SetFields('title',
-			'1','string','Title must be between 2 and 300 characters.',array('maxlength'=>300, 'minlength'=>2));
-			^ this is commented out because there is no title field on these pages*/
-		break;
 }
 
 $Err = $Validate->ValidateForm($_POST); // Validate the form

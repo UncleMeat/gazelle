@@ -19,20 +19,12 @@ if(!is_number($_POST['torrentid'])) {
 	$TorrentID = $_POST['torrentid'];
 }
 
-if(!is_number($_POST['categoryid'])) {
-	error(404);
-} else {
-	$CategoryID = $_POST['categoryid'];
-}
 
 if(!isset($_POST['type'])) {
 	error(404);
-} else if (array_key_exists($_POST['type'], $Types[$CategoryID])) {
+} else if (array_key_exists($_POST['type'], $Types)) {
 	$Type = $_POST['type'];
-	$ReportType = $Types[$CategoryID][$Type];
-} else if(array_key_exists($_POST['type'],$Types['master'])) {
-	$Type = $_POST['type'];
-	$ReportType = $Types['master'][$Type];
+	$ReportType = $Types[$Type];
 } else {
 	//There was a type but it wasn't an option!
 	error(403);
@@ -48,13 +40,13 @@ foreach($ReportType['report_fields'] as $Field => $Value) {
 }
 
 if(!empty($_POST['sitelink'])) {
-	if(preg_match_all('/((https?:\/\/)?([a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*\.)?'.NONSSL_SITE_URL.'\/torrents.php\?(id=[0-9]+\&)?torrentid=([0-9]+))/is', $_POST['sitelink'], $Matches)) {
+	if(preg_match_all('/((https?:\/\/)?([a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*\.)?'.NONSSL_SITE_URL.'\/torrents.php\?(id=[0-9]+\&)?id=([0-9]+))/is', $_POST['sitelink'], $Matches)) {
 		$ExtraIDs = implode(' ', $Matches[6]);
 		if(in_array($TorrentID, $Matches[6])) {
 			$Err = "The extra permalinks you gave included the link to the torrent you're reporting!";
 		}
 	} else {
-		$Err = "Permalink was incorrect, should look like http://".NONSSL_SITE_URL."/torrents.php?torrentid=12345";
+		$Err = "Permalink was incorrect, should look like http://".NONSSL_SITE_URL."/torrents.php?id=12345";
 	}
 } else {
 	$ExtraIDs = "";

@@ -114,7 +114,6 @@ $BaseQuery = "SELECT
 	t.ID,
 	g.ID,
 	g.Name,
-	g.CategoryID,
         g.NewCategoryID,
 	g.TagList,
 	t.Format,
@@ -239,7 +238,7 @@ show_footer();
 
 // generate a table based on data from most recent query to $DB
 function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
-	global $LoggedUser,$Categories, $NewCategories, $Debug,$ReleaseTypes;
+	global $LoggedUser, $NewCategories, $Debug,$ReleaseTypes;
 ?>
 		<h3>Top <?=$Limit.' '.$Caption?>
 <?	if(empty($_GET['advanced'])){ ?> 
@@ -280,10 +279,9 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 	$Artists = get_artists($GroupIDs);
 
 	foreach ($Details as $Detail) {
-		list($TorrentID,$GroupID,$GroupName,$GroupCategoryID, $NewCategoryID, $TorrentTags,
+		list($TorrentID,$GroupID,$GroupName, $NewCategoryID, $TorrentTags,
 			$Format,$Encoding,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
 			$RemasterTitle,$Snatched,$Seeders,$Leechers,$Data,$ReleaseType) = $Detail;
-
 		// highlight every other row
 		$Rank++;
 		$Highlight = ($Rank % 2 ? 'a' : 'b');
@@ -297,13 +295,6 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 		}
 		
 		$DisplayName.= "<a href='torrents.php?id=$GroupID&amp;torrentid=$TorrentID'  title='View Torrent'>$GroupName</a>";
-
-		if($GroupCategoryID==1 && $GroupYear>0) {
-			$DisplayName.= " [$GroupYear]";
-		}
-		if($GroupCategoryID==1 && $ReleaseType > 0) {
-			$DisplayName.= ' ['.$ReleaseTypes[$ReleaseType].']';
-		}
 
 		// append extra info to torrent title
 		$ExtraInfo='';
@@ -339,12 +330,6 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 ?>
 	<tr class="group_torrent row<?=$Highlight?>">
 		<td style="padding:8px;text-align:center;"><strong><?=$Rank?></strong></td>
-<?
-		//fix array offset php error
-		if ($GroupCategoryID > 0) {
-			$GroupCatOffset = $GroupCategoryID - 1;
-		}
-?>
 		<td class="center cats_col">
                     <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
                     <div title="<?=$NewCategories[$NewCategoryID]['cat_desc']?>"><img src="<?=$CatImg?>" />

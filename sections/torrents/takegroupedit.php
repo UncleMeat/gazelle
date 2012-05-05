@@ -36,16 +36,6 @@ if(!empty($_GET['action']) && $_GET['action'] == 'revert') { // if we're reverti
 		$VanityHouse = 0;
 	}
 
-	if($GroupInfo = $Cache->get_value('torrents_details_'.$GroupID)) {
-		$GroupCategoryID = $GroupInfo[0][0]['CategoryID'];
-	} else {
-		$DB->query("SELECT CategoryID FROM torrents_group WHERE ID='$GroupID'");
-		list($GroupCategoryID) = $DB->next_record();
-	}
-	if($GroupCategoryID == 1 && !isset($ReleaseTypes[$ReleaseType]) || $GroupCategoryID != 1 && $ReleaseType) {
-		error(403);
-	}
-
 	// Trickery
 	if(!preg_match("/^".URL_REGEX."$/i", $Image)) {
 		$Image = '';

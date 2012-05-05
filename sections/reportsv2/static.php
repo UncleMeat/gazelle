@@ -153,7 +153,6 @@ $DB->query("SELECT SQL_CALC_FOUND_ROWS
 				ELSE 'Various Artists'
 			END AS ArtistName,
 			tg.Year,
-			tg.CategoryID,
 			t.Time,
 			t.Remastered,
 			t.RemasterTitle,
@@ -222,7 +221,7 @@ if(count($Reports) == 0) {
 		
 		
 		list($ReportID, $ReporterID, $ReporterName, $TorrentID, $Type, $UserComment, $ResolverID, $ResolverName, $Status, $ReportedTime, $LastChangeTime, 
-			$ModComment, $Tracks, $Images, $ExtraIDs, $Links, $LogMessage, $GroupName, $GroupID, $ArtistID, $ArtistName, $Year, $CategoryID, $Time, $Remastered, $RemasterTitle, 
+			$ModComment, $Tracks, $Images, $ExtraIDs, $Links, $LogMessage, $GroupName, $GroupID, $ArtistID, $ArtistName, $Year, $Time, $Remastered, $RemasterTitle, 
 			$RemasterYear, $Media, $Format, $Encoding, $Size, $HasCue, $HasLog, $LogScore, $UploaderID, $UploaderName) = display_array($Report, array("ModComment"));
 		
 		if(!$GroupID && $Status != "Resolved") {
@@ -245,19 +244,7 @@ if(count($Reports) == 0) {
 	</div>
 <?
 		} else {
-			if(!$CategoryID) {
-				//Torrent was deleted
-			} else {
-				if (array_key_exists($Type, $Types[$CategoryID])) {
-					$ReportType = $Types[$CategoryID][$Type];
-				} else if(array_key_exists($Type,$Types['master'])) {
-					$ReportType = $Types['master'][$Type];
-				} else {
-					//There was a type but it wasn't an option!
-					$Type = 'other';
-					$ReportType = $Types['master']['other'];
-				}
-			}
+                        $ReportType = $Types;
 			if ($ArtistID == 0 && empty($ArtistName)) {
 				$RawName = $GroupName.($Year ? " ($Year)" : "")." [$Format/$Encoding/$Media]".($Remastered ? " <$RemasterTitle - $RemasterYear>" : "").($HasCue ? " (Cue)" : '').($HasLog ? " (Log: $LogScore %)" : "")." (".number_format($Size/(1024*1024), 2)." MB)";
 				$LinkName = "<a href='torrents.php?id=$GroupID'>$GroupName".($Year ? " ($Year)" : "")."</a> <a href='torrents.php?torrentid=$TorrentID'> [$Format/$Encoding/$Media]".($Remastered ? " &lt;$RemasterTitle - $RemasterYear&gt;" : "")."</a> ".($HasCue ? " (Cue)" : '').($HasLog ? " <a href='torrents.php?action=viewlog&amp;torrentid=$TorrentID&amp;groupid=$GroupID'>(Log: $LogScore %)</a>" : "")." (".number_format($Size/(1024*1024), 2)." MB)";
@@ -290,7 +277,6 @@ if(count($Reports) == 0) {
 						<input type="hidden" id="report_reason<?=$ReportID?>" name="report_reason" value="<?=$UserComment?>" />
 						<input type="hidden" id="raw_name<?=$ReportID?>" name="raw_name" value="<?=$RawName?>" />
 						<input type="hidden" id="type<?=$ReportID?>" name="type" value="<?=$Type?>" />
-						<input type="hidden" id="categoryid<?=$ReportID?>" name="categoryid" value="<?=$CategoryID?>" />
 					</div>
 					<table cellpadding="5">
 						<tr>
@@ -509,7 +495,7 @@ if(count($Reports) == 0) {
 							<td colspan="3">
 								<select name="resolve_type" id="resolve_type<?=$ReportID?>" onchange="ChangeResolve(<?=$ReportID?>)">
 	<?
-		$TypeList = $Types['master'] + $Types[$CategoryID];
+		$TypeList = $Types;
 		$Priorities = array();
 		foreach ($TypeList as $Key => $Value) {
 			$Priorities[$Key] = $Value['priority'];

@@ -49,12 +49,6 @@ if(!is_number($Warning)) {
 	die();
 }
 
-$CategoryID = $Escaped['categoryid'];
-if(!isset($CategoryID)) {
-	echo 'Hax occuring on the categoryid';
-	die();
-}
-
 $TorrentID = $Escaped['torrentid'];
 $RawName = $Escaped['raw_name'];
 
@@ -99,10 +93,8 @@ if(($Escaped['resolve_type'] == "manual" || $Escaped['resolve_type'] == "dismiss
 if(!isset($Escaped['resolve_type'])) {
 	echo 'No resolve type';
 	die();
-} else if (array_key_exists($_POST['resolve_type'], $Types[$CategoryID])) {
-	$ResolveType = $Types[$CategoryID][$_POST['resolve_type']];
-} else if(array_key_exists($_POST['resolve_type'],$Types['master'])) {
-	$ResolveType = $Types['master'][$_POST['resolve_type']];
+} else if (array_key_exists($_POST['resolve_type'], $Types)) {
+	$ResolveType = $Types[$_POST['resolve_type']];
 } else {
 	//There was a type but it wasn't an option!
 	echo 'HAX (Invalid Resolve Type)';

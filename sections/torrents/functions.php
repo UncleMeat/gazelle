@@ -30,7 +30,7 @@ function get_group_info($GroupID, $Return = true, $RevisionID = 0) {
 			g.RecordLabel,
 			g.CatalogueNumber,
 			g.ReleaseType,
-			g.CategoryID,
+			g.NewCategoryID,
 			g.Time,
 			g.VanityHouse,
 			GROUP_CONCAT(DISTINCT tags.Name SEPARATOR '|'),

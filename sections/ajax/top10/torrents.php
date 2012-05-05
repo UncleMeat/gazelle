@@ -22,7 +22,7 @@ $BaseQuery = "SELECT
 	t.ID,
 	g.ID,
 	g.Name,
-	g.CategoryID,
+	g.NewCategoryID,
 	g.TagList,
 	t.Format,
 	t.Encoding,
@@ -140,7 +140,7 @@ print
 
 
 function generate_torrent_json($Caption, $Tag, $Details, $Limit) {
-	global $LoggedUser,$Categories;
+	global $LoggedUser;
 	$results = array();
 	foreach ($Details as $Detail) {
 		list($TorrentID,$GroupID,$GroupName,$GroupCategoryID,$TorrentTags,

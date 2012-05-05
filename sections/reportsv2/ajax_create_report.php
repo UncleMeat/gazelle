@@ -23,22 +23,17 @@ if(!is_number($_POST['torrentid'])) {
 	$TorrentID = $_POST['torrentid'];
 }
 
-$DB->query("SELECT tg.CategoryID FROM torrents_group AS tg JOIN torrents AS t ON t.GroupID=tg.ID WHERE t.ID = ".$TorrentID);
+$DB->query("SELECT tg.NewCategoryID FROM torrents_group AS tg JOIN torrents AS t ON t.GroupID=tg.ID WHERE t.ID = ".$TorrentID);
 if($DB->record_count() < 1) {
 	$Err = "No torrent with that ID exists!";
-} else {
-	list($CategoryID) = $DB->next_record();
 }
 
 if(!isset($_POST['type'])) {
 	echo 'Missing Type';
 	die();
-} else if (array_key_exists($_POST['type'], $Types[$CategoryID])) {
+} else if (array_key_exists($_POST['type'], $Types)) {
 	$Type = $_POST['type'];
-	$ReportType = $Types[$CategoryID][$Type];
-} else if(array_key_exists($_POST['type'],$Types['master'])) {
-	$Type = $_POST['type'];
-	$ReportType = $Types['master'][$Type];
+	$ReportType = $Types[$Type];
 } else {
 	//There was a type but it wasn't an option!
 	echo 'Wrong type';

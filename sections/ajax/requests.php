@@ -328,7 +328,7 @@ if ($NumResults == 0) {
 		if($CategoryID == 0) {
 			$CategoryName = "Unknown";
 		} else {
-			$CategoryName = $Categories[$CategoryID - 1];
+			$CategoryName = $NewCategories[$CategoryID]['name'];
 		}
 		
 		$JsonArtists = array();

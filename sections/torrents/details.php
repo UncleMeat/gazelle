@@ -22,7 +22,7 @@ $TorrentDetails = $TorrentCache[0];
 $TorrentList = $TorrentCache[1];
 
 // Group details
-list($WikiBody, $WikiImage, $GroupID, $GroupName, $GroupYear, $GroupRecordLabel, $GroupCatalogueNumber, $ReleaseType, $GroupCategoryID,
+    list($WikiBody, $WikiImage, $GroupID, $GroupName, $GroupYear, $GroupRecordLabel, $GroupCatalogueNumber, $ReleaseType, $GroupCategoryID,
 	$GroupTime, $GroupVanityHouse, $TorrentTags, $TorrentTagIDs, $TorrentTagUserIDs, $TagPositiveVotes, $TagNegativeVotes) = array_shift($TorrentDetails);
 
 $DisplayName=$GroupName;
@@ -113,7 +113,7 @@ if ($WikiImage!="") {
 <?
 } else {
 ?>
-			<p align="center"><img src="<?=STATIC_SERVER?>common/noartwork/noimage.png" alt="<?=$Categories[$GroupCategoryID-1]?>" title="<?=$Categories[$GroupCategoryID-1]?>" width="220" border="0" /></p>
+			<p align="center"><img src="<?=STATIC_SERVER?>common/noartwork/noimage.png" alt="Click to see full size image" title="Click to see full size image  " width="220" border="0" /></p>
 <?
 }
 ?>
@@ -230,10 +230,8 @@ $EditionID = 0;
 			$Reporter = user_info($ReporterID);
 			$ReporterName = $Reporter['Username'];
 
-			if (array_key_exists($ReportType, $Types[$GroupCategoryID])) {
-				$ReportType = $Types[$GroupCategoryID][$ReportType];
-			} else if(array_key_exists($ReportType,$Types['master'])) {
-				$ReportType = $Types['master'][$ReportType];
+			if (array_key_exists($ReportType, $Types)) {
+				$ReportType = $Types[$ReportType];
 			} else {
 				//There was a type but it wasn't an option!
 				$ReportType = $Types['master']['other'];

@@ -44,49 +44,14 @@ if(!$NewRequest) {
 		}
 		
 		$IsFilled = !empty($TorrentID);
-		$CategoryName = $Categories[$CategoryID - 1];
-		
-		$ProjectCanEdit = (check_perms('project_team') && !$IsFilled && (($CategoryID == 0) || ($CategoryName == "Music" && $Year == 0)));
+		$CategoryName = $NewCategories[$CategoryID]['name'];
+		$ProjectCanEdit = (check_perms('project_team') && !$IsFilled && (($CategoryID == 0)));
 		$CanEdit = ((!$IsFilled && $LoggedUser['ID'] == $RequestorID && $VoteCount < 2) || $ProjectCanEdit || check_perms('site_moderate_requests'));
 		
 		if(!$CanEdit) {
 			error(403);
 		}
-		
-		if($CategoryName == "Music") {
-			$ArtistForm = get_request_artists($RequestID);
-			
-			$BitrateArray = array();
-			if($BitrateList == "Any") {
-				$BitrateArray = array_keys($Bitrates);
-			} else {
-				$BitrateArray = array_keys(array_intersect($Bitrates,explode('|', $BitrateList)));
-			}
-			
-			$FormatArray = array();
-			if($FormatList == "Any") {
-				$FormatArray = array_keys($Formats);
-			} else {
-				foreach ($Formats as $Key => $Val) {
-					if(strpos($FormatList, $Val) !== false) {
-						$FormatArray[] = $Key;
-					}
-				}
-			}
-			
-			
-			$MediaArray = array();
-			if($MediaList == "Any") {
-				$MediaArray = array_keys($Media);
-			} else {
-				foreach ($Media as $Key => $Val) {
-					if(strpos($MediaList, $Val) !== false) {
-						$MediaArray[] = $Key;
-					}
-				}
-			}
-		}
-		
+				
 		$Tags = implode(" ", $Request['Tags']);
 	}
 }
@@ -106,12 +71,11 @@ if($NewRequest && !empty($_GET['artistid']) && is_number($_GET['artistid'])) {
 					tg.ReleaseType, 
 					tg.WikiImage,
 					GROUP_CONCAT(t.Name SEPARATOR ', '),
-					tg.CategoryID
 				FROM torrents_group AS tg 
 					JOIN torrents_tags AS tt ON tt.GroupID=tg.ID
 					JOIN tags AS t ON t.ID=tt.TagID
 				WHERE tg.ID = ".$_GET['groupid']);
-	if(list($Title, $Year, $ReleaseType, $Image, $Tags, $CategoryID) = $DB->next_record()) {
+	if(list($Title, $Year, $ReleaseType, $Image, $Tags) = $DB->next_record()) {
 		$GroupID = trim($_REQUEST['groupid']);
 	}
 }

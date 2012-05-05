@@ -13,9 +13,7 @@
  ********************************************************************************/
  
 class TORRENT_FORM {
-	var $Categories = array();
-	var $Formats = array();
-	var $Bitrates = array();
+        var $NewCategories = array();
 	var $Media = array();
 	var $NewTorrent = false;
 	var $Torrent = array();
@@ -29,12 +27,9 @@ class TORRENT_FORM {
 		$this->Torrent = $Torrent;
 		$this->Error = $Error;
 		
-		global $Categories, $NewCategories, $Formats, $Bitrates, $Media, $TorrentID;
+		global $NewCategories, $Media, $TorrentID;
 		
-		$this->Categories = $Categories;
                 $this->NewCategories = $NewCategories;
-		$this->Formats = $Formats;
-		$this->Bitrates = $Bitrates;
 		$this->Media = $Media;
 		$this->TorrentID = $TorrentID;
 		
@@ -66,11 +61,9 @@ class TORRENT_FORM {
 <?		if(!$this->NewTorrent) { ?>
 			<input type="hidden" name="action" value="takeedit" />
 			<input type="hidden" name="torrentid" value="<?=display_str($this->TorrentID)?>" />
-			<input type="hidden" name="type" value="<?=display_str($this->Torrent['CategoryID'])?>" />
 <?		} else {
 			if($this->Torrent && $this->Torrent['GroupID']) { ?>
 			<input type="hidden" name="groupid" value="<?=display_str($this->Torrent['GroupID'])?>" />
-			<input type="hidden" name="type" value="Music" />
 <?			} 
 			if($this->Torrent && $this->Torrent['RequestID']) { ?>
 			<input type="hidden" name="requestid" value="<?=display_str($this->Torrent['RequestID'])?>" />
@@ -85,7 +78,6 @@ class TORRENT_FORM {
 				</td>
 				<td>
 					<input id="file" type="file" name="file_input" size="60" />
-                                        <input type="hidden" name="type" value="1" />
 				</td>
                         </tr>
                         <tr>

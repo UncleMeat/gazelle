@@ -1209,12 +1209,6 @@ function delete_group($GroupID) {
 	write_log("Group ".$GroupID." automatically deleted (No torrents have this group).");
 	//$DB->query("DELETE FROM group_log WHERE GroupID = ".$GroupID);
 
-	//Never call this unless you're certain the group is no longer used by any torrents
-	$DB->query("SELECT CategoryID FROM torrents_group WHERE ID='$GroupID'");
-	list($Category) = $DB->next_record();
-	if($Category == 1) {
-		$Cache->decrement('stats_album_count');
-	}
 	$Cache->decrement('stats_group_count');
 	
 	
@@ -1376,13 +1370,12 @@ function update_hash($GroupID) {
 		GROUP BY t.GroupID)
 		WHERE ID='$GroupID'");
 
-	$DB->query("REPLACE INTO sphinx_delta (ID, GroupName, TagList, Year, CategoryID, NewCategoryID, Image, Time, ReleaseType, CatalogueNumber, Size, Snatched, Seeders, Leechers, LogScore, Scene, HasLog, HasCue, FreeTorrent, Media, Format, Encoding, RemasterTitle, FileList)
+	$DB->query("REPLACE INTO sphinx_delta (ID, GroupName, TagList, Year, NewCategoryID, Image, Time, ReleaseType, CatalogueNumber, Size, Snatched, Seeders, Leechers, LogScore, Scene, HasLog, HasCue, FreeTorrent, Media, Format, Encoding, RemasterTitle, FileList)
 		SELECT
 		g.ID AS ID,
 		g.Name AS GroupName,
 		g.TagList,
 		g.Year,
-		g.CategoryID,
                 g.NewCategoryID,
                 g.WikiImage,
 		UNIX_TIMESTAMP(g.Time) AS Time,

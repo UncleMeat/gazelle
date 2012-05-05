@@ -37,7 +37,6 @@ if(!is_array($Info) || !array_key_exists('PlainArtists', $Info) || empty($Info[1
 		tg.ID AS GroupID,
 		tg.Name,
 		tg.WikiImage,
-		tg.CategoryID,
 		t.Size,
 		t.FreeTorrent,
 		t.info_hash
@@ -57,7 +56,7 @@ if(!is_array($Info) || !array_key_exists('PlainArtists', $Info) || empty($Info[1
 if(!is_array($Info[0])) {
 	error(404);
 }
-list($Media,$Format,$Encoding,$Year,$GroupID,$Name,$Image, $CategoryID, $Size, $FreeTorrent, $InfoHash) = array_shift($Info); // used for generating the filename
+list($Media,$Format,$Encoding,$Year,$GroupID,$Name,$Image, $Size, $FreeTorrent, $InfoHash) = array_shift($Info); // used for generating the filename
 $Artists = $Info['Artists'];
 
 // If he's trying use a token on this, we need to make sure he has one,
@@ -121,6 +120,8 @@ if ($_REQUEST['usetoken'] && $FreeTorrent == '0') {
 	}
 }
 
+// TODO: Lanz, unsure about this one, need more investigation, disabled for now.
+/*
 //Stupid Recent Snatches On User Page
 if($CategoryID == '1' && $Image != "") {
 	$RecentSnatches = $Cache->get_value('recent_snatches_'.$UserID);
@@ -137,6 +138,7 @@ if($CategoryID == '1' && $Image != "") {
 		$Cache->cache_value('recent_snatches_'.$UserID, $RecentSnatches, 0);
 	}
 }
+*/
 
 $DB->query("INSERT INTO users_downloads (UserID, TorrentID, Time) VALUES ('$UserID', '$TorrentID', '".sqltime()."') ON DUPLICATE KEY UPDATE Time=VALUES(Time)");
 

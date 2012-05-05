@@ -5,7 +5,7 @@ function ChangeReportType() {
 }
 
 function ChangeResolve(reportid) {
-	ajax.get('reportsv2.php?action=ajax_change_resolve&id=' + reportid + '&type=' + $('#resolve_type' + reportid).raw().value + '&categoryid=' + $('#categoryid' + reportid).raw().value, function (response) {
+	ajax.get('reportsv2.php?action=ajax_change_resolve&id=' + reportid + '&type=' + $('#resolve_type' + reportid).raw().value, function (response) {
 			var x = json.decode(response);
 			$('#delete' + reportid).raw().checked = (x[0] == '1' ? true : false);
 			if($('#uploaderid' + reportid).raw().value == $('#reporterid' + reportid).raw().value) {
@@ -222,7 +222,7 @@ function MultiResolve() {
 
 function UpdateResolve(reportid) {
 	var newresolve = $('#resolve_type' + reportid).raw().options[$('#resolve_type' + reportid).raw().selectedIndex].value;
-	ajax.get("reportsv2.php?action=ajax_update_resolve&reportid=" + reportid + "&newresolve=" + newresolve + "&categoryid=" + $('#categoryid' + reportid).raw().value, function (response) {
+	ajax.get("reportsv2.php?action=ajax_update_resolve&reportid=" + reportid + "&newresolve=" + newresolve, function (response) {
 		$('#update_resolve' + reportid).raw().disabled = true;
 	});
 }

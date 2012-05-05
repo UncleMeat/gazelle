@@ -38,10 +38,8 @@ if($NewRequest) {
 	$VoteCount = count($VoteArray['Voters']);
 	
 	$IsFilled = !empty($TorrentID);
-
-	$CategoryName = $Categories[$CategoryID - 1];
 	
-	$ProjectCanEdit = (check_perms('project_team') && !$IsFilled && (($CategoryID == 0) || ($CategoryName == "Music" && $Year == 0)));
+	$ProjectCanEdit = (check_perms('project_team') && !$IsFilled && (($CategoryID == 0)));
 	$CanEdit = ((!$IsFilled && $LoggedUser['ID'] == $RequestorID && $VoteCount < 2) || $ProjectCanEdit || check_perms('site_moderate_requests'));
 	
 	if(!$CanEdit) {

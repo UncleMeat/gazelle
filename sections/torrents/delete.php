@@ -75,7 +75,6 @@ if(check_perms('admin_reports')) {
 				ELSE 'Various Artists'
 			END AS ArtistName,
 			tg.Year,
-			tg.CategoryID,
 			t.Time,
 			t.Remastered,
 			t.RemasterTitle,
@@ -98,15 +97,13 @@ if(check_perms('admin_reports')) {
 	if($DB->record_count() < 1) {
 		die();
 	}
-	list($GroupName, $GroupID, $ArtistID, $ArtistName, $Year, $CategoryID, $Time, $Remastered, $RemasterTitle, 
+	list($GroupName, $GroupID, $ArtistID, $ArtistName, $Year, $Time, $Remastered, $RemasterTitle, 
 		$RemasterYear, $Media, $Format, $Encoding, $Size, $HasLog, $LogScore, $UploaderID, $UploaderName) = $DB->next_record();
 	
 	$Type = 'dupe'; //hardcoded default
 	
-	if (array_key_exists($Type, $Types[$CategoryID])) {
-		$ReportType = $Types[$CategoryID][$Type];
-	} else if(array_key_exists($Type,$Types['master'])) {
-		$ReportType = $Types['master'][$Type];
+	if (array_key_exists($Type, $Types)) {
+		$ReportType = $Types[$Type];
 	} else {
 		//There was a type but it wasn't an option!
 		$Type = 'other';
@@ -143,7 +140,6 @@ if(check_perms('admin_reports')) {
 				<input type="hidden" id="reporterid<?=$ReportID?>" name="reporterid" value="<?=$ReporterID?>" />
 				<input type="hidden" id="raw_name<?=$ReportID?>" name="raw_name" value="<?=$RawName?>" />
 				<input type="hidden" id="type<?=$ReportID?>" name="type" value="<?=$Type?>" />
-				<input type="hidden" id="categoryid<?=$ReportID?>" name="categoryid" value="<?=$CategoryID?>" />
 				<input type="hidden" id="pm_type<?=$ReportID?>" name="pm_type" value="Uploader" />
 				<input type="hidden" id="from_delete<?=$ReportID?>" name="from_delete" value="<?=$GroupID?>" />
 			</div>
@@ -212,7 +208,7 @@ if(check_perms('admin_reports')) {
 					<td colspan="3">
 						<select name="resolve_type" id="resolve_type<?=$ReportID?>" onchange="ChangeResolve(<?=$ReportID?>)">
 <?
-$TypeList = $Types['master'] + $Types[$CategoryID];
+$TypeList = $Types;
 $Priorities = array();
 foreach ($TypeList as $Key => $Value) {
 	$Priorities[$Key] = $Value['priority'];

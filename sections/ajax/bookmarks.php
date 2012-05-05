@@ -32,7 +32,7 @@ if($Data) {
 	$DB->query("SELECT 
 		bt.GroupID, 
 		tg.WikiImage,
-		tg.CategoryID,
+		tg.NewCategoryID,
 		bt.Time
 		FROM bookmarks_torrents AS bt
 		JOIN torrents_group AS tg ON tg.ID=bt.GroupID

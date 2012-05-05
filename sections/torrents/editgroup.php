@@ -27,14 +27,12 @@ $DB->query("SELECT
 	tg.RecordLabel,
 	tg.CatalogueNumber,
 	tg.ReleaseType,
-	tg.CategoryID,
 	tg.VanityHouse
 	FROM torrents_group AS tg
 	LEFT JOIN wiki_torrents AS wt ON wt.RevisionID=tg.RevisionID
 	WHERE tg.ID='$GroupID'");
 if($DB->record_count() == 0) { error(404); }
-list($Name, $Image, $Body, $WikiImage, $WikiBody, $Year, $RecordLabel, $CatalogueNumber, $ReleaseType, $CategoryID, $VanityHouse) = $DB->next_record();
-$Type = $Categories[(int)$CategoryID];
+list($Name, $Image, $Body, $WikiImage, $WikiBody, $Year, $RecordLabel, $CatalogueNumber, $ReleaseType, $VanityHouse) = $DB->next_record();
 
 if(!$Body) { $Body = $WikiBody; $Image = $WikiImage; }
 
@@ -59,19 +57,6 @@ show_header('Edit torrent','bbcode');
 				<h3>Description</h3>
                             <? $Text->display_bbcode_assistant("textbody"); ?>
 				<textarea id="textbody" name="body" cols="91" rows="20"><?=$Body?></textarea><br />
-<? if($CategoryID == 1) { ?>
-				<select id="releasetype" name="releasetype">
-<?	foreach ($ReleaseTypes as $Key => $Val) { ?>
-					<option value='<?=$Key?>' <?=($Key == $ReleaseType ? " selected='selected'" : '')?>>
-						<?=$Val?>
-					</option>
-<?	} ?>
-				</select>
-<?	if (check_perms('torrents_edit_vanityhouse')) { ?>
-				<br />
-				<h3>Vanity House <input type="checkbox" name="vanity_house" value="1"  <?=($VanityHouse ? 'checked="checked"' : '')?> /></h3>
-<? 	}
-   } ?>
 				<h3>Edit summary</h3>
 				<input type="text" name="summary" size="92" /><br />
 				<div style="text-align: center;">
@@ -89,30 +74,7 @@ show_header('Edit torrent','bbcode');
 			<input type="hidden" name="action" value="nonwikiedit" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 			<input type="hidden" name="groupid" value="<?=$GroupID?>" />
-			<table cellpadding="3" cellspacing="1" border="0" class="border" width="100%">
-<? if($Type == "Music") { ?>
-                                <tr>
-					<td colspan="2" class="center">This is for editing the information related to the <strong>original release</strong> only.</td>
-				</tr>
-				<tr>
-					<td class="label">Year</td>
-					<td>
-						<input type="text" name="year" size="10" value="<?=$Year?>" />
-					</td>
-				</tr>
-				<tr>
-					<td class="label">Record label</td>
-					<td>
-						<input type="text" name="record_label" size="40" value="<?=$RecordLabel?>" />
-					</td>
-				</tr>
-				<tr>
-					<td class="label">Catalogue Number</td>
-					<td>
-						<input type="text" name="catalogue_number" size="40" value="<?=$CatalogueNumber?>" />
-					</td>
-				</tr>
-<? } ?>                                
+			<table cellpadding="3" cellspacing="1" border="0" class="border" width="100%">                              
 <? if(check_perms('torrents_freeleech')) { ?>
 				<tr>
 					<td class="label">Freeleech</td>
@@ -153,24 +115,6 @@ show_header('Edit torrent','bbcode');
 			</div>
 		</form>
 	</div>
-<? if($Type == "Music") { ?>        
-	<h2>Merge with another group</h2>
-	<div class="box pad">
-		<form action="torrents.php" method="post">
-			<div>
-				<input type="hidden" name="action" value="merge" />
-				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-				<input type="hidden" name="groupid" value="<?=$GroupID?>" />
-				<h3>Target Group ID</h3>
-				<input type="text" name="targetgroupid" size="10" />
-				<div style="text-align: center;">
-					<input type="submit" value="Merge" />
-				</div>
-				
-			</div>
-		</form>
-	</div>
-<?          } ?>
 <?	} ?> 
 </div>
 <?

@@ -30,7 +30,7 @@ if($Data) {
 	$DB->query("SELECT 
 		bt.GroupID, 
 		tg.WikiImage,
-		tg.CategoryID,
+		tg.NewCategoryID,
 		bt.Time
 		FROM bookmarks_torrents AS bt
 		JOIN torrents_group AS tg ON tg.ID=bt.GroupID
@@ -67,7 +67,7 @@ $Tags = array();
 
 foreach ($TorrentList as $GroupID=>$Group) {
 	list($GroupID, $GroupName, $GroupYear, $GroupRecordLabel, $GroupCatalogueNumber, $TagList, $ReleaseType, $GroupVanityHouse, $Torrents, $GroupArtists, $ExtendedArtists) = array_values($Group);
-	list($GroupID2, $Image, $GroupCategoryID, $AddedTime) = array_values($CollageDataList[$GroupID]);
+	list($GroupID2, $Image, $NewCategoryID, $AddedTime) = array_values($CollageDataList[$GroupID]);
 	
 	// Handle stats and stuff
 	$NumGroups++;
@@ -124,10 +124,9 @@ foreach ($TorrentList as $GroupID=>$Group) {
         }
 ?>
 <tr class="torrent" id="group_<?=$GroupID?>">
-        <td></td>
         <td class="center">
-                <div title="<?=ucfirst(str_replace('_',' ',$PrimaryTag))?>" class="cats_<?=strtolower(str_replace(array('-',' '),array('',''),$Categories[$GroupCategoryID-1]))?> tags_<?=str_replace('.','_',$PrimaryTag)?>">
-                </div>
+                    <? $CatImg = 'static/common/caticons/' . $NewCategories[$NewCategoryID]['image']; ?>
+                <img src="<?= $CatImg ?>" alt="<?= $NewCategories[$NewCategoryID]['cat_desc'] ?>" title="<?= $NewCategories[$NewCategoryID]['cat_desc'] ?>"/>
         </td>
         <td>
                 <span>
@@ -297,7 +296,6 @@ if($CollageCovers != 0) { ?>
 		<br />
 		<table class="torrent_table" id="torrent_table">
 			<tr class="colhead_dark">
-				<td><!-- expand/collapse --></td>
 				<td><!-- Category --></td>
 				<td width="70%"><strong>Torrents</strong> (<a href="#" onclick="return false;">View</a>)</td>
 				<td>Size</td>
