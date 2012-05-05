@@ -584,38 +584,6 @@ $Types = array(
 					'pm' => 'All applications must come with a crack, keygen, or other method of ensuring that downloaders can install them easily. App torrents with keygens, cracks, or patches that do not work and torrents missing clear installation instructions are deleted if reported. No exceptions.'
 				)
 			),
-			'game' => array(
-				'priority' => '5',
-				'title' => 'Game',
-				'report_messages' => array(
-					'Please include as much information as possible to verify the report',
-				),
-				'report_fields' => array(
-					'link' => '0'
-				),
-				'resolve_options' => array(
-					'upload' => '0', 
-					'warn' => '4',
-					'delete' => '1',
-					'pm' => 'No games of any kind are allowed: whether PC, Mac, phone or any other platform.'
-				)
-			),
-			'free' => array(
-				'priority' => '4',
-				'title' => 'Freely Available',
-				'report_messages' => array(
-					'Please include a link to a source of information or to the freely available app itself.',
-				),
-				'report_fields' => array(
-					'link' => '1'
-				),
-				'resolve_options' => array(
-					'upload' => '0', 
-					'warn' => '1',
-					'delete' => '1',
-					'pm' => 'App releases must not be freely available tools. Application releases cannot be freely downloaded anywhere from any official source. Nor may you upload open source apps where the source code is available for free.'
-				)
-			),
 			'description' => array(
 				'priority' => '8',
 				'title' => 'No Description',
