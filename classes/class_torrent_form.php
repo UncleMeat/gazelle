@@ -158,7 +158,7 @@ class TORRENT_FORM {
 
 	
 
-	function simple_form($OfficialTags = '', $num_smilies = 26) {
+	function simple_form($OfficialTags = '', $num_smilies = 0) {
             global $Text; 
 		$Torrent = $this->Torrent; 
 ?>		<table cellpadding="3" cellspacing="1" border="0" class="border slice" width="100%">

@@ -4,7 +4,7 @@ if (!($IsFLS)) {
 	error(403);
 }
 
-show_header('Staff PMs', 'staffpm');
+show_header('Staff PMs', 'bbcode,staffpm');
 
 include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
 $Text = new TEXT;
@@ -42,6 +42,7 @@ $Text = new TEXT;
 					/>
 				</div>
 				<div class="pad">
+                            <? $Text->display_bbcode_assistant("response_message_0"); ?>
 					<textarea onfocus="if (this.value == 'New message') this.value='';" 
 							  onblur="if (this.value == '') this.value='New message';" 
 							  rows="10" cols="87"
@@ -74,10 +75,12 @@ while(list($ID, $Message, $Name) = $DB->next_record()) {
 					<input type="text" name="name" id="response_name_<?=$ID?>" size="87" value="<?=display_str($Name)?>" />
 				</div>
 				<div class="pad">
-					<div class="box pad hidden" id="response_div_<?=$ID?>">
+					<div class="box pad hidden" id="response_div_<?=$ID?>" style="text-align:left;">
 						<?=$Text->full_format($Message)?>
 					</div>
-					<textarea rows="10" cols="87" id="response_message_<?=$ID?>" name="message"><?=display_str($Message)?></textarea>
+                            <? $Text->display_bbcode_assistant("response_message_".$ID ); ?>
+					<textarea onfocus="if (this.value == 'New message') this.value='';" 
+						   rows="10" cols="87" id="response_message_<?=$ID?>" name="message"><?=display_str($Message)?></textarea>
 					<br />
 					<input type="button" value="Toggle preview" onClick="PreviewResponse(<?=$ID?>);" />
 					<input type="button" value="Delete" onClick="DeleteMessage(<?=$ID?>);" />

@@ -944,42 +944,45 @@ EXPLANATION OF PARSER LOGIC
        * --------------------- BBCode assistant -----------------------------
        * added 2012.04.21 - mifune
        * --------------------------------------------------------------------
-       * This is in the text class because it makes it simpler to access smilies
-       * I suspect a text object will already be instantiated wherever the assistant is needed...
-       * If not this could be moved to a better place maybe?
-       */
       // pass in the id of the textarea this bbcode helper affects
       // start_num == num of smilies to load when created
       // $load_increment == number of smilies to add each time user presses load button
       // $load_increment_first == if passed this number of smilies are added the first time user presses load button
-      function display_bbcode_assistant($textarea, $start_num_smilies = 0, $load_increment = 110, $load_increment_first = 30){
+      // NOTE: its probably best to call this with default parameters because then the user's browser will cache the 
+      // ajax result and all subsequent calls will use the cached result - if differetn pages use different parameters
+      // they will not get that benefit
+       */
+      function display_bbcode_assistant($textarea, $start_num_smilies = 0, $load_increment = 120, $load_increment_first = 30){
         
           if ($load_increment_first == -1) { $load_increment_first = $load_increment; }
         ?>
         <script type="text/javascript">
-                var textBBcode = '<?=$textarea; ?>';
+               // var textBBcode = '<?=$textarea;?>';
+               // var textID = '<?=$textarea;?>';
+               // var textBBcode = '<?=$textarea;?>';
+               // var textID = '<?=$textarea;?>';
         </script>
 
-        <div id="hover_pick" style="width: auto; height: auto; position: absolute; border: 0px solid rgb(51, 51, 51); display: none; z-index: 20;"></div>
+        <div id="hover_pick<?=$textarea;?>" style="width: auto; height: auto; position: absolute; border: 0px solid rgb(51, 51, 51); display: none; z-index: 20;"></div>
 
         <table class="bb_holder">
           <tbody><tr>
             <td class="colhead" style="padding: 2px 6px">
                 <div style="float: left; text-align: left; margin-top: 0px;">
              
-                    <a class="bb_button" onclick="tag('b')" title="Bold text: [b]text[/b]" alt="B"><b>&nbsp;B&nbsp;</b></a>
-                    <a class="bb_button" onclick="tag('i')" title="Italic text: [i]text[/i]" alt="I"><i>&nbsp;I&nbsp;</i></a>
-                    <a class="bb_button" onclick="tag('u')" title="Underline text: [u]text[/u]" alt="U"><u>&nbsp;U&nbsp;</u></a>
-                    <a class="bb_button" onclick="tag('s')" title="Strikethrough text: [s]text[/s]" alt="S"><s>&nbsp;S&nbsp;</s></a>
-                    <a class="bb_button" onclick="clink()" title="Insert URL: [url]http://url[/url] or [url=http://url]URL text[/url]" alt="Url">Url</a>
+                    <a class="bb_button" onclick="tag('b', '<?=$textarea;?>')" title="Bold text: [b]text[/b]" alt="B"><b>B</b></a>
+                    <a class="bb_button" onclick="tag('i', '<?=$textarea;?>')" title="Italic text: [i]text[/i]" alt="I"><i>I</i></a>
+                    <a class="bb_button" onclick="tag('u', '<?=$textarea;?>')" title="Underline text: [u]text[/u]" alt="U"><u>U</u></a>
+                    <a class="bb_button" onclick="tag('s', '<?=$textarea;?>')" title="Strikethrough text: [s]text[/s]" alt="S"><s>S</s></a>
+                    <a class="bb_button" onclick="clink('<?=$textarea;?>')" title="Insert URL: [url]http://url[/url] or [url=http://url]URL text[/url]" alt="Url">Url</a>
                 <!-- <a class="bb_button" onclick="tag('img')" title="Insert image: [img]http://image_url[/img]" alt="Img">Img</a>-->
-                    <a class="bb_button" onclick="cimage()" title="Insert image: [img]http://image_url[/img]" alt="Image">img</a>
-                    <a class="bb_button" onclick="tag('code')" title="Code display: [code]code[/code]" alt="Code">Code</a>
-                    <a class="bb_button" onclick="tag('quote')" title="Quote text: [quote]text[/quote]" alt="Quote">Quote</a>
+                    <a class="bb_button" onclick="cimage('<?=$textarea;?>')" title="Insert image: [img]http://image_url[/img]" alt="Image">img</a>
+                    <a class="bb_button" onclick="tag('code', '<?=$textarea;?>')" title="Code display: [code]code[/code]" alt="Code">Code</a>
+                    <a class="bb_button" onclick="tag('quote', '<?=$textarea;?>')" title="Quote text: [quote]text[/quote]" alt="Quote">Quote</a>
 
                  <!-- <a class="bb_button" onclick="tag('mcom')" title="Staff Comment" alt="Mod comment">Mod</a> -->
                  
-                <select  class="bb_button" name="fontsize" id="fontsize" onchange="font('size',this.value);" title="Font size">
+                <select  class="bb_button" name="fontsize" id="fontsize<?=$textarea;?>" onchange="font('size',this.value, '<?=$textarea;?>');" title="Font size">
                   <option value="0" selected="selected">Font size</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -993,27 +996,29 @@ EXPLANATION OF PARSER LOGIC
                   <option value="10">10</option>
                 </select>
                     
-                     <a class="bb_button" onclick="colorpicker();" title="Select Color" alt="Colors">Colors</a>
+                     <a class="bb_button" onclick="colorpicker('<?=$textarea;?>');" title="Select Color" alt="Colors">Colors</a>
               </div>  
               <div style="float: right; margin-top: 3px;"> 
-                  <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center')" title="Align - center" alt="Center" /> 
-                  <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left')" title="Align - left" alt="Left" /> 
+                  <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center', '<?=$textarea;?>')" title="Align - center" alt="Center" /> 
+                  <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left', '<?=$textarea;?>')" title="Align - left" alt="Left" /> 
                <!-- <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify')" title="Align - justify" alt="justify" />  -->
-                  <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right')" title="Align - right" alt="Right" /> 
-                  <img class="bb_icon" src="<?=get_symbol_url('text_uppercase.png') ?>" onclick="text('up')" title="To Uppercase" alt="Up" /> 
-                  <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low')" title="To Lowercase" alt="Low" />
+                  <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right', '<?=$textarea;?>')" title="Align - right" alt="Right" /> 
+                  <img class="bb_icon" src="<?=get_symbol_url('text_uppercase.png') ?>" onclick="text('up', '<?=$textarea;?>')" title="To Uppercase" alt="Up" /> 
+                  <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low', '<?=$textarea;?>')" title="To Lowercase" alt="Low" />
               </div> 
               </td>
           </tr> 
           <tr>
             <td>
-                <div id="pickerholder"></div>
-                <div id="smiley_overflow" class="bb_smiley_holder">
-                    <? if ($start_num_smilies>0) { $this->draw_smilies_from(0, $start_num_smilies); }  ?> 
+                <div id="pickerholder<?=$textarea;?>" class="picker_holder"></div>
+                <div id="smiley_overflow<?=$textarea;?>" class="bb_smiley_holder">
+                    <? if ($start_num_smilies>0) { $this->draw_smilies_from(0, $start_num_smilies, $textarea); }  ?> 
                 </div>
                 <div class="overflow_button">
-                       <a href="#" id="open_overflow" onclick="if(this.isopen){Close_Smilies();}else{Open_Smilies(<?="$start_num_smilies,$load_increment_first"?>);};return false;">Show smilies</a>
-                       <a href="#" id="open_overflow_more" onclick="Open_Smilies(<?="$start_num_smilies,$load_increment"?>);return false;"></a>
+                       <a href="#" id="open_overflow<?=$textarea;?>" onclick="if(this.isopen){Close_Smilies('<?=$textarea;?>');}else{Open_Smilies(<?="$start_num_smilies,$load_increment_first,'$textarea'"?>);};return false;">Show smilies</a>
+                       <a href="#" id="open_overflow_more<?=$textarea;?>" onclick="Open_Smilies(<?="$start_num_smilies,$load_increment,'$textarea'"?>);return false;"></a>
+                       <span id="smiley_count<?=$textarea;?>" class="number" style="float:right;"></span>
+                       <span id="smiley_max<?=$textarea;?>" class="number" style="float:left;"></span>
                 </div>  
       </td></tr></tbody></table>
         <? 
@@ -1038,12 +1043,12 @@ EXPLANATION OF PARSER LOGIC
 </smilies>';
       }
       
-      function draw_smilies_from($indexfrom = 0, $indexto = -1){
+      function draw_smilies_from($indexfrom = 0, $indexto = -1, $textarea){
             $count=0;
             foreach($this->Smileys as $Key=>$Val) { 
                 if ($indexto >= 0 && $count >= $indexto) { break; }
                 if ($count >= $indexfrom){  // ' &nbsp;' .$Key. - jsut for printing in dev
-                    echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \');">'.$Val.'</a>';
+                    echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \',\''.$textarea.'\');">'.$Val.'</a>';
                 }
                 $count++;
             }

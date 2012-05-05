@@ -440,6 +440,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
                       <li id="nav_friends"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>
                       <li id="nav_logs"><a onmousedown="Stats('logs');" href="log.php">Logs</a></li>
                       <li id="nav_bonus"><a onmousedown="Stats('bonus');" href="bonus.php">Bonus</a></li>
+                      <li id="nav_bonus"><a onmousedown="Stats('sandbox');" href="sandbox.php">Sandbox</a></li>
                 </ul>
             </div>
             <div id="major_stats">

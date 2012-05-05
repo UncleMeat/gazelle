@@ -1086,23 +1086,7 @@ ul .invitetree {
 	background:	#808080; 
       width: 100%;
 }
-
-/*
-.em_holder td, .em_holder td:hover, .em_holder { border:1px solid #333333; 	border-collapse:separate}
-
-.em_holder td:hover { background:#dddddd; border:1px solid #2B60DE;}
  
-.bb_holder textarea, .bb_holder textarea:hover, .bb_holder textarea:focus { 
-	background:#CCCCCC; 
-	border:1px solid #333333; 
-	padding:0px; 
-	font-size:12px; 
-}
-
-.bb_holder textarea:hover, .bb_holder textarea:focus { 
-	background:#FFF8C6; 
-}
-*/
 
 table.bb_holder td {
     padding:0px;
@@ -1121,7 +1105,7 @@ select.bb_button {
 }
 
 a.bb_button { 
-    padding:3px; 
+    padding:3px 6px; 
     background:white;
     cursor:pointer;
     color: #000000; 
@@ -1141,7 +1125,7 @@ a.bb_button:hover {
 }
 
 .bb_smiley img {
-    padding: 1px 3px 4px; 
+    padding: 1px 1px 2px; 
 }
 
 .bb_icon:hover { 
@@ -1149,6 +1133,9 @@ a.bb_button:hover {
 }
 
 .overflow_button {
+  /*  position: relative;
+    bottom: 0px;
+    height: 16px; */
     padding: 1px; 
     margin:3px 1px 2px; 
     font-weight: bold; 
@@ -1157,7 +1144,13 @@ a.bb_button:hover {
     background: none repeat scroll 0% 0% rgb(186, 203, 216);
 }
 .overflow_button a {
-	padding:0px 8px; 
+    padding:0px 8px; 
+}
+.overflow_button .number {
+    font-weight: normal; 
+    color: #BACBD8;     /* #B6C7D3;    /*   #BACBD8 
+    position: absolute;
+    right: 10px; */
 }
 
 .color_pick td { 
@@ -1167,7 +1160,12 @@ a.bb_button:hover {
 	cursor:pointer; 
 }
 
+.picker_holder { 
+    display: block;
+}
+
 .color_pick { 
+    display: block;
 	border-collapse:collapse; 
 }
 
@@ -1218,3 +1216,9 @@ a.button {
 .blueButton:hover {
 	background: #187b8c;
 }
+
+/*
+.staffpm {
+    max-width: 840px;
+    margin: 0px auto;
+}*/
