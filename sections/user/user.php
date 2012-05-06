@@ -600,7 +600,7 @@ if (check_perms('users_view_email',$Class) || $OwnProfile) { ?>
                         <span style="float:right;"><a href="#" onclick="$('#bonusdiv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
 			</div>
 			<div class="pad" id="bonusdiv">
-                      <h4 class="center">Credits: <?=(!$BonusCredits ? '0' : $BonusCredits) ?></h4>
+                      <h4 class="center">Credits: <?=(!$BonusCredits ? '0.00' : number_format($BonusCredits,2))?></h4>
                       <span style="float:right;"><a href="#" onclick="$('#bonuslogdiv').toggle(); this.innerHTML=(this.innerHTML=='(Show Log)'?'(Hide Log)':'(Show Log)'); return false;">(Show Log)</a></span>&nbsp;
 
                       <div class="hidden" id="bonuslogdiv" style="padding-top: 10px;">
