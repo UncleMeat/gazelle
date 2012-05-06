@@ -14,8 +14,8 @@ function print_compose_staff_pm($Hidden = true) { ?>
 				<strong>Send to: </strong>
 				<select name="level">
 					<option value="0" selected="selected">First Line Support</option>
-					<option value="450"><!--650 Forum Moderators-->Mod Pervs</option>
-					<option value="700">Admins</option>
+					<option value="500"><!--650 Forum Moderators-->Mod Pervs</option>
+					<option value="600">Admins</option>
 				</select>
 				
 				<input type="submit" value="Send message" />
