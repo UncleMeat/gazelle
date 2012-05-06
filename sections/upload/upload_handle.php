@@ -58,8 +58,6 @@ $Properties['ReleaseType'] = $_POST['releasetype'];
 $Properties['Scene'] = (isset($_POST['scene'])) ? 1 : 0;
 $Properties['Format'] = $_POST['format'];
 $Properties['Media'] = $_POST['media'];
-$Properties['Bitrate'] = $_POST['bitrate'];
-$Properties['Encoding'] = $_POST['bitrate'];
 $Properties['TagList'] = $_POST['tags'];
 $Properties['Image'] = $_POST['image'];
 $Properties['GroupDescription'] = $_POST['album_desc'];
@@ -184,14 +182,6 @@ $HasCue = "'0'";
 
 foreach ($FileList as $File) {
     list($Size, $Name) = $File;
-    // add +log to encoding
-    if ($T['Encoding'] == "'Lossless'" && preg_match('/(?<!audiochecker)\.log$/i', $Name)) {
-        $HasLog = "'1'";
-    }
-    // add +cue to encoding
-    if ($T['Encoding'] == "'Lossless'" && preg_match('/\.cue$/i', $Name)) {
-        $HasCue = "'1'";
-    }
 
     if (preg_match('/INCOMPLETE~\*/i', $Name)) {
         $Err = 'The torrent contained one or more forbidden files (' . $Name . ').';
@@ -334,12 +324,12 @@ $T['FreeLeechType'] = "'0'";
 // Torrent
 $DB->query("
 	INSERT INTO torrents
-		(GroupID, UserID, Media, Format, Encoding, 
+		(GroupID, UserID, Media, Format, 
 		Remastered, RemasterYear, RemasterTitle, RemasterRecordLabel, RemasterCatalogueNumber, 
 		Scene, HasLog, HasCue, info_hash, FileCount, FileList, FilePath, Size, Time, 
 		Description, LogScore, FreeTorrent, FreeLeechType) 
 	VALUES
-		(" . $GroupID . ", " . $LoggedUser['ID'] . ", " . $T['Media'] . ", " . $T['Format'] . ", " . $T['Encoding'] . ", 
+		(" . $GroupID . ", " . $LoggedUser['ID'] . ", " . $T['Media'] . ", " . $T['Format'] . ", 
 		" . $T['Remastered'] . ", " . $T['RemasterYear'] . ", " . $T['RemasterTitle'] . ", " . $T['RemasterRecordLabel'] . ", " . $T['RemasterCatalogueNumber'] . ", 
 		" . $T['Scene'] . ", " . $HasLog . ", " . $HasCue . ", '" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", '" . sqltime() . "',
 		" . $T['TorrentDescription'] . ", '" . (($HasLog == "'1'") ? $LogScoreAverage : 0) . "', " . $T['FreeLeech'] . ", " . $T['FreeLeechType'] . ")");
@@ -417,31 +407,6 @@ send_irc('PRIVMSG #' . NONSSL_SITE_URL . '-announce :' . html_entity_decode($Ann
 send_irc('PRIVMSG #' . NONSSL_SITE_URL . '-announce-ssl :' . $AnnounceSSL);
 //send_irc('PRIVMSG #'.NONSSL_SITE_URL.'-announce :'.html_entity_decode($Announce));
 // Manage notifications
-$UsedFormatBitrates = array();
-
-if (!$IsNewGroup) {
-    // maybe there are torrents in the same release as the new torrent. Let's find out (for notifications)
-    $GroupInfo = get_group_info($GroupID);
-
-    $ThisMedia = display_str($Properties['Media']);
-    $ThisRemastered = display_str($Properties['Remastered']);
-    $ThisRemasterYear = display_str($Properties['RemasterYear']);
-    $ThisRemasterTitle = display_str($Properties['RemasterTitle']);
-    $ThisRemasterRecordLabel = display_str($Properties['RemasterRecordLabel']);
-    $ThisRemasterCatalogueNumber = display_str($Properties['RemasterCatalogueNumber']);
-
-    foreach ($GroupInfo[1] as $TorrentInfo) {
-        if (($TorrentInfo['Media'] == $ThisMedia)
-                && ($TorrentInfo['Remastered'] == $ThisRemastered)
-                && ($TorrentInfo['RemasterYear'] == (int) $ThisRemasterYear)
-                && ($TorrentInfo['RemasterTitle'] == $ThisRemasterTitle)
-                && ($TorrentInfo['RemasterRecordLabel'] == $ThisRemasterRecordLabel)
-                && ($TorrentInfo['RemasterCatalogueNumber'] == $ThisRemasterCatalogueNumber)
-                && ($TorrentInfo['ID'] != $TorrentID)) {
-            $UsedFormatBitrates[] = array('format' => $TorrentInfo['Format'], 'bitrate' => $TorrentInfo['Encoding']);
-        }
-    }
-}
 
 // For RSS
 $Item = $Feed->item($Title, $Text->strip_bbcode($Body), 'torrents.php?action=download&amp;authkey=[[AUTHKEY]]&amp;torrent_pass=[[PASSKEY]]&amp;id=' . $TorrentID, $LoggedUser['Username'], 'torrents.php?id=' . $GroupID, trim($Properties['TagList']));
@@ -521,12 +486,6 @@ if ($Properties['Format']) {
     $SQL.=" AND (Formats='') ";
 }
 
-if ($_POST['bitrate']) {
-    $SQL.=" AND (Encodings LIKE '%|" . db_string(trim($_POST['bitrate'])) . "|%' OR Encodings='') ";
-} else {
-    $SQL.=" AND (Encodings='') ";
-}
-
 if ($Properties['Media']) {
     $SQL.=" AND (Media LIKE '%|" . db_string(trim($Properties['Media'])) . "|%' OR Media='') ";
 } else {
@@ -537,13 +496,6 @@ if ($Properties['Media']) {
 $SQL .= "AND ((NewGroupsOnly = '0' ";
 // Or this is the first torrent in the group to match the formatbitrate filter
 $SQL .= ") OR ( NewGroupsOnly = '1' ";
-
-// Test the filter doesn't match any previous formatbitrate in the group
-foreach ($UsedFormatBitrates as $UsedFormatBitrate) {
-    $FormatReq = "(Formats LIKE '%|" . db_string($UsedFormatBitrate['format']) . "|%' OR Formats = '') ";
-    $BitrateReq = "(Encodings LIKE '%|" . db_string($UsedFormatBitrate['bitrate']) . "|%' OR Encodings = '') ";
-    $SQL .= "AND (NOT($FormatReq AND $BitrateReq)) ";
-}
 
 $SQL .= "))";
 

@@ -50,8 +50,7 @@ $DB->query("SELECT SQL_CALC_FOUND_ROWS
 			   f.Downloaded,
 			   f.Uses,
 			   g.Name,
-			   t.Format,
-			   t.Encoding
+			   t.Format
 			FROM users_freeleeches AS f
 			JOIN torrents AS t ON t.ID = f.TorrentID
 			JOIN torrents_group AS g ON g.ID = t.GroupID
@@ -87,14 +86,11 @@ $Artists = get_artists($GroupIDs);
 $i = true;
 foreach ($Tokens as $Token) {
 	$i = !$i;
-	list($TorrentID, $GroupID, $Time, $Expired, $Downloaded, $Uses, $Name, $Format, $Encoding) = $Token; 
+	list($TorrentID, $GroupID, $Time, $Expired, $Downloaded, $Uses, $Name, $Format) = $Token; 
 	$Name = "<a href=\"torrents.php?torrentid=$TorrentID\">$Name</a>";
 	$ArtistName = display_artists($Artists[$GroupID]);
 	if($ArtistName) {
 		$Name = $ArtistName.$Name;
-	}
-	if($Format && $Encoding) {
-		$Name.=' ['.$Format.' / '.$Encoding.']';
 	}
 ?>
 	<tr class="<?=($i?'rowa':'rowb')?>">

@@ -48,7 +48,6 @@ $DB->query("SELECT
 	t.GroupID,
 	t.Media,
 	t.Format,
-	t.Encoding,
 	IF(t.RemasterYear=0,tg.Year,t.RemasterYear),
 	tg.Name,
 	t.Size,
@@ -64,7 +63,7 @@ $Artists = get_artists($DB->collect('GroupID'));
 list($UserID, $Username) = array_values(user_info($UserID));
 $Zip = new ZIP($Username.'\'s '.ucfirst($_GET['type']));
 foreach($Downloads as $Download) {
-	list($Month, $GroupID, $Media, $Format, $Encoding, $Year, $Album, $Size, $Contents) = $Download;
+	list($Month, $GroupID, $Media, $Format, $Year, $Album, $Size, $Contents) = $Download;
 	$Artist = display_artists($Artists[$GroupID],false,true,false);
 	$Contents = unserialize(base64_decode($Contents));
 	$Tor = new TORRENT($Contents, true);
@@ -83,11 +82,6 @@ foreach($Downloads as $Download) {
 	if ($Format!='') {
 		if ($TorrentInfo!='') { $TorrentInfo.=' - '; }
 		$TorrentInfo.=$Format;
-	}
-
-	if ($Encoding!='') {
-		if ($TorrentInfo!='') { $TorrentInfo.=' - '; }
-		$TorrentInfo.=$Encoding;
 	}
 
 	if ($TorrentInfo!='') { $TorrentName.=' ('.$TorrentInfo.')'; }

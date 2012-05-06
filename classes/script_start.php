@@ -1370,7 +1370,7 @@ function update_hash($GroupID) {
 		GROUP BY t.GroupID)
 		WHERE ID='$GroupID'");
 
-	$DB->query("REPLACE INTO sphinx_delta (ID, GroupName, TagList, Year, NewCategoryID, Image, Time, ReleaseType, CatalogueNumber, Size, Snatched, Seeders, Leechers, LogScore, Scene, HasLog, HasCue, FreeTorrent, Media, Format, Encoding, RemasterTitle, FileList)
+	$DB->query("REPLACE INTO sphinx_delta (ID, GroupName, TagList, Year, NewCategoryID, Image, Time, ReleaseType, CatalogueNumber, Size, Snatched, Seeders, Leechers, LogScore, Scene, HasLog, HasCue, FreeTorrent, Media, Format, RemasterTitle, FileList)
 		SELECT
 		g.ID AS ID,
 		g.Name AS GroupName,
@@ -1392,7 +1392,6 @@ function update_hash($GroupID) {
 		BIT_OR(t.FreeTorrent-1) AS FreeTorrent,
 		GROUP_CONCAT(DISTINCT t.Media SEPARATOR ' ') AS Media,
 		GROUP_CONCAT(DISTINCT t.Format SEPARATOR ' ') AS Format,
-		GROUP_CONCAT(DISTINCT t.Encoding SEPARATOR ' ') AS Encoding,
 		GROUP_CONCAT(DISTINCT t.RemasterTitle SEPARATOR ' ') AS RemasterTitle,
 		GROUP_CONCAT(REPLACE(REPLACE(FileList, '|||', '\n '), '_', ' ') SEPARATOR '\n ') AS FileList
 		FROM torrents AS t
@@ -1831,8 +1830,8 @@ function get_groups($GroupIDs, $Return = true, $GetArtists = true, $Torrents = t
 		
 		if ($Torrents) {
 			$DB->query("SELECT
-						ID, GroupID, Media, Format, Encoding, RemasterYear, Remastered, RemasterTitle, RemasterRecordLabel, RemasterCatalogueNumber, Scene, HasLog, HasCue, LogScore, FileCount, FreeTorrent, Size, Leechers, Seeders, Snatched, Time, ID AS HasFile
-						FROM torrents AS t WHERE GroupID IN($IDs) ORDER BY GroupID, Remastered, (RemasterYear <> 0) DESC, RemasterYear, RemasterTitle, RemasterRecordLabel, RemasterCatalogueNumber, Media, Format, Encoding, ID");
+						ID, GroupID, Media, Format, RemasterYear, Remastered, RemasterTitle, RemasterRecordLabel, RemasterCatalogueNumber, Scene, HasLog, HasCue, LogScore, FileCount, FreeTorrent, Size, Leechers, Seeders, Snatched, Time, ID AS HasFile
+						FROM torrents AS t WHERE GroupID IN($IDs) ORDER BY GroupID, Remastered, (RemasterYear <> 0) DESC, RemasterYear, RemasterTitle, RemasterRecordLabel, RemasterCatalogueNumber, Media, Format, ID");
 			while($Torrent = $DB->next_record(MYSQLI_ASSOC, true)) {
 				$Found[$Torrent['GroupID']]['Torrents'][$Torrent['ID']] = $Torrent;
 		
@@ -1995,7 +1994,6 @@ function get_tags($TagNames) {
 function torrent_info($Data) {
 	$Info = array();
 	if(!empty($Data['Format'])) { $Info[]=$Data['Format']; }
-	if(!empty($Data['Encoding'])) { $Info[]=$Data['Encoding']; }
 	if(!empty($Data['HasLog'])) {
 		$Str = 'Log';
 		if(!empty($Data['LogScore'])) {

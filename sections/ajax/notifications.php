@@ -31,7 +31,6 @@ $Results = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 		t.Size,
 		t.FileCount,
 		t.Format,
-		t.Encoding,
 		t.Media,
 		t.Scene,
 		t.RemasterYear,
@@ -91,7 +90,7 @@ unset($Result);
 foreach($FilterGroups as $ID => $FilterResults) {
 	unset($FilterResults['FilterLabel']);
 	foreach($FilterResults as $Result) {
-		list($TorrentID, $GroupID, $GroupName, $GroupCategoryID, $TorrentTags, $Size, $FileCount, $Format, $Encoding,
+		list($TorrentID, $GroupID, $GroupName, $GroupCategoryID, $TorrentTags, $Size, $FileCount, $Format,
 			$Media, $Scene, $RemasterYear, $GroupYear, $RemasterYear, $RemasterTitle, $Snatched, $Seeders, 
 			$Leechers, $NotificationTime, $HasLog, $HasCue, $LogScore, $FreeTorrent, $LogInDB, $UnRead) = $Result;
 		
@@ -108,7 +107,6 @@ foreach($FilterGroups as $ID => $FilterResults) {
 			'size' => (float) $Size,
 			'fileCount' => (int) $FileCount,
 			'format' => $Format,
-			'encoding' => $Encoding,
 			'media' => $Media,
 			'scene' => $Scene == 1,
 			'groupYear' => (int) $GroupYear,

@@ -117,7 +117,6 @@ $BaseQuery = "SELECT
         g.NewCategoryID,
 	g.TagList,
 	t.Format,
-	t.Encoding,
 	t.Media,
 	t.Scene,
 	t.HasLog,
@@ -280,7 +279,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 
 	foreach ($Details as $Detail) {
 		list($TorrentID,$GroupID,$GroupName, $NewCategoryID, $TorrentTags,
-			$Format,$Encoding,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
+			$Format,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
 			$RemasterTitle,$Snatched,$Seeders,$Leechers,$Data,$ReleaseType) = $Detail;
 		// highlight every other row
 		$Rank++;
@@ -300,7 +299,6 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 		$ExtraInfo='';
 		$AddExtra='';
 		if($Format) { $ExtraInfo.=$Format; $AddExtra=' / '; }
-		if($Encoding) { $ExtraInfo.=$AddExtra.$Encoding; $AddExtra=' / '; }
 		"FLAC / Lossless / Log (100%) / Cue / CD";
 		if($HasLog) { $ExtraInfo.=$AddExtra."Log (".$LogScore."%)"; $AddExtra=' / '; }
 		if($HasCue) { $ExtraInfo.=$AddExtra."Cue"; $AddExtra=' / '; }

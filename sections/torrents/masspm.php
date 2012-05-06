@@ -6,7 +6,6 @@ $TorrentID = $_GET['torrentid'];
 $DB->query("SELECT
 		t.Media,
 		t.Format,
-		t.Encoding AS Bitrate,
 		t.RemasterYear,
 		t.Remastered,
 		t.RemasterTitle,

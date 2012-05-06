@@ -61,7 +61,6 @@ function get_group_info($GroupID, $Return = true, $RevisionID = 0) {
 			t.ID,
 			t.Media,
 			t.Format,
-			t.Encoding,
 			t.Remastered,
 			t.RemasterYear,
 			t.RemasterTitle,

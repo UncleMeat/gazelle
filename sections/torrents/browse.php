@@ -24,7 +24,7 @@ include(SERVER_ROOT . '/sections/bookmarks/functions.php');
 include(SERVER_ROOT . '/sections/torrents/functions.php');
 
 // The "order by x" links on columns headers
-function header_link($SortKey, $DefaultWay="desc") {
+function header_link($SortKey, $DefaultWay = "desc") {
     global $OrderBy, $OrderWay;
     if ($SortKey == $OrderBy) {
         if ($OrderWay == "desc") {
@@ -47,12 +47,8 @@ if (empty($TokenTorrents)) {
 }
 
 // Search by infohash
-if (!empty($_GET['searchstr']) || !empty($_GET['groupname'])) {
-    if (!empty($_GET['searchstr'])) {
-        $InfoHash = $_GET['searchstr'];
-    } else {
-        $InfoHash = $_GET['groupname'];
-    }
+if (!empty($_GET['searchstr'])) {
+    $InfoHash = $_GET['searchstr'];
 
     if ($InfoHash = is_valid_torrenthash($InfoHash)) {
         $InfoHash = db_string(pack("H*", $InfoHash));
@@ -110,10 +106,6 @@ $Queries = array();
 //Simple search
 if (!empty($_GET['searchstr'])) {
     $Words = explode(' ', strtolower($_GET['searchstr']));
-    $FilterBitrates = array_intersect($Words, $SearchBitrates);
-    if (count($FilterBitrates) > 0) {
-        $Queries[] = '@encoding ' . implode(' ', $FilterBitrates);
-    }
 
     if (!empty($Words)) {
         foreach ($Words as $Key => &$Word) {
@@ -329,19 +321,19 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
     <div class="filter_torrents">
         <h3>
             Filter		
-<? if ($AdvancedSearch) { ?>
+            <? if ($AdvancedSearch) { ?>
                 (<a href="torrents.php?<? if (!empty($LoggedUser['SearchType'])) { ?>action=basic&amp;<? } echo get_url(array('action')); ?>">Basic Search</a>)
-                <? } else { ?>
+            <? } else { ?>
                 (<a href="torrents.php?action=advanced&amp;<?= get_url(array('action')) ?>">Advanced Search</a>)
-<? } ?>
+            <? } ?>
         </h3>
         <div class="box pad">
             <table>
-<? if ($AdvancedSearch) { ?>
+                <? if ($AdvancedSearch) { ?>
                     <tr>
                         <td class="label">Search Term:</td>
                         <td colspan="3">
-                            <input type="text" spellcheck="false" size="40" name="groupname" class="inputtext smaller" value="<? form('groupname') ?>" />
+                            <input type="text" spellcheck="false" size="40" name="searchstr" class="inputtext smaller" value="<? form('searchstr') ?>" />
                         </td>
                     </tr>
                     <tr>
@@ -350,17 +342,17 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                             <input type="text" spellcheck="false" size="40" name="filelist" class="inputtext" value="<? form('filelist') ?>" />
                         </td>
                     </tr>
-                        <? } else { // BASIC SEARCH ?>
+                <? } else { // BASIC SEARCH ?>
                     <tr>
                         <td class="label">Search terms:</td>
                         <td colspan="3">
                             <input type="text" spellcheck="false" size="40" name="searchstr" class="inputtext" value="<? form('searchstr') ?>" />
-                    <? if (!empty($LoggedUser['SearchType'])) { ?>
+                            <? if (!empty($LoggedUser['SearchType'])) { ?>
                                 <input type="hidden" name="action" value="basic" />
-    <? } ?>
+                            <? } ?>
                         </td>
                     </tr>
-<? } ?>
+                <? } ?>
                 <tr>                    
                     <td class="label">Tags:</td>
                     <td colspan="3">
@@ -401,12 +393,12 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                         if ($x > 0) {
                             ?>
                             </tr>
-                            <? } ?>
+                        <? } ?>
                         <tr>
-        <?
-    }
-    $x++;
-    ?>
+                            <?
+                        }
+                        $x++;
+                        ?>
                         <td>
                             <input type="checkbox" name="filter_cat[<?= ($Cat['id']) ?>]" id="cat_<?= ($Cat['id']) ?>" value="1" <? if (isset($_GET['filter_cat'][$Cat['id']])) { ?>checked="checked"<? } ?>/>
                             <label for="cat_<?= ($Cat['id']) ?>"><?= $Cat['name'] ?></label>
@@ -441,7 +433,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                     if ($x % 7 != 0) { // Padding
                         ?>
                         <td colspan="<?= 7 - ($x % 7) ?>"> </td>
-<? } ?>
+                    <? } ?>
                 </tr>
             </table>
             <table class="cat_list" width="100%">
@@ -464,7 +456,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                 if (!empty($LoggedUser['DefaultSearch'])) {
                     ?>
                     <input type="submit" name="cleardefault" value="Clear Default" />
-<? } ?>
+                <? } ?>
             </div>
         </div>
     </div>
@@ -535,11 +527,11 @@ $Bookmarks = all_bookmarks('torrent');
         list($TorrentID, $Data) = each($Torrents);
 
         $OverImage = $Image != '' ? $Image : '/static/common/noartwork/noimage.png';
-        $OverName = strlen($GroupName) <= 60 ? $GroupName : substr($GroupName, 0, 56).'...';
+        $OverName = strlen($GroupName) <= 60 ? $GroupName : substr($GroupName, 0, 56) . '...';
 //        $OverName = display_str($GroupName);
-        $SL = ($TotalSeeders == 0 ? "<span class=r00>".number_format($TotalSeeders)."</span>" : number_format($TotalSeeders)) . "/".number_format($TotalLeechers);
-        $DisplayName = '<a href="torrents.php?id=' . $GroupID . '"'. " onmouseover=\"return overlib('<table class=tdoverlib><tr><td class=tdoverlib colspan=2>".$OverName."</td><tr><td class=tdoverlib style=width:1px><img style=\'max-width: 100px;\' src=".$OverImage."></td><td class=tdoverlib><strong>Uploader:</strong><br />xxxxxx<br /><br /><strong>Size:</strong><br />".get_size($Data['Size'])."<br /><br /><strong>Snatched:</strong><br />".number_format($TotalSnatched)."<br /><br /><strong>Seeders/Leechers:</strong><br />".$SL."</td></tr></table>', FULLHTML);\" onmouseout=\"return nd();\">" . $GroupName . '</a>';
-        
+        $SL = ($TotalSeeders == 0 ? "<span class=r00>" . number_format($TotalSeeders) . "</span>" : number_format($TotalSeeders)) . "/" . number_format($TotalLeechers);
+        $DisplayName = '<a href="torrents.php?id=' . $GroupID . '"' . " onmouseover=\"return overlib('<table class=tdoverlib><tr><td class=tdoverlib colspan=2>" . $OverName . "</td><tr><td class=tdoverlib style=width:1px><img style=\'max-width: 100px;\' src=" . $OverImage . "></td><td class=tdoverlib><strong>Uploader:</strong><br />xxxxxx<br /><br /><strong>Size:</strong><br />" . get_size($Data['Size']) . "<br /><br /><strong>Snatched:</strong><br />" . number_format($TotalSnatched) . "<br /><br /><strong>Seeders/Leechers:</strong><br />" . $SL . "</td></tr></table>', FULLHTML);\" onmouseout=\"return nd();\">" . $GroupName . '</a>';
+
         if ($Data['FreeTorrent'] == '1') {
             $DisplayName .= ' <strong>Freeleech!</strong>';
         } elseif ($Data['FreeTorrent'] == '2') {
@@ -550,16 +542,17 @@ $Bookmarks = all_bookmarks('torrent');
         ?>
         <tr class="torrent">
             <td class="center cats_col">
-                    <? $CatImg = 'static/common/caticons/' . $NewCategories[$NewCategoryID]['image']; ?>
+                <? $CatImg = 'static/common/caticons/' . $NewCategories[$NewCategoryID]['image']; ?>
                 <div title="<?= $NewCategories[$NewCategoryID]['cat_desc'] ?>"><img src="<?= $CatImg ?>" />
             </td>
             <td>
                 <span>
                     [ <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">DL</a>
-                <? if (($LoggedUser['FLTokens'] > 0) && $Data['HasFile']
-                        && !in_array($TorrentID, $TokenTorrents) && empty($Data['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')) { ?>
+                    <? if (($LoggedUser['FLTokens'] > 0) && $Data['HasFile']
+                            && !in_array($TorrentID, $TokenTorrents) && empty($Data['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')) {
+                        ?>
                         | <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>&usetoken=1" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FL</a>
-                    <? } ?>				
+    <? } ?>				
                     | <a href="reportsv2.php?action=report&amp;id=<?= $TorrentID ?>" title="Report">RP</a>]
                 </span>
     <?= $DisplayName ?>
@@ -575,9 +568,9 @@ $Bookmarks = all_bookmarks('torrent');
             <td<?= ($TotalSeeders == 0) ? ' class="r00"' : '' ?>><?= number_format($TotalSeeders) ?></td>
             <td><?= number_format($TotalLeechers) ?></td>
         </tr>
-    <?
-}
-?>
+        <?
+    }
+    ?>
 </table>
 <div class="linkbox"><?= $Pages ?></div>
 <? show_footer(array('disclaimer' => false)); ?>

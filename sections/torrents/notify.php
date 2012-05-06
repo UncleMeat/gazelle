@@ -20,7 +20,6 @@ $Results = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 		t.Size,
 		t.FileCount,
 		t.Format,
-		t.Encoding,
 		t.Media,
 		t.Scene,
 		t.RemasterYear,
@@ -107,7 +106,7 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 <?
 		unset($FilterResults['FilterLabel']);
 		foreach($FilterResults as $Result) {
-			list($TorrentID, $GroupID, $GroupName, $GroupCategoryID, $TorrentTags, $Size, $FileCount, $Format, $Encoding,
+			list($TorrentID, $GroupID, $GroupName, $GroupCategoryID, $TorrentTags, $Size, $FileCount, $Format,
 				$Media, $Scene, $RemasterYear, $GroupYear, $RemasterYear, $RemasterTitle, $Snatched, $Seeders, 
 				$Leechers, $NotificationTime, $HasLog, $HasCue, $LogScore, $FreeTorrent, $LogInDB, $UnRead, $FilterLabel, $FilterLabel, $ReleaseType) = $Result;
 			// generate torrent's title
@@ -129,7 +128,6 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 			$ExtraInfo='';
 			$AddExtra='';
 			if($Format) 		{ $ExtraInfo.=$Format; $AddExtra=' / '; }
-			if($Encoding) 		{ $ExtraInfo.=$AddExtra.$Encoding; $AddExtra=' / '; }
 			if($HasLog) 		{ $ExtraInfo.=$AddExtra.'Log'; $AddExtra=' / '; }
 			if($HasLog && $LogInDB)	{ $ExtraInfo.=' ('.(int) $LogScore.'%)'; }
 			if($HasCue) 		{ $ExtraInfo.=$AddExtra.'Cue'; $AddExtra=' / '; }

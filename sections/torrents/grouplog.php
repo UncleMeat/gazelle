@@ -11,6 +11,7 @@ if (!empty($Groups['matches'][$GroupID])) {
 } else {
 	$Title = "Group $GroupID";
 }
+die('sdlfkjldsaf');
 ?>
 
 <div class="thin">
@@ -31,18 +32,8 @@ if (!empty($Groups['matches'][$GroupID])) {
 ?>
 		<tr class="rowa">
 			<td><?=$Time?></td>
-<?
-			if ($TorrentID != 0) {
-				$DB->query("SELECT Media, Format, Encoding FROM torrents WHERE ID=".$TorrentID);
-				list($Media, $Format, $Encoding) = $DB->next_record();
-				if ($Media == "") { ?>
-					<td><a href="torrents.php?torrentid=<?=$TorrentID?>"><?=$TorrentID?></a> (Deleted)</td><?
-				} else { ?>
-					<td><a href="torrents.php?torrentid=<?=$TorrentID?>"><?=$TorrentID?></a> (<?=$Format?>/<?=$Encoding?>/<?=$Media?>)</td>
-<?				}
-			} else { ?>
-				<td />
-<?			}
+                        
+                        <td />
 			
 			$DB->query("SELECT Username FROM users_main WHERE ID = ".$UserID);
 			list($Username) = $DB->next_record();

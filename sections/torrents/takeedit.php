@@ -47,8 +47,6 @@ $Properties['CassetteApproved'] = (isset($_POST['cassette_approved']))? 1 : 0;
 $Properties['LossymasterApproved'] = (isset($_POST['lossymaster_approved']))? 1 : 0;
 $Properties['Format'] = $_POST['format'];
 $Properties['Media'] = $_POST['media'];
-$Properties['Bitrate'] = $_POST['bitrate'];
-$Properties['Encoding'] = $_POST['bitrate'];
 $Properties['Trumpable'] = (isset($_POST['make_trumpable'])) ? 1 : 0;
 $Properties['TorrentDescription'] = $_POST['release_desc'];
 $Properties['Name'] = $_POST['title'];
@@ -141,7 +139,7 @@ foreach ($Properties as $Key => $Value) {
 //--------------- Start database stuff -----------------------------------------//
 
 $DBTorVals = array();
-$DB->query("SELECT Media, Format, Encoding, RemasterYear, Remastered, RemasterTItle, RemasterRecordLabel, RemasterCatalogueNumber, Scene, Description FROM torrents WHERE ID = ".$TorrentID);
+$DB->query("SELECT Media, Format, RemasterYear, Remastered, RemasterTItle, RemasterRecordLabel, RemasterCatalogueNumber, Scene, Description FROM torrents WHERE ID = ".$TorrentID);
 $DBTorVals = $DB->to_array(false, MYSQLI_ASSOC);
 $DBTorVals = $DBTorVals[0];
 $LogDetails = "";
@@ -167,7 +165,6 @@ $SQL = "
 	UPDATE torrents SET
 		Media=$T[Media], 
 		Format=$T[Format], 
-		Encoding=$T[Encoding],
 		RemasterYear=$T[RemasterYear], 
 		Remastered=$T[Remastered], 
 		RemasterTitle=$T[RemasterTitle], 

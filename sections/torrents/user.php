@@ -48,10 +48,6 @@ if(!empty($_GET['format'])) {
 	}
 }
 
-if(!empty($_GET['bitrate']) && in_array($_GET['bitrate'], $Bitrates)) {
-	$SearchWhere[]="t.Encoding='".db_string($_GET['bitrate'])."'";
-}
-
 if(!empty($_GET['media']) && in_array($_GET['media'], $Media)) {
 	$SearchWhere[]="t.Media='".db_string($_GET['media'])."'";
 }

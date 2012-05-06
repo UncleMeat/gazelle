@@ -25,7 +25,6 @@ $BaseQuery = "SELECT
 	g.NewCategoryID,
 	g.TagList,
 	t.Format,
-	t.Encoding,
 	t.Media,
 	t.Scene,
 	t.HasLog,
@@ -144,7 +143,7 @@ function generate_torrent_json($Caption, $Tag, $Details, $Limit) {
 	$results = array();
 	foreach ($Details as $Detail) {
 		list($TorrentID,$GroupID,$GroupName,$GroupCategoryID,$TorrentTags,
-			$Format,$Encoding,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
+			$Format,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
 			$RemasterTitle,$Snatched,$Seeders,$Leechers,$Data) = $Detail;
 
 		$Artist = display_artists(get_artist($GroupID), false, true);
@@ -170,7 +169,6 @@ function generate_torrent_json($Caption, $Tag, $Details, $Limit) {
 			'groupYear' => (int) $GroupYear,
 			'remasterTitle' => $RemasterTitle,
 			'format' => $Format,
-			'encoding' => $Encoding,
 			'hasLog' => $HasLog == 1,
 			'hasCue' => $HasCue == 1,
 			'media' => $Media,

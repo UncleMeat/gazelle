@@ -151,7 +151,6 @@ foreach ($TorrentList as $Torrent) {
 			'groupId' => (int) $GroupTorrents['GroupID'],
 			'media' => $GroupTorrents['Media'],
 			'format' => $GroupTorrents['Format'],
-			'encoding' => $GroupTorrents['Encoding'],
 			'remasterYear' => (int) $GroupTorrents['RemasterYear'],
 			'remastered' => $GroupTorrents['Remastered'] == 1,
 			'remasterTitle' => $GroupTorrents['RemasterTitle'],

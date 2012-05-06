@@ -194,7 +194,7 @@ $LastRemasterCatalogueNumber = '';
 $EditionID = 0;
 
 	
-	list($TorrentID, $Media, $Format, $Encoding, $Remastered, $RemasterYear, $RemasterTitle, $RemasterRecordLabel, $RemasterCatalogueNumber, 
+	list($TorrentID, $Media, $Format, $Remastered, $RemasterYear, $RemasterTitle, $RemasterRecordLabel, $RemasterCatalogueNumber, 
 		$Scene, $HasLog, $HasCue, $LogScore, $FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $TorrentTime, $Description, 
 		$FileList, $FilePath, $UserID, $Username, $LastActive,
 		$BadTags, $BadFolders, $BadFiles, $CassetteApproved, $LossymasterApproved, $LastReseedRequest, $LogInDB, $HasFile) = $TorrentList[0];
@@ -256,7 +256,6 @@ $EditionID = 0;
 
 	// similar to torrent_info()
 	if($Format) { $ExtraInfo.=display_str($Format); $AddExtra=' / '; }
-	if($Encoding) { $ExtraInfo.=$AddExtra.display_str($Encoding); $AddExtra=' / '; }
 	if($HasLog) { $ExtraInfo.=$AddExtra.'Log'; $AddExtra=' / '; }
 	if($HasLog && $LogInDB) { $ExtraInfo.=' ('.(int) $LogScore.'%)'; }
 	if($HasCue) { $ExtraInfo.=$AddExtra.'Cue'; $AddExtra=' / '; }

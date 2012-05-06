@@ -728,7 +728,6 @@ if($Day != next_day() || $_GET['runday']){
 				g.Name,
 				g.TagList,
 				t.Format,
-				t.Encoding,
 				t.Media,
 				t.Scene,
 				t.HasLog,
@@ -754,7 +753,7 @@ if($Day != next_day() || $_GET['runday']){
 	$i = 1;
 	foreach($Top10 as $Torrent) {
 		list($TorrentID,$GroupID,$GroupName,$TorrentTags,
-			$Format,$Encoding,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
+			$Format,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
 			$RemasterTitle,$Snatched,$Seeders,$Leechers,$Data) = $Torrent;
 
 		$DisplayName='';
@@ -771,7 +770,6 @@ if($Day != next_day() || $_GET['runday']){
 		$ExtraInfo='';
 		$AddExtra='';
 		if($Format) { $ExtraInfo.=$Format; $AddExtra=' / '; }
-		if($Encoding) { $ExtraInfo.=$AddExtra.$Encoding; $AddExtra=' / '; }
 		// "FLAC / Lossless / Log (100%) / Cue / CD";
 		if($HasLog) { $ExtraInfo.=$AddExtra."Log (".$LogScore."%)"; $AddExtra=' / '; }
 		if($HasCue) { $ExtraInfo.=$AddExtra."Cue"; $AddExtra=' / '; }
@@ -808,7 +806,6 @@ if($Day != next_day() || $_GET['runday']){
 					g.Name,
 					g.TagList,
 					t.Format,
-					t.Encoding,
 					t.Media,
 					t.Scene,
 					t.HasLog,
@@ -834,7 +831,7 @@ if($Day != next_day() || $_GET['runday']){
 		$i = 1;
 		foreach($Top10 as $Torrent) {
 			list($TorrentID,$GroupID,$GroupName,$TorrentTags,
-				$Format,$Encoding,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
+				$Format,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
 				$RemasterTitle,$Snatched,$Seeders,$Leechers,$Data) = $Torrent;
 
 			$DisplayName='';
@@ -851,7 +848,6 @@ if($Day != next_day() || $_GET['runday']){
 			$ExtraInfo='';
 			$AddExtra='';
 			if($Format) { $ExtraInfo.=$Format; $AddExtra=' / '; }
-			if($Encoding) { $ExtraInfo.=$AddExtra.$Encoding; $AddExtra=' / '; }
 			// "FLAC / Lossless / Log (100%) / Cue / CD";
 			if($HasLog) { $ExtraInfo.=$AddExtra."Log (".$LogScore."%)"; $AddExtra=' / '; }
 			if($HasCue) { $ExtraInfo.=$AddExtra."Cue"; $AddExtra=' / '; }
@@ -880,7 +876,6 @@ if($Day != next_day() || $_GET['runday']){
 			t.GroupID,
 			tg.Name,
 			t.Format,
-			t.Encoding,
 			t.UserID
 			FROM torrents AS t
 			JOIN torrents_group AS tg ON tg.ID = t.GroupID
@@ -893,7 +888,7 @@ if($Day != next_day() || $_GET['runday']){
 		$TorrentIDs = $DB->to_array();
 		$TorrentAlerts = array();
 		foreach ($TorrentIDs as $TorrentID) {
-			list($ID, $GroupID, $Name, $Format, $Encoding, $UserID) = $TorrentID;
+			list($ID, $GroupID, $Name, $Format, $UserID) = $TorrentID;
 			
 			if (array_key_exists($UserID, $InactivityExceptionsMade) && (time() < $InactivityExceptionsMade[$UserID])) {
 				// don't notify exceptions
@@ -905,9 +900,6 @@ if($Day != next_day() || $_GET['runday']){
 			$ArtistName = display_artists(get_artist($GroupID), false, false, false);
 			if($ArtistName) {
 				$Name = $ArtistName.' - '.$Name;
-			}
-			if($Format && $Encoding) {
-				$Name.=' ['.$Format.' / '.$Encoding.']';
 			}
 			$TorrentAlerts[$UserID]['Msg'] .= "\n[url=http://".NONSSL_SITE_URL."/torrents.php?torrentid=$ID]".$Name."[/url]";
 			$TorrentAlerts[$UserID]['Count']++;

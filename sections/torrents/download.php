@@ -32,7 +32,6 @@ if(!is_array($Info) || !array_key_exists('PlainArtists', $Info) || empty($Info[1
 	$DB->query("SELECT
 		t.Media,
 		t.Format,
-		t.Encoding,
 		IF(t.RemasterYear=0,tg.Year,t.RemasterYear),
 		tg.ID AS GroupID,
 		tg.Name,
@@ -56,7 +55,7 @@ if(!is_array($Info) || !array_key_exists('PlainArtists', $Info) || empty($Info[1
 if(!is_array($Info[0])) {
 	error(404);
 }
-list($Media,$Format,$Encoding,$Year,$GroupID,$Name,$Image, $Size, $FreeTorrent, $InfoHash) = array_shift($Info); // used for generating the filename
+list($Media,$Format,$Year,$GroupID,$Name,$Image, $Size, $FreeTorrent, $InfoHash) = array_shift($Info); // used for generating the filename
 $Artists = $Info['Artists'];
 
 // If he's trying use a token on this, we need to make sure he has one,
@@ -172,11 +171,6 @@ if ($Media!='') { $TorrentInfo.=$Media; }
 if ($Format!='') {
 	if ($TorrentInfo!='') { $TorrentInfo.=' - '; }
 	$TorrentInfo.=$Format;
-}
-
-if ($Encoding!='') {
-	if ($TorrentInfo!='') { $TorrentInfo.=' - '; }
-	$TorrentInfo.=$Encoding;
 }
 
 // Let's try to shorten the filename intelligently before chopping it off

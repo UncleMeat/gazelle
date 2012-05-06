@@ -8,7 +8,7 @@ include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
 $Text = new TEXT;
 
 $GroupAllowed = array('WikiBody', 'WikiImage', 'ID', 'Name', 'Year', 'RecordLabel', 'CatalogueNumber', 'ReleaseType', 'NewCategoryID', 'Time', 'VanityHouse');
-$TorrentAllowed = array('ID', 'Media', 'Format', 'Encoding', 'Remastered', 'RemasterYear', 'RemasterTitle', 'RemasterRecordLabel', 'RemasterCatalogueNumber', 'Scene', 'HasLog', 'HasCue', 'LogScore', 'FileCount', 'Size', 'Seeders', 'Leechers', 'Snatched', 'FreeTorrent', 'Time', 'Description', 'FileList', 'FilePath', 'UserID', 'Username');
+$TorrentAllowed = array('ID', 'Media', 'Format', 'Remastered', 'RemasterYear', 'RemasterTitle', 'RemasterRecordLabel', 'RemasterCatalogueNumber', 'Scene', 'HasLog', 'HasCue', 'LogScore', 'FileCount', 'Size', 'Seeders', 'Leechers', 'Snatched', 'FreeTorrent', 'Time', 'Description', 'FileList', 'FilePath', 'UserID', 'Username');
 
 $GroupID = (int)$_GET['id'];
 
@@ -44,7 +44,6 @@ foreach ($TorrentList as $Torrent) {
 		'id' => (int) $Torrent['ID'],
 		'media' => $Torrent['Media'],
 		'format' => $Torrent['Format'],
-		'encoding' => $Torrent['Encoding'],
 		'remastered' => $Torrent['Remastered'] == 1,
 		'remasterYear' => (int) $Torrent['RemasterYear'],
 		'remasterTitle' => $Torrent['RemasterTitle'],

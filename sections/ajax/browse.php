@@ -63,12 +63,6 @@ if(!empty($_GET['setdefault'])) {
 	}
 }
 
-array_pop($Bitrates); // remove 'other'
-$SearchBitrates = array_merge($Bitrates, array('v0','v1','v2','24bit'));
-
-foreach($SearchBitrates as $ID=>$Val) {
-	$SearchBitrates[$ID]=strtolower($Val);
-}
 foreach($Formats as $ID=>$Val) {
 	$SearchFormats[$ID]=strtolower($Val);
 }
@@ -78,10 +72,6 @@ $Queries = array();
 //Simple search
 if(!empty($_GET['searchstr'])) {
 	$Words = explode(' ',strtolower($_GET['searchstr']));
-	$FilterBitrates = array_intersect($Words, $SearchBitrates);
-	if(count($FilterBitrates)>0) {
-		$Queries[]='@encoding '.implode(' ',$FilterBitrates);
-	}
 	
 	$FilterFormats = array_intersect($Words, $SearchFormats);
 	if(count($FilterFormats)>0) {

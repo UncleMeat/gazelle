@@ -39,7 +39,6 @@ if(!empty($_GET['torrentid']) && is_number($_GET['torrentid'])) {
 $DB->query("SELECT t.UserID,
 				t.Time,
 				tg.ReleaseType,
-				t.Encoding,
 				t.Format,
 				t.Media, 
 				t.HasLog, 
@@ -56,7 +55,7 @@ $DB->query("SELECT t.UserID,
 if($DB->record_count() < 1) {
 	error(404);
 }
-list($UploaderID, $UploadTime, $TorrentReleaseType, $Bitrate, $Format, $Media, $HasLog, $HasCue, $LogScore, $TorrentCategoryID, $TorrentCatalogueNumber) = $DB->next_record();
+list($UploaderID, $UploadTime, $TorrentReleaseType, $Format, $Media, $HasLog, $HasCue, $LogScore, $TorrentCategoryID, $TorrentCatalogueNumber) = $DB->next_record();
 
 $FillerID = $LoggedUser['ID'];
 $FillerUsername = $LoggedUser['Username'];

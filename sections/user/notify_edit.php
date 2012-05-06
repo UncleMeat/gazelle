@@ -5,7 +5,7 @@ show_header('Manage notifications');
 <div class="thin">
 	<h2>Notify me of all new torrents with...<a href="torrents.php?action=notify">(View)</a></h2>
 <?
-$DB->query("SELECT ID, Label, Artists, ExcludeVA, NewGroupsOnly, Tags, NotTags, ReleaseTypes, Categories, Formats, Encodings, Media, FromYear, ToYear FROM users_notify_filters WHERE UserID='$LoggedUser[ID]' UNION ALL SELECT NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL");
+$DB->query("SELECT ID, Label, Artists, ExcludeVA, NewGroupsOnly, Tags, NotTags, ReleaseTypes, Categories, Formats, Media, FromYear, ToYear FROM users_notify_filters WHERE UserID='$LoggedUser[ID]' UNION ALL SELECT NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL");
 $i = 0;
 $NumFilters = $DB->record_count()-1;
 
@@ -18,7 +18,6 @@ foreach($Notifications as $N) { //$N stands for Notifications
 	$N['ReleaseTypes'] 	= explode('|', substr($N['ReleaseTypes'],1,-1));
 	$N['Categories'] 	= explode('|', substr($N['Categories'],1,-1));
 	$N['Formats'] 		= explode('|', substr($N['Formats'],1,-1));
-	$N['Encodings'] 	= explode('|', substr($N['Encodings'],1,-1));
 	$N['Media'] 		= explode('|', substr($N['Media'],1,-1));
 	if($N['FromYear'] ==0) { $N['FromYear'] = ''; }
 	if($N['ToYear'] ==0) { $N['ToYear'] = ''; }
@@ -100,15 +99,6 @@ foreach($Notifications as $N) { //$N stands for Notifications
 <?	foreach($Formats as $Format){ ?>
 					<input type="checkbox" name="formats[]" id="<?=$Format?>_<?=$N['ID']?>" value="<?=$Format?>"<? if(in_array($Format, $N['Formats'])) { echo ' checked="checked"';} ?> />
 					<label for="<?=$Format?>_<?=$N['ID']?>"><?=$Format?></label>
-<?	} ?>
-				</td>
-			</tr>
-			<tr>
-				<td class="label"><strong>Only these bitrates</strong></td>
-				<td>
-<?	foreach($Bitrates as $Bitrate){ ?>
-					<input type="checkbox" name="bitrates[]" id="<?=$Bitrate?>_<?=$N['ID']?>" value="<?=$Bitrate?>"<? if(in_array($Bitrate, $N['Encodings'])) { echo ' checked="checked"';} ?> />
-					<label for="<?=$Bitrate?>_<?=$N['ID']?>"><?=$Bitrate?></label>
 <?	} ?>
 				</td>
 			</tr>
