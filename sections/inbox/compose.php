@@ -41,8 +41,8 @@ show_header('Compose', 'inbox,bbcode');
                         <textarea id="body" name="body" class="long" rows="10"><?=(!empty($Body) ? $Body : '')?></textarea>
                 </div>
             </div>
-		<div id="buttons" class="center">
-			 <input type="button" value="Preview" onclick="Inbox_Preview();" /> 
+		<div class="center">
+			 <input type="button" id="previewbtn" value="Preview" onclick="Inbox_Preview();" /> 
 			 <input type="submit" value="Send message" />
 		</div>
         </form>

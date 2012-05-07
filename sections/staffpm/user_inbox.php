@@ -2,7 +2,7 @@
 
 include(SERVER_ROOT.'/sections/staffpm/functions.php');
 
-show_header('Staff PMs', 'staffpm');
+show_header('Staff PMs', 'staffpm,bbcode,inbox');
 
 // Get messages
 $StaffPMs = $DB->query("

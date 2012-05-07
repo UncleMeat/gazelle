@@ -1,6 +1,6 @@
 <?
 enforce_login();
-show_header('Staff');
+show_header('Staff','bbcode,inbox');
 
 include(SERVER_ROOT.'/sections/staff/functions.php');
 include(SERVER_ROOT.'/sections/staffpm/functions.php');
@@ -98,7 +98,7 @@ list($FrontLineSupport, $Staff, $Admins) = $SupportStaff;
 			$Row = 'a';
 			if($CloseTable) {
 				$CloseTable = false;
-				echo "\t</table>";
+				echo "\t</table><br/>";
 			}
 			$CurClass = $Class;
 			$CloseTable = true;
@@ -133,7 +133,7 @@ list($FrontLineSupport, $Staff, $Admins) = $SupportStaff;
 	</div>
        
 	<div class="box pad" style="padding:10px;">
-            <h3>Admins</h3>
+            <h3>Senior Staff</h3>
             <p>Senior Staff - They make the decisions, annoy them at your own peril.</p>
 <?
 	$CurClass = 0;
@@ -144,7 +144,7 @@ list($FrontLineSupport, $Staff, $Admins) = $SupportStaff;
 			$Row = 'a';
 			if($CloseTable) {
 				$CloseTable = false;
-				echo "\t</table>";
+				echo "\t</table><br/>";
 			}
 			$CurClass = $Class;
 			$CloseTable = true;

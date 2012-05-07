@@ -16,7 +16,7 @@ function Sandbox_Preview() {
     ajax.post("ajax.php?action=preview","messageform", function(response){
         $('#preview_content').raw().innerHTML = response;
         $('#preview').show();
-    $('#preview_button').raw().value = "Update Preview";
+        $('#preview_button').raw().value = "Update Preview";
     });
 }
 

@@ -16,19 +16,18 @@ function Quick_Edit() {
 }
 
 
-
-
 function Inbox_Preview() {
-	$('#buttons').raw().innerHTML = "<input type='button' value='Editor' onclick='Inbox_Edit();' /><input type='submit' value='Send Message' />";
-	ajax.post("ajax.php?action=preview_newpm","messageform", function(response){
-		$('#quickpost').hide();
-		$('#preview').raw().innerHTML = response;
-		$('#preview').show();
-	});
+	if ($('#preview').has_class('hidden')) {
+		ajax.post('ajax.php?action=preview_newpm', "messageform", function (response) {
+                  $('#preview').raw().innerHTML = response;
+                  $('#preview').show();
+			$('#quickpost').hide();
+			$('#previewbtn').raw().value = "Edit Message";
+		});
+	} else {
+		$('#preview').hide();
+		$('#quickpost').toggle();
+		$('#previewbtn').raw().value = "Preview";
+	}
 }
 
-function Inbox_Edit() {
-	$('#buttons').raw().innerHTML = "<input type='button' value='Preview' onclick='Inbox_Preview();' /><input type='submit' value='Send Message' />";
-	$('#preview').hide();
-	$('#quickpost').show();
-}
