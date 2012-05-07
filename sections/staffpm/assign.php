@@ -15,10 +15,10 @@ if ($ConvID = (int)$_GET['convid']) {
 		if(!empty($_GET['to'])) {
 			$Level = 0;
 			switch($_GET['to']) {
-				case 'forum' :  // in this context 'forum' == Mod Pervs
+				case 'staff' :  // in this context 'staff' == Mod Pervs
 					$Level = 500; //  650;
 					break;
-				case 'staff' :  // in this context 'staff' == Admins+
+				case 'admin' :  // in this context 'admin' == Admins+
 					$Level = 600; // 700;
 					break;
 				default :

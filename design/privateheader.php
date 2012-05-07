@@ -166,7 +166,7 @@ if ($NewStaffPMs === false) {
 	$DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE UserID='".$LoggedUser['ID']."' AND Unread = '1'");
 	list($NewStaffPMs) = $DB->next_record();
 	$Cache->cache_value('staff_pm_new_'.$LoggedUser['ID'], $NewStaffPMs, 0);
-    $NumStaffPMsDisplay = $NewStaffPMs;
+      //$NumStaffPMsDisplay = $NewStaffPMs;
 }  
 
 if ($NewStaffPMs > 0) {
@@ -234,7 +234,7 @@ if (check_perms('users_mod')) {
 		list($NumStaffPMs) = $DB->next_record();
 		$Cache->cache_value('num_staff_pms_'.$LoggedUser['ID'], $NumStaffPMs , 1000);
 	}
-    $NumStaffPMsDisplay = $NumStaffPMs;
+      //$NumStaffPMsDisplay = $NumStaffPMs;
 	
 	if ($NumStaffPMs > 0) {
 		$ModBar[] = '<a href="staffpm.php">'.$NumStaffPMs.' Staff PMs</a>';
@@ -429,13 +429,15 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
             <div id="minor_stats">
                 <ul id="userinfo_minor">
                       <li id="nav_inbox"<?=$NewMessages ? ' class="highlight"' : ''?>><a onmousedown="Stats('inbox');" href="inbox.php">Inbox<?=$NewMessages ? "($NewMessages)" : ''?></a></li>
-                      <li id="nav_staffinbox"<?=$NumStaffPMsDisplay ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffpm');" href="staffpm.php">Staff Messages<?=$NumStaffPMsDisplay ? "($NumStaffPMsDisplay)" : ''?></a></li>
+                      <li id="nav_staffmessages"<?=$NewStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffpm');" href="staffpm.php?action=user_inbox">Staff Messages<?=$NewStaffPMs ? "($NewStaffPMs)" : ''?></a></li>
+    <? if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {  ?>
+                      <li id="nav_staffinbox"<?=$NumStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffinbox');" href="staffpm.php?action=staff_inbox">Staff Inbox<?=$NumStaffPMs ? "($NumStaffPMs)" : ''?></a></li>
+    <? }  ?>
                       <li id="nav_uploaded"><a onmousedown="Stats('uploads');" href="torrents.php?type=uploaded&amp;userid=<?=$LoggedUser['ID']?>">Uploads</a></li>
                       <li id="nav_bookmarks"><a onmousedown="Stats('bookmarks');" href="bookmarks.php?type=torrents">Bookmarks</a></li>
     <? if (check_perms('site_torrents_notify')) { ?>
                       <li id="nav_notifications"<?=($NewNotifications ? ' class="highlight"' : '')?>><a onmousedown="Stats('notifications');" href="user.php?action=notify">Notifications<?=$NewNotifications ? "($NewNotifications)" : ''?></a></li>
-    <? } 
-    ?>
+    <? }  ?>
                       <li id="nav_subscriptions"<?=($NewSubscriptions ? ' class="highlight"' : '')?>><a onmousedown="Stats('subscriptions');" href="userhistory.php?action=subscriptions"<?=($NewSubscriptions ? ' class="new-subscriptions"' : '')?>>Subscriptions<?=$NewSubscriptions ? "($NewSubscriptions)" : ''?></a></li>
                       <li id="nav_comments"><a onmousedown="Stats('comments');" href="comments.php">Comments</a></li>
                       <li id="nav_friends"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>

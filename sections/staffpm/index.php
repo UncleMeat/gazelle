@@ -3,7 +3,7 @@ enforce_login();
 
 if(!isset($_REQUEST['action']))
 	$_REQUEST['action'] = '';
-
+/*
 // Get user level
 $DB->query("
 	SELECT
@@ -15,11 +15,16 @@ $DB->query("
 	WHERE i.UserID = ".$LoggedUser['ID']
 );
 list($SupportFor, $DisplayStaff) = $DB->next_record();
+*/
+
+// get vars from LoggedUser
+$SupportFor =  $LoggedUser['SupportFor'];
+$DisplayStaff =  $LoggedUser['DisplayStaff'];
 // Logged in user is staff
 $IsStaff = ($DisplayStaff == 1);
 // Logged in user is Staff or FLS
 $IsFLS = ($SupportFor != '' || $IsStaff);
-
+       
 switch($_REQUEST['action']) {
 	case 'viewconv':	
 		require('viewconv.php');
@@ -57,6 +62,11 @@ switch($_REQUEST['action']) {
 	case 'preview':
 		require('ajax_preview_response.php');
 		break;
+        
+	case 'user_inbox': // so staff can access the user interface too
+		require('user_inbox.php');
+		break;
+	case 'staff_inbox': //  
 	default:
 		if ($IsStaff || $IsFLS) {
 			require('staff_inbox.php');

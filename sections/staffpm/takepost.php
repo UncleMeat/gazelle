@@ -19,7 +19,7 @@ if ($Message = db_string($_POST['message'])) {
 				(".$LoggedUser['ID'].", '".sqltime()."', '$Message', $ConvID)"
 		);
 		
-		header('Location: staffpm.php');
+		header('Location: staffpm.php?action=user_inbox');
 		
 	} elseif ($ConvID = (int)$_POST['convid']) {
 		// Check if conversation belongs to user
