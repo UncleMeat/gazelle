@@ -506,6 +506,7 @@ $Bookmarks = all_bookmarks('torrent');
         <td class="sign"><a href="<?= header_link('snatched') ?>"><img src="static/styles/<?= $LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></a></td>
         <td class="sign"><a href="<?= header_link('seeders') ?>"><img src="static/styles/<?= $LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /></a></td>
         <td class="sign"><a href="<?= header_link('leechers') ?>"><img src="static/styles/<?= $LoggedUser['StyleName'] ?>/images/leechers.png" alt="Leechers" title="Leechers" /></a></td>
+        <td>Uploader</td>
     </tr>
     <?
 // Start printing torrent list
@@ -567,6 +568,7 @@ $Bookmarks = all_bookmarks('torrent');
             <td><?= number_format($TotalSnatched) ?></td>
             <td<?= ($TotalSeeders == 0) ? ' class="r00"' : '' ?>><?= number_format($TotalSeeders) ?></td>
             <td><?= number_format($TotalLeechers) ?></td>
+            <td> </td>
         </tr>
         <?
     }

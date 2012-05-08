@@ -119,6 +119,9 @@ span.size8 { font-size:2.5em; }
 span.size9 { font-size:2.75em; }
 span.size10 { font-size:3em; }
 
+code {
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+}
 ul.thin { margin:0px 0px 0px 25px; padding:0px; }
 ul.thin li { margin:0px 0px; padding:0px; }
 
@@ -1073,12 +1076,36 @@ ul .invitetree {
     font-weight: bold;
 }
 
+/* bbcode */
 
+div.bbcode {
+    background-color: inherit; 
+    text-align: inherit;
+    margin: 0px auto;
+}
 
-/*
- Stuff for the bbcode assistant
- */
+table.bbcode {
+    background-color: inherit; 
+    text-align: inherit;
+    margin: 0px auto;
+}
+tr.bbcode {
+    background-color: inherit; 
+    text-align: inherit;
+}
+th.bbcode {
+    background-color: inherit; 
+    text-align: inherit;
+    font-size: larger;
+    padding: 7px;
+    font-weight: bolder;
+}
+td.bbcode {
+    background-color: inherit; 
+    text-align: inherit;
+}
 
+/*  Stuff for the bbcode assistant  */
 
 .bb_holder { 
 	/*border: 1px solid #222; */
@@ -1102,6 +1129,7 @@ select.bb_button {
     background:white;
     cursor:pointer;
     color: #000000; 
+    height: 24px;
 }
 
 a.bb_button { 
@@ -1176,6 +1204,8 @@ a.bb_button:hover {
 .color_pick td:hover { 
     border:1px solid #333333; 
 }
+
+/*  Torrent Buttons  */
 
 #torrent_buttons {
     margin-left: 10px;

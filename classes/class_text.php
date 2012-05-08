@@ -1,7 +1,7 @@
 <?
 class TEXT {
 	// tag=>max number of attributes
-	private $ValidTags = array('b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, '#'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
+	private $ValidTags = array('table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, '#'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
 	);
 	private $Smileys = array(
            ':smile1:'           => 'smile1.gif',
@@ -265,54 +265,38 @@ class TEXT {
            ':spamhammer:'           => 'spamhammer.gif',
            ':atomic:'           => 'atomic.gif',
           
-          
-          /*
-		':angry:'			=> 'angry.gif',
-		':-D'				=> 'biggrin.gif',
-		':D'				=> 'biggrin.gif',
-		':|'				=> 'blank.gif',
-		':-|'				=> 'blank.gif',
-		':blush:'			=> 'blush.gif',
-		':cool:'			=> 'cool.gif',
-		':&#39;('				=> 'crying.gif',
-		':crying:'				=> 'crying.gif',
-		'&gt;.&gt;'			=> 'eyesright.gif',
-		':frown:'			=> 'frown.gif',
-		'&lt;3'				=> 'heart.gif',
-		':unsure:'			=> 'hmm.gif',
-		':\\'			=> 'hmm.gif',
-		':whatlove:'		=> 'ilu.gif',
-		':lol:'				=> 'laughing.gif',
-		':loveflac:'		=> 'loveflac.gif',
-		':ninja:'			=> 'ninja.gif',
-		':no:'				=> 'no.gif',
-		':nod:'				=> 'nod.gif',
-		':ohno:'			=> 'ohnoes.gif',
-		':ohnoes:'			=> 'ohnoes.gif',
-		':omg:'				=> 'omg.gif',
-		':o'				=> 'ohshit.gif',
-		':O'				=> 'ohshit.gif',
-		':paddle:'			=> 'paddle.gif',
-		':('				=> 'sad.gif',
-		':-('				=> 'sad.gif',
-		':shifty:'			=> 'shifty.gif',
-		':sick:'			=> 'sick.gif',
-		':)'				=> 'smile.gif',
-		':-)'				=> 'smile.gif',
-		':sorry:'			=> 'sorry.gif',
-		':thanks:'			=> 'thanks.gif',
-		':P'				=> 'tongue.gif',
-		':-P'				=> 'tongue.gif',
-		':-p'				=> 'tongue.gif',
-		':wave:'			=> 'wave.gif',
-		';-)'				=> 'wink.gif',
-		':wink:'			=> 'wink.gif',
-		':creepy:'			=> 'creepy.gif',
-		':worried:'			=> 'worried.gif',
-		':wtf:'				=> 'wtf.gif',
-		':wub:'				=> 'wub.gif', */
+           
 	);
 	
+      //  font name (display) => fallback fonts (css)
+	private $Fonts = array(
+           'Arial'                  => "Arial, 'Helvetica Neue', Helvetica, sans-serif;",
+           'Arial Black'            => "'Arial Black', 'Arial Bold', Gadget, sans-serif;",
+           'Comic Sans MS'          => "'Comic Sans MS', cursive, sans-serif;",
+           'Courier New'            => "'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;",
+           'Franklin Gothic Medium' => "'Franklin Gothic Medium', 'Franklin Gothic', 'ITC Franklin Gothic', Arial, sans-serif;",
+           'Georgia'                => "Georgia, Times, 'Times New Roman', serif;",
+           'Helvetica'              => "'Helvetica Neue', Helvetica, Arial, sans-serif;",
+           'Impact'                 => "Impact, Haettenschweiler, 'Franklin Gothic Bold', Charcoal, 'Helvetica Inserat', 'Bitstream Vera Sans Bold', 'Arial Black', sans-serif;",
+           'Lucida Console'         => "'Lucida Console', Monaco, monospace;",
+           'Lucida Sans Unicode'    => "'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Geneva, Verdana, sans-serif;",
+           'Microsoft Sans Serif'   => "'Microsoft Sans Serif', Helvetica, sans-serif;",
+           'Palatino Linotype'      => "Palatino, 'Palatino Linotype', 'Palatino LT STD', 'Book Antiqua', Georgia, serif;",
+           'Tahoma'                 => "Tahoma, Verdana, Segoe, sans-serif;",
+           'Times New Roman'        => "TimesNewRoman, 'Times New Roman', Times, Baskerville, Georgia, serif;",
+           'Trebuchet MS'           => "'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;",
+           'Verdana'                => "Verdana, Geneva, sans-serif;"
+          );
+ 
+      //  icon tag => img  //[cast][details][info][plot][screens] 
+	private $Icons = array(
+           'cast'                  => "cast11.png",
+           'details'               => "details11.png",
+           'info'                  => "info11.png",
+           'plot'                  => "plot11.png",
+           'screens'               => "screens11.png"
+          );
+      
 	private $NoImg = 0; // If images should be turned into URLs
 	private $Levels = 0; // If images should be turned into URLs
 	
@@ -322,7 +306,12 @@ class TEXT {
 		}
 		reset($this->Smileys);
             // asort($this->Smileys, SORT_STRING | SORT_FLAG_CASE); // do not uncomment - just for printing in a-z order in dev
-	}
+	
+		foreach($this->Icons as $Key=>$Val) {
+			$this->Icons[$Key] = '<img src="'.STATIC_SERVER.'common/icons/'.$Val.'" alt="'.$Key.'" />';
+		}
+		reset($this->Icons);
+      }
 	
 	function full_format($Str) {
 		$Str = display_str($Str);
@@ -537,8 +526,8 @@ EXPLANATION OF PARSER LOGIC
 				// strcspn returns the number of characters after the offset $i, not after the beginning of the string
 				// Therefore, we use += instead of the = everywhere else
 				$i += $CloseTag; // 5d) Move the pointer past the end of the [/close] tag. 
-			} elseif($WikiLink == true || $TagName == 'n') { 
-				// Don't need to do anything - empty tag with no closing
+			} elseif($WikiLink == true || $TagName == 'n' || $TagName == 'br' || $TagName == 'hr' || $TagName == 'cast' || $TagName == 'details' || $TagName == 'info' || $TagName == 'plot' || $TagName == 'screens') { 
+				// Don't need to do anything - empty tag with no closing 
 			} elseif($TagName === '*' || $TagName === '#') {
 				// We're in a list. Find where it ends
 				$NewLine = $i;
@@ -598,6 +587,21 @@ EXPLANATION OF PARSER LOGIC
 			
 			// 6) Depending on what type of tag we're dealing with, create an array with the attribute and block.
 			switch($TagName) {
+				case 'br':
+				case 'hr':
+				case 'cast':
+				case 'details':
+				case 'info':
+				case 'plot':
+				case 'screens':
+					$Array[$ArrayPos] = array('Type'=>$TagName, 'Val'=>'');
+					break;
+				case 'font':
+					$Array[$ArrayPos] = array('Type'=>'font', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
+					break;
+				case 'center': // lets just swap a center tag for an [align=center] tag
+					$Array[$ArrayPos] = array('Type'=>'align', 'Attr'=>'center', 'Val'=>$this->parse($Block));
+					break;
 				case 'inlineurl':
 					$Array[$ArrayPos] = array('Type'=>'inlineurl', 'Attr'=>$Block, 'Val'=>'');
 					break;
@@ -650,6 +654,7 @@ EXPLANATION OF PARSER LOGIC
 					$Array[$ArrayPos] = array('Type'=>$TagName, 'Val'=>$Block);
 					break;
 				case 'hide':
+				case 'spoiler':
 					$Array[$ArrayPos] = array('Type'=>'hide', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
 					break;
 				case '#':
@@ -684,17 +689,91 @@ EXPLANATION OF PARSER LOGIC
 		return $Array;
 	}
 	
+       
+      function is_color_attrib($Attrib) {
+            static $ColorAttribs;
+            if (!$ColorAttribs) // only build it once per page 
+                $ColorAttribs = array('aqua', 'pink', 'black', 'blue', 'lightblue', 'fuchsia', 'lightgreen', 'green', 'grey', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'white', 'yellow');
+		
+            return (in_array($Attrib, $ColorAttribs) || preg_match('/^#[0-9a-f]{3,6}$/', $Attrib));
+      }
+      
+      function get_color_width_attributes($Attrib) {
+            $InlineStyle = '';
+            if ( isset($Attrib) ) {
+                $attributes = explode(",", $Attrib);
+                if ($attributes) {
+                    $InlineStyle = ' style="';
+                    foreach($attributes as $att) {
+                        if($this->is_color_attrib($att)) {
+                            $InlineStyle .= 'background-color:'.$att.';';
+                        } elseif (preg_match('/^[0-9]{1,3}$/', $att)) {
+                            if ( (int)$att > 100 ) $att = '100';
+                            $InlineStyle .= 'width:'.$att.'%;';
+                        }
+                    }
+                    $InlineStyle .= '"';
+                }
+            }
+            return $InlineStyle;
+      }
+      
 	function to_html($Array) {
 		$this->Levels++;
 		if($this->Levels>10) { return $Block['Val']; } // Hax prevention
 		$Str = '';
-		
+            
 		foreach($Array as $Block) {
 			if(is_string($Block)) {
 				$Str.=$this->smileys($Block);
 				continue;
 			}
 			switch($Block['Type']) {
+				case 'table':
+                              $InlineStyle = $this->get_color_width_attributes($Block['Attr']);
+					$Str.='<table class="bbcode"'.$InlineStyle.'><tbody>'.$this->to_html($Block['Val']).'</tbody></table>';
+					break;
+				case 'tr':
+                              $InlineStyle = '';
+                              if($this->is_color_attrib( $Block['Attr']))
+                                       $InlineStyle = ' style="background-color:'.$Block['Attr'].';"';
+					$Str.='<'.$Block['Type'].' class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</'.$Block['Type'].'>';
+					break;
+				case 'th':
+				case 'td':
+                              $InlineStyle = $this->get_color_width_attributes($Block['Attr']);
+					$Str.='<'.$Block['Type'].' class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</'.$Block['Type'].'>';
+					break;
+				case 'bg':
+                              $InlineStyle = $this->get_color_width_attributes($Block['Attr']);
+					if (!$InlineStyle) {
+                                  	$Str.='[bg='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/bg]';
+                              } else  $Str.='<div class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</div>';
+                              break;
+				case 'cast':
+				case 'details':
+				case 'info':
+				case 'plot':
+				case 'screens': // [cast] [details] [info] [plot] [screens]
+                              if(!isset($this->Icons[$Block['Type']])) { 
+                                  $Str.='['.$Block['Type'].']'; 
+					} else  { 
+                                  $Str.= $this->Icons[$Block['Type']]; 
+                              }
+					break;
+				case 'br':
+					$Str.='<br />';
+					break;
+				case 'hr':
+					$Str.='<hr />'; 
+					break;
+				case 'font':
+                              if(!isset($this->Fonts[$Block['Attr']])) {
+                                    $Str.='[font='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/font]';
+                              } else {
+						$Str.='<span style="font-family: '.$this->Fonts[$Block['Attr']].'">'.$this->to_html($Block['Val']).'</span>';
+                              }
+					break;
 				case 'b':
 					$Str.='<strong>'.$this->to_html($Block['Val']).'</strong>';
 					break;
@@ -757,7 +836,7 @@ EXPLANATION OF PARSER LOGIC
 					$Str.='</'.$Block['ListType'].'>';
 					break;
 				case 'align':
-					$ValidAttribs = array('left', 'center', 'right');
+					$ValidAttribs = array('left', 'center', 'justify', 'right');
 					if(!in_array($Block['Attr'], $ValidAttribs)) {
 						$Str.='[align='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/align]';
 					} else {
@@ -766,9 +845,10 @@ EXPLANATION OF PARSER LOGIC
 					break;
 				case 'color':
 				case 'colour':
-					$ValidAttribs = array('aqua', 'black', 'blue', 'fuchsia', 'green', 'grey', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'white', 'yellow');
-					if(!in_array($Block['Attr'], $ValidAttribs) && !preg_match('/^#[0-9a-f]{6}$/', $Block['Attr'])) { 
-						$Str.='[color='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/color]';
+					//$ValidAttribs = array('aqua', 'black', 'blue', 'fuchsia', 'green', 'grey', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'white', 'yellow');
+					if(!$this->is_color_attrib($Block['Attr'])) { 
+					//if(!is_color_attrib($Block['Attr'])) {
+                                  	$Str.='[color='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/color]';
 					} else {
 						$Str.='<span style="color:'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</span>';
 					}
@@ -861,7 +941,7 @@ EXPLANATION OF PARSER LOGIC
 					break;
 				
 			}
-		}
+            }
 		$this->Levels--;
 		return $Str;
 	}
@@ -883,6 +963,7 @@ EXPLANATION OF PARSER LOGIC
 				case 'size':
 				case 'quote':
 				case 'align':
+				case 'center':
 				
 					$Str.=$this->raw_text($Block['Val']);
 					break;
@@ -971,11 +1052,22 @@ EXPLANATION OF PARSER LOGIC
                 <!-- <a class="bb_button" onclick="tag('img')" title="Insert image: [img]http://image_url[/img]" alt="Img">Img</a>-->
                     <a class="bb_button" onclick="cimage('<?=$textarea;?>')" title="Insert image: [img]http://image_url[/img]" alt="Image">img</a>
                     <a class="bb_button" onclick="tag('code', '<?=$textarea;?>')" title="Code display: [code]code[/code]" alt="Code">Code</a>
+                    <a class="bb_button" onclick="table('<?=$textarea;?>')" title="Table: [table][tr][td]text[/td][td]text[/td][/tr][/table]" alt="Table">Table</a>
+                    
                     <a class="bb_button" onclick="tag('quote', '<?=$textarea;?>')" title="Quote text: [quote]text[/quote]" alt="Quote">Quote</a>
 
                  <!-- <a class="bb_button" onclick="tag('mcom')" title="Staff Comment" alt="Mod comment">Mod</a> -->
-                 
-                <select  class="bb_button" name="fontsize" id="fontsize<?=$textarea;?>" onchange="font('size',this.value, '<?=$textarea;?>');" title="Font size">
+               
+                <select class="bb_button" name="fontfont" id="fontfont<?=$textarea;?>" onchange="font('font',this.value,'<?=$textarea;?>');" title="Font face">
+                    <option value="0">Font Type</option>
+                <?  foreach($this->Fonts as $Key=>$Val) {
+                        echo  '
+                            <option value="'.$Key.'"  style="font-family: '.$Val.'">'.$Key.'</option>';
+                    }  ?>
+                </select>
+                    
+                    
+                <select  class="bb_button" name="fontsize" id="fontsize<?=$textarea;?>" onchange="font('size',this.value,'<?=$textarea;?>');" title="Font size">
                   <option value="0" selected="selected">Font size</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -994,7 +1086,7 @@ EXPLANATION OF PARSER LOGIC
               <div style="float: right; margin-top: 3px;"> 
                   <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center', '<?=$textarea;?>')" title="Align - center" alt="Center" /> 
                   <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left', '<?=$textarea;?>')" title="Align - left" alt="Left" /> 
-               <!-- <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify')" title="Align - justify" alt="justify" />  -->
+                  <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify', '<?=$textarea;?>')" title="Align - justify" alt="Justify" />
                   <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right', '<?=$textarea;?>')" title="Align - right" alt="Right" /> 
                   <img class="bb_icon" src="<?=get_symbol_url('text_uppercase.png') ?>" onclick="text('up', '<?=$textarea;?>')" title="To Uppercase" alt="Up" /> 
                   <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low', '<?=$textarea;?>')" title="To Lowercase" alt="Low" />

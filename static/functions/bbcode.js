@@ -167,6 +167,15 @@ function cimage(textID) {
 
 }
 
+function table(textID) {
+  //var link;
+  //link = prompt("Please enter the number of columns and rows for your table\nin the format 'columns, rows'", '');
+  
+    em("[table]\n[tr]\n[td] [/td][td] [/td]\n[/tr]\n[/table]\n", textID)
+  //  em('img', link, '', textID);
+
+}
+
 function tag(v , textID) {
   wrap(v, '', '', textID);
 }
