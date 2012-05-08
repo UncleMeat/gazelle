@@ -66,7 +66,7 @@ $DB->query("UPDATE users_collage_subs SET LastVisit=NOW() WHERE UserID = ".$Logg
 // Build the data for the collage and the torrent list
 if(!is_array($TorrentList)) {
 	$DB->query("SELECT ct.GroupID,
-			tg.WikiImage,
+			tg.Image,
                         tg.NewCategoryID,
 			um.ID,
 			um.Username
@@ -93,13 +93,12 @@ $TorrentTable = '';
 
 $NumGroups = 0;
 $NumGroupsByUser = 0;
-$Artists = array();
 $Tags = array();
 $Users = array();
 $Number = 0;
 
 foreach ($TorrentList as $GroupID=>$Group) {
-	list($GroupID, $GroupName, $GroupYear, $GroupRecordLabel, $GroupCatalogueNumber, $TagList, $ReleaseType, $GroupVanityHouse, $Torrents, $GroupArtists, $ExtendedArtists) = array_values($Group);
+	list($GroupID, $GroupName, $TagList, $Torrents) = array_values($Group);
 	list($GroupID2, $Image, $NewCategoryID, $UserID, $Username) = array_values($CollageDataList[$GroupID]);
 
         // Handle stats and stuff
@@ -108,23 +107,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
 	if($UserID == $LoggedUser['ID']) {
 		$NumGroupsByUser++;
 	}
-	
-	if (!empty($ExtendedArtists[1]) || !empty($ExtendedArtists[4]) || !empty($ExtendedArtists[5]) || !empty($ExtendedArtists[6])) {
-		$CountArtists = array_merge((array)$ExtendedArtists[1], (array)$ExtendedArtists[4], (array)$ExtendedArtists[5], (array)$ExtendedArtists[6]);
-	} else{
-		$CountArtists = $GroupArtists;
-	}
-	
-	if($CountArtists) {
-		foreach($CountArtists as $Artist) {
-			if(!isset($Artists[$Artist['id']])) {
-				$Artists[$Artist['id']] = array('name'=>$Artist['name'], 'count'=>1);
-			} else {
-				$Artists[$Artist['id']]['count']++;
-			}
-		}
-	}
-	
+		
 	if($Username) {
 		if(!isset($Users[$UserID])) {
 			$Users[$UserID] = array('name'=>$Username, 'count'=>1);
@@ -150,17 +133,8 @@ foreach ($TorrentList as $GroupID=>$Group) {
 
 	$DisplayName = $Number.' - ';
 	
-	if (!empty($ExtendedArtists[1]) || !empty($ExtendedArtists[4]) || !empty($ExtendedArtists[5])|| !empty($ExtendedArtists[6])) {
-			unset($ExtendedArtists[2]);
-			unset($ExtendedArtists[3]);
-			$DisplayName .= display_artists($ExtendedArtists);
-	} elseif(count($GroupArtists)>0) {
-			$DisplayName .= display_artists(array('1'=>$GroupArtists));
-	}
-	
 	$DisplayName .= '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
-	if($GroupYear>0) { $DisplayName = $DisplayName. ' ['. $GroupYear .']';}
-	if($GroupVanityHouse) { $DisplayName .= ' [<abbr title="This is a vanity house release">VH</abbr>]'; }
+
 	// Start an output buffer, so we can store this output in $TorrentTable
 	ob_start();
 
@@ -205,16 +179,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
 	
 	ob_start();
 	
-	$DisplayName = '';
-	if (!empty($ExtendedArtists[1]) || !empty($ExtendedArtists[4]) || !empty($ExtendedArtists[5])|| !empty($ExtendedArtists[6])) {
-		unset($ExtendedArtists[2]);
-		unset($ExtendedArtists[3]);
-		$DisplayName .= display_artists($ExtendedArtists, false);
-	} elseif(count($GroupArtists)>0) {
-		$DisplayName .= display_artists(array('1'=>$GroupArtists), false);
-	}
-	$DisplayName .= $GroupName;
-	if($GroupYear>0) { $DisplayName = $DisplayName. ' ['. $GroupYear .']';}
+	$DisplayName = $GroupName;
 ?>
 		<li class="image_group_<?=$GroupID?>">
 			<a href="#group_<?=$GroupID?>">
@@ -364,7 +329,6 @@ foreach ($ZIPOptions as $Option) {
 			<div class="head"><strong>Stats</strong></div>
 			<ul class="stats nobullet">
 				<li>Torrents: <?=$NumGroups?></li>
-<? if(count($Artists) >0) { ?>	<li>Artists: <?=count($Artists)?></li> <? } ?>
 				<li>Built by <?=count($Users)?> user<?=(count($Users)>1) ? 's' : ''?></li>
 			</ul>
 		</div>
@@ -386,26 +350,6 @@ foreach ($Tags as $TagName => $Tag) {
 				</ol>
 			</div>
 		</div>
-<? if(!empty($Artists)) { ?>		
-		<div class="box">
-			<div class="head"><strong>Top artists</strong></div>
-			<div class="pad">
-				<ol style="padding-left:5px;">
-<?
-uasort($Artists, 'compare');
-$i = 0;
-foreach ($Artists as $ID => $Artist) {
-	$i++;
-	if($i>10) { break; }
-?>
-					<li><a href="artist.php?id=<?=$ID?>"><?=$Artist['name']?></a> (<?=$Artist['count']?>)</li>
-<?
-}
-?>
-				</ol>
-			</div>
-		</div>
-<? } ?>
 		<div class="box">
 			<div class="head"><strong>Top contributors</strong></div>
 			<div class="pad">

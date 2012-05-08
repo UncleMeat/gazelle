@@ -123,7 +123,6 @@ $DB->query("SELECT
 	i.AdminComment,
 	m.torrent_pass,
 	i.Donor,
-	i.Artist,
 	i.Warned,
 	i.SupportFor,
 	i.RestrictedForums,

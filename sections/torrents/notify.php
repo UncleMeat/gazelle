@@ -19,26 +19,15 @@ $Results = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 		g.TagList,
 		t.Size,
 		t.FileCount,
-		t.Format,
-		t.Media,
-		t.Scene,
-		t.RemasterYear,
-		g.Year,
-		t.RemasterYear,
-		t.RemasterTitle,
 		t.Snatched,
 		t.Seeders,
 		t.Leechers,
 		t.Time,
-		t.HasLog,
-		t.HasCue,
-		t.LogScore,
 		t.FreeTorrent,
 		tln.TorrentID AS LogInDB,
 		unt.UnRead,
 		unt.FilterID,
 		unf.Label,
-		g.ReleaseType
 		FROM users_notify_torrents AS unt
 		JOIN torrents AS t ON t.ID=unt.TorrentID
 		JOIN torrents_group AS g ON g.ID = t.GroupID 
@@ -106,39 +95,18 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 <?
 		unset($FilterResults['FilterLabel']);
 		foreach($FilterResults as $Result) {
-			list($TorrentID, $GroupID, $GroupName, $GroupCategoryID, $TorrentTags, $Size, $FileCount, $Format,
-				$Media, $Scene, $RemasterYear, $GroupYear, $RemasterYear, $RemasterTitle, $Snatched, $Seeders, 
-				$Leechers, $NotificationTime, $HasLog, $HasCue, $LogScore, $FreeTorrent, $LogInDB, $UnRead, $FilterLabel, $FilterLabel, $ReleaseType) = $Result;
+			list($TorrentID, $GroupID, $GroupName, $GroupCategoryID, $TorrentTags, $Size, $FileCount,
+				$Snatched, $Seeders, 
+				$Leechers, $NotificationTime, $FreeTorrent, $LogInDB, $UnRead, $FilterLabel, $FilterLabel) = $Result;
 			// generate torrent's title
 			$DisplayName='';
-			
-			$Artists = get_artist($GroupID);
-			
-			if(!empty($Artists)) {
-				$DisplayName = display_artists($Artists, true, true);
-			}
-			
+					
 			if (in_array($TorrentID, $TokenTorrents) && empty($Torrent['FreeTorrent'])) {
 				$Data['PersonalFL'] = 1;
 			}
 			
 			$DisplayName.= "<a href='torrents.php?id=$GroupID&amp;torrentid=$TorrentID#torrent$TorrentID'  title='View Torrent'>".$GroupName."</a>";
-		
-			// append extra info to torrent title
-			$ExtraInfo='';
-			$AddExtra='';
-			if($Format) 		{ $ExtraInfo.=$Format; $AddExtra=' / '; }
-			if($HasLog) 		{ $ExtraInfo.=$AddExtra.'Log'; $AddExtra=' / '; }
-			if($HasLog && $LogInDB)	{ $ExtraInfo.=' ('.(int) $LogScore.'%)'; }
-			if($HasCue) 		{ $ExtraInfo.=$AddExtra.'Cue'; $AddExtra=' / '; }
-			if($Media) 		{ $ExtraInfo.=$AddExtra.$Media; $AddExtra=' / '; }
-			if($Scene) 		{ $ExtraInfo.=$AddExtra.'Scene'; $AddExtra=' / '; }
-			if($RemasterYear)	{ $ExtraInfo.=$AddExtra.$RemasterYear; $AddExtra=' '; }
-			if($RemasterTitle) 	{ $ExtraInfo.=$AddExtra.$RemasterTitle; }
-			if($ExtraInfo!='') 	{
-				$ExtraInfo = "- [$ExtraInfo]";
-			}
-			
+					
 			$TagLinks=array();
 			if($TorrentTags!='') {
 				$TorrentTags=explode(' ',$TorrentTags);

@@ -223,7 +223,6 @@ show_header($Title, 'requests');
 <?		} ?>
 <?	} else { ?>
 		<a href="bookmarks.php?type=torrents">[Torrents]</a>
-		<a href="bookmarks.php?type=artists">[Artists]</a>
 		<a href="bookmarks.php?type=collages">[Collages]</a>
 		<a href="bookmarks.php?type=requests">[Requests]</a>
 <?	} ?>
@@ -352,12 +351,8 @@ foreach($NewCategories as $Cat) {
 		$TimeCompare = 1267643718; // Requests v2 was implemented 2010-03-03 20:15:18
 		foreach ($Requests as $RequestID => $Request) {
 			
-			//list($BitrateList, $CatalogueNumber, $CategoryID, $Description, $FillerID, $FormatList, $RequestID, $Image, $LogCue, $MediaList, $ReleaseType, 
-			//	$Tags, $TimeAdded, $TimeFilled, $Title, $TorrentID, $RequestorID, $RequestorName, $Year, $RequestID, $Categoryid, $FillerID, $LastVote, 
-			//	$ReleaseType, $TagIDs, $TimeAdded, $TimeFilled, $TorrentID, $RequestorID, $Voters) = array_values($Request);
-			
-			list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Year, $Image, $Description, $CatalogueNumber, $RecordLabel,
-				$ReleaseType, $BitrateList, $FormatList, $MediaList, $LogCue, $FillerID, $FillerName, $TorrentID, $TimeFilled) = $Request;
+			list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Image, $Description, 
+                             $FillerID, $FillerName, $TorrentID, $TimeFilled) = $Request;
 				
 			$RequestVotes = get_votes_array($RequestID);
 			

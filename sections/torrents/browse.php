@@ -124,7 +124,7 @@ if (!empty($_GET['searchstr'])) {
         unset($Word);
         $Words = trim(implode(' ', $Words));
         if (!empty($Words)) {
-            $Queries[] = '@(groupname,artistname,yearfulltext) ' . $Words;
+            $Queries[] = '@(groupname) ' . $Words;
         }
     }
 }
@@ -163,9 +163,7 @@ if (empty($_GET['tags_type']) && !empty($TagList) && count($TagList) > 1) {
     $_GET['tags_type'] = '1';
 }
 
-foreach (array('artistname', 'groupname', 'recordlabel', 'cataloguenumber',
- 'remastertitle', 'remasteryear', 'remasterrecordlabel', 'remastercataloguenumber',
- 'filelist', 'format', 'media') as $Search) {
+foreach (array('groupname', 'filelist') as $Search) {
     if (!empty($_GET[$Search])) {
         $_GET[$Search] = str_replace(array('%'), '', $_GET[$Search]);
         if ($Search == 'filelist') {
@@ -193,7 +191,7 @@ foreach (array('artistname', 'groupname', 'recordlabel', 'cataloguenumber',
     }
 }
 
-foreach (array('hascue', 'scene', 'vanityhouse', 'freetorrent', 'releasetype') as $Search) {
+foreach (array('freetorrent') as $Search) {
     if (isset($_GET[$Search]) && $_GET[$Search] !== '') {
         if ($Search == 'freetorrent') {
             switch ($_GET[$Search]) {
@@ -241,7 +239,7 @@ if (!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
     $OrderWay = 'desc';
 }
 
-if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('year', 'time', 'size', 'seeders', 'leechers', 'snatched', 'random'))) {
+if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('time', 'size', 'seeders', 'leechers', 'snatched', 'random'))) {
     $_GET['order_by'] = 'time';
     $OrderBy = 'time'; // For header links
 } elseif ($_GET['order_by'] == 'random') {
@@ -268,20 +266,6 @@ $SS->set_index(SPHINX_INDEX . ' delta');
 $Results = $SS->search($Query, '', 0, array(), '', '');
 $TorrentCount = $SS->TotalResults;
 
-/*
-  // If some were fetched from memcached, get their artists
-  if(!empty($Results['matches'])) { // Fetch the artists for groups
-  $GroupIDs = array_keys($Results['matches']);
-  $Artists = get_artists($GroupIDs);
-
-  foreach($Artists as $GroupID=>$Data) {
-  if(!empty($Data[1])) {
-  $Results['matches'][$GroupID]['Artists']=$Data[1]; // Only use main artists
-  }
-  ksort($Results['matches'][$GroupID]);
-  }
-  }
- */
 // These ones were not found in the cache, run SQL
 if (!empty($Results['notfound'])) {
     $SQLResults = get_groups($Results['notfound']);
@@ -510,9 +494,8 @@ $Bookmarks = all_bookmarks('torrent');
     <?
 // Start printing torrent list
 
-    foreach ($Results as $GroupID => $Data) {
-        list($Artists, $GroupCatalogueNumber, $ExtendedArtists, $GroupID2, $GroupName, $GroupRecordLabel, $ReleaseType, $TagList, $Torrents, $GroupVanityHouse, $GroupYear, $FreeTorrent, $HasCue, $HasLog, $Image, $TotalLeechers, $LogScore, $NewCategoryID, $ReleaseType, $ReleaseType, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
-
+    foreach ($Results as $GroupID => $Data) {       
+        list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, $NewCategoryID, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
         $TagList = explode(' ', str_replace('_', '.', $TagList));
 
         $TorrentTags = array();

@@ -105,13 +105,6 @@ if(check_paranoia_here('uploads+')) {
 	$Uploads = null;
 }
 
-if (check_paranoia_here('artistsadded')) {
-	$DB->query("SELECT COUNT(ta.ArtistID) FROM torrents_artists AS ta WHERE ta.UserID = ".$UserID);
-	list($ArtistsAdded) = $DB->next_record();
-} else {
-	$ArtistsAdded = 0;
-}
-
 // Do the ranks.
 include(SERVER_ROOT.'/classes/class_user_rank.php');
 $Rank = new USER_RANK;
@@ -142,11 +135,6 @@ if (check_paranoia_here('requestsvoted_bounty')) {
 } else {
 	$BountyRank = null;
 }
-if (check_paranoia_here('artistsadded')) {
-	$ArtistsRank = $Rank->get_rank('artists', $ArtistsAdded);
-} else {
-	$ArtistsRank = null;
-}
 
 if($Downloaded == 0) {
 	$Ratio = 1;
@@ -155,8 +143,8 @@ if($Downloaded == 0) {
 } else {
 	$Ratio = round($Uploaded/$Downloaded, 2);
 }
-if (check_paranoia_here(array('uploaded', 'downloaded', 'uploads+', 'requestsfilled_count', 'requestsvoted_bounty', 'artistsadded'))) {
-	$OverallRank = floor($Rank->overall_score($UploadedRank, $DownloadedRank, $UploadsRank, $RequestRank, $PostRank, $BountyRank, $ArtistsRank, $Ratio));
+if (check_paranoia_here(array('uploaded', 'downloaded', 'uploads+', 'requestsfilled_count', 'requestsvoted_bounty'))) {
+	$OverallRank = floor($Rank->overall_score($UploadedRank, $DownloadedRank, $UploadsRank, $RequestRank, $PostRank, $BountyRank, $Ratio));
 } else {
 	$OverallRank = null;
 }
@@ -249,7 +237,6 @@ print json_encode(array('status' => 'success',
 								'requests' => $RequestRank,
 								'bounty' => $BountyRank,
 								'posts' => $PostRank,
-								'artists' => $ArtistsRank,
 								'overall' => $OverallRank == null ? 0 : $OverallRank
 								),
 							'personal' => array(

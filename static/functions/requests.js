@@ -105,38 +105,6 @@ function RemoveArtistField() {
 		ArtistCount--;
 }
 
-function Categories() {
-	var cat = $('#categories').raw().options[$('#categories').raw().selectedIndex].value;
-	if(cat == "Music") {
-		$('#artist_tr').show();
-		$('#releasetypes_tr').show();
-		$('#formats_tr').show();
-		$('#bitrates_tr').show();
-		$('#media_tr').show();
-		ToggleLogCue();
-		$('#year_tr').show();
-		$('#cataloguenumber_tr').show();
-	} else if(cat == "Audiobooks" || cat == "Comedy") {
-		$('#year_tr').show();
-		$('#artist_tr').hide();
-		$('#releasetypes_tr').hide();
-		$('#formats_tr').hide();
-		$('#bitrates_tr').hide();
-		$('#media_tr').hide();
-		$('#logcue_tr').hide();
-		$('#cataloguenumber_tr').hide();
-	} else {
-		$('#artist_tr').hide();
-		$('#releasetypes_tr').hide();
-		$('#formats_tr').hide();
-		$('#bitrates_tr').hide();
-		$('#media_tr').hide();
-		$('#logcue_tr').hide();
-		$('#year_tr').hide();
-		$('#cataloguenumber_tr').hide();
-	}
-}
-
 function add_tag() {
 	if ($('#tags').raw().value == "") {
 		$('#tags').raw().value = $('#genre_tags').raw().options[$('#genre_tags').raw().selectedIndex].value;

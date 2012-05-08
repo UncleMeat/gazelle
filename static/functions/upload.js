@@ -4,47 +4,6 @@ function Categories() {
 	});
 }
 
-function Remaster() {
-	if($('#remaster').raw().checked) {
-		$('#remaster_true').show();
-	} else {
-		$('#remaster_true').hide();
-	}
-}
-
-function Format() {
-	if($('#format').raw().options[$('#format').raw().selectedIndex].value == 'FLAC') {
-		for (var i = 0; i<$('#bitrate').raw().options.length; i++) {
-			if($('#bitrate').raw().options[i].value == 'Lossless') {
-				$('#bitrate').raw()[i].selected = true;
-			}
-		}
-		$('#upload_logs').show();
-		$('#other_bitrate_span').hide();
-	} else {
-		$('#bitrate').raw()[0].selected = true;
-		$('#upload_logs').hide();
-	}
-}
-
-function Bitrate() {
-	$('#other_bitrate').raw().value = '';
-	if($('#bitrate').raw().options[$('#bitrate').raw().selectedIndex].value == 'Other') {
-		$('#other_bitrate_span').show();
-	} else {
-		$('#other_bitrate_span').hide();
-	}
-}
-
-function AltBitrate() {
-	if($('#other_bitrate').raw().value >= 320) {
-		$('#vbr').raw().disabled = true;
-		$('#vbr').raw().checked = false;
-	} else {
-		$('#vbr').raw().disabled = false;
-	}
-}
-
 function add_tag() {
 	if($('#tags').raw().value == "") {
 		$('#tags').raw().value = $('#genre_tags').raw().options[$('#genre_tags').raw().selectedIndex].value;
@@ -165,14 +124,6 @@ function RemoveFormat() {
 	
 	FormatCount--;
 	
-}
-
-function Media() {
-	if($('#media').raw().options[$('#media').raw().selectedIndex].text == 'Cassette') {
-		$('#cassette_true').show();
-	} else {
-		$('#cassette_true').hide();
-	}
 }
 
 

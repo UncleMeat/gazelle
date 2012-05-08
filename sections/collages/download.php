@@ -1,6 +1,4 @@
 <?
-// TODO: Lanz, is this code even used anywhere?
-
 /* 
 This page is something of a hack so those 
 easily scared off by funky solutions, don't 
@@ -60,7 +58,7 @@ if(
 
 if(!check_perms('zip_downloader')){ error(403); }
 
-$Preferences = array('RemasterTitle DESC','Seeders ASC','Size ASC');
+$Preferences = array('Seeders ASC','Size ASC');
 
 $CollageID = $_REQUEST['collageid'];
 $Preference = $Preferences[$_REQUEST['preference']];
@@ -71,9 +69,6 @@ list($CollageName) = $DB->next_record(MYSQLI_NUM,false);
 $SQL = "SELECT
 t.GroupID,
 t.ID,
-t.Media,
-t.Format,
-IF(t.RemasterYear=0,tg.Year,t.RemasterYear),
 tg.Name,
 t.Size
 FROM torrents AS t 
@@ -83,7 +78,6 @@ ORDER BY t.GroupID ASC, t.$Preference";
 
 $DB->query($SQL);
 $Downloads = $DB->to_array('1',MYSQLI_NUM,false);
-$Artists = get_artists($DB->collect('GroupID'), false);
 $Skips = array();
 $TotalSize = 0;
 
@@ -99,8 +93,7 @@ require(SERVER_ROOT.'/classes/class_torrent.php');
 require(SERVER_ROOT.'/classes/class_zip.php');
 $Zip = new ZIP(file_string($CollageName));
 foreach($Downloads as $Download) {
-	list($GroupID, $TorrentID, $Media, $Format, $Year, $Album, $Size) = $Download;
-	$Artist = display_artists($Artists[$GroupID],false,true,false);
+	list($GroupID, $TorrentID, $Album, $Size) = $Download;
 	$TotalSize += $Size;
 	$Contents = unserialize(base64_decode($Torrents[$TorrentID]['file']));
 	$Tor = new TORRENT($Contents, true);
@@ -110,17 +103,7 @@ foreach($Downloads as $Download) {
 	// We need this section for long file names :/
 	$TorrentName='';
 	$TorrentInfo='';
-	$TorrentName = file_string($Artist.$Album);
-	if ($Year   >   0) { $TorrentName.=' - '.file_string($Year); }
-	if ($Media  != '') { $TorrentInfo .= file_string($Media); }
-	if ($Format != '') {
-		if ($TorrentInfo!='') { $TorrentInfo .= ' - '; }
-		$TorrentInfo .= file_string($Format);
-	}
-	if ($TorrentInfo != '') { $TorrentInfo = " ($TorrentInfo)"; }
-	if (strlen($TorrentName) + strlen($TorrentInfo) + 3 > 200) {
-		$TorrentName = file_string($Album).(($Year>0)?(' - '.file_string($Year)):'');
-	}
+	$TorrentName = file_string($Album);
 	$FileName = $TorrentName.$TorrentInfo;
 	$FileName = cut_string($FileName, 192, true, false);
 	

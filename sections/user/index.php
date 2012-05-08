@@ -22,10 +22,6 @@ switch ($_REQUEST['action']) {
 		authorize();
 		if($_GET['id'] && is_number($_GET['id'])){
 			$DB->query("DELETE FROM users_notify_filters WHERE ID='".db_string($_GET['id'])."' AND UserID='$LoggedUser[ID]'");
-			$ArtistNotifications = $Cache->get_value('notify_artists_'.$LoggedUser['ID']);
-			if(is_array($ArtistNotifications) && $ArtistNotifications['ID'] == $_GET['id']) {
-				$Cache->delete_value('notify_artists_'.$LoggedUser['ID']);
-			}
 		}
 		$Cache->delete_value('notify_filters_'.$LoggedUser['ID']);
 		header('Location: user.php?action=notify');

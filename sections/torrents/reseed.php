@@ -13,11 +13,9 @@ $DB->query("UPDATE torrents SET LastReseedRequest=NOW() WHERE ID='$TorrentID'");
 
 $Group = get_groups(array($GroupID));
 $Group = array_pop($Group['matches']);
-list($GroupID, $GroupName, $GroupYear, $GroupRecordLabel, $GroupCatalogueNumber, $TagList, $ReleaseType, $GroupVanityHouse, $Torrents, $GroupArtists) = array_values($Group);
+list($GroupID, $GroupName, $TagList, $Torrents) = array_values($Group);
 
-$Name = '';
-$Name .= display_artists(array('1'=>$GroupArtists), false, true);
-$Name .= $GroupName;
+$Name = $GroupName;
 
 $DB->query("SELECT uid, tstamp FROM xbt_snatched WHERE fid='$TorrentID' ORDER BY tstamp DESC LIMIT 10");
 if($DB->record_count()>0) {

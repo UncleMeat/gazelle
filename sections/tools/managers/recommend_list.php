@@ -9,11 +9,8 @@ $DB->query("SELECT
 	tr.UserID,
 	u.Username,
 	tg.Name,
-	tg.ArtistID,
-	ag.Name
 	FROM torrents_recommended AS tr
 	JOIN torrents_group AS tg ON tg.ID=tr.GroupID
-	LEFT JOIN artists_group AS ag ON ag.ArtistID=tg.ArtistID
 	LEFT JOIN users_main AS u ON u.ID=tr.UserID
 	ORDER BY tr.Time DESC
 	LIMIT 10
@@ -42,13 +39,10 @@ $DB->query("SELECT
 <?		} ?>
 		<ul class="nobullet">
 <?
-	while(list($GroupID, $UserID, $Username, $GroupName, $ArtistID, $ArtistName)=$DB->next_record()) {
+	while(list($GroupID, $UserID, $Username, $GroupName)=$DB->next_record()) {
 ?>
 			<li>
 				<strong><?=format_username($UserID, $Username)?></strong>
-<?		if($ArtistID){ ?> 
-				- <a href="artist.php?id=<?=$ArtistID?>"><?=$ArtistName?></a>
-<?		} ?> 
 				- <a href="torrents.php?id=<?=$GroupID?>"><?=$GroupName?></a>
 <?		if(check_perms('site_manage_recommendations') || $UserID == $LoggedUser['ID']){ ?>
 				<a href="tools.php?action=recommend_alter&amp;groupid=<?=$GroupID?>">[Delete]</a>

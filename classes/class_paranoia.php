@@ -20,7 +20,6 @@
 //   requestsfilled_bounty: the bounty thus earned
 //   requestsfilled_list: the actual list of requests the user has filled
 // requestsvoted_...: similar
-// artistsadded: the number of artists the user has added
 // torrentcomments: the list of comments the user has added to torrents
 //   +
 // collages: the list of collages the user has created

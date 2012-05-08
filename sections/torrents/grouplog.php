@@ -4,10 +4,10 @@ if (!is_number($GroupID)) { error(404); }
 
 show_header("History for Group $GroupID");
 
-$Groups = get_groups(array($GroupID), true, true, false);
+$Groups = get_groups(array($GroupID), true, false);
 if (!empty($Groups['matches'][$GroupID])) {
 	$Group = $Groups['matches'][$GroupID];
-	$Title = display_artists($Group['ExtendedArtists']).'<a href="torrents.php?id='.$GroupID.'">'.$Group['Name'].'</a>';
+	$Title = '<a href="torrents.php?id='.$GroupID.'">'.$Group['Name'].'</a>';
 } else {
 	$Title = "Group $GroupID";
 }

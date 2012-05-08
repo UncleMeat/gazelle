@@ -11,41 +11,21 @@ include(SERVER_ROOT.'/classes/class_text.php');
 $Text = NEW TEXT;
 
 $GroupID=ceil($_GET['id']);
-if(!empty($_GET['revisionid']) && is_number($_GET['revisionid'])) {
-	$RevisionID = $_GET['revisionid'];
-} else { $RevisionID = 0; }
 
 include(SERVER_ROOT.'/sections/torrents/functions.php');
-$TorrentCache = get_group_info($GroupID, true, $RevisionID);
+$TorrentCache = get_group_info($GroupID, true);
 
 $TorrentDetails = $TorrentCache[0];
 $TorrentList = $TorrentCache[1];
 
 // Group details
-    list($WikiBody, $WikiImage, $GroupID, $GroupName, $GroupYear, $GroupRecordLabel, $GroupCatalogueNumber, $ReleaseType, $GroupCategoryID,
-	$GroupTime, $GroupVanityHouse, $TorrentTags, $TorrentTagIDs, $TorrentTagUserIDs, $TagPositiveVotes, $TagNegativeVotes) = array_shift($TorrentDetails);
+list($Body, $Image, $GroupID, $GroupName, $GroupCategoryID,
+    $GroupTime, $TorrentTags, $TorrentTagIDs, $TorrentTagUserIDs, $TagPositiveVotes, $TagNegativeVotes) = array_shift($TorrentDetails);
 
 $DisplayName=$GroupName;
 $AltName=$GroupName; // Goes in the alt text of the image
 $Title=$GroupName; // goes in <title>
-$WikiBody = $Text->full_format($WikiBody);
-
-$Artists = get_artist($GroupID);
-
-if($Artists) {
-	$DisplayName = '<span dir="ltr">'.display_artists($Artists, true).$DisplayName.'</span>';
-	$AltName = display_str(display_artists($Artists, false)).$AltName;
-	$Title = $AltName;
-}
-
-if($GroupYear>0) {
-	$DisplayName.=' ['.$GroupYear.']';
-	$AltName.=' ['.$GroupYear.']';
-}
-if($GroupVanityHouse){
-	$DisplayName.=' [Vanity House]';
-	$AltName.=' [Vanity House]';
-}
+$Body = $Text->full_format($Body);
 
 $Tags = array();
 if ($TorrentTags != '') {
@@ -88,10 +68,7 @@ show_header($Title,'browse,comments,torrent,bbcode');
 		<a href="torrents.php?action=editgroup&amp;groupid=<?=$GroupID?>">[Edit description]</a>
 <?	} ?>
 		<a href="torrents.php?action=history&amp;groupid=<?=$GroupID?>">[View history]</a>
-<?	if($RevisionID && check_perms('site_edit_wiki')) { ?>
-		<a href="/torrents.php?action=revert&amp;groupid=<?=$GroupID ?>&amp;revisionid=<?=$RevisionID ?>&amp;auth=<?=$LoggedUser['AuthKey']?>">[Revert to this revision]</a>
-<?	}
-	if(has_bookmarked('torrent', $GroupID)) {
+<?	if(has_bookmarked('torrent', $GroupID)) {
 ?>
 		<a href="#" id="bookmarklink_torrent_<?=$GroupID?>" onclick="Unbookmark('torrent', <?=$GroupID?>,'[Bookmark]');return false;">[Remove bookmark]</a>
 <?	} else { ?>
@@ -104,12 +81,12 @@ show_header($Title,'browse,comments,torrent,bbcode');
 		<div class="box box_albumart">
 			<div class="head"><strong>Cover</strong></div>
 <?
-if ($WikiImage!="") {
+if ($Image!="") {
 	if(check_perms('site_proxy_images')) {
-		$WikiImage = 'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?i='.urlencode($WikiImage);
+		$Image = 'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?i='.urlencode($Image);
 	}
 ?>
-			<p align="center"><img style="max-width: 220px;" src="<?=$WikiImage?>" alt="<?=$AltName?>" onclick="lightbox.init(this,220);" /></p>
+			<p align="center"><img style="max-width: 220px;" src="<?=$Image?>" alt="<?=$AltName?>" onclick="lightbox.init(this,220);" /></p>
 <?
 } else {
 ?>
@@ -186,22 +163,13 @@ function filelist($Str) {
 	return "</td><td>".get_size($Str[1])."</td></tr>";
 }
 
-$LastRemasterYear = '-';
-$LastRemasterTitle = '';
-$LastRemasterRecordLabel = '';
-$LastRemasterCatalogueNumber = '';
-
 $EditionID = 0;
 
 	
-	list($TorrentID, $Media, $Format, $Remastered, $RemasterYear, $RemasterTitle, $RemasterRecordLabel, $RemasterCatalogueNumber, 
-		$Scene, $HasLog, $HasCue, $LogScore, $FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $TorrentTime, $Description, 
+	list($TorrentID,
+		$FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $TorrentTime, $Description, 
 		$FileList, $FilePath, $UserID, $Username, $LastActive,
 		$BadTags, $BadFolders, $BadFiles, $CassetteApproved, $LossymasterApproved, $LastReseedRequest, $LogInDB, $HasFile) = $TorrentList[0];
-
-	if($Remastered && !$RemasterYear) {
-		$FirstUnknown = !isset($FirstUnknown);
-	}
 
 	$Reported = false;
 	unset($ReportedTimes);
@@ -242,27 +210,21 @@ $EditionID = 0;
 		$ReportInfo .= "</table>";
 	}
 	
-	$CanEdit = (check_perms('torrents_edit') || (($UserID == $LoggedUser['ID'] && !$LoggedUser['DisableWiki']) && !($Remastered && !$RemasterYear)));
+	$CanEdit = (check_perms('torrents_edit') || (($UserID == $LoggedUser['ID'] && !$LoggedUser['DisableWiki'])));
 	
 	$FileList = str_replace(array('_','-'), ' ', $FileList);
 	$FileList = str_replace('|||','<tr><td>',display_str($FileList));
 	$FileList = preg_replace_callback('/\{\{\{([^\{]*)\}\}\}/i','filelist',$FileList);
 	$FileList = '<table style="overflow-x:auto;"><tr class="colhead_dark"><td><strong><div style="float: left; display: block;">File Name'.(check_perms('users_mod') ? ' [<a href="torrents.php?action=regen_filelist&amp;torrentid='.$TorrentID.'">Regenerate</a>]' : '').'</div></strong><div style="float:right; display:block;">'.(empty($FilePath) ? '' : '/'.$FilePath.'/' ).'</div></td><td><strong>Size</strong></td></tr><tr><td>'.$FileList."</table>";
 
-	$ExtraInfo=''; // String that contains information on the torrent, eg. format and encoding
-	$AddExtra=''; // Separator between torrent properties
-
 	$TorrentUploader = $Username; // Save this for "Uploaded by:" below
 
 	// similar to torrent_info()
-	if($Format) { $ExtraInfo.=display_str($Format); $AddExtra=' / '; }
-	if($HasLog) { $ExtraInfo.=$AddExtra.'Log'; $AddExtra=' / '; }
-	if($HasLog && $LogInDB) { $ExtraInfo.=' ('.(int) $LogScore.'%)'; }
-	if($HasCue) { $ExtraInfo.=$AddExtra.'Cue'; $AddExtra=' / '; }
-	if($Scene) { $ExtraInfo.=$AddExtra.'Scene'; $AddExtra=' / '; }
-	if(!$ExtraInfo) {
-		$ExtraInfo = $GroupName ; $AddExtra=' / ';
-	}
+
+
+	$ExtraInfo = $GroupName;
+        $AddExtra = ' / ';
+
 	if($FreeTorrent == '1') { $ExtraInfo.=$AddExtra.'<strong>Freeleech!</strong>'; $AddExtra=' / '; }
 	if($FreeTorrent == '2') { $ExtraInfo.=$AddExtra.'<strong>Neutral Leech!</strong>'; $AddExtra=' / '; }
 	if(in_array($TorrentID, $TokenTorrents)) { $ExtraInfo.=$AddExtra.'<strong>Personal Freeleech!</strong>'; $AddExtra=' / '; }
@@ -273,14 +235,9 @@ $EditionID = 0;
 	if(!empty($LossymasterApproved)) { $ExtraInfo.=$AddExtra.'<strong>Lossy Master Approved</strong>'; $AddExtra=' / '; }
 	if(!empty($BadFiles)) { $ExtraInfo.=$AddExtra.'<strong>Bad File Names</strong>'; $AddExtra=' / '; }
 	
-	$LastRemasterTitle = $RemasterTitle;
-	$LastRemasterYear = $RemasterYear;
-	$LastRemasterRecordLabel = $RemasterRecordLabel;
-	$LastRemasterCatalogueNumber = $RemasterCatalogueNumber;
-	$LastMedia = $Media;
 ?>
 
-			<tr class="releases_<?=$ReleaseType?> groupid_<?=$GroupID?> edition_<?=$EditionID?> group_torrent" style="font-weight: normal;" id="torrent<?=$TorrentID?>">
+			<tr class="groupid_<?=$GroupID?> edition_<?=$EditionID?> group_torrent" style="font-weight: normal;" id="torrent<?=$TorrentID?>">
 				<td>
 					<span>[
                                                 <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">Report</a>
@@ -299,7 +256,7 @@ $EditionID = 0;
 				<td><?=number_format($Seeders)?></td>
 				<td><?=number_format($Leechers)?></td>
 			</tr>
-			<tr class="releases_<?=$ReleaseType?> groupid_<?=$GroupID?> edition_<?=$EditionID?> torrentdetails pad" id="torrent_<?=$TorrentID; ?>">
+			<tr class="groupid_<?=$GroupID?> edition_<?=$EditionID?> torrentdetails pad" id="torrent_<?=$TorrentID; ?>">
 				<td colspan="5">
                                         <span id="torrent_buttons">
                                             <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
@@ -369,22 +326,9 @@ if (count($Requests) > 0) {
 				</tr>
 <?	foreach($Requests as $Request) {
 		$RequestVotes = get_votes_array($Request['ID']);
-
-		if($Request['BitrateList'] != "") {
-			$BitrateString = implode(", ", explode("|", $Request['BitrateList']));
-			$FormatString = implode(", ", explode("|", $Request['FormatList']));
-			$MediaString = implode(", ", explode("|", $Request['MediaList']));
-			if ($Request['LogCue']) {
-				$FormatString .= ' - '.$Request['LogCue'];
-			}
-		} else {
-			$BitrateString = "Unknown";
-			$FormatString = "Unknown";
-			$MediaString = "Unknown";
-		}
 ?>
 				<tr class="requestrows <?=(++$i%2?'rowa':'rowb')?>">
-					<td><a href="requests.php?action=view&id=<?=$Request['ID']?>"><?=$FormatString?> / <?=$BitrateString?> / <?=$MediaString?></a></td>
+					<td><a href="requests.php?action=view&id=<?=$Request['ID']?>">xxx</a></td>
 					<td>
 						<form id="form_<?=$Request['ID']?>">
 							<span id="vote_count_<?=$Request['ID']?>"><?=count($RequestVotes['Voters'])?></span>
@@ -472,7 +416,7 @@ if(count($PersonalCollages)>0) {
 ?>
 		<div class="box">
 			<div class="head"><strong>Description</strong></div>
-			<div class="body"><? if ($WikiBody!="") { echo $WikiBody; } else { echo "There is no information on this torrent."; } ?></div>
+			<div class="body"><? if ($Body!="") { echo $Body; } else { echo "There is no information on this torrent."; } ?></div>
 		</div>
 <?
 
@@ -536,7 +480,7 @@ echo $Pages;
 //---------- Begin printing
 foreach($Thread as $Key => $Post){
 	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature) = array_values($Post);
-	list($AuthorID, $Username, $PermissionID, $Paranoia, $Artist, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
+	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
       list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values(get_permissions($PermissionID));
 ?>
 <table class="forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>" id="post<?=$PostID?>">

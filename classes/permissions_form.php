@@ -28,7 +28,6 @@
 	'site_can_invite_always' => 'Can invite past user limit.',
 	'site_send_unlimited_invites' => 'Unlimited invites.',
 	'site_moderate_requests' => 'Request moderation access.',
-	'site_delete_artist' => 'Can delete artists (must be able to delete torrents+requests).',
 	'site_moderate_forums' => 'Forum moderation access.',
 	'site_admin_forums' => 'Forum administrator access.',
 	'site_forums_double_post' => 'Can double post in the forums.',
@@ -109,13 +108,10 @@
 	'admin_manage_wiki' => 'Can manage wiki access.',
 	'admin_update_geoip' => 'Can update geoip data.',
  	'site_collages_recover' => 'Can recover \'deleted\' collages.',
- 	'torrents_add_artist' => 'Can add artists to any group.',
  	'edit_unknowns' => 'Can edit unknown release information.',
  	'forums_polls_create' => 'Can create polls in the forums.',
  	'forums_polls_moderate' => 'Can feature and close polls.',
-	'project_team' => 'Is part of the project team.',
-	'torrents_edit_vanityhouse' => 'Can mark groups as part of Vanity House.',
-	'artist_edit_vanityhouse' => 'Can mark Artists as part of Vanity House.'
+	'project_team' => 'Is part of the project team.'
 
  );
  
@@ -148,7 +144,6 @@ function permissions_form(){ ?>
 					<? display_perm('site_can_invite_always', 'Can invite users even when invites are closed.'); ?>
 					<? display_perm('site_send_unlimited_invites', 'Can send unlimited invites.'); ?>
 					<? display_perm('site_moderate_requests', 'Can moderate any request.'); ?>
-					<? display_perm('site_delete_artist', 'Can delete artists (must be able to delete torrents+requests).'); ?>
 					<? display_perm('forums_polls_create','Can create polls in the forums.') ?>
 					<? display_perm('forums_polls_moderate','Can feature and close polls.') ?>
 					<? display_perm('site_moderate_forums', 'Can moderate the forums.'); ?>
@@ -233,10 +228,7 @@ function permissions_form(){ ?>
 					<? display_perm('torrents_delete_fast', 'Can delete more than 3 torrents at a time.'); ?>
 					<? display_perm('torrents_freeleech', 'Can make torrents freeleech'); ?>
 					<? display_perm('torrents_search_fast', 'Unlimit search frequency (for scripts).'); ?>
-					<? display_perm('torrents_add_artist', 'Can add artists to any group.'); ?>
 					<? display_perm('edit_unknowns', 'Can edit unknown release information.'); ?>
-					<? display_perm('torrents_edit_vanityhouse', 'Can mark groups as part of Vanity House.'); ?>
-					<? display_perm('artist_edit_vanityhouse', 'Can mark Artists as part of Vanity House.'); ?>
 					<? display_perm('site_add_logs', 'Can add logs to torrents after upload'); ?>
 					<? display_perm('torrents_hide_dnu', 'Hide the Do Not Upload list by default.'); ?>
 					    <? display_perm('torrents_hide_imagehosts', 'Hide the Imagehost Whitelist by default.'); ?>

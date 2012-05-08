@@ -22,31 +22,11 @@ $Validate = new VALIDATE;
 $Properties=array();
 $Type = $Categories[$TypeID-1];
 $TorrentID = (int)$_POST['torrentid'];
-$Properties['Remastered'] = (isset($_POST['remaster']))? 1 : 0;
-if($Properties['Remastered']) {
-	$Properties['UnknownRelease'] = (isset($_POST['unknown'])) ? 1 : 0;
-	$Properties['RemasterYear'] = $_POST['remaster_year'];
-	$Properties['RemasterTitle'] = $_POST['remaster_title'];
-	$Properties['RemasterRecordLabel'] = $_POST['remaster_record_label'];
-	$Properties['RemasterCatalogueNumber'] = $_POST['remaster_catalogue_number'];
-}
-if(!$Properties['Remastered']) {
-	$Properties['UnknownRelease'] = 0;
-	$Properties['RemasterYear'] = '';
-	$Properties['RemasterTitle'] = '';
-	$Properties['RemasterRecordLabel'] = '';
-	$Properties['RemasterCatalogueNumber'] = '';
-}
-$Properties['Scene'] = (isset($_POST['scene']))? 1 : 0;
-$Properties['HasLog'] = (isset($_POST['flac_log']))? 1 : 0;
-$Properties['HasCue'] = (isset($_POST['flac_cue']))? 1 : 0;
 $Properties['BadTags'] = (isset($_POST['bad_tags']))? 1 : 0;
 $Properties['BadFolders'] = (isset($_POST['bad_folders']))? 1 : 0;
 $Properties['BadFiles'] = (isset($_POST['bad_files'])) ? 1 : 0;
 $Properties['CassetteApproved'] = (isset($_POST['cassette_approved']))? 1 : 0;
 $Properties['LossymasterApproved'] = (isset($_POST['lossymaster_approved']))? 1 : 0;
-$Properties['Format'] = $_POST['format'];
-$Properties['Media'] = $_POST['media'];
 $Properties['Trumpable'] = (isset($_POST['make_trumpable'])) ? 1 : 0;
 $Properties['TorrentDescription'] = $_POST['release_desc'];
 $Properties['Name'] = $_POST['title'];
@@ -74,17 +54,15 @@ if(check_perms('torrents_freeleech')) {
 //******************************************************************************//
 //--------------- Validate data in edit form -----------------------------------//
 
-$DB->query('SELECT UserID, Remastered, RemasterYear, FreeTorrent FROM torrents WHERE ID='.$TorrentID);
-list($UserID, $Remastered, $RemasterYear, $CurFreeLeech) = $DB->next_record(MYSQLI_BOTH, false);
+$DB->query('SELECT UserID, FreeTorrent FROM torrents WHERE ID='.$TorrentID);
+list($UserID, $CurFreeLeech) = $DB->next_record(MYSQLI_BOTH, false);
 
 if($LoggedUser['ID']!=$UserID && !check_perms('torrents_edit')) {
 	error(403);
 }
 
-if($Remastered == '1' && !$RemasterYear && !check_perms('edit_unknowns')) {
-	error(403);
-}
-
+// TODO: Lanz, this needs to be modified, and some proper handeling of other peoples torrents needs to be implemented.
+/*
 if($Properties['UnknownRelease'] && !($Remastered == '1' && !$RemasterYear) && !check_perms('edit_unknowns')) {
 	//It's Unknown now, and it wasn't before
 	$DB->query("SELECT UserID FROM torrents WHERE ID = ".$TorrentID);
@@ -94,9 +72,12 @@ if($Properties['UnknownRelease'] && !($Remastered == '1' && !$RemasterYear) && !
 		die();
 	}
 }
+*/
 
 $Err = $Validate->ValidateForm($_POST); // Validate the form
 
+// Lanz: Same here
+/*
 if($Properties['Remastered'] && !$Properties['RemasterYear']) {
 	//Unknown Edit!
 	if($LoggedUser['ID'] == $UserID || check_perms('edit_unknowns')) {
@@ -105,6 +86,7 @@ if($Properties['Remastered'] && !$Properties['RemasterYear']) {
 		$Err = "You may not edit somebody elses upload to unknown";
 	}
 }
+*/
 
 // Strip out amazon's padding
 $AmazonReg = '/(http:\/\/ecx.images-amazon.com\/images\/.+)(\._.*_\.jpg)/i';
@@ -139,7 +121,7 @@ foreach ($Properties as $Key => $Value) {
 //--------------- Start database stuff -----------------------------------------//
 
 $DBTorVals = array();
-$DB->query("SELECT Media, Format, RemasterYear, Remastered, RemasterTItle, RemasterRecordLabel, RemasterCatalogueNumber, Scene, Description FROM torrents WHERE ID = ".$TorrentID);
+$DB->query("SELECT Description FROM torrents WHERE ID = ".$TorrentID);
 $DBTorVals = $DB->to_array(false, MYSQLI_ASSOC);
 $DBTorVals = $DBTorVals[0];
 $LogDetails = "";
@@ -163,14 +145,6 @@ foreach ($DBTorVals as $Key => $Value) {
 // Update info for the torrent
 $SQL = "
 	UPDATE torrents SET
-		Media=$T[Media], 
-		Format=$T[Format], 
-		RemasterYear=$T[RemasterYear], 
-		Remastered=$T[Remastered], 
-		RemasterTitle=$T[RemasterTitle], 
-		RemasterRecordLabel=$T[RemasterRecordLabel], 
-		RemasterCatalogueNumber=$T[RemasterCatalogueNumber],
-		Scene=$T[Scene], 
 		Description=$T[TorrentDescription],";
 
 if(check_perms('torrents_freeleech')) {
@@ -179,18 +153,6 @@ if(check_perms('torrents_freeleech')) {
 }
 
 if(check_perms('users_mod')) {
-	if($T[Format] != "'FLAC'") {
-		$SQL .= "
-	                HasLog='0',
-	                HasCue='0',
-	        ";
-	} else {
-		$SQL .= "
-			HasLog=$T[HasLog],
-			HasCue=$T[HasCue],
-		";
-	}
-
 	$DB->query("SELECT TorrentID FROM torrents_bad_tags WHERE TorrentID='$TorrentID'");
 	list($btID) = $DB->next_record();
 
@@ -254,35 +216,7 @@ if(check_perms('torrents_freeleech') && $Properties['FreeLeech'] != $CurFreeLeec
 
 $DB->query("SELECT GroupID, Time FROM torrents WHERE ID='$TorrentID'");
 list($GroupID, $Time) = $DB->next_record();
-
-// Competition
-if(strtotime($Time)>1241352173) {
-	if($_POST['log_score'] == '100') {
-		$DB->query("INSERT IGNORE into users_points (GroupID, UserID, Points) VALUES ('$GroupID', '$UserID', '1')");
-	}
-}
-// End competiton
-
-$DB->query("SELECT LogScore FROM torrents WHERE ID = ".$TorrentID);
-list($LogScore) = $DB->next_record();
-if ($Properties['Trumpable'] == 1 && $LogScore == 100) {
-	$DB->query("UPDATE torrents SET LogScore = 99 WHERE ID = ".$TorrentID);
-	$Results = array();
-	$Results[] = "The original uploader has chosen to allow this log to be deducted one point for using EAC v0.95., -1 point [1]";
-	$Details = db_string(serialize($Results));
-	$DB->query("UPDATE torrents_logs_new SET Score = 99, Details = '".$Details."' WHERE TorrentID = ".$TorrentID);
-}
-
-$DB->query("SELECT Enabled FROM users_main WHERE ID =".$UserID);
-list($Enabled) = $DB->next_record();
-if ($Properties['Trumpable'] == 0 && $LogScore == 99 && $Enabled == 1 && strtotime($Time) < 1284422400) {
-	$DB->query("SELECT Log FROM torrents_logs_new WHERE TorrentID = ".$TorrentID);
-	list($Log) = $DB->next_record();
-	if (strpos($Log, "EAC extraction") === 0) {
-		$DB->query("UPDATE torrents SET LogScore = 100 WHERE ID = ".$TorrentID);
-		$DB->query("UPDATE torrents_logs_new SET Score = 100, Details = '' WHERE TorrentID = ".$TorrentID);
-	}
-}
+die('GroupID: '.$GroupID);
 
 $DB->query("SELECT Name FROM torrents_group WHERE ID=$GroupID");
 list($Name) = $DB->next_record();
@@ -291,12 +225,6 @@ write_log("Torrent $TorrentID ($Name) in group $GroupID was edited by ".$LoggedU
 write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], $LogDetails, 0);
 $Cache->delete_value('torrents_details_'.$GroupID);
 $Cache->delete_value('torrent_download_'.$TorrentID);
-
-$DB->query("SELECT ArtistID FROM torrents_artists WHERE GroupID = ".$GroupID);
-$Artists = $DB->collect('ArtistID');
-foreach($Artists as $ArtistID) {
-	$Cache->delete_value('artist_'.$ArtistID);
-}
 
 update_hash($GroupID);
 // All done!

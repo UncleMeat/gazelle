@@ -73,9 +73,6 @@ switch ($_GET['action']){
 	case 'requests':
 		require(SERVER_ROOT.'/sections/ajax/requests.php');
 		break;
-	case 'artist':
-		require(SERVER_ROOT.'/sections/ajax/artist.php');
-		break;
 	case 'inbox':
 		require(SERVER_ROOT.'/sections/ajax/inbox/index.php');
 		break;

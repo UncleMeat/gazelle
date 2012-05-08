@@ -487,19 +487,6 @@ if($Day != next_day() || $_GET['runday']){
 	}
 
 	sleep(5);
-
-	//------------- Rescore 0.95 logs of disabled users
-
-	$LogQuery = $DB->query("SELECT DISTINCT t.ID FROM torrents AS t JOIN users_main AS um ON t.UserID = um.ID JOIN torrents_logs_new AS tl ON tl.TorrentID = t.ID WHERE um.Enabled = '2' and t.HasLog = '1' and LogScore = 100 and Log LIKE 'EAC extraction logfile from%'");
-	$Details = array();
-	$Details[] = "Ripped with EAC v0.95, -1 point [1]";
-	$Details = serialize($Details);
-	while (list($TorrentID) = $DB->next_record()) {
-		$DB->query("UPDATE torrents SET LogScore = 99 WHERE ID = ".$TorrentID);
-		$DB->query("UPDATE torrents_logs_new SET Score = 99, Details = '".$Details."' WHERE TorrentID = ".$TorrentID);
-	}
-
-	sleep(5);
 	
 	//------------- Disable downloading ability of users on ratio watch
 	
@@ -638,20 +625,16 @@ if($Day != next_day() || $_GET['runday']){
 // We need to get the seeders back on most torrents before we delete what the
 // code would consider inactive torrents.
         
-/*        
+/*       
 	$i = 0;
 	$DB->query("SELECT
 		t.ID,
 		t.GroupID,
 		tg.Name,
-		ag.Name,
 		t.last_action,
-		t.Format,
-		t.Encoding,
 		t.UserID
 		FROM torrents AS t
 		JOIN torrents_group AS tg ON tg.ID = t.GroupID
-		LEFT JOIN artists_group AS ag ON ag.ArtistID = tg.ArtistID
 		WHERE t.last_action < '".time_minus(3600*24*28)."'
 		AND t.last_action != 0
 		OR t.Time < '".time_minus(3600*24*2)."'
@@ -666,17 +649,12 @@ if($Day != next_day() || $_GET['runday']){
 		
 	);
 	foreach ($TorrentIDs as $TorrentID) {
-		list($ID, $GroupID, $Name, $ArtistName, $LastAction, $Format, $Encoding, $UserID, $Media) = $TorrentID;
+		list($ID, $GroupID, $Name, $LastAction, $UserID) = $TorrentID;
 		if (array_key_exists($UserID, $InactivityExceptionsMade) && (time() < $InactivityExceptionsMade[$UserID])) {
 			// don't delete the torrent!
 			continue;	
 		}
-		if($ArtistName) {
-			$Name = $ArtistName.' - '.$Name;
-		}
-		if($Format && $Encoding) {
-			$Name.=' ['.(empty($Media)?'':"$Media / ").$Format.' / '.$Encoding.']';
-		}
+
 		delete_torrent($ID, $GroupID);
 		$LogEntries[] = "Torrent ".$ID." (".$Name.") was deleted for inactivity (unseeded)";
 		
@@ -692,7 +670,7 @@ if($Day != next_day() || $_GET['runday']){
 		}
 	}
 	echo "$i torrents deleted for inactivity.\n";
-*/	
+*/
 	foreach($DeleteNotes as $UserID => $MessageInfo){
 		$Singular = ($MessageInfo['Count'] == 1) ? true : false;
 		send_pm($UserID,0,db_string($MessageInfo['Count'].' of your torrents '.($Singular?'has':'have').' been deleted for inactivity'), db_string(($Singular?'One':'Some').' of your uploads '.($Singular?'has':'have').' been deleted for being unseeded.  Since '.($Singular?'it':'they').' didn\'t break any rules (we hope), please feel free to re-upload '.($Singular?'it':'them').".\n\nThe following torrent".($Singular?' was':'s were').' deleted:'.$MessageInfo['Msg']));
@@ -705,17 +683,6 @@ if($Day != next_day() || $_GET['runday']){
 		echo "\nDeleted $i torrents for inactivity\n";
 	}
 
-	$DB->query("SELECT SimilarID FROM artists_similar_scores WHERE Score<=0");
-	$SimilarIDs = implode(',',$DB->collect('SimilarID'));
-	
-	if($SimilarIDs) {	
-		$DB->query("DELETE FROM artists_similar WHERE SimilarID IN($SimilarIDs)");
-		$DB->query("DELETE FROM artists_similar_scores WHERE SimilarID IN($SimilarIDs)");
-		$DB->query("DELETE FROM artists_similar_votes WHERE SimilarID IN($SimilarIDs)");
-	}
-	
-	
-
 	// Daily top 10 history.
 	$DB->query("INSERT INTO top10_history (Date, Type) VALUES ('".$sqltime."', 'Daily')");
 	$HistoryID = $DB->inserted_id();
@@ -727,15 +694,6 @@ if($Day != next_day() || $_GET['runday']){
 				g.ID,
 				g.Name,
 				g.TagList,
-				t.Format,
-				t.Media,
-				t.Scene,
-				t.HasLog,
-				t.HasCue,
-				t.LogScore,
-				t.RemasterYear,
-				g.Year,
-				t.RemasterTitle,
 				t.Snatched,
 				t.Seeders,
 				t.Leechers,
@@ -753,35 +711,11 @@ if($Day != next_day() || $_GET['runday']){
 	$i = 1;
 	foreach($Top10 as $Torrent) {
 		list($TorrentID,$GroupID,$GroupName,$TorrentTags,
-			$Format,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
-			$RemasterTitle,$Snatched,$Seeders,$Leechers,$Data) = $Torrent;
+                     $Snatched,$Seeders,$Leechers,$Data) = $Torrent;
 
-		$DisplayName='';
-		
-		$Artists = get_artist($GroupID);
-		
-		if(!empty($Artists)) {
-			$DisplayName = display_artists($Artists, false, true);
-		}
-		
 		$DisplayName.= $GroupName;
 
-		// append extra info to torrent title
-		$ExtraInfo='';
-		$AddExtra='';
-		if($Format) { $ExtraInfo.=$Format; $AddExtra=' / '; }
-		// "FLAC / Lossless / Log (100%) / Cue / CD";
-		if($HasLog) { $ExtraInfo.=$AddExtra."Log (".$LogScore."%)"; $AddExtra=' / '; }
-		if($HasCue) { $ExtraInfo.=$AddExtra."Cue"; $AddExtra=' / '; }
-		if($Media) { $ExtraInfo.=$AddExtra.$Media; $AddExtra=' / '; }
-		if($Scene) { $ExtraInfo.=$AddExtra.'Scene'; $AddExtra=' / '; }
-		if($Year>0) { $ExtraInfo.=$AddExtra.$Year; $AddExtra=' '; }
-		if($RemasterTitle) { $ExtraInfo.=$AddExtra.$RemasterTitle; }
-		if($ExtraInfo!='') {
-			$ExtraInfo = "- [$ExtraInfo]";
-		}
-
-		$TitleString = $DisplayName.' '.$ExtraInfo;
+		$TitleString = $DisplayName;
 
 		$TagString = str_replace("|", " ", $TorrentTags);
 
@@ -805,15 +739,6 @@ if($Day != next_day() || $_GET['runday']){
 					g.ID,
 					g.Name,
 					g.TagList,
-					t.Format,
-					t.Media,
-					t.Scene,
-					t.HasLog,
-					t.HasCue,
-					t.LogScore,
-					t.RemasterYear,
-					g.Year,
-					t.RemasterTitle,
 					t.Snatched,
 					t.Seeders,
 					t.Leechers,
@@ -831,33 +756,9 @@ if($Day != next_day() || $_GET['runday']){
 		$i = 1;
 		foreach($Top10 as $Torrent) {
 			list($TorrentID,$GroupID,$GroupName,$TorrentTags,
-				$Format,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
-				$RemasterTitle,$Snatched,$Seeders,$Leechers,$Data) = $Torrent;
-
-			$DisplayName='';
-			
-			$Artists = get_artist($GroupID);
-			
-			if(!empty($Artists)) {
-				$DisplayName = display_artists($Artists, false, true);
-			}
+                             $Snatched,$Seeders,$Leechers,$Data) = $Torrent;
 			
 			$DisplayName.= $GroupName;
-
-			// append extra info to torrent title
-			$ExtraInfo='';
-			$AddExtra='';
-			if($Format) { $ExtraInfo.=$Format; $AddExtra=' / '; }
-			// "FLAC / Lossless / Log (100%) / Cue / CD";
-			if($HasLog) { $ExtraInfo.=$AddExtra."Log (".$LogScore."%)"; $AddExtra=' / '; }
-			if($HasCue) { $ExtraInfo.=$AddExtra."Cue"; $AddExtra=' / '; }
-			if($Media) { $ExtraInfo.=$AddExtra.$Media; $AddExtra=' / '; }
-			if($Scene) { $ExtraInfo.=$AddExtra.'Scene'; $AddExtra=' / '; }
-			if($Year>0) { $ExtraInfo.=$AddExtra.$Year; $AddExtra=' '; }
-			if($RemasterTitle) { $ExtraInfo.=$AddExtra.$RemasterTitle; }
-			if($ExtraInfo!='') {
-				$ExtraInfo = "- [$ExtraInfo]";
-			}
 
 			$TitleString = $DisplayName.' '.$ExtraInfo;
 
@@ -875,12 +776,10 @@ if($Day != next_day() || $_GET['runday']){
 			t.ID,
 			t.GroupID,
 			tg.Name,
-			t.Format,
 			t.UserID
 			FROM torrents AS t
 			JOIN torrents_group AS tg ON tg.ID = t.GroupID
 			JOIN users_info AS u ON u.UserID = t.UserID
-			LEFT JOIN artists_group AS ag ON ag.ArtistID = tg.ArtistID
 			WHERE t.last_action < NOW() - INTERVAL 20 DAY
 			AND t.last_action != 0
 			AND u.UnseededAlerts = '1'
@@ -888,7 +787,7 @@ if($Day != next_day() || $_GET['runday']){
 		$TorrentIDs = $DB->to_array();
 		$TorrentAlerts = array();
 		foreach ($TorrentIDs as $TorrentID) {
-			list($ID, $GroupID, $Name, $Format, $UserID) = $TorrentID;
+			list($ID, $GroupID, $Name, $UserID) = $TorrentID;
 			
 			if (array_key_exists($UserID, $InactivityExceptionsMade) && (time() < $InactivityExceptionsMade[$UserID])) {
 				// don't notify exceptions
@@ -897,11 +796,8 @@ if($Day != next_day() || $_GET['runday']){
 			
 			if (!array_key_exists($UserID, $TorrentAlerts))
 				$TorrentAlerts[$UserID] = array('Count' => 0, 'Msg' => '');
-			$ArtistName = display_artists(get_artist($GroupID), false, false, false);
-			if($ArtistName) {
-				$Name = $ArtistName.' - '.$Name;
-			}
-			$TorrentAlerts[$UserID]['Msg'] .= "\n[url=http://".NONSSL_SITE_URL."/torrents.php?torrentid=$ID]".$Name."[/url]";
+
+                        $TorrentAlerts[$UserID]['Msg'] .= "\n[url=http://".NONSSL_SITE_URL."/torrents.php?torrentid=$ID]".$Name."[/url]";
 			$TorrentAlerts[$UserID]['Count']++;
 		}
 		foreach($TorrentAlerts as $UserID => $MessageInfo){

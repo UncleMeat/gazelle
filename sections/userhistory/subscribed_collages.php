@@ -77,7 +77,7 @@ $CollageSubs = $DB->to_array();
 
             list($CollageID, $CollageName, $CollageSize, $LastVisit) = $Collage;
             $RS = $DB->query("SELECT ct.GroupID,
-								tg.WikiImage,
+								tg.Image,
 								tg.NewCategoryID
 		            FROM collages_torrents AS ct
 					JOIN torrents_group AS tg ON ct.GroupID = tg.ID
@@ -86,7 +86,6 @@ $CollageSubs = $DB->to_array();
 					ORDER BY ct.AddedOn");
             $NewTorrentCount = $DB->record_count();
             //$NewTorrents = $DB->to_array();
-            //$Artists = get_artists($GroupID);
 
             $GroupIDs = $DB->collect('GroupID');
             $CollageDataList = $DB->to_array('GroupID', MYSQLI_ASSOC);
@@ -97,15 +96,10 @@ $CollageSubs = $DB->to_array();
                 $TorrentList = array();
             }
 
-            $Artists = get_artists($GroupIDs);
             $Number = 0;
 
-            //	foreach ($NewTorrents as $TorrentGroup) {
-            //		list($GroupID, $GroupName, $GroupYear, $ReleaseType, $RecordLabel, $CatalogueNumber, $WikiImage) = $TorrentGroup;
-            //		$DisplayName = display_artists($Artists[$GroupID]);
-            //		$AltName=$GroupName;
             foreach ($TorrentList as $GroupID => $Group) {
-                list($GroupID, $GroupName, $GroupYear, $GroupRecordLabel, $GroupCatalogueNumber, $TagList, $ReleaseType, $GroupVanityHouse, $Torrents, $GroupArtists, $ExtendedArtists) = array_values($Group);
+                list($GroupID, $GroupName, $TagList, $Torrents) = array_values($Group);
                 list($GroupID2, $Image, $GroupCategoryID) = array_values($CollageDataList[$GroupID]);
 
                 unset($DisplayName);
@@ -125,20 +119,7 @@ $CollageSubs = $DB->to_array();
                 $TorrentTags = implode(', ', $TorrentTags);
                 $TorrentTags = '<br /><div class="tags">' . $TorrentTags . '</div>';
 
-                if (!empty($ExtendedArtists[1]) || !empty($ExtendedArtists[4]) || !empty($ExtendedArtists[5]) || !empty($ExtendedArtists[6])) {
-                    unset($ExtendedArtists[2]);
-                    unset($ExtendedArtists[3]);
-                    $DisplayName .= display_artists($ExtendedArtists);
-                } elseif (count($GroupArtists) > 0) {
-                    $DisplayName .= display_artists(array('1' => $GroupArtists));
-                }
                 $DisplayName .= '<a href="torrents.php?id=' . $GroupID . '" title="View Torrent">' . $GroupName . '</a>';
-                if ($GroupYear > 0) {
-                    $DisplayName = $DisplayName . ' [' . $GroupYear . ']';
-                }
-                if ($GroupVanityHouse) {
-                    $DisplayName .= ' [<abbr title="This is a vanity house release">VH</abbr>]';
-                }
 
                 // Start an output buffer, so we can store this output in $TorrentTable
                 ob_start();

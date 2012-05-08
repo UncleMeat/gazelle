@@ -107,16 +107,6 @@ while(list($Message, $LogTime) = $DB->next_record()) {
 					$Message = $Message.' '.$MessageParts[$i];
 				}
 				break;
-			case "Artist":
-			case "artist":
-				$ArtistID = $MessageParts[$i + 1];
-				if (is_numeric($ArtistID)) {
-					$Message = $Message.' '.$MessageParts[$i].' <a href="artist.php?id='.$ArtistID.'"> '.$ArtistID.'</a>';
-					$i++;
-				} else {
-					$Message = $Message.' '.$MessageParts[$i];
-				}
-				break;
 			case "group":
 			case "Group":
 				$GroupID = $MessageParts[$i + 1];

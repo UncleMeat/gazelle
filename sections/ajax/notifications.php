@@ -30,20 +30,10 @@ $Results = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 		g.TagList,
 		t.Size,
 		t.FileCount,
-		t.Format,
-		t.Media,
-		t.Scene,
-		t.RemasterYear,
-		g.Year,
-		t.RemasterYear,
-		t.RemasterTitle,
 		t.Snatched,
 		t.Seeders,
 		t.Leechers,
 		t.Time,
-		t.HasLog,
-		t.HasCue,
-		t.LogScore,
 		t.FreeTorrent,
 		tln.TorrentID AS LogInDB,
 		unt.UnRead,
@@ -90,11 +80,9 @@ unset($Result);
 foreach($FilterGroups as $ID => $FilterResults) {
 	unset($FilterResults['FilterLabel']);
 	foreach($FilterResults as $Result) {
-		list($TorrentID, $GroupID, $GroupName, $GroupCategoryID, $TorrentTags, $Size, $FileCount, $Format,
-			$Media, $Scene, $RemasterYear, $GroupYear, $RemasterYear, $RemasterTitle, $Snatched, $Seeders, 
-			$Leechers, $NotificationTime, $HasLog, $HasCue, $LogScore, $FreeTorrent, $LogInDB, $UnRead) = $Result;
-		
-		$Artists = get_artist($GroupID);
+		list($TorrentID, $GroupID, $GroupName, $GroupCategoryID, $TorrentTags, $Size, $FileCount,
+			$Snatched, $Seeders, $Leechers, $NotificationTime, $FreeTorrent, $LogInDB, 
+                        $UnRead) = $Result;
 		
 		if ($Unread) $NumNew++;
 		
@@ -106,19 +94,10 @@ foreach($FilterGroups as $ID => $FilterResults) {
 			'torrentTags' => $TorrentTags,
 			'size' => (float) $Size,
 			'fileCount' => (int) $FileCount,
-			'format' => $Format,
-			'media' => $Media,
-			'scene' => $Scene == 1,
-			'groupYear' => (int) $GroupYear,
-			'remasterYear' => (int) $RemasterYear,
-			'remasterTitle' => $RemasterTitle,
 			'snatched' => (int) $Snatched,
 			'seeders' => (int) $Seeders,
 			'leechers' => (int) $Leechers,
 			'notificationTime' => $NotificationTime,
-			'hasLog' => $HasLog == 1,
-			'hasCue' => $HasCue == 1,
-			'logScore' => (float) $LogScore,
 			'freeTorrent' => $FreeTorrent == 1,
 			'logInDb' => $LogInDB,
 			'unread' => $UnRead == 1

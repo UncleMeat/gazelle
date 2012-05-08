@@ -5,22 +5,18 @@ show_header('Manage notifications');
 <div class="thin">
 	<h2>Notify me of all new torrents with...<a href="torrents.php?action=notify">(View)</a></h2>
 <?
-$DB->query("SELECT ID, Label, Artists, ExcludeVA, NewGroupsOnly, Tags, NotTags, ReleaseTypes, Categories, Formats, Media, FromYear, ToYear FROM users_notify_filters WHERE UserID='$LoggedUser[ID]' UNION ALL SELECT NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL");
+$DB->query("SELECT ID, Label, NewGroupsOnly, Tags, NotTags, Categories, Formats, Media FROM users_notify_filters WHERE UserID='$LoggedUser[ID]' UNION ALL SELECT NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL");
 $i = 0;
 $NumFilters = $DB->record_count()-1;
 
 $Notifications = $DB->to_array();
 
 foreach($Notifications as $N) { //$N stands for Notifications
-	$N['Artists']		= implode(', ', explode('|', substr($N['Artists'],1,-1)));
 	$N['Tags']		= implode(', ', explode('|', substr($N['Tags'],1,-1)));
 	$N['NotTags']		= implode(', ', explode('|', substr($N['NotTags'],1,-1)));
-	$N['ReleaseTypes'] 	= explode('|', substr($N['ReleaseTypes'],1,-1));
 	$N['Categories'] 	= explode('|', substr($N['Categories'],1,-1));
 	$N['Formats'] 		= explode('|', substr($N['Formats'],1,-1));
 	$N['Media'] 		= explode('|', substr($N['Media'],1,-1));
-	if($N['FromYear'] ==0) { $N['FromYear'] = ''; }
-	if($N['ToYear'] ==0) { $N['ToYear'] = ''; }
 	$i++;
 
 	if($i>$NumFilters && $NumFilters>0){ ?>
@@ -52,15 +48,7 @@ foreach($Notifications as $N) { //$N stands for Notifications
 <?	} else { ?>
 			<input type="hidden" name="id" value="<?=$N['ID']?>" />
 <?	} ?>
-			<tr>
-				<td class="label"><strong>One of these artists</strong></td>
-				<td>
-					<textarea name="artists" style="width:100%" rows="5"><?=display_str($N['Artists'])?></textarea>
-					<p class="min_padding">Comma-separated list - eg. <em>Pink Floyd, Led Zeppelin, Neil Young</em></p>
-					<input type="checkbox" name="excludeva" id="excludeva_<?=$N['ID']?>"<? if($N['ExcludeVA']=="1") { echo ' checked="checked"';} ?> />
-					<label for="excludeva_<?=$N['ID']?>">Exclude Various Artists releases</label>
-				</td>
-			</tr>
+
 			<tr>
 				<td class="label"><strong>At least one of these tags</strong></td>
 				<td>
@@ -78,45 +66,10 @@ foreach($Notifications as $N) { //$N stands for Notifications
 			<tr>
 				<td class="label"><strong>Only these categories</strong></td>
 				<td>
-<?	foreach($Categories as $Category){ ?>
-					<input type="checkbox" name="categories[]" id="<?=$Category?>_<?=$N['ID']?>" value="<?=$Category?>"<? if(in_array($Category, $N['Categories'])) { echo ' checked="checked"';} ?> />
-					<label for="<?=$Category?>_<?=$N['ID']?>"><?=$Category?></label>
+<?	foreach($NewCategories as $Category){ ?>
+					<input type="checkbox" name="categories[]" id="<?=$Category['name']?>_<?=$N['ID']?>" value="<?=$Category['name']?>"<? if(in_array($Category['name'], $N['Categories'])) { echo ' checked="checked"';} ?> />
+					<label for="<?=$Category['name']?>_<?=$N['ID']?>"><?=$Category['name']?></label>
 <?	} ?>
-				</td>
-			</tr>
-			<tr>
-				<td class="label"><strong>Only these types</strong></td>
-				<td>
-<?	foreach($ReleaseTypes as $ReleaseType){ ?>
-					<input type="checkbox" name="releasetypes[]" id="<?=$ReleaseType?>_<?=$N['ID']?>" value="<?=$ReleaseType?>"<? if(in_array($ReleaseType, $N['ReleaseTypes'])) { echo ' checked="checked"';} ?> />
-					<label for="<?=$ReleaseType?>_<?=$N['ID']?>"><?=$ReleaseType?></label>
-<?	} ?>
-				</td>
-			</tr>
-			<tr>
-				<td class="label"><strong>Only these formats</strong></td>
-				<td>
-<?	foreach($Formats as $Format){ ?>
-					<input type="checkbox" name="formats[]" id="<?=$Format?>_<?=$N['ID']?>" value="<?=$Format?>"<? if(in_array($Format, $N['Formats'])) { echo ' checked="checked"';} ?> />
-					<label for="<?=$Format?>_<?=$N['ID']?>"><?=$Format?></label>
-<?	} ?>
-				</td>
-			</tr>
-			<tr>
-				<td class="label"><strong>Only these media</strong></td>
-				<td>
-<?	foreach($Media as $Medium){ ?>
-					<input type="checkbox" name="media[]" id="<?=$Medium?>_<?=$N['ID']?>" value="<?=$Medium?>"<? if(in_array($Medium, $N['Media'])) { echo ' checked="checked"';} ?> />
-					<label for="<?=$Medium?>_<?=$N['ID']?>"><?=$Medium?></label>
-<?	} ?>
-				</td>
-			</tr>
-			<tr>
-				<td class="label"><strong>Between the years</strong></td>
-				<td>
-					<input type="text" name="fromyear" value="<?=$N['FromYear']?>" size="6" />
-					and
-					<input type="text" name="toyear" value="<?=$N['ToYear']?>" size="6" />
 				</td>
 			</tr>
 			<tr>

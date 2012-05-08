@@ -44,8 +44,8 @@ if(empty($Request)) {
 	die();
 }
 
-list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Year, $Image, $Description, $CatalogueNumber, $ReleaseType,
-	$BitrateList, $FormatList, $MediaList, $LogCue, $FillerID, $FillerName, $TorrentID, $TimeFilled) = $Request;
+list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Image, $Description, 
+	$FillerID, $FillerName, $TorrentID, $TimeFilled) = $Request;
 
 //Convenience variables
 $IsFilled = !empty($TorrentID);
@@ -125,7 +125,7 @@ $Thread = array_slice($Catalogue,((TORRENT_COMMENTS_PER_PAGE*$Page-TORRENT_COMME
 $JsonRequestComments = array();
 foreach($Thread as $Key => $Post){
 	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername) = array_values($Post);
-	list($AuthorID, $Username, $PermissionID, $Paranoia, $Artist, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
+	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
 	$JsonRequestComments[] = array(
 		'postId' => (int) $PostID,
 		'authorId' => (int) $AuthorID,
@@ -168,17 +168,10 @@ print
 				'categoryId' => (int) $CategoryID,
 				'categoryName' => $CategoryName,
 				'title' => $Title,
-				'year' => (int) $Year,
 				'image' => $Image,
 				'description' => $Text->full_format($Description),
 				'musicInfo' => $JsonMusicInfo,
-				'catalogueNumber' => $CatalogueNumber,
-				'releaseType' => (int) $ReleaseType,
 				'releaseName' => $ReleaseName,
-				'bitrateList' => $BitrateList,
-				'formatList' => $FormatList,
-				'mediaList' => $MediaList,
-				'logCue' => $LogCue,
 				'isFilled' => $IsFilled,
 				'fillerId' => (int) $FillerID,
 				'fillerName' => $FillerName,

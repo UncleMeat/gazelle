@@ -10,22 +10,16 @@ $DB->query("SELECT
 	t.Size,
 	t.info_hash,
 	tg.Name,
-	ag.Name,
 	t.Time, 
 	COUNT(x.uid) 
 	FROM torrents AS t
 	LEFT JOIN torrents_group AS tg ON tg.ID=t.GroupID
-	LEFT JOIN artists_group AS ag ON ag.ArtistID=tg.ArtistID
 	LEFT JOIN xbt_snatched AS x ON x.fid=t.ID
 	WHERE t.ID='$TorrentID'");
-list($UserID, $GroupID, $Size, $InfoHash, $Name, $ArtistName, $Time, $Snatches) = $DB->next_record(MYSQLI_NUM, array(3));
+list($UserID, $GroupID, $Size, $InfoHash, $Name, $Time, $Snatches) = $DB->next_record(MYSQLI_NUM, array(3));
 
 if(($LoggedUser['ID']!=$UserID || time_ago($Time) > 3600*24*7 || $Snatches > 4) && !check_perms('torrents_delete')) {
 	error(403);
-}
-
-if($ArtistName) {
-	$Name = $ArtistName.' - '.$Name;
 }
 
 if(isset($_SESSION['logged_user']['multi_delete'])) {

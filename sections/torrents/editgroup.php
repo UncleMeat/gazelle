@@ -16,25 +16,14 @@ the cache for the artist page.
 $GroupID = $_GET['groupid'];
 if(!is_number($GroupID) || !$GroupID) { error(0); }
 
-// Get the artist name and the body of the last revision
 $DB->query("SELECT
 	tg.Name,
-	wt.Image,
-	wt.Body,
-	tg.WikiImage,
-	tg.WikiBody,
-	tg.Year,
-	tg.RecordLabel,
-	tg.CatalogueNumber,
-	tg.ReleaseType,
-	tg.VanityHouse
+	tg.Image,
+	tg.Body
 	FROM torrents_group AS tg
-	LEFT JOIN wiki_torrents AS wt ON wt.RevisionID=tg.RevisionID
 	WHERE tg.ID='$GroupID'");
 if($DB->record_count() == 0) { error(404); }
-list($Name, $Image, $Body, $WikiImage, $WikiBody, $Year, $RecordLabel, $CatalogueNumber, $ReleaseType, $VanityHouse) = $DB->next_record();
-
-if(!$Body) { $Body = $WikiBody; $Image = $WikiImage; }
+list($Name, $Image, $Body) = $DB->next_record();
 
 include(SERVER_ROOT.'/classes/class_text.php');
 

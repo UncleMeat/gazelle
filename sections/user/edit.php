@@ -343,10 +343,6 @@ $DB->query("SELECT COUNT(UserID) FROM users_info WHERE Inviter='$UserID'");
 list($Invited) = $DB->next_record();
 ?>
 					<br /><label><input type="checkbox" name="p_invitedcount" <?=checked(!in_array('invitedcount', $Paranoia))?>> Number of users invited</label>
-<?
-$DB->query("SELECT COUNT(ta.ArtistID) FROM torrents_artists AS ta WHERE ta.UserID = ".$UserID);
-list($ArtistsAdded) = $DB->next_record();
-?>
 				</td>
 			</tr>
 			<tr class="colhead_dark">

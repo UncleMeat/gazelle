@@ -55,6 +55,7 @@ $Debug->set_flag('Debug constructed');
 
 $DB = new DB_MYSQL;
 $Cache = new CACHE;
+$Cache->flush();
 $Enc = new CRYPT;
 $UA = new USER_AGENT;
 $SS = new SPHINX_SEARCH;
@@ -276,7 +277,6 @@ function user_info($UserID) {
 			m.Username,
 			m.PermissionID,
 			m.Paranoia,
-			i.Artist,
 			i.Donor,
 			i.Warned,
 			i.Avatar,
@@ -288,7 +288,7 @@ function user_info($UserID) {
 			INNER JOIN users_info AS i ON i.UserID=m.ID
 			WHERE m.ID='$UserID'");
 		if($DB->record_count() == 0) { // Deleted user, maybe?
-			$UserInfo = array('ID'=>'','Username'=>'','PermissionID'=>0,'Artist'=>false,'Donor'=>false,'Warned'=>'0000-00-00 00:00:00','Avatar'=>'','Enabled'=>0,'Title'=>'', 'CatchupTime'=>0, 'Visible'=>'1');
+			$UserInfo = array('ID'=>'','Username'=>'','PermissionID'=>0,'Donor'=>false,'Warned'=>'0000-00-00 00:00:00','Avatar'=>'','Enabled'=>0,'Title'=>'', 'CatchupTime'=>0, 'Visible'=>'1');
 
 		} else {
 			$UserInfo = $DB->next_record(MYSQLI_ASSOC, array('Paranoia', 'Title'));
@@ -471,14 +471,6 @@ function get_permissions_for_user($UserID, $CustomPermissions = false) {
 
 	$Permissions = get_permissions($UserInfo['PermissionID']);
 	
-
-	// Manage 'special' inherited permissions
-	if($UserInfo['Artist']) {
-		$ArtistPerms = get_permissions(ARTIST);
-	} else {
-		$ArtistPerms = array('Permissions' => array());
-	}
-
 	if($UserInfo['Donor']) {
 		$DonorPerms = get_permissions(DONOR);
 	} else {
@@ -491,10 +483,10 @@ function get_permissions_for_user($UserID, $CustomPermissions = false) {
 		$CustomPerms = array();
 	}
 
-	$MaxCollages = $Permissions['Permissions']['MaxCollages'] + $DonorPerms['Permissions']['MaxCollages'] + $ArtistPerms['Permissions']['MaxCollages'] + $CustomPerms['MaxCollages'];
+	$MaxCollages = $Permissions['Permissions']['MaxCollages'] + $DonorPerms['Permissions']['MaxCollages'] + $CustomPerms['MaxCollages'];
 	
 	//Combine the permissions
-	return array_merge($Permissions['Permissions'], $DonorPerms['Permissions'], $ArtistPerms['Permissions'], $CustomPerms, array('MaxCollages' => $MaxCollages));
+	return array_merge($Permissions['Permissions'], $DonorPerms['Permissions'], $CustomPerms, array('MaxCollages' => $MaxCollages));
 }
 
 // This function is slow. Don't call it unless somebody's logging in.
@@ -1163,14 +1155,6 @@ function delete_torrent($ID, $GroupID=0) {
 		delete_group($GroupID);
 	} else {
 		update_hash($GroupID);
-		//Artists
-		$DB->query("SELECT ArtistID
-				FROM torrents_artists 
-				WHERE GroupID = ".$GroupID);
-		$ArtistIDs = $DB->collect('ArtistID');
-		foreach($ArtistIDs as $ArtistID) {
-			$Cache->delete_value('artist_'.$ArtistID);
-		}
 	}
 
 	// Torrent notifications
@@ -1225,38 +1209,7 @@ function delete_group($GroupID) {
 		}
 		$Cache->delete_value('torrent_collages_'.$GroupID);
 	}
-	
-	//Artists
-	//Collect the artist IDs and then wipe the torrents_artist entry
-	$DB->query("SELECT ArtistID FROM torrents_artists WHERE GroupID = ".$GroupID);
-	$Artists = $DB->collect('ArtistID');
-	
-	$DB->query("DELETE FROM torrents_artists WHERE GroupID='$GroupID'");
-	
-	foreach($Artists as $ArtistID) {
-		if(empty($ArtistID)) { continue; }
-		//Get a count of how many groups or requests use the artist ID
-		$DB->query("SELECT COUNT(ag.ArtistID)
-					FROM artists_group as ag 
-						LEFT JOIN requests_artists AS ra ON ag.ArtistID=ra.ArtistID 
-					WHERE ra.ArtistID IS NOT NULL
-						AND ag.ArtistID = '$ArtistID'");
-		list($ReqCount) = $DB->next_record();
-		$DB->query("SELECT COUNT(ag.ArtistID)
-					FROM artists_group as ag 
-						LEFT JOIN torrents_artists AS ta ON ag.ArtistID=ta.ArtistID 
-					WHERE ta.ArtistID IS NOT NULL
-						AND ag.ArtistID = '$ArtistID'");
-		list($GroupCount) = $DB->next_record();
-		if(($ReqCount + $GroupCount) == 0) {
-			//The only group to use this artist
-			delete_artist($ArtistID);
-		} else {
-			//Not the only group, still need to clear cache
-			$Cache->delete_value('artist_'.$ArtistID);
-		}
-	}
-	
+		
 	// Requests
 	$DB->query("SELECT ID FROM requests WHERE GroupID='$GroupID'");
 	$Requests = $DB->collect('ID');
@@ -1270,51 +1223,10 @@ function delete_group($GroupID) {
 	$DB->query("DELETE FROM torrents_tags_votes WHERE GroupID='$GroupID'");
 	$DB->query("DELETE FROM torrents_comments WHERE GroupID='$GroupID'");
 	$DB->query("DELETE FROM bookmarks_torrents WHERE GroupID='$GroupID'");
-	$DB->query("DELETE FROM wiki_torrents WHERE PageID='$GroupID'");
 	$DB->query("REPLACE INTO sphinx_delta (ID,Time) VALUES ('$GroupID',UNIX_TIMESTAMP())"); // Tells Sphinx that the group is removed
 	
 	$Cache->delete_value('torrents_details_'.$GroupID);
 	$Cache->delete_value('torrent_group_'.$GroupID);
-	$Cache->delete_value('groups_artists_'.$GroupID);
-}
-
-function delete_artist($ArtistID) {
-	global $DB, $LoggedUser, $Cache;
-
-	$DB->query("SELECT Name FROM artists_group WHERE ArtistID = ".$ArtistID);
-	list($Name) = $DB->next_record();
-	
-	// Delete requests
-	$DB->query("SELECT RequestID FROM requests_artists WHERE ArtistID=".$ArtistID." AND ArtistID != 0");
-	$Requests = $DB->to_array();
-	foreach($Requests AS $Request) {
-		list($RequestID) = $Request;
-		$DB->query('DELETE FROM requests WHERE ID='.$RequestID);
-		$DB->query('DELETE FROM requests_votes WHERE RequestID='.$RequestID);
-		$DB->query('DELETE FROM requests_tags WHERE RequestID='.$RequestID);
-		$DB->query('DELETE FROM requests_artists WHERE RequestID='.$RequestID);
-	}
-
-	// Delete artist
-	$DB->query('DELETE FROM artists_group WHERE ArtistID='.$ArtistID);
-	$DB->query('DELETE FROM artists_alias WHERE ArtistID='.$ArtistID);
-	$Cache->decrement('stats_artist_count');
-
-	// Delete wiki revisions
-	$DB->query('DELETE FROM wiki_artists WHERE PageID='.$ArtistID);
-
-	// Delete tags
-	$DB->query('DELETE FROM artists_tags WHERE ArtistID='.$ArtistID);
-
-	$Cache->delete_value('artist_'.$ArtistID);
-	// Record in log
-
-	if(!empty($LoggedUser['Username'])) {
-		$Username = $LoggedUser['Username'];
-	} else {
-		$Username = 'System';
-	}
-	write_log('Artist '.$ArtistID.' ('.$Name.') was deleted by '.$Username);
 }
 
 function warn_user($UserID, $Duration, $Reason) {
@@ -1370,58 +1282,27 @@ function update_hash($GroupID) {
 		GROUP BY t.GroupID)
 		WHERE ID='$GroupID'");
 
-	$DB->query("REPLACE INTO sphinx_delta (ID, GroupName, TagList, Year, NewCategoryID, Image, Time, ReleaseType, CatalogueNumber, Size, Snatched, Seeders, Leechers, LogScore, Scene, HasLog, HasCue, FreeTorrent, Media, Format, RemasterTitle, FileList)
+	$DB->query("REPLACE INTO sphinx_delta (ID, GroupName, TagList, NewCategoryID, Image, Time, Size, Snatched, Seeders, Leechers, FreeTorrent, FileList)
 		SELECT
 		g.ID AS ID,
 		g.Name AS GroupName,
 		g.TagList,
-		g.Year,
                 g.NewCategoryID,
-                g.WikiImage,
+                g.Image,
 		UNIX_TIMESTAMP(g.Time) AS Time,
-		g.ReleaseType,
-		g.CatalogueNumber,
 		MAX(CEIL(t.Size/1024)) AS Size,
 		SUM(t.Snatched) AS Snatched,
 		SUM(t.Seeders) AS Seeders,
 		SUM(t.Leechers) AS Leechers,
-		MAX(t.LogScore) AS LogScore,
-		MAX(t.Scene) AS Scene,
-		MAX(t.HasLog) AS HasLog,
-		MAX(t.HasCue) AS HasCue,
 		BIT_OR(t.FreeTorrent-1) AS FreeTorrent,
-		GROUP_CONCAT(DISTINCT t.Media SEPARATOR ' ') AS Media,
-		GROUP_CONCAT(DISTINCT t.Format SEPARATOR ' ') AS Format,
-		GROUP_CONCAT(DISTINCT t.RemasterTitle SEPARATOR ' ') AS RemasterTitle,
 		GROUP_CONCAT(REPLACE(REPLACE(FileList, '|||', '\n '), '_', ' ') SEPARATOR '\n ') AS FileList
 		FROM torrents AS t
 		JOIN torrents_group AS g ON g.ID=t.GroupID
 		WHERE g.ID=$GroupID
 		GROUP BY g.ID");
-
-	$DB->query("INSERT INTO sphinx_delta
-		(ID, ArtistName)
-		SELECT
-		GroupID,
-		GROUP_CONCAT(aa.Name separator ' ')
-		FROM torrents_artists AS ta
-		JOIN artists_alias AS aa ON aa.AliasID=ta.AliasID
-		JOIN torrents_group AS tg ON tg.ID=ta.GroupID
-		WHERE ta.GroupID=$GroupID AND ta.Importance IN ('1', '4', '5', '6')
-		GROUP BY tg.ID
-		ON DUPLICATE KEY UPDATE ArtistName=values(ArtistName)");
 	
 	$Cache->delete_value('torrents_details_'.$GroupID);
 	$Cache->delete_value('torrent_group_'.$GroupID);
-
-	$ArtistInfo = get_artist($GroupID);
-	foreach($ArtistInfo as $Importances => $Importance) {
-		foreach($Importance as $Artist) {
-			$Cache->delete_value('artist_'.$Artist['id']); //Needed for at least freeleech change, if not others.
-		}
-	}
-		
-	$Cache->delete_value('groups_artists_'.$GroupID);
 }
 
 // this function sends a PM to the userid $ToID and from the userid $FromID, sets date to now
@@ -1611,190 +1492,9 @@ function check_perms($PermissionName,$MinClass = 0) {
 	return (isset($LoggedUser['Permissions'][$PermissionName]) && $LoggedUser['Permissions'][$PermissionName] && $LoggedUser['Class']>=$MinClass)?true:false;
 }
 
-// TODO: make stricter, e.g. on all whitespace characters or Unicode normalisation
-function normalise_artist_name($ArtistName) {
-	// \u200e is &lrm;
-	$ArtistName = trim($ArtistName);
-	$ArtistName = preg_replace('/^(\xE2\x80\x8E)+/', '', $ArtistName);
-	$ArtistName = preg_replace('/(\xE2\x80\x8E)+$/', '', $ArtistName);
-	return trim(preg_replace('/ +/', ' ', $ArtistName));
-}
-
-function get_artists($GroupIDs, $Escape = array()) {
-	global $Cache, $DB;
-	$Results = array();
-	$DBs = array();
-	foreach($GroupIDs as $GroupID) {
-		if(!is_number($GroupID)) {
-			continue;
-		}
-		$Artists = $Cache->get_value('groups_artists_'.$GroupID);
-		if(is_array($Artists)) {
-			$Results[$GroupID] = $Artists;
-		} else {
-			$DBs[] = $GroupID;
-		}
-	}
-	if(count($DBs) > 0) {
-		$IDs = implode(',', $DBs);
-		if(empty($IDs)) {
-			$IDs = "null";
-		}
-		$DB->query("SELECT ta.GroupID,
-				ta.ArtistID,
-				aa.Name,
-				ta.Importance,
-				ta.AliasID
-			FROM torrents_artists AS ta 
-				JOIN artists_alias AS aa ON ta.AliasID = aa.AliasID 
-			WHERE ta.GroupID IN ($IDs) 
-			ORDER BY ta.GroupID ASC, 
-				ta.Importance ASC, 
-				aa.Name ASC;");
-		while(list($GroupID,$ArtistID,$ArtistName,$ArtistImportance,$AliasID) = $DB->next_record(MYSQLI_BOTH, false)) {
-			$Results[$GroupID][$ArtistImportance][] = array('id' => $ArtistID, 'name' => $ArtistName, 'aliasid' => $AliasID);
-			$New[$GroupID][$ArtistImportance][] = array('id' => $ArtistID, 'name' => $ArtistName, 'aliasid' => $AliasID);
-		}
-		foreach($DBs as $GroupID) {
-			if(isset($New[$GroupID])) {
-				$Cache->cache_value('groups_artists_'.$GroupID, $New[$GroupID]);
-			}
-			else {
-				$Cache->cache_value('groups_artists_'.$GroupID, array());
-			}
-		}
-		$Missing = array_diff($GroupIDs, array_keys($Results));
-		if(!empty($Missing)) {
-			$Results += array_fill_keys($Missing, array());
-		}
-	}
-	return $Results;
-}
-
-/**
- * Convenience class for when you just need one group
- * @param $GroupID
- * @return unknown_type
- */
-function get_artist($GroupID) {
-	$Results = get_artists(array($GroupID));
-	return $Results[$GroupID];
-}
-
-function display_artists($Artists, $MakeLink = true, $IncludeHyphen = true, $Escape = true) {
-	if(!empty($Artists)) {
-		$ampersand = ($Escape) ? ' &amp; ' : ' & ';
-		$link = '';
-		
-		$MainArtists = $Artists[1];
-		$Guests      = $Artists[2];
-		$Composers   = $Artists[4];
-		$Conductors  = $Artists[5];
-		$DJs         = $Artists[6];
-		
-		if ((count($MainArtists) + count($Conductors) + count($DJs) == 0) && (count($Composers) == 0)) {
-			return '';
-		}
-		
-		// Various Composers is not needed and is ugly and should die
-		switch(count($Composers)) {
-			case 0:
-				break;
-			case 1:
-				$link .= display_artist($Composers[0], $MakeLink, $Escape);
-				break;
-			case 2:
-				$link .= display_artist($Composers[0], $MakeLink, $Escape).$ampersand.display_artist($Composers[1], $MakeLink, $Escape);
-				break;
-		}
-
-		if ((count($Composers) > 0) && (count($Composers) < 3) && (count($MainArtists) > 0)) {
-			$link .= ' performed by ';
-		}
-		
-		$ComposerStr .= $link;
-		
-		switch(count($MainArtists)) {
-			case 0:
-				break;
-			case 1:
-				$link .= display_artist($MainArtists[0], $MakeLink, $Escape);
-				break;
-			case 2:
-				$link .= display_artist($MainArtists[0], $MakeLink, $Escape).$ampersand.display_artist($MainArtists[1], $MakeLink, $Escape);
-				break;
-			default:
-				$link .= 'Various Artists';
-		}
-		
-		/*if(!empty($Guests) &&  (count($MainArtists) + count($Composers) > 0) && (count($MainArtists) + count($Composers) + count($Conductors) < 3)) {
-			switch(count($Guests)) {
-				case 1:
-					$link .= ' with '.display_artist($Guests[0], $MakeLink, $Escape);
-					break;
-				case 2:
-					$link .= ' with '.display_artist($Guests[0], $MakeLink, $Escape).$ampersand.display_artist($Guests[1], $MakeLink, $Escape);
-					break;
-			}
-		}*/
-		
-		if ((count($Conductors) > 0) && (count($MainArtists) + count($Composers) > 0) && (count($Composers) < 3 || count($MainArtists) > 0)) {
-			$link .= ' under ';
-		}
-		switch(count($Conductors)) {
-			case 0:
-				break;
-			case 1:
-				$link .= display_artist($Conductors[0], $MakeLink, $Escape);
-				break;
-			case 2:
-				$link .= display_artist($Conductors[0], $MakeLink, $Escape).$ampersand.display_artist($Conductors[1], $MakeLink, $Escape);
-				break;
-			default:
-				$link .= ' Various Conductors';
-		}
-		
-		if ((count($Composers) > 0) && (count($MainArtists) + count($Conductors) > 3) && (count($MainArtists) > 1) && (count($Conductors) > 1)) {
-			$link = $ComposerStr . 'Various Artists';
-		} elseif ((count($Composers) > 2) && (count($MainArtists) + count($Conductors) == 0)) {
-			$link = 'Various Composers';
-		}
-				
-		// DJs override everything else
-		switch(count($DJs)) {
-			case 0:
-				break;
-			case 1:
-				$link = display_artist($DJs[0], $MakeLink, $Escape);
-				break;
-			case 2:
-				$link = display_artist($DJs[0], $MakeLink, $Escape).$ampersand.display_artist($DJs[1], $MakeLink, $Escape);
-				break;
-			default :
-				$link = 'Various DJs';
-		}
-		
-		return $link.($IncludeHyphen?' - ':'');
-	} else {
-		return '';
-	}
-}
-
-function display_artist($Artist, $MakeLink = true, $Escape = true) {
-	if ($MakeLink && !$Escape) {
-		error('Invalid parameters to display_artist()');
-	} elseif ($MakeLink) {
-		return '<a href="artist.php?id='.$Artist['id'].'">'.display_str($Artist['name']).'</a>';
-	} elseif ($Escape) {
-		return display_str($Artist['name']);
-	} else {
-		return $Artist['name'];
-	}
-}
-
 // Function to get data and torrents for an array of GroupIDs.
 // In places where the output from this is merged with sphinx filters, it will be in a different order.
-function get_groups($GroupIDs, $Return = true, $GetArtists = true, $Torrents = true) {
+function get_groups($GroupIDs, $Return = true, $Torrents = true) {
 	global $DB, $Cache;
 	
 	$Found = array_flip($GroupIDs);
@@ -1814,24 +1514,23 @@ function get_groups($GroupIDs, $Return = true, $GetArtists = true, $Torrents = t
 	/*
 	Changing any of these attributes returned will cause very large, very dramatic site-wide chaos.
 	Do not change what is returned or the order thereof without updating:
-		torrents, artists, collages, bookmarks, better, the front page, 
+		torrents, collages, bookmarks, better, the front page, 
 	and anywhere else the get_groups function is used.
 	*/
 	
 	if(count($NotFound)>0) {
-		$DB->query("SELECT g.ID, g.Name, g.Year, g.RecordLabel, g.CatalogueNumber, g.TagList, g.ReleaseType, g.VanityHouse FROM torrents_group AS g WHERE g.ID IN ($IDs)");
+		$DB->query("SELECT g.ID, g.Name, g.TagList FROM torrents_group AS g WHERE g.ID IN ($IDs)");
 	
 		while($Group = $DB->next_record(MYSQLI_ASSOC, true)) {
 			unset($NotFound[$Group['ID']]);
 			$Found[$Group['ID']] = $Group;
 			$Found[$Group['ID']]['Torrents'] = array();
-			$Found[$Group['ID']]['Artists'] = array();
 		}
 		
 		if ($Torrents) {
 			$DB->query("SELECT
-						ID, GroupID, Media, Format, RemasterYear, Remastered, RemasterTitle, RemasterRecordLabel, RemasterCatalogueNumber, Scene, HasLog, HasCue, LogScore, FileCount, FreeTorrent, Size, Leechers, Seeders, Snatched, Time, ID AS HasFile
-						FROM torrents AS t WHERE GroupID IN($IDs) ORDER BY GroupID, Remastered, (RemasterYear <> 0) DESC, RemasterYear, RemasterTitle, RemasterRecordLabel, RemasterCatalogueNumber, Media, Format, ID");
+                                        ID, GroupID, FileCount, FreeTorrent, Size, Leechers, Seeders, Snatched, Time, ID AS HasFile
+                                        FROM torrents AS t WHERE GroupID IN($IDs) ORDER BY GroupID DESC, ID");
 			while($Torrent = $DB->next_record(MYSQLI_ASSOC, true)) {
 				$Found[$Torrent['GroupID']]['Torrents'][$Torrent['ID']] = $Torrent;
 		
@@ -1844,27 +1543,8 @@ function get_groups($GroupIDs, $Return = true, $GetArtists = true, $Torrents = t
 			}
 		}
 	}
-	if($GetArtists) {
-		$Artists = get_artists($GroupIDs);
-	} else {
-		$Artists = array();
-	}
 	
 	if($Return) { // If we're interested in the data, and not just caching it
-		foreach($Artists as $GroupID=>$Data) {
-			if(array_key_exists(1, $Data) || array_key_exists(4, $Data) || array_key_exists(6, $Data)) {
-				$Found[$GroupID]['Artists']=$Data[1]; // Only use main artists (legacy)
-				$Found[$GroupID]['ExtendedArtists'][1]=$Data[1];
-				$Found[$GroupID]['ExtendedArtists'][2]=$Data[2];
-				$Found[$GroupID]['ExtendedArtists'][3]=$Data[3];
-				$Found[$GroupID]['ExtendedArtists'][4]=$Data[4];
-				$Found[$GroupID]['ExtendedArtists'][5]=$Data[5];
-				$Found[$GroupID]['ExtendedArtists'][6]=$Data[6];
-			}
-			else {
-				$Found[$GroupID]['ExtendedArtists'] = false;
-			}
-		}
 		$Matches = array('matches'=>$Found, 'notfound'=>array_flip($NotFound));
 
 		return $Matches;
@@ -1902,16 +1582,8 @@ function get_requests($RequestIDs, $Return = true) {
 					r.LastVote,
 					r.CategoryID, 
 					r.Title, 
-					r.Year, 
 					r.Image,
 					r.Description,
-					r.CatalogueNumber,
-					r.RecordLabel,
-					r.ReleaseType, 
-					r.BitrateList,
-					r.FormatList, 
-					r.MediaList,
-					r.LogCue,
 					r.FillerID,
 					filler.Username,
 					r.TorrentID,
@@ -1942,29 +1614,18 @@ function update_sphinx_requests($RequestID) {
 	global $DB, $Cache;
 
 	$DB->query("REPLACE INTO sphinx_requests_delta (
-				ID, UserID, TimeAdded, LastVote, CategoryID, Title,
-				Year, ReleaseType, CatalogueNumber, BitrateList,
-				FormatList, MediaList, LogCue, FillerID, TorrentID,
+				ID, UserID, TimeAdded, LastVote, CategoryID, 
+                                Title, FillerID, TorrentID,
 				TimeFilled, Visible, Votes, Bounty)
 			SELECT
 				ID, r.UserID, UNIX_TIMESTAMP(TimeAdded) AS TimeAdded,
 				UNIX_TIMESTAMP(LastVote) AS LastVote, CategoryID,
-				Title, Year, ReleaseType, CatalogueNumber, BitrateList,
-				FormatList, MediaList, LogCue, FillerID, TorrentID,
+				Title, FillerID, TorrentID,
 				UNIX_TIMESTAMP(TimeFilled) AS TimeFilled, Visible,
 				COUNT(rv.UserID) AS Votes, SUM(rv.Bounty) >> 10 AS Bounty
 			FROM requests AS r LEFT JOIN requests_votes AS rv ON rv.RequestID=r.ID
 				wHERE ID = ".$RequestID."
 				GROUP BY r.ID");
-
-	$DB->query("UPDATE sphinx_requests_delta
-					SET ArtistList = (SELECT
-						GROUP_CONCAT(aa.Name SEPARATOR ' ')
-					FROM requests_artists AS ra
-						JOIN artists_alias AS aa ON aa.AliasID=ra.AliasID
-					WHERE ra.RequestID = ".$RequestID."
-					GROUP BY NULL)
-				WHERE ID = ".$RequestID);
 
 	$Cache->delete_value('requests_'.$RequestID);
 }
@@ -1993,16 +1654,6 @@ function get_tags($TagNames) {
 
 function torrent_info($Data) {
 	$Info = array();
-	if(!empty($Data['Format'])) { $Info[]=$Data['Format']; }
-	if(!empty($Data['HasLog'])) {
-		$Str = 'Log';
-		if(!empty($Data['LogScore'])) {
-			$Str.=' ('.$Data['LogScore'].'%)';
-		}
-		$Info[]=$Str;
-	}
-	if(!empty($Data['HasCue'])) { $Info[]='Cue'; }
-	if(!empty($Data['Scene'])) { $Info[]='Scene'; }
 	if($Data['FreeTorrent'] == '1') { $Info[]='<strong>Freeleech!</strong>'; }
 	if($Data['FreeTorrent'] == '2') { $Info[]='<strong>Neutral Leech!</strong>'; }
 	if($Data['PersonalFL'] == 1) { $Info[]='<strong>Personal Freeleech!</strong>'; }
