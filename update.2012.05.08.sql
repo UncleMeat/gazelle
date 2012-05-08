@@ -115,3 +115,4 @@ DROP TABLE  `wiki_artists`;
 DROP TABLE  `wiki_aliases`;
 DROP TABLE  `wiki_articles`;
 DROP TABLE  `wiki_torrents`;
+DROP TABLE `wiki_revisions`;
