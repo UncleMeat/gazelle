@@ -54,22 +54,11 @@ if($UserID != $LoggedUser['ID']) {
 write_log("Request $RequestID ($FullName), with a ".get_size($RequestVotes['TotalBounty'])." bounty, was un-filled by user ".$LoggedUser['ID']." (".$LoggedUser['Username'].") for the reason: ".$_POST['reason']);
 
 $Cache->delete_value('request_'.$RequestID);
-$Cache->delete_value('request_artists_'.$RequestID);
 if ($GroupID) {
 	$Cache->delete_value('requests_group_'.$GroupID);
 }
 
 update_sphinx_requests($RequestID);
-
-if(!empty($ArtistForm)) {
-	foreach($ArtistForm as $ArtistType) {
-		foreach($ArtistType as $Artist) {
-			$Cache->delete_value('artist_'.$Artist['id']);
-			$Cache->delete_value('artists_requests_'.$Artist['id']);
-		}
-	}
-}
-
 
 header('Location: requests.php?action=view&id='.$RequestID);
 ?>

@@ -142,26 +142,6 @@ switch($Short) {
 			<input type="hidden" name="type" value="<?=$Short?>" />
 			<table>
 				<tr>
-					<td class="label">Year (required)</td>
-					<td>
-						<input type="text" size="4" name="year" />
-					</td>
-				</tr>
-				<tr>
-					<td class="label">Release Type</td>
-					<td>
-						<select id="releasetype" name="releasetype">
-							<option value='0'>---</option>
-<?		
-		foreach ($ReleaseTypes as $Key => $Val) {
-?>							<option value='<?=$Key?>' <?=(!empty($ReleaseType) ? ($Key == $ReleaseType ?" selected='selected'" : "") : '') ?>><?=$Val?></option>
-<?			
-		}
-?>
-						</select>
-					</td>
-				</tr>
-				<tr>
 					<td class="label">Comment</td>
 					<td>
 						<textarea rows="8" cols="80" name="comment"></textarea>

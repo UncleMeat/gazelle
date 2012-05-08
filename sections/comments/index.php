@@ -102,8 +102,6 @@ $Pages=get_pages($Page,$Results,$PerPage, 11);
 $DB->set_query_id($Comments);
 $GroupIDs = $DB->collect('GroupID');
 
-$Artists = get_artists($GroupIDs);
-
 $DB->set_query_id($Comments);
 show_header($Title,'bbcode');
 
@@ -126,7 +124,7 @@ while(list($UserID, $Username, $Class, $Enabled, $Avatar, $Donor, $Warned, $Torr
 			<td  colspan="2">
 				<span style="float:left;"><a href='torrents.php?id=<?=$GroupID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>'>#<?=$PostID?></a>
 					by <strong><?=format_username($UserID, $Username, $Donor, $Warned, $Enabled, $Class)?></strong> <?=time_diff($AddedTime) ?>
-					on <?=display_artists($Artists[$GroupID])?><a href="torrents.php?id=<?=$GroupID?>"><?=$Title?></a>
+					on <a href="torrents.php?id=<?=$GroupID?>"><?=$Title?></a>
 				</span>
 			</td>
 		</tr>

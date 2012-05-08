@@ -1,30 +1,5 @@
 <?
 enforce_login();
-function get_request_artists($RequestID) {
-	global $Cache, $DB;
-	$Artists = $Cache->get_value('request_artists_'.$RequestID);
-	if(is_array($Artists)) {
-		$Results = $Artists;
-	} else {
-		$Results = array();
-		$DB->query("SELECT ra.ArtistID, 
-						aa.Name, 
-						ra.Importance 
-					FROM requests_artists AS ra 
-						JOIN artists_alias AS aa ON ra.AliasID = aa.AliasID 
-					WHERE ra.RequestID = ".$RequestID."
-					ORDER BY ra.Importance ASC,
-							aa.Name ASC;");
-		
-		$ArtistRaw = $DB->to_array();
-		foreach($ArtistRaw as $ArtistRow) {
-			list($ArtistID, $ArtistName, $ArtistImportance) = $ArtistRow;
-			$Results[$ArtistImportance][] = array('id' => $ArtistID, 'name' => $ArtistName);
-		}
-		$Cache->cache_value('request_artists_'.$RequestID, $Results);
-	}
-	return $Results;
-}
 
 function get_request_tags($RequestID) {
 	global $DB;

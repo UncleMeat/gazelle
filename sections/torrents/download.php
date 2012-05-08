@@ -28,14 +28,10 @@ $TorrentID = $_REQUEST['id'];
 if (!is_number($TorrentID)){ error(0); }
 
 $Info = $Cache->get_value('torrent_download_'.$TorrentID);
-if(!is_array($Info) || !array_key_exists('PlainArtists', $Info) || empty($Info[10])) {
+if(!is_array($Info) || empty($Info[10])) {
 	$DB->query("SELECT
-		t.Media,
-		t.Format,
-		IF(t.RemasterYear=0,tg.Year,t.RemasterYear),
 		tg.ID AS GroupID,
 		tg.Name,
-		tg.WikiImage,
 		t.Size,
 		t.FreeTorrent,
 		t.info_hash
@@ -47,16 +43,12 @@ if(!is_array($Info) || !array_key_exists('PlainArtists', $Info) || empty($Info[1
 		die();
 	}
 	$Info = array($DB->next_record(MYSQLI_NUM, array(4,5,6,10)));
-	$Artists = get_artist($Info[0][4],false);
-	$Info['Artists'] = display_artists($Artists, false, true);
-	$Info['PlainArtists'] = display_artists($Artists, false, true, false);
 	$Cache->cache_value('torrent_download_'.$TorrentID, $Info, 0);
 }
 if(!is_array($Info[0])) {
 	error(404);
 }
-list($Media,$Format,$Year,$GroupID,$Name,$Image, $Size, $FreeTorrent, $InfoHash) = array_shift($Info); // used for generating the filename
-$Artists = $Info['Artists'];
+list($GroupID,$Name,$Image, $Size, $FreeTorrent, $InfoHash) = array_shift($Info); // used for generating the filename
 
 // If he's trying use a token on this, we need to make sure he has one,
 // deduct it, add this to the FLs table, and update his cache key.
@@ -155,34 +147,9 @@ unset($Tor->Val['announce-list']);
 unset($Tor->Val['url-list']);
 // Remove libtorrent resume info
 unset($Tor->Val['libtorrent_resume']);
-// Torrent name takes the format of Artist - Album - YYYY (Media - Format - Encoding)
+// Torrent name takes the format of Album - YYYY
 
-$TorrentName='';
-$TorrentInfo='';
-
-$TorrentName = $Info['PlainArtists'];
-
-$TorrentName.=$Name;
-
-if ($Year>0) { $TorrentName.=' - '.$Year; }
-
-if ($Media!='') { $TorrentInfo.=$Media; }
-
-if ($Format!='') {
-	if ($TorrentInfo!='') { $TorrentInfo.=' - '; }
-	$TorrentInfo.=$Format;
-}
-
-// Let's try to shorten the filename intelligently before chopping it off
-if (strlen($TorrentName) + strlen($TorrentInfo) + 3 > 200) {
-	$TorrentName = $Name . (($Year>0)?(' - '.$Year):'');
-}
-
-if ($TorrentInfo!='') { $TorrentName.=' ('.$TorrentInfo.')'; }
-
-if(!empty($_GET['mode']) && $_GET['mode'] == 'bbb'){
-	$TorrentName = $Artists.' -- '.$Name;
-}
+$TorrentName = $Name;
 
 if (!$TorrentName) { $TorrentName="No Name"; }
 

@@ -28,12 +28,6 @@ $FullName = $Title;
 $DB->query("DELETE FROM requests WHERE ID='$RequestID'");
 $DB->query("DELETE FROM requests_votes WHERE RequestID='$RequestID'");
 $DB->query("DELETE FROM requests_tags WHERE RequestID='$RequestID'");
-$DB->query("SELECT ArtistID FROM requests_artists WHERE RequestID = ".$RequestID);
-$RequestArtists = $DB->to_array();
-foreach($RequestArtists as $RequestArtist) {
-	$Cache->delete_value('artists_requests_'.$RequestArtist);
-}
-$DB->query("DELETE FROM requests_artists WHERE RequestID='$RequestID'");
 
 if($UserID != $LoggedUser['ID']) {
 	send_pm($UserID, 0, db_string("A request you created has been deleted"), db_string("The request '".$FullName."' was deleted by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url] for the reason: ".$_POST['reason']));

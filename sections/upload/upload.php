@@ -17,13 +17,8 @@ if(empty($Properties) && !empty($_GET['groupid']) && is_number($_GET['groupid'])
 		tg.ID as GroupID,
 		tg.NewCategoryID,
 		tg.Name AS Title,
-		tg.Year,
-		tg.RecordLabel,
-		tg.CatalogueNumber,
-		tg.WikiImage AS Image,
-		tg.WikiBody AS GroupDescription,
-		tg.ReleaseType,
-		tg.VanityHouse
+		tg.Image AS Image,
+		tg.Body AS GroupDescription
 		FROM torrents_group AS tg
 		LEFT JOIN torrents AS t ON t.GroupID = tg.ID
 		WHERE tg.ID=".$_GET['groupid']."
@@ -31,8 +26,6 @@ if(empty($Properties) && !empty($_GET['groupid']) && is_number($_GET['groupid'])
 	if ($DB->record_count()) {	
 		list($Properties) = $DB->to_array(false,MYSQLI_BOTH);
 
-		$Properties['Artists'] = get_artist($_GET['groupid']);
-		
 		$DB->query("SELECT 
 			GROUP_CONCAT(tags.Name SEPARATOR ', ') AS TagList 
 			FROM torrents_tags AS tt JOIN tags ON tags.ID=tt.TagID
@@ -51,21 +44,12 @@ if(empty($Properties) && !empty($_GET['groupid']) && is_number($_GET['groupid'])
 		r.ID AS RequestID,
 		r.CategoryID,
 		r.Title AS Title,
-		r.Year,
-		r.RecordLabel,
-		r.CatalogueNumber,
-		r.ReleaseType,
 		r.Image
 		FROM requests AS r
 		WHERE r.ID=".$_GET['requestid']);
 	
 	list($Properties) = $DB->to_array(false,MYSQLI_BOTH);
-	$Properties['Artists'] = get_request_artists($_GET['requestid']);
 	$Properties['TagList'] = implode(", ", get_request_tags($_GET['requestid']));
-}
-
-if(!empty($ArtistForm)) {
-	$Properties['Artists'] = $ArtistForm;
 }
 
 require(SERVER_ROOT.'/classes/class_torrent_form.php');
@@ -173,16 +157,8 @@ $HideWL = check_perms('torrents_hide_imagehosts') && !$NewWL;
  
 /* -------  Draw upload torrent form  ------- */   
 $TorrentForm->head();
-//$TorrentForm->simple_form($Properties['CategoryID'], $GenreTags);
 $TorrentForm->simple_form($GenreTags);
 $TorrentForm->foot();
-?>
-<script type="text/javascript">
-	Format();
-	Bitrate();
-	Media();
-</script>
 
-<?
 show_footer();
 ?>

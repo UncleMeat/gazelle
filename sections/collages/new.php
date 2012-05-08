@@ -50,12 +50,10 @@ if(($CollageCount < $LoggedUser['Permissions']['MaxCollages']) && check_perms('s
 					</select>
 					<br />
 					<ul>
-						<li><strong>Theme</strong> - A collage containing releases that all relate to a certain theme (Searching for the perfect beat, for instance)</li>	
-						<li><strong>Genre introduction</strong> - A subjective introduction to a Genre composed by our own users</li>
-						<li><strong>Discography</strong> - A collage containing all the releases of an artist, when that artist has a multitude of side projects</li>
-						<li><strong>Label</strong> - A collage containing all the releases of a particular record label</li>
-						<li><strong>Staff picks</strong> - A list of recommendations picked by the staff on special occasions</li>
-						<li><strong>Charts</strong> - A collage containing all the releases that comprise a certain chart (Billboard Top 100, Pitchfork Top 100, What.cd Top 10 for a certain week)</li>
+						<li><strong>Theme</strong> - A collage containing releases that all relate to a certain theme</li>	
+						<li><strong>Porn Star</strong> - A collage containing a specific porn star</li>
+						<li><strong>Studio</strong> - A collage with content from a specific studio</li>
+						<li><strong>Staff picks</strong> - A list of recommendations picked by the staff on special occasions</li>						
 <?
    if(($CollageCount < $LoggedUser['Permissions']['MaxCollages']) && check_perms('site_collages_personal')) { ?>
 						<li><strong>Personal</strong> - You can put whatever your want here.  It's your personal collage.</li>	

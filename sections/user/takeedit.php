@@ -72,7 +72,7 @@ if($StatsShown == 2) {
 }
 
 $Paranoia = array();
-$Checkboxes = array('downloaded', 'uploaded', 'ratio', 'lastseen', 'requiredratio', 'invitedcount', 'artistsadded');
+$Checkboxes = array('downloaded', 'uploaded', 'ratio', 'lastseen', 'requiredratio', 'invitedcount');
 foreach($Checkboxes as $C) {
 	if(!isset($_POST['p_'.$C])) {
 		$Paranoia[] = $C;
@@ -196,7 +196,6 @@ if (check_perms('site_advanced_search')) {
 }
 
 //TODO: Remove the following after a significant amount of time
-unset($Options['ArtistNoRedirect']);
 unset($Options['ShowQueryList']);
 unset($Options['ShowCacheList']);
 

@@ -31,18 +31,17 @@ show_header('News','bbcode');
 <?
 	$FeaturedAlbum = $Cache->get_value('featured_album');
 	if($FeaturedAlbum === false) {
-		$DB->query("SELECT fa.GroupID, tg.Name, tg.WikiImage, fa.ThreadID, fa.Title FROM featured_albums AS fa JOIN torrents_group AS tg ON tg.ID=fa.GroupID WHERE Ended = 0");
+		$DB->query("SELECT fa.GroupID, tg.Name, tg.Image, fa.ThreadID, fa.Title FROM featured_albums AS fa JOIN torrents_group AS tg ON tg.ID=fa.GroupID WHERE Ended = 0");
 		$FeaturedAlbum = $DB->next_record();
 		
 		$Cache->cache_value('featured_album', $FeaturedAlbum, 0);
 	}
 	if(is_number($FeaturedAlbum['GroupID'])) {
-		$Artists = get_artist($FeaturedAlbum['GroupID']);
 ?>
 		<div class="box">
 			<div class="head colhead_dark"><strong>Featured Album</strong></div>
-			<div class="center pad"><?=display_artists($Artists, true, true)?><a href="torrents.php?id=<?=$FeaturedAlbum['GroupID']?>"><?=$FeaturedAlbum['Name']?></a></div>
-			<div class="center"><a href="torrents.php?id=<?=$FeaturedAlbum['GroupID']?>" title="<?=display_artists($Artists, false, false)?> - <?=$FeaturedAlbum['Name']?>"><img src="<?=$FeaturedAlbum['WikiImage']?>" alt="<?=display_artists($Artists, false, false)?> - <?=$FeaturedAlbum['Name']?>" width="100%" /></a></div>
+			<div class="center pad"><a href="torrents.php?id=<?=$FeaturedAlbum['GroupID']?>"><?=$FeaturedAlbum['Name']?></a></div>
+			<div class="center"><a href="torrents.php?id=<?=$FeaturedAlbum['GroupID']?>" title="<?=$FeaturedAlbum['Name']?>"><img src="<?=$FeaturedAlbum['Image']?>" alt="<?=$FeaturedAlbum['Name']?>" width="100%" /></a></div>
 			<div class="center pad"><a href="forums.php?action=viewthread&amp;threadid=<?=$FeaturedAlbum['ThreadID']?>"><em>Read the interview with the band, discuss here</em></a></div>
 		</div>
 <?
@@ -174,11 +173,6 @@ if(($TorrentCount = $Cache->get_value('stats_torrent_count')) === false) {
 	$Cache->cache_value('stats_torrent_count', $TorrentCount, 0); //inf cache
 }
 
-if (($PerfectCount = $Cache->get_value('stats_perfect_count')) === false) {
-	$DB->query("SELECT COUNT(ID) FROM torrents WHERE ((LogScore = 100 AND Format = 'FLAC') OR (Media = 'Vinyl' AND Format = 'FLAC') OR (Media = 'WEB' AND Format = 'FLAC') OR (Media = 'DVD' AND Format = 'FLAC') OR (Media = 'Soundboard' AND Format = 'FLAC'))");
-	list($PerfectCount) = $DB->next_record();
-	$Cache->cache_value('stats_perfect_count', $PerfectCount, 0);
-}
 ?>
 				<li>Torrents: <?=number_format($TorrentCount)?></li>
 <?
@@ -325,65 +319,6 @@ if($TopicID) {
 	<div class="main_column">
 <?
 
-$Recommend = $Cache->get_value('recommend');
-$Recommend_artists = $Cache->get_value('recommend_artists');
-
-if (!is_array($Recommend) || !is_array($Recommend_artists)) {
-	$DB->query("SELECT
-		tr.GroupID,
-		tr.UserID,
-		u.Username,
-		tg.Name,
-		tg.TagList
-		FROM torrents_recommended AS tr
-		JOIN torrents_group AS tg ON tg.ID=tr.GroupID
-		LEFT JOIN users_main AS u ON u.ID=tr.UserID
-		ORDER BY tr.Time DESC LIMIT 10
-		");
-	$Recommend = $DB->to_array();
-	$Cache->cache_value('recommend',$Recommend,1209600);
-	
-	$Recommend_artists = get_artists($DB->collect('GroupID'));
-	$Cache->cache_value('recommend_artists',$Recommend_artists,1209600);
-}
-
-if (count($Recommend) >= 4) {
-$Cache->increment('usage_index');
-?>
-	<div class="box" id="recommended">
-		<div class="head colhead_dark">
-			<strong>Latest vanity house additions</strong>
-			<a href="#" onclick="$('#vanityhouse').toggle();return false;">(View)</a>
-		</div>
-
-		<table class="hidden" id="vanityhouse">
-<?
-	foreach($Recommend as $Recommendations) {
-		list($GroupID, $UserID, $Username, $GroupName, $TagList) = $Recommendations;
-		$TagsStr = '';
-		if ($TagList) {
-			// No vanity.house tag.
-			$Tags = explode(' ', str_replace('_', '.', str_replace('vanity_house', '', $TagList)));
-			$TagLinks = array();
-			foreach ($Tags as $Tag) {
-				$TagLinks[] = "<a href=\"torrents.php?action=basic&taglist=$Tag\">$Tag</a> ";
-			}
-			$TagStr = "<br />\n<div class=\"tags\">".implode(', ', $TagLinks).'</div>';
-		}
-?>
-			<tr>
-				<td>
-					<?=display_artists($Recommend_artists[$GroupID]) ?>
-					<a href="torrents.php?id=<?=$GroupID?>"><?=$GroupName?></a> (by <?=format_username($UserID, $Username)?>)
-					<?=$TagStr?>
-				</td>
-			</tr>
-<?	  } ?>
-		</table>
-	</div>
-<!-- END recommendations section -->
-<?
-}
 $Count = 0;
 foreach ($News as $NewsItem) {
 	list($NewsID,$Title,$Body,$NewsTime) = $NewsItem;

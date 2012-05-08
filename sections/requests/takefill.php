@@ -38,14 +38,7 @@ if(!empty($_GET['torrentid']) && is_number($_GET['torrentid'])) {
 //Torrent exists, check it's applicable
 $DB->query("SELECT t.UserID,
 				t.Time,
-				tg.ReleaseType,
-				t.Format,
-				t.Media, 
-				t.HasLog, 
-				t.HasCue, 
-				t.LogScore,
-				tg.NewCategoryID,
-				IF(t.Remastered = '1', t.RemasterCatalogueNumber, tg.CatalogueNumber)
+				tg.NewCategoryID,				
 			FROM torrents AS t
 				LEFT JOIN torrents_group AS tg ON t.GroupID=tg.ID
 			WHERE t.ID = ".$TorrentID." 
@@ -55,7 +48,7 @@ $DB->query("SELECT t.UserID,
 if($DB->record_count() < 1) {
 	error(404);
 }
-list($UploaderID, $UploadTime, $TorrentReleaseType, $Format, $Media, $HasLog, $HasCue, $LogScore, $TorrentCategoryID, $TorrentCatalogueNumber) = $DB->next_record();
+list($UploaderID, $UploadTime, $TorrentCategoryID) = $DB->next_record();
 
 $FillerID = $LoggedUser['ID'];
 $FillerUsername = $LoggedUser['Username'];
@@ -81,15 +74,9 @@ $DB->query("SELECT
 		UserID,
 		TorrentID,
 		CategoryID,
-		ReleaseType,
-		CatalogueNumber,
-		BitrateList,
-		FormatList,
-		MediaList,
-		LogCue
 	FROM requests
 	WHERE ID = ".$RequestID);
-list($Title, $RequesterID, $OldTorrentID, $RequestCategoryID, $RequestReleaseType, $RequestCatalogueNumber, $BitrateList, $FormatList, $MediaList, $LogCue) = $DB->next_record();
+list($Title, $RequesterID, $OldTorrentID, $RequestCategoryID) = $DB->next_record();
 
 
 if(!empty($OldTorrentID)) {
@@ -103,8 +90,6 @@ if($RequestCategoryID != 0 && $TorrentCategoryID != $RequestCategoryID) {
 if(!empty($Err)) {
 	error($Err);
 }
-
-
 
 //We're all good! Fill!
 $DB->query("UPDATE requests SET
@@ -136,14 +121,6 @@ $Cache->delete_value('user_stats_'.$FillerID);
 $Cache->delete_value('request_'.$RequestID);
 if ($GroupID) {
 	$Cache->delete_value('requests_group_'.$GroupID);
-}
-
-
-
-$DB->query("SELECT ArtistID FROM requests_artists WHERE RequestID = ".$RequestID);
-$ArtistIDs = $DB->to_array();
-foreach($ArtistIDs as $ArtistID) {
-	$Cache->delete_value('artists_requests_'.$ArtistID);
 }
 
 $SS->UpdateAttributes('requests', array('torrentid','fillerid'), array($RequestID => array((int)$TorrentID,(int)$FillerID)));

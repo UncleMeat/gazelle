@@ -46,9 +46,6 @@ ZIP::unlimit();
 $DB->query("SELECT 
 	DATE_FORMAT(".$Month.",'%b \'%y') AS Month,
 	t.GroupID,
-	t.Media,
-	t.Format,
-	IF(t.RemasterYear=0,tg.Year,t.RemasterYear),
 	tg.Name,
 	t.Size,
 	f.File
@@ -58,33 +55,17 @@ $DB->query("SELECT
 	".$SQL."
 	GROUP BY t.ID");
 $Downloads = $DB->to_array(false,MYSQLI_NUM,false);
-$Artists = get_artists($DB->collect('GroupID'));
 
 list($UserID, $Username) = array_values(user_info($UserID));
 $Zip = new ZIP($Username.'\'s '.ucfirst($_GET['type']));
 foreach($Downloads as $Download) {
-	list($Month, $GroupID, $Media, $Format, $Year, $Album, $Size, $Contents) = $Download;
-	$Artist = display_artists($Artists[$GroupID],false,true,false);
+	list($Month, $GroupID, $Album, $Size, $Contents) = $Download;
 	$Contents = unserialize(base64_decode($Contents));
 	$Tor = new TORRENT($Contents, true);
 	$Tor->set_announce_url(ANNOUNCE_URL.'/'.$LoggedUser['torrent_pass'].'/announce');
 	unset($Tor->Val['announce-list']);
 
-	$TorrentName='';
-	$TorrentInfo='';
-	$TorrentName = $Artist;
-	$TorrentName .= $Album;
-
-	if ($Year>0) { $TorrentName.=' - '.$Year; }
-
-	if ($Media!='') { $TorrentInfo.=$Media; }
-
-	if ($Format!='') {
-		if ($TorrentInfo!='') { $TorrentInfo.=' - '; }
-		$TorrentInfo.=$Format;
-	}
-
-	if ($TorrentInfo!='') { $TorrentName.=' ('.$TorrentInfo.')'; }
+	$TorrentName = $Album;
 
 	if (!$TorrentName) { $TorrentName="No Name"; }
 

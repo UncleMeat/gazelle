@@ -11,7 +11,8 @@ The wiki class is used here to generate the page history.
 
 ************************************************************************/
 
-
+// TODO: Lanz, this needs to be replaced with a new log function, or removed all together.
+error(404);
 
 
 $GroupID = $_GET['groupid'];

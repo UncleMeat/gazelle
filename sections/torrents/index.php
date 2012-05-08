@@ -14,9 +14,6 @@ function js_pages($Action, $TorrentID, $NumResults, $CurrentPage) {
 	return implode(' | ',$PageLinks);
 }
 
-// This gets used in a few places
-$ArtistTypes = array(1 => 'Main', 2 => 'Guest', 3 => 'Remixer', 4 => 'Composer', 5 => 'Conductor', 6 => 'DJ/Compiler', 7 => 'Producer');
-
 if(!empty($_REQUEST['action'])) {
 	switch($_REQUEST['action']){
 		case 'edit':
@@ -139,10 +136,6 @@ if(!empty($_REQUEST['action'])) {
 			include(SERVER_ROOT.'/sections/torrents/notify.php');
 			break;
 
-		case 'manage_artists':
-			enforce_login();
-			require(SERVER_ROOT.'/sections/torrents/manage_artists.php');			
-			break;
 		case 'notify_clear':
 			enforce_login();
 			authorize();
@@ -362,11 +355,7 @@ if(!empty($_REQUEST['action'])) {
 					delete_group($_GET['groupid']);
 				} else {
 				}
-				if(!empty($_GET['artistid']) && is_number($_GET['artistid'])) {
-					header('Location: artist.php?id='.$_GET['artistid']);
-				} else {
-					header('Location: torrents.php?id='.$_GET['groupid']);
-				}
+                                header('Location: torrents.php?id='.$_GET['groupid']);
 			} else {
 				error(403);
 			}

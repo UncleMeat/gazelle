@@ -14,14 +14,7 @@ if(!empty($_GET['advanced']) && check_perms('site_advanced_top10')) {
 				$Where[]="g.TagList REGEXP '[[:<:]]".$Tag."[[:>:]]'";
 			}
 		}
-	}
-	
-	if($_GET['format']) {
-		if(in_array($_GET['format'], $Formats)) {
-			$Where[]="t.Format='".db_string($_GET['format'])."'";
-		}
-	}
-	
+	}	
 } else {
 	// error out on invalid requests (before caching)
 	if(isset($_GET['details'])) {
@@ -116,20 +109,10 @@ $BaseQuery = "SELECT
 	g.Name,
         g.NewCategoryID,
 	g.TagList,
-	t.Format,
-	t.Media,
-	t.Scene,
-	t.HasLog,
-	t.HasCue,
-	t.LogScore,
-	t.RemasterYear,
-	g.Year,
-	t.RemasterTitle,
 	t.Snatched,
 	t.Seeders,
 	t.Leechers,
-	((t.Size * t.Snatched) + (t.Size * 0.5 * t.Leechers)) AS Data,
-	g.ReleaseType
+	((t.Size * t.Snatched) + (t.Size * 0.5 * t.Leechers)) AS Data
 	FROM torrents AS t
 	LEFT JOIN torrents_group AS g ON g.ID = t.GroupID ";
 	
@@ -237,7 +220,7 @@ show_footer();
 
 // generate a table based on data from most recent query to $DB
 function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
-	global $LoggedUser, $NewCategories, $Debug,$ReleaseTypes;
+	global $LoggedUser, $NewCategories, $Debug;
 ?>
 		<h3>Top <?=$Limit.' '.$Caption?>
 <?	if(empty($_GET['advanced'])){ ?> 
@@ -275,40 +258,16 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 	foreach ($Details as $Detail) {
 		$GroupIDs[] = $Detail[1];
 	}
-	$Artists = get_artists($GroupIDs);
 
 	foreach ($Details as $Detail) {
 		list($TorrentID,$GroupID,$GroupName, $NewCategoryID, $TorrentTags,
-			$Format,$Media,$Scene,$HasLog,$HasCue,$LogScore,$Year,$GroupYear,
-			$RemasterTitle,$Snatched,$Seeders,$Leechers,$Data,$ReleaseType) = $Detail;
+			$Snatched,$Seeders,$Leechers,$Data) = $Detail;
 		// highlight every other row
 		$Rank++;
 		$Highlight = ($Rank % 2 ? 'a' : 'b');
 
 		// generate torrent's title
-		$DisplayName='';
-		
-		
-		if(!empty($Artists[$GroupID])) {
-			$DisplayName = display_artists($Artists[$GroupID], true, true);
-		}
-		
-		$DisplayName.= "<a href='torrents.php?id=$GroupID&amp;torrentid=$TorrentID'  title='View Torrent'>$GroupName</a>";
-
-		// append extra info to torrent title
-		$ExtraInfo='';
-		$AddExtra='';
-		if($Format) { $ExtraInfo.=$Format; $AddExtra=' / '; }
-		"FLAC / Lossless / Log (100%) / Cue / CD";
-		if($HasLog) { $ExtraInfo.=$AddExtra."Log (".$LogScore."%)"; $AddExtra=' / '; }
-		if($HasCue) { $ExtraInfo.=$AddExtra."Cue"; $AddExtra=' / '; }
-		if($Media) { $ExtraInfo.=$AddExtra.$Media; $AddExtra=' / '; }
-		if($Scene) { $ExtraInfo.=$AddExtra.'Scene'; $AddExtra=' / '; }
-		if($Year>0) { $ExtraInfo.=$AddExtra.$Year; $AddExtra=' '; }
-		if($RemasterTitle) { $ExtraInfo.=$AddExtra.$RemasterTitle; }
-		if($ExtraInfo!='') {
-			$ExtraInfo = "- [$ExtraInfo]";
-		}
+		$DisplayName = "<a href='torrents.php?id=$GroupID&amp;torrentid=$TorrentID'  title='View Torrent'>$GroupName</a>";
 		
 		$TagList=array();
 		
@@ -334,7 +293,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
                 </td>
 		<td>
 		<span>[<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>]</span>
-			<strong><?=$DisplayName?></strong> <?=$ExtraInfo?>
+			<strong><?=$DisplayName?></strong>
 			<?=$TorrentTags?>
 		</td>
 		<td style="text-align:right" class="nobr"><?=get_size($Data)?></td>

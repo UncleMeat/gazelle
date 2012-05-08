@@ -40,46 +40,6 @@ if(!empty($_GET['way']) && array_key_exists($_GET['way'], $Ways)) {
 
 $SearchWhere = array();
 
-if(!empty($_GET['format'])) {
-	if(in_array($_GET['format'], $Formats)) {
-		$SearchWhere[]="t.Format='".db_string($_GET['format'])."'";
-	} elseif($_GET['format'] == 'perfectflac') {
-		$_GET['filter'] = 'perfectflac';
-	}
-}
-
-if(!empty($_GET['media']) && in_array($_GET['media'], $Media)) {
-	$SearchWhere[]="t.Media='".db_string($_GET['media'])."'";
-}
-
-if(!empty($_GET['releasetype']) && array_key_exists($_GET['releasetype'], $ReleaseTypes)) {
-	$SearchWhere[]="tg.ReleaseType='".db_string($_GET['releasetype'])."'";
-}
-
-if(isset($_GET['scene']) && in_array($_GET['scene'], array('1','0'))) {
-	$SearchWhere[]="t.Scene='".db_string($_GET['scene'])."'";
-}
-
-if(isset($_GET['vanityhouse']) && in_array($_GET['vanityhouse'], array('1','0'))) {
-	$SearchWhere[]="tg.VanityHouse='".db_string($_GET['vanityhouse'])."'";
-}
-
-if(isset($_GET['cue']) && in_array($_GET['cue'], array('1','0'))) {
-	$SearchWhere[]="t.HasCue='".db_string($_GET['cue'])."'";
-}
-
-if(isset($_GET['log']) && in_array($_GET['log'], array('1','0', '100', '-1'))) {
-	if($_GET['log'] == '100') {
-		$SearchWhere[]="t.HasLog = '1'";
-		$SearchWhere[]="t.LogScore = '100'";
-	} elseif ($_GET['log'] == '-1') {
-		$SearchWhere[]="t.HasLog = '1'";
-		$SearchWhere[]="t.LogScore < '100'";
-	} else {
-		$SearchWhere[]="t.HasLog='".db_string($_GET['log'])."'";
-	}
-}
-
 if(!empty($_GET['categories'])) {
 	$Cats = array();
 	foreach(array_keys($_GET['categories']) as $Cat) {
@@ -154,18 +114,7 @@ switch($_GET['type']) {
 }
 
 if(!empty($_GET['filter'])) {
-	if($_GET['filter'] == "perfectflac") {
-		if (!check_paranoia('perfectflacs', $User['Paranoia'], $UserClass, $UserID)) { error(403); }
-		$ExtraWhere .= " AND t.Format = 'FLAC'";
-		if(empty($_GET['media'])) {
-			$ExtraWhere .= " AND (
-				t.LogScore = 100 OR
-				t.Media IN ('Vinyl','WEB','DVD','Soundboard','Casette','SACD','Blu-ray','DAT')
-				)";
-		} elseif(strtoupper($_GET['media']) == 'CD' && empty($_GET['log'])) {
-			$ExtraWhere .= " AND t.LogScore = 100";
-		}
-	} elseif($_GET['filter'] == "uniquegroup") {
+	if($_GET['filter'] == "uniquegroup") {
 		$GroupBy = "tg.ID";
 	}
 }
@@ -201,12 +150,10 @@ if((empty($_GET['search']) || trim($_GET['search']) == '') && $Order!='Name') {
 		t.Seeders,
 		t.Leechers,
 		t.Snatched,
-		CONCAT_WS(' ', GROUP_CONCAT(aa.Name SEPARATOR ' '), ' ', tg.Name, ' ', tg.Year, ' ') AS Name,
+		tg.Name,
 		t.Size
 		FROM $From
 		JOIN torrents_group AS tg ON tg.ID=t.GroupID
-		LEFT JOIN torrents_artists AS ta ON ta.GroupID=tg.ID
-		LEFT JOIN artists_alias AS aa ON aa.AliasID=ta.AliasID
 		WHERE $UserField='$UserID' $ExtraWhere $SearchWhere 
 		GROUP BY TorrentID, Time");
 	
@@ -338,7 +285,7 @@ foreach($NewCategories as $Cat) {
 	foreach($TorrentsInfo as $TorrentID=>$Info) {
 		list($GroupID,, $Time, $NewCategoryID) = array_values($Info);
 		
-		list($GroupID, $GroupName, $GroupYear, $GroupRecordLabel, $GroupCatalogueNumber, $TagList, $ReleaseType, $GroupVanityHouse, $Torrents, $Artists, $ExtendedArtists) = array_values($Results[$GroupID]);
+		list($GroupID, $GroupName, $TagList, $Torrents) = array_values($Results[$GroupID]);
 		$Torrent = $Torrents[$TorrentID];
 		
 		
@@ -350,18 +297,7 @@ foreach($NewCategories as $Cat) {
 		}
 		$TorrentTags = implode(', ', $TorrentTags);
 				
-		if (!empty($ExtendedArtists[1]) || !empty($ExtendedArtists[4]) || !empty($ExtendedArtists[5])) {
-			unset($ExtendedArtists[2]);
-			unset($ExtendedArtists[3]);
-			$DisplayName = display_artists($ExtendedArtists);
-		} elseif(!empty($Artists)) {
-			$DisplayName = display_artists(array(1=>$Artists));
-		} else {
-			$DisplayName='';
-		}
-		$DisplayName.='<a href="torrents.php?id='.$GroupID.'&amp;torrentid='.$TorrentID.'" title="View Torrent">'.$GroupName.'</a>';
-		if($GroupYear>0) { $DisplayName.=" [".$GroupYear."]"; }
-		if($GroupVanityHouse) { $DisplayName .= ' [<abbr title="This is a vanity house release">VH</abbr>]'; }
+		$DisplayName = '<a href="torrents.php?id='.$GroupID.'&amp;torrentid='.$TorrentID.'" title="View Torrent">'.$GroupName.'</a>';
 		
 		$ExtraInfo = torrent_info($Torrent);
 		if($ExtraInfo) {

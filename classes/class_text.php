@@ -792,18 +792,15 @@ EXPLANATION OF PARSER LOGIC
 				case 'user':
 					$Str.='<a href="user.php?action=search&amp;search='.urlencode($Block['Val']).'">'.$Block['Val'].'</a>';
 					break;
-				case 'artist':
-					$Str.='<a href="artist.php?artistname='.urlencode(undisplay_str($Block['Val'])).'">'.$Block['Val'].'</a>';
-					break;
 				case 'torrent':
 					$Pattern = '/('.NONSSL_SITE_URL.'\/torrents\.php.*[\?&]id=)?(\d+)($|&|\#).*/i';
 					$Matches = array();
 					if (preg_match($Pattern, $Block['Val'], $Matches)) {
 						if (isset($Matches[2])) {
-							$Groups = get_groups(array($Matches[2]), true, true, false);
+							$Groups = get_groups(array($Matches[2]), true, false);
 							if (!empty($Groups['matches'][$Matches[2]])) {
 								$Group = $Groups['matches'][$Matches[2]];
-								$Str .= display_artists($Group['ExtendedArtists']).'<a href="torrents.php?id='.$Matches[2].'">'.$Group['Name'].'</a>';
+								$Str .= '<a href="torrents.php?id='.$Matches[2].'">'.$Group['Name'].'</a>';
 							} else {
 								$Str .= '[torrent]'.str_replace('[inlineurl]','',$Block['Val']).'[/torrent]';
 							}

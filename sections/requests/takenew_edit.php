@@ -32,8 +32,8 @@ if($NewRequest) {
 		error(404);
 	}
 	
-	list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Year, $Image, $Description, $CatalogueNumber, $RecordLabel,
-	     $ReleaseType, $BitrateList, $FormatList, $MediaList, $LogCue, $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID) = $Request;
+	list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Image, $Description,
+	     $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID) = $Request;
 	$VoteArray = get_votes_array($RequestID);
 	$VoteCount = count($VoteArray['Voters']);
 	
@@ -167,7 +167,6 @@ if($NewRequest) {
 	
 } else {
 	$Cache->delete_value('request_'.$RequestID);
-	$Cache->delete_value('request_artists_'.$RequestID);
 }
 
 update_sphinx_requests($RequestID);

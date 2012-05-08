@@ -22,8 +22,8 @@ if(empty($Request)) {
 	error(404);
 }
 
-list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Year, $Image, $Description, $CatalogueNumber, $RecordLabel, $ReleaseType,
-	$BitrateList, $FormatList, $MediaList, $LogCue, $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID) = $Request;
+list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Image, $Description,
+     $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID) = $Request;
 
 //Convenience variables
 $IsFilled = !empty($TorrentID);
@@ -41,7 +41,7 @@ $DisplayLink = $Title;
 //Votes time
 $RequestVotes = get_votes_array($RequestID);
 $VoteCount = count($RequestVotes['Voters']);
-$ProjectCanEdit = (check_perms('project_team') && !$IsFilled && (($CategoryID == 0) || ($CategoryName == "Music" && $Year == 0)));
+$ProjectCanEdit = (check_perms('project_team') && !$IsFilled && (($CategoryID == 0)));
 $UserCanEdit = (!$IsFilled && $LoggedUser['ID'] == $RequestorID && $VoteCount < 2);
 $CanEdit = ($UserCanEdit || $ProjectCanEdit || check_perms('site_moderate_requests'));
 
@@ -64,7 +64,7 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 <?	} ?>
 		<a href="reports.php?action=report&amp;type=request&amp;id=<?=$RequestID?>">[Report Request]</a>
 		<a href="upload.php?requestid=<?=$RequestID?><?=($GroupID?"&groupid=$GroupID":'')?>">[Upload Request]</a>
-<? if(!$IsFilled && (($CategoryID == 0) || ($CategoryName == "Music" && $Year == 0))) { ?>
+<? if(!$IsFilled && $CategoryID == 0) { ?>
 		<a href="reports.php?action=report&amp;type=request_update&amp;id=<?=$RequestID?>">[Request Update]</a>
 <? } ?>
 	</div>
@@ -79,90 +79,8 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 			<p align="center"><img src="<?=STATIC_SERVER?>common/noartwork/noimage.png" alt="<?=$CategoryName?>" title="<?=$CategoryName?>" width="220" height="220" border="0" /></p>
 <?	} ?>
 		</div>
-<? } 
-	if($CategoryName == "Music") { ?>	
-		<div class="box box_artists">
-			<div class="head"><strong>Artists</strong></div>
-			<ul class="stats nobullet">
-<?
-		if(!empty($ArtistForm[4]) && count($ArtistForm[4]) > 0) { 
-?>
-				<li class="artists_composer"><strong>Composers:</strong></li>
-<?			foreach($ArtistForm[4] as $Artist) {
-?>
-				<li class="artists_composer">
-					<?=display_artist($Artist)?>
-				</li>
-<?			}
-		}
-		if(!empty($ArtistForm[6]) && count($ArtistForm[6]) > 0) { 
-?>
-				<li class="artists_dj"><strong>DJ / Compiler:</strong></li>
-<?			foreach($ArtistForm[6] as $Artist) {
-?>
-				<li class="artists_dj">
-					<?=display_artist($Artist)?>
-				</li>
-<?
-			}
-		}
-		if ((count($ArtistForm[6]) > 0) && (count($ArtistForm[1]) > 0)) {
-			print '				<li class="artists_main"><strong>Artists:</strong></li>';
-		} elseif ((count($ArtistForm[4]) > 0) && (count($ArtistForm[1]) > 0)) {
-			print '				<li class="artists_main"><strong>Performers:</strong></li>';
-		}
-		foreach($ArtistForm[1] as $Artist) {
-?>
-				<li class="artists_main">
-					<?=display_artist($Artist)?>
-				</li>
-<?		}
-		if(!empty($ArtistForm[2]) && count($ArtistForm[2]) > 0) { 
-?>
-				<li class="artists_with"><strong>With:</strong></li>
-<?			foreach($ArtistForm[2] as $Artist) {
-?>
-				<li class="artists_with">
-					<?=display_artist($Artist)?>
-				</li>
-<?			}
-		}
-		if(!empty($ArtistForm[5]) && count($ArtistForm[5]) > 0) { 
-?>
-				<li class="artists_conductor"><strong>Conducted by:</strong></li>
-<?			foreach($ArtistForm[5] as $Artist) {
-?>
-				<li class="artist_guest">
-					<?=display_artist($Artist)?>
-				</li>
-<?			}
-		}
-		if(!empty($ArtistForm[3]) && count($ArtistForm[3]) > 0) { 
-?>
-				<li class="artists_remix"><strong>Remixed by:</strong></li>
-<?			foreach($ArtistForm[3] as $Artist) {
-?>
-				<li class="artists_remix">
-					<?=display_artist($Artist)?>
-				</li>
-<?
-			}
-		}
-		if(!empty($ArtistForm[7]) && count($ArtistForm[7]) > 0) { 
-?>
-				<li class="artists_producer"><strong>Produced by:</strong></li>
-<?			foreach($ArtistForm[7] as $Artist) {
-?>
-				<li class="artists_remix">
-					<?=display_artist($Artist)?>
-				</li>
-<?
-			}
-		}
-?>
-			</ul>
-		</div>
-<?	} ?>
+<? } ?>
+
 		<div class="box box_tags">
 			<div class="head"><strong>Tags</strong></div>
 			<ul class="stats nobullet">
@@ -223,61 +141,8 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 					<?=time_diff($TimeAdded)?>	by  <strong><?=format_username($RequestorID, $RequestorName)?></strong>
 				</td>
 			</tr>
-<?	if($CategoryName == "Music") {
-		if(!empty($RecordLabel)) { ?>
-			<tr>
-				<td class="label">Record Label</td>
-				<td>
-					<?=$RecordLabel?>
-				</td>
-			</tr>
-<?		} 
-		if(!empty($CatalogueNumber)) { ?>
-			<tr>
-				<td class="label">Catalogue Number</td>
-				<td>
-					<?=$CatalogueNumber?>
-				</td>
-			</tr>
-<?		} ?>
-			<tr>
-				<td class="label">Release Type</td>
-				<td>
-					<?=$ReleaseName?>
-				</td>
-			</tr>
-			<tr>
-				<td class="label">Acceptable Bitrates</td>
-				<td>
-					<?=$BitrateString?>
-				</td>
-			</tr>
-			<tr>
-				<td class="label">Acceptable Formats</td>
-				<td>
-					<?=$FormatString?>
-				</td>
-			</tr>
-			<tr>
-				<td class="label">Acceptable Media</td>
-				<td>
-					<?=$MediaString?>
-				</td>
-			</tr>
-<?		if(!empty($LogCue)) { ?>
-			<tr>
-				<td class="label">Required FLAC only extra(s)</td>
-				<td>
-					<?=$LogCue?>
-				</td>
-			</tr>
-<?		}
-	} 
-	if ($GroupID) { 
-		/*$Groups = get_groups(array($GroupID), true, true, false);
-		$Group = $Groups['matches'][$GroupID];
-		$GroupLink = display_artists($Group['ExtendedArtists']).'<a href="torrents.php?id='.$GroupID.'">'.$Group['Name'].'</a>';*/
-?>
+
+<?	if ($GroupID) { ?>
 			<tr>
 				<td class="label">Torrent Group</td>
 				<td><a href="torrents.php?id=<?=$GroupID?>">torrents.php?id=<?=$GroupID?></td>
@@ -356,7 +221,7 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 							<input type="hidden" name="requestid" value="<?=$RequestID?>" />
 							<input type="text" size="50" name="link" <?=(!empty($Link) ? "value='$Link' " : '')?>/>
 							<br />
-                                                        <strong>Should be the permalink (PL) to the torrent (e.g. http://<?=NONSSL_SITE_URL?>/torrents.php?torrentid=xxxx).</strong>
+                                                        <strong>Should be the permalink (PL) to the torrent (e.g. http://<?=NONSSL_SITE_URL?>/torrents.php?id=xxxx).</strong>
 							<br />
 							<br />
 							<? if(check_perms('site_moderate_requests')) { ?> For User: <input type="text" size="25" name="user" <?=(!empty($FillerUsername) ? "value='$FillerUsername' " : '')?>/>
@@ -431,7 +296,7 @@ echo $Pages;
 //---------- Begin printing
 foreach($Thread as $Key => $Post){
 	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername) = array_values($Post);
-	list($AuthorID, $Username, $PermissionID, $Paranoia, $Artist, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
+	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
 ?>
 <table class="forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>" id="post<?=$PostID?>">
 	<tr class="colhead_dark">

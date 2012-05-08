@@ -57,99 +57,6 @@ CREATE TABLE IF NOT EXISTS `api_users` (
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `artists_alias`
---
-
-CREATE TABLE IF NOT EXISTS `artists_alias` (
-  `AliasID` int(10) NOT NULL AUTO_INCREMENT,
-  `ArtistID` int(10) NOT NULL,
-  `Name` varchar(200) NOT NULL,
-  `Redirect` int(10) NOT NULL DEFAULT '0',
-  `UserID` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`AliasID`),
-  KEY `ArtistID` (`ArtistID`),
-  KEY `Name` (`Name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellstruktur `artists_group`
---
-
-CREATE TABLE IF NOT EXISTS `artists_group` (
-  `ArtistID` int(10) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(200) NOT NULL,
-  `RevisionID` int(12) DEFAULT NULL,
-  `VanityHouse` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`ArtistID`),
-  KEY `Name` (`Name`),
-  KEY `RevisionID` (`RevisionID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellstruktur `artists_similar`
---
-
-CREATE TABLE IF NOT EXISTS `artists_similar` (
-  `ArtistID` int(10) NOT NULL DEFAULT '0',
-  `SimilarID` int(12) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ArtistID`,`SimilarID`),
-  KEY `ArtistID` (`ArtistID`),
-  KEY `SimilarID` (`SimilarID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Tabellstruktur `artists_similar_scores`
---
-
-CREATE TABLE IF NOT EXISTS `artists_similar_scores` (
-  `SimilarID` int(12) NOT NULL AUTO_INCREMENT,
-  `Score` int(10) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`SimilarID`),
-  KEY `Score` (`Score`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellstruktur `artists_similar_votes`
---
-
-CREATE TABLE IF NOT EXISTS `artists_similar_votes` (
-  `SimilarID` int(12) NOT NULL,
-  `UserID` int(10) NOT NULL,
-  `Way` enum('up','down') NOT NULL DEFAULT 'up',
-  PRIMARY KEY (`SimilarID`,`UserID`,`Way`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Tabellstruktur `artists_tags`
---
-
-CREATE TABLE IF NOT EXISTS `artists_tags` (
-  `TagID` int(10) NOT NULL DEFAULT '0',
-  `ArtistID` int(10) NOT NULL DEFAULT '0',
-  `PositiveVotes` int(6) NOT NULL DEFAULT '1',
-  `NegativeVotes` int(6) NOT NULL DEFAULT '1',
-  `UserID` int(10) DEFAULT NULL,
-  PRIMARY KEY (`TagID`,`ArtistID`),
-  KEY `TagID` (`TagID`),
-  KEY `ArtistID` (`ArtistID`),
-  KEY `PositiveVotes` (`PositiveVotes`),
-  KEY `NegativeVotes` (`NegativeVotes`),
-  KEY `UserID` (`UserID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Tabellstruktur `bad_passwords`
 --
 
@@ -204,20 +111,6 @@ INSERT INTO `bonus_shop_actions` (`ID`, `Title`, `Description`, `Action`, `Value
 (25, '-10 GB to other', 'Do you know a friend or perhaps someone else who has a shitty ratio? Here you can give someone a happy surprise by taking away 10GB from the person''s downloaded traffic!', 'givegb', 10, 8500),
 (30, '1 Slot', 'A slot will give you the option to either freeleech or doubleseed a torrent. Freeleech will allow you to download the torrent without counting the downloaded amount, while doubleseed will count the uploaded amount times 2.', 'slot', 1, 11000),
 (31, '2 Slots', 'A slot will give you the option to either freeleech or doubleseed a torrent. Freeleech will allow you to download the torrent without counting the downloaded amount, while doubleseed will count the uploaded amount times 2.', 'slot', 2, 21000);
-
--- --------------------------------------------------------
-
---
--- Tabellstruktur `bookmarks_artists`
---
-
-CREATE TABLE IF NOT EXISTS `bookmarks_artists` (
-  `UserID` int(10) NOT NULL,
-  `ArtistID` int(10) NOT NULL,
-  `Time` datetime NOT NULL,
-  KEY `UserID` (`UserID`),
-  KEY `ArtistID` (`ArtistID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -1006,20 +899,13 @@ CREATE TABLE IF NOT EXISTS `requests` (
   `LastVote` datetime DEFAULT NULL,
   `CategoryID` int(3) NOT NULL,
   `Title` varchar(255) DEFAULT NULL,
-  `Year` int(4) DEFAULT NULL,
   `Image` varchar(255) DEFAULT NULL,
   `Description` text NOT NULL,
   `ReleaseType` tinyint(2) DEFAULT NULL,
-  `CatalogueNumber` varchar(50) NOT NULL,
-  `BitrateList` varchar(255) DEFAULT NULL,
-  `FormatList` varchar(255) DEFAULT NULL,
-  `MediaList` varchar(255) DEFAULT NULL,
-  `LogCue` varchar(20) DEFAULT NULL,
   `FillerID` int(10) unsigned NOT NULL DEFAULT '0',
   `TorrentID` int(10) unsigned NOT NULL DEFAULT '0',
   `TimeFilled` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `Visible` binary(1) NOT NULL DEFAULT '1',
-  `RecordLabel` varchar(80) DEFAULT NULL,
   `GroupID` int(10) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `Userid` (`UserID`),
@@ -1027,25 +913,10 @@ CREATE TABLE IF NOT EXISTS `requests` (
   KEY `Filled` (`TorrentID`),
   KEY `FillerID` (`FillerID`),
   KEY `TimeAdded` (`TimeAdded`),
-  KEY `Year` (`Year`),
   KEY `TimeFilled` (`TimeFilled`),
   KEY `LastVote` (`LastVote`),
   KEY `GroupID` (`GroupID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellstruktur `requests_artists`
---
-
-CREATE TABLE IF NOT EXISTS `requests_artists` (
-  `RequestID` int(10) unsigned NOT NULL,
-  `ArtistID` int(10) NOT NULL,
-  `AliasID` int(10) NOT NULL,
-  `Importance` enum('1','2','3','4','5','6') DEFAULT NULL,
-  PRIMARY KEY (`RequestID`,`AliasID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1128,11 +999,7 @@ INSERT INTO `schedule` (`NextHour`, `NextDay`, `NextBiWeekly`) VALUES
 CREATE TABLE IF NOT EXISTS `sphinx_delta` (
   `ID` int(10) NOT NULL,
   `GroupName` varchar(255) DEFAULT NULL,
-  `ArtistName` varchar(2048) DEFAULT NULL,
   `TagList` varchar(728) DEFAULT NULL,
-  `Year` int(4) DEFAULT NULL,
-  `CatalogueNumber` varchar(50) DEFAULT NULL,
-  `RecordLabel` varchar(50) DEFAULT NULL,
   `NewCategoryID` int(11) NOT NULL,
   `Image` varchar(255) NOT NULL,
   `Time` int(12) DEFAULT NULL,
@@ -1141,18 +1008,7 @@ CREATE TABLE IF NOT EXISTS `sphinx_delta` (
   `Snatched` int(10) DEFAULT NULL,
   `Seeders` int(10) DEFAULT NULL,
   `Leechers` int(10) DEFAULT NULL,
-  `LogScore` int(3) DEFAULT NULL,
-  `Scene` tinyint(1) NOT NULL DEFAULT '0',
-  `VanityHouse` tinyint(1) NOT NULL DEFAULT '0',
-  `HasLog` tinyint(1) DEFAULT NULL,
-  `HasCue` tinyint(1) DEFAULT NULL,
   `FreeTorrent` tinyint(1) DEFAULT NULL,
-  `Media` varchar(255) DEFAULT NULL,
-  `Format` varchar(255) DEFAULT NULL,
-  `RemasterYear` int(4) DEFAULT NULL,
-  `RemasterTitle` varchar(512) DEFAULT NULL,
-  `RemasterRecordLabel` varchar(50) DEFAULT NULL,
-  `RemasterCatalogueNumber` varchar(50) DEFAULT NULL,
   `FileList` mediumtext,
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -1167,11 +1023,7 @@ CREATE TABLE IF NOT EXISTS `sphinx_delta` (
 CREATE TABLE IF NOT EXISTS `sphinx_hash` (
   `ID` int(10) NOT NULL,
   `GroupName` varchar(255) DEFAULT NULL,
-  `ArtistName` varchar(2048) DEFAULT NULL,
   `TagList` varchar(728) DEFAULT NULL,
-  `Year` int(4) DEFAULT NULL,
-  `CatalogueNumber` varchar(50) DEFAULT NULL,
-  `RecordLabel` varchar(50) DEFAULT NULL,
   `NewCategoryID` int(11) NOT NULL,
   `Image` varchar(255) NOT NULL,
   `Time` int(12) DEFAULT NULL,
@@ -1180,18 +1032,7 @@ CREATE TABLE IF NOT EXISTS `sphinx_hash` (
   `Snatched` int(10) DEFAULT NULL,
   `Seeders` int(10) DEFAULT NULL,
   `Leechers` int(10) DEFAULT NULL,
-  `LogScore` int(3) DEFAULT NULL,
-  `Scene` tinyint(1) NOT NULL DEFAULT '0',
-  `VanityHouse` tinyint(1) NOT NULL DEFAULT '0',
-  `HasLog` tinyint(1) DEFAULT NULL,
-  `HasCue` tinyint(1) DEFAULT NULL,
   `FreeTorrent` tinyint(1) DEFAULT NULL,
-  `Media` varchar(255) DEFAULT NULL,
-  `Format` varchar(255) DEFAULT NULL,
-  `RemasterYear` int(4) DEFAULT NULL,
-  `RemasterTitle` varchar(512) DEFAULT NULL,
-  `RemasterRecordLabel` varchar(50) DEFAULT NULL,
-  `RemasterCatalogueNumber` varchar(50) DEFAULT NULL,
   `FileList` mediumtext,
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -1209,28 +1050,19 @@ CREATE TABLE IF NOT EXISTS `sphinx_requests` (
   `LastVote` int(12) unsigned NOT NULL,
   `CategoryID` int(3) NOT NULL,
   `Title` varchar(255) DEFAULT NULL,
-  `Year` int(4) DEFAULT NULL,
-  `ArtistList` varchar(2048) DEFAULT NULL,
   `ReleaseType` tinyint(2) DEFAULT NULL,
-  `CatalogueNumber` varchar(50) NOT NULL,
-  `BitrateList` varchar(255) DEFAULT NULL,
-  `FormatList` varchar(255) DEFAULT NULL,
-  `MediaList` varchar(255) DEFAULT NULL,
-  `LogCue` varchar(20) DEFAULT NULL,
   `FillerID` int(10) unsigned NOT NULL DEFAULT '0',
   `TorrentID` int(10) unsigned NOT NULL DEFAULT '0',
   `TimeFilled` int(12) unsigned NOT NULL,
   `Visible` binary(1) NOT NULL DEFAULT '1',
   `Bounty` bigint(20) unsigned NOT NULL DEFAULT '0',
   `Votes` int(10) unsigned NOT NULL DEFAULT '0',
-  `RecordLabel` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `Userid` (`UserID`),
   KEY `Name` (`Title`),
   KEY `Filled` (`TorrentID`),
   KEY `FillerID` (`FillerID`),
   KEY `TimeAdded` (`TimeAdded`),
-  KEY `Year` (`Year`),
   KEY `TimeFilled` (`TimeFilled`),
   KEY `LastVote` (`LastVote`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -1248,28 +1080,19 @@ CREATE TABLE IF NOT EXISTS `sphinx_requests_delta` (
   `LastVote` int(12) unsigned DEFAULT NULL,
   `CategoryID` int(3) NOT NULL,
   `Title` varchar(255) DEFAULT NULL,
-  `Year` int(4) DEFAULT NULL,
-  `ArtistList` varchar(2048) DEFAULT NULL,
   `ReleaseType` tinyint(2) DEFAULT NULL,
-  `CatalogueNumber` varchar(50) NOT NULL,
-  `BitrateList` varchar(255) DEFAULT NULL,
-  `FormatList` varchar(255) DEFAULT NULL,
-  `MediaList` varchar(255) DEFAULT NULL,
-  `LogCue` varchar(20) DEFAULT NULL,
   `FillerID` int(10) unsigned NOT NULL DEFAULT '0',
   `TorrentID` int(10) unsigned NOT NULL DEFAULT '0',
   `TimeFilled` int(12) unsigned DEFAULT NULL,
   `Visible` binary(1) NOT NULL DEFAULT '1',
   `Bounty` bigint(20) unsigned NOT NULL DEFAULT '0',
   `Votes` int(10) unsigned NOT NULL DEFAULT '0',
-  `RecordLabel` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `Userid` (`UserID`),
   KEY `Name` (`Title`),
   KEY `Filled` (`TorrentID`),
   KEY `FillerID` (`FillerID`),
   KEY `TimeAdded` (`TimeAdded`),
-  KEY `Year` (`Year`),
   KEY `TimeFilled` (`TimeFilled`),
   KEY `LastVote` (`LastVote`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -1439,17 +1262,6 @@ CREATE TABLE IF NOT EXISTS `torrents` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
   `GroupID` int(10) NOT NULL,
   `UserID` int(10) DEFAULT NULL,
-  `Media` varchar(20) DEFAULT NULL,
-  `Format` varchar(10) DEFAULT NULL,
-  `Remastered` enum('0','1') NOT NULL DEFAULT '0',
-  `RemasterYear` int(4) DEFAULT NULL,
-  `RemasterTitle` varchar(80) NOT NULL DEFAULT '',
-  `RemasterCatalogueNumber` varchar(80) NOT NULL DEFAULT '',
-  `RemasterRecordLabel` varchar(80) NOT NULL DEFAULT '',
-  `Scene` enum('0','1') NOT NULL DEFAULT '0',
-  `HasLog` enum('0','1') NOT NULL DEFAULT '0',
-  `HasCue` enum('0','1') NOT NULL DEFAULT '0',
-  `LogScore` int(6) NOT NULL DEFAULT '0',
   `info_hash` blob NOT NULL,
   `InfoHash` char(40) NOT NULL DEFAULT '',
   `FileCount` int(6) NOT NULL,
@@ -1485,14 +1297,12 @@ CREATE TABLE IF NOT EXISTS `torrents` (
   `LastReseedRequest` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ExtendedGrace` enum('0','1') NOT NULL DEFAULT '0',
   `Tasted` enum('0','1') NOT NULL DEFAULT '0',
-  `TranscodedFrom` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `InfoHash` (`info_hash`(40)),
   KEY `GroupID` (`GroupID`),
   KEY `UserID` (`UserID`),
   KEY `Media` (`Media`),
   KEY `Format` (`Format`),
-  KEY `Year` (`RemasterYear`),
   KEY `FileCount` (`FileCount`),
   KEY `Size` (`Size`),
   KEY `Seeders` (`Seeders`),
@@ -1504,26 +1314,6 @@ CREATE TABLE IF NOT EXISTS `torrents` (
   KEY `LastLogged` (`LastLogged`),
   KEY `FreeTorrent` (`FreeTorrent`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellstruktur `torrents_artists`
---
-
-CREATE TABLE IF NOT EXISTS `torrents_artists` (
-  `GroupID` int(10) NOT NULL,
-  `ArtistID` int(10) NOT NULL,
-  `AliasID` int(10) NOT NULL,
-  `UserID` int(10) unsigned NOT NULL DEFAULT '0',
-  `Importance` enum('1','2','3','4','5','6','7') NOT NULL DEFAULT '1',
-  PRIMARY KEY (`GroupID`,`ArtistID`,`Importance`),
-  KEY `ArtistID` (`ArtistID`),
-  KEY `AliasID` (`AliasID`),
-  KEY `Importance` (`Importance`),
-  KEY `GroupID` (`GroupID`),
-  KEY `UserID` (`UserID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1634,28 +1424,18 @@ CREATE TABLE IF NOT EXISTS `torrents_files` (
 
 CREATE TABLE IF NOT EXISTS `torrents_group` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
-  `ArtistID` int(10) DEFAULT NULL,
-  `NumArtists` int(3) NOT NULL DEFAULT '0',
   `NewCategoryID` int(11) NOT NULL,
   `Name` varchar(300) DEFAULT NULL,
-  `Year` int(4) DEFAULT NULL,
-  `CatalogueNumber` varchar(80) NOT NULL DEFAULT '',
-  `RecordLabel` varchar(80) NOT NULL DEFAULT '',
   `ReleaseType` tinyint(2) DEFAULT '21',
   `TagList` varchar(500) NOT NULL,
   `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `RevisionID` int(12) DEFAULT NULL,
-  `WikiBody` text NOT NULL,
-  `WikiImage` varchar(255) NOT NULL,
+  `Body` text NOT NULL,
+  `Image` varchar(255) NOT NULL,
   `SearchText` varchar(500) NOT NULL,
-  `VanityHouse` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`ID`),
-  KEY `ArtistID` (`ArtistID`),
   KEY `CategoryID` (`CategoryID`),
   KEY `Name` (`Name`(255)),
-  KEY `Year` (`Year`),
   KEY `Time` (`Time`),
-  KEY `RevisionID` (`RevisionID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1935,7 +1715,6 @@ CREATE TABLE IF NOT EXISTS `users_info` (
   `SiteOptions` text NOT NULL,
   `ViewAvatars` enum('0','1') NOT NULL DEFAULT '1',
   `Donor` enum('0','1') NOT NULL DEFAULT '0',
-  `Artist` enum('0','1') NOT NULL DEFAULT '0',
   `DownloadAlt` enum('0','1') NOT NULL DEFAULT '0',
   `Warned` datetime NOT NULL,
   `MessagesPerPage` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -2061,8 +1840,6 @@ CREATE TABLE IF NOT EXISTS `users_notify_filters` (
   `ID` int(12) NOT NULL AUTO_INCREMENT,
   `UserID` int(10) NOT NULL,
   `Label` varchar(128) NOT NULL DEFAULT '',
-  `Artists` mediumtext NOT NULL,
-  `RecordLabels` mediumtext NOT NULL,
   `Users` mediumtext NOT NULL,
   `Tags` varchar(500) NOT NULL DEFAULT '',
   `NotTags` varchar(500) NOT NULL DEFAULT '',
@@ -2070,15 +1847,10 @@ CREATE TABLE IF NOT EXISTS `users_notify_filters` (
   `Formats` varchar(500) NOT NULL DEFAULT '',
   `Encodings` varchar(500) NOT NULL DEFAULT '',
   `Media` varchar(500) NOT NULL DEFAULT '',
-  `FromYear` int(4) NOT NULL DEFAULT '0',
-  `ToYear` int(4) NOT NULL DEFAULT '0',
-  `ExcludeVA` enum('1','0') NOT NULL DEFAULT '0',
   `NewGroupsOnly` enum('1','0') NOT NULL DEFAULT '0',
   `ReleaseTypes` varchar(500) NOT NULL DEFAULT '',
   PRIMARY KEY (`ID`),
-  KEY `UserID` (`UserID`),
-  KEY `FromYear` (`FromYear`),
-  KEY `ToYear` (`ToYear`)
+  KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2208,57 +1980,6 @@ CREATE TABLE IF NOT EXISTS `users_torrent_history_temp` (
   `SeedingAvg` int(6) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Tabellstruktur `wiki_aliases`
---
-
-CREATE TABLE IF NOT EXISTS `wiki_aliases` (
-  `Alias` varchar(50) NOT NULL,
-  `UserID` int(10) NOT NULL,
-  `ArticleID` int(10) DEFAULT NULL,
-  PRIMARY KEY (`Alias`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Tabellstruktur `wiki_articles`
---
-
-CREATE TABLE IF NOT EXISTS `wiki_articles` (
-  `ID` int(10) NOT NULL AUTO_INCREMENT,
-  `Revision` int(10) NOT NULL DEFAULT '1',
-  `Title` varchar(100) DEFAULT NULL,
-  `Body` mediumtext,
-  `MinClassRead` int(4) DEFAULT NULL,
-  `MinClassEdit` int(4) DEFAULT NULL,
-  `Date` datetime DEFAULT NULL,
-  `Author` int(10) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellstruktur `wiki_artists`
---
-
-CREATE TABLE IF NOT EXISTS `wiki_artists` (
-  `RevisionID` int(12) NOT NULL AUTO_INCREMENT,
-  `PageID` int(10) NOT NULL DEFAULT '0',
-  `Body` text,
-  `UserID` int(10) NOT NULL DEFAULT '0',
-  `Summary` varchar(100) DEFAULT NULL,
-  `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `Image` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`RevisionID`),
-  KEY `PageID` (`PageID`),
-  KEY `UserID` (`UserID`),
-  KEY `Time` (`Time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 

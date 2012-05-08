@@ -29,20 +29,11 @@ if(!$NewRequest) {
 			error(404);
 		}
 		
-		list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Year, $Image, $Description, $CatalogueNumber, $RecordLabel, 
-		     $ReleaseType, $BitrateList, $FormatList, $MediaList, $LogCue, $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID) = $Request;
+		list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Image, $Description, 
+		     $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID) = $Request;
 		$VoteArray = get_votes_array($RequestID);
 		$VoteCount = count($VoteArray['Voters']);
-		
-		$NeedCue = (strpos($LogCue, "Cue") !== false);
-		$NeedLog = (strpos($LogCue, "Log") !== false);
-		if($NeedLog) {
-			if(strpos($LogCue, "%")) {
-				preg_match("/\d+/", $LogCue, $Matches);
-				$MinLogScore = (int) $Matches[0];
-			}
-		}
-		
+				
 		$IsFilled = !empty($TorrentID);
 		$CategoryName = $NewCategories[$CategoryID]['name'];
 		$ProjectCanEdit = (check_perms('project_team') && !$IsFilled && (($CategoryID == 0)));
@@ -56,26 +47,16 @@ if(!$NewRequest) {
 	}
 }
 
-if($NewRequest && !empty($_GET['artistid']) && is_number($_GET['artistid'])) {
-	$DB->query("SELECT Name FROM artists_group WHERE artistid = ".$_GET['artistid']." LIMIT 1");
-	list($ArtistName) = $DB->next_record();
-	$ArtistForm = array(
-		1 => array(array('name' => trim($ArtistName))),
-		2 => array(),
-		3 => array()
-	);
-} elseif($NewRequest && !empty($_GET['groupid']) && is_number($_GET['groupid'])) {
-	$ArtistForm = get_artist($_GET['groupid']);
-	$DB->query("SELECT tg.Name, 
-					tg.Year, 
-					tg.ReleaseType, 
-					tg.WikiImage,
-					GROUP_CONCAT(t.Name SEPARATOR ', '),
-				FROM torrents_group AS tg 
-					JOIN torrents_tags AS tt ON tt.GroupID=tg.ID
-					JOIN tags AS t ON t.ID=tt.TagID
-				WHERE tg.ID = ".$_GET['groupid']);
-	if(list($Title, $Year, $ReleaseType, $Image, $Tags) = $DB->next_record()) {
+if($NewRequest && !empty($_GET['groupid']) && is_number($_GET['groupid'])) {
+	$DB->query("SELECT 
+                            tg.Name, 					
+                            tg.Image,
+                            GROUP_CONCAT(t.Name SEPARATOR ', '),
+                    FROM torrents_group AS tg 
+                            JOIN torrents_tags AS tt ON tt.GroupID=tg.ID
+                            JOIN tags AS t ON t.ID=tt.TagID
+                    WHERE tg.ID = ".$_GET['groupid']);
+	if(list($Title, $Image, $Tags) = $DB->next_record()) {
 		$GroupID = trim($_REQUEST['groupid']);
 	}
 }

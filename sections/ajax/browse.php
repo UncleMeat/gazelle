@@ -63,27 +63,12 @@ if(!empty($_GET['setdefault'])) {
 	}
 }
 
-foreach($Formats as $ID=>$Val) {
-	$SearchFormats[$ID]=strtolower($Val);
-}
-
 $Queries = array();
 
 //Simple search
 if(!empty($_GET['searchstr'])) {
 	$Words = explode(' ',strtolower($_GET['searchstr']));
-	
-	$FilterFormats = array_intersect($Words, $SearchFormats);
-	if(count($FilterFormats)>0) {
-		$Queries[]='@format '.implode(' ',$FilterFormats);
-	}
-	
-	if(in_array('100%', $Words)) {
-		$_GET['haslog'] = '100';
-		unset($Words[array_search('100%',$Words)]);
-	}
-	
-	$Words = array_diff($Words, $FilterBitrates, $FilterFormats);
+		
 	if(!empty($Words)) {
 		foreach($Words as $Key => &$Word) {
 			if($Word[0] == '!' && strlen($Word) >= 3 && count($Words) >= 2) {
@@ -101,7 +86,7 @@ if(!empty($_GET['searchstr'])) {
 		unset($Word);
 		$Words = trim(implode(' ',$Words));
 		if(!empty($Words)) {
-			$Queries[]='@(groupname,artistname,yearfulltext) '.$Words;
+			$Queries[]='@(groupname) '.$Words;
 		}
 	}
 }
@@ -139,9 +124,7 @@ if(empty($_GET['tags_type']) && !empty($TagList) && count($TagList) > 1) {
 	$_GET['tags_type'] = '1';
 }
 
-foreach(array('artistname','groupname', 'recordlabel', 'cataloguenumber', 
-				'remastertitle', 'remasteryear', 'remasterrecordlabel', 'remastercataloguenumber',
-				'filelist', 'format', 'media') as $Search) {
+foreach(array('groupname', 'filelist') as $Search) {
 	if(!empty($_GET[$Search])) {
 		$_GET[$Search] = str_replace(array('%'), '', $_GET[$Search]);
 		if($Search == 'filelist') {
@@ -169,38 +152,7 @@ foreach(array('artistname','groupname', 'recordlabel', 'cataloguenumber',
 	}
 }
 
-if(!empty($_GET['year'])) {
-	$Years = explode('-', $_GET['year']);
-	if(is_number($Years[0]) || (empty($Years[0]) && !empty($Years[1]) && is_number($Years[1]))) {
-		if(count($Years) == 1) {
-			$SS->set_filter('year', array((int)$Years[0]));
-		} else {
-			if(empty($Years[1]) || !is_number($Years[1])) {
-				$Years[1] = PHP_INT_MAX;
-			} elseif($Years[0] > $Years[1]) {
-				$Years = array_reverse($Years);
-			}
-			$SS->set_filter_range('year', (int)$Years[0], (int)$Years[1]);
-		}
-	}
-}
-if(!empty($_GET['encoding'])) {
-	$Queries[]='@encoding "'.$SS->EscapeString($_GET['encoding']).'"'; // Note the quotes, for 24bit lossless
-}
-
-if(isset($_GET['haslog']) && $_GET['haslog']!=='') {
-	if($_GET['haslog'] == 100) {
-		$SS->set_filter('logscore', array(100));
- 	} elseif ($_GET['haslog'] < 0) {
- 		// Exclude torrents with log score equal to 100 
- 		$SS->set_filter('logscore', array(100), true);
- 		$SS->set_filter('haslog', array(1));
-	} else {
-		$SS->set_filter('haslog', array(1));
-	}	
-}
-
-foreach(array('hascue','scene','vanityhouse','freetorrent','releasetype') as $Search) {
+foreach(array('freetorrent') as $Search) {
 	if(isset($_GET[$Search]) && $_GET[$Search]!=='') {
 		if($Search == 'freetorrent') {
 			switch($_GET[$Search]) {
@@ -244,7 +196,7 @@ if(!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
 	$OrderWay = 'desc';
 }
 
-if(empty($_GET['order_by']) || !in_array($_GET['order_by'], array('year','time','size','seeders','leechers','snatched','random'))) {
+if(empty($_GET['order_by']) || !in_array($_GET['order_by'], array('time','size','seeders','leechers','snatched','random'))) {
 	$_GET['order_by'] = 'time';
 	$OrderBy = 'time'; // For header links
 } elseif($_GET['order_by'] == 'random') {
@@ -340,7 +292,7 @@ $Bookmarks = all_bookmarks('torrent');
 
 $JsonGroups = array();
 foreach($Results as $GroupID=>$Data) {
-	list($Artists, $GroupCatalogueNumber, $ExtendedArtists, $GroupID2, $GroupName, $GroupRecordLabel, $ReleaseType, $TagList, $Torrents, $GroupVanityHouse, $GroupYear, $FreeTorrent, $HasCue, $HasLog, $TotalLeechers, $LogScore, $ReleaseType, $ReleaseType, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
+	list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $TotalLeechers, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 	
 	$TagList = explode(' ',str_replace('_','.',$TagList));
 			

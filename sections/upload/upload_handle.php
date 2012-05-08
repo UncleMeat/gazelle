@@ -26,7 +26,7 @@ define('QUERY_EXCEPTION', true); // Shut up debugging
 //******************************************************************************//
 //--------------- Set $Properties array ----------------------------------------//
 // This is used if the form doesn't validate, and when the time comes to enter  //
-// it into the database.														//
+// it into the database.								//
 
 // trim whitespace before setting/evaluating these fields
 $_POST['image'] = trim($_POST['image']);
@@ -36,36 +36,9 @@ $_POST['title'] = trim($_POST['title']);
 $Properties = array();
 $NewCategory = $_POST['category'];
 $Properties['Title'] = $_POST['title'];
-$Properties['Remastered'] = (isset($_POST['remaster'])) ? 1 : 0;
-if ($Properties['Remastered'] || isset($_POST['unknown'])) {
-    $Properties['UnknownRelease'] = (isset($_POST['unknown'])) ? 1 : 0;
-    $Properties['RemasterYear'] = $_POST['remaster_year'];
-    $Properties['RemasterTitle'] = $_POST['remaster_title'];
-    $Properties['RemasterRecordLabel'] = $_POST['remaster_record_label'];
-    $Properties['RemasterCatalogueNumber'] = $_POST['remaster_catalogue_number'];
-}
-if (!$Properties['Remastered'] || $Properties['UnknownRelease']) {
-    $Properties['UnknownRelease'] = 1;
-    $Properties['RemasterYear'] = '';
-    $Properties['RemasterTitle'] = '';
-    $Properties['RemasterRecordLabel'] = '';
-    $Properties['RemasterCatalogueNumber'] = '';
-}
-$Properties['Year'] = $_POST['year'];
-$Properties['RecordLabel'] = $_POST['record_label'];
-$Properties['CatalogueNumber'] = $_POST['catalogue_number'];
-$Properties['ReleaseType'] = $_POST['releasetype'];
-$Properties['Scene'] = (isset($_POST['scene'])) ? 1 : 0;
-$Properties['Format'] = $_POST['format'];
-$Properties['Media'] = $_POST['media'];
 $Properties['TagList'] = $_POST['tags'];
 $Properties['Image'] = $_POST['image'];
 $Properties['GroupDescription'] = $_POST['album_desc'];
-if ($_POST['vanity_house'] && check_perms('torrents_edit_vanityhouse')) {
-    $Properties['VanityHouse'] = 1;
-} else {
-    $Properties['VanityHouse'] = 0;
-}
 $Properties['TorrentDescription'] = $_POST['release_desc'];
 if ($_POST['album_desc']) {
     $Properties['GroupDescription'] = $_POST['album_desc'];
@@ -73,12 +46,6 @@ if ($_POST['album_desc']) {
     $Properties['GroupDescription'] = $_POST['desc'];
 }
 $Properties['GroupID'] = $_POST['groupid'];
-if (empty($_POST['artists'])) {
-    $Err = "You didn't enter any artists";
-} else {
-    $Artists = $_POST['artists'];
-    $Importance = $_POST['importance'];
-}
 $RequestID = $_POST['requestid'];
 //******************************************************************************//
 //--------------- Validate data in upload form ---------------------------------//
@@ -122,22 +89,6 @@ $SendPM = 0;
 $LogMessage = "";
 $CheckStamp = "";
 
-if (!$Err && $Properties['Format'] == 'FLAC') {
-    foreach ($_FILES['logfiles']['name'] as $FileName) {
-        if (!empty($FileName) && substr(strtolower($FileName), strlen($FileName) - strlen(".log")) !== ".log") {
-            $Err = "You seem to have put something other than an EAC or XLD log file into an upload field. (" . $FileName . ").";
-            break;
-        }
-    }
-    //There is absolutely no point in checking the type of the file upload as its interpretation of the type is decided by the client.
-    /* 	foreach($_FILES['logfiles']['type'] as $FileType) {
-      if(!empty($FileType) && $FileType != "text/plain" && $FileType != "text/x-log" && $FileType != "application/octet-stream" && $FileType != "text/richtext") {
-      $Err = "You seem to have put something other than an EAC or XLD log file into an upload field. (".$FileType.")";
-      break;
-      }
-      } */
-}
-
 if ($Err) { // Show the upload form, with the data the user entered
     include(SERVER_ROOT . '/sections/upload/upload.php');
     die();
@@ -154,7 +105,7 @@ foreach ($Properties as $Key => $Value) {
     }
 }
 
-$SearchText = db_string(trim($Properties['Artist']) . ' ' . trim($Properties['Title']) . ' ' . trim($Properties['Year']));
+$SearchText = db_string(trim($Properties['Title']));
 
 
 //******************************************************************************//
@@ -177,8 +128,6 @@ $Private = $Tor->make_private();
 list($TotalSize, $FileList) = $Tor->file_list();
 
 $TmpFileList = array();
-$HasLog = "'0'";
-$HasCue = "'0'";
 
 foreach ($FileList as $File) {
     list($Size, $Name) = $File;
@@ -253,8 +202,8 @@ if (!$GroupID) {
     // Create torrent group
     $DB->query("
 		INSERT INTO torrents_group
-		(ArtistID, NewCategoryID, Name, Year, RecordLabel, CatalogueNumber, Time, WikiBody, WikiImage, SearchText, ReleaseType, VanityHouse) VALUES
-		(0, " . $NewCategory . ", " . $T['Title'] . ", $T[Year], $T[RecordLabel], $T[CatalogueNumber], '" . sqltime() . "', '" . db_string($Body) . "', $T[Image], '$SearchText', $T[ReleaseType], $T[VanityHouse])");
+		(NewCategoryID, Name, Time, Body, Image, SearchText) VALUES
+		(" . $NewCategory . ", " . $T['Title'] . ", '" . sqltime() . "', '" . db_string($Body) . "', $T[Image], '$SearchText'");
     $GroupID = $DB->inserted_id();
     $Cache->increment('stats_group_count');
 } else {
@@ -264,19 +213,6 @@ if (!$GroupID) {
     $Cache->delete_value('torrent_group_' . $GroupID);
     $Cache->delete_value('torrents_details_' . $GroupID);
     $Cache->delete_value('detail_files_' . $GroupID);
-}
-
-// Description
-if (!$NoRevision) {
-    $DB->query("
-		INSERT INTO wiki_torrents
-		(PageID, Body, UserID, Summary, Time, Image) VALUES
-		($GroupID, $T[GroupDescription], $LoggedUser[ID], 'Uploaded new torrent', '" . sqltime() . "', $T[Image])
-		");
-    $RevisionID = $DB->inserted_id();
-
-    // Revision ID
-    $DB->query("UPDATE torrents_group SET RevisionID='$RevisionID' WHERE ID=$GroupID");
 }
 
 // Tags
@@ -324,15 +260,13 @@ $T['FreeLeechType'] = "'0'";
 // Torrent
 $DB->query("
 	INSERT INTO torrents
-		(GroupID, UserID, Media, Format, 
-		Remastered, RemasterYear, RemasterTitle, RemasterRecordLabel, RemasterCatalogueNumber, 
-		Scene, HasLog, HasCue, info_hash, FileCount, FileList, FilePath, Size, Time, 
-		Description, LogScore, FreeTorrent, FreeLeechType) 
+		(GroupID, UserID,
+		info_hash, FileCount, FileList, FilePath, Size, Time, 
+		Description, FreeTorrent, FreeLeechType) 
 	VALUES
-		(" . $GroupID . ", " . $LoggedUser['ID'] . ", " . $T['Media'] . ", " . $T['Format'] . ", 
-		" . $T['Remastered'] . ", " . $T['RemasterYear'] . ", " . $T['RemasterTitle'] . ", " . $T['RemasterRecordLabel'] . ", " . $T['RemasterCatalogueNumber'] . ", 
-		" . $T['Scene'] . ", " . $HasLog . ", " . $HasCue . ", '" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", '" . sqltime() . "',
-		" . $T['TorrentDescription'] . ", '" . (($HasLog == "'1'") ? $LogScoreAverage : 0) . "', " . $T['FreeLeech'] . ", " . $T['FreeLeechType'] . ")");
+		(" . $GroupID . ", " . $LoggedUser['ID'] . ", 
+		" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", '" . sqltime() . "',
+		" . $T['TorrentDescription'] . ", " . $T['FreeLeech'] . ", " . $T['FreeLeechType'] . ")");
 
 $Cache->increment('stats_torrent_count');
 $TorrentID = $DB->inserted_id();
@@ -351,22 +285,6 @@ write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], "uploaded (" . number_f
 
 update_hash($GroupID);
 
-
-
-
-//******************************************************************************//
-//--------------- Add the log scores to the DB ---------------------------------//
-
-if (!empty($LogScores) && $HasLog) {
-    $LogQuery = 'INSERT INTO torrents_logs_new (TorrentID,Log,Details,NotEnglish,Score,Revision,Adjusted,AdjustedBy,AdjustmentReason) VALUES (';
-    foreach ($LogScores as $LogKey => $LogScore) {
-        $LogScores[$LogKey] = "$TorrentID,$LogScore,1,0,0,NULL";
-    }
-    $LogQuery .= implode('),(', $LogScores) . ')';
-    $DB->query($LogQuery);
-    $LogInDB = true;
-}
-
 //******************************************************************************//
 //--------------- Stupid Recent Uploads ----------------------------------------//
 
@@ -384,7 +302,7 @@ if (trim($Properties['Image']) != "") {
             if (count($RecentUploads) == 5) {
                 array_pop($RecentUploads);
             }
-            array_unshift($RecentUploads, array('ID' => $GroupID, 'Name' => trim($Properties['Title']), 'Artist' => display_artists($ArtistForm, false, true), 'WikiImage' => trim($Properties['Image'])));
+            array_unshift($RecentUploads, array('ID' => $GroupID, 'Name' => trim($Properties['Title']), 'Image' => trim($Properties['Image'])));
             $Cache->cache_value('recent_uploads_' . $UserID, $RecentUploads, 0);
         } while (0);
     }
@@ -417,40 +335,6 @@ $SQL = "SELECT unf.ID, unf.UserID, torrent_pass
 	FROM users_notify_filters AS unf
 	JOIN users_main AS um ON um.ID=unf.UserID
 	WHERE um.Enabled='1'";
-if (empty($ArtistsUnescaped)) {
-    $ArtistsUnescaped = $ArtistForm;
-}
-if (!empty($ArtistsUnescaped)) {
-    $ArtistNameList = array();
-    $GuestArtistNameList = array();
-    foreach ($ArtistsUnescaped as $Importance => $Artists) {
-        foreach ($Artists as $Artist) {
-            if ($Importance == 1 || $Importance == 4 || $Importance == 5 || $Importance == 6) {
-                $ArtistNameList[] = "Artists LIKE '%|" . db_string($Artist['name']) . "|%'";
-            } else {
-                $GuestArtistNameList[] = "Artists LIKE '%|" . db_string($Artist['name']) . "|%'";
-            }
-        }
-    }
-    // Don't add notification if >2 main artists or if tracked artist isn't a main artist
-    if (count($ArtistNameList) > 2 || $Artist['name'] == 'Various Artists') {
-        $SQL.= " AND (ExcludeVA='0' AND (";
-        $SQL.= implode(" OR ", array_merge($ArtistNameList, $GuestArtistNameList));
-        $SQL.= " OR Artists='')) AND (";
-    } else {
-        $SQL.= " AND (";
-        if (!empty($GuestArtistNameList)) {
-            $SQL.= "(ExcludeVA='0' AND (";
-            $SQL.= implode(" OR ", $GuestArtistNameList);
-            $SQL.= ")) OR ";
-        }
-        $SQL.= implode(" OR ", $ArtistNameList);
-        $SQL.= " OR Artists='') AND (";
-    }
-} else {
-    $SQL.="AND (Artists='') AND (";
-}
-
 
 reset($Tags);
 $TagSQL = array();
@@ -467,12 +351,6 @@ $SQL.= ") AND !(" . implode(' OR ', $NotTagSQL) . ")";
 // TODO: Lanz: fix this! $Type was the old category id
 //$SQL.=" AND (Categories LIKE '%|" . db_string(trim($Type)) . "|%' OR Categories='') ";
 
-if ($Properties['ReleaseType']) {
-    $SQL.=" AND (ReleaseTypes LIKE '%|" . db_string(trim($ReleaseTypes[$Properties['ReleaseType']])) . "|%' OR ReleaseTypes='') ";
-} else {
-    $SQL.=" AND (ReleaseTypes='') ";
-}
-
 /*
   Notify based on the following:
   1. The torrent must match the formatbitrate filter on the notification
@@ -480,36 +358,12 @@ if ($Properties['ReleaseType']) {
  */
 
 
-if ($Properties['Format']) {
-    $SQL.=" AND (Formats LIKE '%|" . db_string(trim($Properties['Format'])) . "|%' OR Formats='') ";
-} else {
-    $SQL.=" AND (Formats='') ";
-}
-
-if ($Properties['Media']) {
-    $SQL.=" AND (Media LIKE '%|" . db_string(trim($Properties['Media'])) . "|%' OR Media='') ";
-} else {
-    $SQL.=" AND (Media='') ";
-}
-
 // Either they aren't using NewGroupsOnly
 $SQL .= "AND ((NewGroupsOnly = '0' ";
 // Or this is the first torrent in the group to match the formatbitrate filter
 $SQL .= ") OR ( NewGroupsOnly = '1' ";
 
 $SQL .= "))";
-
-
-if ($Properties['Year'] && $Properties['RemasterYear']) {
-    $SQL.=" AND (('" . db_string(trim($Properties['Year'])) . "' BETWEEN FromYear AND ToYear)
-			OR ('" . db_string(trim($Properties['RemasterYear'])) . "' BETWEEN FromYear AND ToYear)
-			OR (FromYear=0 AND ToYear=0)) ";
-} elseif ($Properties['Year'] || $Properties['RemasterYear']) {
-    $SQL.=" AND (('" . db_string(trim(Max($Properties['Year'], $Properties['RemasterYear']))) . "' BETWEEN FromYear AND ToYear)
-			OR (FromYear=0 AND ToYear=0)) ";
-} else {
-    $SQL.=" AND (FromYear=0 AND ToYear=0) ";
-}
 
 $SQL.=" AND UserID != '" . $LoggedUser['ID'] . "' ";
 
@@ -551,16 +405,6 @@ $Feed->populate('torrents_all', $Item);
 
 // TODO: Lanz this needs to be looked in to more. The code had one for each of the old categories here, look over and clean up!
 $Feed->populate('torrents_apps', $Item);
-
-// Clear Cache
-$Cache->delete('torrents_details_' . $GroupID);
-foreach ($ArtistForm as $Importance => $Artists) {
-    foreach ($Artists as $Num => $Artist) {
-        if (!empty($Artist['id'])) {
-            $Cache->delete('artist_' . $Artist['id']);
-        }
-    }
-}
 
 if (!$Private) {
     show_header("Warning");
