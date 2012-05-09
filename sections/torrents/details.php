@@ -25,7 +25,7 @@ list($Body, $Image, $GroupID, $GroupName, $GroupCategoryID,
 $DisplayName=$GroupName;
 $AltName=$GroupName; // Goes in the alt text of the image
 $Title=$GroupName; // goes in <title>
-$Body = $Text->full_format($Body);
+//$Body = $Text->full_format($Body);
 
 $Tags = array();
 if ($TorrentTags != '') {
@@ -60,11 +60,20 @@ if (empty($TokenTorrents)) {
 
 // Start output
 show_header($Title,'browse,comments,torrent,bbcode');
+
+
+	list($TorrentID,
+		$FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $TorrentTime, $Description, 
+		$FileList, $FilePath, $UserID, $Username, $LastActive,
+		$BadTags, $BadFolders, $BadFiles, $CassetteApproved, $LossymasterApproved, $LastReseedRequest, $LogInDB, $HasFile) = $TorrentList[0];
+
+	$CanEdit = (check_perms('torrents_edit') ||  ($UserID == $LoggedUser['ID']  ) );
+      
 ?>
 <div class="thin">
 	<h2><?=$DisplayName?></h2>
 	<div class="linkbox">
-<?	if(check_perms('site_edit_wiki')) { ?>
+<?	if( $CanEdit) { //  check_perms('site_edit_wiki')  ?>
 		<a href="torrents.php?action=editgroup&amp;groupid=<?=$GroupID?>">[Edit description]</a>
 <?	} ?>
 		<a href="torrents.php?action=history&amp;groupid=<?=$GroupID?>">[View history]</a>
@@ -165,12 +174,12 @@ function filelist($Str) {
 
 $EditionID = 0;
 
-	
+	/*  moved up top so can do proper permissions check before printing 'Edit Description' link
 	list($TorrentID,
 		$FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $TorrentTime, $Description, 
 		$FileList, $FilePath, $UserID, $Username, $LastActive,
 		$BadTags, $BadFolders, $BadFiles, $CassetteApproved, $LossymasterApproved, $LastReseedRequest, $LogInDB, $HasFile) = $TorrentList[0];
-
+*/
 	$Reported = false;
 	unset($ReportedTimes);
 	$Reports = $Cache->get_value('reports_torrent_'.$TorrentID);
@@ -209,8 +218,8 @@ $EditionID = 0;
 		}
 		$ReportInfo .= "</table>";
 	}
-	
-	$CanEdit = (check_perms('torrents_edit') || (($UserID == $LoggedUser['ID'] && !$LoggedUser['DisableWiki'])));
+	//moved up page
+	//$CanEdit = (check_perms('torrents_edit') || (($UserID == $LoggedUser['ID'] && !$LoggedUser['DisableWiki'])));
 	
 	$FileList = str_replace(array('_','-'), ' ', $FileList);
 	$FileList = str_replace('|||','<tr><td>',display_str($FileList));
@@ -413,6 +422,10 @@ if(count($PersonalCollages)>0) {
 		</table>
 <?
 }
+
+        $PermissionsInfo = get_permissions_for_user($UserID);
+        $Body = $Text->full_format($Body, isset($PermissionsInfo['site_advanced_tags']) &&  $PermissionsInfo['site_advanced_tags'] );
+
 ?>
 		<div class="box">
 			<div class="head"><strong>Description</strong></div>
@@ -513,7 +526,7 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 ?>
 		<td class="body" valign="top">
 			<div id="content<?=$PostID?>" class="post_container">
-                      <div class="post_content"><?=$Text->full_format($Body) ?> </div>
+                      <div class="post_content"><?=$Text->full_format($Body, isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues['site_advanced_tags']) ?> </div>
                 <?  
            if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength>0) && !empty($Signature) ) {
                         

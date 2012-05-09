@@ -94,6 +94,7 @@ $DB->query("INSERT INTO comments_edits (Page, PostID, EditUser, EditTime, Body)
 								VALUES ('forums', ".$PostID.", ".$UserID.", '".sqltime()."', '".db_string($OldBody)."')");
 $Cache->delete_value("forums_edits_$PostID");
 // This gets sent to the browser, which echoes it in place of the old body
-echo $Text->full_format($_POST['body']);
+$PermissionsInfo = get_permissions_for_user($AuthorID);
+echo $Text->full_format($_POST['body'], isset($PermissionsInfo['site_advanced_tags']) &&  $PermissionsInfo['site_advanced_tags']);
 ?>
 <br /><br />Last edited by <a href="user.php?id=<?=$LoggedUser['ID']?>"><?=$LoggedUser['Username']?></a> just now

@@ -132,7 +132,7 @@ foreach ($Blog as $BlogItem) {
 		 <? } ?>
 				</div>
 				<div class="pad">
-					<?=$Text->full_format($Body)?>
+					<?=$Text->full_format($Body,true)?>
 				</div>
 			</div>
 		<br />

@@ -27,6 +27,7 @@
 	'site_edit_wiki' => 'Wiki edit access.',
 	'site_can_invite_always' => 'Can invite past user limit.',
 	'site_send_unlimited_invites' => 'Unlimited invites.',
+            'site_advanced_tags' => 'Advanced bbcode tags.',
 	'site_moderate_requests' => 'Request moderation access.',
 	'site_moderate_forums' => 'Forum moderation access.',
 	'site_admin_forums' => 'Forum administrator access.',
@@ -71,6 +72,7 @@
 	'users_delete_users' => 'Can delete users.',
 	'users_view_invites' => 'Can view who user has invited.',
 	'users_view_seedleech' => 'Can view what a user is seeding or leeching.',
+            'users_view_bonuslog' => 'Can view bonus logs.',
 	'users_view_uploaded' => 'Can view a user\'s uploads, regardless of privacy level.',
 	'users_view_keys' => 'Can view passkeys.',
 	'users_view_ips' => 'Can view IP addresses.',
@@ -143,6 +145,7 @@ function permissions_form(){ ?>
 					<? display_perm('site_edit_wiki','Can edit wiki pages.'); ?>
 					<? display_perm('site_can_invite_always', 'Can invite users even when invites are closed.'); ?>
 					<? display_perm('site_send_unlimited_invites', 'Can send unlimited invites.'); ?>
+                              <?            display_perm('site_advanced_tags', 'Can use advanced bbcode tags.'); ?>
 					<? display_perm('site_moderate_requests', 'Can moderate any request.'); ?>
 					<? display_perm('forums_polls_create','Can create polls in the forums.') ?>
 					<? display_perm('forums_polls_moderate','Can feature and close polls.') ?>
@@ -201,6 +204,7 @@ function permissions_form(){ ?>
 					<? display_perm('users_delete_users', 'Can delete anyone\'s account'); ?>
 					<? display_perm('users_view_invites', 'Can view who user has invited'); ?>
 					<? display_perm('users_view_seedleech', 'Can view what a user is seeding or leeching'); ?>
+                                    <? display_perm('users_view_bonuslog', 'Can view a users bonus logs.'); ?>
 					<? display_perm('users_view_uploaded', 'Can view a user\'s uploads, regardless of privacy level'); ?>
 					<? display_perm('users_view_keys', 'Can view passkeys'); ?>
 					<? display_perm('users_view_ips', 'Can view IP addresses'); ?>

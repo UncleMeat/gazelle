@@ -5,7 +5,6 @@ include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
 $Text = new TEXT;
 
 $Content = $_REQUEST['desc']; // Don't use URL decode.
-//echo $Text->full_format($Content);
  
 $Imageurl = $_REQUEST['image']; // Don't use URL decode.
 if (!empty($Imageurl)) {
@@ -29,7 +28,7 @@ echo '<table cellpadding="3" cellspacing="1" border="0" class="border slice" wid
     <tr>
         <td class="label">Description</td>
         <td>
-            '.$Text->full_format($Content).'                              
+            '.$Text->full_format($Content, isset($LoggedUser['Permissions']['site_advanced_tags']) &&  $LoggedUser['Permissions']['site_advanced_tags']).'                              
         </td>
     </tr> 
 </table>';

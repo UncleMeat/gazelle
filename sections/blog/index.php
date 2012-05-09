@@ -143,7 +143,7 @@ foreach ($Blog as $BlogItem) {
 		 <? } ?>
 				</div>
 				<div class="pad">
-					<?=$Text->full_format($Body)?>
+					<?=$Text->full_format($Body, true)?>
 		<? if($ThreadID) { ?>
 					<br /><br />
 					<em><a href="forums.php?action=viewthread&threadid=<?=$ThreadID?>">Discuss this post here</a></em>
