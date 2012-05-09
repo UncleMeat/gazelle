@@ -76,7 +76,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash,$BonusCredits,$BonusLog) = $DB->next_record(MYSQLI_NUM, array(8,11));
+	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash,$BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight) = $DB->next_record(MYSQLI_NUM, array(8,11));
 
 } else { // Person viewing is a normal user
 	$DB->query("SELECT
@@ -584,7 +584,7 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 <?
 // TODO: Add proper perms for viewing user credits + bonus history
 // TODO: Add editing of bonus log (by admin/staff)... I am inclined to make this savable in frame + also teh staff notes edit could be the same.. dunno
-if (check_perms('users_view_email',$Class) || $OwnProfile) { ?>
+if (check_perms('users_view_bonuslog',$Class) || $OwnProfile) { ?>
 		<div class="box">
 			<div class="head">
 				<span style="float:left;">Bonus Credits</span>

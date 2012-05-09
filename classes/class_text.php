@@ -1,7 +1,7 @@
 <?
 class TEXT {
 	// tag=>max number of attributes
-	private $ValidTags = array('table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, '#'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
+	private $ValidTags = array('mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, '#'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
 	);
 	private $Smileys = array(
            ':smile1:'           => 'smile1.gif',
@@ -298,8 +298,9 @@ class TEXT {
           );
       
 	private $NoImg = 0; // If images should be turned into URLs
-	private $Levels = 0; // If images should be turned into URLs
-	
+	private $Levels = 0; // nesting level
+	private $Advanced = false; // allow advanced tags to be printed
+      
 	function __construct() {
 		foreach($this->Smileys as $Key=>$Val) {
 			$this->Smileys[$Key] = '<img src="'.STATIC_SERVER.'common/smileys/'.$Val.'" alt="'.$Key.'" />';
@@ -313,7 +314,8 @@ class TEXT {
 		reset($this->Icons);
       }
 	
-	function full_format($Str) {
+	function full_format($Str, $AdvancedTags = false) {
+            $this->Advanced = $AdvancedTags;
 		$Str = display_str($Str);
 		//Inline links
 		$URLPrefix = '(\[url\]|\[url\=|\[img\=|\[img\])';
@@ -695,7 +697,7 @@ EXPLANATION OF PARSER LOGIC
             if (!$ColorAttribs) // only build it once per page 
                 $ColorAttribs = array('aqua', 'pink', 'black', 'blue', 'lightblue', 'fuchsia', 'lightgreen', 'green', 'grey', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'white', 'yellow');
 		
-            return (in_array($Attrib, $ColorAttribs) || preg_match('/^#[0-9a-f]{3,6}$/', $Attrib));
+            return (in_array($Attrib, $ColorAttribs) || preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/', $Attrib));
       }
       
       function get_color_width_attributes($Attrib) {
@@ -710,6 +712,8 @@ EXPLANATION OF PARSER LOGIC
                         } elseif (preg_match('/^[0-9]{1,3}$/', $att)) {
                             if ( (int)$att > 100 ) $att = '100';
                             $InlineStyle .= 'width:'.$att.'%;';
+                        } else {
+                            return FALSE;
                         }
                     }
                     $InlineStyle .= '"';
@@ -717,6 +721,19 @@ EXPLANATION OF PARSER LOGIC
             }
             return $InlineStyle;
       }
+      
+    
+      function remove_text_between_tags(&$Array, $MatchTagRegex = false){
+            $count = count($Array);
+            for ($i = 0; $i <= $count; $i++) {
+                if ( is_string($Array[$i]) ){
+                    $Array[$i] = '';
+                } elseif ( $MatchTagRegex !== false && !preg_match($MatchTagRegex, $Array[$i]['Type']) ) {
+                    $Array[$i] = '';
+                }
+            }
+      }
+      
       
 	function to_html($Array) {
 		$this->Levels++;
@@ -729,26 +746,45 @@ EXPLANATION OF PARSER LOGIC
 				continue;
 			}
 			switch($Block['Type']) {
+                        case 'mcom':  // doh! cannot be advanced if we want to mod comment normal users posts
+                              $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[Please read the <a href="rules.php">Rules</a>]</div><div class="clear"></div></div>';
+                              break;
 				case 'table':
-                              $InlineStyle = $this->get_color_width_attributes($Block['Attr']);
-					$Str.='<table class="bbcode"'.$InlineStyle.'><tbody>'.$this->to_html($Block['Val']).'</tbody></table>';
+                              $InlineStyle = $this->Advanced ? $this->get_color_width_attributes($Block['Attr']) : FALSE;
+					if ($InlineStyle === FALSE) {
+                                  	$Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
+                              } else  {
+                                    $this->remove_text_between_tags($Block['Val'], "/^tr$/");
+                                    $Str.='<table class="bbcode"'.$InlineStyle.'><tbody>'.$this->to_html($Block['Val']).'</tbody></table>';
+                              }
 					break;
 				case 'tr':
-                              $InlineStyle = '';
-                              if($this->is_color_attrib( $Block['Attr']))
-                                       $InlineStyle = ' style="background-color:'.$Block['Attr'].';"';
-					$Str.='<'.$Block['Type'].' class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</'.$Block['Type'].'>';
+                              if (!$this->Advanced)
+                                    $InlineStyle = FALSE;
+                              else if($this->is_color_attrib( $Block['Attr']))
+                                    $InlineStyle = ' style="background-color:'.$Block['Attr'].';"';
+                              else $InlineStyle = '';
+					if ($InlineStyle === FALSE) {
+                                  	$Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
+                              } else  {
+                                  $this->remove_text_between_tags($Block['Val'], "/^th$|^td$/");
+                                  $Str.='<'.$Block['Type'].' class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</'.$Block['Type'].'>';
+                              }
 					break;
 				case 'th':
 				case 'td':
-                              $InlineStyle = $this->get_color_width_attributes($Block['Attr']);
-					$Str.='<'.$Block['Type'].' class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</'.$Block['Type'].'>';
+                              $InlineStyle = $this->Advanced ? $this->get_color_width_attributes($Block['Attr']) : FALSE;
+					if ($InlineStyle === FALSE) {
+                                  	$Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
+                              } else  
+                                  $Str.='<'.$Block['Type'].' class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</'.$Block['Type'].'>';
 					break;
 				case 'bg':
-                              $InlineStyle = $this->get_color_width_attributes($Block['Attr']);
-					if (!$InlineStyle) {
+                              $InlineStyle = $this->Advanced ? $this->get_color_width_attributes($Block['Attr']) : FALSE;
+					if (!$InlineStyle || $InlineStyle =='') {
                                   	$Str.='[bg='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/bg]';
-                              } else  $Str.='<div class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</div>';
+                              } else  
+                                  $Str.='<div class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</div>';
                               break;
 				case 'cast':
 				case 'details':
@@ -1031,7 +1067,7 @@ EXPLANATION OF PARSER LOGIC
       // they will not get that benefit
        */
       function display_bbcode_assistant($textarea, $start_num_smilies = 0, $load_increment = 120, $load_increment_first = 30){
-        
+        global $LoggedUser;
           if ($load_increment_first == -1) { $load_increment_first = $load_increment; }
         ?>
         <div id="hover_pick<?=$textarea;?>" style="width: auto; height: auto; position: absolute; border: 0px solid rgb(51, 51, 51); display: none; z-index: 20;"></div>
@@ -1049,12 +1085,12 @@ EXPLANATION OF PARSER LOGIC
                 <!-- <a class="bb_button" onclick="tag('img')" title="Insert image: [img]http://image_url[/img]" alt="Img">Img</a>-->
                     <a class="bb_button" onclick="cimage('<?=$textarea;?>')" title="Insert image: [img]http://image_url[/img]" alt="Image">img</a>
                     <a class="bb_button" onclick="tag('code', '<?=$textarea;?>')" title="Code display: [code]code[/code]" alt="Code">Code</a>
-                    <a class="bb_button" onclick="table('<?=$textarea;?>')" title="Table: [table][tr][td]text[/td][td]text[/td][/tr][/table]" alt="Table">Table</a>
                     
+       <? if ( isset($LoggedUser['Permissions']['site_advanced_tags']) &&  $LoggedUser['Permissions']['site_advanced_tags']) { ?>
+                    <a class="bb_button" onclick="table('<?=$textarea;?>')" title="Table: [table][tr][td]text[/td][td]text[/td][/tr][/table]" alt="Table">Table</a>
+       <? }  ?>
                     <a class="bb_button" onclick="tag('quote', '<?=$textarea;?>')" title="Quote text: [quote]text[/quote]" alt="Quote">Quote</a>
 
-                 <!-- <a class="bb_button" onclick="tag('mcom')" title="Staff Comment" alt="Mod comment">Mod</a> -->
-               
                 <select class="bb_button" name="fontfont" id="fontfont<?=$textarea;?>" onchange="font('font',this.value,'<?=$textarea;?>');" title="Font face">
                     <option value="0">Font Type</option>
                 <?  foreach($this->Fonts as $Key=>$Val) {
@@ -1078,8 +1114,12 @@ EXPLANATION OF PARSER LOGIC
                   <option value="10">10</option>
                 </select>
                     
-                     <a class="bb_button" onclick="colorpicker('<?=$textarea;?>');" title="Select Color" alt="Colors">Colors</a>
-              </div>  
+                <a class="bb_button" onclick="colorpicker('<?=$textarea;?>');" title="Select Color" alt="Colors">Colors</a>
+              
+	<?  if(check_perms('site_moderate_forums')) { ?>
+                <a class="bb_button" style="margin-left: 40px; border: 3px solid #600;" onclick="tag('mcom', '<?=$textarea;?>')" title="Staff Comment: [mcom]text[/mcom]" alt="Mod comment">Mod</a>
+       <? }  ?>  
+              </div>
               <div style="float: right; margin-top: 3px;"> 
                   <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center', '<?=$textarea;?>')" title="Align - center" alt="Center" /> 
                   <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left', '<?=$textarea;?>')" title="Align - left" alt="Left" /> 

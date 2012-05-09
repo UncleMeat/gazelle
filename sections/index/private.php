@@ -333,7 +333,7 @@ foreach ($News as $NewsItem) {
 				- <a href="tools.php?action=editnews&amp;id=<?=$NewsID?>">[Edit]</a> 
 <? } ?>
 			</div>
-			<div class="pad"><?=$Text->full_format($Body)?></div>
+			<div class="pad"><?=$Text->full_format($Body, true)?></div>
 		</div>
 <?
 	if (++$Count > 4) {

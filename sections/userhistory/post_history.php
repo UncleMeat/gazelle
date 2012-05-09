@@ -56,6 +56,10 @@ if($LoggedUser['CustomForums']) {
 	unset($LoggedUser['CustomForums']['']);
 	$RestrictedForums = implode("','", array_keys($LoggedUser['CustomForums'], 0));
 }
+
+// get the permission info for the author so we can test for adv bbcode tags 
+$PermissionsInfo = get_permissions_for_user($UserID);
+       
 $ViewingOwn = ($UserID == $LoggedUser['ID']);
 $ShowUnread = ($ViewingOwn && (!isset($_GET['showunread']) || !!$_GET['showunread']));
 $ShowGrouped = ($ViewingOwn && (!isset($_GET['group']) || !!$_GET['group']));
@@ -307,7 +311,7 @@ if(empty($Results)) {
 ?>
 			<td class='body' valign="top">
 				<div id="content<?=$PostID?>">
-					<?=$Text->full_format($Body)?>
+					<?=$Text->full_format($Body, isset($PermissionsInfo['site_advanced_tags']) &&  $PermissionsInfo['site_advanced_tags'] );?>
 <?			if($EditedUserID) { ?>       
 					<br />
 					<br />

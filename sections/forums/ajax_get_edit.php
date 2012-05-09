@@ -59,7 +59,7 @@ if($Depth != 0) {
 }
 ?>
 
-				<?=$Text->full_format($Body)?>
+				<?=$Text->full_format($Body, true)?>
 				<br />
 				<br />
 

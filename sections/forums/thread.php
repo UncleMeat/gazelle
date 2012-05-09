@@ -422,8 +422,8 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
 <? } ?>
 		<td class="body" valign="top"<? if(!empty($HeavyInfo['DisableAvatars'])) { echo ' colspan="2"'; } ?>>
 			<div id="content<?=$PostID?>" class="post_container">
-                      <div class="post_content"><?=$Text->full_format($Body) ?> </div>
-                <?  
+                      <div class="post_content"><?=$Text->full_format($Body, isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues['site_advanced_tags']) ?> </div>
+                <? 
            if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength > 0) && !empty($Signature) ) {
                         
                         echo '<div class="sig post_footer">' . $Text->full_format($Signature) . '</div>';
