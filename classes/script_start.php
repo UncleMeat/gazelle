@@ -1618,8 +1618,10 @@ function get_groups($GroupIDs, $Return = true, $Torrents = true) {
 		
 		if ($Torrents) {
 			$DB->query("SELECT
-                                        ID, GroupID, FileCount, FreeTorrent, Size, Leechers, Seeders, Snatched, Time, ID AS HasFile
-                                        FROM torrents AS t WHERE GroupID IN($IDs) ORDER BY GroupID DESC, ID");
+                                        t.ID, t.UserID, um.Username, GroupID, FileCount, FreeTorrent, Size, Leechers, Seeders, Snatched, Time, t.ID AS HasFile
+                                        FROM torrents AS t 
+                                        JOIN users_main AS um ON t.UserID=um.ID
+                                        WHERE GroupID IN($IDs) ORDER BY GroupID DESC, t.ID");
 			while($Torrent = $DB->next_record(MYSQLI_ASSOC, true)) {
 				$Found[$Torrent['GroupID']]['Torrents'][$Torrent['ID']] = $Torrent;
 		

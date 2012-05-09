@@ -216,7 +216,6 @@ if(check_perms('torrents_freeleech') && $Properties['FreeLeech'] != $CurFreeLeec
 
 $DB->query("SELECT GroupID, Time FROM torrents WHERE ID='$TorrentID'");
 list($GroupID, $Time) = $DB->next_record();
-die('GroupID: '.$GroupID);
 
 $DB->query("SELECT Name FROM torrents_group WHERE ID=$GroupID");
 list($Name) = $DB->next_record();

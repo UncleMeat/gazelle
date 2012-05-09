@@ -268,6 +268,7 @@ $TorrentCount = $SS->TotalResults;
 
 // These ones were not found in the cache, run SQL
 if (!empty($Results['notfound'])) {
+
     $SQLResults = get_groups($Results['notfound']);
 
     if (is_array($SQLResults['notfound'])) { // Something wasn't found in the db, remove it from results
@@ -512,17 +513,18 @@ $Bookmarks = all_bookmarks('torrent');
 
         $OverImage = $Image != '' ? $Image : '/static/common/noartwork/noimage.png';
         $OverName = strlen($GroupName) <= 60 ? $GroupName : substr($GroupName, 0, 56) . '...';
-//        $OverName = display_str($GroupName);
         $SL = ($TotalSeeders == 0 ? "<span class=r00>" . number_format($TotalSeeders) . "</span>" : number_format($TotalSeeders)) . "/" . number_format($TotalLeechers);
-        $DisplayName = '<a href="torrents.php?id=' . $GroupID . '"' . " onmouseover=\"return overlib('<table class=tdoverlib><tr><td class=tdoverlib colspan=2>" . $OverName . "</td><tr><td class=tdoverlib style=width:1px><img style=\'max-width: 100px;\' src=" . $OverImage . "></td><td class=tdoverlib><strong>Uploader:</strong><br />xxxxxx<br /><br /><strong>Size:</strong><br />" . get_size($Data['Size']) . "<br /><br /><strong>Snatched:</strong><br />" . number_format($TotalSnatched) . "<br /><br /><strong>Seeders/Leechers:</strong><br />" . $SL . "</td></tr></table>', FULLHTML);\" onmouseout=\"return nd();\">" . $GroupName . '</a>';
-
+        $Overlay = "<table class=overlay><tr><td class=overlay colspan=2><strong>" . $OverName . "</strong></td><tr><td class=leftOverlay><img style='max-width: 150px;' src=" . $OverImage . "></td><td class=rightOverlay><strong>Uploader:</strong><br />{$Data['Username']}<br /><br /><strong>Size:</strong><br />" . get_size($Data['Size']) . "<br /><br /><strong>Snatched:</strong><br />" . number_format($TotalSnatched) . "<br /><br /><strong>Seeders/Leechers:</strong><br />" . $SL . "</td></tr></table>";
+        
+        $AddExtra = '';
         if ($Data['FreeTorrent'] == '1') {
-            $DisplayName .= ' <strong>Freeleech!</strong>';
+            $AddExtra = ' <strong>/ Freeleech!</strong>';
         } elseif ($Data['FreeTorrent'] == '2') {
-            $DisplayName .= ' <strong>Neutral Leech!</strong>';
+            $AddExtra = ' <strong>/ Neutral Leech!</strong>';
         } elseif (in_array($TorrentID, $TokenTorrents)) {
-            $DisplayName .= $AddExtra . '<strong>Personal Freeleech!</strong>';
+            $AddExtra = '<strong>/ Personal Freeleech!</strong>';
         }
+                
         ?>
         <tr class="torrent">
             <td class="center cats_col">
@@ -539,7 +541,12 @@ $Bookmarks = all_bookmarks('torrent');
     <? } ?>				
                     | <a href="reportsv2.php?action=report&amp;id=<?= $TorrentID ?>" title="Report">RP</a>]
                 </span>
-    <?= $DisplayName ?>
+
+                <script>
+                    var overlay<?=$GroupID?> = <?=json_encode($Overlay)?>
+                </script>
+                
+                <a href="torrents.php?id=<?=$GroupID?>"  onmouseover="return overlib(overlay<?=$GroupID?>, FULLHTML);" onmouseout="return nd();"><?=$GroupName?></a> <?=$AddExtra?>
                 <br />
                 <div class="tags">
     <?= $TorrentTags ?>
@@ -551,7 +558,7 @@ $Bookmarks = all_bookmarks('torrent');
             <td><?= number_format($TotalSnatched) ?></td>
             <td<?= ($TotalSeeders == 0) ? ' class="r00"' : '' ?>><?= number_format($TotalSeeders) ?></td>
             <td><?= number_format($TotalLeechers) ?></td>
-            <td> </td>
+            <td><a href="user.php?id=<?= $Data['UserID'] ?>"><?= $Data['Username'] ?></a></td>
         </tr>
         <?
     }
