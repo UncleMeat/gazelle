@@ -1304,7 +1304,22 @@ function delete_group($GroupID) {
 	foreach ($Requests as $RequestID) {
 		$Cache->delete_value('request_'.$RequestID);
 	}
-	
+
+        // Decrease the tag count, if it's not in use any longer and not an official tag, delete it from the list.
+        $DB->query("SELECT tt.TagID, t.Uses, t.TagType
+                    FROM torrents_tags AS tt
+                        JOIN tags AS t ON t.ID = tt.TagID
+                    WHERE GroupID ='$GroupID'");
+        $Tags = $DB->to_array();
+        foreach($Tags as $Tag) {
+            $Uses = $Tag['Uses'] > 0 ?  $Tag['Uses'] - 1 : 0;
+            if ($Tag['TagType'] == 'genre' || $Uses > 0) {
+                $DB->query("UPDATE tags SET Uses=$Uses WHERE ID=".$TagID);
+            } else {
+                $DB->query("DELETE FROM tags WHERE ID=".$Tag['TagID']." AND TagType='other'");
+            }
+        }
+        
 	$DB->query("DELETE FROM torrents_group WHERE ID='$GroupID'");
 	$DB->query("DELETE FROM torrents_tags WHERE GroupID='$GroupID'");
 	$DB->query("DELETE FROM torrents_tags_votes WHERE GroupID='$GroupID'");

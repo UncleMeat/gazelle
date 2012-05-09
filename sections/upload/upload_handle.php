@@ -203,7 +203,7 @@ if (!$GroupID) {
     $DB->query("
 		INSERT INTO torrents_group
 		(NewCategoryID, Name, Time, Body, Image, SearchText) VALUES
-		(" . $NewCategory . ", " . $T['Title'] . ", '" . sqltime() . "', '" . db_string($Body) . "', $T[Image], '$SearchText'");
+		(" . $NewCategory . ", " . $T['Title'] . ", '" . sqltime() . "', '" . db_string($Body) . "', $T[Image], '$SearchText')");
     $GroupID = $DB->inserted_id();
     $Cache->increment('stats_group_count');
 } else {
@@ -264,7 +264,7 @@ $DB->query("
 		info_hash, FileCount, FileList, FilePath, Size, Time, 
 		Description, FreeTorrent, FreeLeechType) 
 	VALUES
-		(" . $GroupID . ", " . $LoggedUser['ID'] . ", 
+		(" . $GroupID . ", " . $LoggedUser['ID'] . ", '
 		" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", '" . sqltime() . "',
 		" . $T['TorrentDescription'] . ", " . $T['FreeLeech'] . ", " . $T['FreeLeechType'] . ")");
 
@@ -343,6 +343,8 @@ foreach ($Tags as $Tag) {
     $TagSQL[] = " Tags LIKE '%|" . db_string(trim($Tag)) . "|%' ";
     $NotTagSQL[] = " NotTags LIKE '%|" . db_string(trim($Tag)) . "|%' ";
 }
+
+$SQL .= " AND ((";
 $TagSQL[] = "Tags=''";
 $SQL.=implode(' OR ', $TagSQL);
 
@@ -357,13 +359,7 @@ $SQL.= ") AND !(" . implode(' OR ', $NotTagSQL) . ")";
   2. If they set NewGroupsOnly to 1, it must also be the first torrent in the group to match the formatbitrate filter on the notification
  */
 
-
-// Either they aren't using NewGroupsOnly
-$SQL .= "AND ((NewGroupsOnly = '0' ";
-// Or this is the first torrent in the group to match the formatbitrate filter
-$SQL .= ") OR ( NewGroupsOnly = '1' ";
-
-$SQL .= "))";
+$SQL .= ")";
 
 $SQL.=" AND UserID != '" . $LoggedUser['ID'] . "' ";
 

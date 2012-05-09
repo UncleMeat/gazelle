@@ -278,7 +278,7 @@ $EditionID = 0;
 						Uploaded by <?=format_username($UserID, $TorrentUploader)?> <?=time_diff($TorrentTime);?>
 <? if($Seeders == 0){ ?>
 						<?
-						if ($LastActive != '0000-00-00 00:00:00' && time() - strtotime($LastActive) >= 1209600) { ?>
+						if ($LastActive != '0000-00-00 00:00:00' && time() - strtotime($LastActive) >= 432000) { ?>
 							<br /><strong>Last active: <?=time_diff($LastActive);?></strong>
 						<?} else { ?>
 						<br />Last active: <?=time_diff($LastActive);?>

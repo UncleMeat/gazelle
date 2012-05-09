@@ -73,7 +73,7 @@ tg.Name,
 t.Size
 FROM torrents AS t 
 INNER JOIN collages_torrents AS c ON t.GroupID=c.GroupID AND c.CollageID='$CollageID'
-INNER JOIN torrents_group AS tg ON tg.ID=t.GroupID AND tg.CategoryID='1'
+INNER JOIN torrents_group AS tg ON tg.ID=t.GroupID
 ORDER BY t.GroupID ASC, t.$Preference";
 
 $DB->query($SQL);
@@ -83,7 +83,7 @@ $TotalSize = 0;
 
 if(count($Downloads)) {
 	foreach($Downloads as $Download) {
-		$TorrentIDs[] = $Download[2];
+		$TorrentIDs[] = $Download[1];
 	}
 	$DB->query("SELECT TorrentID, file FROM torrents_files WHERE TorrentID IN (".implode(',', $TorrentIDs).")");
 	$Torrents = $DB->to_array('TorrentID',MYSQLI_ASSOC,false);
@@ -120,6 +120,7 @@ $Settings = array(implode(':',$_REQUEST['list']),$_REQUEST['preference']);
 $Zip->close_stream();
 
 $Settings = array(implode(':',$_REQUEST['list']),$_REQUEST['preference']);
+
 if(!isset($LoggedUser['Collector']) || $LoggedUser['Collector'] != $Settings) {
 	$DB->query("SELECT SiteOptions FROM users_info WHERE UserID='$LoggedUser[ID]'");
 	list($Options) = $DB->next_record(MYSQLI_NUM,false);

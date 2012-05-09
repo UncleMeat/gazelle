@@ -9,8 +9,8 @@ if(!check_perms('site_delete_tag')) {
 	error(403);
 }
 
-$DB->query("SELECT Name FROM tags WHERE ID='$TagID'");
-if (list($TagName) = $DB->next_record()) {
+$DB->query("SELECT Name, TagType FROM tags WHERE ID='$TagID'");
+if (list($TagName, $TagType) = $DB->next_record()) {
 	$DB->query("INSERT INTO group_log (GroupID, UserID, Time, Info)
 				VALUES ('$GroupID',".$LoggedUser['ID'].",'".sqltime()."','".db_string('Tag "'.$TagName.'" removed from group')."')");
 }
@@ -18,19 +18,17 @@ if (list($TagName) = $DB->next_record()) {
 $DB->query("DELETE FROM torrents_tags_votes WHERE GroupID='$GroupID' AND TagID='$TagID'");
 $DB->query("DELETE FROM torrents_tags WHERE GroupID='$GroupID' AND TagID='$TagID'");
 
-
-
 $Cache->delete_value('torrents_details_'.$GroupID); // Delete torrent group cache
 update_hash($GroupID);
 
+// Decrease the tag count, if it's not in use any longer and not an official tag, delete it from the list.
 $DB->query("SELECT COUNT(GroupID) FROM torrents_tags WHERE TagID=".$TagID);
 list($Count) = $DB->next_record();
-if($Count < 1) {
-	$DB->query("SELECT Name FROM tags WHERE ID=".$TagID);
-	list($TagName) = $DB->next_record();
-	
-	$DB->query("DELETE FROM tags WHERE ID=".$TagID);
+if ($TagType == 'genre' || $Count > 0) {
+    $Count = $Count > 0 ? $Count : 0;
+    $DB->query("UPDATE tags SET Uses=$Count");
+} else {
+    $DB->query("DELETE FROM tags WHERE ID=".$TagID." AND TagType='other'");
 }
-
 header('Location: '.$_SERVER['HTTP_REFERER']);
 ?>

@@ -33,6 +33,8 @@ if(isset($_GET['id'])) {
 	$Self = true;
 }
 
+show_header($Title,'bbcode');
+
 if (isset($LoggedUser['PostsPerPage'])) {
 	$PerPage = $LoggedUser['PostsPerPage'];
 } else {
@@ -57,7 +59,7 @@ else {
 
 $Comments = $DB->query("SELECT
 	SQL_CALC_FOUND_ROWS
-	m.ID,
+	m.ID AS UserID,
 	m.Username,
 	m.PermissionID,
 	m.Enabled,
@@ -66,12 +68,12 @@ $Comments = $DB->query("SELECT
 	i.Donor,
 	i.Warned,
 	
-	t.ID,
+	t.ID AS TorrentID,
 	t.GroupID,
 	
 	tg.Name,
 	
-	tc.ID,
+	tc.ID AS PostID,
 	tc.Body,
 	tc.AddedTime,
 	tc.EditedTime,
@@ -97,13 +99,14 @@ $Comments = $DB->query("SELECT
 
 $DB->query("SELECT FOUND_ROWS()");
 list($Results) = $DB->next_record();
+
 $Pages=get_pages($Page,$Results,$PerPage, 11);
 
 $DB->set_query_id($Comments);
+
 $GroupIDs = $DB->collect('GroupID');
 
-$DB->set_query_id($Comments);
-show_header($Title,'bbcode');
+$DB->set_query_id($Comments); 
 
 ?><div class="thin">
 	<h2>
@@ -115,7 +118,7 @@ show_header($Title,'bbcode');
 	<br /><br />
 	<?=$Pages?>
 	</div>
-<?php
+<?
 
 while(list($UserID, $Username, $Class, $Enabled, $Avatar, $Donor, $Warned, $TorrentID, $GroupID, $Title, $PostID, $Body, $AddedTime, $EditedTime, $EditorID, $EditorUsername) = $DB->next_record()) {
 	?>
