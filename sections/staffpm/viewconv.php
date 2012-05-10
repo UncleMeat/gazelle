@@ -45,14 +45,14 @@ if ($ConvID = (int)$_GET['id']) {
 ?>
 		[ &nbsp;<a href="staffpm.php?view=unanswered">All unanswered<?=$NumUnanswered>0?" ($NumUnanswered)":''?></a>&nbsp; ] &nbsp; 
 		[ &nbsp;<a href="staffpm.php?view=open">Open<?=$NumOpen>0?" ($NumOpen)":''?></a>&nbsp; ] &nbsp; 
-		[ &nbsp;<a href="staffpm.php?view=resolved">Resolved</a>&nbsp; ]
-            <?
-		// User
+		[ &nbsp;<a href="staffpm.php?view=resolved">Resolved</a>&nbsp; ]  &nbsp; 
+            [ &nbsp;<a href="staffpm.php?action=responses&convid=<?=$ConvID?>">Common Answers</a>&nbsp; ]
+<?           // User
 	} else {
 ?>
 		[ &nbsp;<a href="staffpm.php">Back to inbox</a>&nbsp; ]
 <?
-	} 
+	}
       /*
 	// Staff only
 	if ($IsStaff) {

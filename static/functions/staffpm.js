@@ -81,11 +81,11 @@ function PreviewResponse(id) {
 		ajax.post('?action=preview', ToPost, function (data) {
 			document.getElementById('response_div_'+id).innerHTML = data;
 			$(div).toggle();
-			$('#response_message_'+id).toggle();
+			$('#response_editor_'+id).toggle();
 		});
 	} else {
 		$(div).toggle();
-		$('#response_message_'+id).toggle();
+		$('#response_editor_'+id).toggle();
 	}
 }
 
