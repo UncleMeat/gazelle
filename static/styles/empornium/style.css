@@ -248,12 +248,15 @@ ul.thin li { margin:0px 0px; padding:0px; }
     height: 24px;
 }
 
-#major_stats { 
-    position: absolute;
-    right: 20px;
-    top: 2px; 
-}
 
+#minor_stats { 
+    float:left;
+    margin: 0px;
+}
+#major_stats { 
+    float:right;
+    margin: 0 0 0 10px;
+}
 
 #userinfo_username { 
     display:inline;
@@ -1145,6 +1148,7 @@ table.bb_holder td {
 .bb_smiley_holder {
     text-align: center; 
     padding: 0px; 
+    max-width:100%;
 }
  
 select.bb_button { 
@@ -1154,6 +1158,23 @@ select.bb_button {
     color: #000000; 
     height: 24px;
 }
+
+.bb_buttons_left {
+    float: left; 
+    text-align: left; 
+    margin-top: 0px;
+}
+
+.bb_buttons_right {
+    float: right;
+    margin-top: 3px;
+}
+.bb_buttons_right div {
+    float: left; 
+    text-align: left;
+    margin: 3px 20px 0 0;
+}
+
 
 a.bb_button { 
     padding:3px 6px; 

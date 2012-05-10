@@ -156,7 +156,7 @@ if ($CurrentNews === false) {
 }
 
 if ($MyNews < $CurrentNews) {
-	$Alerts[] = '<a href="index.php">'.'New Announcement!'.'</a>';
+	$Alerts[] = '<a href="index.php">New Announcement!</a>';
 }
 
 //Staff PM
@@ -165,11 +165,10 @@ if ($NewStaffPMs === false) {
 	$DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE UserID='".$LoggedUser['ID']."' AND Unread = '1'");
 	list($NewStaffPMs) = $DB->next_record();
 	$Cache->cache_value('staff_pm_new_'.$LoggedUser['ID'], $NewStaffPMs, 0);
-      //$NumStaffPMsDisplay = $NewStaffPMs;
 }  
 
 if ($NewStaffPMs > 0) {
-	$Alerts[] = '<a href="staffpm.php">'.'You have '.$NewStaffPMs.(($NewStaffPMs > 1) ? ' new staff messages' : ' new staff message').'</a>';
+	$Alerts[] = '<a href="staffpm.php?action=user_inbox">You have '.$NewStaffPMs.(($NewStaffPMs > 1) ? ' new staff messages' : ' new staff message').'</a>';
 }
 
 //Inbox
@@ -181,13 +180,13 @@ if ($NewMessages === false) {
 }
 
 if ($NewMessages > 0) {
-	$Alerts[] = '<a href="inbox.php">'.'You have '.$NewMessages.(($NewMessages > 1) ? ' new messages' : ' new message').'</a>';
+	$Alerts[] = '<a href="inbox.php">You have '.$NewMessages.(($NewMessages > 1) ? ' new messages' : ' new message').'</a>';
 }
 
 if($LoggedUser['RatioWatch']) {
-	$Alerts[] = '<a href="rules.php?p=ratio">'.'Ratio Watch'.'</a>: '.'You have '.time_diff($LoggedUser['RatioWatchEnds'], 3).' to get your ratio over your required ratio or your leeching abilities will be disabled.';
+	$Alerts[] = '<a href="rules.php?p=ratio">Ratio Watch</a>: You have '.time_diff($LoggedUser['RatioWatchEnds'], 3).' to get your ratio over your required ratio or your leeching abilities will be disabled.';
 } else if($LoggedUser['CanLeech'] != 1) {
-	$Alerts[] = '<a href="rules.php?p=ratio">'.'Ratio Watch'.'</a>: '.'Your downloading privileges are disabled until you meet your required ratio.';
+	$Alerts[] = '<a href="rules.php?p=ratio">Ratio Watch</a>: Your downloading privileges are disabled until you meet your required ratio.';
 }
 
 if (check_perms('site_torrents_notify')) {
@@ -219,26 +218,28 @@ if(check_perms('site_collages_subscribe')) {
 			$Cache->cache_value('collage_subs_user_new_'.$LoggedUser['ID'], $NewCollages, 0);
 	}
 	if ($NewCollages > 0) {
-		$Alerts[] = '<a href="userhistory.php?action=subscribed_collages">'.'You have '.$NewCollages.(($NewCollages > 1) ? ' new collage updates' : ' new collage update').'</a>';
+		$Alerts[] = '<a href="userhistory.php?action=subscribed_collages">You have '.$NewCollages.(($NewCollages > 1) ? ' new collage updates' : ' new collage update').'</a>';
 	}
 }
 
 if (check_perms('users_mod')) {
-	$ModBar[] = '<a href="tools.php">'.'Toolbox'.'</a>';
-
+	$ModBar[] = '<a href="tools.php">Toolbox</a>';
+}
+//changed check so that FLS as well as staff can see PM's (always restricted by userclass anyway so its just a nicety for FLS)
+if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {
 	$NumStaffPMs = $Cache->get_value('num_staff_pms_'.$LoggedUser['ID']);
 	if ($NumStaffPMs === false) {
-		//$DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE Status='Unanswered' AND (AssignedToUser=".$LoggedUser['ID']." OR (Level >= ".max(700,$Classes[MOD]['Level'])." AND Level <=".$LoggedUser['Class']."))");
-		$DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE Status='Unanswered' AND (AssignedToUser=".$LoggedUser['ID']." OR (Level >= 500 AND Level <=".$LoggedUser['Class']."))");
+		//$DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE Status='Unanswered' AND (AssignedToUser=".$LoggedUser['ID']." OR (Level >= 500 AND Level <=".$LoggedUser['Class']."))");
+		//removed Level>=500 clause so staff see num of all unanswered pm's they can answer
+            $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations 
+                               WHERE Status='Unanswered' 
+                                 AND (AssignedToUser=".$LoggedUser['ID']." OR Level <={$LoggedUser['Class']})");
 		list($NumStaffPMs) = $DB->next_record();
 		$Cache->cache_value('num_staff_pms_'.$LoggedUser['ID'], $NumStaffPMs , 1000);
 	}
-      //$NumStaffPMsDisplay = $NumStaffPMs;
-	
-	if ($NumStaffPMs > 0) {
-		$ModBar[] = '<a href="staffpm.php">'.$NumStaffPMs.' Staff PMs</a>';
-	}
+	if ($NumStaffPMs > 0) $ModBar[] = '<a href="staffpm.php">'.$NumStaffPMs.' Staff PMs</a>';
 }
+
 if(check_perms('admin_reports')) {
 	$NumTorrentReports = $Cache->get_value('num_torrent_reportsv2');
 	if ($NumTorrentReports === false) {

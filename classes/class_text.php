@@ -694,8 +694,8 @@ EXPLANATION OF PARSER LOGIC
        
       function is_color_attrib($Attrib) {
             static $ColorAttribs;
-            if (!$ColorAttribs) // only build it once per page 
-                $ColorAttribs = array('aqua', 'pink', 'black', 'blue', 'lightblue', 'fuchsia', 'lightgreen', 'green', 'grey', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'white', 'yellow');
+            if (!$ColorAttribs) // only build it once per page  
+                $ColorAttribs = array('aqua', 'aquamarine', 'magenta', 'darkmagenta', 'slategrey', 'pink', 'hotpink', 'black', 'wheat', 'midnightblue', 'forestgreen', 'blue', 'lightblue', 'fuchsia', 'lightgreen', 'green', 'grey', 'lightgrey', 'lime', 'maroon', 'navy', 'olive', 'khaki', 'darkkhaki', 'gold', 'goldenrod', 'darkgoldenrod', 'purple', 'violet', 'red', 'crimson', 'firebrick', 'gainsboro', 'silver', 'teal', 'linen', 'aliceblue', 'lavender', 'white', 'whitesmoke', 'lightyellow', 'yellow');
 		
             return (in_array($Attrib, $ColorAttribs) || preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/', $Attrib));
       }
@@ -747,7 +747,7 @@ EXPLANATION OF PARSER LOGIC
 			}
 			switch($Block['Type']) {
                         case 'mcom':  // doh! cannot be advanced if we want to mod comment normal users posts
-                              $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[Please read the <a href="rules.php">Rules</a>]</div><div class="clear"></div></div>';
+                              $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[ <a href="forums.php?action=viewforum&forumid=17">Help</a> | <a href="rules.php">Rules</a> ]</div><div class="clear"></div></div>';
                               break;
 				case 'table':
                               $InlineStyle = $this->Advanced ? $this->get_color_width_attributes($Block['Attr']) : FALSE;
@@ -1075,7 +1075,7 @@ EXPLANATION OF PARSER LOGIC
         <table class="bb_holder">
           <tbody><tr>
             <td class="colhead" style="padding: 2px 6px">
-                <div style="float: left; text-align: left; margin-top: 0px;">
+                <div class="bb_buttons_left">
              
                     <a class="bb_button" onclick="tag('b', '<?=$textarea;?>')" title="Bold text: [b]text[/b]" alt="B"><b>B</b></a>
                     <a class="bb_button" onclick="tag('i', '<?=$textarea;?>')" title="Italic text: [i]text[/i]" alt="I"><i>I</i></a>
@@ -1085,10 +1085,6 @@ EXPLANATION OF PARSER LOGIC
                 <!-- <a class="bb_button" onclick="tag('img')" title="Insert image: [img]http://image_url[/img]" alt="Img">Img</a>-->
                     <a class="bb_button" onclick="cimage('<?=$textarea;?>')" title="Insert image: [img]http://image_url[/img]" alt="Image">img</a>
                     <a class="bb_button" onclick="tag('code', '<?=$textarea;?>')" title="Code display: [code]code[/code]" alt="Code">Code</a>
-                    
-       <? if ( isset($LoggedUser['Permissions']['site_advanced_tags']) &&  $LoggedUser['Permissions']['site_advanced_tags']) { ?>
-                    <a class="bb_button" onclick="table('<?=$textarea;?>')" title="Table: [table][tr][td]text[/td][td]text[/td][/tr][/table]" alt="Table">Table</a>
-       <? }  ?>
                     <a class="bb_button" onclick="tag('quote', '<?=$textarea;?>')" title="Quote text: [quote]text[/quote]" alt="Quote">Quote</a>
 
                 <select class="bb_button" name="fontfont" id="fontfont<?=$textarea;?>" onchange="font('font',this.value,'<?=$textarea;?>');" title="Font face">
@@ -1114,19 +1110,31 @@ EXPLANATION OF PARSER LOGIC
                   <option value="10">10</option>
                 </select>
                     
-                <a class="bb_button" onclick="colorpicker('<?=$textarea;?>');" title="Select Color" alt="Colors">Colors</a>
+                <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','color');" title="Select Text Color" alt="Colors">Colors</a>
               
-	<?  if(check_perms('site_moderate_forums')) { ?>
-                <a class="bb_button" style="margin-left: 40px; border: 3px solid #600;" onclick="tag('mcom', '<?=$textarea;?>')" title="Staff Comment: [mcom]text[/mcom]" alt="Mod comment">Mod</a>
-       <? }  ?>  
               </div>
-              <div style="float: right; margin-top: 3px;"> 
-                  <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center', '<?=$textarea;?>')" title="Align - center" alt="Center" /> 
-                  <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left', '<?=$textarea;?>')" title="Align - left" alt="Left" /> 
-                  <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify', '<?=$textarea;?>')" title="Align - justify" alt="Justify" />
-                  <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right', '<?=$textarea;?>')" title="Align - right" alt="Right" /> 
-                  <img class="bb_icon" src="<?=get_symbol_url('text_uppercase.png') ?>" onclick="text('up', '<?=$textarea;?>')" title="To Uppercase" alt="Up" /> 
-                  <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low', '<?=$textarea;?>')" title="To Lowercase" alt="Low" />
+              <div  class="bb_buttons_right">
+                <div > 
+
+
+               <? if ( isset($LoggedUser['Permissions']['site_advanced_tags']) &&  $LoggedUser['Permissions']['site_advanced_tags']) { ?>
+
+                        <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','bg');" title="Background: [bg=color]text[/bg]" alt="Background">Bg</a>
+
+                        <a class="bb_button" onclick="table('<?=$textarea;?>')" title="Table: [table][tr][td]text[/td][td]text[/td][/tr][/table]" alt="Table">Table</a>
+               <? }  ?>
+
+
+              <?  if(check_perms('site_moderate_forums')) { ?>
+                        <a class="bb_button" style="border: 3px solid #600;" onclick="tag('mcom', '<?=$textarea;?>')" title="Staff Comment: [mcom]text[/mcom]" alt="Mod comment">Mod</a>
+               <? }  ?>  
+                 </div> 
+                      <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center', '<?=$textarea;?>')" title="Align - center" alt="Center" /> 
+                      <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left', '<?=$textarea;?>')" title="Align - left" alt="Left" /> 
+                      <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify', '<?=$textarea;?>')" title="Align - justify" alt="Justify" />
+                      <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right', '<?=$textarea;?>')" title="Align - right" alt="Right" /> 
+                      <img class="bb_icon" src="<?=get_symbol_url('text_uppercase.png') ?>" onclick="text('up', '<?=$textarea;?>')" title="To Uppercase" alt="Up" /> 
+                      <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low', '<?=$textarea;?>')" title="To Lowercase" alt="Low" />
               </div> 
               </td>
           </tr> 

@@ -1,4 +1,9 @@
 <?
+// FLS+Staff
+if ($IsFLS) {
+    include(SERVER_ROOT.'/sections/staffpm/functions.php');
+    list($NumMy, $NumUnanswered, $NumOpen) = get_num_staff_pms($LoggedUser['ID'], $LoggedUser['Class']);
+}
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
 
@@ -31,7 +36,24 @@ if ($ConvID = (int)$_GET['id']) {
 <div class="thin">
 	<h2>Staff PM - <?=display_str($Subject)?></h2>
 	<div class="linkbox">
+          
+<? 	if ($IsStaff) { ?>
+		[ &nbsp;<a href="staffpm.php?view=my">My unanswered<?=$NumMy>0?" ($NumMy)":''?></a>&nbsp; ] &nbsp; 
+<? 	} 
+	// FLS/Staff
+	if ($IsFLS) {
+?>
+		[ &nbsp;<a href="staffpm.php?view=unanswered">All unanswered<?=$NumUnanswered>0?" ($NumUnanswered)":''?></a>&nbsp; ] &nbsp; 
+		[ &nbsp;<a href="staffpm.php?view=open">Open<?=$NumOpen>0?" ($NumOpen)":''?></a>&nbsp; ] &nbsp; 
+		[ &nbsp;<a href="staffpm.php?view=resolved">Resolved</a>&nbsp; ]
+            <?
+		// User
+	} else {
+?>
+		[ &nbsp;<a href="staffpm.php">Back to inbox</a>&nbsp; ]
 <?
+	} 
+      /*
 	// Staff only
 	if ($IsStaff) {
 ?>
@@ -41,6 +63,7 @@ if ($ConvID = (int)$_GET['id']) {
 
 	// FLS/Staff
 	if ($IsFLS) {
+          
 ?>
 		<a href="staffpm.php?view=unanswered">[All unanswered]</a>
 		<a href="staffpm.php?view=open">[Open]</a>
@@ -52,7 +75,7 @@ if ($ConvID = (int)$_GET['id']) {
 		<a href="staffpm.php">[Back to inbox]</a>
 <?
 	}
-
+        */
 ?>
 		<br />
 		<br />

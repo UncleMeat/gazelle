@@ -1,4 +1,32 @@
 <?
+function get_num_staff_pms($UserID, $UserLevel){
+        global $DB, $Cache;  
+        $NumUnanswered = $Cache->get_value('num_staff_pms_'.$UserID);
+        if ($NumUnanswered === false) {
+            $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations 
+                                 WHERE (AssignedToUser=$UserID OR Level <=$UserLevel) AND Status='Unanswered'");
+            list($NumUnanswered) = $DB->next_record();
+            $Cache->cache_value('num_staff_pms_'.$UserID, $NumUnanswered , 1000);
+        }
+        $NumOpen = $Cache->get_value('num_staff_pms_open_'.$UserID);
+        if ($NumOpen === false) {
+            $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations 
+                                 WHERE (AssignedToUser=$UserID OR Level <=$UserLevel) AND Status IN ('Open', 'Unanswered')");
+            list($NumOpen) = $DB->next_record();
+            $Cache->cache_value('num_staff_pms_open_'.$UserID, $NumOpen , 1000);
+        }
+        $NumMy = $Cache->get_value('num_staff_pms_my_'.$UserID);
+        if ($NumMy === false) {
+            $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations 
+                                 WHERE (AssignedToUser=$UserID OR Level =$UserLevel) AND Status='Unanswered'");
+            list($NumMy) = $DB->next_record();
+            $Cache->cache_value('num_staff_pms_my_'.$UserID, $NumMy , 1000);
+        }
+        return array($NumMy, $NumUnanswered, $NumOpen);
+}
+
+
+
 function print_compose_staff_pm($Hidden = true, $Text = false) { 
         global $LoggedUser;  
         if (!$Text){
