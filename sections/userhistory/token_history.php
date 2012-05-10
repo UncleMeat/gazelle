@@ -49,7 +49,7 @@ $DB->query("SELECT SQL_CALC_FOUND_ROWS
 			   f.Expired,			
 			   f.Downloaded,
 			   f.Uses,
-			   g.Name,
+			   g.Name
 			FROM users_freeleeches AS f
 			JOIN torrents AS t ON t.ID = f.TorrentID
 			JOIN torrents_group AS g ON g.ID = t.GroupID
