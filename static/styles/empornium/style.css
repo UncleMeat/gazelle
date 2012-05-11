@@ -7,8 +7,12 @@
 * {
     padding: 0;
     margin: 0;
+    outline: 0pt none;
 }
 
+:focus {
+    outline: 0pt none;
+}
 html {
     width: 100%;
 }
@@ -248,12 +252,15 @@ ul.thin li { margin:0px 0px; padding:0px; }
     height: 24px;
 }
 
-#major_stats { 
-    position: absolute;
-    right: 20px;
-    top: 2px; 
-}
 
+#minor_stats { 
+    float:left;
+    margin: 0px;
+}
+#major_stats { 
+    float:right;
+    margin: 0 0 0 10px;
+}
 
 #userinfo_username { 
     display:inline;
@@ -626,6 +633,9 @@ tr {
 tr.rowa {
     background-color: #E1E9F2;
 }
+tr.rowb {
+    background-color: white;
+}
 
 td {
     border: 1px solid #98AAB1;
@@ -788,8 +798,21 @@ ul.poll li.graph {
     width:850px;
     margin-left:auto;
     margin-right:auto;
-    margin-bottom:15px;
+    margin-bottom:0px;
+    /*margin-bottom:15px; */
 }
+.filter_slidetoggle {
+    width:836px;
+    margin: 2px auto 15px;
+    height:20px;
+    text-align: center;
+    background-color: white;
+    border: 1px solid #98AAB1;
+    padding: 6px;
+    font-weight: bold;
+    font-size: 14pt;
+}
+
 
 .filter_torrents .submit {
     text-align:right;
@@ -845,7 +868,7 @@ ul.poll li.graph {
 
 .torrent {
     font-weight:bold;
-    background-color:#E1E9F2;
+    /*background-color:#E1E9F2;*/
 }
 .torrent span {
     font-weight:normal;
@@ -1145,6 +1168,7 @@ table.bb_holder td {
 .bb_smiley_holder {
     text-align: center; 
     padding: 0px; 
+    max-width:100%;
 }
  
 select.bb_button { 
@@ -1154,6 +1178,23 @@ select.bb_button {
     color: #000000; 
     height: 24px;
 }
+
+.bb_buttons_left {
+    float: left; 
+    text-align: left; 
+    margin-top: 0px;
+}
+
+.bb_buttons_right {
+    float: right;
+    margin-top: 3px;
+}
+.bb_buttons_right div {
+    float: left; 
+    text-align: left;
+    margin: 3px 20px 0 0;
+}
+
 
 a.bb_button { 
     padding:3px 6px; 

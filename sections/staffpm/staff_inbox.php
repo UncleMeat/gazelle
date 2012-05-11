@@ -1,17 +1,16 @@
 <?
+include(SERVER_ROOT.'/sections/staffpm/functions.php');
 
 show_header('Staff Inbox');
 
 $View = display_str($_GET['view']);
 $UserLevel = $LoggedUser['Class'];
 
+list($NumMy, $NumUnanswered, $NumOpen) = get_num_staff_pms($LoggedUser['ID'], $UserLevel);
+
 // Setup for current view mode
 $SortStr = "IF(AssignedToUser = ".$LoggedUser['ID'].",0,1) ASC, ";
 switch ($View) {
-	case 'unanswered':
-		$ViewString = "Unanswered";
-		$WhereCondition = "WHERE (Level <= $UserLevel OR AssignedToUser='".$LoggedUser['ID']."') AND Status='Unanswered'";
-		break;
 	case 'open':
 		$ViewString = "All open";
 		$WhereCondition = "WHERE (Level <= $UserLevel OR AssignedToUser='".$LoggedUser['ID']."') AND Status IN ('Open', 'Unanswered')";
@@ -26,11 +25,17 @@ switch ($View) {
 		$ViewString = "My unanswered";
 		$WhereCondition = "WHERE (Level = $UserLevel OR AssignedToUser='".$LoggedUser['ID']."') AND Status='Unanswered'";
 		break;
+	case 'unanswered':
+	default:
+		$ViewString = "All unanswered";
+		$WhereCondition = "WHERE (Level <= $UserLevel OR AssignedToUser='".$LoggedUser['ID']."') AND Status='Unanswered'";
+		break;
+        /*
 	default:
 		if ($UserLevel >= 600) {        // 700) {
 			$ViewString = "My unanswered";
 			//$WhereCondition = "WHERE ((Level >= ".max($Classes[MOD]['Level'],700)." AND Level <= $UserLevel) OR AssignedToUser='".$LoggedUser['ID']."') AND Status='Unanswered'";
-			$WhereCondition = "WHERE ((Level >= 500 AND Level <= $UserLevel) OR AssignedToUser='".$LoggedUser['ID']."') AND Status='Unanswered'";
+			$WhereCondition = "WHERE ((Level >= 600 AND Level <= $UserLevel) OR AssignedToUser='".$LoggedUser['ID']."') AND Status='Unanswered'";
 		} elseif ($UserLevel == 500) {        //650) {
 			// Forum Mods
 			$ViewString = "My Unanswered";
@@ -40,7 +45,7 @@ switch ($View) {
 			$ViewString = "Unanswered";
 			$WhereCondition = "WHERE (Level <= $UserLevel OR AssignedToUser='".$LoggedUser['ID']."') AND Status='Unanswered'";
 		}
-		break;
+		break; */
 }
 
 list($Page,$Limit) = page_limit(MESSAGES_PER_PAGE);
@@ -82,12 +87,13 @@ $Row = 'a';
 <div class="thin">
 	<h2><?=$ViewString?> Staff PMs</h2>
 	<div class="linkbox">
-<? 	if ($IsStaff) {
-?>		<a href="staffpm.php">[My unanswered]</a>
+<? 	if ($IsStaff) { ?>
+		[ &nbsp;<a href="staffpm.php?view=my">My unanswered<?=$NumMy>0?" ($NumMy)":''?></a>&nbsp; ] &nbsp; 
 <? 	} ?>
-		<a href="staffpm.php?view=unanswered">[All unanswered]</a>
-		<a href="staffpm.php?view=open">[Open]</a>
-		<a href="staffpm.php?view=resolved">[Resolved]</a>
+		[ &nbsp;<a href="staffpm.php?view=unanswered">All unanswered<?=$NumUnanswered>0?" ($NumUnanswered)":''?></a>&nbsp; ] &nbsp; 
+		[ &nbsp;<a href="staffpm.php?view=open">Open<?=$NumOpen>0?" ($NumOpen)":''?></a>&nbsp; ] &nbsp; 
+		[ &nbsp;<a href="staffpm.php?view=resolved">Resolved</a>&nbsp; ] &nbsp; 
+		[ &nbsp;<a href="staffpm.php?action=responses">Common Answers</a>&nbsp; ]
 		<br />
 		<br />
 		<?=$Pages?>
@@ -119,13 +125,15 @@ if ($DB->record_count() == 0) {
 <? 				if ($ViewString != 'Resolved' && $IsStaff) { ?>
 					<td width="10"><input type="checkbox" onclick="toggleChecks('messageform',this)" /></td>
 <? 				} ?>
-					<td width="35%">Subject</td>
-					<td width="18%">Sender</td>
-					<td>Date</td>
-					<td width="15%">Assigned to</td>
+					<td>Subject</td>
+					<td width="20%">Sender</td>
+					<td width="18%">Date</td>
+					<td width="18%">Assigned to</td>
 <?				if ($ViewString == 'Resolved') { ?>
-					<td width="13%">Resolved by</td>
-<?				} ?>
+					<td width="18%">Resolved by</td>
+<?				} else { ?>
+                              <td width="8%">Status</td>
+<?				}  ?>
 				</tr>
 <?
 
@@ -169,6 +177,8 @@ if ($DB->record_count() == 0) {
 					<td><?=$Assigned?></td>
 <?				if ($ViewString == 'Resolved') { ?>
 					<td><?=$ResolverStr?></td>
+<?				} else { ?>
+                              <td><?=$Status?></td>
 <?				} ?>
 				</tr>
 <?

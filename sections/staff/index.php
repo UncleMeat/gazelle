@@ -1,6 +1,6 @@
 <?
 enforce_login();
-show_header('Staff','bbcode,inbox');
+show_header('Staff','bbcode,inbox,jquery');
 
 include(SERVER_ROOT.'/sections/staff/functions.php');
 include(SERVER_ROOT.'/sections/staffpm/functions.php');
@@ -16,7 +16,7 @@ list($FrontLineSupport, $Staff, $Admins) = $SupportStaff;
 		<div id="below_box">
 			<p>If you are looking for help with a general question, we appreciate it if you would only message through the staff inbox, where we can all help you.</p>
                   <p>You can do that by
-                              <a href="#"  class="contact_link" onClick="$('#compose').toggle();">sending a message to the Staff Inbox</a>
+                              <a href="#"  class="contact_link" onClick="jQuery('#compose').slideToggle('slow');">sending a message to the Staff Inbox</a>
                               <em>Please do not PM individual staff members for support!</em> </p>
             </div>
 		<? print_compose_staff_pm(true); ?>
