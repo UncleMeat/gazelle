@@ -51,11 +51,12 @@ $HTTPS = ($_SERVER['SERVER_PORT'] == 443) ? 'ssl_' : '';
 	<link href="<?=$LoggedUser['StyleURL']?>" title="External CSS" rel="stylesheet" type="text/css" media="screen" />
 	<? } ?>
 <? } ?>
-
+       
 	<script src="<?=STATIC_SERVER?>functions/sizzle.js" type="text/javascript"></script>
 	<script src="<?=STATIC_SERVER?>functions/script_start.js?v=<?=filemtime(SERVER_ROOT.'/static/functions/script_start.js')?>" type="text/javascript"></script>
 	<script src="<?=STATIC_SERVER?>functions/class_ajax.js?v=<?=filemtime(SERVER_ROOT.'/static/functions/class_ajax.js')?>" type="text/javascript"></script>
-	<script type="text/javascript">//<![CDATA[
+	
+      <script type="text/javascript">//<![CDATA[
 		var authkey = "<?=$LoggedUser['AuthKey']?>";
 		var userid = <?=$LoggedUser['ID']?>;
 	//]]></script>
@@ -71,7 +72,7 @@ foreach ($Scripts as $Script) {
 <?
  	if ($Script == 'jquery') { ?>
 <script type="text/javascript">
-  $.noConflict();
+        $.noConflict();
 </script>
 <?
 	} ?>

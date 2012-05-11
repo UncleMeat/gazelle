@@ -2,7 +2,7 @@
 
 include(SERVER_ROOT.'/sections/staffpm/functions.php');
 
-show_header('Staff PMs', 'staffpm,bbcode,inbox');
+show_header('Staff PMs', 'staffpm,bbcode,inbox,jquery');
 
 // Get messages
 $StaffPMs = $DB->query("
@@ -21,12 +21,13 @@ $StaffPMs = $DB->query("
 );
 
 // Start page
+                //<a href="#" onClick="$('#compose').toggle();">[Compose New]</a>
 ?>
 <div class="thin">
 	<h2>Staff PMs</h2>
 	<div class="box pad">
           <div class="linkbox">
-                <a href="#" onClick="$('#compose').toggle();">[Compose New]</a>
+                <a href="#" onClick="jQuery('#compose').slideToggle('slow');">[Compose New]</a>
           </div>
           <? print_compose_staff_pm(true); ?>
       </div>

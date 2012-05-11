@@ -297,13 +297,13 @@ if (((!empty($_GET['action']) && strtolower($_GET['action']) == "advanced") || (
 
 
 
-show_header('Browse Torrents', 'browse,overlib');
+show_header('Browse Torrents', 'browse,overlib,jquery');
 
 // List of pages
 $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
 ?>
 <form name="filter" method="get" action=''>
-    <div class="filter_torrents">
+    <div id="search_box" class="filter_torrents hide">
         <h3>
             Filter		
             <? if ($AdvancedSearch) { ?>
@@ -445,8 +445,9 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
             </div>
         </div>
     </div>
+   
 </form>
-
+ <div class="filter_slidetoggle"><a href="#" onclick="jQuery('#search_box').slideToggle('slow')">Open Search</a> </div>
 <div class="linkbox"><?= $Pages ?></div>
 <?
 if (count($Results) == 0) {
@@ -495,7 +496,7 @@ $Bookmarks = all_bookmarks('torrent');
     </tr>
     <?
 // Start printing torrent list
-
+$row='b';
     foreach ($Results as $GroupID => $Data) {       
         list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, $NewCategoryID, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
         $TagList = explode(' ', str_replace('_', '.', $TagList));
@@ -524,9 +525,10 @@ $Bookmarks = all_bookmarks('torrent');
         } elseif (in_array($TorrentID, $TokenTorrents)) {
             $AddExtra = '<strong>/ Personal Freeleech!</strong>';
         }
-                
+        
+        $row = ($row == 'a'? 'b' : 'a');
         ?>
-        <tr class="torrent">
+        <tr class="torrent row<?=$row?>">
             <td class="center cats_col">
                 <? $CatImg = 'static/common/caticons/' . $NewCategories[$NewCategoryID]['image']; ?>
                 <div title="<?= $NewCategories[$NewCategoryID]['cat_desc'] ?>"><img src="<?= $CatImg ?>" />

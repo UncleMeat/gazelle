@@ -105,7 +105,7 @@ if ($ConvID = (int)$_GET['id']) {
 				<?=time_diff($SentDate, 2, true)?>
 
 			</div>
-			<div class="body"><?=$Text->full_format($Message)?></div>
+			<div class="body"><?=$Text->full_format($Message, true)?></div>
 		</div>
 		<div align="center" style="display: none"></div>
 <?

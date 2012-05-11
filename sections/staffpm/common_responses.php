@@ -79,7 +79,7 @@ while(list($ID, $Message, $Name) = $DB->next_record()) {
 					<input type="text" name="name" id="response_name_<?=$ID?>" size="87" value="<?=display_str($Name)?>" />
 				</div>
 				<div class="box pad" id="response_div_<?=$ID?>" style="text-align:left;">
-						<?=$Text->full_format($Message)?>
+						<?=$Text->full_format($Message, true)?>
 				</div>
 				<div class="pad hidden" id="response_editor_<?=$ID?>" >
                             <? $Text->display_bbcode_assistant("response_message_".$ID ); ?>

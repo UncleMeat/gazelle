@@ -7,8 +7,12 @@
 * {
     padding: 0;
     margin: 0;
+    outline: 0pt none;
 }
 
+:focus {
+    outline: 0pt none;
+}
 html {
     width: 100%;
 }
@@ -629,6 +633,9 @@ tr {
 tr.rowa {
     background-color: #E1E9F2;
 }
+tr.rowb {
+    background-color: white;
+}
 
 td {
     border: 1px solid #98AAB1;
@@ -791,8 +798,21 @@ ul.poll li.graph {
     width:850px;
     margin-left:auto;
     margin-right:auto;
-    margin-bottom:15px;
+    margin-bottom:0px;
+    /*margin-bottom:15px; */
 }
+.filter_slidetoggle {
+    width:836px;
+    margin: 2px auto 15px;
+    height:20px;
+    text-align: center;
+    background-color: white;
+    border: 1px solid #98AAB1;
+    padding: 6px;
+    font-weight: bold;
+    font-size: 14pt;
+}
+
 
 .filter_torrents .submit {
     text-align:right;
@@ -848,7 +868,7 @@ ul.poll li.graph {
 
 .torrent {
     font-weight:bold;
-    background-color:#E1E9F2;
+    /*background-color:#E1E9F2;*/
 }
 .torrent span {
     font-weight:normal;

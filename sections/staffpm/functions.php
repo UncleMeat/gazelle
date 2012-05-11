@@ -34,7 +34,7 @@ function print_compose_staff_pm($Hidden = true, $Text = false) {
             $Text = new TEXT;
         }
         ?>
-		<div id="compose" class="<?=($Hidden ? 'hidden' : '')?>">
+		<div id="compose" class="<?=($Hidden ? 'hide' : '')?>">
              <? if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {  ?>
                     <div class="box pad">
                       <strong class="important_text">Are you sure you want to send a message to staff? You are staff yourself you know...</strong>

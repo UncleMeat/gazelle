@@ -3,19 +3,6 @@ enforce_login();
 
 if(!isset($_REQUEST['action']))
 	$_REQUEST['action'] = '';
-/*
-// Get user level
-$DB->query("
-	SELECT
-		i.SupportFor,
-		p.DisplayStaff
-	FROM users_info as i
-	JOIN users_main as m ON m.ID = i.UserID
-	JOIN permissions as p ON p.ID = m.PermissionID
-	WHERE i.UserID = ".$LoggedUser['ID']
-);
-list($SupportFor, $DisplayStaff) = $DB->next_record();
-*/
 
 // get vars from LoggedUser
 $SupportFor =  $LoggedUser['SupportFor'];
