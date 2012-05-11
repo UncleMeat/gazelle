@@ -101,7 +101,7 @@ $NewCategories = $Cache->get_value('new_categories');
 if (!$NewCategories) {
     $DB->query('SELECT id, name, image, cat_desc FROM categories ORDER BY id');
     $NewCategories = $DB->to_array('id');
-    $Cache->cache_value('new_categories', $NewCategories);
+    $Cache->cache_value('new_categories', $NewCategories, 0);
 }
 $Debug->set_flag('Loaded new categories');
 

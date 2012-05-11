@@ -112,6 +112,7 @@ $ForumsRevealVoters = array();
 $ForumsDoublePost = array();
 
 $CollageCats = array(0=>'Pesonal', 1=>'Theme', 2=>'Porn Star', 3=>'Studio', 4=>'Staff picks');
+$ArticleCats = array(0=>'Rules', 1=>'Tutorials');
 
 $ZIPGroups = array(
 	0 => 'MP3 (VBR) - High Quality',

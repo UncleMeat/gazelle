@@ -78,18 +78,6 @@ switch ($_REQUEST['action']){
 		include('managers/login_watch.php');
 		break;
 
-	case 'recommend':
-		include('managers/recommend_list.php');
-		break;
-
-	case 'recommend_add':
-		include('managers/recommend_add.php');
-		break;
-
-	case 'recommend_alter':
-		include('managers/recommend_alter.php');
-		break;
-
 	case 'email_blacklist':
 		include('managers/eb.php');
 		break;
@@ -165,7 +153,38 @@ switch ($_REQUEST['action']){
 
 		header('Location: index.php');
 		break;
-		
+	
+        case 'editarticle':
+        case 'takeeditarticle':
+        case 'articles':
+		include('managers/articles.php');
+                break;  
+            
+        case 'takearticle':
+                if(!check_perms('admin_manage_articles')){ error(403); }
+                $DB->query("SELECT Count(*) as c FROM articles WHERE TopicID='".db_string($_POST['topicid'])."'");
+                list($Count) = $DB->next_record();
+                if ($Count > 0) {
+                    error('The topic ID must be unique for the article');
+                }
+                $DB->query("INSERT INTO articles (Category, TopicID, Title, Description, Body, Time) VALUES ('".$_POST['category']."', '".db_string($_POST['topicid'])."', '".db_string($_POST['title'])."', '".db_string($_POST['description'])."', '".db_string($_POST['body'])."', '".sqltime()."')");
+
+                header('Location: tools.php?action=articles');
+                break;
+
+	case 'deletearticle':
+		if(!check_perms('admin_manage_articles')){ error(403); }
+		if(is_number($_GET['id'])){
+			authorize();
+                        $DB->query("SELECT TopicID FROM articles WHERE ID='".db_string($_GET['id'])."'");
+                        list($TopicID) = $DB->next_record();
+			$DB->query("DELETE FROM articles WHERE ID='".db_string($_GET['id'])."'");
+			$Cache->delete_value('article_'.$TopicID);
+		}
+
+		header('Location: tools.php?action=articles');
+		break;
+                
 	case 'tokens':
 		include('managers/tokens.php');
 		break;
