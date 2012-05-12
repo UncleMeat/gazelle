@@ -61,7 +61,7 @@ show_header('Manage articles','bbcode');
 			<input type="text" name="description" size="100" <? if(!empty($Description)) { echo 'value="'.display_str($Description).'"'; } ?> />
 			<br />
 			<h3>Body</h3>
-                  <? $Text->display_bbcode_assistant('textbody', true) ?>
+                  <? $Text->display_bbcode_assistant('textbody', get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])) ?>
                   <textarea id="textbody" name="body" class="long" rows="15"><? if(!empty($Body)) { echo display_str($Body); } ?></textarea> 
             </div>
             <br />
