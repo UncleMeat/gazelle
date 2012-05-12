@@ -700,19 +700,19 @@ EXPLANATION OF PARSER LOGIC
             return (in_array($Attrib, $ColorAttribs) || preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/', $Attrib));
       }
       
-      function get_color_width_attributes($Attrib) {
+      function get_multi_attributes($Attrib, $AllowMargin = true, $AllowColor = true, $AllowWidth = true) {
             $InlineStyle = '';
             if ( isset($Attrib) ) {
                 $attributes = explode(",", $Attrib);
                 if ($attributes) {
                     $InlineStyle = ' style="';
                     foreach($attributes as $att) {
-                        if($this->is_color_attrib($att)) {
+                        if($AllowColor && $this->is_color_attrib($att)) {
                             $InlineStyle .= 'background-color:'.$att.';';
-                        } elseif (preg_match('/^[0-9]{1,3}$/', $att)) {
+                        } elseif ($AllowWidth && preg_match('/^[0-9]{1,3}$/', $att)) {
                             if ( (int)$att > 100 ) $att = '100';
                             $InlineStyle .= 'width:'.$att.'%;';
-                        } elseif (in_array($att, array('left','center','right') )) {
+                        } elseif ($AllowMargin && in_array($att, array('left','center','right') )) {
                             switch($att){
                                 case 'left':
                                         $InlineStyle .= 'margin: 0px auto 0px 0px;';
@@ -763,7 +763,7 @@ EXPLANATION OF PARSER LOGIC
                               $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[ <a href="forums.php?action=viewforum&forumid=17">Help</a> | <a href=""articles.php?topic=rules">Rules</a> ]</div><div class="clear"></div></div>';
                               break;
 				case 'table':
-                              $InlineStyle = $this->Advanced ? $this->get_color_width_attributes($Block['Attr']) : FALSE;
+                              $InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr']) : FALSE;
 					if ($InlineStyle === FALSE) {
                                   	$Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
                               } else  {
@@ -786,14 +786,14 @@ EXPLANATION OF PARSER LOGIC
 					break;
 				case 'th':
 				case 'td':
-                              $InlineStyle = $this->Advanced ? $this->get_color_width_attributes($Block['Attr']) : FALSE;
+                              $InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr'], false) : FALSE;
 					if ($InlineStyle === FALSE) {
                                   	$Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
                               } else  
                                   $Str.='<'.$Block['Type'].' class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</'.$Block['Type'].'>';
 					break;
 				case 'bg':
-                              $InlineStyle = $this->Advanced ? $this->get_color_width_attributes($Block['Attr']) : FALSE;
+                              $InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr']) : FALSE;
 					if (!$InlineStyle || $InlineStyle =='') {
                                   	$Str.='[bg='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/bg]';
                               } else  

@@ -300,17 +300,18 @@ if (((!empty($_GET['action']) && strtolower($_GET['action']) == "advanced") || (
     $Action = 'action=advanced';
 }
 
+ 
+
+show_header('Browse Torrents', 'browse,overlib,jquery,jquery.cookie');
 
 
 
-show_header('Browse Torrents', 'browse,overlib,jquery');
-
-// List of pages
+// List of pages  
 $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
 ?>
 
 <form name="filter" method="get" action=''>
-    <div id="search_box" class="filter_torrents <?= empty($_GET['action']) ? 'hide' : ''; ?>">
+    <div id="search_box" class="filter_torrents"> 
         <h3>
             Filter		
             <? if ($AdvancedSearch) { ?>
@@ -452,10 +453,9 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
             </div>
         </div>
     </div>
-   
 </form>
- <div class="filter_slidetoggle"><a href="#" onclick="jQuery('#search_box').slideToggle('slow')">Open Search</a> </div>
-<div class="linkbox"><?= $Pages ?></div>
+ <div class="filter_slidetoggle"><a href="#" id="search_button">Open Search</a> </div>
+ <div class="linkbox"><?= $Pages ?></div>
 <?
 if (count($Results) == 0) {
     $DB->query("SELECT 
