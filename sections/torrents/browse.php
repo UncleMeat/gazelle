@@ -217,7 +217,6 @@ foreach (array('freetorrent') as $Search) {
     }
 }
 
-
 if (!empty($_GET['filter_cat'])) {
     $SS->set_filter('newcategoryid', array_keys($_GET['filter_cat']));
 }
@@ -309,12 +308,13 @@ show_header('Browse Torrents', 'browse,overlib,jquery');
 // List of pages
 $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
 ?>
+
 <form name="filter" method="get" action=''>
-    <div id="search_box" class="filter_torrents hide">
+    <div id="search_box" class="filter_torrents <?= empty($_GET['action']) ? 'hide' : ''; ?>">
         <h3>
             Filter		
             <? if ($AdvancedSearch) { ?>
-                (<a href="torrents.php?<? if (!empty($LoggedUser['SearchType'])) { ?>action=basic&amp;<? } echo get_url(array('action')); ?>">Basic Search</a>)
+                (<a href="torrents.php?action=basic&amp;<?=get_url(array('action')); ?>">Basic Search</a>)
             <? } else { ?>
                 (<a href="torrents.php?action=advanced&amp;<?= get_url(array('action')) ?>">Advanced Search</a>)
             <? } ?>
@@ -538,7 +538,7 @@ $row='b';
         <tr class="torrent row<?=$row?>">
             <td class="center cats_col">
                 <? $CatImg = 'static/common/caticons/' . $NewCategories[$NewCategoryID]['image']; ?>
-                <div title="<?= $NewCategories[$NewCategoryID]['cat_desc'] ?>"><img src="<?= $CatImg ?>" />
+                <div title="<?= $NewCategories[$NewCategoryID]['cat_desc'] ?>"><a href="torrents.php?filter_cat[<?=$NewCategoryID?>]=1"><img src="<?= $CatImg ?>" /></a></div>
             </td>
             <td>
                 <span>
