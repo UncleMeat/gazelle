@@ -393,7 +393,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                         ?>
                         <td>
                             <input type="checkbox" name="filter_cat[<?= ($Cat['id']) ?>]" id="cat_<?= ($Cat['id']) ?>" value="1" <? if (isset($_GET['filter_cat'][$Cat['id']])) { ?>checked="checked"<? } ?>/>
-                            <label for="cat_<?= ($Cat['id']) ?>"><?= $Cat['name'] ?></label>
+                            <label for="cat_<?= ($Cat['id']) ?>"><a href="torrents.php?filter_cat[<?=$Cat['id']?>]=1"><?= $Cat['name'] ?></a></label>
                         </td>
                     <? } ?>                           
                     <td colspan="<?= 7 - ($x % 7) ?>"></td>
