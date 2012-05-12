@@ -75,7 +75,7 @@ if(($CollageCount < $LoggedUser['Permissions']['MaxCollages']) && check_perms('s
 			</tr>
 			<tr>
 				<td colspan="2" class="center">
-					<strong>Please ensure your collage will be allowed under the <a href="rules.php?p=collages">rules</a></strong>
+					<strong>Please ensure your collage will be allowed under the <a href="articles.php?topic=collages">rules</a></strong>
 				</td>
 			</tr>
 			<tr>

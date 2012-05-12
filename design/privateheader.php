@@ -108,9 +108,9 @@ if ($Mobile) { ?>
 
                 </span>
                 <span class="inside_stat">
-                      <li id="stats_ratio"><a href="rules.php?p=ratio">Ratio</a>: <span class="stat"><?=ratio($LoggedUser['BytesUploaded'], $LoggedUser['BytesDownloaded'])?></span></li>
+                      <li id="stats_ratio"><a href="articles.php?topic=ratio">Ratio</a>: <span class="stat"><?=ratio($LoggedUser['BytesUploaded'], $LoggedUser['BytesDownloaded'])?></span></li>
     <?	if(!empty($LoggedUser['RequiredRatio']) && $LoggedUser['RequiredRatio']>0) {?>
-                      <li id="stats_required"><a href="rules.php?p=ratio">Required</a>: <span class="stat"><?=number_format($LoggedUser['RequiredRatio'], 2)?></span></li>
+                      <li id="stats_required"><a href="articles.php?topic=ratio">Required</a>: <span class="stat"><?=number_format($LoggedUser['RequiredRatio'], 2)?></span></li>
     <?	}  ?> 
                 </span>
             </ul>
@@ -185,9 +185,9 @@ if ($NewMessages > 0) {
 }
 
 if($LoggedUser['RatioWatch']) {
-	$Alerts[] = '<a href="rules.php?p=ratio">Ratio Watch</a>: You have '.time_diff($LoggedUser['RatioWatchEnds'], 3).' to get your ratio over your required ratio or your leeching abilities will be disabled.';
+	$Alerts[] = '<a href="articles.php?topic=ratio">'.'Ratio Watch'.'</a>: '.'You have '.time_diff($LoggedUser['RatioWatchEnds'], 3).' to get your ratio over your required ratio or your leeching abilities will be disabled.';
 } else if($LoggedUser['CanLeech'] != 1) {
-	$Alerts[] = '<a href="rules.php?p=ratio">Ratio Watch</a>: Your downloading privileges are disabled until you meet your required ratio.';
+	$Alerts[] = '<a href="articles.php?topic=ratio">'.'Ratio Watch'.'</a>: '.'Your downloading privileges are disabled until you meet your required ratio.';
 }
 
 if (check_perms('site_torrents_notify')) {
@@ -299,7 +299,8 @@ if(check_perms('admin_reports')) {
 			<li id="nav_forums"><a href="forums.php">Forums</a></li>
 			<li id="nav_irc"><a href="chat.php">IRC</a></li>
 			<li id="nav_top10"><a href="top10.php">Top 10</a></li>
-			<li id="nav_rules"><a href="rules.php">Rules</a></li>
+			<li id="nav_rules"><a href="articles.php?topic=rules">Rules</a></li>
+                        <li id="nav_rules"><a href="articles.php?topic=tutorials">Tutorials</a></li>
 			<li id="nav_staff"><a href="staff.php">Staff</a></li>
 		</ul>
 	</div>

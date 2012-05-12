@@ -747,7 +747,7 @@ EXPLANATION OF PARSER LOGIC
 			}
 			switch($Block['Type']) {
                         case 'mcom':  // doh! cannot be advanced if we want to mod comment normal users posts
-                              $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[ <a href="forums.php?action=viewforum&forumid=17">Help</a> | <a href="rules.php">Rules</a> ]</div><div class="clear"></div></div>';
+                              $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[ <a href="forums.php?action=viewforum&forumid=17">Help</a> | <a href=""articles.php?topic=rules">Rules</a> ]</div><div class="clear"></div></div>';
                               break;
 				case 'table':
                               $InlineStyle = $this->Advanced ? $this->get_color_width_attributes($Block['Attr']) : FALSE;

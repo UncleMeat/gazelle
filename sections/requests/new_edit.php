@@ -78,7 +78,7 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests');
 			
 			<table>
 				<tr>
-					<td colspan="2" class="center">Please make sure your request follows <a href="rules.php?p=requests">the request rules!</a></td>
+					<td colspan="2" class="center">Please make sure your request follows <a href="articles.php?topic=requests">the request rules!</a></td>
 				</tr>
 <?	if($NewRequest || $CanEdit) { ?>
 				<tr>

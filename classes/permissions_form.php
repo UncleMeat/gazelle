@@ -35,8 +35,6 @@
 	'site_view_flow' => 'Can view stats and data pools.',
 	'site_view_full_log' => 'Can view old log entries.',
 	'site_view_torrent_snatchlist' => 'Can view torrent snatchlists.',
-	'site_recommend_own' => 'Can recommend own torrents.',
-	'site_manage_recommendations' => 'Recommendations management access.',
 	'site_delete_tag' => 'Can delete tags.',
 	'site_disable_ip_history' => 'Disable IP history.',
 	'zip_downloader' => 'Download multiple torrents at once.',
@@ -91,6 +89,7 @@
 	  'torrents_hide_imagehosts' => 'Hide the Imagehost Whitelist list by default.',
         'admin_manage_categories' => 'Can manage categories.',
 	'admin_manage_news' => 'Can manage news.',
+        'admin_manage_articles' => 'Can manage articles',
 	'admin_manage_blog' => 'Can manage blog.',
 	'admin_manage_polls' => 'Can manage polls.',
 	'admin_manage_forums' => 'Can manage forums (add/edit/delete).',
@@ -154,8 +153,6 @@ function permissions_form(){ ?>
 					<? display_perm('site_view_flow', 'Can view site stats and data pools.'); ?>
 					<? display_perm('site_view_full_log', 'Can view the full site log.'); ?>
 					<? display_perm('site_view_torrent_snatchlist', 'Can view torrent snatchlists.'); ?>
-					<? display_perm('site_recommend_own', 'Can add own torrents to recommendations list.'); ?>
-					<? display_perm('site_manage_recommendations', 'Can edit recommendations list.'); ?>
 					<? display_perm('site_delete_tag', 'Can delete tags.'); ?>
 					<? display_perm('site_disable_ip_history', 'Disable IP history.'); ?>
 					<? display_perm('zip_downloader', 'Download multiple torrents at once.'); ?>
@@ -249,6 +246,7 @@ function permissions_form(){ ?>
 				<td>
                                         <? display_perm('admin_manage_categories', 'Can manage categories.'); ?>
 					<? display_perm('admin_manage_news', 'Can manage news'); ?>
+                                        <? display_perm('admin_manage_articles', 'Can manage articles'); ?>
 					<? display_perm('admin_manage_blog', 'Can manage blog'); ?>
 					<? display_perm('admin_manage_polls', 'Can manage polls'); ?>
 					<? display_perm('admin_manage_forums', 'Can manage forums (add/edit/delete)'); ?>

@@ -153,7 +153,7 @@ if(count($Tags) > 0) {
 					<input type="submit" value="+" />
 				</form>
 				<br /><br />
-				<strong><a href="rules.php?p=tag">Tagging rules</a></strong>
+				<strong><a href="articles.php?topic=tag">Tagging rules</a></strong>
 			</div>
 		</div>
 	</div>

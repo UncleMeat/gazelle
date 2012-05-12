@@ -20,7 +20,7 @@ function change_image(display_image, cat_image) {
     $(display_image).html('<img src="/static/common/caticons/'+$(cat_image).val()+'"/>');
 }
 //]]></script>
-
+<div class="thin">
 <h2>Categories</h2>
 <strong>Observe!</strong> You must upload new images to the <?=SERVER_ROOT?>/static/common/caticons/ folder before you can use it here.<br /><br />
 
@@ -99,6 +99,6 @@ function change_image(display_image, cat_image) {
 </tr>
 <? } ?>        
 </table></div>
-
+</div>
 
 <? show_footer();?>

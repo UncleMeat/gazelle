@@ -131,7 +131,7 @@ class TORRENT_FORM {
 ?>
 			<tr>
 				<td colspan="2" style="text-align: center;">
-					<p>Be sure that your torrent is approved by the <a href="rules.php?p=upload">rules</a>. Not doing this will result in a <strong>warning</strong> or <strong>worse</strong>.</p>
+					<p>Be sure that your torrent is approved by the <a href="articles.php?topic=upload">rules</a>. Not doing this will result in a <strong>warning</strong> or <strong>worse</strong>.</p>
 <?		if($this->NewTorrent) { ?>
 					<p>After uploading the torrent, you will have a one hour grace period during which no one other than you can fill requests with this torrent. Make use of this time wisely, and search the requests. </p>
  

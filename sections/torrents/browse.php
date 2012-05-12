@@ -102,7 +102,7 @@ if (!empty($_GET['setdefault'])) {
 }
 
 $Queries = array();
-
+/*
 //Simple search
 if (!empty($_GET['searchstr'])) {
     $Words = explode(' ', strtolower($_GET['searchstr']));
@@ -128,6 +128,13 @@ if (!empty($_GET['searchstr'])) {
         }
     }
 }
+*/
+if (!empty($_GET['searchstr'])) {
+    $SearchStr = trim($_GET['searchstr']);
+    if (!empty($SearchStr)) {
+        $Queries[] = '@(groupname) ' . $SearchStr;
+    }
+}   
 
 if (!empty($_GET['taglist'])) {
     $_GET['taglist'] = cleanup_tags($_GET['taglist']);
