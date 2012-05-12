@@ -1141,11 +1141,11 @@ div.modcomment div.after {
 
 div.modcomment:before {
     color: #800;
-    content: "Staff Comment:\00000a";
+    content: "Staff Comment: ";
     font-weight: bold;
 }
 
-div.bbcode {
+div.bbcode { /* bg tag */
     background-color: inherit; 
     text-align: inherit;
     margin: 0px auto;

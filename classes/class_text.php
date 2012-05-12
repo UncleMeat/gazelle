@@ -712,6 +712,19 @@ EXPLANATION OF PARSER LOGIC
                         } elseif (preg_match('/^[0-9]{1,3}$/', $att)) {
                             if ( (int)$att > 100 ) $att = '100';
                             $InlineStyle .= 'width:'.$att.'%;';
+                        } elseif (in_array($att, array('left','center','right') )) {
+                            switch($att){
+                                case 'left':
+                                        $InlineStyle .= 'margin: 0px auto 0px 0px;';
+                                    break;
+                                case 'right':
+                                        $InlineStyle .= 'margin: 0px 0px 0px auto;';
+                                    break;
+                                case 'center':
+                                default:
+                                        $InlineStyle .= 'margin: 0px auto;';
+                                    break;
+                            }
                         } else {
                             return FALSE;
                         }

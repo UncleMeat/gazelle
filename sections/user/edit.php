@@ -242,14 +242,27 @@ echo $Val->GenerateJS('userform');
 			</tr>
 			<tr>
 				<td class="label"><strong>Info</strong></td>
-				<td> <? $Text->display_bbcode_assistant("info", get_permissions_advtags($UserID, unserialize($CustomPermissions),$Permissions )); ?>
-                            <textarea id="info" name="info" class="long" rows="8"><?=display_str($Info)?></textarea></td>
-			</tr>
+				<td> 
+				<div class="box pad hidden" id="preview_info" style="text-align:left;"></div>
+				<div  class="" id="editor_info" >
+                              <? $Text->display_bbcode_assistant("preview_message_info", get_permissions_advtags($UserID, unserialize($CustomPermissions),$Permissions )); ?>
+                            <textarea id="preview_message_info" name="info" class="long" rows="8"><?=display_str($Info)?></textarea>
+                        </div>
+                        <input type="button" value="Toggle Preview" onclick="Preview_Toggle('info');" />
+                        </td>
+                  </tr>
 			<tr>
 				<td class="label"><strong>Signature<br/>(max <?=$MaxSigLength?> chars)</strong></td>
-				<td><textarea name="signature" class="long" 
+				<td>
+				<div class="box pad hidden" id="preview_sig" style="text-align:left;"></div>
+				<div  class="" id="editor_sig" >
+                          <? $Text->display_bbcode_assistant("preview_message_sig", get_permissions_advtags($UserID, unserialize($CustomPermissions),$Permissions )); ?>
+                            <textarea  id="preview_message_sig" name="signature" class="long" 
                                       rows="<?=($MaxSigLength !== 0 ? round(3 + ($MaxSigLength / 512)) : 2);?>" 
-                    <?=($MaxSigLength == 0 ? 'disabled="disabled"' : ''); ?>><?=($MaxSigLength == 0 ? 'You need to get promoted to Perv before you can have a signature!' : display_str($Signature));?></textarea></td>
+                    <?=($MaxSigLength == 0 ? 'disabled="disabled"' : ''); ?>><?=($MaxSigLength == 0 ? 'You need to get promoted to Perv before you can have a signature!' : display_str($Signature));?></textarea>
+                        </div>
+                        <input type="button" value="Toggle Preview" onclick="Preview_Toggle('sig');" />
+                        </td>
 			</tr> 
 			<tr>
 				<td class="label"><strong>IRCKey</strong></td>
