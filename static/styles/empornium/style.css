@@ -409,16 +409,14 @@ li.searchbars {
 /* staff pms */
 .messagecontainer { 
     height: 20px;
+    margin: 0px auto 10px auto;
 }
-.messagebar {  /* #0261a3;  */
-    
-    padding-top: 4px; 
-    margin: auto;
+.messagebar {  /* #0261a3; */
+    padding-top: 3px; 
     height: 20px;
     background-color: #1a1; 
     text-align: center;
     font-weight: bold;
-    font-size: 10pt;
     color: white;
     border-radius: 10px;       /* FF9+ IE9+ */
     -moz-border-radius: 10px; /* for FF5 */
