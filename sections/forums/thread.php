@@ -366,13 +366,15 @@ if($ThreadInfo['StickyPostID']) {
 foreach($Thread as $Key => $Post){
 	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature) = array_values($Post);
 	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
-	list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values(get_permissions($PermissionID));
-
+	$AuthorPermissions = get_permissions($PermissionID);
+      list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
+      // we need to get custom permissions for this author
+      $PermissionValues = get_permissions_for_user($AuthorID, false, $AuthorPermissions);
 	// Image proxy CTs
 	if(check_perms('site_proxy_images') && !empty($UserTitle)) {
 		$UserTitle = preg_replace_callback('~src=("?)(http.+?)(["\s>])~', function($Matches) {
-																		return 'src='.$Matches[1].'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?c=1&amp;i='.urlencode($Matches[2]).$Matches[3];
-																	  }, $UserTitle);
+						 return 'src='.$Matches[1].'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?c=1&amp;i='.urlencode($Matches[2]).$Matches[3];
+					 }, $UserTitle);
 	}
 ?>
 <table class="forum_post box vertical_margin<? if (((!$ThreadInfo['IsLocked'] || $ThreadInfo['IsSticky']) && $PostID>$LastRead && strtotime($AddedTime)>$LoggedUser['CatchupTime']) || (isset($RequestKey) && $Key==$RequestKey)) { echo ' forum_unread'; } if($HeavyInfo['DisableAvatars']) { echo ' noavatar'; } ?>" id="post<?=$PostID?>">
@@ -380,8 +382,7 @@ foreach($Thread as $Key => $Post){
 		<td colspan="2">
 			<span style="float:left;"><a class="post_id" href='forums.php?action=viewthread&amp;threadid=<?=$ThreadID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>'>#<?=$PostID?></a>
 				<?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, $UserTitle, true)?>
-		<!--		<span class="user_title"><?=!empty($UserTitle) ? '('.$UserTitle.')' : '' ?></span>  -->
-				<?=time_diff($AddedTime,2)?> 
+                        <?=time_diff($AddedTime,2)?> 
 <? if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')){ ?> 
 				- <a href="#quickpost" onclick="Quote('<?=$PostID?>','<?=$Username?>');">[Quote]</a> 
 <? }
@@ -476,9 +477,8 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 					<tr>
                         <? if(empty($HeavyInfo['DisableAvatars'])) { ?>
                                     <td class="avatar" valign="top">
-                              <? if (!empty($LoggedUser['Avatar'])) { 
-                                    $PermissionsInfo = get_permissions($LoggedUser['PermissionID']) ; ?>
-                                            <img src="<?=$LoggedUser['Avatar']?>" class="avatar" style="<?=get_avatar_css($PermissionsInfo['MaxAvatarWidth'], $PermissionsInfo['MaxAvatarHeight'])?>" alt="<?=$LoggedUser['Username']?>'s avatar" />
+                              <? if (!empty($LoggedUser['Avatar'])) {  ?>
+                                            <img src="<?=$LoggedUser['Avatar']?>" class="avatar" style="<?=get_avatar_css($LoggedUser['MaxAvatarWidth'], $LoggedUser['MaxAvatarHeight'])?>" alt="<?=$LoggedUser['Username']?>'s avatar" />
                                <? } else { ?>
                                           <img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
                               <? } ?>
@@ -495,7 +495,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 					<input type="hidden" name="thread" value="<?=$ThreadID?>" />
 
 					<div id="quickreplytext">
-                            <? $Text->display_bbcode_assistant("quickpost"); ?>
+                            <?  $Text->display_bbcode_assistant("quickpost", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
 						<textarea id="quickpost" class="long" tabindex="1" onkeyup="resize('quickpost');" name="body" rows="8"></textarea> <br />
 					</div>
 					<div>

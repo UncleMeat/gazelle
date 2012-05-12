@@ -6,7 +6,7 @@ if(!is_number($UserID)){
 }
 
 
-
+/*
 $DB->query("SELECT 
 			m.Username,
 			m.Email,
@@ -24,21 +24,53 @@ $DB->query("SELECT
 			p.Level AS Class,
                   p.MaxSigLength,
                   p.MaxAvatarWidth,
-                  p.MaxAvatarHeight
+                  p.MaxAvatarHeight,
+                    m.CustomPermissions
 			FROM users_main AS m
 			JOIN users_info AS i ON i.UserID = m.ID
 			LEFT JOIN permissions AS p ON p.ID=m.PermissionID
 			WHERE m.ID = '".db_string($UserID)."'");
-list($Username,$Email,$IRCKey,$Paranoia,$Signature,$PermissionID,$Info,$Avatar,$Country,$StyleID,$StyleURL,$SiteOptions,$UnseededAlerts,$Class,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=$DB->next_record(MYSQLI_NUM, array(3,11));
+list($Username,$Email,$IRCKey,$Paranoia,$Signature,$PermissionID,$Info,$Avatar,$Country,$StyleID,$StyleURL,$SiteOptions,$UnseededAlerts,$Class,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight,$CustomPermissions,$Permissions)=$DB->next_record(MYSQLI_NUM, array(3,11,17,18));
+*/
+
+
+
+$DB->query("SELECT 
+			m.Username,
+			m.Email,
+			m.IRCKey,
+			m.Paranoia,
+                  m.Signature,
+                  m.PermissionID,
+                    m.CustomPermissions,
+			i.Info,
+			i.Avatar,
+			i.Country,
+			i.StyleID,
+			i.StyleURL,
+			i.SiteOptions,
+			i.UnseededAlerts
+			FROM users_main AS m
+			JOIN users_info AS i ON i.UserID = m.ID
+			LEFT JOIN permissions AS p ON p.ID=m.PermissionID
+			WHERE m.ID = '".db_string($UserID)."'");
+
+list($Username,$Email,$IRCKey,$Paranoia,$Signature,$PermissionID,$CustomPermissions,$Info,$Avatar,$Country,$StyleID,$StyleURL,$SiteOptions,$UnseededAlerts)=$DB->next_record(MYSQLI_NUM, array(3,6,12));
+
+$Permissions = get_permissions($PermissionID);
+list($Class,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($Permissions);
 
 if($UserID != $LoggedUser['ID'] && !check_perms('users_edit_profiles', $Class)) {
 	error(403);
 }
 
 $Paranoia = unserialize($Paranoia);
-if(!is_array($Paranoia)) { 
-	$Paranoia = array(); 
-}
+if(!is_array($Paranoia)) $Paranoia = array(); 
+ 
+//$CustomPermissions = unserialize($CustomPermissions);
+//if(!is_array($CustomPermissions)) $CustomPermissions = array(); 
+
+
 
 function paranoia_level($Setting) {
        global $Paranoia;
@@ -210,7 +242,7 @@ echo $Val->GenerateJS('userform');
 			</tr>
 			<tr>
 				<td class="label"><strong>Info</strong></td>
-				<td> <? $Text->display_bbcode_assistant("info"); ?>
+				<td> <? $Text->display_bbcode_assistant("info", get_permissions_advtags($UserID, unserialize($CustomPermissions),$Permissions )); ?>
                             <textarea id="info" name="info" class="long" rows="8"><?=display_str($Info)?></textarea></td>
 			</tr>
 			<tr>

@@ -14,7 +14,7 @@ echo'
                         <div class="head">
                                '. format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'], $LoggedUser['Title'], true). '  Just now
                         </div>
-                        <div class="body">'.$Text->full_format($Body, isset($LoggedUser['Permissions']['site_advanced_tags']) &&  $LoggedUser['Permissions']['site_advanced_tags']).'</div>
+                        <div class="body">'.$Text->full_format($Body, get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])).'</div>
                     </div>';
    
 ?>

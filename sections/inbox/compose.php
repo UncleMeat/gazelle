@@ -37,7 +37,7 @@ show_header('Compose', 'inbox,bbcode');
                         <input type="text" name="subject" class="long" value="<?=(!empty($Subject) ? $Subject : '')?>"/>
                         <br />
                         <h3>Body</h3>  
-                        <? $Text->display_bbcode_assistant("body"); ?>
+                        <? $Text->display_bbcode_assistant("body", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
                         <textarea id="body" name="body" class="long" rows="10"><?=(!empty($Body) ? $Body : '')?></textarea>
                 </div>
             </div>

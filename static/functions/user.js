@@ -21,7 +21,9 @@ function ChangeTo(to) {
 }
 
 function CalculateAdjustUpload(name, radioObj, currentvalue){
-    var adjustamount = Math.floor($('#' + name + 'value').raw().value); 
+    var adjustamount = $('#' + name + 'value').raw().value; 
+    if ( adjustamount == '' ) adjustamount =0;
+    else adjustamount = parseFloat(adjustamount); 
     if (adjustamount != 0){
         var mul = 1;
 	  var radioLength = radioObj.length;

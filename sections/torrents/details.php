@@ -95,7 +95,7 @@ if ($Image!="") {
 		$Image = 'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?i='.urlencode($Image);
 	}
 ?>
-			<p align="center"><img style="max-width: 220px;" src="<?=$Image?>" alt="<?=$AltName?>" onclick="lightbox.init(this,220);" /></p>
+			<p align="center"><img style="max-width: 100%;" src="<?=$Image?>" alt="<?=$AltName?>" onclick="lightbox.init(this,220);" /></p>
 <?
 } else {
 ?>
@@ -494,7 +494,10 @@ echo $Pages;
 foreach($Thread as $Key => $Post){
 	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature) = array_values($Post);
 	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
-      list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values(get_permissions($PermissionID));
+      $AuthorPermissions = get_permissions($PermissionID);
+      list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
+      // we need to get custom permissions for this author
+      //$PermissionValues = get_permissions_for_user($AuthorID, false, $AuthorPermissions);
 ?>
 <table class="forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>" id="post<?=$PostID?>">
 	<tr class="colhead_dark">
@@ -526,7 +529,7 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 ?>
 		<td class="body" valign="top">
 			<div id="content<?=$PostID?>" class="post_container">
-                      <div class="post_content"><?=$Text->full_format($Body, isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues['site_advanced_tags']) ?> </div>
+                      <div class="post_content"><?=$Text->full_format($Body, get_permissions_advtags($AuthorID, false, $AuthorPermissions)) ?> </div>
                 <?  
            if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength>0) && !empty($Signature) ) {
                         
@@ -570,11 +573,11 @@ if(!$LoggedUser['DisablePosting']) { ?>
 					</tr>
 					<tr>
 						<td class="avatar" valign="top">
-				<? if (!empty($LoggedUser['Avatar'])) { ?>
-							<img src="<?=$LoggedUser['Avatar']?>" width="150" alt="<?=$LoggedUser['Username']?>'s avatar" />
-				<? } else { ?>
-							<img src="<?=STATIC_SERVER?>common/avatars/default.png" width="150" alt="Default avatar" />
-				<? } ?>
+                              <? if (!empty($LoggedUser['Avatar'])) {  ?>
+                                            <img src="<?=$LoggedUser['Avatar']?>" class="avatar" style="<?=get_avatar_css($LoggedUser['MaxAvatarWidth'], $LoggedUser['MaxAvatarHeight'])?>" alt="<?=$LoggedUser['Username']?>'s avatar" />
+                               <? } else { ?>
+                                          <img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
+                              <? } ?>
 						</td>
 						<td class="body" valign="top">
 							<div id="contentpreview" style="text-align:left;"></div>
@@ -586,7 +589,7 @@ if(!$LoggedUser['DisablePosting']) { ?>
 						<input type="hidden" name="action" value="reply" />
 						<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 						<input type="hidden" name="groupid" value="<?=$GroupID?>" />
-                            <? $Text->display_bbcode_assistant("quickpost"); ?>
+                            <? $Text->display_bbcode_assistant("quickpost", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
 						<textarea id="quickpost" name="body" class="long"  rows="8"></textarea> <br />
 					</div>
 					<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit();}else{Quick_Preview();}" />
