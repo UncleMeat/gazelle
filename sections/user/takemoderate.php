@@ -52,21 +52,6 @@ $Warned = (isset($_POST['Warned']))? 1 : 0;
             error(0);
         }
  
-/*
-if(isset($_POST['Uploaded']) && isset($_POST['Downloaded'])) {
-     
-	$Uploaded = ($_POST['Uploaded']  == "" ? 0 : $_POST['Uploaded']);
-	if($Arithmetic = strpbrk($Uploaded, '+-')) {
-		$Uploaded += max(-$Uploaded, get_bytes($Arithmetic));
-	}
-	$Downloaded = ($_POST['Downloaded'] == "" ? 0 : $_POST['Downloaded']);
-	if($Arithmetic = strpbrk($Downloaded, '+-')) {
-		$Downloaded += max(-$Downloaded, get_bytes($Arithmetic));
-	}
-	if(!is_number($Uploaded) || !is_number($Downloaded)) {
-		error(0);
-	}
-} */
 $FLTokens = (int)$_POST['FLTokens'];
 $BonusCredits = (float)$_POST['BonusCredits'];
 
@@ -299,6 +284,7 @@ if ($Visible!=$Cur['Visible']  && check_perms('users_make_invisible')) {
 if ($AdjustUpValue != 0 && ((check_perms('users_edit_ratio') && $UserID != $LoggedUser['ID'])
                         || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID'])) ){
       $Uploaded = $Cur['Uploaded'] + $AdjustUpValue;
+      if ($Uploaded<0) $Uploaded=0;
 	$UpdateSet[]="Uploaded='".$Uploaded."'";
 	$EditSummary[]="uploaded changed from ".get_size($Cur['Uploaded'])." to ".get_size($Uploaded);
 	$Cache->delete_value('users_stats_'.$UserID);
@@ -306,6 +292,7 @@ if ($AdjustUpValue != 0 && ((check_perms('users_edit_ratio') && $UserID != $Logg
 if ($AdjustDownValue != 0 && ((check_perms('users_edit_ratio') && $UserID != $LoggedUser['ID'])
                         || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID']))){
       $Downloaded = $Cur['Downloaded'] + $AdjustDownValue;
+      if ($Downloaded<0) $Downloaded=0;
 	$UpdateSet[]="Downloaded='".$Downloaded."'";
 	$EditSummary[]="downloaded changed from ".get_size($Cur['Downloaded'])." to ".get_size($Downloaded);
 	$Cache->delete_value('users_stats_'.$UserID);

@@ -28,7 +28,7 @@ echo '<table cellpadding="3" cellspacing="1" border="0" class="border slice" wid
     <tr>
         <td class="label">Description</td>
         <td>
-            '.$Text->full_format($Content, isset($LoggedUser['Permissions']['site_advanced_tags']) &&  $LoggedUser['Permissions']['site_advanced_tags']).'                              
+            '.$Text->full_format($Content, get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])).'                              
         </td>
     </tr> 
 </table>';

@@ -8,6 +8,6 @@ if(!empty($_POST['AdminComment'])) {
 	echo $Text->full_format($_POST['AdminComment']);
 } else {
 	$Content = $_REQUEST['body']; // Don't use URL decode.
-	echo $Text->full_format($Content, isset($LoggedUser['Permissions']['site_advanced_tags']) &&  $LoggedUser['Permissions']['site_advanced_tags']);
+      echo $Text->full_format($Content, get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions']));
 }
 ?>

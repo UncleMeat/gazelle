@@ -12,11 +12,12 @@ show_header('Sandbox', 'bbcode');
 	<form action="" method="post" id="messageform">
 		<div class="box pad">
                   <h3 class="center">Practice your bbCode skills here</h3> 
+                  <br/>
 			<div id="preview" class="hidden"><br/>
                         <h3 class="left">Preview:</h3> 
                         <div id="preview_content" class="box pad"></div> 
                   </div>
-                  <? $Text->display_bbcode_assistant("body"); ?>
+                  <? $Text->display_bbcode_assistant("body",get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
 			<textarea id="body" name="body" class="long" rows="10"></textarea>
 			<div class="center">
 				<input  id="preview_button" type="button" value="Preview" onclick="Sandbox_Preview();" /> 

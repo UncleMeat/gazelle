@@ -20,8 +20,26 @@ function ChangeTo(to) {
 	}
 }
 
+function Preview_Toggle(id) {
+	var preview_div = '#preview_'+id;
+	if ($(preview_div).has_class('hidden')) {
+		var ToPost = [];
+		ToPost['body'] = $('#preview_message_'+id).raw().value;
+		ajax.post('ajax.php?action=preview', ToPost, function (data) {
+			$(preview_div).raw().innerHTML = data;
+			$(preview_div).toggle();
+			$('#editor_'+id).toggle();
+		});
+	} else {
+		$(preview_div).toggle();
+		$('#editor_'+id).toggle();
+	}
+}
+
 function CalculateAdjustUpload(name, radioObj, currentvalue){
-    var adjustamount = Math.floor($('#' + name + 'value').raw().value); 
+    var adjustamount = $('#' + name + 'value').raw().value; 
+    if ( adjustamount == '' ) adjustamount =0;
+    else adjustamount = parseFloat(adjustamount); 
     if (adjustamount != 0){
         var mul = 1;
 	  var radioLength = radioObj.length;

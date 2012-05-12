@@ -13,7 +13,7 @@ echo '<div class="box vertical_space">
 			- <a href="#quickreplypreview">[Edit]</a> 
 			<a href="#quickreplypreview">[Delete]</a>
 		</div>
-		<div class="pad">'.$Text->full_format($Body, isset($LoggedUser['Permissions']['site_advanced_tags']) &&  $LoggedUser['Permissions']['site_advanced_tags']).'</div> 
+		<div class="pad">'.$Text->full_format($Body, get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])).'</div> 
 	</div>
       <br />';
    

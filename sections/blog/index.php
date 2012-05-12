@@ -94,7 +94,7 @@ if(check_perms('admin_manage_blog')) {
 					<h3>Title</h3>
 					<input type="text" name="title" class="long"  <? if(!empty($Title)) { echo 'value="'.display_str($Title).'"'; } ?> /><br />
 					<h3>Body</h3>
-                           <? $Text->display_bbcode_assistant('textbody', 0)  ?>
+                           <? $Text->display_bbcode_assistant('textbody', true)  ?>
 					<textarea id="textbody" name="body" class="long" rows="15"><? if(!empty($Body)) { echo display_str($Body); } ?></textarea> <br />
 					<h3>Thread ID</h3>
 					<input type="text" name="thread" size="8"<? if(!empty($ThreadID)) { echo 'value="'.display_str($ThreadID).'"'; } ?> />

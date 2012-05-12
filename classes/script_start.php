@@ -473,7 +473,7 @@ function get_permissions($PermissionID) {
     return $Permission;
 }
 
-function get_permissions_for_user($UserID, $CustomPermissions = false) {
+function get_permissions_for_user($UserID, $CustomPermissions = false, $UserPermission = false) {
 	global $DB;
 
 	$UserInfo = user_info($UserID);
@@ -488,8 +488,12 @@ function get_permissions_for_user($UserID, $CustomPermissions = false) {
 		$CustomPermissions = unserialize($CustomPermissions);
 	}
 
-	$Permissions = get_permissions($UserInfo['PermissionID']);
-	
+	if ($UserPermission === false) {
+            $Permissions = get_permissions($UserInfo['PermissionID']);
+      } else {
+            $Permissions = $UserPermission;
+      }
+      
 	if($UserInfo['Donor']) {
 		$DonorPerms = get_permissions(DONOR);
 	} else {
@@ -506,6 +510,12 @@ function get_permissions_for_user($UserID, $CustomPermissions = false) {
 	
 	//Combine the permissions
 	return array_merge($Permissions['Permissions'], $DonorPerms['Permissions'], $CustomPerms, array('MaxCollages' => $MaxCollages));
+}
+
+// Get whether this user can use adv tags (pass optional params to reduce lookups)
+function get_permissions_advtags($UserID, $CustomPermissions = false, $UserPermission = false){
+	$PermissionsValues = get_permissions_for_user($UserID, $CustomPermissions, $UserPermission);
+      return isset($PermissionsValues['site_advanced_tags']) &&  $PermissionsValues['site_advanced_tags'];
 }
 
 // This function is slow. Don't call it unless somebody's logging in.
@@ -778,7 +788,7 @@ function ratio($Dividend, $Divisor, $Color = true) {
     if ($Divisor == 0 && $Dividend == 0) {
         return '<span>--</span>';
     } elseif ($Divisor == 0) {
-        return '<span class="r99">∞</span>';
+        return '<span class="r99 infinity">∞</span>';
     }
     $Ratio = number_format(max($Dividend / $Divisor - 0.005, 0), 2); //Subtract .005 to floor to 2 decimals
     if ($Color) {

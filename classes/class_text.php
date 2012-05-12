@@ -712,6 +712,19 @@ EXPLANATION OF PARSER LOGIC
                         } elseif (preg_match('/^[0-9]{1,3}$/', $att)) {
                             if ( (int)$att > 100 ) $att = '100';
                             $InlineStyle .= 'width:'.$att.'%;';
+                        } elseif (in_array($att, array('left','center','right') )) {
+                            switch($att){
+                                case 'left':
+                                        $InlineStyle .= 'margin: 0px auto 0px 0px;';
+                                    break;
+                                case 'right':
+                                        $InlineStyle .= 'margin: 0px 0px 0px auto;';
+                                    break;
+                                case 'center':
+                                default:
+                                        $InlineStyle .= 'margin: 0px auto;';
+                                    break;
+                            }
                         } else {
                             return FALSE;
                         }
@@ -1066,7 +1079,7 @@ EXPLANATION OF PARSER LOGIC
       // ajax result and all subsequent calls will use the cached result - if differetn pages use different parameters
       // they will not get that benefit
        */
-      function display_bbcode_assistant($textarea, $start_num_smilies = 0, $load_increment = 120, $load_increment_first = 30){
+      function display_bbcode_assistant($textarea, $AllowAdvancedTags, $start_num_smilies = 0, $load_increment = 120, $load_increment_first = 30){
         global $LoggedUser;
           if ($load_increment_first == -1) { $load_increment_first = $load_increment; }
         ?>
@@ -1114,10 +1127,10 @@ EXPLANATION OF PARSER LOGIC
               
               </div>
               <div  class="bb_buttons_right">
-                <div > 
+                <div> 
 
-
-               <? if ( isset($LoggedUser['Permissions']['site_advanced_tags']) &&  $LoggedUser['Permissions']['site_advanced_tags']) { ?>
+               <?   //   isset($LoggedUser['Permissions']['site_advanced_tags']) &&  $LoggedUser['Permissions']['site_advanced_tags']
+                  if ( $AllowAdvancedTags ) { ?>
 
                         <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','bg');" title="Background: [bg=color]text[/bg]" alt="Background">Bg</a>
 
@@ -1128,7 +1141,7 @@ EXPLANATION OF PARSER LOGIC
               <?  if(check_perms('site_moderate_forums')) { ?>
                         <a class="bb_button" style="border: 3px solid #600;" onclick="tag('mcom', '<?=$textarea;?>')" title="Staff Comment: [mcom]text[/mcom]" alt="Mod comment">Mod</a>
                <? }  ?>  
-                 </div> 
+                 </div>
                       <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center', '<?=$textarea;?>')" title="Align - center" alt="Center" /> 
                       <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left', '<?=$textarea;?>')" title="Align - left" alt="Left" /> 
                       <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify', '<?=$textarea;?>')" title="Align - justify" alt="Justify" />

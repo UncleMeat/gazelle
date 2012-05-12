@@ -35,16 +35,17 @@ $DB->query("SELECT
 	WHERE c.ID='$ConvID' AND UserID='$UserID'");
 list($Subject, $Sticky, $UnRead, $ForwardedID, $ForwardedName) = $DB->next_record();
 
-$DB->query("SELECT UserID, Username, PermissionID, Enabled, Donor, Warned, Title
+$DB->query("SELECT UserID, Username, PermissionID, CustomPermissions, Enabled, Donor, Warned, Title
 	FROM pm_messages AS pm
 	JOIN users_info AS ui ON ui.UserID=pm.SenderID
 	JOIN users_main AS um ON um.ID=pm.SenderID
 	WHERE pm.ConvID='$ConvID'");
 
-while(list($PMUserID, $Username, $PermissionID, $Enabled, $Donor, $Warned, $Title) = $DB->next_record()) {
+while(list($PMUserID, $Username, $PermissionID, $CustomPermissions, $Enabled, $Donor, $Warned, $Title) = $DB->next_record()) {
 	$PMUserID = (int)$PMUserID;
 	$Users[$PMUserID]['UserStr'] = format_username($PMUserID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, $Title, true);
 	$Users[$PMUserID]['Username'] = $Username;
+	$Users[$PMUserID]['AdvTags'] = get_permissions_advtags($PMUserID, $CustomPermissions);
 }
 $Users[0]['UserStr'] = 'System'; // in case it's a message from the system
 $Users[0]['Username'] = 'System';
@@ -73,10 +74,10 @@ $DB->query("SELECT SentDate, SenderID, Body, ID FROM pm_messages AS m WHERE Conv
 while(list($SentDate, $SenderID, $Body, $MessageID) = $DB->next_record()) { ?>
 	<div class="box vertical_space">
 		<div class="head">
-			<strong><?=$Users[(int)$SenderID]['UserStr']?></strong> <?=time_diff($SentDate)?> - <a href="#quickpost" onclick="Quote('<?=$MessageID?>','<?=$Users[(int)$SenderID]['Username']?>');">[Quote]</a>	
+			<?=$Users[(int)$SenderID]['UserStr']?> <?=time_diff($SentDate)?> - <a href="#quickpost" onclick="Quote('<?=$MessageID?>','<?=$Users[(int)$SenderID]['Username']?>');">[Quote]</a>	
 		</div>
 		<div class="body" id="message<?=$MessageID?>">
-			<?=$Text->full_format($Body)?>
+			<?=$Text->full_format($Body, $Users[(int)$SenderID]['AdvTags'])?>
 		</div>
 	</div>
 <?
@@ -94,7 +95,7 @@ if(!empty($ReceiverIDs) && (empty($LoggedUser['DisablePM']) || array_intersect($
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 			<input type="hidden" name="toid" value="<?=implode(',',$ReceiverIDs)?>" />
 			<input type="hidden" name="convid" value="<?=$ConvID?>" />
-                            <? $Text->display_bbcode_assistant("quickpost"); ?>
+            <? $Text->display_bbcode_assistant("quickpost", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
 			<textarea id="quickpost" name="body" class="long" rows="10"></textarea> <br />
 			<div id="preview" class="box vertical_space body hidden"></div>
 			<div id="buttons" class="center">

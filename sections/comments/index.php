@@ -63,6 +63,7 @@ $Comments = $DB->query("SELECT
 	m.Username,
 	m.PermissionID,
 	m.Enabled,
+            m.CustomPermissions,
 	
 	i.Avatar,
 	i.Donor,
@@ -120,13 +121,15 @@ $DB->set_query_id($Comments);
 	</div>
 <?
 
-while(list($UserID, $Username, $Class, $Enabled, $Avatar, $Donor, $Warned, $TorrentID, $GroupID, $Title, $PostID, $Body, $AddedTime, $EditedTime, $EditorID, $EditorUsername) = $DB->next_record()) {
-	?>
+while(list($UserID, $Username, $Class, $Enabled, $CustomPermissions, $Avatar, $Donor, $Warned, $TorrentID, $GroupID, $Title, $PostID, $Body, $AddedTime, $EditedTime, $EditorID, $EditorUsername) = $DB->next_record(MYSQLI_BOTH,  array('CustomPermissions'))) {
+	$AuthorPermissions = get_permissions($Class);
+      list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
+?>
 	<table class='forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>' id="post<?=$PostID?>">
 		<tr class='colhead_dark'>
 			<td  colspan="2">
 				<span style="float:left;"><a href='torrents.php?id=<?=$GroupID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>'>#<?=$PostID?></a>
-					by <strong><?=format_username($UserID, $Username, $Donor, $Warned, $Enabled, $Class)?></strong> <?=time_diff($AddedTime) ?>
+					by <?=format_username($UserID, $Username, $Donor, $Warned, $Enabled, $Class, false, true)?> <?=time_diff($AddedTime) ?>
 					on <a href="torrents.php?id=<?=$GroupID?>"><?=$Title?></a>
 				</span>
 			</td>
@@ -137,22 +140,16 @@ if(empty($HeavyInfo['DisableAvatars'])) {
 ?>
 			<td class='avatar' valign="top">
 <?
-				if($Avatar){ 
-?>
-				<img src='<?=$Avatar?>' width='150' alt="<?=$Username ?>'s avatar" />
-<?
-				} else { ?>
-				<img src="<?=STATIC_SERVER?>common/avatars/default.png" width="150" alt="Default avatar" />
-<?
-				} 
-?>
+                    if($Avatar){    ?>
+                        <img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$Username ?>'s avatar" />
+<?                  } else {        ?>
+                        <img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
+<?                  }               ?>
 			</td>
-<?
-}
-?>
+<? } ?>
 			<td class='body' valign="top">
-				<?=$Text->full_format($Body) ?> 
-<?
+				<?=$Text->full_format($Body, get_permissions_advtags($UserID, unserialize($CustomPermissions), $AuthorPermissions)) ?> 
+<? 
 				if($EditorID){ 
 ?>
 				<br /><br />
@@ -161,7 +158,6 @@ if(empty($HeavyInfo['DisableAvatars'])) {
 <?
 				}
 ?>
-
 			</td>
 		</tr>
 	</table>

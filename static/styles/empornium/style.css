@@ -213,6 +213,9 @@ ul.thin li { margin:0px 0px; padding:0px; }
    text-decoration: none;
 }
 
+span.infinity {
+    font-weight: bold;
+}
 #stats_block {
     text-align: right;
     color: white;
@@ -403,6 +406,24 @@ li.searchbars {
     margin: 20px auto;
 }
 
+/* staff pms */
+.messagecontainer { 
+    height: 20px;
+}
+.messagebar {  /* #0261a3;  */
+    
+    padding-top: 4px; 
+    margin: auto;
+    height: 20px;
+    background-color: #1a1; 
+    text-align: center;
+    font-weight: bold;
+    font-size: 10pt;
+    color: white;
+    border-radius: 10px;       /* FF9+ IE9+ */
+    -moz-border-radius: 10px; /* for FF5 */
+    -webkit-border-radius: 10px; /* for opera */
+}
 
 
 /* user classes */
@@ -1120,11 +1141,11 @@ div.modcomment div.after {
 
 div.modcomment:before {
     color: #800;
-    content: "Staff Comment:\00000a";
+    content: "Staff Comment: ";
     font-weight: bold;
 }
 
-div.bbcode {
+div.bbcode { /* bg tag */
     background-color: inherit; 
     text-align: inherit;
     margin: 0px auto;

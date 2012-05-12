@@ -33,18 +33,22 @@ function SaveMessage(id) {
 				document.getElementById(ajax_message).textContent = 'Something went wrong.';
 			}
 			$('#' + ajax_message).show();
-			var t = setTimeout("$('#" + ajax_message + "').hide()", 2000);
+                  jQuery('#' + ajax_message).fadeIn(0);
+			//var t = setTimeout("$('#" + ajax_message + "').hide()", 2000);
+                  var t = setTimeout("jQuery('#" + ajax_message + "').fadeOut(1000)", 2500);
 		}
 	);
 }
 
 function DeleteMessage(id) {
+      var tt = $('#response_name_' + id).raw().value;
+      var r=confirm("Are you sure you want to delete response  '" + tt + "' ?");
+      if(r !== true) return;
 	var div = '#response_' + id;
 	var ajax_message = 'ajax_message_' + id;
 
 	var ToPost = [];
 	ToPost['id'] = id;
-
 	ajax.post("?action=delete_response", ToPost, function (data) {
 		$(div).hide();
 		if (data == '1') {
@@ -53,7 +57,8 @@ function DeleteMessage(id) {
 			document.getElementById(ajax_message).textContent = 'Something went wrong.';
 		}
 		$('#'+ajax_message).show();
-		var t = setTimeout("$('#" + ajax_message + "').hide()", 2000);
+            jQuery('#' + ajax_message).fadeIn(0);
+		var t = setTimeout("jQuery('#" + ajax_message + "').fadeOut(1000)", 1500);
 	});
 }
 
@@ -69,7 +74,8 @@ function Assign() {
 			document.getElementById('ajax_message').textContent = 'Something went wrong.';
 		}
 		$('#ajax_message').show();
-		var t = setTimeout("$('#ajax_message').hide()", 2000);
+            jQuery('#ajax_message').fadeIn(0);
+		var t = setTimeout("jQuery('#ajax_message').fadeOut(1000)", 1500);
 	});
 }
 

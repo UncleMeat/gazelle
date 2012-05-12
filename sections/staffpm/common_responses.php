@@ -4,7 +4,7 @@ if (!($IsFLS)) {
 	error(403);
 }
 
-show_header('Staff PMs', 'bbcode,staffpm');
+show_header('Staff PMs', 'bbcode,staffpm,jquery');
 
 include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
 include(SERVER_ROOT.'/sections/staffpm/functions.php');
@@ -29,7 +29,7 @@ list($NumMy, $NumUnanswered, $NumOpen) = get_num_staff_pms($LoggedUser['ID'], $L
 	</div>
 	<div id="commonresponses" class="center">
 		<br />
-		<div id="ajax_message_0" class="hidden center alertbar"></div>
+		<div class="messagecontainer"><div id="ajax_message_0" class="hidden center messagebar"></div></div>
 		<br />
 		<div class="center">
 			<h3>Create new response:</h3>
@@ -46,7 +46,7 @@ list($NumMy, $NumUnanswered, $NumOpen) = get_num_staff_pms($LoggedUser['ID'], $L
 				<div class="box pad hidden" id="response_div_0" style="text-align:left;">
 				</div>
 				<div  class="pad" id="response_editor_0" >
-                            <? $Text->display_bbcode_assistant("response_message_0"); ?>
+                            <? $Text->display_bbcode_assistant("response_message_0", true); ?>
 					<textarea class="long" onfocus="if (this.value == 'New message') this.value='';" 
 							  onblur="if (this.value == '') this.value='New message';" 
 							  rows="10" id="response_message_0">New message</textarea>
@@ -69,7 +69,7 @@ while(list($ID, $Message, $Name) = $DB->next_record()) {
 	
 ?>
 		<br />
-		<div id="ajax_message_<?=$ID?>" class="hidden center alertbar"></div>
+		<div class="messagecontainer"><div id="ajax_message_<?=$ID?>" class="hidden center messagebar"></div></div>
 		<br />
 		<div id="response_<?=$ID?>" class="box">
 			<form id="response_form_<?=$ID?>" action="">
@@ -82,7 +82,7 @@ while(list($ID, $Message, $Name) = $DB->next_record()) {
 						<?=$Text->full_format($Message, true)?>
 				</div>
 				<div class="pad hidden" id="response_editor_<?=$ID?>" >
-                            <? $Text->display_bbcode_assistant("response_message_".$ID ); ?>
+                            <? $Text->display_bbcode_assistant("response_message_".$ID, true); ?>
 					<textarea class="long" onfocus="if (this.value == 'New message') this.value='';" 
 						   rows="10" id="response_message_<?=$ID?>" name="message"><?=display_str($Message)?></textarea>
 					
