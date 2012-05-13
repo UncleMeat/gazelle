@@ -24,7 +24,6 @@
 	'site_collages_personal' => 'Can have a personal collage.',
 	'site_collages_renamepersonal' => 'Can rename own personal collages.',
 	'site_make_bookmarks' => 'Bookmarks access.',
-	'site_edit_wiki' => 'Wiki edit access.',
 	'site_can_invite_always' => 'Can invite past user limit.',
 	'site_send_unlimited_invites' => 'Unlimited invites.',
             'site_advanced_tags' => 'Advanced bbcode tags.',
@@ -141,7 +140,6 @@ function permissions_form(){ ?>
 					<? display_perm('site_collages_renamepersonal','Can rename own personal collages.'); ?>
 					<? display_perm('site_advanced_top10','Can access advanced top 10.'); ?>
 					<? display_perm('site_make_bookmarks','Can make bookmarks.'); ?>
-					<? display_perm('site_edit_wiki','Can edit wiki pages.'); ?>
 					<? display_perm('site_can_invite_always', 'Can invite users even when invites are closed.'); ?>
 					<? display_perm('site_send_unlimited_invites', 'Can send unlimited invites.'); ?>
                               <?            display_perm('site_advanced_tags', 'Can use advanced bbcode tags.'); ?>

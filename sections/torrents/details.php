@@ -73,7 +73,7 @@ show_header($Title,'browse,comments,torrent,bbcode');
 <div class="thin">
 	<h2><?=$DisplayName?></h2>
 	<div class="linkbox">
-<?	if( $CanEdit) { //  check_perms('site_edit_wiki')  ?>
+<?	if( $CanEdit) {   ?>
 		<a href="torrents.php?action=editgroup&amp;groupid=<?=$GroupID?>">[Edit description]</a>
 <?	} ?>
 		<a href="torrents.php?action=history&amp;groupid=<?=$GroupID?>">[View history]</a>
@@ -218,8 +218,6 @@ $EditionID = 0;
 		}
 		$ReportInfo .= "</table>";
 	}
-	//moved up page
-	//$CanEdit = (check_perms('torrents_edit') || (($UserID == $LoggedUser['ID'] && !$LoggedUser['DisableWiki'])));
 	
 	$FileList = str_replace(array('_','-'), ' ', $FileList);
 	$FileList = str_replace('|||','<tr><td>',display_str($FileList));

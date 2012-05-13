@@ -232,11 +232,6 @@ if (isset($LoginCookie)) {
         }
     }
 
-    // We've never had to disable the wiki privs of anyone.
-    if ($LoggedUser['DisableWiki']) {
-        unset($LoggedUser['Permissions']['site_edit_wiki']);
-    }
-
     // IP changed
     if ($LoggedUser['IP'] != $_SERVER['REMOTE_ADDR'] && !check_perms('site_disable_ip_history')) {
         if (site_ban_ip($_SERVER['REMOTE_ADDR'])) {
@@ -352,7 +347,6 @@ function user_heavy_info($UserID) {
 			i.DisableInvites,
 			i.DisablePosting,
 			i.DisableUpload,
-			i.DisableWiki,
 			i.DisableAvatar,
 			i.DisablePM,
 			i.DisableRequests,

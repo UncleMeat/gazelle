@@ -11,8 +11,6 @@ if(!$_REQUEST['groupid'] || !is_number($_REQUEST['groupid'])) {
 }
 // End injection check
 
-if(!check_perms('site_edit_wiki')) { error(403); }
-
 // Variables for database input
 $UserID = $LoggedUser['ID'];
 $GroupID = $_REQUEST['groupid'];
