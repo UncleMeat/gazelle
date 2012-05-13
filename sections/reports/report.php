@@ -24,27 +24,27 @@ switch($Short) {
 		break;
 
 	case "request" :
-		$DB->query("SELECT Title, Description, TorrentID FROM requests WHERE ID=".$ID);
+		$DB->query("SELECT Title, Description, TorrentID, UserID FROM requests WHERE ID=".$ID);
 		if($DB->record_count() < 1) {
 			error(404);
 		}
-		list($Name, $Desc, $Filled) = $DB->next_record();
+		list($Name, $Desc, $Filled, $AuthorID) = $DB->next_record();
 		break;
 
 	case "collage" :
-		$DB->query("SELECT Name, Description FROM collages WHERE ID=".$ID);
+		$DB->query("SELECT Name, Description, UserID FROM collages WHERE ID=".$ID);
 		if($DB->record_count() < 1) {
 			error(404);
 		}
-		list($Name, $Desc) = $DB->next_record();
+		list($Name, $Desc, $AuthorID) = $DB->next_record();
 		break;
 
 	case "thread" :
-		$DB->query("SELECT ft.Title, ft.ForumID, um.Username FROM forums_topics AS ft JOIN users_main AS um ON um.ID=ft.AuthorID WHERE ft.ID=".$ID);
+		$DB->query("SELECT ft.Title, ft.ForumID, um.Username, um.ID FROM forums_topics AS ft JOIN users_main AS um ON um.ID=ft.AuthorID WHERE ft.ID=".$ID);
 		if($DB->record_count() < 1) {
 			error(404);
 		}
-		list($Title, $ForumID, $Username) = $DB->next_record();
+		list($Title, $ForumID, $Username, $AuthorID) = $DB->next_record();
 		$DB->query("SELECT MinClassRead FROM forums WHERE ID = ".$ForumID);
 		list($MinClassRead) = $DB->next_record();
 		if(!empty($LoggedUser['DisableForums']) ||
@@ -55,11 +55,11 @@ switch($Short) {
 		break;
 
 	case "post" :
-		$DB->query("SELECT fp.Body, fp.TopicID, um.Username FROM forums_posts AS fp JOIN users_main AS um ON um.ID=fp.AuthorID WHERE fp.ID=".$ID);
+		$DB->query("SELECT fp.Body, fp.TopicID, um.Username, um.ID FROM forums_posts AS fp JOIN users_main AS um ON um.ID=fp.AuthorID WHERE fp.ID=".$ID);
 		if($DB->record_count() < 1) {
 			error(404);
 		}
-		list($Body, $TopicID, $Username) = $DB->next_record();
+		list($Body, $TopicID, $Username, $AuthorID) = $DB->next_record();
 		$DB->query("SELECT ForumID FROM forums_topics WHERE ID = ".$TopicID);
 		list($ForumID) = $DB->next_record();
 		$DB->query("SELECT MinClassRead FROM forums WHERE ID = ".$ForumID);
@@ -80,11 +80,11 @@ switch($Short) {
 		} else {
 			$Column = "AuthorID";
 		}
-		$DB->query("SELECT ".$Short.".Body, um.Username FROM ".$Table." AS ".$Short." JOIN users_main AS um ON um.ID=".$Short.".".$Column." WHERE ".$Short.".ID=".$ID);
+		$DB->query("SELECT ".$Short.".Body, um.Username, um.ID FROM ".$Table." AS ".$Short." JOIN users_main AS um ON um.ID=".$Short.".".$Column." WHERE ".$Short.".ID=".$ID);
 		if($DB->record_count() < 1) {
 			error(404);
 		}
-		list($Body, $Username) = $DB->next_record();
+		list($Body, $Username, $AuthorID) = $DB->next_record();
 		break;
 }
 
@@ -121,13 +121,13 @@ switch($Short) {
 	<p>You are reporting the request:</p>
 	<table>
 		<tr class="colhead">
-			<td>Title</td>
+			<td width="20%">Title</td>
 			<td>Description</td>
-			<td>Filled?</td>
+			<td width="20">Filled?</td>
 		</tr>
 		<tr>
 			<td><?=display_str($Name)?></td>
-			<td><?=$Text->full_format($Desc)?></td>	
+			<td><?=$Text->full_format($Desc, get_permissions_advtags($AuthorID))?></td>	
 			<td><strong><?=($Filled == 0 ? 'No' : 'Yes')?></strong></td>
 		</tr>
 	</table>
@@ -160,13 +160,13 @@ switch($Short) {
 	<p>You are reporting the request:</p>
 	<table>
 		<tr class="colhead">
-			<td>Title</td>
+			<td width="20%">Title</td>
 			<td>Description</td>
-			<td>Filled?</td>
+			<td width="20">Filled?</td>
 		</tr>
 		<tr>
 			<td><?=display_str($Name)?></td>
-			<td><?=$Text->full_format($Desc)?></td>	
+			<td><?=$Text->full_format($Desc, get_permissions_advtags($AuthorID))?></td>	
 			<td><strong><?=($Filled == 0 ? 'No' : 'Yes')?></strong></td>
 		</tr>
 	</table>
@@ -177,12 +177,12 @@ switch($Short) {
 		<p>You are reporting the collage:</p>
 		<table>
 		<tr class="colhead">
-			<td>Title</td>
+			<td width="20%">Title</td>
 			<td>Description</td>
 		</tr>
 		<tr>
 			<td><?=display_str($Name)?></td>	
-			<td><?=$Text->full_format($Desc)?></td>
+			<td><?=$Text->full_format($Desc, get_permissions_advtags($AuthorID))?></td>
 		</tr>
 	</table>
 <?	
@@ -192,7 +192,7 @@ switch($Short) {
 		<p>You are reporting the thread:</p>
 		<table>
 		<tr class="colhead">
-			<td>Username</td>
+			<td width="20%">Username</td>
 			<td>Title</td>
 		</tr>
 		<tr>
@@ -207,12 +207,12 @@ switch($Short) {
 		<p>You are reporting the post:</p>
 		<table>
 		<tr class="colhead">
-			<td>Username</td>
+			<td width="20%">Username</td>
 			<td>Body</td>
 		</tr>
 		<tr>
 			<td><?=display_str($Username)?></td>	
-			<td><?=$Text->full_format($Body)?></td>
+			<td><?=$Text->full_format($Body, get_permissions_advtags($AuthorID))?></td>
 		</tr>
 	</table>
 <?	
@@ -224,12 +224,12 @@ switch($Short) {
 		<p>You are reporting the <?=$Types[$Short]['title']?>:</p>
 		<table>
 		<tr class="colhead">
-			<td>Username</td>
+			<td width="20%">Username</td>
 			<td>Body</td>
 		</tr>
 		<tr>
 			<td><?=display_str($Username)?></td>	
-			<td><?=$Text->full_format($Body)?></td>
+			<td><?=$Text->full_format($Body, get_permissions_advtags($AuthorID))?></td>
 		</tr>
 	</table>
 <?	

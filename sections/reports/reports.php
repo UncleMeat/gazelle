@@ -99,7 +99,7 @@ while(list($ReportID, $SnitchID, $SnitchName, $ThingID, $Short, $ReportedTime, $
 	<table cellpadding="5" id="report_<?=$ReportID?>">
             <tr class="colhead_dark">
 			<td width="16%"><strong><a href="<?=$Reference?>">Report</a></strong></td>
-			<td><strong><?=$Type['title']?></strong> was reported by <a href="user.php?id=<?=$SnitchID?>"><?=$SnitchName?></a> <?=time_diff($ReportedTime)?></td>
+			<td><strong><?=$Type['title']?></strong> was reported by <strong><a href="user.php?id=<?=$SnitchID?>"><?=$SnitchName?></a></strong> <?=time_diff($ReportedTime)?></td>
 		</tr>
             <tr class="rowa"> 
 			<td class="center" colspan="2">
@@ -117,30 +117,39 @@ while(list($ReportID, $SnitchID, $SnitchName, $ThingID, $Short, $ReportedTime, $
 			break;
 		case "request" :
 		case "request_update" :
-			$DB->query("SELECT Title FROM requests WHERE ID=".$ThingID);
+			$DB->query("SELECT r.Title,
+                                     u.Username 
+                                     FROM requests AS r
+                                     LEFT JOIN users_main AS u ON u.ID = r.UserID WHERE r.ID=".$ThingID);
 			if($DB->record_count() < 1) {
 				echo "No request with the reported ID found";
 			} else {
-				list($Name) = $DB->next_record();
-				echo "<a href='requests.php?action=view&amp;id=".$ThingID."'>".display_str($Name)."</a>";
+				list($Name,$Username) = $DB->next_record();
+				echo "<a href='requests.php?action=view&amp;id=".$ThingID."'>Request '".display_str($Name)."' by ".display_str($Username)."</a>";
 			}
 			break;
 		case "collage" :
-			$DB->query("SELECT Name FROM collages WHERE ID=".$ThingID);
+			$DB->query("SELECT c.Name,
+                                     u.Username 
+                                     FROM collages AS c
+                                     LEFT JOIN users_main AS u ON u.ID = c.UserID WHERE c.ID=".$ThingID);
 			if($DB->record_count() < 1) {
 				echo "No collage with the reported ID found";
 			} else {
-				list($Name) = $DB->next_record();
-				echo "<a href='collages.php?id=".$ThingID."'>".display_str($Name)."</a>";
+				list($Name,$Username) = $DB->next_record();
+				echo "<a href='collages.php?id=".$ThingID."'>Collage '".display_str($Name)."' by ".display_str($Username)."</a>";
 			}
 			break;
 		case "thread" :
-			$DB->query("SELECT Title FROM forums_topics WHERE ID=".$ThingID);
+			$DB->query("SELECT f.Title,
+                                     u.Username
+                                     FROM forums_topics AS f
+                                     LEFT JOIN users_main AS u ON u.ID = f.AuthorID WHERE f.ID=".$ThingID);
 			if($DB->record_count() < 1) {
 				echo "No thread with the reported ID found";
 			} else {
-				list($Title) = $DB->next_record();
-				echo "<a href='forums.php?action=viewthread&amp;threadid=".$ThingID."'>".display_str($Title)."</a>";
+				list($Title,$Username) = $DB->next_record();
+				echo "<a href='forums.php?action=viewthread&amp;threadid=".$ThingID."'>Thread '".display_str($Title)."' by ".display_str($Username)."</a>";
 			}
 			break;
 		case "post" :
@@ -158,44 +167,71 @@ while(list($ReportID, $SnitchID, $SnitchName, $ThingID, $Short, $ReportedTime, $
                                                        AND forums_posts.ID<=p.ID) AS PostNum, 
                                      f.Title,
                                      u.Username FROM forums_posts AS p 
-                                                JOIN forums_topics AS f ON f.ID = p.TopicID 
-                                                JOIN users_main AS u ON u.ID = p.AuthorID WHERE p.ID=".$ThingID);
+                                                LEFT JOIN forums_topics AS f ON f.ID = p.TopicID 
+                                                LEFT JOIN users_main AS u ON u.ID = p.AuthorID WHERE p.ID=".$ThingID);
 			if($DB->record_count() < 1) {
 				echo "No post with the reported ID found";
 			} else {
 				list($PostID,$Body,$TopicID,$PostNum,$Title,$Username) = $DB->next_record();
-				echo "<a href='forums.php?action=viewthread&amp;threadid=".$TopicID."&post=".$PostNum."#post".$PostID."'>Post#$PostID by $Username in thread $Title</a>";
+				echo "<a href='forums.php?action=viewthread&amp;threadid=".$TopicID."&post=".$PostNum."#post".$PostID."'>Post#$PostID by ".display_str($Username)." in thread '".display_str($Title)."'</a>";
 			}
 			break;
 		case "requests_comment" :
-			$DB->query("SELECT rc.RequestID, rc.Body, (SELECT COUNT(ID) FROM requests_comments WHERE ID <= ".$ThingID." AND requests_comments.RequestID = rc.RequestID) AS CommentNum FROM requests_comments AS rc WHERE ID=".$ThingID);
+			$DB->query("SELECT rc.RequestID, 
+                                     rc.Body, 
+                                     (SELECT COUNT(ID) FROM requests_comments 
+                                                       WHERE ID <= ".$ThingID." 
+                                                       AND requests_comments.RequestID = rc.RequestID) AS CommentNum 
+                                     r.Title,
+                                     u.Username
+                                     FROM requests_comments AS rc
+                                     LEFT JOIN requests AS r ON r.ID = rc.RequestID 
+                                     LEFT JOIN users_main AS u ON u.ID = rc.AuthorID WHERE rc.ID=".$ThingID);
 			if($DB->record_count() < 1) {
 				echo "No comment with the reported ID found";
 			} else {
-				list($RequestID, $Body, $PostNum) = $DB->next_record();
+				list($RequestID, $Body, $PostNum,$Title,$Username) = $DB->next_record();
 				$PageNum = ceil($PostNum / TORRENT_COMMENTS_PER_PAGE);
-				echo "<a href='requests.php?action=view&amp;id=".$RequestID."&page=".$PageNum."#post".$ThingID."'>COMMENT</a>";
+				echo "<a href='requests.php?action=view&amp;id=".$RequestID."&page=".$PageNum."#post".$ThingID."'>Comment#$ThingID by ".display_str($Username)." in request '".display_str($Title)."'</a>";
 			}
 			break;
 		case "torrents_comment" :
-			$DB->query("SELECT tc.GroupID, tc.Body, (SELECT COUNT(ID) FROM torrents_comments WHERE ID <= ".$ThingID." AND torrents_comments.GroupID = tc.GroupID) AS CommentNum FROM torrents_comments AS tc WHERE ID=".$ThingID);
+			$DB->query("SELECT tc.GroupID, 
+                                     tc.Body, 
+                                     (SELECT COUNT(ID) FROM torrents_comments 
+                                                       WHERE ID <= ".$ThingID." 
+                                                       AND torrents_comments.GroupID = tc.GroupID) AS CommentNum 
+                                     tg.Title,
+                                     u.Username
+                                     FROM torrents_comments AS tc
+                                     LEFT JOIN torrents_group AS tg ON tg.ID = tc.GroupID 
+                                     LEFT JOIN users_main AS u ON u.ID = tc.AuthorID WHERE tc.ID=".$ThingID);
 			if($DB->record_count() < 1) {
 				echo "No comment with the reported ID found";
 			} else {
-				list($GroupID, $Body, $PostNum) = $DB->next_record();
+				list($GroupID, $Body, $PostNum,$Title,$Username) = $DB->next_record();
 				$PageNum = ceil($PostNum / TORRENT_COMMENTS_PER_PAGE);
-				echo "<a href='torrents.php?id=".$GroupID."&page=".$PageNum."#post".$ThingID."'>COMMENT</a>";
+				echo "<a href='torrents.php?id=".$GroupID."&page=".$PageNum."#post".$ThingID."'>Comment#$ThingID by ".display_str($Username)." in torrent '".display_str($Title)."'</a>";
 			}
 			break;
 		case "collages_comment" :
-			$DB->query("SELECT cc.CollageID, cc.Body, (SELECT COUNT(ID) FROM collages_comments WHERE ID <= ".$ThingID." AND collages_comments.CollageID = cc.CollageID) AS CommentNum FROM collages_comments AS cc WHERE ID=".$ThingID);
+			$DB->query("SELECT cc.CollageID, 
+                                     cc.Body, 
+                                     (SELECT COUNT(ID) FROM collages_comments 
+                                                       WHERE ID <= ".$ThingID." 
+                                                       AND collages_comments.CollageID = cc.CollageID) AS CommentNum
+                                     c.Name,
+                                     u.Username
+                                     FROM collages_comments AS cc
+                                     LEFT JOIN collages AS c ON c.ID = cc.CollageID 
+                                     LEFT JOIN users_main AS u ON u.ID = tc.UserID WHERE cc.ID=".$ThingID);
 			if($DB->record_count() < 1) {
 				echo "No comment with the reported ID found";
 			} else {
-				list($CollageID, $Body, $PostNum) = $DB->next_record();
+				list($CollageID, $Body, $PostNum,$Title,$Username) = $DB->next_record();
 				$PerPage = POSTS_PER_PAGE;
 				$PageNum = ceil($PostNum / $PerPage);
-				echo "<a href='collage.php?action=comments&amp;collageid=".$CollageID."&page=".$PageNum."#post".$ThingID."'>COMMENT</a>";
+				echo "<a href='collage.php?action=comments&amp;collageid=".$CollageID."&page=".$PageNum."#post".$ThingID."'>Comment#$ThingID by ".display_str($Username)." in collage '".display_str($Title)."'</a>";
 			}
 			break;
 	}
@@ -204,7 +240,7 @@ while(list($ReportID, $SnitchID, $SnitchName, $ThingID, $Short, $ReportedTime, $
 			</td>
 		</tr>
             <tr class="rowb">
-			<td colspan="2"><?=$Text->full_format($Reason)?></td>
+                <td colspan="2"><?=$Text->full_format($Reason, get_permissions_advtags($SnitchID))?></td>
 		</tr>
 <? if($Status != "Resolved") { ?>
             <tr class="rowa">
