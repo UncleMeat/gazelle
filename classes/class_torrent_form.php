@@ -77,7 +77,7 @@ class TORRENT_FORM {
 					Torrent file
 				</td>
 				<td>
-					<input id="file" type="file" name="file_input" size="60" />
+					<input id="file" type="file" name="file_input" size="70" />
 				</td>
                         </tr>
                         <tr>

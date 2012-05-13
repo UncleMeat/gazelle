@@ -67,22 +67,34 @@ if(!$GenreTags) {
 	$Cache->cache_value('genre_tags', $GenreTags, 3600*6);
 }
 
-/* -------  Draw a box with do_not_upload list  ------- */   
+/* -------  Draw a box with do_not_upload list  -------    
 $DB->query("SELECT 
 	d.Name, 
 	d.Comment,
 	d.Time
 	FROM do_not_upload as d
 	ORDER BY d.Time");
-$DNU = $DB->to_array();
+$DNU = $DB->to_array(); 
+ */
+$DNU = $Cache->get_value('do_not_upload_list');
+if($DNU === FALSE) {
+        $DB->query("SELECT 
+              d.Name, 
+              d.Comment,
+              d.Time
+              FROM do_not_upload as d
+              ORDER BY d.Time");
+        $DNU = $DB->to_array();
+        $Cache->cache_value('do_not_upload_list', $DNU);
+}
 list($Name,$Comment,$Updated) = end($DNU);
 reset($DNU);
 $DB->query("SELECT IF(MAX(t.Time) < '$Updated' OR MAX(t.Time) IS NULL,1,0) FROM torrents AS t
 			WHERE UserID = ".$LoggedUser['ID']);
 list($NewDNU) = $DB->next_record();
 $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
-/*  class="<?=(check_perms('torrents_hide_dnu')?'box pad':'')?>"   */
-?><div class="thin">
+?>
+<div class="thin">
 <div class="box pad" style="margin:10px auto">
 	<span style="float:right;clear:right"><p><?=$NewDNU?'<strong class="important_text">':''?>Last Updated: <?=time_diff($Updated)?><?=$NewDNU?'</strong>':''?></p></span>
 	<h3 id="dnu_header">Do not upload from the following list</h3> 
@@ -105,20 +117,23 @@ $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
 		</tr>
 <? } ?>
 	</table>
-</div><?=($HideDNU?'<br />':'')?>
+</div>
 <?   
 /* -------  Draw a box with imagehost whitelist  ------- */   
-$DB->query("SELECT 
+$Whitelist = $Cache->get_value('imagehost_whitelist');
+if($Whitelist === FALSE) {
+        $DB->query("SELECT 
             w.Imagehost, 
             w.Link,
             w.Comment,
             w.Time
             FROM imagehost_whitelist as w
             ORDER BY w.Time");
-$Whitelist = $DB->to_array();
+        $Whitelist = $DB->to_array();
+        $Cache->cache_value('imagehost_whitelist', $Whitelist);
+}
 list($Host, $Link, $Comment,$Updated) = end($Whitelist);
 reset($Whitelist);
-
 $DB->query("SELECT IF(MAX(t.Time) < '$Updated' OR MAX(t.Time) IS NULL,1,0) FROM torrents AS t
 			WHERE UserID = ".$LoggedUser['ID']);
 list($NewWL) = $DB->next_record();  
@@ -151,10 +166,9 @@ $HideWL = check_perms('torrents_hide_imagehosts') && !$NewWL;
 		</tr>
 <? } ?>
 	</table> 
-</div></div><?=($HideWL?'<br />':'')?>
+</div></div>
 
 <?
- 
 /* -------  Draw upload torrent form  ------- */   
 $TorrentForm->head();
 $TorrentForm->simple_form($GenreTags);
