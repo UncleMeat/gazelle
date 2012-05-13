@@ -25,7 +25,7 @@ if ($ConvID = (int)$_GET['id']) {
 		$Cache->delete_value('staff_pm_new_'.$LoggedUser['ID']);
 	}
 
-	show_header('Staff PM', 'staffpm,bbcode');
+	show_header('Staff PM', 'staffpm,bbcode,jquery');
 
 	$UserInfo = user_info($UserID);
 	$UserStr = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID'], $UserInfo['Title'], true);
@@ -53,29 +53,6 @@ if ($ConvID = (int)$_GET['id']) {
 		[ &nbsp;<a href="staffpm.php">Back to inbox</a>&nbsp; ]
 <?
 	}
-      /*
-	// Staff only
-	if ($IsStaff) {
-?>
-	<a href="staffpm.php">[My unanswered]</a>
-<?
-	}
-
-	// FLS/Staff
-	if ($IsFLS) {
-          
-?>
-		<a href="staffpm.php?view=unanswered">[All unanswered]</a>
-		<a href="staffpm.php?view=open">[Open]</a>
-		<a href="staffpm.php?view=resolved">[Resolved]</a>
-<?
-		// User
-	} else {
-?>
-		<a href="staffpm.php">[Back to inbox]</a>
-<?
-	}
-        */
 ?>
 		<br />
 		<br />
@@ -99,9 +76,7 @@ if ($ConvID = (int)$_GET['id']) {
 ?>
 		<div class="box vertical_space">
 			<div class="head">
-				<!--<strong>-->
 					<?=$UserString?>
-				<!--</strong>-->
 				<?=time_diff($SentDate, 2, true)?>
 
 			</div>
@@ -142,7 +117,7 @@ if ($ConvID = (int)$_GET['id']) {
 
 	// Ajax assign response div
 	if ($IsStaff) { ?>
-		<div id="ajax_message" class="hidden center alertbar"></div>
+            <div class="messagecontainer"><div id="ajax_message" class="hidden center messagebar"></div></div>
 <?	}
 
 	// Replybox and buttons
@@ -154,7 +129,7 @@ if ($ConvID = (int)$_GET['id']) {
 				<form action="staffpm.php" method="post" class="staffpm" id="messageform">
 					<input type="hidden" name="action" value="takepost" />
 					<input type="hidden" name="convid" value="<?=$ConvID?>" id="convid" />
-                            <? $Text->display_bbcode_assistant("quickpost"); ?>
+                            <? $Text->display_bbcode_assistant("quickpost", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
 					<textarea id="quickpost" name="message" class="long" rows="10"></textarea> 
                               <br />
 					<input type="button" id="previewbtn" value="Preview" style="margin-right: 40px;" onclick="PreviewMessage();" />
@@ -172,7 +147,7 @@ if ($ConvID = (int)$_GET['id']) {
 <?		// Staff classes
 		foreach ($ClassLevels as $Class) {
 			// Create one <option> for each staff user class  >= 650
-			if ($Class['Level'] >= 450) {
+			if ($Class['Level'] >= 500) {
 				$Selected = (!$AssignedToUser && ($Level == $Class['Level'])) ? ' selected="selected"' : '';
 ?>
 							<option value="class_<?=$Class['Level']?>"<?=$Selected?>><?=$Class['Name']?></option>

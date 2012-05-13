@@ -239,7 +239,7 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 				<td colspan="2" class="center"><strong>Description</strong></td>
 			</tr>
 			<tr>
-				<td colspan="2"><?=$Text->full_format($Description)?></td>
+                      <td colspan="2"><?=$Text->full_format($Description, get_permissions_advtags($RequestorID))?></td>
 			</tr>
 		</table>
 <?
@@ -328,7 +328,7 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 ?>
 		<td class="body" valign="top">
 			<div id="content<?=$PostID?>">
-<?=$Text->full_format($Body)?>
+<?=$Text->full_format($Body, get_permissions_advtags($AuthorID))?>
 <? if($EditedUserID){ ?>
 				<br />
 				<br />

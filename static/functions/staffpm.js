@@ -16,7 +16,7 @@ function UpdateMessage() {
 	});
 }
 
-function SaveMessage(id) {
+function SaveMessage(id, conv_id) {
 	var ajax_message = 'ajax_message_' + id;
 	var ToPost = [];
 	
@@ -34,31 +34,31 @@ function SaveMessage(id) {
 			}
 			$('#' + ajax_message).show();
                   jQuery('#' + ajax_message).fadeIn(0);
-			//var t = setTimeout("$('#" + ajax_message + "').hide()", 2000);
-                  var t = setTimeout("jQuery('#" + ajax_message + "').fadeOut(1000)", 2500);
+                  var t = setTimeout("jQuery('#" + ajax_message + "').fadeOut(400)", 2000);
+                  //location.href='?action=responses&convid=' + conv_id;
 		}
 	);
 }
 
 function DeleteMessage(id) {
       var tt = $('#response_name_' + id).raw().value;
-      var r=confirm("Are you sure you want to delete response  '" + tt + "' ?");
-      if(r !== true) return;
+      if(!confirm("Are you sure you want to delete response #" + id + "\n'" + tt + "' ?")) return;
 	var div = '#response_' + id;
-	var ajax_message = 'ajax_message_' + id;
+	var ajax_message = '#ajax_message_' + id;
 
 	var ToPost = [];
 	ToPost['id'] = id;
 	ajax.post("?action=delete_response", ToPost, function (data) {
 		$(div).hide();
 		if (data == '1') {
-			document.getElementById(ajax_message).textContent = 'Response successfully deleted.';
+			$(ajax_message).raw().textContent = "Response #" + id + " successfully deleted.";
 		} else {
-			document.getElementById(ajax_message).textContent = 'Something went wrong.';
+			$(ajax_message).raw().textContent = 'Something went wrong.';
 		}
-		$('#'+ajax_message).show();
-            jQuery('#' + ajax_message).fadeIn(0);
-		var t = setTimeout("jQuery('#" + ajax_message + "').fadeOut(1000)", 1500);
+		$(ajax_message).show();
+            jQuery(ajax_message).fadeIn(0);
+		setTimeout("jQuery('" + ajax_message + "').fadeOut(400)", 2000);
+		setTimeout("$('#container_" + id + "').hide()", 2400);
 	});
 }
 
@@ -75,7 +75,7 @@ function Assign() {
 		}
 		$('#ajax_message').show();
             jQuery('#ajax_message').fadeIn(0);
-		var t = setTimeout("jQuery('#ajax_message').fadeOut(1000)", 1500);
+		setTimeout("jQuery('#ajax_message').fadeOut(400)", 2000);
 	});
 }
 

@@ -29,11 +29,10 @@ list($NumMy, $NumUnanswered, $NumOpen) = get_num_staff_pms($LoggedUser['ID'], $L
 	</div>
 	<div id="commonresponses" class="center">
 		<br />
-		<div class="messagecontainer"><div id="ajax_message_0" class="hidden center messagebar"></div></div>
-		<br />
 		<div class="center">
 			<h3>Create new response:</h3>
 		</div>
+		<div class="messagecontainer" id="container_0"><div id="ajax_message_0" class="hidden center messagebar"></div></div>
 		<div id="response_0" class="box">
 			<form id="response_form_0" action="">
 				<div class="head">
@@ -68,9 +67,7 @@ $DB->query("SELECT ID, Message, Name FROM staff_pm_responses ORDER BY ID DESC");
 while(list($ID, $Message, $Name) = $DB->next_record()) {
 	
 ?>
-		<br />
-		<div class="messagecontainer"><div id="ajax_message_<?=$ID?>" class="hidden center messagebar"></div></div>
-		<br />
+		<div class="messagecontainer" id="container_<?=$ID?>"><div id="ajax_message_<?=$ID?>" class="hidden center messagebar"></div></div>
 		<div id="response_<?=$ID?>" class="box">
 			<form id="response_form_<?=$ID?>" action="">
 				<div class="head">
