@@ -61,7 +61,7 @@ show_header('Manage articles','bbcode');
 			<input type="text" name="description" size="100" <? if(!empty($Description)) { echo 'value="'.display_str($Description).'"'; } ?> />
 			<br />
 			<h3>Body</h3>
-                  <? $Text->display_bbcode_assistant('textbody', true) ?>
+                  <? $Text->display_bbcode_assistant('textbody', get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])) ?>
                   <textarea id="textbody" name="body" class="long" rows="15"><? if(!empty($Body)) { echo display_str($Body); } ?></textarea> 
             </div>
             <br />
@@ -87,11 +87,12 @@ while(list($ArticleID,$Category,$TopicID, $Title,$Body,$ArticleTime)=$DB->next_r
 	<div class="box vertical_space">
 		<div class="head">
 			<strong><?=$TopicID?> - <?=display_str($Title) ?></strong> - posted <?=time_diff($ArticleTime) ?>
+                            <span style="float:right;"><a href="#" onClick="$('#article_<?=$ArticleID?>').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
 			- <a href="tools.php?action=editarticle&amp;id=<?=$ArticleID?>">[Edit]</a> 
-			<a href="tools.php?action=deletearticle&amp;id=<?=$ArticleID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">[Delete]</a>
+			<a href="tools.php?action=deletearticle&amp;id=<?=$ArticleID?>&amp;auth=<?=$LoggedUser['AuthKey']?>" onClick="return confirm('Are you sure you want to delete this article?');">[Delete]</a>
 		</div>
 		
-		<div class="pad"><?=$Text->full_format($Body, true) ?></div>
+		<div id="article_<?=$ArticleID?>"class="pad hidden"><?=$Text->full_format($Body, true) ?></div>
 	</div>
 <? } ?>
 </div>

@@ -42,7 +42,7 @@ if (!$Properties) {
 }
 
 
-if (($LoggedUser['ID'] != $Properties['UserID'] && !check_perms('torrents_edit')) || $LoggedUser['DisableWiki']) {
+if (($LoggedUser['ID'] != $Properties['UserID'] && !check_perms('torrents_edit'))) {
     error(403);
 }
 

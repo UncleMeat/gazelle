@@ -51,14 +51,12 @@ if(
 	!isset($_REQUEST['collageid']) || 
 	!isset($_REQUEST['preference']) || 
 	!is_number($_REQUEST['preference']) || 
-	!is_number($_REQUEST['collageid']) || 
-	$_REQUEST['preference'] > 2 ||
-	count($_REQUEST['list']) == 0
-) { error(0); }
+	!is_number($_REQUEST['collageid']))
+{ error(0); }
 
 if(!check_perms('zip_downloader')){ error(403); }
 
-$Preferences = array('Seeders ASC','Size ASC');
+$Preferences = array('', "WHERE t.Seeders >= '1'", "WHERE t.Seeders >= '5'");
 
 $CollageID = $_REQUEST['collageid'];
 $Preference = $Preferences[$_REQUEST['preference']];
@@ -74,11 +72,11 @@ t.Size
 FROM torrents AS t 
 INNER JOIN collages_torrents AS c ON t.GroupID=c.GroupID AND c.CollageID='$CollageID'
 INNER JOIN torrents_group AS tg ON tg.ID=t.GroupID
-ORDER BY t.GroupID ASC, t.$Preference";
+$Preference
+ORDER BY t.GroupID ASC";
 
 $DB->query($SQL);
 $Downloads = $DB->to_array('1',MYSQLI_NUM,false);
-$Skips = array();
 $TotalSize = 0;
 
 if(count($Downloads)) {
@@ -109,13 +107,13 @@ foreach($Downloads as $Download) {
 	
 	$Zip->add_file($Tor->enc(), $FileName.'.torrent');
 }
-$Analyzed = count($Downloads);
+
 $Skipped = count($Skips);
-$Downloaded = $Analyzed - $Skipped;
+$Downloaded =count($Downloads);
 $Time = number_format(((microtime(true)-$ScriptStartTime)*1000),5).' ms';
 $Used = get_size(memory_get_usage(true));
 $Date = date('M d Y, H:i');
-$Zip->add_file('Collector Download Summary - '.SITE_NAME."\r\n\r\nUser:\t\t$LoggedUser[Username]\r\nPasskey:\t$LoggedUser[torrent_pass]\r\n\r\nTime:\t\t$Time\r\nUsed:\t\t$Used\r\nDate:\t\t$Date\r\n\r\nTorrents Analyzed:\t\t$Analyzed\r\nTorrents Filtered:\t\t$Skipped\r\nTorrents Downloaded:\t$Downloaded\r\n\r\nTotal Size of Torrents (Ratio Hit): ".get_size($TotalSize)."\r\n\r\nAlbums Unavailable within your criteria (consider making a request for your desired format):\r\n".implode("\r\n",$Skips), 'Summary.txt');
+$Zip->add_file('Collector Download Summary - '.SITE_NAME."\r\n\r\nUser:\t\t$LoggedUser[Username]\r\nPasskey:\t$LoggedUser[torrent_pass]\r\n\r\nTime:\t\t$Time\r\nUsed:\t\t$Used\r\nDate:\t\t$Date\r\n\r\nTorrents Downloaded:\t\t$Downloaded\r\n\r\nTotal Size of Torrents (Ratio Hit): ".get_size($TotalSize)."\r\n", 'Summary.txt');
 $Settings = array(implode(':',$_REQUEST['list']),$_REQUEST['preference']);
 $Zip->close_stream();
 

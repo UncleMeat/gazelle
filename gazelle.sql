@@ -1769,7 +1769,6 @@ CREATE TABLE IF NOT EXISTS `users_info` (
   `DisableIRC` enum('0','1') DEFAULT '0',
   `DisableTagging` enum('0','1') NOT NULL DEFAULT '0',
   `DisableUpload` enum('0','1') NOT NULL DEFAULT '0',
-  `DisableWiki` enum('0','1') NOT NULL DEFAULT '0',
   `DisablePM` enum('0','1') NOT NULL DEFAULT '0',
   `RatioWatchEnds` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `RatioWatchDownload` bigint(20) unsigned NOT NULL DEFAULT '0',

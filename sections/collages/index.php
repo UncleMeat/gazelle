@@ -26,11 +26,9 @@ switch($_REQUEST['action']) {
 		require(SERVER_ROOT.'/sections/collages/manage_handle.php');
 		break;
 	case 'edit':
-		if(!check_perms('site_edit_wiki')) { error(403); }
 		require(SERVER_ROOT.'/sections/collages/edit.php');
 		break;
 	case 'edit_handle':
-		if(!check_perms('site_edit_wiki')) { error(403); }
 		require(SERVER_ROOT.'/sections/collages/edit_handle.php');
 		break;
 	case 'delete':

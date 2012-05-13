@@ -236,7 +236,7 @@ show_header($Name,'browse,collage,bbcode');
 <? if(check_perms('site_collages_subscribe')) { ?>
 		<a href="#" onclick="CollageSubscribe(<?=$CollageID?>);return false;" id="subscribelink<?=$CollageID?>">[<?=(in_array($CollageID, $CollageSubscriptions) ? 'Unsubscribe' : 'Subscribe')?>]</a>
 <? }
-   if (check_perms('site_edit_wiki') && !$Locked) { ?>
+   if (!$Locked) { ?>
 		<a href="collages.php?action=edit&amp;collageid=<?=$CollageID?>">[Edit description]</a> 
 <? }
 	if(has_bookmarked('collage', $CollageID)) {
@@ -265,15 +265,7 @@ if (check_perms('site_collages_manage') && !$Locked) { ?>
 		</div>
 <?
 if(check_perms('zip_downloader')){
-	if(isset($LoggedUser['Collector'])) {
-		list($ZIPList,$ZIPPrefs) = $LoggedUser['Collector'];
-		$ZIPList = explode(':',$ZIPList);
-	} else {
-		$ZIPList = array('00','11');
-		$ZIPPrefs = 1;
-	}
 ?>
-             
 		<div class="box">
 			<div class="head colhead_dark"><strong>Collector</strong></div>
 			<div class="pad">
@@ -281,44 +273,10 @@ if(check_perms('zip_downloader')){
 				<input type="hidden" name="action" value="download" />
 				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 				<input type="hidden" name="collageid" value="<?=$CollageID?>" /> 
-				<ul id="list" class="nobullet">
-<? foreach ($ZIPList as $ListItem) { ?>
-					<li id="list<?=$ListItem?>">
-						<input type="hidden" name="list[]" value="<?=$ListItem?>" /> 
-						<span style="float:left;"><?=$ZIPOptions[$ListItem]['2']?></span>
-						<a href="#" onclick="remove_selection('<?=$ListItem?>');return false;" style="float:right;">[X]</a>
-						<br style="clear:all;" />
-					</li>
-<? } ?>
-				</ul>
-				<select id="formats" style="width:180px">
-<?
-$OpenGroup = false;
-$LastGroupID=-1;
-
-foreach ($ZIPOptions as $Option) {
-	list($GroupID,$OptionID,$OptName) = $Option;
-
-	if($GroupID!=$LastGroupID) {
-		$LastGroupID=$GroupID;
-		if($OpenGroup) { ?>
-					</optgroup>
-<?		} ?>
-					<optgroup label="<?=$ZIPGroups[$GroupID]?>">
-<?		$OpenGroup = true;
-	}
-?>
-						<option id="opt<?=$GroupID.$OptionID?>" value="<?=$GroupID.$OptionID?>"<? if(in_array($GroupID.$OptionID,$ZIPList)){ echo ' disabled="disabled"'; }?>><?=$OptName?></option>
-<?
-}
-?>
-					</optgroup>
-				</select>
-				<button type="button" onclick="add_selection()">+</button>
 				<select name="preference" style="width:210px">
-					<option value="0"<? if($ZIPPrefs==0){ echo ' selected="selected"'; } ?>>Prefer Original</option>
-					<option value="1"<? if($ZIPPrefs==1){ echo ' selected="selected"'; } ?>>Prefer Best Seeded</option>
-					<option value="2"<? if($ZIPPrefs==2){ echo ' selected="selected"'; } ?>>Prefer Bonus Tracks</option>
+					<option value="0">Download All</option>
+					<option value="1">At least 1 seeder</option>
+					<option value="2">5 or more seeders</option>
 				</select>
 				<input type="submit" style="width:210px" value="Download" /> 
 				</form>
