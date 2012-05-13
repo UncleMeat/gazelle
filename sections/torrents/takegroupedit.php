@@ -16,6 +16,7 @@ $UserID = $LoggedUser['ID'];
 $GroupID = $_REQUEST['groupid'];
 
  // with edit, the variables are passed with POST
+$CategoryID = $_POST['categoryid'];
 $Body = $_POST['body'];
 $Image = $_POST['image'];
 
@@ -30,7 +31,8 @@ $Image = db_string($Image);
 
 // Update torrents table
 $DB->query("UPDATE torrents_group SET 
-	Body='$Body',
+	NewCategoryID='$CategoryID',
+        Body='$Body',
 	Image='$Image'
 	WHERE ID='$GroupID'");
 // Log VH changes
@@ -43,6 +45,8 @@ if($DB->record_count()>0) {
 		$Cache->delete_value('collage_'.$CollageID);
 	}
 }
+
+update_hash($GroupID);
 
 //Fix Recent Uploads/Downloads for image change
 $DB->query("SELECT DISTINCT UserID

@@ -17,13 +17,14 @@ $GroupID = $_GET['groupid'];
 if(!is_number($GroupID) || !$GroupID) { error(0); }
 
 $DB->query("SELECT
+        tg.NewCategoryID,
 	tg.Name,
 	tg.Image,
 	tg.Body
 	FROM torrents_group AS tg
 	WHERE tg.ID='$GroupID'");
 if($DB->record_count() == 0) { error(404); }
-list($Name, $Image, $Body) = $DB->next_record();
+list($CategoryID, $Name, $Image, $Body) = $DB->next_record();
 
 include(SERVER_ROOT.'/classes/class_text.php');
 
@@ -41,6 +42,14 @@ show_header('Edit torrent','bbcode');
 				<input type="hidden" name="action" value="takegroupedit" />
 				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 				<input type="hidden" name="groupid" value="<?=$GroupID?>" />
+                                <h3>Category</h3>
+                                <select name="categoryid">
+                                <? foreach($NewCategories as $category) { ?>
+                                <option <?=$CategoryID==$category['id'] ? 'selected="selected"' : ''?> value="<?=$category['id']?>"><?=$category['name']?></option>
+                                <? } ?>
+                                </select>
+			</tr>
+                                
 				<h3>Image</h3>
 				<input type="text" name="image" size="92" value="<?=$Image?>" /><br />
 				<h3>Description</h3>

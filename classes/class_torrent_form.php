@@ -174,7 +174,7 @@ class TORRENT_FORM {
 <?			} ?> 
 					<input type="text" id="tags" name="tags" class="medium" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>/>
 					<br />
-					Tags should be comma separated, and you should use a period ('.') to separate words inside a tag.
+					Tags should be separated with spaces, and you should use a period ('.') to separate words inside a tag.
 					<br /><br />
 					There is a list of official tags to the left of the text box. Please use these tags instead of 'unofficial' tags.  <strong>Please note that the '2000s' tag refers to produced between 2000 and 2009.</strong>
 					<br /><br />

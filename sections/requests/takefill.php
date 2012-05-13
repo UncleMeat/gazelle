@@ -11,7 +11,7 @@ authorize();
 
 //VALIDATION
 if(!empty($_GET['torrentid']) && is_number($_GET['torrentid'])) {
-	$TorrentID = $_GET['torrentid'];
+	$TorID = $_GET['torrentid'];
 } else {
 	if(empty($_POST['link'])) {
 		$Err = "You forgot to supply a link to the filling torrent";
@@ -20,7 +20,7 @@ if(!empty($_GET['torrentid']) && is_number($_GET['torrentid'])) {
 		if(preg_match("/".TORRENT_REGEX."/i", $Link, $Matches) < 1) {
 			$Err = "Your link didn't seem to be a valid torrent link";
 		} else {
-			$TorrentID = $Matches[0];
+			$GroupID = $Matches[3];
 		}
 	}
 	
@@ -28,27 +28,29 @@ if(!empty($_GET['torrentid']) && is_number($_GET['torrentid'])) {
 		error($Err);
 	}
 	
-	preg_match("/torrentid=([0-9]+)/i", $Link, $Matches);
-	$TorrentID = $Matches[1];
-	if(!$TorrentID || !is_number($TorrentID)) {
+	if(!$GroupID || !is_number($GroupID)) {
 		error(404);
 	}
 }
 
+$Where = $TorID ? "t.ID = $TorrentID" : "tg.ID = $GroupID";
+
 //Torrent exists, check it's applicable
-$DB->query("SELECT t.UserID,
-				t.Time,
-				tg.NewCategoryID,				
-			FROM torrents AS t
-				LEFT JOIN torrents_group AS tg ON t.GroupID=tg.ID
-			WHERE t.ID = ".$TorrentID." 
-			LIMIT 1");
+$DB->query("SELECT 
+                    t.ID,
+                    t.UserID,
+                    t.Time,
+                    tg.NewCategoryID				
+            FROM torrents AS t
+                    LEFT JOIN torrents_group AS tg ON t.GroupID=tg.ID
+            WHERE $Where 
+            LIMIT 1");
 
 
 if($DB->record_count() < 1) {
 	error(404);
 }
-list($UploaderID, $UploadTime, $TorrentCategoryID) = $DB->next_record();
+list($TorrentID, $UploaderID, $UploadTime, $TorrentCategoryID) = $DB->next_record();
 
 $FillerID = $LoggedUser['ID'];
 $FillerUsername = $LoggedUser['Username'];
@@ -73,7 +75,7 @@ $DB->query("SELECT
 		Title,
 		UserID,
 		TorrentID,
-		CategoryID,
+		CategoryID
 	FROM requests
 	WHERE ID = ".$RequestID);
 list($Title, $RequesterID, $OldTorrentID, $RequestCategoryID) = $DB->next_record();

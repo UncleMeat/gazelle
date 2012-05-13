@@ -295,13 +295,16 @@ $EditionID = 0;
 						<a href="#" onclick="show_snatches('<?=$TorrentID?>', 0);return false;">(View Snatchlist)</a>
 <? } ?>
 						<a href="#" onclick="show_files('<?=$TorrentID?>');return false;">(View Filelist)</a>
+<? if($Reported) { ?> 
+						<a href="#" onclick="show_reported('<?=$TorrentID?>');return false;">(View Report Information)</a>
+<? } ?>
 					</div>
 					<div id="peers_<?=$TorrentID?>" class="hidden"></div>
 					<div id="downloads_<?=$TorrentID?>" class="hidden"></div>
 					<div id="snatches_<?=$TorrentID?>" class="hidden"></div>
 					<div id="files_<?=$TorrentID?>" class="hidden"><?=$FileList?></div>
 <?  if($Reported) { ?> 
-					<div id="reported_<?=$TorrentID?>" ><?=$ReportInfo?></div>
+					<div id="reported_<?=$TorrentID?>"><?=$ReportInfo?></div>
 <? } ?>
 					<? if(!empty($Description)) {
 						echo '<blockquote>'.$Text->full_format($Description).'</blockquote>';}
