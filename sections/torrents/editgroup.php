@@ -16,50 +16,80 @@ the cache for the artist page.
 $GroupID = $_GET['groupid'];
 if(!is_number($GroupID) || !$GroupID) { error(0); }
 
-$DB->query("SELECT
-        tg.NewCategoryID,
-	tg.Name,
-	tg.Image,
-	tg.Body
-	FROM torrents_group AS tg
-	WHERE tg.ID='$GroupID'");
-if($DB->record_count() == 0) { error(404); }
-list($CategoryID, $Name, $Image, $Body) = $DB->next_record();
+if($HasDescriptionData === TRUE) {
+    $DB->query("SELECT
+          tg.Name,
+          t.UserID
+          FROM torrents_group AS tg
+          JOIN torrents AS t ON t.GroupID = tg.ID
+          WHERE tg.ID='$GroupID'");
+    if($DB->record_count() == 0) { error(404); }
+    list($Name, $UserID) = $DB->next_record();
+} else {
+    $DB->query("SELECT
+          tg.NewCategoryID,
+          tg.Name,
+          tg.Image,
+          tg.Body,
+          t.UserID
+          FROM torrents_group AS tg
+          JOIN torrents AS t ON t.GroupID = tg.ID
+          WHERE tg.ID='$GroupID'");
+    if($DB->record_count() == 0) { error(404); }
+    list($CategoryID, $Name, $Image, $Body, $UserID) = $DB->next_record();
+    $CanEdit = check_perms('torrents_edit') || ($UserID == $LoggedUser['ID']);
+}
 
-include(SERVER_ROOT.'/classes/class_text.php');
+if(!$CanEdit) { error(403); }
 
-$Text = new TEXT;
+if (!isset($Text)) {
+    include(SERVER_ROOT.'/classes/class_text.php');
+    $Text = new TEXT;
+}
 
-show_header('Edit torrent','bbcode');
+show_header('Edit torrent','bbcode,edittorrent');
 
 // Start printing form
 ?>
 <div class="thin">
+<?
+    if($Err) {
+        echo '<div class="box pad"><h4 style="color: red;text-align:center;">'.$Err.'</h4></div>';
+    } 
+?>
 	<h2>Edit <a href="torrents.php?id=<?=$GroupID?>"><?=$Name?></a></h2>
 	<div class="box pad">
-		<form action="torrents.php" method="post">
+		<form id="edit_torrent" action="torrents.php" method="post">
 			<div>
 				<input type="hidden" name="action" value="takegroupedit" />
 				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 				<input type="hidden" name="groupid" value="<?=$GroupID?>" />
+
                                 <h3>Category</h3>
                                 <select name="categoryid">
                                 <? foreach($NewCategories as $category) { ?>
                                 <option <?=$CategoryID==$category['id'] ? 'selected="selected"' : ''?> value="<?=$category['id']?>"><?=$category['name']?></option>
                                 <? } ?>
-                                </select>
-			</tr>
-                                
+                                </select>                              
 				<h3>Image</h3>
 				<input type="text" name="image" size="92" value="<?=$Image?>" /><br />
 				<h3>Description</h3>
-                            <? $Text->display_bbcode_assistant("textbody"); ?>
-				<textarea id="textbody" name="body" cols="91" rows="20"><?=$Body?></textarea><br />
-				<h3>Edit summary</h3>
-				<input type="text" name="summary" size="92" /><br />
+                        
+                        <div id="preview" class="hidden"  style="text-align:left;">
+                        </div>
+                        <div id="editor"> 
+                                <h3>Cover Image</h3>
+                                <input type="text" name="image" class="long" value="<?=$Image?>" /><br />
+                                <h3>Description</h3>
+                                    <? $Text->display_bbcode_assistant("body", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
+                                <textarea id="body" name="body" class="long" rows="20"><?=$Body?></textarea><br />
+                        </div>
+                        <h3>Edit summary</h3>
+				<input type="text" name="summary" class="long" value="<?=$EditSummary?>" /><br />
 				<div style="text-align: center;">
-					<input type="submit" value="Submit" />
-				</div>
+                                <input id="preview_button" type="button" value="Preview" onclick="Preview_Toggle();" />
+                                <input type="submit" value="Submit" />
+                        </div>
 			</div>
 		</form>
 	</div>

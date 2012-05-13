@@ -33,6 +33,7 @@ if($_POST['submit'] == 'Delete'){ //Delete
 			('$P[host]','$P[link]','$P[comment]','$LoggedUser[ID]','".sqltime()."')");
 	}
 }
+$Cache->delete_value('imagehost_whitelist');
 
 // Go back
 header('Location: tools.php?action=imghost_whitelist')

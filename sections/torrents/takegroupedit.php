@@ -3,7 +3,9 @@
 authorize();
 
 include(SERVER_ROOT.'/classes/class_text.php');
+include(SERVER_ROOT . '/classes/class_validate.php');
 $Text = new TEXT;
+$Validate = new VALIDATE;
 
 // Quick SQL injection check
 if(!$_REQUEST['groupid'] || !is_number($_REQUEST['groupid'])) {
@@ -11,14 +13,47 @@ if(!$_REQUEST['groupid'] || !is_number($_REQUEST['groupid'])) {
 }
 // End injection check
 
-// Variables for database input
-$UserID = $LoggedUser['ID'];
-$GroupID = $_REQUEST['groupid'];
+//<<<<<<< HEAD
+//if(!check_perms('site_edit_wiki')) { error(403); }
 
+//=======
+//>>>>>>> origin/work
+// Variables for database input
+//$UserID = $LoggedUser['ID']; //apparently never used??
+$GroupID = (int)$_REQUEST['groupid'];
+
+$CanEdit = check_perms('torrents_edit');
+if (!$CanEdit){
+    //check user has permission to edit
+    $DB->query("SELECT UserID FROM torrents WHERE GroupID='$GroupID'");
+    list($UserID) = $DB->next_record();
+    $CanEdit = $UserID == $LoggedUser['ID'];
+}
+if(!$CanEdit) { error(403); }
+
+      
  // with edit, the variables are passed with POST
 $CategoryID = $_POST['categoryid'];
 $Body = $_POST['body'];
 $Image = $_POST['image'];
+
+$whitelist_regex = $Validate->GetWhitelistRegex();
+
+$Validate->SetFields('image', '0', 'image', 'The image URL you entered was not valid.', array('regex' => $whitelist_regex, 'maxlength' => 255, 'minlength' => 12));
+
+$Validate->SetFields('body', '1', 'desc', 'Description', array('regex' => $whitelist_regex, 'maxlength' => 1000000, 'minlength' => 20));
+
+$Err = $Validate->ValidateForm($_POST); // Validate the form
+
+if ($Err) { // Show the upload form, with the data the user entered
+    $HasDescriptionData = TRUE; /// tells editgroup to use $Body and $Image vars instead of requerying them
+    
+    $_GET['groupid'] = $GroupID;
+    $EditSummary = $_POST['summary'];
+    include(SERVER_ROOT . '/sections/torrents/editgroup.php');
+    die();
+}
+
 
 // Trickery
 if(!preg_match("/^".URL_REGEX."$/i", $Image)) {
@@ -91,5 +126,5 @@ foreach($Snatchers as $UserID) {
 	}
 }
 
-header("Location: torrents.php?id=".$GroupID);
+header("Location: torrents.php?id=".$GroupID."&did=1");
 ?>

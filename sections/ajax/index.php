@@ -33,6 +33,9 @@ switch ($_GET['action']){
 	case 'preview_blog':
 		require('preview_blog.php');
 		break;
+      case 'preview_edit_torrent':
+		require('preview_edit_torrent.php');
+		break;
 	case 'torrent_info':
 		require('torrent_info.php');
 		break;
