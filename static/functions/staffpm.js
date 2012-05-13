@@ -34,8 +34,7 @@ function SaveMessage(id, conv_id) {
 			}
 			$('#' + ajax_message).show();
                   jQuery('#' + ajax_message).fadeIn(0);
-                  var t = setTimeout("jQuery('#" + ajax_message + "').fadeOut(400)", 2000);
-                  //location.href='?action=responses&convid=' + conv_id;
+                  setTimeout("jQuery('#" + ajax_message + "').fadeOut(400)", 2000);
 		}
 	);
 }

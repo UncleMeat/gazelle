@@ -124,7 +124,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
 
 #header {
     width: 100%;
-    min-width:740px; 
+    min-width:960px; 
     padding: 0;
     background: #000 url('images/header.png') repeat-x;  
     font-weight: normal;
@@ -133,7 +133,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
 
 #content {
     width: 90%;
-    min-width: 820px;
+    min-width: 940px;
     background-color: #e0e8eb;
     margin: 0px auto 0px auto;
     padding: 0.6em 0.6em 30px;
@@ -144,6 +144,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
 #footer {
     margin-top: 40px;
     width: 100%;
+    min-width:960px; 
     text-align: center;
     padding: 1em 0 0;
     color: #eee;
@@ -253,6 +254,8 @@ span.infinity {
 #footer_bottom {
     background: #0261a3 url('images/pagebottom.jpg') repeat-x;  
     height: 24px;
+    width:100%;
+    min-width:960px; 
 }
 
 
@@ -471,9 +474,11 @@ input.hidden {
 /* Layout (Any page) */
 
 .thin {
-    /* width: 850px; */
+    /* width: 850px; 
     width: 80%;
-    min-width: 740px;
+    min-width: 740px; */
+    width: 96%;
+    min-width: 920px;
     margin-left:auto;
     margin-right:auto;
 }

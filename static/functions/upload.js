@@ -35,6 +35,26 @@ function RemoveLogField() {
 		LogCount--;
 }
 
+
+function Upload_Quick_Preview() { 
+	$('#post_preview').raw().value = "Make changes";
+	$('#post_preview').raw().preview = true;
+	ajax.post("ajax.php?action=preview_upload","upload_table", function(response){
+		$('#uploadpreviewbody').show();
+		$('#contentpreview').raw().innerHTML = response;
+		$('#uploadbody').hide(); 
+	});
+}
+
+function Upload_Quick_Edit() {
+	$('#post_preview').raw().value = "Preview";
+	$('#post_preview').raw().preview = false;
+	$('#uploadpreviewbody').hide();
+	$('#uploadbody').show(); 
+}
+
+
+/*
 var FormatCount = 0;
 
 function AddFormat() {
@@ -230,22 +250,4 @@ function GroupRemaster() {
 		$('#remaster_catalogue_number').raw().value = remasters[index][4];
 	}
 }
-
-
-
-function Upload_Quick_Preview() { 
-	$('#post_preview').raw().value = "Make changes";
-	$('#post_preview').raw().preview = true;
-	ajax.post("ajax.php?action=preview_upload","upload_table", function(response){
-		$('#uploadpreviewbody').show();
-		$('#contentpreview').raw().innerHTML = response;
-		$('#uploadbody').hide(); 
-	});
-}
-
-function Upload_Quick_Edit() {
-	$('#post_preview').raw().value = "Preview";
-	$('#post_preview').raw().preview = false;
-	$('#uploadpreviewbody').hide();
-	$('#uploadbody').show(); 
-}
+*/

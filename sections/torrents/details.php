@@ -59,7 +59,7 @@ if (empty($TokenTorrents)) {
 }
 
 // Start output
-show_header($Title,'browse,comments,torrent,bbcode');
+show_header($Title,'browse,comments,torrent,bbcode,jquery');
 
 
 	list($TorrentID,
@@ -72,6 +72,14 @@ show_header($Title,'browse,comments,torrent,bbcode');
 ?>
 <div class="thin">
 	<h2><?=$DisplayName?></h2>
+<?
+	if($_GET['did'] == 1) { ?>
+			<div id="messagebar" class="messagebar">Successfully Edited Description</div>
+                  <script type="text/javascript">
+                        function Kill_Message(){ setTimeout("jQuery('#messagebar').fadeOut(400)", 2000); }
+                        addDOMLoadEvent(Kill_Message);
+                  </script>
+<?	} ?>
 	<div class="linkbox">
 <?	if( $CanEdit) { //  check_perms('site_edit_wiki')  ?>
 		<a href="torrents.php?action=editgroup&amp;groupid=<?=$GroupID?>">[Edit description]</a>
