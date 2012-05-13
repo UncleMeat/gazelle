@@ -721,7 +721,7 @@ td.colhead, .colhead td {
     padding-right: 10px;
 }
 
-.colhead .sign, .colhead_dark .sign {
+.colhead .sign, .colhead_dark .colhead_red .sign {
     padding: 0px 8px 0px 8px;
     vertical-align:middle;
     text-align:center;
@@ -735,6 +735,15 @@ td.colhead, .colhead td {
 }
 
 .colhead_dark a {
+    color: white;
+}
+
+.colhead_red {
+    background-color: red;
+    color: #eee;
+}
+
+.colhead_red a {
     color: white;
 }
 

@@ -174,12 +174,6 @@ function filelist($Str) {
 
 $EditionID = 0;
 
-	/*  moved up top so can do proper permissions check before printing 'Edit Description' link
-	list($TorrentID,
-		$FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $TorrentTime, $Description, 
-		$FileList, $FilePath, $UserID, $Username, $LastActive,
-		$BadTags, $BadFolders, $BadFiles, $CassetteApproved, $LossymasterApproved, $LastReseedRequest, $LogInDB, $HasFile) = $TorrentList[0];
-*/
 	$Reported = false;
 	unset($ReportedTimes);
 	$Reports = $Cache->get_value('reports_torrent_'.$TorrentID);
@@ -199,7 +193,7 @@ $EditionID = 0;
 	if(count($Reports) > 0) {
 		$Reported = true;
 		include(SERVER_ROOT.'/sections/reportsv2/array.php');
-		$ReportInfo = "<table><tr class='colhead_dark' style='font-weight: bold;'><td>This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report').":</td></tr>";
+		$ReportInfo = "<table><tr class='colhead_red' style='font-weight: bold;'><td>This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report').":</td></tr>";
 
 		foreach($Reports as $Report) {
 			list($ReportID, $ReporterID, $ReportType, $ReportReason, $ReportedTime) = $Report;
@@ -301,16 +295,13 @@ $EditionID = 0;
 						<a href="#" onclick="show_snatches('<?=$TorrentID?>', 0);return false;">(View Snatchlist)</a>
 <? } ?>
 						<a href="#" onclick="show_files('<?=$TorrentID?>');return false;">(View Filelist)</a>
-<? if($Reported) { ?> 
-						<a href="#" onclick="show_reported('<?=$TorrentID?>');return false;">(View Report Information)</a>
-<? } ?>
 					</div>
 					<div id="peers_<?=$TorrentID?>" class="hidden"></div>
 					<div id="downloads_<?=$TorrentID?>" class="hidden"></div>
 					<div id="snatches_<?=$TorrentID?>" class="hidden"></div>
 					<div id="files_<?=$TorrentID?>" class="hidden"><?=$FileList?></div>
 <?  if($Reported) { ?> 
-					<div id="reported_<?=$TorrentID?>" class="hidden"><?=$ReportInfo?></div>
+					<div id="reported_<?=$TorrentID?>" ><?=$ReportInfo?></div>
 <? } ?>
 					<? if(!empty($Description)) {
 						echo '<blockquote>'.$Text->full_format($Description).'</blockquote>';}
