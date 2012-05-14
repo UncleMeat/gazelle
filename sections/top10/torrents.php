@@ -113,6 +113,7 @@ $BaseQuery = "SELECT
 	t.Seeders,
 	t.Leechers,
 	((t.Size * t.Snatched) + (t.Size * 0.5 * t.Leechers)) AS Data,
+      t.Size,
       t.UserID,
       u.Username
 	FROM torrents AS t
@@ -239,6 +240,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 		<td style="width:40px;"></td>
 		<td><strong>Name</strong></td>
 		<td class="top10 statlong"><strong>Data</strong></td>
+		<td class="top10 statlong"><strong>Size</strong></td>
 		<td class="top10 stat"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
 		<td class="top10 stat"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>
 		<td class="top10 stat"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/leechers.png" alt="Leechers" title="Leechers" /></td>
@@ -265,7 +267,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 
 	foreach ($Details as $Detail) {
 		list($TorrentID,$GroupID,$GroupName, $NewCategoryID, $TorrentTags,
-			$Snatched,$Seeders,$Leechers,$Data,$UploaderID,$UploaderName) = $Detail;
+			$Snatched,$Seeders,$Leechers,$Data,$Size,$UploaderID,$UploaderName) = $Detail;
 		// highlight every other row
 		$Rank++;
 		$Highlight = ($Rank % 2 ? 'a' : 'b');
@@ -301,6 +303,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 			<?=$TorrentTags?>
 		</td>
 		<td class="top10 nobr"><?=get_size($Data)?></td>
+		<td class="top10"><?=get_size($Size)?></td>
 		<td class="top10"><?=number_format((double) $Snatched)?></td>
 		<td class="top10"><?=number_format((double) $Seeders)?></td>
 		<td class="top10"><?=number_format((double) $Leechers)?></td>
