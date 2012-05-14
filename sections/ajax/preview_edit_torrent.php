@@ -6,6 +6,7 @@ $Text = new TEXT;
 
 $Content = $_REQUEST['body'];
 $Imageurl = $_REQUEST['image'];
+$AuthorID = (int)$_REQUEST['authorid'];
 if (!empty($Imageurl)) {
     if ($Text->valid_url($Imageurl)){ 
         $Imageurl = "<div style=\"text-align: center;\" class=\"box pad\">". $Text->full_format('[img]'.$Imageurl.'[/img]')."</div>";
@@ -22,8 +23,8 @@ echo '
                             '.$Imageurl.'<br />
                             <h3>Description</h3>
                             <br />
-                            <div style="text-align: center;" class="box pad">
-            '.$Text->full_format($Content, get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])).'                              
+                            <div class="box pad">
+            '.$Text->full_format($Content, get_permissions_advtags($AuthorID)).'                              
                             </div>';
    
 ?>

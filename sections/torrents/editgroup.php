@@ -16,16 +16,8 @@ the cache for the artist page.
 $GroupID = $_GET['groupid'];
 if(!is_number($GroupID) || !$GroupID) { error(0); }
 
-if($HasDescriptionData === TRUE) {
-    $DB->query("SELECT
-          tg.Name,
-          t.UserID
-          FROM torrents_group AS tg
-          JOIN torrents AS t ON t.GroupID = tg.ID
-          WHERE tg.ID='$GroupID'");
-    if($DB->record_count() == 0) { error(404); }
-    list($Name, $UserID) = $DB->next_record();
-} else {
+    // may as well use prefilled vars if coming from takegroupedit 
+if($HasDescriptionData !== TRUE) {
     $DB->query("SELECT
           tg.NewCategoryID,
           tg.Name,
@@ -36,8 +28,8 @@ if($HasDescriptionData === TRUE) {
           JOIN torrents AS t ON t.GroupID = tg.ID
           WHERE tg.ID='$GroupID'");
     if($DB->record_count() == 0) { error(404); }
-    list($CategoryID, $Name, $Image, $Body, $UserID) = $DB->next_record();
-    $CanEdit = check_perms('torrents_edit') || ($UserID == $LoggedUser['ID']);
+    list($CategoryID, $Name, $Image, $Body, $AuthorID) = $DB->next_record();
+    $CanEdit = check_perms('torrents_edit') || ($AuthorID == $LoggedUser['ID']);
 }
 
 if(!$CanEdit) { error(403); }
@@ -53,10 +45,32 @@ show_header('Edit torrent','bbcode,edittorrent');
 ?>
 <div class="thin">
 <?
-    if($Err) {
-        echo '<div class="box pad"><h4 style="color: red;text-align:center;">'.$Err.'</h4></div>';
+    if($Err) { 
+        echo '<div class="box pad"><strong class=\"important_text\">'.$Err.'</strong></div>';
     } 
-?>
+
+// =====================================================
+//  Do we want users to be able to edit their own titles??
+//  If so then maybe the title edit should be integrated into the main form above?
+if(check_perms('torrents_edit')) {  
+?> 
+	<h2>Rename Title</h2>
+	<div class="box pad">
+		<form action="torrents.php" method="post">
+			<div>
+				<input type="hidden" name="action" value="rename" />
+				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+				<input type="hidden" name="groupid" value="<?=$GroupID?>" />
+				<input type="text" name="name" class="long" value="<?=$Name?>" />
+				<div style="text-align: center;">
+					<input type="submit" value="Rename" />
+				</div>
+				
+			</div>
+		</form>
+	</div>
+<?
+} ?> 
 	<h2>Edit <a href="torrents.php?id=<?=$GroupID?>"><?=$Name?></a></h2>
 	<div class="box pad">
 		<form id="edit_torrent" action="torrents.php" method="post">
@@ -64,25 +78,23 @@ show_header('Edit torrent','bbcode,edittorrent');
 				<input type="hidden" name="action" value="takegroupedit" />
 				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 				<input type="hidden" name="groupid" value="<?=$GroupID?>" />
+				<input type="hidden" name="authorid" value="<?=$AuthorID?>" />
 
                                 <h3>Category</h3>
                                 <select name="categoryid">
                                 <? foreach($NewCategories as $category) { ?>
                                 <option <?=$CategoryID==$category['id'] ? 'selected="selected"' : ''?> value="<?=$category['id']?>"><?=$category['name']?></option>
                                 <? } ?>
-                                </select>                              
-				<h3>Image</h3>
-				<input type="text" name="image" size="92" value="<?=$Image?>" /><br />
-				<h3>Description</h3>
-                        
+                                </select>
+                        <br /> <br />
                         <div id="preview" class="hidden"  style="text-align:left;">
                         </div>
                         <div id="editor"> 
                                 <h3>Cover Image</h3>
-                                <input type="text" name="image" class="long" value="<?=$Image?>" /><br />
+                                <input type="text" name="image" class="long" value="<?=$Image?>" /><br /><br />
                                 <h3>Description</h3>
-                                    <? $Text->display_bbcode_assistant("body", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
-                                <textarea id="body" name="body" class="long" rows="20"><?=$Body?></textarea><br />
+                                    <? $Text->display_bbcode_assistant("body", get_permissions_advtags($AuthorID)); ?>
+                                <textarea id="body" name="body" class="long" rows="20"><?=$Body?></textarea><br /><br />
                         </div>
                         <h3>Edit summary</h3>
 				<input type="text" name="summary" class="long" value="<?=$EditSummary?>" /><br />
@@ -93,9 +105,9 @@ show_header('Edit torrent','bbcode,edittorrent');
 			</div>
 		</form>
 	</div>
-<?	$DB->query("SELECT UserID FROM torrents WHERE GroupID = ".$GroupID);
-	//Users can edit the group info if they've uploaded a torrent to the group or have torrents_edit
-	if(in_array($LoggedUser['ID'], $DB->collect('UserID')) || check_perms('torrents_edit')) { ?> 
+<?	//$DB->query("SELECT UserID FROM torrents WHERE GroupID = ".$GroupID);
+      //Users can edit the group info if they've uploaded a torrent to the group or have torrents_edit
+	//if(in_array($LoggedUser['ID'], $DB->collect('UserID')) || check_perms('torrents_edit')) { ?> 
 	<h2>Other</h2>
 	<div class="box pad">
 		<form action="torrents.php" method="post">
@@ -124,26 +136,6 @@ show_header('Edit torrent','bbcode,edittorrent');
 			<input type="submit" value="Edit" />
 		</form>
 	</div>
-<? 
-	}
-	if(check_perms('torrents_edit')) { 
-?> 
-	<h2>Rename Title</h2>
-	<div class="box pad">
-		<form action="torrents.php" method="post">
-			<div>
-				<input type="hidden" name="action" value="rename" />
-				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-				<input type="hidden" name="groupid" value="<?=$GroupID?>" />
-				<input type="text" name="name" size="92" value="<?=$Name?>" />
-				<div style="text-align: center;">
-					<input type="submit" value="Rename" />
-				</div>
-				
-			</div>
-		</form>
-	</div>
-<?	} ?> 
 </div>
 <?
 show_footer();

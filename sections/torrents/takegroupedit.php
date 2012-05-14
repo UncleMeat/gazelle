@@ -13,27 +13,22 @@ if(!$_REQUEST['groupid'] || !is_number($_REQUEST['groupid'])) {
 }
 // End injection check
 
-//<<<<<<< HEAD
-//if(!check_perms('site_edit_wiki')) { error(403); }
 
-//=======
-//>>>>>>> origin/work
-// Variables for database input
-//$UserID = $LoggedUser['ID']; //apparently never used??
-$GroupID = (int)$_REQUEST['groupid'];
-
-$CanEdit = check_perms('torrents_edit');
-if (!$CanEdit){
     //check user has permission to edit
+$CanEdit = check_perms('torrents_edit');
+if(!$CanEdit) { 
     $DB->query("SELECT UserID FROM torrents WHERE GroupID='$GroupID'");
-    list($UserID) = $DB->next_record();
-    $CanEdit = $UserID == $LoggedUser['ID'];
+    list($AuthorID) = $DB->next_record();
+    $CanEdit = $AuthorID == $LoggedUser['ID'];
 }
+
+    //check user has permission to edit
 if(!$CanEdit) { error(403); }
 
       
- // with edit, the variables are passed with POST
-$CategoryID = $_POST['categoryid'];
+// Variables for database input - with edit, the variables are passed with POST
+$GroupID = (int)$_REQUEST['groupid'];
+$CategoryID = (int)$_POST['categoryid'];
 $Body = $_POST['body'];
 $Image = $_POST['image'];
 
@@ -47,8 +42,9 @@ $Err = $Validate->ValidateForm($_POST); // Validate the form
 
 if ($Err) { // Show the upload form, with the data the user entered
     $HasDescriptionData = TRUE; /// tells editgroup to use $Body and $Image vars instead of requerying them
-    
     $_GET['groupid'] = $GroupID;
+    $Name = $_POST['name'];
+    $AuthorID = $_POST['authorid'];
     $EditSummary = $_POST['summary'];
     include(SERVER_ROOT . '/sections/torrents/editgroup.php');
     die();
