@@ -216,7 +216,7 @@ if (!$GroupID) {
 }
 
 // Tags
-$Tags = explode(',', $Properties['TagList']);
+$Tags = explode(' ', $Properties['TagList']);
 if (!$Properties['GroupID']) {
     foreach ($Tags as $Tag) {
         $Tag = sanitize_tag($Tag);
