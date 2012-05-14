@@ -3,13 +3,13 @@
 function Details_Toggle() {
         jQuery('#details_top').slideToggle('1000', function(){
             //if(jQuery.cookie('torrentDetailsState') == 'expanded') {
-            if ($('#slide_button').raw().innerHTML=='Hide Torrent Info'){
+            if ($('#slide_button').raw().innerHTML=='Hide Info'){
                             jQuery.cookie('torrentDetailsState', 'collapsed');
-                            $('#slide_button').raw().innerHTML=('Show Torrent Info');
+                            $('#slide_button').raw().innerHTML=('Show Info');
                             //$('#top_info').show();
             }  else{
                             jQuery.cookie('torrentDetailsState', 'expanded');
-                            $('#slide_button').raw().innerHTML=('Hide Torrent Info');
+                            $('#slide_button').raw().innerHTML=('Hide Info');
                             //$('#top_info').hide();
             }
         });
@@ -31,9 +31,9 @@ function Load_Details_Cookie()  {
 	if(state == 'collapsed') {
 		panel.hide();
             //$('#top_info').show();
-		button.text('Show Torrent Info');
+		button.text('Show Info');
 	} else {
-		button.text('Hide Torrent Info');
+		button.text('Hide Info');
       }
 }
  

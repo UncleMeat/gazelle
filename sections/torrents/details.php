@@ -104,26 +104,26 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
                      <span id="torrent_buttons"  style="float: left;">
                                             <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
 <?	if (($LoggedUser['FLTokens'] > 0) && $HasFile  && !in_array($TorrentID, $TokenTorrents) && ($FreeTorrent == '0') && ($LoggedUser['CanLeech'] == '1')) { ?>
-                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" class="button greenButton" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FREELEECH DOWNLOAD</a>
+                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" class="button greenButton" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FREELEECH TORRENT</a>
 <?	} ?>					
                                             
                      </span>
           
-                     <span style="float: right;"><a href="#"  id="slide_button"  class="button toggle" onclick="Details_Toggle();" title="Toggle display">Hide Torrent Info</a></span>
-	 
-                     <span style="float:right;" id="top_info">
+                     <div id="top_info">
                          <table class="boxstat">
                             <tr>
-                            <td>Uploaded by <?=format_username($UserID, $Username)?> <?=time_diff($TorrentTime);?></td>
-                            <td>Size: <?=get_size($Size)?></td>
+                            <td><?=format_username($UserID, $Username)?> &nbsp;<?=time_diff($TorrentTime);?></td>
+                            <td><?=get_size($Size)?></td>
                             <td><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /> <?=number_format($Snatched)?></td>
                             <td><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /> <?=number_format($Seeders)?></td>
                             <td><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/leechers.png" alt="Leechers" title="Leechers" /> <?=number_format($Leechers)?></td>
                             </tr>
                          </table>
-                       </span>
+                       </div>
                      
-      <br style="clear:both" />
+                     <span style="float: right;"><a href="#"  id="slide_button"  class="button toggle" onclick="Details_Toggle();" title="Toggle display">Hide Info</a></span>
+	 
+            <br style="clear:both" />
       </div>
  <div id="details_top">
 	<div class="sidebar" style="float: left;">

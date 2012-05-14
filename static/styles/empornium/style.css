@@ -588,9 +588,12 @@ p.min_padding {
     margin-bottom: 10px;
 }
 #top_info {
-    margin:8px 40px 0px 0px;
+    display:inline-table;
+    width: 400px;
+    /*margin:8px 10px 0px 0px;*/
+    margin:7px auto;
     border: 1px solid #7BA3C1;
-    padding:0px 20px;
+    padding:0px 12px;
     background: white; 
     -moz-border-radius: 8px;
     border-radius: 8px;
@@ -600,12 +603,13 @@ table.boxstat {
     border:none;
 }
 table.boxstat td { 
-    padding: 2px 12px;
+    padding: 2px 6px;
     border-top:none;
     border-right: none;
     border-left:1px solid #7BA3C1;
     border-bottom:none;
     background: white; 
+    text-align:center;
 }
 table.boxstat td:first-child { 
     border-left:none;
@@ -615,8 +619,8 @@ table.boxstat td:first-child {
     text-align:center;
 }
 .button.toggle {
-    width: 140px;
-    margin: 8px 0px 0px 0px;
+    width: 80px;
+    margin: 7px 0px 0px 0px;
     padding: 4px 12px;
     border: 1px solid #7BA3C1;
     background: #5A8Bb8;    /* #024a7c;#BACBD8 #9AaBb8 */
