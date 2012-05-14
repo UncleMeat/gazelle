@@ -59,7 +59,7 @@ if (empty($TokenTorrents)) {
 }
 
 // Start output
-show_header($Title,'browse,comments,torrent,bbcode,jquery');
+show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 
 
 	list($TorrentID,
@@ -70,7 +70,7 @@ show_header($Title,'browse,comments,torrent,bbcode,jquery');
 	$CanEdit = (check_perms('torrents_edit') ||  ($UserID == $LoggedUser['ID']  ) );
       
 ?>
-<div class="thin">
+<div class="details">
 	<h2><?=$DisplayName?></h2>
 <?
 	if($_GET['did'] == 1) { ?>
@@ -80,21 +80,53 @@ show_header($Title,'browse,comments,torrent,bbcode,jquery');
                         addDOMLoadEvent(Kill_Message);
                   </script>
 <?	} ?>
-	<div class="linkbox">
-<?	if( $CanEdit) {   ?>
-		<a href="torrents.php?action=editgroup&amp;groupid=<?=$GroupID?>">[Edit description]</a>
-<?	} ?>
-		<a href="torrents.php?action=history&amp;groupid=<?=$GroupID?>">[View history]</a>
-<?	if(has_bookmarked('torrent', $GroupID)) {
-?>
-		<a href="#" id="bookmarklink_torrent_<?=$GroupID?>" onclick="Unbookmark('torrent', <?=$GroupID?>,'[Bookmark]');return false;">[Remove bookmark]</a>
-<?	} else { ?>
-		<a href="#" id="bookmarklink_torrent_<?=$GroupID?>" onclick="Bookmark('torrent', <?=$GroupID?>,'[Remove bookmark]');return false;">[Bookmark]</a>
-<?	} ?>
-	<a href="torrents.php?action=grouplog&amp;groupid=<?=$GroupID?>">[View log]</a>
-	</div>
+	<div class="linkbox" >
+    <?	if( $CanEdit) {   ?>
+                <a href="torrents.php?action=editgroup&amp;groupid=<?=$GroupID?>">[Edit description]</a>
+    <?	} ?>
+                <a href="torrents.php?action=history&amp;groupid=<?=$GroupID?>">[View history]</a>
+    <?	if(has_bookmarked('torrent', $GroupID)) { ?>
+                <a href="#" id="bookmarklink_torrent_<?=$GroupID?>" onclick="Unbookmark('torrent', <?=$GroupID?>,'[Bookmark]');return false;">[Remove bookmark]</a>
+    <?	} else { ?>
+                <a href="#" id="bookmarklink_torrent_<?=$GroupID?>" onclick="Bookmark('torrent', <?=$GroupID?>,'[Remove bookmark]');return false;">[Bookmark]</a>
+    <?	} ?>
+          <a href="torrents.php?action=grouplog&amp;groupid=<?=$GroupID?>">[View log]</a>
 
-	<div class="sidebar">
+          <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">[Report]</a>
+
+    <?	if(check_perms('torrents_delete') || $UserID == $LoggedUser['ID']) { ?>
+            <a href="torrents.php?action=delete&amp;torrentid=<?=$TorrentID ?>" title="Remove">[Remove]</a>
+    <?	} ?>
+
+	</div>
+      <div  class="linkbox">
+          
+                     <span id="torrent_buttons"  style="float: left;">
+                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
+<?	if (($LoggedUser['FLTokens'] > 0) && $HasFile  && !in_array($TorrentID, $TokenTorrents) && ($FreeTorrent == '0') && ($LoggedUser['CanLeech'] == '1')) { ?>
+                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" class="button greenButton" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FREELEECH DOWNLOAD</a>
+<?	} ?>					
+                                            
+                     </span>
+          
+                     <span style="float: right;"><a href="#"  id="slide_button"  class="button toggle" onclick="Details_Toggle();" title="Toggle display">Hide Torrent Info</a></span>
+	 
+                     <span style="float:right;" id="top_info">
+                         <table class="boxstat">
+                            <tr>
+                            <td>Uploaded by <?=format_username($UserID, $Username)?> <?=time_diff($TorrentTime);?></td>
+                            <td>Size: <?=get_size($Size)?></td>
+                            <td><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /> <?=number_format($Snatched)?></td>
+                            <td><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /> <?=number_format($Seeders)?></td>
+                            <td><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/leechers.png" alt="Leechers" title="Leechers" /> <?=number_format($Leechers)?></td>
+                            </tr>
+                         </table>
+                       </span>
+                     
+      <br style="clear:both" />
+      </div>
+ <div id="details_top">
+	<div class="sidebar" style="float: left;">
 		<div class="box box_albumart">
 			<div class="head"><strong>Cover</strong></div>
 <?
@@ -112,36 +144,40 @@ if ($Image!="") {
 }
 ?>
 		</div>
+      </div>
+          
+	<div class="sidebar" style="float: right;">
 
 		<div class="box box_tags">
-			<div class="head"><strong>Tags</strong></div>
+			<div class="head"><strong>Tags</strong> <span style="float:right;"><a href="articles.php?topic=tag">Tagging rules</a></span></div>
+                        <div class="tag_inner">
 <?
 if(count($Tags) > 0) {
 ?>
-			<ul class="stats nobullet">
-<?
-	foreach($Tags as $TagKey=>$Tag) {
-			
-?>
-				<li>
-					<a href="torrents.php?taglist=<?=$Tag['name']?>" style="float:left; display:block;"><?=display_str($Tag['name'])?></a>
-					<div style="float:right; display:block; letter-spacing: -1px;">
-					<a href="torrents.php?action=vote_tag&amp;way=down&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;" >[-]</a>
-					<?=$Tag['score']?>
-					<a href="torrents.php?action=vote_tag&amp;way=up&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;">[+]</a>
-<?		if(check_perms('users_warn')){ ?>
-					<a href="user.php?id=<?=$Tag['userid']?>" >[U]</a>
-<?		} ?>
-<?		if(check_perms('site_delete_tag')){ ?>
-					<a href="torrents.php?action=delete_tag&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" >[X]</a>
-<?		} ?>
-					</div>
-					<br style="clear:both" />
-				</li>
-<?
-	}
-?>
-			</ul>
+                          <ul class="stats nobullet">
+        <?
+              foreach($Tags as $TagKey=>$Tag) {
+
+        ?>
+                                <li>
+                                      <a href="torrents.php?taglist=<?=$Tag['name']?>" style="float:left; display:block;"><?=display_str($Tag['name'])?></a>
+                                      <div style="float:right; display:block; letter-spacing: -1px;">
+                                      <a href="torrents.php?action=vote_tag&amp;way=down&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;" >[-]</a>
+                                      <?=$Tag['score']?>
+                                      <a href="torrents.php?action=vote_tag&amp;way=up&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;">[+]</a>
+        <?		if(check_perms('users_warn')){ ?>
+                                      <a href="user.php?id=<?=$Tag['userid']?>" >[U]</a>
+        <?		} ?>
+        <?		if(check_perms('site_delete_tag')){ ?>
+                                      <a href="torrents.php?action=delete_tag&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" >[X]</a>
+        <?		} ?>
+                                      </div>
+                                      <br style="clear:both" />
+                                </li>
+        <?
+              }
+        ?>
+                          </ul>
 <?
 } else {
 ?>
@@ -149,26 +185,29 @@ if(count($Tags) > 0) {
 <?
 }
 ?>
-		</div>
+                        </div>
+		<!--</div>
 		<div class="box">
-			<div class="head"><strong>Add tag</strong></div>
-			<div class="body">
+			<div class="head"><strong>Add tag</strong> <span style="float:right;"><a href="articles.php?topic=tag">Tagging rules</a></span></div>-->
+			<div class="tag_add">
 				<form action="torrents.php" method="post">
 					<input type="hidden" name="action" value="add_tag" />
 					<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 					<input type="hidden" name="groupid" value="<?=$GroupID?>" />
-					<input type="text" name="tagname" size="20" />
+					<input type="text" name="tagname" size="15" />
 					<input type="submit" value="+" />
 				</form>
-				<br /><br />
-				<strong><a href="articles.php?topic=tag">Tagging rules</a></strong>
+				<!--<br /><br />
+				<strong><a href="articles.php?topic=tag">Tagging rules</a></strong>-->
 			</div>
 		</div>
 	</div>
-	<div class="main_column">
+	<div class="middle_column">
 		<table class="torrent_table">
 			<tr class="colhead_dark">
-				<td width="80%"><strong>Torrent Info</strong></td>
+                        <td width="80%">
+                          <strong>Torrent Info</strong>
+                        </td>
 				<td><strong>Size</strong></td>
 				<td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
 				<td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>
@@ -247,50 +286,34 @@ $EditionID = 0;
 ?>
 
 			<tr class="groupid_<?=$GroupID?> edition_<?=$EditionID?> group_torrent" style="font-weight: normal;" id="torrent<?=$TorrentID?>">
-				<td>
-					<span>[
-                                                <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">Report</a>
-<?	if($CanEdit) { ?>
-						| <a href="torrents.php?action=edit&amp;id=<?=$TorrentID ?>" title="Edit">Edit</a>
-<?	} ?>
-<?	if(check_perms('torrents_delete') || $UserID == $LoggedUser['ID']) { ?>
-						| <a href="torrents.php?action=delete&amp;torrentid=<?=$TorrentID ?>" title="Remove">Remove</a>
-<?	} ?>
+                      <td>
+                          <strong><?=$ExtraInfo; ?></strong>
+						<!-- Uploaded by <?=format_username($UserID, $TorrentUploader)?> <?=time_diff($TorrentTime);?> -->
 
-					]</span>
-					<strong><?=$ExtraInfo; ?></strong>
-				</td>
+                      </td>
 				<td class="nobr"><?=get_size($Size)?></td>
 				<td><?=number_format($Snatched)?></td>
 				<td><?=number_format($Seeders)?></td>
 				<td><?=number_format($Leechers)?></td>
 			</tr>
 			<tr class="groupid_<?=$GroupID?> edition_<?=$EditionID?> torrentdetails pad" id="torrent_<?=$TorrentID; ?>">
-				<td colspan="5">
-                                        <span id="torrent_buttons">
-                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
-<?	if (($LoggedUser['FLTokens'] > 0) && $HasFile  && !in_array($TorrentID, $TokenTorrents) && ($FreeTorrent == '0') && ($LoggedUser['CanLeech'] == '1')) { ?>
-                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" class="button greenButton" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FREELEECH DOWNLOAD</a>
-<?	} ?>					
-                                            
-                                        </span>
-					<blockquote>
-						Uploaded by <?=format_username($UserID, $TorrentUploader)?> <?=time_diff($TorrentTime);?>
-<? if($Seeders == 0){ ?>
+				<td colspan="5"> 
+                            
+<? if($Seeders == 0){ ?>            
+                            <blockquote  style="text-align: center;">
 						<?
 						if ($LastActive != '0000-00-00 00:00:00' && time() - strtotime($LastActive) >= 432000) { ?>
-							<br /><strong>Last active: <?=time_diff($LastActive);?></strong>
+							<strong>Last active: <?=time_diff($LastActive);?></strong>
 						<?} else { ?>
-						<br />Last active: <?=time_diff($LastActive);?>
+                                          Last active: <?=time_diff($LastActive);?>
 						<?} ?>
 						<?
 						if ($LastActive != '0000-00-00 00:00:00' && time() - strtotime($LastActive) >= 345678 && time()-strtotime($LastReseedRequest)>=864000) { ?>
-						<br /><a href="torrents.php?action=reseed&amp;torrentid=<?=$TorrentID?>&amp;groupid=<?=$GroupID?>">[Request re-seed]</a>
+						<a href="torrents.php?action=reseed&amp;torrentid=<?=$TorrentID?>&amp;groupid=<?=$GroupID?>"> [Request re-seed] </a>
 						<?} ?>
-						
+                            </blockquote>
 <? } ?>
-
-					</blockquote>
+                                    
 <? if(check_perms('site_moderate_requests')) { ?>
 					<div class="linkbox">
 						<a href="torrents.php?action=masspm&amp;id=<?=$GroupID?>&amp;torrentid=<?=$TorrentID?>">[Mass PM Snatchers]</a>
@@ -427,6 +450,15 @@ if(count($PersonalCollages)>0) {
         $Body = $Text->full_format($Body, isset($PermissionsInfo['site_advanced_tags']) &&  $PermissionsInfo['site_advanced_tags'] );
 
 ?>
+           
+		<!--<div class="box">
+		<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            </div>-->
+        </div>
+      <div style="clear:both"></div>
+    </div>
+      <div style="clear:both"></div>
+	<div class="main_column">
 		<div class="box">
 			<div class="head"><strong>Description</strong></div>
 			<div class="body"><? if ($Body!="") { echo $Body; } else { echo "There is no information on this torrent."; } ?></div>

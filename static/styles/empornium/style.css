@@ -576,13 +576,95 @@ p.min_padding {
     margin-top: 0px;
     padding-top: 0px;
 }
-
+/* 
 .sidebar {
     float: right;
-/*    width: 250px; */
+  // width: 250px;  
     width: 29%;
     height: 100%;
+}*/
+
+#details_top {
+    margin-bottom: 10px;
 }
+#top_info {
+    margin:8px 40px 0px 0px;
+    border: 1px solid #7BA3C1;
+    padding:0px 20px;
+    background: white; 
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+}
+table.boxstat { 
+    border:none;
+}
+table.boxstat td { 
+    padding: 2px 12px;
+    border-top:none;
+    border-right: none;
+    border-left:1px solid #7BA3C1;
+    border-bottom:none;
+    background: white; 
+}
+table.boxstat td:first-child { 
+    border-left:none;
+}
+.boxstat img {
+    vertical-align:middle;
+    text-align:center;
+}
+.button.toggle {
+    width: 140px;
+    margin: 8px 0px 0px 0px;
+    padding: 4px 12px;
+    border: 1px solid #7BA3C1;
+    background: #5A8Bb8;    /* #024a7c;#BACBD8 #9AaBb8 */
+    color: #fff;
+}
+
+.details {
+    width: 96%;
+    min-width: 920px;
+    margin-left:auto;
+    margin-right:auto;
+}
+.details div.linkbox {
+    text-align:center;
+    padding: 0px;
+}
+
+.details .sidebar {
+    width: 260px;
+  /*  height: 380px; */ 
+}
+
+.details .middle_column {
+    margin: 0px 270px 10px;
+    max-height: 460px;
+    overflow: auto;
+}
+.details .main_column {
+    margin: 0px 0px 10px 0px;
+}
+.details .tag_inner {
+   /* height: 310px;*/
+    max-height: 400px;
+    overflow: auto;
+}
+
+.details .tag_add {
+    border-top: 1px solid #98AAB1;
+    padding: 2px 10px 2px 10px;
+    height:30px;
+}
+
+.box_albumart{
+    margin: 0px;
+    max-height: 460px;
+    overflow: auto;
+}
+
 
 .sidebar .box {
     margin: 0px 5px 10px 5px;
@@ -592,6 +674,9 @@ p.min_padding {
     margin: 0 auto 10px;
 }
 
+.details .box {
+    margin: 0px;
+}
 .head {
     padding: 4px;
     background: #0261A3 url(images/colhead-grad.gif) repeat-x;  /* #C6D3E4   */
@@ -607,10 +692,24 @@ p.min_padding {
     padding: 3px 10px 10px 10px;
 }
 
+/*
 .main_column {
     margin: 0px 255px 10px 0px;
-    /* width: 590px; */ 
+    // width: 590px;  
     width: 70%;  
+}
+*/
+
+.sidebar {
+    float: right;
+    width: 280px;
+    height: 100%;
+}
+
+.main_column {
+    margin: 0px 290px 10px 0px;
+   /* display:inline;
+     width: 590px; */
 }
 
 .main_column .box, .main_column table {
@@ -960,13 +1059,13 @@ ul.poll li.graph {
     text-align: right;
 }
 .top10.stat {
-    width:30px
+    width:16px
 }
 .top10.statname {
-    width:50px
+    width:40px
 }
 .top10.statlong {
-    width:80px
+    width:60px
 }
 
 
@@ -1282,8 +1381,8 @@ a.bb_button:hover {
     margin:3px 1px 2px; 
     font-weight: bold; 
     text-align: center; 
-    border: 1px solid rgb(123, 163, 193); 
-    background: none repeat scroll 0% 0% rgb(186, 203, 216);
+    border: 1px solid #7BA3C1;  /* rgb(123, 163, 193); */
+    background: none repeat scroll 0% 0% #BACBD8;   /*rgb(186, 203, 216);*/
 }
 .overflow_button a {
     padding:0px 8px; 
@@ -1322,7 +1421,8 @@ a.bb_button:hover {
 /*  Torrent Buttons  */
 
 #torrent_buttons {
-    margin-left: 10px;
+    /*margin-left: 10px;*/
+    margin-bottom: 10px;
 }
 
 a.button {

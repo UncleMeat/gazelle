@@ -1,3 +1,6 @@
+/*
+// All remmed out are assumed to be no longer used or transferred to details.js where they are used
+// its not impossible they are actually still needed - they could be written in via ajax or somethign so keep for the moment?
 function show_peers (TorrentID, Page) {
 	if(Page>0) {
 		ajax.get('torrents.php?action=peerlist&page='+Page+'&torrentid=' + TorrentID,function(response){
@@ -77,13 +80,6 @@ function show_reported(TorrentID){
 	$('#reported_' + TorrentID).toggle();
 }
 
-function add_tag(tag) {
-	if ($('#tags').raw().value == "") {
-		$('#tags').raw().value = tag;
-	} else {
-		$('#tags').raw().value = $('#tags').raw().value + ", " + tag;
-	}
-}
 
 function toggle_group(groupid, link, event) {
 	var clickedRow = link;
@@ -175,6 +171,16 @@ function ToggleEditionRows() {
 	$('#edition_title').toggle();
 	$('#edition_label').toggle();
 	$('#edition_catalogue').toggle();
+}
+// All above are assumed to be no longer used or transferred to details.js where they are used
+*/
+
+function add_tag(tag) {
+	if ($('#tags').raw().value == "") {
+		$('#tags').raw().value = tag;
+	} else {
+		$('#tags').raw().value = $('#tags').raw().value + ", " + tag;
+	}
 }
   
 function Load_Cookie()  {
