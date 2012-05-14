@@ -181,7 +181,7 @@ while(list($ReportID, $SnitchID, $SnitchName, $ThingID, $Short, $ReportedTime, $
                                      rc.Body, 
                                      (SELECT COUNT(ID) FROM requests_comments 
                                                        WHERE ID <= ".$ThingID." 
-                                                       AND requests_comments.RequestID = rc.RequestID) AS CommentNum 
+                                                       AND requests_comments.RequestID = rc.RequestID) AS CommentNum ,
                                      r.Title,
                                      u.Username
                                      FROM requests_comments AS rc
@@ -200,8 +200,8 @@ while(list($ReportID, $SnitchID, $SnitchName, $ThingID, $Short, $ReportedTime, $
                                      tc.Body, 
                                      (SELECT COUNT(ID) FROM torrents_comments 
                                                        WHERE ID <= ".$ThingID." 
-                                                       AND torrents_comments.GroupID = tc.GroupID) AS CommentNum 
-                                     tg.Title,
+                                                       AND torrents_comments.GroupID = tc.GroupID) AS CommentNum,
+                                     tg.Name,
                                      u.Username
                                      FROM torrents_comments AS tc
                                      LEFT JOIN torrents_group AS tg ON tg.ID = tc.GroupID 
@@ -219,7 +219,7 @@ while(list($ReportID, $SnitchID, $SnitchName, $ThingID, $Short, $ReportedTime, $
                                      cc.Body, 
                                      (SELECT COUNT(ID) FROM collages_comments 
                                                        WHERE ID <= ".$ThingID." 
-                                                       AND collages_comments.CollageID = cc.CollageID) AS CommentNum
+                                                       AND collages_comments.CollageID = cc.CollageID) AS CommentNum,
                                      c.Name,
                                      u.Username
                                      FROM collages_comments AS cc
