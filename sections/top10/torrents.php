@@ -252,7 +252,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 	if(empty($Details)) {
 ?>
 		<tr class="rowb">
-			<td colspan="9" class="center">
+			<td colspan="10" class="center">
 				Found no torrents matching the criteria
 			</td>
 		</tr>
