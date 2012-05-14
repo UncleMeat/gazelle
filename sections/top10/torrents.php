@@ -112,9 +112,12 @@ $BaseQuery = "SELECT
 	t.Snatched,
 	t.Seeders,
 	t.Leechers,
-	((t.Size * t.Snatched) + (t.Size * 0.5 * t.Leechers)) AS Data
+	((t.Size * t.Snatched) + (t.Size * 0.5 * t.Leechers)) AS Data,
+      t.UserID,
+      u.Username
 	FROM torrents AS t
-	LEFT JOIN torrents_group AS g ON g.ID = t.GroupID ";
+	LEFT JOIN torrents_group AS g ON g.ID = t.GroupID
+      LEFT JOIN users_main AS u ON u.ID = t.UserID ";
 	
 if($Details=='all' || $Details=='day') {
 	if (!$TopTorrentsActiveLastDay = $Cache->get_value('top10tor_day_'.$Limit.$WhereSum)) {
@@ -233,13 +236,14 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 	<table class="border">
 	<tr class="colhead">
 		<td class="center" style="width:15px;"></td>
-		<td></td>
+		<td style="width:40px;"></td>
 		<td><strong>Name</strong></td>
-		<td style="text-align:right"><strong>Data</strong></td>
-		<td style="text-align:right"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
-		<td style="text-align:right"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>
-		<td style="text-align:right"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/leechers.png" alt="Leechers" title="Leechers" /></td>
-		<td style="text-align:right"><strong>Peers</strong></td>
+		<td class="top10 statlong"><strong>Data</strong></td>
+		<td class="top10 stat"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
+		<td class="top10 stat"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>
+		<td class="top10 stat"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/leechers.png" alt="Leechers" title="Leechers" /></td>
+		<td class="top10 stat"><strong>Peers</strong></td>
+		<td class="top10 statname"><strong>Uploader</strong></td>
 	</tr>
 <?
 	// in the unlikely event that query finds 0 rows...
@@ -261,7 +265,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 
 	foreach ($Details as $Detail) {
 		list($TorrentID,$GroupID,$GroupName, $NewCategoryID, $TorrentTags,
-			$Snatched,$Seeders,$Leechers,$Data) = $Detail;
+			$Snatched,$Seeders,$Leechers,$Data,$UploaderID,$UploaderName) = $Detail;
 		// highlight every other row
 		$Rank++;
 		$Highlight = ($Rank % 2 ? 'a' : 'b');
@@ -289,18 +293,19 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 		<td style="padding:8px;text-align:center;"><strong><?=$Rank?></strong></td>
 		<td class="center cats_col">
                     <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
-                    <div title="<?=$NewCategories[$NewCategoryID]['cat_desc']?>"><img src="<?=$CatImg?>" />
+                    <div title="<?=$NewCategories[$NewCategoryID]['cat_desc']?>"><img src="<?=$CatImg?>" /></div>
                 </td>
 		<td>
-		<span>[<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>]</span>
+                  <span>[<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>]</span>
 			<strong><?=$DisplayName?></strong>
 			<?=$TorrentTags?>
 		</td>
-		<td style="text-align:right" class="nobr"><?=get_size($Data)?></td>
-		<td style="text-align:right"><?=number_format((double) $Snatched)?></td>
-		<td style="text-align:right"><?=number_format((double) $Seeders)?></td>
-		<td style="text-align:right"><?=number_format((double) $Leechers)?></td>
-		<td style="text-align:right"><?=number_format($Seeders+$Leechers)?></td>
+		<td class="top10 nobr"><?=get_size($Data)?></td>
+		<td class="top10"><?=number_format((double) $Snatched)?></td>
+		<td class="top10"><?=number_format((double) $Seeders)?></td>
+		<td class="top10"><?=number_format((double) $Leechers)?></td>
+		<td class="top10"><?=number_format($Seeders+$Leechers)?></td>
+            <td class="top10"><?=format_username($UploaderID, $UploaderName)?></td>
 	</tr>
 <?
 	}
