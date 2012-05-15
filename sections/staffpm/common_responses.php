@@ -34,12 +34,12 @@ list($NumMy, $NumUnanswered, $NumOpen) = get_num_staff_pms($LoggedUser['ID'], $L
 		</div>
 		<div class="messagecontainer" id="container_0"><div id="ajax_message_0" class="hidden center messagebar"></div></div>
 		<div id="response_0" class="box">
-			<form id="response_form_0" action="">
+			<form id="response_form_0" action="" method="post">
 				<div class="head">
 					<strong>Name:</strong> 
 					<input onfocus="if (this.value == 'New name') this.value='';" 
 						   onblur="if (this.value == '') this.value='New name';" 
-						   type="text" id="response_name_0" size="87" value="New name" 
+						   type="text" name="name" id="response_name_0" size="87" value="New name" 
 					/>
 				</div>
 				<div class="box pad hidden" id="response_div_0" style="text-align:left;">
@@ -48,13 +48,17 @@ list($NumMy, $NumUnanswered, $NumOpen) = get_num_staff_pms($LoggedUser['ID'], $L
                             <? $Text->display_bbcode_assistant("response_message_0", true); ?>
 					<textarea class="long" onfocus="if (this.value == 'New message') this.value='';" 
 							  onblur="if (this.value == '') this.value='New message';" 
-							  rows="10" id="response_message_0">New message</textarea>
+							  rows="10" name="message" id="response_message_0">New message</textarea>
 				</div>
 					<br />
 					<input type="button" value="Toggle preview" onClick="PreviewResponse(0);" />
-					<input type="button" value="Save" id="save_0" onClick="SaveMessage(0);" />
+					<!--<input type="button" value="Save" id="save_0" onClick="SaveMessage(0);" />-->
+					<input type="hidden" name="convid" value="<?=$ConvID?>" />
+					<input type="hidden" name="id" value="0" />
+					<input type="hidden" name="action" value="edit_response" />
+					<input type="submit" name="submit" value="Save" id="save_0" />
 			</form>
-		</div>
+		</div><a id="old_responses" name="old_responses"></a>
 		<br />
 		<br />
 		<div class="center">
@@ -90,10 +94,32 @@ while(list($ID, $Message, $Name) = $DB->next_record()) {
 				<input type="button" value="Save" id="save_<?=$ID?>" onClick="SaveMessage(<?=$ID?>);" />
 			</form>
 		</div>
-<?
-	
+<?	
 }
 
+if(isset($_GET['added'])) { 
+?>
+    <script type="text/javascript">
+        function Send_Message(){ <?
+                $JustAdded = (int)$_GET['added'];
+                if ($JustAdded>0) {
+                      $Msg = "Response successfully created.";  ?>
+                                    $('#ajax_message_<?=$JustAdded?>').remove_class('alert'); <?
+                } else  {
+                      if ($JustAdded==-1) $Msg='One or more fields were blank.';
+                      elseif ($JustAdded==-2) $Msg='Not a valid ID!';
+                      else $Msg = "Something unexpected went wrong!";  
+                      $JustAdded=0; ?>
+                                    $('#ajax_message_<?=$JustAdded?>').add_class('alert'); <?
+                }  ?>
+                                    $('#ajax_message_<?=$JustAdded?>').show();
+                                    $('#ajax_message_<?=$JustAdded?>').raw().innerHTML = '<?=$Msg?>';
+                                    setTimeout("jQuery('#ajax_message_<?=$JustAdded?>').fadeOut(400)", 3000); 
+        }
+        addDOMLoadEvent(Send_Message);
+    </script>
+<?
+}
 ?>
 	</div>
 </div>

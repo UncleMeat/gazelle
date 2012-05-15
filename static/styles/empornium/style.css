@@ -426,6 +426,9 @@ li.searchbars {
     -moz-border-radius: 10px; /* for FF5 */
     -webkit-border-radius: 10px; /* for opera */
 }
+.messagebar.alert {
+    background-color: #e11; 
+}
 
 
 /* user classes */

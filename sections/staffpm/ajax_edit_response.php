@@ -17,13 +17,25 @@ if (!($SupportFor != '' || $DisplayStaff == '1')) {
 	error(403);
 }
 
-if (($Message = db_string($_POST['message'])) && ($Name = db_string($_POST['name']))) {
+$Message = isset($_POST['message'])? trim($_POST['message']):false;
+$Name = isset($_POST['name'])? trim($_POST['name']):false;
+
+if ($Message && $Name && ($Message != "") && ($Name != "")) {
+      $Message = db_string(display_str($Message));
+      $Name = db_string(display_str($Name));
 	$ID = (int)$_POST['id'];
 	if (is_numeric($ID)) {
 		if ($ID == 0) {
 			// Create new response
 			$DB->query("INSERT INTO staff_pm_responses (Message, Name) VALUES ('$Message', '$Name')");
-			echo '1';
+                  // if submit is set then this is not an ajax response - reload page and pass vars for message & return convid
+                  if (isset($_POST['submit']) && $_POST['submit'] == 'Save'){
+                      $InsertedID = $DB->inserted_id();
+                      $ConvID = (int)$_POST['convid'];
+                      header("Location: staffpm.php?action=responses&added=$InsertedID".($ConvID>0?"&convid=$ConvID":'')."#old_responses");
+                  } else
+                      echo 1;
+                  
 		} else {
 			$DB->query("SELECT * FROM staff_pm_responses WHERE ID=$ID");
 			if ($DB->record_count() != 0) {
@@ -33,16 +45,32 @@ if (($Message = db_string($_POST['message'])) && ($Name = db_string($_POST['name
 			} else {
 				// Create new response
 				$DB->query("INSERT INTO staff_pm_responses (Message, Name) VALUES ('$Message', '$Name')");
-				echo '1';
+				// if submit is set then this is not an ajax response - reload page and pass vars for message & return convid
+                        if (isset($_POST['submit']) && $_POST['submit'] == 'Save'){
+                              $InsertedID = $DB->inserted_id();
+                              $ConvID = (int)$_POST['convid'];
+                              header("Location: staffpm.php?action=responses&added=$InsertedID".($ConvID>0?"&convid=$ConvID":'')."#old_responses");
+                        } else
+                              echo 1;
 			}
 		}
 	} else {
 		// No id
-		echo '-2';
+		// if submit is set then this is not an ajax response - reload page and pass vars for message & return convid
+            if (isset($_POST['submit']) && $_POST['submit'] == 'Save'){
+                  $ConvID = (int)$_POST['convid'];
+                  header("Location: staffpm.php?action=responses&added=-2".($ConvID>0?"&convid=$ConvID":''));
+            } else
+                  echo -2;
 	}
 	
 } else {
 	// No message/name
-	echo '-1';
+	// if submit is set then this is not an ajax response - reload page and pass vars for message & return convid
+            if (isset($_POST['submit']) && $_POST['submit'] == 'Save'){
+                  $ConvID = (int)$_POST['convid'];
+                  header("Location: staffpm.php?action=responses&added=-1".($ConvID>0?"&convid=$ConvID":''));
+            } else
+                  echo -1;
 }
 ?>

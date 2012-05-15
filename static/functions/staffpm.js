@@ -16,6 +16,40 @@ function UpdateMessage() {
 	});
 }
 
+
+function SaveMessage(id) {
+	var ajax_message = '#ajax_message_' + id;
+	var ToPost = [];
+	
+	ToPost['id'] = id;
+	ToPost['name'] = $('#response_name_' + id).raw().value;
+	ToPost['message'] = $('#response_message_' + id).raw().value;
+
+	ajax.post("?action=edit_response", ToPost, function (data) {
+			if (data == '1') {
+				$(ajax_message).raw().innerHTML = 'Response successfully created.';
+                        $(ajax_message).remove_class('alert');
+			} else if (data == '2') {
+				$(ajax_message).raw().innerHTML = 'Response successfully edited.';
+                        $(ajax_message).remove_class('alert');
+                        
+			} else if (data == '-1') {
+				$(ajax_message).raw().innerHTML = 'One or more fields were blank.';
+                        $(ajax_message).add_class('alert');
+			} else if (data == '-2') {
+				$(ajax_message).raw().innerHTML = 'Not a valid ID!';
+                        $(ajax_message).add_class('alert');
+			} else {
+				$(ajax_message).raw().innerHTML = 'Something unexpected went wrong!';
+                        $(ajax_message).add_class('alert');
+			}
+			$(ajax_message).show();
+                  jQuery(ajax_message).fadeIn(0);
+                  setTimeout("jQuery('" + ajax_message + "').fadeOut(400)", 2000);
+		}
+	);
+}
+/*
 function SaveMessage(id, conv_id) {
 	var ajax_message = 'ajax_message_' + id;
 	var ToPost = [];
@@ -37,7 +71,7 @@ function SaveMessage(id, conv_id) {
                   setTimeout("jQuery('#" + ajax_message + "').fadeOut(400)", 2000);
 		}
 	);
-}
+}*/
 
 function DeleteMessage(id) {
       var tt = $('#response_name_' + id).raw().value;
