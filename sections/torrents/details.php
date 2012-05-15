@@ -121,7 +121,7 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
                          </table>
                        </div>
                      
-                     <span style="float: right;"><a href="#"  id="slide_button"  class="button toggle" onclick="Details_Toggle();" title="Toggle display">Hide Info</a></span>
+                     <span style="float: right;"><a id="slide_button"  class="button toggle" onclick="Details_Toggle();" title="Toggle display">Hide Info</a></span>
 	 
             <br style="clear:both" />
       </div>

@@ -575,7 +575,7 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 				This profile is currently empty.
 <?
 } else {
-	echo $Text->full_format($Info);
+	echo $Text->full_format($Info, get_permissions_advtags($UserID));
 }
 
 ?>
@@ -625,9 +625,12 @@ if ($Snatched > 4 && check_paranoia_here('snatched')) {
 ?>
 	<table class="recent" cellpadding="0" cellspacing="0" border="0">
 		<tr class="colhead">
-			<td colspan="5">Recent Snatches</td>
+			<td colspan="5" style="padding:4px;">
+                      	<span style="float:left;">Recent Snatches</span>
+                        <span style="float:right;"><a href="#" onclick="$('#recentsnatches').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+			</td>
 		</tr>
-		<tr>
+		<tr id="recentsnatches">
 <?		
 		foreach($RecentSnatches as $RS) { ?>
 			<td>
@@ -660,9 +663,12 @@ if ($Uploads > 4 && check_paranoia_here('uploads')) {
 ?>
 	<table class="recent" cellpadding="0" cellspacing="0" border="0">
 		<tr class="colhead">
-			<td colspan="5">Recent Uploads</td>
+			<td colspan="5" style="padding:4px;">     	
+                        <span style="float:left;">Recent Uploads</span>
+                        <span style="float:right;"><a href="#" onclick="$('#recentuploads').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>
+			</td>
 		</tr>
-		<tr>
+		<tr id="recentuploads">
 <?		foreach($RecentUploads as $RU) { ?>
 			<td>
 				<a href="torrents.php?id=<?=$RU['ID']?>" title="<?=$RU['Name']?>"><img src="<?=$RU['Image']?>" alt="<?=$RU['Name']?>" width="107" /></a>
@@ -689,7 +695,7 @@ foreach ($Collages as $CollageInfo) {
 ?>
 	<table class="recent" cellpadding="0" cellspacing="0" border="0">
 		<tr class="colhead">
-			<td colspan="5">
+			<td colspan="5" style="padding:4px;">
 				<span style="float:left;">
 					<?=display_str($CName)?> - <a href="collages.php?id=<?=$CollageID?>">see full</a>
 				</span>
@@ -910,10 +916,6 @@ if (check_perms('users_mod', $Class) || $IsFLS) {
 		</div>
 <?	}
 }
-?>
-<!--<br />-->
-<?
-
 
 if (check_perms('users_mod', $Class)) { ?>
 		<form id="form" action="user.php" method="post">

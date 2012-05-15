@@ -158,7 +158,7 @@ div#AddArtists a {
 	max-width: 500px;
 }
 
-#torrents .scale_image {
+#torrents .scale_image, #upload .scale_image {
 	max-width: 100%;
 }
 

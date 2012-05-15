@@ -584,12 +584,19 @@ p.min_padding {
     height: 100%;
 }*/
 
+#bonuslog, #admincommentlinks {
+    max-height:400px;
+    overflow: auto;
+}
+
+
+
 #details_top {
     margin-bottom: 10px;
 }
 #top_info {
     display:inline-table;
-    width: 400px;
+    width: 380px;
     /*margin:8px 10px 0px 0px;*/
     margin:7px auto;
     border: 1px solid #7BA3C1;
@@ -625,6 +632,7 @@ table.boxstat td:first-child {
     border: 1px solid #7BA3C1;
     background: #5A8Bb8;    /* #024a7c;#BACBD8 #9AaBb8 */
     color: #fff;
+    cursor: pointer;
 }
 
 .details {
@@ -636,6 +644,7 @@ table.boxstat td:first-child {
 .details div.linkbox {
     text-align:center;
     padding: 0px;
+    margin:12px 0px 1px 0px;
 }
 
 .details .sidebar {
