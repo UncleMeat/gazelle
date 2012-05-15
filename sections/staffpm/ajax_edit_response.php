@@ -56,8 +56,7 @@ if ($Message && $Name && ($Message != "") && ($Name != "")) {
 		}
 	} else {
 		// No id
-		// if submit is set then this is not an ajax response - reload page and pass vars for message & return convid
-            if (isset($_POST['submit']) && $_POST['submit'] == 'Save'){
+		if (isset($_POST['submit']) && $_POST['submit'] == 'Save'){
                   $ConvID = (int)$_POST['convid'];
                   header("Location: staffpm.php?action=responses&added=-2".($ConvID>0?"&convid=$ConvID":''));
             } else
@@ -66,11 +65,10 @@ if ($Message && $Name && ($Message != "") && ($Name != "")) {
 	
 } else {
 	// No message/name
-	// if submit is set then this is not an ajax response - reload page and pass vars for message & return convid
-            if (isset($_POST['submit']) && $_POST['submit'] == 'Save'){
-                  $ConvID = (int)$_POST['convid'];
-                  header("Location: staffpm.php?action=responses&added=-1".($ConvID>0?"&convid=$ConvID":''));
-            } else
-                  echo -1;
+	if (isset($_POST['submit']) && $_POST['submit'] == 'Save'){
+            $ConvID = (int)$_POST['convid'];
+            header("Location: staffpm.php?action=responses&added=-1".($ConvID>0?"&convid=$ConvID":''));
+      } else
+            echo -1;
 }
 ?>

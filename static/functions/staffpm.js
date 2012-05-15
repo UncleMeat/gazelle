@@ -16,6 +16,22 @@ function UpdateMessage() {
 	});
 }
 
+function ValidateForm(id) {
+    var ajax_message = '#ajax_message_' + id;
+    var name =  jQuery.trim($('#response_name_' + id).raw().value);
+    var message =  jQuery.trim($('#response_message_' + id).raw().value);
+     
+    if (name==null || name=="" || message==null || message=="")
+    {
+	  $(ajax_message).raw().innerHTML = 'One or more fields were blank.';
+        $(ajax_message).add_class('alert');
+        $(ajax_message).show();
+        jQuery(ajax_message).fadeIn(0);
+        setTimeout("jQuery('" + ajax_message + "').fadeOut(400)", 2000);
+        return false;
+    }
+    return true;
+}
 
 function SaveMessage(id) {
 	var ajax_message = '#ajax_message_' + id;
