@@ -120,13 +120,12 @@ function Close_Smilies(textID) {
 }
 
 //made by putyn@tbdev.net lastupdate 28/12/2009
+function wrap(tag, replacetext, attribute, textID) {
+  var r = replacetext ? replacetext : "";
+  var v = tag ? tag : "";
+  var e = attribute ? attribute : "";
 
-function wrap(v, r, e, textID) {
-  var r = r ? r : "";
-  var v = v ? v : "";
-  var e = e ? e : "";
-
-  var obj = document.getElementById(textID);    //textBBcode);      $('#' + textID).raw();    // 
+  var obj = document.getElementById(textID);
 
   if (document.selection) {
     var str = document.selection.createRange().text;
@@ -138,12 +137,37 @@ function wrap(v, r, e, textID) {
     var start = obj.selectionStart;
     var end = obj.selectionEnd;
     var sel = obj.value.substring(start, end);
-    obj.value = obj.value.substring(0, start) + "[" + v + (e ? "=" + e : "") + "]" + (r ? r : sel) + "[/" + v + "]" + obj.value.substring(end, len);
-    obj.selectionEnd = start + v.length + e.length + sel.length + r.length + v.length + 5;
-
+    var opentag = "[" + v + (e ? "=" + e : "") + "]";
+    obj.value = obj.value.substring(0, start) + opentag + (r ? r : sel) + "[/" + v + "]" + obj.value.substring(end, len);
+    obj.selectionStart = start + opentag.length;
+    obj.selectionEnd = end + opentag.length;
   }
   obj.focus();
 }
+
+function tagwrap(opentag, closetag, textID) {
+  opentag = opentag ? opentag : "";
+  closetag = closetag ? closetag : "";
+
+  var textarea = document.getElementById(textID);
+
+  if (document.selection) {
+    var str = document.selection.createRange().text;
+    textarea.focus();
+    var sel = document.selection.createRange();
+    sel.text = opentag + str + closetag;
+  } else {
+    var len = textarea.value.length;
+    var start = textarea.selectionStart;
+    var end = textarea.selectionEnd;
+    var sel = textarea.value.substring(start, end);
+    textarea.value = textarea.value.substring(0, start) + opentag + sel + closetag + textarea.value.substring(end, len);
+    textarea.selectionStart = start + opentag.length;
+    textarea.selectionEnd = end + opentag.length;
+  }
+  textarea.focus();
+}
+
 
 function clink(textID) {
   var linkTitle;
@@ -169,12 +193,27 @@ function cimage(textID) {
 }
 
 function table(textID) {
-  //var link;
-  //link = prompt("Please enter the number of columns and rows for your table\nin the format 'columns, rows'", '');
-  
-    em("[table]\n[tr]\n[td] [/td][td] [/td]\n[/tr]\n[/table]\n", textID)
-  //  em('img', link, '', textID);
-
+      //return some bbcode for a table
+      var input = prompt("Enter the number of columns and rows for your table\nin the format 'columns, rows'", '2,2');
+      var numx = 1;var numy = 1;
+      if (input != null && input != ""){
+          var splits = input.split(",",2);
+          if(splits.length > 0) numx = parseInt(splits[0]);
+          if(splits.length > 1) numy = parseInt(splits[1]);
+      }
+      if (numx<=0)numx=1;if (numy<=0)numy=1;
+      var x=0;var y=0;
+      var opentag='[table]\n[tr]\n[td] ';
+      var closetag='';
+      for (y=0;y<numy;y++){
+          if(y>0) closetag += ' [/td]\n[/tr]\n[tr]\n[td] ';
+          for (x=1;x<numx;x++){
+              closetag += ' [/td][td] ';
+          }
+      }
+      closetag += ' [/td]\n[/tr]\n[/table]\n';
+      tagwrap(opentag, closetag, textID);
+      // em("[table]\n[tr]\n[td] [/td][td] [/td]\n[/tr]\n[/table]\n", textID) 
 }
 
 function tag(v , textID) {
@@ -193,28 +232,29 @@ function mail(textID) {
 }
 
 function text(to, textID) {
-  var obj = document.getElementById(textID);        //textBBcode);
+  var obj = document.getElementById(textID);
 
   if (document.selection) {
-    var str = document.selection.createRange().text;
-    obj.focus();
-    var sel = document.selection.createRange();
-    sel.text = (to == 'up' ? str.toUpperCase() : str.toLowerCase())
+        var str = document.selection.createRange().text;
+        obj.focus();
+        var sel = document.selection.createRange();
+        sel.text = (to == 'up' ? str.toUpperCase() : str.toLowerCase())
   } else {
-    var len = obj.value.length;
-    var start = obj.selectionStart;
-    var end = obj.selectionEnd;
-    var sel = obj.value.substring(start, end);
-    obj.value = obj.value.substring(0, start) + (to == 'up' ? sel.toUpperCase() : sel.toLowerCase()) + obj.value.substring(end, len);
+        var len = obj.value.length;
+        var start = obj.selectionStart;
+        var end = obj.selectionEnd;
+        var sel = obj.value.substring(start, end);
+        obj.value = obj.value.substring(0, start) + (to == 'up' ? sel.toUpperCase() : sel.toLowerCase()) + obj.value.substring(end, len);
+        obj.selectionStart = start;
+        obj.selectionEnd = end;
   }
   obj.focus();
-
 }
 
 function fonts(w, textID) {
   var fmin = 12;
   var fmax = 24;
-  var obj = document.getElementById(textID);    //textBBcode);
+  var obj = document.getElementById(textID);
   var size = obj.style.fontSize;
   size = (parseInt(size));
   var nsize;
@@ -240,8 +280,10 @@ function font(w, f, textID) {
     var start = obj.selectionStart;
     var end = obj.selectionEnd;
     var sel = obj.value.substring(start, end);
-    obj.value = obj.value.substring(0, start) + "[" + w + "=" + f + "]" + sel + "[/" + w + "]" + obj.value.substring(end, len);
-    obj.selectionEnd = start + w.length + (1 + f.length) + sel.length + w.length + 5;
+    var opentag = "[" + w + "=" + f + "]";
+    obj.value = obj.value.substring(0, start) + opentag + sel + "[/" + w + "]" + obj.value.substring(end, len);
+    obj.selectionStart = start + opentag.length;
+    obj.selectionEnd = end + opentag.length;
   }
   if (w != "color" && w != "bg") document.getElementById("font" + w + textID).selectedIndex = 0;
   obj.focus();
@@ -261,6 +303,7 @@ function em(f, textID) {
     var end = obj.selectionEnd;
     var sel = obj.value.substring(start, end);
     obj.value = obj.value.substring(0, start) + f + obj.value.substring(end, len);
+    obj.selectionStart = start;
     obj.selectionEnd = start + f.length;
   }
   obj.focus();

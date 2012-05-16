@@ -1,4 +1,21 @@
 
+function Preview_Request() {
+	if ($('#preview').has_class('hidden')) {
+		var ToPost = [];
+		ToPost['body'] = $('#quickcomment').raw().value;
+		ajax.post('ajax.php?action=preview', ToPost, function (data) {
+			$('#preview').raw().innerHTML = data;
+			$('#preview').toggle();
+			$('#editor').toggle();
+			$('#previewbtn').raw().value = "Edit";
+		});
+	} else {
+		$('#preview').toggle();
+		$('#editor').toggle();
+		$('#previewbtn').raw().value = "Preview";
+	}
+}
+
 function Vote(amount, requestid) {
 	if(typeof amount == 'undefined') {
 		amount = parseInt($('#amount').raw().value);

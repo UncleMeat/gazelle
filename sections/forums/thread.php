@@ -420,15 +420,13 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
 			<img src="<?=STATIC_SERVER?>common/avatars/default.png"  class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 	<? } ?>
             </td>
-<? } ?>
+<? } 
+$AllowTags= isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues['site_advanced_tags'];
+?>
 		<td class="body" valign="top"<? if(!empty($HeavyInfo['DisableAvatars'])) { echo ' colspan="2"'; } ?>>
 			<div id="content<?=$PostID?>" class="post_container">
-                      <div class="post_content"><?=$Text->full_format($Body, isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues['site_advanced_tags']) ?> </div>
-                <? 
-           if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength > 0) && !empty($Signature) ) {
-                        
-                        echo '<div class="sig post_footer">' . $Text->full_format($Signature) . '</div>';
-           }      ?>
+                      <div class="post_content"><?=$Text->full_format($Body, $AllowTags) ?> </div>
+       
                       
 <? if($EditedUserID){ ?>  
                         <div class="post_footer">
@@ -440,6 +438,11 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
                         </div>
         <? }   ?>  
 			</div>
+                         <? 
+           if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength > 0) && !empty($Signature) ) {
+                        
+                        echo '<div class="sig post_footer">' . $Text->full_format($Signature, $AllowTags) . '</div>';
+           }      ?>
 		</td>
 	</tr>
 </table>
@@ -464,7 +467,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 					<tr class="colhead_dark">
 						<td colspan="2">
 							<span style="float:left;"><a href='#quickreplypreview'>#XXXXXX</a>
-								by <strong><?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'], false, true)?></strong> <? if (!empty($LoggedUser['Title'])) { echo display_str('('.$LoggedUser['Title'].')'); }?>
+								<?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'], $LoggedUser['Title'], true)?> 
 							Just now
 							</span>
 							<span id="barpreview" style="float:right;">

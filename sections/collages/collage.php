@@ -374,7 +374,7 @@ foreach ($CommentList as $Comment) {
 ?>
 		<div class="box">
 			<div class="head">By <?=format_username($UserID, $Username) ?> <?=time_diff($CommentTime) ?> <a href="reports.php?action=report&amp;type=collages_comment&amp;id=<?=$CommentID?>">[Report Comment]</a></div>
-			<div class="pad"><?=$Text->full_format($Body)?></div>
+                  <div class="pad"><?=$Text->full_format($Body, get_permissions_advtags($UserID))?></div>
 		</div>
 <?
 }

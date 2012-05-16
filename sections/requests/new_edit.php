@@ -6,6 +6,10 @@
  * maintaining 2 copies of almost identical files. 
  */
 
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+
+
 $NewRequest = ($_GET['action'] == "new" ? true : false);
 
 if(!$NewRequest) {
@@ -61,7 +65,7 @@ if($NewRequest && !empty($_GET['groupid']) && is_number($_GET['groupid'])) {
 	}
 }
 
-show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests');
+show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests,bbcode');
 ?>
 <div class="thin">
 	<h2><?=($NewRequest ? "Create a request" : "Edit a request")?></h2>
@@ -134,9 +138,13 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests');
 				</tr>
 				<tr>
 					<td class="label">Description</td>
-					<td>
-						<textarea name="description" cols="70" rows="7"><?=(!empty($Description) ? $Description : '')?></textarea> <br />
-					</td>
+					<td>  <div id="preview" class="box pad hidden"></div>
+                                    <div  id="editor">
+                                         <? $Text->display_bbcode_assistant("quickcomment", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
+                                        <textarea  id="quickcomment" name="description" class="long" rows="7"><?=(!empty($Description) ? $Description : '')?></textarea> 
+                                    </div>
+                                    <input type="button" id="previewbtn" value="Preview" style="margin-right: 40px;" onclick="Preview_Request();" />
+                              </td>
 				</tr>
 
 <?	if($NewRequest) { ?>

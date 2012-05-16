@@ -32,6 +32,23 @@ function ValidateForm(id) {
     }
     return true;
 }
+// displays a message in common_responses
+function Display_Message(added_id){
+                //$JustAdded = (int)$_GET['added'];
+    if (added_id>0) {
+        msg = "Response successfully created.";  
+        $('#ajax_message_' + added_id).remove_class('alert');  
+    } else  {
+        if (added_id==-1) msg='One or more fields were blank.';
+        else if (added_id==-2) msg='Not a valid ID!';
+        else msg = "Something unexpected went wrong!";  
+        added_id=0;  
+        $('#ajax_message_' + added_id).add_class('alert');  
+   }  
+   $('#ajax_message_' + added_id).show();
+   $('#ajax_message_' + added_id).raw().innerHTML = msg;
+   setTimeout("jQuery('#ajax_message_" + added_id + "').fadeOut(400)", 3000); 
+}
 
 function SaveMessage(id) {
 	var ajax_message = '#ajax_message_' + id;

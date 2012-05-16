@@ -30,11 +30,13 @@ $CatalogueLimit=$CatalogueID*THREAD_CATALOGUE . ', ' . THREAD_CATALOGUE;
 // Cache catalogue from which the page is selected, allows block caches and future ability to specify posts per page
 if(!list($Catalogue,$Posts) = $Cache->get_value('collage_'.$CollageID.'_catalogue_'.$CatalogueID)) {
 	$DB->query("SELECT SQL_CALC_FOUND_ROWS
-		ID,
-		UserID,
-		Time,
-		Body
-		FROM collages_comments
+		cc.ID,
+		cc.UserID,
+		cc.Time,
+		cc.Body,
+            a.Signature
+		FROM collages_comments AS cc
+            LEFT JOIN users_main AS a ON a.ID = UserID
 		WHERE CollageID = '$CollageID'
 		LIMIT $CatalogueLimit");
 	$Catalogue = $DB->to_array();
@@ -67,14 +69,17 @@ echo $Pages;
 
 //---------- Begin printing
 foreach($Thread as $Post){
-	list($PostID, $AuthorID, $AddedTime, $Body) = $Post;
+	list($PostID, $AuthorID, $AddedTime, $Body,$Signature) = $Post;
 	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
-?>
+      $AuthorPermissions = get_permissions($PermissionID);
+      list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
+            
+      ?>
 <table class="forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>" id="post<?=$PostID?>">
 	<tr class="colhead_dark">
 		<td colspan="2">
 			<span style="float:left;"><a href='#post<?=$PostID?>'>#<?=$PostID?></a>
-				by <strong><?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled, $PermissionID)?></strong> <? if ($UserTitle) { echo '('.$UserTitle.')'; }?> <?=time_diff($AddedTime)?> <a href="reports.php?action=report&amp;type=collages_comment&amp;id=<?=$PostID?>">[Report Comment]</a>
+				<?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled, $PermissionID, $UserTitle, true)?> <?=time_diff($AddedTime)?> <a href="reports.php?action=report&amp;type=collages_comment&amp;id=<?=$PostID?>">[Report Comment]</a>
 <? if (!$ThreadInfo['IsLocked']){ ?>				- <a href="#quickpost" onclick="Quote('<?=$PostID?>','<?=$Username?>');">[Quote]</a><? }
 if ($AuthorID == $LoggedUser['ID'] || check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" onclick="Edit_Form('<?=$PostID?>');">[Edit]</a><? }
 if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" onclick="Delete('<?=$PostID?>');">[Delete]</a> <? } ?>
@@ -87,21 +92,85 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 	<tr>
 <? if(empty($HeavyInfo['DisableAvatars'])) { ?>
 		<td class="avatar" valign="top">
-<? if ($Avatar) { ?>
-			<img src="<?=$Avatar?>" width="150" alt="<?=$Username ?>'s avatar" />
-<? } else { ?>
-			<img src="<?=STATIC_SERVER?>common/avatars/default.png" width="150" alt="Default avatar" />
-<? } ?>
+<?      if ($Avatar) { ?>
+			<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$Username ?>'s avatar" />
+<?      } else { ?>
+			<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
+<?      } ?>
 		</td>
-<? } ?>
+<? }
+$AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
+?>
 		<td class="body" valign="top">
 			<div id="content<?=$PostID?>">
-<?=$Text->full_format($Body)?>
+                      <div class="post_content"><?=$Text->full_format($Body, $AllowTags) ?></div>
 			</div>
+<?  
+           if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength>0) && !empty($Signature) ) {
+                        echo '<div class="sig post_footer">' . $Text->full_format($Signature, $AllowTags) . '</div>';
+           }
+?>
 		</td>
 	</tr>
 </table>
-<?	} 
+<?	}
+
+ 
+if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
+	if($ThreadInfo['MinClassWrite'] <= $LoggedUser['Class'] && !$LoggedUser['DisablePosting']) {
+          
+?>
+			<br />
+			<h3>Post reply</h3>
+			<div class="box pad">
+				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
+					<tr class="colhead_dark">
+						<td colspan="2">
+							<span style="float:left;"><a href='#quickreplypreview'>#XXXXXX</a>
+								<?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'], $LoggedUser['Title'], true)?>
+							Just now
+							<a href="#quickreplypreview">[Report Comment]</a>
+							</span>
+							<span id="barpreview" style="float:right;">
+								<a href="#">&uarr;</a>
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="avatar" valign="top">
+                              <? if (!empty($LoggedUser['Avatar'])) {  ?>
+                                            <img src="<?=$LoggedUser['Avatar']?>" class="avatar" style="<?=get_avatar_css($LoggedUser['MaxAvatarWidth'], $LoggedUser['MaxAvatarHeight'])?>" alt="<?=$LoggedUser['Username']?>'s avatar" />
+                               <? } else { ?>
+                                          <img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
+                              <? } ?>
+						</td>
+						<td class="body" valign="top">
+							<div id="contentpreview" style="text-align:left;"></div>
+						</td>
+					</tr>
+				</table>
+				<form id="quickpostform" action="" method="post" style="display: block; text-align: center;">
+					<div id="quickreplytext">
+						<input type="hidden" name="action" value="add_comment" />
+						<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+				<input type="hidden" name="collageid" value="<?=$CollageID?>" />
+                            <? $Text->display_bbcode_assistant("quickpost", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
+						<textarea id="quickpost" name="body" class="long"  rows="8"></textarea> <br />
+					</div>
+					<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit();}else{Quick_Preview();}" />
+					<input type="submit" value="Post reply" />
+				</form>
+			</div>
+<?
+          
+          
+          
+      }
+}
+
+
+/*
+
 if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 	if($ThreadInfo['MinClassWrite'] <= $LoggedUser['Class'] && !$LoggedUser['DisablePosting']) {
 ?>
@@ -123,6 +192,8 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 <?
 	}
 }
+*/
+
 ?>
 	<div class="linkbox">
 		<?=$Pages?>

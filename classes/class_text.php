@@ -911,9 +911,9 @@ EXPLANATION OF PARSER LOGIC
 				case 'quote':
 					$this->NoImg++; // No images inside quote tags
 					if(!empty($Block['Attr'])) {
-						$Str.= '<strong>'.$this->to_html($Block['Attr']).'</strong> wrote: ';
+						$Str.= '<span class="quote_label"><strong>'.$this->to_html($Block['Attr']).'</strong> wrote: </span>';
 					}
-					$Str.='<blockquote>'.$this->to_html($Block['Val']).'</blockquote>';
+					$Str.='<blockquote class="bbcode">'.$this->to_html($Block['Val']).'</blockquote>';
 					$this->NoImg--;
 					break;
 				case 'hide':

@@ -535,7 +535,7 @@ foreach($Thread as $Key => $Post){
 	<tr class="colhead_dark">
 		<td colspan="2">
 			<span style="float:left;"><a class="post_id" href='torrents.php?id=<?=$GroupID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>'>#<?=$PostID?></a>
-				<strong><?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, false, true)?></strong> <?=time_diff($AddedTime)?> <a href="reports.php?action=report&amp;type=torrents_comment&amp;id=<?=$PostID?>">[Report]</a>
+				<?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, $UserTitle, true)?> <?=time_diff($AddedTime)?> <a href="reports.php?action=report&amp;type=torrents_comment&amp;id=<?=$PostID?>">[Report]</a>
 				- <a href="#quickpost" onclick="Quote('<?=$PostID?>','<?=$Username?>');">[Quote]</a>
 <?if ($AuthorID == $LoggedUser['ID'] || check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" onclick="Edit_Form('<?=$PostID?>','<?=$Key?>');">[Edit]</a><? }
 if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" onclick="Delete('<?=$PostID?>');">[Delete]</a> <? } ?>
@@ -558,15 +558,12 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 		</td>
 <?
 }
+$AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 ?>
 		<td class="body" valign="top">
 			<div id="content<?=$PostID?>" class="post_container">
-                      <div class="post_content"><?=$Text->full_format($Body, get_permissions_advtags($AuthorID, false, $AuthorPermissions)) ?> </div>
-                <?  
-           if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength>0) && !empty($Signature) ) {
-                        
-                        echo '<div class="sig post_footer">' . $Text->full_format($Signature) . '</div>';
-           }      ?>
+                      <div class="post_content"><?=$Text->full_format($Body, $AllowTags) ?> </div>
+          
                       
 <? if($EditedUserID){ ?>  
                         <div class="post_footer">
@@ -578,6 +575,11 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
                         </div>
         <? }   ?>  
 			</div>
+<?  
+           if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength>0) && !empty($Signature) ) {
+                        echo '<div class="sig post_footer">' . $Text->full_format($Signature, $AllowTags) . '</div>';
+           }
+?>
 		</td>
 	</tr>
 </table>

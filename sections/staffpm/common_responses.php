@@ -97,23 +97,7 @@ while(list($ID, $Message, $Name) = $DB->next_record()) {
 if(isset($_GET['added'])) { 
 ?>
     <script type="text/javascript">
-        function Send_Message(){ <?
-                $JustAdded = (int)$_GET['added'];
-                if ($JustAdded>0) {
-                      $Msg = "Response successfully created.";  ?>
-                                    $('#ajax_message_<?=$JustAdded?>').remove_class('alert'); <?
-                } else  {
-                      if ($JustAdded==-1) $Msg='One or more fields were blank.';
-                      elseif ($JustAdded==-2) $Msg='Not a valid ID!';
-                      else $Msg = "Something unexpected went wrong!";  
-                      $JustAdded=0; ?>
-                                    $('#ajax_message_<?=$JustAdded?>').add_class('alert'); <?
-                }  ?>
-                                    $('#ajax_message_<?=$JustAdded?>').show();
-                                    $('#ajax_message_<?=$JustAdded?>').raw().innerHTML = '<?=$Msg?>';
-                                    setTimeout("jQuery('#ajax_message_<?=$JustAdded?>').fadeOut(400)", 3000); 
-        }
-        addDOMLoadEvent(Send_Message);
+        addDOMLoadEvent(function () { Display_Message(<?=(int)$_GET['added']?>) } );
     </script>
 <?
 }

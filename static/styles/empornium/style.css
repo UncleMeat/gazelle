@@ -770,8 +770,8 @@ tr {
     background-color: white;
 }
 
-tr.rowa {
-    background-color: #E1E9F2;
+tr.rowa {    /* original alternate row color: quite blue #E1E9F2;*/
+    background-color: #eff3f6; /* lighter shade: #eff3f6;*/
 }
 tr.rowb {
     background-color: white;
@@ -1316,10 +1316,23 @@ td.bbcode {
     text-align: inherit;
 }
 
+span.quote_label {
+  /*  text-align:left; */
+    float:left;
+    font-size: 8pt;
+    margin-left:10px;
+}
+blockquote.bbcode {
+    clear:both;
+    background-color: #f4f4f4;
+    color: #333;
+    text-align: left;
+   /* font-size: 0.9em; */
+}
+
 /*  Stuff for the bbcode assistant  */
 
-.bb_holder { 
-	/*border: 1px solid #222; */
+.bb_holder {
 	border-collapse:collapse; 
 	background:	#808080; 
       width: 100%;
@@ -1452,7 +1465,7 @@ a.button {
 	border: none;
 	font-size: 11px;
 	vertical-align: top;
-	cursor: hand;
+	cursor: pointer;  /* hand; */
 	line-height: 11px;
 	text-align: center;
 	font-size: 12px;
