@@ -429,7 +429,10 @@ li.searchbars {
 .messagebar.alert {
     background-color: #e11; 
 }
-
+.messagebar.checking { 
+    background-color: white; 
+    color: black;
+}
 
 /* user classes */
 .user_name { 

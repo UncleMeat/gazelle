@@ -17,18 +17,18 @@ if(isset($_GET['ip']) && isset($_GET['port'])){
 		$Octets[0] == 127 ||
 		$Octets[0] == 192
 	) {
-		die('Invalid IP');
+		die('-3'); //'Invalid IP');
 	}
 	
 	if (empty($_GET['port']) || !is_number($_GET['port']) ||  $_GET['port']<1 || $_GET['port']>65535){
-		die('Invalid Port');
+		die('-2');    //'Invalid Port');
 	}
 
 	//Error suppression, ugh.	
 	if(@fsockopen($_GET['ip'], $_GET['port'], $Errno, $Errstr, 20)){
-		die('Port '.$_GET['port'].' on '.$_GET['ip'].' connected successfully.');
+		die('1');     //'Port '.$_GET['port'].' on '.$_GET['ip'].' connected successfully.');
 	} else {
-		die('Port '.$_GET['port'].' on '.$_GET['ip'].' failed to connect.');
+		die('-1');     //'Port '.$_GET['port'].' on '.$_GET['ip'].' failed to connect.');
 	}
 }
 
@@ -52,18 +52,35 @@ show_header('Connectability Checker');
 				</td>
 			</tr>
 		</table>
-	</form>
-	<div id="result" class="box pad"></div>
+	</form><br />
+	<div class="box pad"><div id="result" class="messagebar checking"></div></div>
 </div>
 <script type="text/javascript">
-var result = $('#result').raw();
 
 function check_ip() {
-	var intervalid = setInterval("result.innerHTML += '.';",999);
-	result.innerHTML = 'Checking.';
+      var result = $('#result');
+	var intervalid = setInterval("$('#result').raw().innerHTML += '.';",1499);
+      result.remove_class('alert');
+      result.add_class('checking');
+	result.raw().innerHTML = 'Checking.';
 	ajax.get('user.php?action=connchecker&ip=' + $('#ip').raw().value + '&port=' + $('#port').raw().value, function (response) {
 		clearInterval(intervalid);
-		result.innerHTML = response;
+            result.remove_class('checking');
+            if(response == '-3') {
+                result.add_class('alert');
+                result.raw().innerHTML = 'Invalid IP';
+            } else if(response == '-2') {
+                result.add_class('alert');
+                result.raw().innerHTML = 'Invalid Port';
+            }else if(response == '-1'){
+                result.add_class('alert');
+                result.raw().innerHTML = 'Port '+$('#port').raw().value+' on '+$('#ip').raw().value+' failed to connect.';
+            }else if(response == '1'){
+                result.raw().innerHTML = 'Port '+$('#port').raw().value+' on '+$('#ip').raw().value+' connected successfully.';
+            }else{
+                result.add_class('alert');
+                result.raw().innerHTML = 'Invalid response: An error occured';
+            }
 	});
 }
 </script>
