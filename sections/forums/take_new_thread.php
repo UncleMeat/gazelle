@@ -30,10 +30,16 @@ if(isset($_POST['forum']) && !is_number($_POST['forum'])) {
 }
 
 //If you're not sending anything, go back
-if (empty($_POST['body']) || empty($_POST['title'])) {
-	header('Location: '.$_SERVER['HTTP_REFERER']);
-	die();
-}
+if (empty($_POST['title'])) {
+	// better to error out as at least they can go back and retreive the other post content
+      error('You cannot create a thread with no title.');
+	//header('Location: '.$_SERVER['HTTP_REFERER']);
+	//die();
+} 
+
+if (empty($_POST['body'])) {
+	error('You cannot create a thread with no post content.');
+} 
 
 $Body = $_POST['body'];
 

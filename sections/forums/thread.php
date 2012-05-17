@@ -127,7 +127,7 @@ if(in_array($ThreadID, $UserSubscriptions)) {
 }
 
 // Start printing
-show_header('Forums'.' > '.$Forums[$ForumID]['Name'].' > '.$ThreadInfo['Title'],'comments,subscriptions,bbcode');
+show_header('Forums'.' > '.$Forums[$ForumID]['Name'].' > '.$ThreadInfo['Title'],'comments,subscriptions,bbcode,jquery');
 ?>
 <div class="thin">
 	<h2>
@@ -460,8 +460,8 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 	if(check_forumperm($ForumID, 'Write') && !$LoggedUser['DisablePosting']) {
 	//TODO: Preview, come up with a standard, make it look like post or just a block of formatted bbcode, but decide and write some proper html
 ?>
-			<br />
-			<h3>Post reply</h3>
+			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
+                  <h3>Post reply</h3>
 			<div class="box pad">
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
 					<tr class="colhead_dark">
@@ -492,7 +492,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 						</td>
 					</tr>
 				</table>
-				<form id="quickpostform" action="" method="post" style="display: block; text-align: center;">
+				<form id="quickpostform" action="" method="post" onsubmit="return Validate_Form('message','quickpost')" style="display: block; text-align: center;">
 					<input type="hidden" name="action" value="reply" />
 					<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 					<input type="hidden" name="thread" value="<?=$ThreadID?>" />

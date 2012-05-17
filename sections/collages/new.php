@@ -1,5 +1,7 @@
 <?
-show_header('Create a collage');
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+show_header('Create a collage','bbcode,jquery');
 
 if (!check_perms('site_collages_renamepersonal')) {
 	$ChangeJS = "OnChange=\"if ( this.options[this.selectedIndex].value == '0') { $('#namebox').hide(); $('#personal').show(); } else { $('#namebox').show(); $('#personal').hide(); }\"";
@@ -28,7 +30,7 @@ if (!empty($Error)) { ?>
 			<tr id="collagename">
 				<td class="label"><strong>Name</strong></td>
 				<td>
-					<input type="text" class="<?=$NoName?'hidden':''?>" name="name" size="60" id="namebox" value="<?=display_str($Name)?>" />
+					<input type="text" class="long<?=$NoName?' hidden':''?>" name="name" id="namebox" value="<?=display_str($Name)?>" />
 					<span id="personal" class="<?=$NoName?'':'hidden'?>" style="font-style: oblique"><strong><?=$LoggedUser['Username']?>'s personal collage</strong></span>
 				</td>
 			</tr>
@@ -64,13 +66,17 @@ if(($CollageCount < $LoggedUser['Permissions']['MaxCollages']) && check_perms('s
 			<tr>
 				<td class="label">Description</td>
 				<td>
-					<textarea name="description" id="description" cols="60" rows="10"><?=display_str($Description)?></textarea>
+                            <div id="preview" class="box pad hidden"></div>
+                            <div  id="editor">
+                            <? $Text->display_bbcode_assistant("description", get_permissions_advtags($UserID)); ?>
+					<textarea name="description" id="description" class="long" rows="10"><?=display_str($Description)?></textarea>
+                            </div>
 				</td>
 			</tr>
 			<tr>
 				<td class="label"><strong>Tags (comma-separated)</strong></td>
 				<td>
-					<input type="text" id="tags" name="tags" size="60" value="<?=display_str($Tags)?>" />
+					<input type="text" id="tags" name="tags" class="long" value="<?=display_str($Tags)?>" />
 				</td>
 			</tr>
 			<tr>
@@ -79,7 +85,10 @@ if(($CollageCount < $LoggedUser['Permissions']['MaxCollages']) && check_perms('s
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2" class="center"><input type="submit" value="Create collage" /></td>
+				<td colspan="2" class="center">
+                            <input id="previewbtn" type="button" value="Preview" onclick="Preview_Collage();" />
+                            <input type="submit" value="Create collage" />
+                        </td>
 			</tr>
 		</table>
 	</form>

@@ -48,9 +48,12 @@ if(!isset($_REQUEST['action'])) {
 			authorize();
 
 			enforce_login();
-			if (!isset($_POST['requestid']) || !is_number($_POST['requestid']) || empty($_POST['body'])) { 
+			if (!isset($_POST['requestid']) || !is_number($_POST['requestid'])) { 
 				error(0);
 			}
+                  if(empty($_POST['body'])) {
+                        error('You cannot post a comment with no content.');
+                  }
 			if($LoggedUser['DisablePosting']) {
 				error('Your posting rights have been removed.');
 			}
@@ -80,7 +83,7 @@ if(!isset($_REQUEST['action'])) {
 			$Cache->commit_transaction(0);
 			$Cache->increment('request_comments_'.$RequestID);
 			
-			header('Location: requests.php?action=view&id='.$RequestID.'&page='.$Pages);
+			header('Location: requests.php?action=view&id='.$RequestID.'&page='.$Pages."#post$PostID");
 		break;
 		
 		case 'get_post':

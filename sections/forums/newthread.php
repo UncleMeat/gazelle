@@ -21,7 +21,7 @@ include(SERVER_ROOT.'/classes/class_text.php');
 $Text = NEW TEXT;
 
 if(!check_forumperm($ForumID, 'Write') || !check_forumperm($ForumID, 'Create')) { error(403); }
-show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode');
+show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode,jquery');
 ?>
 <div class="thin">
 	<h2><a href="forums.php">Forums</a> &gt; <a href="forums.php?action=viewforum&amp;forumid=<?=$ForumID?>"><?=$Forum['Name']?></a> &gt; <span id="newthreadtitle">New Topic</span></h2>
@@ -47,7 +47,7 @@ show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode');
 			<tr class="colhead_dark">
 				<td colspan="2">
 					<span style="float:left;"><a href='#newthreadpreview'>#XXXXXX</a>
-						by <?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'], $LoggedUser['Title'], true)?> <? //if (!empty($LoggedUser['Title'])) { echo '('.$LoggedUser['Title'].')'; }?>
+						<?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'], $LoggedUser['Title'], true)?> <? //if (!empty($LoggedUser['Title'])) { echo '('.$LoggedUser['Title'].')'; }?>
 					Just now
 					</span>
 					<span id="barpreview" style="float:right;">
@@ -72,8 +72,9 @@ show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode');
 			</tr>
 		</table>
 	</div>
-	<div class="box pad">
-		<form action="" id="newthreadform" method="post">
+	<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
+      <div class="box pad">
+		<form action="" id="newthreadform" method="post" onsubmit="return Validate_Form('message',new Array('title','posttext'))">
 			<input type="hidden" name="action" value="new" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 			<input type="hidden" name="forum" value="<?=$ForumID?>" />
@@ -84,7 +85,7 @@ show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode');
 				</tr>
 				<tr>
 					<td class="label">Body</td>
-					<td> <? $Text->display_bbcode_assistant("posttext"); ?>
+					<td> <? $Text->display_bbcode_assistant("posttext", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
                                    <textarea id="posttext" class="long" onkeyup="resize('posttext');" name="body" cols="90" rows="8"></textarea>
                               </td>
 				</tr>

@@ -76,7 +76,7 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 	if($_GET['did'] == 1) { ?>
 			<div id="messagebar" class="messagebar">Successfully Edited Description</div>
                   <script type="text/javascript">
-                        function Kill_Message(){ setTimeout("jQuery('#messagebar').fadeOut(400)", 2000); }
+                        function Kill_Message(){ setTimeout("jQuery('#messagebar').fadeOut(400)", 3000); }
                         addDOMLoadEvent(Kill_Message);
                   </script>
 <?	} ?>
@@ -590,7 +590,8 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 <?
 if(!$LoggedUser['DisablePosting']) { ?>
 			<br />
-			<h3>Post reply</h3>
+			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
+                  <h3>Post reply</h3>
 			<div class="box pad">
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
 					<tr class="colhead_dark">
@@ -618,7 +619,7 @@ if(!$LoggedUser['DisablePosting']) { ?>
 						</td>
 					</tr>
 				</table>
-				<form id="quickpostform" action="" method="post" style="display: block; text-align: center;">
+				<form id="quickpostform" action="" method="post" onsubmit="return Validate_Form('message','quickpost')" style="display: block; text-align: center;">
 					<div id="quickreplytext">
 						<input type="hidden" name="action" value="reply" />
 						<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />

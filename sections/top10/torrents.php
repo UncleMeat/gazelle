@@ -234,10 +234,10 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 		</small>
 <?	} ?> 
 		</h3>
-	<table class="border">
+	<table class="border torrent_table">
 	<tr class="colhead">
 		<td class="center" style="width:15px;"></td>
-		<td style="width:40px;"></td>
+		<td style="width:32px;"></td>
 		<td><strong>Name</strong></td>
 		<td class="top10 statlong"><strong>Data</strong></td>
 		<td class="top10 statlong"><strong>Size</strong></td>

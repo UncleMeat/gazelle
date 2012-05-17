@@ -149,7 +149,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
         }
 ?>
 <tr class="torrent" id="group_<?=$GroupID?>">
-        <td></td>
+        <!--<td></td>-->
         <td class="center">
             <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
                 <div title="<?=$NewCategories[$NewCategoryID]['cat_desc']?>"><img src="<?=$CatImg?>" />
@@ -223,7 +223,7 @@ for ($i=0; $i < $NumGroups/$CollageCovers; $i++) {
 	$CollagePages[] = $CollagePage;
 }
 
-show_header($Name,'browse,collage,bbcode');
+show_header($Name,'browse,collage,comments,bbcode,jquery');
 ?>
 <div class="thin">
 	<h2><?=$Name?></h2>
@@ -259,10 +259,10 @@ if (check_perms('site_collages_manage') && !$Locked) { ?>
 			<div class="head"><strong>Category</strong></div>
 			<div class="pad"><a href="collages.php?action=search&amp;cats[<?=(int)$CollageCategoryID?>]=1"><?=$CollageCats[(int)$CollageCategoryID]?></a></div>
 		</div>
-		<div class="box">
+	<!--	<div class="box">
 			<div class="head"><strong>Description</strong></div>
 			<div class="pad"><?=$Text->full_format($Description)?></div>
-		</div>
+		</div> -->
 <?
 if(check_perms('zip_downloader')){
 ?>
@@ -354,53 +354,6 @@ foreach ($Users as $ID => $User) {
 			</div>
 		</div>
 <? } ?>
-		<h3>Comments</h3>
-<?
-if(empty($CommentList)) {
-	$DB->query("SELECT 
-		cc.ID, 
-		cc.Body, 
-		cc.UserID, 
-		um.Username,
-		cc.Time 
-		FROM collages_comments AS cc
-		LEFT JOIN users_main AS um ON um.ID=cc.UserID
-		WHERE CollageID='$CollageID' 
-		ORDER BY ID DESC LIMIT 15");
-	$CommentList = $DB->to_array();	
-}
-foreach ($CommentList as $Comment) {
-	list($CommentID, $Body, $UserID, $Username, $CommentTime) = $Comment;
-?>
-		<div class="box">
-			<div class="head">By <?=format_username($UserID, $Username) ?> <?=time_diff($CommentTime) ?> <a href="reports.php?action=report&amp;type=collages_comment&amp;id=<?=$CommentID?>">[Report Comment]</a></div>
-                  <div class="pad"><?=$Text->full_format($Body, get_permissions_advtags($UserID))?></div>
-		</div>
-<?
-}
-?>
-		<div class="box pad">
-			<a href="collages.php?action=comments&amp;collageid=<?=$CollageID?>">All comments</a>
-		</div>
-<?
-if(!$LoggedUser['DisablePosting']) {
-?>
-		<div class="box">
-			<div class="head"><strong>Add comment</strong></div>
-			<form action="collages.php" method="post">
-				<input type="hidden" name="action" value="add_comment" />
-				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-				<input type="hidden" name="collageid" value="<?=$CollageID?>" />
-				<div class="pad">
-					<textarea name="body" cols="24" rows="5"></textarea>
-					<br />
-					<input type="submit" value="Add comment" />
-				</div>
-			</form>
-		</div>
-<?
-}
-?>
 	</div>
 	<div class="main_column">	
 <?	
@@ -431,9 +384,13 @@ if($CollageCovers != 0) { ?>
 		</script>
 <?		} 
 } ?>
+		<div class="box">
+			<div class="head"><strong>Description</strong></div>
+                  <div class="pad"><?=$Text->full_format($Description, get_permissions_advtags($UserID))?></div>
+		</div>
 		<table class="torrent_table" id="discog_table">
 			<tr class="colhead_dark">
-				<td><!-- expand/collapse --></td>
+				<!--<td> expand/collapse </td>-->
 				<td><!-- Category --></td>
 				<td width="70%"><strong>Torrents</strong></td>
 				<td>Size</td>
@@ -443,6 +400,96 @@ if($CollageCovers != 0) { ?>
 			</tr>
 <?=$TorrentTable?>
 		</table>
+            <br style="clear:both;" />
+            <div class="box pad">
+                <h3 style="float:left">Most recent Comments</h3> <a style="float:right" href="collages.php?action=comments&amp;collageid=<?=$CollageID?>">All comments</a>
+            <br style="clear:both;" /></div>
+<?
+if(empty($CommentList)) {
+	$DB->query("SELECT 
+		cc.ID, 
+		cc.Body, 
+		cc.UserID, 
+		um.Username,
+		cc.Time 
+		FROM collages_comments AS cc
+		LEFT JOIN users_main AS um ON um.ID=cc.UserID
+		WHERE CollageID='$CollageID' 
+		ORDER BY ID DESC LIMIT 15");
+	$CommentList = $DB->to_array();	
+}
+foreach ($CommentList as $Comment) {
+	list($CommentID, $Body, $UserID, $Username, $CommentTime) = $Comment;
+?>
+		<div id="post<?=$CommentID?>" class="box">
+			<div class="head"><a href='#post<?=$CommentID?>'>#<?=$CommentID?></a> By <?=format_username($UserID, $Username) ?> <?=time_diff($CommentTime) ?> <a href="reports.php?action=report&amp;type=collages_comment&amp;id=<?=$CommentID?>">[Report Comment]</a></div>
+                  <div class="pad"><?=$Text->full_format($Body, get_permissions_advtags($UserID))?></div>
+		</div>
+<?
+}
+?>
+	<!--	<div class="box pad">
+			<a href="collages.php?action=comments&amp;collageid=<?=$CollageID?>">All comments</a>
+		</div>-->
+<?
+if(!$LoggedUser['DisablePosting']) {
+?>
+            
+			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
+                  <h3>Post reply</h3>
+			<div class="box pad">
+				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
+					<tr class="head">
+						<td>
+							<span style="float:left;"><a href='#quickreplypreview'>#XXXXXX</a>
+                                            By <?=format_username($LoggedUser['ID'], $LoggedUser['Username'])?>
+							Just now  <a href="#quickreplypreview">[Report Comment]</a>
+							</span>
+							<span id="barpreview" style="float:right;">
+								<a href="#">&uarr;</a>
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="body pad" valign="top">
+							<div id="contentpreview" style="text-align:left;"></div>
+						</td>
+					</tr>
+				</table>
+				<form id="quickpostform" action="" method="post" onsubmit="return Validate_Form('message', 'quickpost')" style="display: block; text-align: center;">
+					<div id="quickreplytext">
+						<input type="hidden" name="action" value="add_comment" />
+						<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+                                    <input type="hidden" name="collageid" value="<?=$CollageID?>" />
+                            <? $Text->display_bbcode_assistant("quickpost", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
+						<textarea id="quickpost" name="body" class="long"  rows="5"></textarea> <br />
+					</div>
+					<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit();}else{Quick_Preview();}" />
+					<input type="submit" value="Post reply" />
+				</form>
+			</div>
+                  
+                  <!--
+		<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
+		<div class="box">
+                  <div class="head"><strong>Add comment</strong></div>
+			<form action="collages.php" method="post" onsubmit="return Validate_Form('message', 'textbody')">
+				<input type="hidden" name="action" value="add_comment" />
+				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+				<input type="hidden" name="collageid" value="<?=$CollageID?>" />
+				<div class="pad">
+					<textarea id="textbody" name="body" class="long" rows="5"></textarea>
+					<br />
+					<input type="submit" value="Add comment" />
+				</div>
+			</form>
+		</div>
+            -->
+            
+            
+<?
+}
+?>
 	</div>
 </div>
 <?

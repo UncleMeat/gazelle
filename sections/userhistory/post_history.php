@@ -298,13 +298,14 @@ if(empty($Results)) {
 			if(empty($HeavyInfo['DisableAvatars'])) {
 ?>
 			<td class='avatar' valign="top">
-<?
-				if($Avatar) {
-?>
-				<img src='<?=$Avatar?>' width='150' style="max-height:400px;" alt="<?=$Username?>'s avatar" />
-<?
-				} 
-?>
+
+	<? if ($Avatar) { ?>
+			<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($PermissionsInfo['MaxAvatarWidth'], $PermissionsInfo['MaxAvatarHeight'])?>" alt="<?=$Username ?>'s avatar" />
+	<? } else { ?>
+			<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
+	<?
+         }
+	?>
 			</td>
 <?
 			}

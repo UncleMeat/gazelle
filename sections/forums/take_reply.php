@@ -36,8 +36,9 @@ if(isset($_POST['forum']) && !is_number($_POST['forum'])) {
 
 //If you're not sending anything, go back
 if(empty($_POST['body'])) {
-	header('Location: '.$_SERVER['HTTP_REFERER']);
-	die();
+	error('You cannot post a reply with no content.');
+	//header('Location: '.$_SERVER['HTTP_REFERER']);
+	//die();
 }
 
 $Body = $_POST['body'];
@@ -225,5 +226,5 @@ if($DB->record_count() > 0) {
 	}
 }
 
-header('Location: forums.php?action=viewthread&threadid='.$TopicID.'&page='.ceil($ThreadInfo['Posts']/$PerPage));
+header('Location: forums.php?action=viewthread&threadid='.$TopicID.'&page='.ceil($ThreadInfo['Posts']/$PerPage)."#post$PostID");
 die();

@@ -10,6 +10,48 @@ var BBCode = {
 	}
 };
 
+function Validate_Form(message_div, fields) {
+    if ( !is_array(fields)) {
+        if (fields == null) return false;
+        fields = new Array(fields);
+    }
+    message_div = '#' + message_div;
+    failed = false;
+    for (i=0;i<fields.length;i++) {
+        var message =  jQuery.trim($('#'+fields[i]).raw().value);
+        //alert('checking field: #'+fields[i] + ' msg: '+ message);
+        if (message==null || message==""){
+            failed=true;
+            break;
+        }
+    }
+    if (failed) {
+	  $(message_div).raw().innerHTML = 'One or more fields were blank.';
+        $(message_div).add_class('alert');
+        $(message_div).show();
+        jQuery(message_div).fadeIn(0);
+        setTimeout("jQuery('" + message_div + "').fadeOut(400)", 2000);
+        return false;
+    }
+    return true;
+}
+
+function Preview_Collage() {
+	if ($('#preview').has_class('hidden')) {
+		var ToPost = [];
+		ToPost['body'] = $('#description').raw().value;
+		ajax.post('ajax.php?action=preview', ToPost, function (data) {
+			$('#preview').raw().innerHTML = data;
+			$('#preview').toggle();
+			$('#editor').toggle();
+			$('#previewbtn').raw().value = "Edit";
+		});
+	} else {
+		$('#preview').toggle();
+		$('#editor').toggle();
+		$('#previewbtn').raw().value = "Preview";
+	}
+}
 
 function Sandbox_Preview() { 
     $('#preview_button').raw().value = "Updating...";

@@ -76,7 +76,8 @@ if($NumResults > $PerPage*($Page-1)) {
 		ui.Avatar,
 		p.EditedUserID,
 		p.EditedTime,
-		ed.Username AS EditedUsername
+		ed.Username AS EditedUsername,
+            um.PermissionID
 		FROM forums_posts AS p
 		LEFT JOIN forums_topics AS t ON t.ID = p.TopicID
 		LEFT JOIN forums AS f ON f.ID = t.ForumID
@@ -129,7 +130,11 @@ if(!$NumResults) {
 ?>
 	</div>
 <?
-	while(list($ForumID, $ForumName, $TopicID, $ThreadTitle, $Body, $LastPostID, $Locked, $Sticky, $PostID, $AuthorID, $AuthorName, $AuthorAvatar, $EditedUserID, $EditedTime, $EditedUsername) = $DB->next_record()){
+	while(list($ForumID, $ForumName, $TopicID, $ThreadTitle, $Body, $LastPostID, $Locked, $Sticky, $PostID, $AuthorID, $AuthorName, $AuthorAvatar, $EditedUserID, $EditedTime, $EditedUsername,$PermissionID) = $DB->next_record()){
+      
+          $AuthorPermissions = get_permissions($PermissionID);
+          list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
+      
 ?>
 	<table class='forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>'>
 		<tr class='colhead_dark'>
@@ -154,18 +159,25 @@ if(!$NumResults) {
 		<tr class="row<?=$ShowCollapsed?' hidden':''?>">
 		<? if(empty($HeavyInfo['DisableAvatars'])) { ?>
 			<td class='avatar' valign="top">
-			<? if(check_perms('site_proxy_images') && preg_match('/^https?:\/\/(localhost(:[0-9]{2,5})?|[0-9]{1,3}(\.[0-9]{1,3}){3}|([a-zA-Z0-9\-\_]+\.)+([a-zA-Z]{1,5}[^\.]))(:[0-9]{2,5})?(\/[^<>]+)+\.(jpg|jpeg|gif|png|tif|tiff|bmp)$/is',$AuthorAvatar)) { ?>
+			<? /* if(check_perms('site_proxy_images') && preg_match('/^https?:\/\/(localhost(:[0-9]{2,5})?|[0-9]{1,3}(\.[0-9]{1,3}){3}|([a-zA-Z0-9\-\_]+\.)+([a-zA-Z]{1,5}[^\.]))(:[0-9]{2,5})?(\/[^<>]+)+\.(jpg|jpeg|gif|png|tif|tiff|bmp)$/is',$AuthorAvatar)) { ?>
 				<img src="<?='http://'.SITE_URL.'/image.php?c=1&i='.urlencode($AuthorAvatar)?>" width="150" style="max-height:400px;" alt="<?=$AuthorName?>'s avatar" />
 			<? } elseif(!$AuthorAvatar) { ?>
 				<img src="<?=STATIC_SERVER.'common/avatars/default.png'?>" width="150" style="max-height:400px;" alt="Default avatar" />
 			<? } else { ?>
 				<img src="<?=$AuthorAvatar?>" width="150" style="max-height:400px;" alt="<?=$AuthorName?>'s avatar" />
-			<? } ?>
+			<? } */ ?>
+                        
+	<? if ($AuthorAvatar) { ?>
+			<img src="<?=$AuthorAvatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$AuthorName ?>'s avatar" />
+	<? } else { ?>
+			<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
+	<? } ?>
 			</td>
-		<? } ?>
+		<? }
+$AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions); ?>
 			<td class='body' valign="top">
 				<div class="content3">
-					<?=$Text->full_format($Body) ?>
+					<?=$Text->full_format($Body,$AllowTags) ?>
 		<? if($EditedUserID) { ?>
 					<br /><br />
 					Last edited by

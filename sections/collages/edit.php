@@ -1,4 +1,7 @@
 <?
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+
 $CollageID = $_GET['collageid'];
 if(!is_number($CollageID)) { error(0); }
 
@@ -8,11 +11,12 @@ $TagList = implode(', ', explode(' ', $TagList));
 
 if($CategoryID == 0 && $UserID!=$LoggedUser['ID'] && !check_perms('site_collages_delete')) { error(403); }
 
-show_header('Edit collage');
+show_header('Edit collage','bbcode,jquery');
 ?>
 <div class="thin">
-	<h2>Edit collage <a href="collages.php?id=<?=$CollageID?>"><?=$Name?></a></h2>
-	<form action="collages.php" method="post">
+      <h2>Edit collage <a href="collages.php?id=<?=$CollageID?>"><?=$Name?></a></h2>
+      
+	<form action="collages.php" method="post" id="quickpostform" >
 		<input type="hidden" name="action" value="edit_handle" />
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 		<input type="hidden" name="collageid" value="<?=$CollageID?>" />
@@ -20,7 +24,7 @@ show_header('Edit collage');
 <? if (check_perms('site_collages_delete') || ($CategoryID == 0 && $UserID == $LoggedUser['ID'] && check_perms('site_collages_renamepersonal'))) { ?>
 			<tr>
 				<td class="label">Name</td>
-				<td><input type="text" name="name" size="60" value="<?=$Name?>" /></td>
+				<td><input type="text" name="name" class="long" value="<?=$Name?>" /></td>
 			</tr>
 <? } ?>
 <? if($CategoryID>0) { ?>
@@ -39,13 +43,17 @@ show_header('Edit collage');
 <? } ?>
 			<tr>
 				<td class="label">Description</td>
-				<td>
-					<textarea name="description" id="description" cols="60" rows="10"><?=$Description?></textarea>
-				</td>
+				<td> 
+                            <div id="preview" class="box pad hidden"></div>
+                            <div  id="editor">
+                            <? $Text->display_bbcode_assistant("description", get_permissions_advtags($UserID)); ?>
+					<textarea name="description" id="description" class="long" rows="10"><?=$Description?></textarea>
+                            </div>
+                        </td>
 			</tr>
 			<tr>
 				<td class="label">Tags</td>
-				<td><input type="text" name="tags" size="60" value="<?=$TagList?>" /></td>
+				<td><input type="text" name="tags" class="long" value="<?=$TagList?>" /></td>
 			</tr>
 <? if($CategoryID == 0) { ?>
 			<tr>
@@ -69,7 +77,10 @@ show_header('Edit collage');
 			
 <? } ?>
 			<tr>
-				<td colspan="2" class="center"><input type="submit" value="Edit collage" /></td>
+				<td colspan="2" class="center">
+                            <input id="previewbtn" type="button" value="Preview" onclick="Preview_Collage();" />
+                            <input type="submit" value="Edit collage" />
+                        </td>
 			</tr>
 		</table>
 	</form>

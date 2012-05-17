@@ -1,7 +1,11 @@
 <?
 authorize();
 
-if(empty($_POST['collageid']) || !is_number($_POST['collageid']) || empty($_POST['body'])) { error(0); }
+if(empty($_POST['collageid']) || !is_number($_POST['collageid'])) { error(0); }
+ 
+if(empty($_POST['body'])) {
+	error('You cannot post a comment with no content.');
+}
 $CollageID = $_POST['collageid'];
 
 if($LoggedUser['DisablePosting']) {
@@ -13,8 +17,10 @@ $DB->query("INSERT INTO collages_comments
 	VALUES
 	('$CollageID', '".db_string($_POST['body'])."', '$LoggedUser[ID]', '".sqltime()."')");
 
+$CommentID = $DB->inserted_id();
+		
 $Cache->delete_value('collage_'.$CollageID.'_catalogue_0');
 $Cache->delete_value('collage_'.$CollageID);
-header('Location: collages.php?id='.$CollageID);
+header('Location: collages.php?id='.$CollageID."#post$CommentID");
 
 ?>

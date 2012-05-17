@@ -45,7 +45,7 @@ $ProjectCanEdit = (check_perms('project_team') && !$IsFilled && (($CategoryID ==
 $UserCanEdit = (!$IsFilled && $LoggedUser['ID'] == $RequestorID && $VoteCount < 2);
 $CanEdit = ($UserCanEdit || $ProjectCanEdit || check_perms('site_moderate_requests'));
 
-show_header('View request: '.$FullName, 'comments,requests,bbcode');
+show_header('View request: '.$FullName, 'comments,requests,bbcode,jquery');
 
 ?>
 <div class="thin">
@@ -359,7 +359,8 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 <?
 if(!$LoggedUser['DisablePosting']) { ?>
 			<br />
-			<h3>Post comment</h3>
+			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
+                  <h3>Post comment</h3>
 			<div class="box pad">
 				<table id="quickreplypreview" class="hidden forum_post box vertical_margin" id="preview">
 					<tr class="colhead_dark">
@@ -387,7 +388,7 @@ if(!$LoggedUser['DisablePosting']) { ?>
 						</td>
 					</tr>
 				</table>
-				<form id="quickpostform" action="" method="post" style="display: block; text-align: center;">
+				<form id="quickpostform" action="" method="post" onsubmit="return Validate_Form('message', 'quickpost')" style="display: block; text-align: center;">
 					<div id="quickreplytext">
 						<input type="hidden" name="action" value="reply" />
 						<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />

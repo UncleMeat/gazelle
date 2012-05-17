@@ -52,7 +52,7 @@ $DB->query("SELECT Name FROM collages WHERE ID='$CollageID'");
 list($Name) = $DB->next_record();
 
 // Start printing
-show_header('Comments for collage '.$Name, 'comments,bbcode');
+show_header('Comments for collage '.$Name, 'comments,bbcode,jquery');
 ?>
 <div class="thin">
 	<h2>
@@ -120,8 +120,8 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 	if($ThreadInfo['MinClassWrite'] <= $LoggedUser['Class'] && !$LoggedUser['DisablePosting']) {
           
 ?>
-			<br />
-			<h3>Post reply</h3>
+			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
+                  <h3>Post reply</h3>
 			<div class="box pad">
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
 					<tr class="colhead_dark">
@@ -149,7 +149,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 						</td>
 					</tr>
 				</table>
-				<form id="quickpostform" action="" method="post" style="display: block; text-align: center;">
+				<form id="quickpostform" action="" method="post" onsubmit="return Validate_Form('message', 'quickpost')" style="display: block; text-align: center;">
 					<div id="quickreplytext">
 						<input type="hidden" name="action" value="add_comment" />
 						<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />

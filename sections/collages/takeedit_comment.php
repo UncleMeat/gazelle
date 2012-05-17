@@ -10,6 +10,9 @@ if(!$_POST['post'] || !is_number($_POST['post'])) {
 }
 // End injection check
 
+if(empty($_POST['body'])) {
+	error('You cannot post a comment with no content.');
+}
 // Variables for database input
 $UserID = $LoggedUser['ID'];
 $Body = db_string(urldecode($_POST['body']));

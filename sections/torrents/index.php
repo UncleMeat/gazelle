@@ -182,9 +182,12 @@ if(!empty($_REQUEST['action'])) {
 			enforce_login();
 			authorize();
 
-			if (!isset($_POST['groupid']) || !is_number($_POST['groupid']) || empty($_POST['body'])) { 
+			if (!isset($_POST['groupid']) || !is_number($_POST['groupid'])) { // || empty($_POST['body'])
 				error(0);
 			}
+                  if (empty($_POST['body'])) {
+                        error('You cannot post a reply with no content.');
+                  } 
 			if($LoggedUser['DisablePosting']) {
 				error('Your posting rights have been removed.');
 			}
@@ -214,7 +217,7 @@ if(!empty($_REQUEST['action'])) {
 			$Cache->commit_transaction(0);
 			$Cache->increment('torrent_comments_'.$GroupID);
 			
-			header('Location: torrents.php?id='.$GroupID.'&page='.$Pages);
+			header('Location: torrents.php?id='.$GroupID.'&page='.$Pages."#post$PostID");
 			break;
 		
 		case 'get_post':
