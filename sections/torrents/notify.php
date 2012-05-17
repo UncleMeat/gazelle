@@ -27,7 +27,7 @@ $Results = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 		tln.TorrentID AS LogInDB,
 		unt.UnRead,
 		unt.FilterID,
-		unf.Label,
+		unf.Label
 		FROM users_notify_torrents AS unt
 		JOIN torrents AS t ON t.ID=unt.TorrentID
 		JOIN torrents_group AS g ON g.ID = t.GroupID 
