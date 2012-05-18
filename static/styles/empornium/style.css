@@ -662,7 +662,7 @@ table.boxstat td:first-child {
 .details .middle_column {
     margin: 0px 270px 10px;
     max-height: 460px; /* should be 60px more than tag_inner max-height */
-    overflow: auto;
+    /* overflow: auto; <- screws up chrome in linux */
 }
 .details .main_column {
     margin: 0px 0px 10px 0px;
