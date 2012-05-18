@@ -45,13 +45,12 @@ show_header('Edit torrent','bbcode,edittorrent');
 ?>
 <div class="thin">
 <?
-    if($Err) { 
-        echo '<div class="box pad"><strong class=\"important_text\">'.$Err.'</strong></div>';
-    } 
-
+	if($Err) { ?>
+			<div id="messagebar" class="messagebar alert"><?=$Err?></div>
+<?	}  
 // =====================================================
 //  Do we want users to be able to edit their own titles??
-//  If so then maybe the title edit should be integrated into the main form above?
+//  If so then maybe the title edit should be integrated into the main form ?
 if(check_perms('torrents_edit')) {  
 ?> 
 	<h2>Rename Title</h2>
@@ -79,6 +78,7 @@ if(check_perms('torrents_edit')) {
 				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 				<input type="hidden" name="groupid" value="<?=$GroupID?>" />
 				<input type="hidden" name="authorid" value="<?=$AuthorID?>" />
+				<input type="hidden" name="name" value="<?=$Name?>" />
 
                                 <h3>Category</h3>
                                 <select name="categoryid">

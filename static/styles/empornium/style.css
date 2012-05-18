@@ -602,11 +602,12 @@ p.min_padding {
 }
 #top_info {
     display:inline-table;
-    width: 380px;
-    /*margin:8px 10px 0px 0px;*/
-    margin:7px auto;
+    /* width: 380px;
+    margin:8px 10px 0px 0px;
+    margin:7px auto;*/
+    margin:10px auto 6px;
     border: 1px solid #7BA3C1;
-    padding:0px 12px;
+    padding:4px 12px;
     background: white; 
     -moz-border-radius: 8px;
     border-radius: 8px;
@@ -633,7 +634,7 @@ table.boxstat td:first-child {
 }
 .button.toggle {
     width: 80px;
-    margin: 7px 0px 0px 0px;
+    margin: 4px 0px 0px 0px;
     padding: 4px 12px;
     border: 1px solid #7BA3C1;
     background: #5A8Bb8;    /* #024a7c;#BACBD8 #9AaBb8 */
@@ -650,7 +651,7 @@ table.boxstat td:first-child {
 .details div.linkbox {
     text-align:center;
     padding: 0px;
-    margin:12px 0px 1px 0px;
+    margin: 0px;    /* 12px 0px 1px 0px; */
 }
 
 .details .sidebar {
@@ -660,7 +661,7 @@ table.boxstat td:first-child {
 
 .details .middle_column {
     margin: 0px 270px 10px;
-    max-height: 460px;
+    max-height: 460px; /* should be 60px more than tag_inner max-height */
     overflow: auto;
 }
 .details .main_column {
@@ -680,7 +681,7 @@ table.boxstat td:first-child {
 
 .box_albumart{
     margin: 0px;
-    max-height: 460px;
+    max-height: 460px; /* should be 60px more than tag_inner max-height */
     overflow: auto;
 }
 
@@ -1462,7 +1463,8 @@ a.button {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	-webkit-border-radius: 3px;
-	margin: 3px 6px 3px 0;
+	/* margin: 3px 6px 3px 0; */
+      margin: 0px 8px 0px 0px;
 	text-decoration: none;
 	color: #fff;	
 	border: none;

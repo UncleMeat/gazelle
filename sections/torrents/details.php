@@ -73,13 +73,20 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 <div class="details">
 	<h2><?=$DisplayName?></h2>
 <?
-	if($_GET['did'] == 1) { ?>
-			<div id="messagebar" class="messagebar">Successfully Edited Description</div>
+	if(isset($_GET['did']) && is_number($_GET['did'])) {
+          if($_GET['did'] == 1) $ResultMessage ='Successfully Edited Description';
+          elseif($_GET['did'] == 2) $ResultMessage ='Successfully Renamed Title';
+          if($ResultMessage){
+          ?>
+			<div id="messagebar" class="messagebar"><?=$ResultMessage?></div>
                   <script type="text/javascript">
                         function Kill_Message(){ setTimeout("jQuery('#messagebar').fadeOut(400)", 3000); }
                         addDOMLoadEvent(Kill_Message);
                   </script>
-<?	} ?>
+<?
+          }
+      }
+?>
 	<div class="linkbox" >
     <?	if( $CanEdit) {   ?>
                 <a href="torrents.php?action=editgroup&amp;groupid=<?=$GroupID?>">[Edit description]</a>
@@ -101,14 +108,6 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 	</div>
       <div  class="linkbox">
           
-                     <span id="torrent_buttons"  style="float: left;">
-                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
-<?	if (($LoggedUser['FLTokens'] > 0) && $HasFile  && !in_array($TorrentID, $TokenTorrents) && ($FreeTorrent == '0') && ($LoggedUser['CanLeech'] == '1')) { ?>
-                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" class="button greenButton" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FREELEECH TORRENT</a>
-<?	} ?>					
-                                            
-                     </span>
-          
                      <div id="top_info">
                          <table class="boxstat">
                             <tr>
@@ -120,6 +119,17 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
                             </tr>
                          </table>
                        </div>
+      </div>
+      <div  class="linkbox">
+          
+                     <span id="torrent_buttons"  style="float: left;">
+                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
+<?	if (($LoggedUser['FLTokens'] > 0) && $HasFile  && !in_array($TorrentID, $TokenTorrents) && ($FreeTorrent == '0') && ($LoggedUser['CanLeech'] == '1')) { ?>
+                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" class="button greenButton" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FREELEECH TORRENT</a>
+<?	} ?>					
+                                            
+                     </span>
+          
                      
                      <span style="float: right;"><a id="slide_button"  class="button toggle" onclick="Details_Toggle();" title="Toggle display">Hide Info</a></span>
 	 

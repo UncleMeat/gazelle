@@ -50,7 +50,7 @@ class TORRENT_FORM {
 	</p>
 <?		}
 		if($this->Error) {
-			echo '<p style="color: red;text-align:center;">'.$this->Error.'</p>';
+			echo '<div id="messagebar" class="messagebar alert">'.$this->Error.'</div><br />';
 		}
             //for testing form vars set action="http://www.tipjar.com/cgi-bin/test"
 ?>
