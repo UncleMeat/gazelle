@@ -1318,7 +1318,7 @@ function delete_group($GroupID) {
         foreach($Tags as $Tag) {
             $Uses = $Tag['Uses'] > 0 ?  $Tag['Uses'] - 1 : 0;
             if ($Tag['TagType'] == 'genre' || $Uses > 0) {
-                $DB->query("UPDATE tags SET Uses=$Uses WHERE ID=".$TagID);
+                $DB->query("UPDATE tags SET Uses=$Uses WHERE ID=".$Tag['TagID']);   //$TagID);
             } else {
                 $DB->query("DELETE FROM tags WHERE ID=".$Tag['TagID']." AND TagType='other'");
             }
