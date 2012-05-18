@@ -172,14 +172,19 @@ if(count($Tags) > 0) {
                                 <li>
                                       <a href="torrents.php?taglist=<?=$Tag['name']?>" style="float:left; display:block;"><?=display_str($Tag['name'])?></a>
                                       <div style="float:right; display:block; letter-spacing: -1px;">
-                                      <a href="torrents.php?action=vote_tag&amp;way=down&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;" >[-]</a>
+        <?		if(check_perms('site_vote_tag')){ ?>
+                                      <a title="Vote down tag '<?=$Tag['name']?>'" href="torrents.php?action=vote_tag&amp;way=down&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;" >[-]</a>
                                       <?=$Tag['score']?>
-                                      <a href="torrents.php?action=vote_tag&amp;way=up&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;">[+]</a>
+                                      <a title="Vote up tag '<?=$Tag['name']?>'" href="torrents.php?action=vote_tag&amp;way=up&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;">[+]</a>
+        <?		} else {  // cannot vote on tags ?>
+                                      <span  title="Your voting privilidges have been removed">&nbsp;<?=$Tag['score']?>&nbsp;&nbsp;</span>
+                                      
+        <?		} ?>
         <?		if(check_perms('users_warn')){ ?>
-                                      <a href="user.php?id=<?=$Tag['userid']?>" >[U]</a>
+                                      <a title="User that added tag '<?=$Tag['name']?>'" href="user.php?id=<?=$Tag['userid']?>" >[U]</a>
         <?		} ?>
         <?		if(check_perms('site_delete_tag')){ ?>
-                                      <a href="torrents.php?action=delete_tag&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" >[X]</a>
+                                      <a title="Delete tag '<?=$Tag['name']?>'" href="torrents.php?action=delete_tag&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" >[X]</a>
         <?		} ?>
                                       </div>
                                       <br style="clear:both" />
@@ -196,6 +201,7 @@ if(count($Tags) > 0) {
 }
 ?>
                         </div>
+<?	if(check_perms('site_add_tag')){ ?>
 		<!--</div>
 		<div class="box">
 			<div class="head"><strong>Add tag</strong> <span style="float:right;"><a href="articles.php?topic=tag">Tagging rules</a></span></div>-->
@@ -210,6 +216,9 @@ if(count($Tags) > 0) {
 				<!--<br /><br />
 				<strong><a href="articles.php?topic=tag">Tagging rules</a></strong>-->
 			</div>
+<?
+}
+?>
 		</div>
 	</div>
 	<div class="middle_column">

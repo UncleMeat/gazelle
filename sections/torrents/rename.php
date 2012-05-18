@@ -8,7 +8,7 @@ $NewName = db_string($_POST['name']);
 if(!$GroupID || !is_number($GroupID)) { error(404); }
 
 if(empty($NewName)) {
-	error("Torrents cannot have no name");
+	error("Torrents cannot have a blank name");
 }
 
 if(!check_perms('torrents_edit')) { error(403); }
@@ -24,4 +24,4 @@ update_hash($GroupID);
 write_log("Torrent Group ".$GroupID." (".$OldName.")  was renamed to '".$NewName."' by ".$LoggedUser['Username']);
 write_group_log($GroupID, 0, $LoggedUser['ID'], "renamed to ".$NewName." from ".$OldName, 0);
 
-header('Location: torrents.php?id='.$GroupID."&did=1");
+header('Location: torrents.php?id='.$GroupID."&did=2");

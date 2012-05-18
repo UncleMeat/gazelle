@@ -34,6 +34,8 @@
 	'site_view_flow' => 'Can view stats and data pools.',
 	'site_view_full_log' => 'Can view old log entries.',
 	'site_view_torrent_snatchlist' => 'Can view torrent snatchlists.',
+            'site_vote_tag' => 'Can vote on tags.',
+            'site_add_tag' => 'Can add tags.',
 	'site_delete_tag' => 'Can delete tags.',
 	'site_disable_ip_history' => 'Disable IP history.',
 	'zip_downloader' => 'Download multiple torrents at once.',
@@ -151,6 +153,8 @@ function permissions_form(){ ?>
 					<? display_perm('site_view_flow', 'Can view site stats and data pools.'); ?>
 					<? display_perm('site_view_full_log', 'Can view the full site log.'); ?>
 					<? display_perm('site_view_torrent_snatchlist', 'Can view torrent snatchlists.'); ?>
+                                          <? display_perm('site_vote_tag', 'Can vote on tags.'); ?>
+                                          <? display_perm('site_add_tag', 'Can add tags.'); ?>
 					<? display_perm('site_delete_tag', 'Can delete tags.'); ?>
 					<? display_perm('site_disable_ip_history', 'Disable IP history.'); ?>
 					<? display_perm('zip_downloader', 'Download multiple torrents at once.'); ?>
