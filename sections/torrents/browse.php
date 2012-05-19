@@ -190,7 +190,7 @@ if (!$AdvancedSearch) {
     }
     
     if (!empty($_GET['taglist'])) {
-        $TagList = ' ' . trim($_GET['taglist']);
+        $TagList = trim(str_replace('.', '_', $_GET['taglist']));
         $TagList = preg_replace(array('/ -/','/ not /i', '/ or /i', '/ and /i'), array(' !', ' -', ' | ', ' & '), $TagList);
         $TagList = trim($TagList);
         
