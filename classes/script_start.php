@@ -1271,8 +1271,6 @@ function delete_torrent($ID, $GroupID=0) {
     $DB->query("DELETE FROM torrents_bad_tags WHERE TorrentID = " . $ID);
     $DB->query("DELETE FROM torrents_bad_folders WHERE TorrentID = " . $ID);
     $DB->query("DELETE FROM torrents_bad_files WHERE TorrentID = " . $ID);
-    $DB->query("DELETE FROM torrents_cassette_approved WHERE TorrentID = " . $ID);
-    $DB->query("DELETE FROM torrents_lossymaster_approved WHERE TorrentID = " . $ID);
     $Cache->delete_value('torrent_download_' . $ID);
     $Cache->delete_value('torrent_group_' . $GroupID);
     $Cache->delete_value('torrents_details_' . $GroupID);
@@ -1388,7 +1386,7 @@ function update_hash($GroupID) {
 		GROUP BY t.GroupID)
 		WHERE ID='$GroupID'");
 
-	$DB->query("REPLACE INTO sphinx_delta (ID, GroupName, TagList, NewCategoryID, Image, Time, Size, Snatched, Seeders, Leechers, FreeTorrent, FileList)
+	$DB->query("REPLACE INTO sphinx_delta (ID, GroupName, TagList, NewCategoryID, Image, Time, Size, Snatched, Seeders, Leechers, FreeTorrent, FileList, SearchText)
 		SELECT
 		g.ID AS ID,
 		g.Name AS GroupName,
@@ -1401,7 +1399,8 @@ function update_hash($GroupID) {
 		SUM(t.Seeders) AS Seeders,
 		SUM(t.Leechers) AS Leechers,
 		BIT_OR(t.FreeTorrent-1) AS FreeTorrent,
-		GROUP_CONCAT(REPLACE(REPLACE(FileList, '|||', '\n '), '_', ' ') SEPARATOR '\n ') AS FileList
+		GROUP_CONCAT(REPLACE(REPLACE(FileList, '|||', '\n '), '_', ' ') SEPARATOR '\n ') AS FileList,
+                g.SearchText
 		FROM torrents AS t
 		JOIN torrents_group AS g ON g.ID=t.GroupID
 		WHERE g.ID=$GroupID
@@ -1637,9 +1636,10 @@ function get_groups($GroupIDs, $Return = true, $Torrents = true) {
 		
 		if ($Torrents) {
 			$DB->query("SELECT
-                                        t.ID, t.UserID, um.Username, GroupID, FileCount, FreeTorrent, Size, Leechers, Seeders, Snatched, Time, t.ID AS HasFile
+                                        t.ID, t.UserID, um.Username, GroupID, FileCount, FreeTorrent, Size, Leechers, Seeders, Snatched, Time, t.ID AS HasFile, r.ReportCount
                                         FROM torrents AS t 
                                         JOIN users_main AS um ON t.UserID=um.ID
+                                        LEFT JOIN (SELECT TorrentID, count(*) as ReportCount FROM reportsv2 WHERE Type != 'edited' AND Status != 'Resolved' GROUP BY TorrentID) AS r ON r.TorrentID=t.ID
                                         WHERE GroupID IN($IDs) ORDER BY GroupID DESC, t.ID");
 			while($Torrent = $DB->next_record(MYSQLI_ASSOC, true)) {
 				$Found[$Torrent['GroupID']]['Torrents'][$Torrent['ID']] = $Torrent;

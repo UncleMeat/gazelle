@@ -1,6 +1,8 @@
 <?
 authorize();
 
+include(SERVER_ROOT.'/classes/class_text.php');
+
 $GroupID = $_POST['groupid'];
 $OldGroupID = $GroupID;
 $NewName = db_string($_POST['name']);
@@ -13,10 +15,13 @@ if(empty($NewName)) {
 
 if(!check_perms('torrents_edit')) { error(403); }
 
-$DB->query("SELECT Name FROM torrents_group WHERE ID = ".$GroupID);
-list($OldName) = $DB->next_record();
+$Text = new TEXT;
 
-$DB->query("UPDATE torrents_group SET Name='$NewName' WHERE ID='$GroupID'");
+$DB->query("SELECT Name, Body FROM torrents_group WHERE ID = ".$GroupID);
+list($OldName, $Body) = $DB->next_record();
+$SearchText = db_string($NewName . ' ' . $Text->db_clean_search($Body));
+
+$DB->query("UPDATE torrents_group SET Name='$NewName', SearchText='$SearchText' WHERE ID='$GroupID'");
 $Cache->delete_value('torrents_details_'.$GroupID);
 
 update_hash($GroupID);

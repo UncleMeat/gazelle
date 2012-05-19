@@ -105,7 +105,7 @@ foreach ($Properties as $Key => $Value) {
     }
 }
 
-$SearchText = db_string(trim($Properties['Title']));
+$SearchText = db_string(trim($Properties['Title'] . ' ' . $Text->db_clean_search($Properties['GroupDescription'])));
 
 
 //******************************************************************************//

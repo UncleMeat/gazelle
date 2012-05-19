@@ -44,13 +44,6 @@ if ($TorrentTags != '') {
 	uasort($Tags, 'compare');
 }
 
-/*if (check_perms('site_debug')) {
-	print_r($TorrentTags);
-	print_r($Tags);
-	print_r($TorrentTagUserIDs);
-	die();
-}*/
-
 $TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 if (empty($TokenTorrents)) {
 	$DB->query("SELECT TorrentID FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
@@ -65,10 +58,31 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 	list($TorrentID,
 		$FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $TorrentTime, $Description, 
 		$FileList, $FilePath, $UserID, $Username, $LastActive,
-		$BadTags, $BadFolders, $BadFiles, $CassetteApproved, $LossymasterApproved, $LastReseedRequest, $LogInDB, $HasFile) = $TorrentList[0];
+		$BadTags, $BadFolders, $BadFiles, $LastReseedRequest, $LogInDB, $HasFile) = $TorrentList[0];
 
 	$CanEdit = (check_perms('torrents_edit') ||  ($UserID == $LoggedUser['ID']  ) );
-      
+
+	$Reported = false;
+	unset($ReportedTimes);
+	$Reports = $Cache->get_value('reports_torrent_'.$TorrentID);
+	if($Reports === false) {
+		$DB->query("SELECT r.ID,
+				r.ReporterID,
+				r.Type,
+				r.UserComment,
+				r.ReportedTime
+			FROM reportsv2 AS r
+			WHERE TorrentID = $TorrentID
+				AND Type != 'edited'
+				AND Status != 'Resolved'");
+		$Reports = $DB->to_array();
+		$Cache->cache_value('reports_torrent_'.$TorrentID, $Reports, 0);
+	}	
+        
+        if (count($Reports) > 0) {
+            $Title = "This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report');
+            $DisplayName .= ' <span style="background-color: red; padding: 2px 4px 2px 4px;" title="'.$Title.'">Reported</span>';
+        }
 ?>
 <div class="details">
 	<h2><?=$DisplayName?></h2>
@@ -89,7 +103,7 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 ?>
 	<div class="linkbox" >
     <?	if( $CanEdit) {   ?>
-                <a href="torrents.php?action=editgroup&amp;groupid=<?=$GroupID?>">[Edit description]</a>
+                <a href="torrents.php?action=editgroup&amp;groupid=<?=$GroupID?>">[Edit Torrent]</a>
     <?	} ?>
                 <a href="torrents.php?action=history&amp;groupid=<?=$GroupID?>">[View history]</a>
     <?	if(has_bookmarked('torrent', $GroupID)) { ?>
@@ -240,23 +254,8 @@ function filelist($Str) {
 
 $EditionID = 0;
 
-	$Reported = false;
-	unset($ReportedTimes);
-	$Reports = $Cache->get_value('reports_torrent_'.$TorrentID);
-	if($Reports === false) {
-		$DB->query("SELECT r.ID,
-				r.ReporterID,
-				r.Type,
-				r.UserComment,
-				r.ReportedTime
-			FROM reportsv2 AS r
-			WHERE TorrentID = $TorrentID
-				AND Type != 'edited'
-				AND Status != 'Resolved'");
-		$Reports = $DB->to_array();
-		$Cache->cache_value('reports_torrent_'.$TorrentID, $Reports, 0);
-	}	
-	if(count($Reports) > 0) {
+        // The report array has been moved up above the display name so "reported" could be added to the title.
+        if(count($Reports) > 0) {
 		$Reported = true;
 		include(SERVER_ROOT.'/sections/reportsv2/array.php');
 		$ReportInfo = "<table><tr class='colhead_red' style='font-weight: bold;'><td>This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report').":</td></tr>";
@@ -271,7 +270,7 @@ $EditionID = 0;
 				$ReportType = $Types[$ReportType];
 			} else {
 				//There was a type but it wasn't an option!
-				$ReportType = $Types['master']['other'];
+				$ReportType = $Types['other'];
 			}
 			$ReportInfo .= "<tr><td>".(check_perms('admin_reports') ? "<a href='user.php?id=$ReporterID'>$ReporterName</a> <a href='reportsv2.php?view=report&amp;id=$ReportID'>reported it</a> " : "Someone reported it ").time_diff($ReportedTime,2,true,true)." for the reason '".$ReportType['title']."':";
 			$ReportInfo .= "<blockquote>".$Text->full_format($ReportReason)."</blockquote></td></tr>";
@@ -298,8 +297,6 @@ $EditionID = 0;
 	if($Reported) { $ExtraInfo.=$AddExtra.'<strong>Reported</strong>'; $AddExtra=' / '; }
 	if(!empty($BadTags)) { $ExtraInfo.=$AddExtra.'<strong>Bad Tags</strong>'; $AddExtra=' / '; }
 	if(!empty($BadFolders)) { $ExtraInfo.=$AddExtra.'<strong>Bad Folders</strong>'; $AddExtra=' / '; }
-	if(!empty($CassetteApproved)) { $ExtraInfo.=$AddExtra.'<strong>Cassette Approved</strong>'; $AddExtra=' / '; }
-	if(!empty($LossymasterApproved)) { $ExtraInfo.=$AddExtra.'<strong>Lossy Master Approved</strong>'; $AddExtra=' / '; }
 	if(!empty($BadFiles)) { $ExtraInfo.=$AddExtra.'<strong>Bad File Names</strong>'; $AddExtra=' / '; }
 	
 ?>

@@ -1499,12 +1499,6 @@ a.button {
 	background: #187b8c;
 }
 
-/*
-.staffpm {
-    max-width: 840px;
-    margin: 0px auto;
-}*/
-
 .overlay, .leftOverlay, .rightOverlay {
     background-color: black;
     color: #eee;
@@ -1517,4 +1511,10 @@ a.button {
 .overlay .rightOverlay {
     min-width: 150px;
     vertical-align: top;
+}
+
+span.reported {
+    font-weight: bold;
+    color: red;
+    float: none;
 }
