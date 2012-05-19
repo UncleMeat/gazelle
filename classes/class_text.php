@@ -342,15 +342,132 @@ class TEXT {
 		
 		//Inline links
 		$Str = preg_replace('/(?<!(\[url\]|\[url\=|\[img\=|\[img\]))http(s)?:\/\//i', '$1[inlineurl]http$2://', $Str);
-		
-		$Str = $this->parse($Str);
-		
+		$Str = $this->parse($Str);               
 		$Str = $this->raw_text($Str);
 		
 		$Str = nl2br($Str);
 		return $Str;
 	}
 	
+        // I took a shortcut here and made this function instead of using strip_bbcode since it's purpose is a bit
+        // different.
+        function db_clean_search($Str) {
+            
+                foreach ($this->Smileys as $key => $value)
+                {
+                    $remove[] = "/$key/i";
+                }
+
+                $remove[] = '/\[align.*?\]/i';
+                $remove[] = '/\[\/align\]/i';
+
+                $remove[] = '/\[audio\].*?\[\/audio\]/i';
+
+                $remove[] = '/\[b\]/i';
+                $remove[] = '/\[\/b\]/i';
+
+                $remove[] = '/\[banner\].*?\[\/banner\]/i';
+
+                $remove[] = '/\[bg.*?\]/i';
+                $remove[] = '/\[\/bg\]/i';
+
+                $remove[] = '/\[br\]/i';
+
+                $remove[] = '/\[cast\]/i';
+
+                $remove[] = '/\[code.*?\]/i';
+                $remove[] = '/\[\/code\]/i';
+
+                $remove[] = '/\[color.*?\]/i';
+                $remove[] = '/\[\/color\]/i';
+
+                $remove[] = '/\[colour.*?\]/i';
+                $remove[] = '/\[\/colour\]/i';
+
+                $remove[] = '/\[details\]/i';
+
+                $remove[] = '/\[flash\].*?\[\/flash\]/i';
+
+                $remove[] = '/\[font.*?\]/i';
+                $remove[] = '/\[\/font\]/i';
+
+                $remove[] = '/\[hide\]/i';
+                $remove[] = '/\[\/hide\]/i';
+
+                $remove[] = '/\[hr\]/i';
+
+                $remove[] = '/\[i\]/i';
+                $remove[] = '/\[\/i\]/i';
+
+                $remove[] = '/\[img.*?\].*?\[\/img\]/i';
+
+                $remove[] = '/\[important\]/i';
+                $remove[] = '/\[\/important\]/i';
+
+                $remove[] = '/\[info\]/i';
+
+                $remove[] = '/\[list\]/i';
+                $remove[] = '/\[\/list\]/i';
+
+                $remove[] = '/\[mcom\]/i';
+                $remove[] = '/\[\/mcom\]/i';
+
+                $remove[] = '/\[media.*?\].*?\[\/media\]/i';
+
+                $remove[] = '/\[plain\]/i';
+                $remove[] = '/\[\/plain\]/i';
+
+                $remove[] = '/\[plot\]/i';
+
+                $remove[] = '/\[pre\]/i';
+                $remove[] = '/\[\/pre\]/i';
+
+                $remove[] = '/\[quote\]/i';
+                $remove[] = '/\[\/quote\]/i';
+
+                $remove[] = '/\[s\]/i';
+                $remove[] = '/\[\/s\]/i';
+
+                $remove[] = '/\[screens\]/i';
+
+                $remove[] = '/\[size.*?\]/i';
+                $remove[] = '/\[\/size\]/i';
+
+                $remove[] = '/\[spoiler\]/i';
+                $remove[] = '/\[\/spoiler\]/i';
+
+                // Table elements
+                $remove[] = '/\[table.*?\]/i';
+                $remove[] = '/\[\/table\]/i';
+                $remove[] = '/\[tr.*?\]/i';
+                $remove[] = '/\[\/tr\]/i';
+                $remove[] = '/\[th.*?\]/i';
+                $remove[] = '/\[\/th\]/i';
+                $remove[] = '/\[td.*?\]/i';
+                $remove[] = '/\[\/td\]/i';
+
+                $remove[] = '/\[tex\].*?\[\/tex\]/i';
+
+                $remove[] = '/\[thumb\].*?\[\/thumb\]/i';
+
+                $remove[] = '/\[torrent\].*?\[\/torrent\]/i';
+
+                $remove[] = '/\[u\]/i';
+                $remove[] = '/\[\/u\]/i';
+
+                $remove[] = '/\[url.*?\].*?\[\/url\]/i';
+
+                $remove[] = '/\[user\]/i';
+                $remove[] = '/\[\/user\]/i';
+
+                $remove[] = '/\[video.*?\]/i';
+
+                $Str = preg_replace($remove, '', $Str);
+                $Str = preg_replace('/[\r\n]+/', ' ', $Str);
+                
+                return $Str;
+        }
+        
 	
 	function valid_url($Str, $Extension = '', $Inline = false) {
 		$Regex = '/^';
@@ -858,9 +975,6 @@ EXPLANATION OF PARSER LOGIC
 						$Str .= '[torrent]'.str_replace('[inlineurl]','',$Block['Val']).'[/torrent]';
 					}
 					break;
-				case 'wiki':
-					$Str.='<a href="wiki.php?action=article&amp;name='.urlencode($Block['Val']).'">'.$Block['Val'].'</a>';
-					break;
 				case 'tex':
 					$Str.='<img style="vertical-align: middle" src="'.STATIC_SERVER.'blank.gif" onload="if (this.src.substr(this.src.length-9,this.src.length) == \'blank.gif\') { this.src = \'http://chart.apis.google.com/chart?cht=tx&amp;chf=bg,s,FFFFFF00&amp;chl='.urlencode(mb_convert_encoding($Block['Val'],"UTF-8","HTML-ENTITIES")).'&amp;chco=\' + hexify(getComputedStyle(this.parentNode,null).color); }" />';
 					break;
@@ -932,7 +1046,7 @@ EXPLANATION OF PARSER LOGIC
 					}
 					break;
 					
-				case 'aud':
+				case 'audio':
 					if($this->NoImg>0 && $this->valid_url($Block['Val'])) {
 						$Str.='<a rel="noreferrer" target="_blank" href="'.$Block['Val'].'">'.$Block['Val'].'</a> (audio)';
 						break;
@@ -992,7 +1106,7 @@ EXPLANATION OF PARSER LOGIC
 		return $Str;
 	}
 	
-	function raw_text($Array) {
+	function raw_text($Array, $StripURL = false) {
 		$Str = '';
 		foreach($Array as $Block) {
 			if(is_string($Block)) {
@@ -1006,21 +1120,21 @@ EXPLANATION OF PARSER LOGIC
 				case 'i':
 				case 's':
 				case 'color':
+                                case 'colour':
 				case 'size':
 				case 'quote':
 				case 'align':
 				case 'center':
-				
+				case 'mcom':
 					$Str.=$this->raw_text($Block['Val']);
 					break;
 				case 'tex': //since this will never strip cleanly, just remove it
 					break;
 				case 'artist':
 				case 'user':
-				case 'wiki':
 				case 'pre':
 				case 'code':
-				case 'aud':
+				case 'audio':
 				case 'img':
 					$Str.=$Block['Val'];
 					break;
@@ -1031,6 +1145,7 @@ EXPLANATION OF PARSER LOGIC
 					break;
 					
 				case 'url':
+                                        if ($StripURL) break;
 					// Make sure the URL has a label
 					if(empty($Block['Val'])) {
 						$Block['Val'] = $Block['Attr'];

@@ -47,8 +47,8 @@ if (empty($TokenTorrents)) {
 }
 
 // Search by infohash
-if (!empty($_GET['searchstr'])) {
-    $InfoHash = $_GET['searchstr'];
+if (!empty($_GET['searchtext'])) {
+    $InfoHash = $_GET['searchtext'];
 
     if ($InfoHash = is_valid_torrenthash($InfoHash)) {
         $InfoHash = db_string(pack("H*", $InfoHash));
@@ -101,76 +101,95 @@ if (!empty($_GET['setdefault'])) {
     }
 }
 
-$Queries = array();
-/*
-//Simple search
-if (!empty($_GET['searchstr'])) {
-    $Words = explode(' ', strtolower($_GET['searchstr']));
+$AdvancedSearch = false;
+$Action = 'action=basic';
+if (((!empty($_GET['action']) && strtolower($_GET['action']) == "advanced") || (!empty($LoggedUser['SearchType']) && ((!empty($_GET['action']) && strtolower($_GET['action']) != "basic") || empty($_GET['action'])))) && check_perms('site_advanced_search')) {
+    $AdvancedSearch = true;
+    $Action = 'action=advanced';
+}
 
-    if (!empty($Words)) {
-        foreach ($Words as $Key => &$Word) {
-            if ($Word[0] == '!' && strlen($Word) >= 3 && count($Words) >= 2) {
-                if (strpos($Word, '!', 1) === false) {
-                    $Word = '!' . $SS->EscapeString(substr($Word, 1));
+$Queries = array();
+
+// Simple Search
+if (!$AdvancedSearch) {
+    if (!empty($_GET['searchtext'])) {
+        $SearchList = explode(' ', $_GET['searchtext']);
+        $SearchListEx = array();
+        foreach ($SearchList as $Key => &$Word) {
+            $Word = trim($Word);
+            if (strlen($Word) >= 2) {
+                if ($Word[0] == '-' && strlen($Word) >= 3) {
+                    $SearchListEx[] = '!' . $SS->EscapeString(substr($Word, 1));
+                    unset($SearchList[$Key]);
                 } else {
                     $Word = $SS->EscapeString($Word);
                 }
-            } elseif (strlen($Word) >= 2) {
-                $Word = $SS->EscapeString($Word);
             } else {
-                unset($Words[$Key]);
+                unset($SearchList[$Key]);
             }
         }
         unset($Word);
-        $Words = trim(implode(' ', $Words));
-        if (!empty($Words)) {
-            $Queries[] = '@(groupname) ' . $Words;
-        }
     }
-}
-*/
-if (!empty($_GET['searchstr'])) {
-    $SearchStr = trim($_GET['searchstr']);
-    if (!empty($SearchStr)) {
-        $Queries[] = '@(groupname) ' . $SearchStr;
-    }
-}   
 
-if (!empty($_GET['taglist'])) {
-    $_GET['taglist'] = cleanup_tags($_GET['taglist']);
-    $_GET['taglist'] = str_replace('.', '_', $_GET['taglist']);
-    $TagList = explode(' ', $_GET['taglist']);
-    $TagListEx = array();
-    foreach ($TagList as $Key => &$Tag) {
-        $Tag = trim($Tag);
-        if (strlen($Tag) >= 2) {
-            if ($Tag[0] == '-' && strlen($Tag) >= 3) {
-                $TagListEx[] = '!' . $SS->EscapeString(substr($Tag, 1));
-                unset($TagList[$Key]);
-            } else {
-                $Tag = $SS->EscapeString($Tag);
-            }
+    if (empty($_GET['search_type']) && !empty($SearchList) && count($SearchList) > 1) {
+        $_GET['search_type'] = '0';
+        if (!empty($SearchListEx)) {
+            $Queries[] = '@searchtext ( ' . implode(' | ', $SearchList) . ' ) ' . implode(' ', $SearchListEx);
         } else {
-            unset($TagList[$Key]);
+            $Queries[] = '@searchtext ( ' . implode(' | ', $SearchList) . ' )';
         }
-    }
-    unset($Tag);
-}
-
-if (empty($_GET['tags_type']) && !empty($TagList) && count($TagList) > 1) {
-    $_GET['tags_type'] = '0';
-    if (!empty($TagListEx)) {
-        $Queries[] = '@taglist ( ' . implode(' | ', $TagList) . ' ) ' . implode(' ', $TagListEx);
+    } elseif (!empty($SearchList)) {
+        $Queries[] = '@searchtext ' . implode(' ', array_merge($SearchList, $SearchListEx));
     } else {
-        $Queries[] = '@taglist ( ' . implode(' | ', $TagList) . ' )';
+        $_GET['search_type'] = '1';
     }
-} elseif (!empty($TagList)) {
-    $Queries[] = '@taglist ' . implode(' ', array_merge($TagList, $TagListEx));
+
+    if (!empty($_GET['taglist'])) {
+        $_GET['taglist'] = cleanup_tags($_GET['taglist']);
+        $_GET['taglist'] = str_replace('.', '_', $_GET['taglist']);
+        $TagList = explode(' ', $_GET['taglist']);
+        $TagListEx = array();
+        foreach ($TagList as $Key => &$Tag) {
+            $Tag = trim($Tag);
+            if (strlen($Tag) >= 2) {
+                if ($Tag[0] == '-' && strlen($Tag) >= 3) {
+                    $TagListEx[] = '!' . $SS->EscapeString(substr($Tag, 1));
+                    unset($TagList[$Key]);
+                } else {
+                    $Tag = $SS->EscapeString($Tag);
+                }
+            } else {
+                unset($TagList[$Key]);
+            }
+        }
+        unset($Tag);
+    }
+
+    if (empty($_GET['tags_type']) && !empty($TagList) && count($TagList) > 1) {
+        $_GET['tags_type'] = '0';
+        if (!empty($TagListEx)) {
+            $Queries[] = '@taglist ( ' . implode(' | ', $TagList) . ' ) ' . implode(' ', $TagListEx);
+        } else {
+            $Queries[] = '@taglist ( ' . implode(' | ', $TagList) . ' )';
+        }
+    } elseif (!empty($TagList)) {
+        $Queries[] = '@taglist ' . implode(' ', array_merge($TagList, $TagListEx));
+    } else {
+        $_GET['tags_type'] = '1';
+    }
 } else {
-    $_GET['tags_type'] = '1';
+    // Advanced search, and yet so much simpler in code.
+    if (!empty($_GET['searchtext'])) {
+        $SearchText = ' ' . trim($_GET['searchtext']);
+        $SearchText = preg_replace(array('/ -/','/ not /i', '/ or /i', '/ and /i'), array(' !', ' -', ' | ', ' & '), $SearchText);
+        $SearchText = trim($SearchText);
+        
+        $Queries[] = '@searchtext ' . $SearchText;
+        //die($SearchText);
+    }
 }
 
-foreach (array('groupname', 'filelist') as $Search) {
+foreach (array('filelist') as $Search) {
     if (!empty($_GET[$Search])) {
         $_GET[$Search] = str_replace(array('%'), '', $_GET[$Search]);
         if ($Search == 'filelist') {
@@ -178,12 +197,8 @@ foreach (array('groupname', 'filelist') as $Search) {
         } else {
             $Words = explode(' ', $_GET[$Search]);
             foreach ($Words as $Key => &$Word) {
-                if ($Word[0] == '!' && strlen($Word) >= 3 && count($Words) >= 2) {
-                    if (strpos($Word, '!', 1) === false) {
-                        $Word = '!' . $SS->EscapeString(substr($Word, 1));
-                    } else {
-                        $Word = $SS->EscapeString($Word);
-                    }
+                if ($Word[0] == '-' && strlen($Word) >= 3 && count($Words) >= 2) {
+                    $Word = '!' . $SS->EscapeString(substr($Word, 1));
                 } elseif (strlen($Word) >= 2) {
                     $Word = $SS->EscapeString($Word);
                 } else {
@@ -293,15 +308,6 @@ if (!empty($Results['notfound'])) {
 
 $Results = $Results['matches'];
 
-$AdvancedSearch = false;
-$Action = 'action=basic';
-if (((!empty($_GET['action']) && strtolower($_GET['action']) == "advanced") || (!empty($LoggedUser['SearchType']) && ((!empty($_GET['action']) && strtolower($_GET['action']) != "basic") || empty($_GET['action'])))) && check_perms('site_advanced_search')) {
-    $AdvancedSearch = true;
-    $Action = 'action=advanced';
-}
-
- 
-
 show_header('Browse Torrents', 'browse,overlib,jquery,jquery.cookie');
 
 
@@ -324,9 +330,15 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
             <table>
                 <? if ($AdvancedSearch) { ?>
                     <tr>
+                        <td colspan="3">
+                            The advanced search supports full boolean search, click <a href="articles.php?topic=search">here</a> for more information.
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="label">Search Term:</td>
                         <td colspan="3">
-                            <input type="text" spellcheck="false" size="40" name="searchstr" class="inputtext smaller" value="<? form('searchstr') ?>" />
+                            <input type="text" spellcheck="false" size="40" name="searchtext" class="inputtext" title="Supports full boolean search" value="<? form('searchtext') ?>" />
+                            <input type="hidden" name="action" value="advanced" />
                         </td>
                     </tr>
                     <tr>
@@ -339,20 +351,32 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                     <tr>
                         <td class="label">Search terms:</td>
                         <td colspan="3">
-                            <input type="text" spellcheck="false" size="40" name="searchstr" class="inputtext" value="<? form('searchstr') ?>" />
+                            <input type="text" spellcheck="false" size="40" name="searchtext" class="inputtext" title="Use -word to exclude a word" value="<? form('searchtext') ?>" />
+                            <input type="radio" name="search_type" id="search_type0" value="0" <? selected('search_type', 0, 'checked') ?> /><label for="search_type0"> Any</label>&nbsp;&nbsp;
+                            <input type="radio" name="search_type" id="search_type1" value="1"  <? selected('search_type', 1, 'checked') ?> /><label for="search_type1"> All</label>
                             <? if (!empty($LoggedUser['SearchType'])) { ?>
                                 <input type="hidden" name="action" value="basic" />
                             <? } ?>
                         </td>
                     </tr>
                 <? } ?>
+                <? if ($AdvancedSearch) { ?>                    
                 <tr>                    
                     <td class="label">Tags:</td>
                     <td colspan="3">
-                        <input type="text" size="40" id="tags" name="taglist" class="inputtext smaller" title="Use -tag to exclude tag" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />&nbsp;					<input type="radio" name="tags_type" id="tags_type0" value="0" <? selected('tags_type', 0, 'checked') ?> /><label for="tags_type0"> Any</label>&nbsp;&nbsp;
+                        <input type="text" size="40" id="tags" name="taglist" class="inputtext" title="Supports full boolean search" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />&nbsp;					
+                    </td>
+                </tr>
+                <? } else { // BASIC SEARCH ?>
+                <tr>                    
+                    <td class="label">Tags:</td>
+                    <td colspan="3">
+                        <input type="text" size="40" id="tags" name="taglist" class="inputtext" title="Use -tag to exclude tag" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />&nbsp;					
+                        <input type="radio" name="tags_type" id="tags_type0" value="0" <? selected('tags_type', 0, 'checked') ?> /><label for="tags_type0"> Any</label>&nbsp;&nbsp;
                         <input type="radio" name="tags_type" id="tags_type1" value="1"  <? selected('tags_type', 1, 'checked') ?> /><label for="tags_type1"> All</label>
                     </td>
                 </tr>
+                <? } ?>
                 <tr>
                     <td class="label">Order by:</td>
                     <td colspan="<?= ($AdvancedSearch) ? '3' : '1' ?>">
@@ -505,7 +529,9 @@ $Bookmarks = all_bookmarks('torrent');
 // Start printing torrent list
 $row='b';
     foreach ($Results as $GroupID => $Data) {       
+        //print_r(array_values($Data));
         list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, $NewCategoryID, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
+        //Die();
         $TagList = explode(' ', str_replace('_', '.', $TagList));
 
         $TorrentTags = array();
@@ -526,13 +552,16 @@ $row='b';
         
         $AddExtra = '';
         if ($Data['FreeTorrent'] == '1') {
-            $AddExtra = ' <strong>/ Freeleech!</strong>';
+            $AddExtra .= ' <strong>/ Freeleech!</strong>';
         } elseif ($Data['FreeTorrent'] == '2') {
-            $AddExtra = ' <strong>/ Neutral Leech!</strong>';
+            $AddExtra .= ' <strong>/ Neutral Leech!</strong>';
         } elseif (in_array($TorrentID, $TokenTorrents)) {
-            $AddExtra = '<strong>/ Personal Freeleech!</strong>';
+            $AddExtra .= ' <strong>/ Personal Freeleech!</strong>';
         }
-        
+        if ($Data['ReportCount'] > 0) {
+            $Title = "This torrent has ".$Data['ReportCount']." active ".($Data['ReportCount'] > 1 ?'reports' : 'report');
+            $AddExtra .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
+        }
         $row = ($row == 'a'? 'b' : 'a');
         ?>
         <tr class="torrent row<?=$row?>">

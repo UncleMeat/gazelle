@@ -1406,19 +1406,6 @@ CREATE TABLE IF NOT EXISTS `torrents_balance_history` (
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `torrents_cassette_approved`
---
-
-CREATE TABLE IF NOT EXISTS `torrents_cassette_approved` (
-  `TorrentID` int(10) NOT NULL DEFAULT '0',
-  `UserID` int(10) NOT NULL DEFAULT '0',
-  `TimeAdded` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  KEY `TimeAdded` (`TimeAdded`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Tabellstruktur `torrents_comments`
 --
 
@@ -1463,7 +1450,7 @@ CREATE TABLE IF NOT EXISTS `torrents_group` (
   `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `Body` text NOT NULL,
   `Image` varchar(255) NOT NULL,
-  `SearchText` varchar(500) NOT NULL,
+  `SearchText` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `CategoryID` (`CategoryID`),
   KEY `Name` (`Name`(255)),
@@ -1511,18 +1498,6 @@ CREATE TABLE IF NOT EXISTS `torrents_logs_new` (
   KEY `TorrentID` (`TorrentID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Tabellstruktur `torrents_lossymaster_approved`
---
-
-CREATE TABLE IF NOT EXISTS `torrents_lossymaster_approved` (
-  `TorrentID` int(10) NOT NULL DEFAULT '0',
-  `UserID` int(10) NOT NULL DEFAULT '0',
-  `TimeAdded` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  KEY `TimeAdded` (`TimeAdded`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 

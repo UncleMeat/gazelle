@@ -4,6 +4,8 @@ authorize();
 
 include(SERVER_ROOT.'/classes/class_text.php');
 include(SERVER_ROOT . '/classes/class_validate.php');
+include(SERVER_ROOT . '/sections/torrents/functions.php');
+
 $Text = new TEXT;
 $Validate = new VALIDATE;
 
@@ -50,23 +52,26 @@ if ($Err) { // Show the upload form, with the data the user entered
     die();
 }
 
-
 // Trickery
 if(!preg_match("/^".URL_REGEX."$/i", $Image)) {
         $Image = '';
 }
-$Summary = db_string($_POST['summary']);
 
-$Body = db_string($Body);
+$TorrentCache = get_group_info($GroupID, true);
+$GroupName = $TorrentCache[0][0][3];
+
+$Summary = db_string($_POST['summary']);
 $Image = db_string($Image);
+$SearchText = db_string($GroupName . ' ' . $Text->db_clean_search($Body));
+$Body =  db_string($Body);
 
 // Update torrents table
 $DB->query("UPDATE torrents_group SET 
 	NewCategoryID='$CategoryID',
         Body='$Body',
-	Image='$Image'
+	Image='$Image',
+        SearchText='$SearchText'
 	WHERE ID='$GroupID'");
-// Log VH changes
 
 // There we go, all done!
 $Cache->delete_value('torrents_details_'.$GroupID);
