@@ -115,13 +115,20 @@ $DB->set_query_id($Comments);
 	</h2>
 	
 	<div class="linkbox">
-	<?=$OtherLink?>
+	<?=$OtherLink?>&nbsp;&nbsp;&nbsp;
+			<a href="userhistory.php?action=posts&amp;userid=<?=$LoggedUser['ID']?>">Go to post history</a>&nbsp;&nbsp;&nbsp;
+			<a href="userhistory.php?action=subscriptions">Go to subscriptions</a>
 	<br /><br />
 	<?=$Pages?>
 	</div>
 <?
 
-while(list($UserID, $Username, $Class, $Enabled, $CustomPermissions, $Avatar, $Donor, $Warned, $TorrentID, $GroupID, $Title, $PostID, $Body, $AddedTime, $EditedTime, $EditorID, $EditorUsername) = $DB->next_record(MYSQLI_BOTH,  array('CustomPermissions'))) {
+     $Posts = $DB->to_array(false,MYSQLI_ASSOC,array('CustomPermissions'));
+
+foreach($Posts as $Post){
+	list($UserID, $Username, $Class, $Enabled, $CustomPermissions, $Avatar, $Donor, $Warned, $TorrentID, $GroupID, $Title, $PostID, $Body, $AddedTime, $EditedTime, $EditorID, $EditorUsername) = array_values($Post);
+          
+//while(list($UserID, $Username, $Class, $Enabled, $CustomPermissions, $Avatar, $Donor, $Warned, $TorrentID, $GroupID, $Title, $PostID, $Body, $AddedTime, $EditedTime, $EditorID, $EditorUsername) = $DB->next_record(MYSQLI_BOTH,  array('CustomPermissions'))) {
 	$AuthorPermissions = get_permissions($Class);
       list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
 ?>

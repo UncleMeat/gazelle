@@ -1124,6 +1124,10 @@ td.avatar {
     text-align: center;
 }
 
+.newstatus{
+    color: #3f3;
+    padding: 0px 3px;
+}
 /* td.avatar img.avatar {
     float: right;
 }

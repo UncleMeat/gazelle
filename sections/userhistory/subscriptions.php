@@ -113,6 +113,7 @@ if($NumResults) {
 ?>
 			<a href="userhistory.php?action=catchup&amp;auth=<?=$LoggedUser['AuthKey']?>">Catch up</a>&nbsp;&nbsp;&nbsp;
 			<a href="userhistory.php?action=posts&amp;userid=<?=$LoggedUser['ID']?>">Go to post history</a>&nbsp;&nbsp;&nbsp;
+			<a href="comments.php">Go to comment history</a>
 	</div>
 <?
 if(!$NumResults) {
@@ -130,9 +131,15 @@ if(!$NumResults) {
 ?>
 	</div>
 <?
-	while(list($ForumID, $ForumName, $TopicID, $ThreadTitle, $Body, $LastPostID, $Locked, $Sticky, $PostID, $AuthorID, $AuthorName, $AuthorAvatar, $EditedUserID, $EditedTime, $EditedUsername,$PermissionID) = $DB->next_record()){
-      
-          $AuthorPermissions = get_permissions($PermissionID);
+
+     $Posts = $DB->to_array(false,MYSQLI_ASSOC);
+
+	//while(list($ForumID, $ForumName, $TopicID, $ThreadTitle, $Body, $LastPostID, $Locked, $Sticky, $PostID, $AuthorID, $AuthorName, $AuthorAvatar, $EditedUserID, $EditedTime, $EditedUsername,$PermissionID) = $DB->next_record()){
+       
+foreach($Posts as $Post){
+	list($ForumID, $ForumName, $TopicID, $ThreadTitle, $Body, $LastPostID, $Locked, $Sticky, $PostID, $AuthorID, $AuthorName, $AuthorAvatar, $EditedUserID, $EditedTime, $EditedUsername,$PermissionID) = array_values($Post);
+          
+      $AuthorPermissions = get_permissions($PermissionID);
           list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
       
 ?>
@@ -143,7 +150,7 @@ if(!$NumResults) {
 					<a href="forums.php?action=viewforum&amp;forumid=<?=$ForumID?>"><?=$ForumName?></a> &gt;
 					<a href="forums.php?action=viewthread&amp;threadid=<?=$TopicID?>" title="<?=display_str($ThreadTitle)?>"><?=cut_string($ThreadTitle, 75)?></a>
 		<? if($PostID<$LastPostID && !$Locked) { ?>
-					<span style="color: red;">(New!)</span>
+					<span class="newstatus">(New!)</span>
 		<? } ?>
 				</span>
 				<span style="float:left;" class="last_read" title="Jump to last read">
