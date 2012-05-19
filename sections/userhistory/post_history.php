@@ -233,7 +233,8 @@ if($ViewingOwn) {
 		}
 	}
 ?>
-			<a href="userhistory.php?action=subscriptions">Go to subscriptions</a>
+			<a href="userhistory.php?action=subscriptions">Go to subscriptions</a>&nbsp;&nbsp;&nbsp;
+			<a href="comments.php">Go to comment history</a>
 <?
 }
 
@@ -266,7 +267,7 @@ if(empty($Results)) {
 <?
 		if($ViewingOwn) {
 			if ((!$Locked  || $Sticky) && (!$LastRead || $LastRead < $LastPostID)) { ?> 
-					<span style="color: red;">(New!)</span>
+					<span class="newstatus">(New!)</span>
 <?
 			}
 ?>
