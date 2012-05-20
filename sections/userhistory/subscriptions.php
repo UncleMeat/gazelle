@@ -58,7 +58,7 @@ $PostIDs = $DB->query($sql);
 $DB->query('SELECT FOUND_ROWS()');
 list($NumResults) = $DB->next_record();
 
-if($NumResults > $PerPage*($Page-1)) {
+//if($NumResults > $PerPage*($Page-1)) {
 	$DB->set_query_id($PostIDs);
 	$PostIDs = $DB->collect('ID');
 	$sql = 'SELECT
@@ -71,7 +71,7 @@ if($NumResults > $PerPage*($Page-1)) {
 		t.IsLocked,
 		t.IsSticky,
 		p.ID,
-		um.ID,
+		p.AuthorID,
 		um.Username,
 		ui.Avatar,
 		p.EditedUserID,
@@ -87,7 +87,7 @@ if($NumResults > $PerPage*($Page-1)) {
 		WHERE p.ID IN ('.implode(',',$PostIDs).')
 		ORDER BY f.Name ASC, t.LastPostID DESC';
 	$DB->query($sql);
-}
+//}
 ?>
 <div class="thin">
 	<h2><?='Subscribed topics'.($ShowUnread?' with unread posts':'')?></h2>
@@ -134,11 +134,9 @@ if(!$NumResults) {
 
      $Posts = $DB->to_array(false,MYSQLI_ASSOC);
 
-	//while(list($ForumID, $ForumName, $TopicID, $ThreadTitle, $Body, $LastPostID, $Locked, $Sticky, $PostID, $AuthorID, $AuthorName, $AuthorAvatar, $EditedUserID, $EditedTime, $EditedUsername,$PermissionID) = $DB->next_record()){
-       
 foreach($Posts as $Post){
 	list($ForumID, $ForumName, $TopicID, $ThreadTitle, $Body, $LastPostID, $Locked, $Sticky, $PostID, $AuthorID, $AuthorName, $AuthorAvatar, $EditedUserID, $EditedTime, $EditedUsername,$PermissionID) = array_values($Post);
-          
+      //echo "($ForumID, $ForumName, $TopicID, $ThreadTitle, $Body, $LastPostID, $Locked, $Sticky, $PostID, $AuthorID, $AuthorName, $AuthorAvatar, $EditedUserID, $EditedTime, $EditedUsername,$PermissionID)";
       $AuthorPermissions = get_permissions($PermissionID);
           list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
       
@@ -175,7 +173,7 @@ foreach($Posts as $Post){
 			<? } */ ?>
                         
 	<? if ($AuthorAvatar) { ?>
-			<img src="<?=$AuthorAvatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$AuthorName ?>'s avatar" />
+			<img src="<?=$AuthorAvatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$AuthorName?>'s avatar" />
 	<? } else { ?>
 			<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 	<? } ?>
