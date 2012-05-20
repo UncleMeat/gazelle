@@ -58,7 +58,7 @@ $PostIDs = $DB->query($sql);
 $DB->query('SELECT FOUND_ROWS()');
 list($NumResults) = $DB->next_record();
 
-//if($NumResults > $PerPage*($Page-1)) {
+if($NumResults > $PerPage*($Page-1)) {
 	$DB->set_query_id($PostIDs);
 	$PostIDs = $DB->collect('ID');
 	$sql = 'SELECT
@@ -87,7 +87,7 @@ list($NumResults) = $DB->next_record();
 		WHERE p.ID IN ('.implode(',',$PostIDs).')
 		ORDER BY f.Name ASC, t.LastPostID DESC';
 	$DB->query($sql);
-//}
+}
 ?>
 <div class="thin">
 	<h2><?='Subscribed topics'.($ShowUnread?' with unread posts':'')?></h2>
