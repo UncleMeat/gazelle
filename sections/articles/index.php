@@ -103,6 +103,7 @@ if (preg_match("/\[ratiolist\]/i", $Body)) {
 				<td>0.60</td>
 			</tr>
 		</table>';
+    
     $Body = preg_replace("/\[ratiolist\]/i", $list, $Body);
     
 }
