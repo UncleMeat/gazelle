@@ -539,9 +539,8 @@ $Bookmarks = all_bookmarks('torrent');
 // Start printing torrent list
 $row='b';
     foreach ($Results as $GroupID => $Data) {       
-        //print_r(array_values($Data));
-        list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, $NewCategoryID, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
-        //Die();
+        list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, $NewCategoryID, $SearchText, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
+
         $TagList = explode(' ', str_replace('_', '.', $TagList));
 
         $TorrentTags = array();
