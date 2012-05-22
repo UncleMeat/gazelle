@@ -18,8 +18,8 @@ function header_link($SortKey,$DefaultWay="desc") {
 
 $TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 if (empty($TokenTorrents)) {
-	$DB->query("SELECT TorrentID FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
-	$TokenTorrents = $DB->collect('TorrentID');
+	$DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+	$TokenTorrents = $DB->to_array('TorrentID');
 	$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
 }
 
@@ -292,7 +292,7 @@ $Bookmarks = all_bookmarks('torrent');
 
 $JsonGroups = array();
 foreach($Results as $GroupID=>$Data) {
-	list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $TotalLeechers, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
+	list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $DoubleSeed, $TotalLeechers, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 	
 	$TagList = explode(' ',str_replace('_','.',$TagList));
 			
@@ -311,10 +311,10 @@ foreach($Results as $GroupID=>$Data) {
                 'leechers' => (int) $TotalLeechers,
                 'isFreeleech' => $Data['FreeTorrent'] == '1',
                 'isNeutralLeech' => $Data['FreeTorrent'] == '2',
-                'isPersonalFreeleech' => in_array($TorrentID, $TokenTorrents),
+                'isPersonalFreeleech' => !empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'leech',
                 'canUseToken' => ($LoggedUser['FLTokens'] > 0)
                                                         && $Data['HasFile'] && ($Data['Size'] < 1073741824)
-                                                        && !in_array($TorrentID, $TokenTorrents)
+                                                        && (empty($TockenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'leech')
                                                         && empty($Data['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')
         );
 }

@@ -1,1 +1,0 @@
-ALTER TABLE  `users_info` DROP  `DisableWiki` ;

@@ -34,6 +34,7 @@ if(!is_array($Info) || empty($Info[10])) {
 		tg.Name,
 		t.Size,
 		t.FreeTorrent,
+                t.double_seed,
 		t.info_hash
 		FROM torrents AS t
 		INNER JOIN torrents_group AS tg ON tg.ID=t.GroupID
@@ -48,11 +49,17 @@ if(!is_array($Info) || empty($Info[10])) {
 if(!is_array($Info[0])) {
 	error(404);
 }
-list($GroupID,$Name,$Image, $Size, $FreeTorrent, $InfoHash) = array_shift($Info); // used for generating the filename
+list($GroupID,$Name, $Size, $FreeTorrent, $DoubleSeed, $InfoHash) = array_shift($Info); // used for generating the filename
+
+$TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
+if (empty($TokenTorrents)) {
+        $DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+        $TokenTorrents = $DB->to_array('TorrentID');
+}
 
 // If he's trying use a token on this, we need to make sure he has one,
 // deduct it, add this to the FLs table, and update his cache key.
-if ($_REQUEST['usetoken'] && $FreeTorrent == '0') {
+if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == '0') {
 	if (isset($LoggedUser)) {
 		$FLTokens = $LoggedUser['FLTokens'];
 		if ($LoggedUser['CanLeech'] != '1') {
@@ -68,19 +75,14 @@ if ($_REQUEST['usetoken'] && $FreeTorrent == '0') {
 	}
 	
 	// First make sure this isn't already FL, and if it is, do nothing
-	$TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
-	if (empty($TokenTorrents)) {
-		$DB->query("SELECT TorrentID FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
-		$TokenTorrents = $DB->collect('TorrentID');
-	}
-	
-	if (!in_array($TorrentID, $TokenTorrents)) {
+        // if it's currently using a double seed slot, switch to FL.
+	if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'leech') {
 		if ($FLTokens <= 0) {
-			error("You do not have any freeleech tokens left.  Please use the regular DL link.");
+			error("You do not have any tokens left. Please use the regular DL link.");
 		}
 		
 		// Let the tracker know about this
-		if (!update_tracker('add_token', array('info_hash' => rawurlencode($InfoHash), 'userid' => $UserID))) {
+		if (!update_tracker('add_token_leech', array('info_hash' => rawurlencode($InfoHash), 'userid' => $UserID))) {
 			error("Sorry! An error occurred while trying to register your token. Most often, this is due to the tracker being down or under heavy load. Please try again later.");
 		}
 		
@@ -88,13 +90,13 @@ if ($_REQUEST['usetoken'] && $FreeTorrent == '0') {
 		// double-clicking the FL link while waiting for a tracker response.
 		$TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 		if (empty($TokenTorrents)) {
-			$DB->query("SELECT TorrentID FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
-			$TokenTorrents = $DB->collect('TorrentID');
+			$DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+			$TokenTorrents = $DB->to_array('TorrentID');
 		}
 		
-		if (!in_array($TorrentID, $TokenTorrents)) {
-			$DB->query("INSERT INTO users_freeleeches (UserID, TorrentID, Time) VALUES ($UserID, $TorrentID, NOW())
-							ON DUPLICATE KEY UPDATE Time=VALUES(Time), Expired=FALSE, Uses=Uses+1");
+		if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'leech') {
+			$DB->query("INSERT INTO users_freeleeches (UserID, TorrentID, Type, Time) VALUES ($UserID, $TorrentID, 'leech', NOW())
+							ON DUPLICATE KEY UPDATE Time=VALUES(Time), Type=VALUES(Type), Expired=FALSE, Uses=Uses+1");
 			$DB->query("UPDATE users_main SET FLTokens = FLTokens - 1 WHERE ID=$UserID");
 			
 			// Fix for downloadthemall messing with the cached token count
@@ -109,6 +111,52 @@ if ($_REQUEST['usetoken'] && $FreeTorrent == '0') {
 			$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
 		}
 	}
+} elseif ($_REQUEST['usetoken'] == 2 && $DoubleSeed == '0') {
+
+	// First make sure this isn't already DS, and if it is, do nothing
+	if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'seed') {
+                if (isset($LoggedUser)) {
+                        $FLTokens = $LoggedUser['FLTokens'];
+                } else {
+                        $UInfo = user_heavy_info($UserID);
+                        $FLTokens = $UInfo['FLTokens'];
+                }
+
+                if ($FLTokens <= 0) {
+			error("You do not have any tokens left. Please use the regular DL link.");
+		}
+
+		// Let the tracker know about this
+		if (!update_tracker('add_token_seed', array('info_hash' => rawurlencode($InfoHash), 'userid' => $UserID))) {
+			error("Sorry! An error occurred while trying to register your token. Most often, this is due to the tracker being down or under heavy load. Please try again later.");
+		}
+		
+		// We need to fetch and check this again here because of people 
+		// double-clicking the DS link while waiting for a tracker response.
+		$TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
+		if (empty($TokenTorrents)) {
+			$DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+			$TokenTorrents = $DB->to_array('TorrentID');
+		}
+
+		if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'seed') {
+			$DB->query("INSERT INTO users_freeleeches (UserID, TorrentID, Type, Time) VALUES ($UserID, $TorrentID, 'seed', NOW())
+							ON DUPLICATE KEY UPDATE Time=VALUES(Time), Type=VALUES(Type), Expired=FALSE, Uses=Uses+1");
+			$DB->query("UPDATE users_main SET FLTokens = FLTokens - 1 WHERE ID=$UserID");
+			
+			// Fix for downloadthemall messing with the cached token count
+			$UInfo = user_heavy_info($UserID);
+			$FLTokens = $UInfo['FLTokens'];
+			
+			$Cache->begin_transaction('user_info_heavy_'.$UserID);
+			$Cache->update_row(false, array('FLTokens'=>($FLTokens - 1)));
+			$Cache->commit_transaction(0);
+			
+			$TokenTorrents[] = $TorrentID;
+			$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
+		}
+        }
+                
 }
 
 // TODO: Lanz, unsure about this one, need more investigation, disabled for now.
