@@ -273,9 +273,12 @@ util.fn = util.prototype = {
 		}
 		return false;
 	},
-	disable : function () {
+	disable : function (set_value) {
+		if (set_value === undefined) {
+			set_value = true;
+		}
 		for (var i=0,il=this.objects.length;i<il;i++) {
-			this.objects[i].disabled = true;
+			this.objects[i].disabled = set_value;
 		}
 		return this;
 	},

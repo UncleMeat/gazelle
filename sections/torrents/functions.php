@@ -56,18 +56,34 @@ function get_group_info($GroupID, $Return = true) {
 			tfi.TorrentID,
 			t.LastReseedRequest,
 			tln.TorrentID AS LogInDB,
-			t.ID AS HasFile
+			t.ID AS HasFile,
+                        tr.ID AS ReviewID,
+                        tr.Status,
+                        tr.ConvID,
+                        tr.Time AS StatusTime,
+                        tr.KillTime,
+                        IF(tr.ReasonID = 0, tr.Reason, rr.Description) AS StatusDescription,
+                        tr.UserID AS StatusUserID,
+                        su.Username AS StatusUsername
 			FROM torrents AS t
 			LEFT JOIN users_main AS um ON um.ID=t.UserID
+                        LEFT JOIN torrents_reviews AS tr ON tr.GroupID=t.GroupID
+                        LEFT JOIN review_reasons AS rr ON rr.ID=tr.ReasonID
+                        LEFT JOIN users_main AS su ON su.ID=tr.UserID
 			LEFT JOIN torrents_bad_tags AS tbt ON tbt.TorrentID=t.ID
 			LEFT JOIN torrents_bad_folders AS tbf on tbf.TorrentID=t.ID
 			LEFT JOIN torrents_bad_files AS tfi on tfi.TorrentID=t.ID
 			LEFT JOIN torrents_logs_new AS tln ON tln.TorrentID=t.ID
-			WHERE t.GroupID='".db_string($GroupID)."'
+			WHERE t.GroupID='".db_string($GroupID)."' 
+                        AND (tr.Time IS NULL OR tr.Time=(SELECT MAX(torrents_reviews.Time) 
+                                                              FROM torrents_reviews 
+                                                              WHERE torrents_reviews.GroupID=t.GroupID))
 			AND flags != 1
 			GROUP BY t.ID
 			ORDER BY t.ID");
-
+ //                              
+ //                                                           AND torrents_reviews.Status != 'Pending'
+ //                              AND (tr.Status IS NULL OR tr.Status != 'Pending')
 		$TorrentList = $DB->to_array();
 		if(count($TorrentList) == 0) {
 			//error(404,'','','',true);
@@ -95,6 +111,12 @@ function get_group_info($GroupID, $Return = true) {
 	if($Return) {
 		return array($TorrentDetails,$TorrentList);
 	}
+}
+
+function get_status_icon($Status){
+    if ($Status == 'Warned' || $Status == 'Pending') return '<span style="float:right;" title="This torrent will be automatically deleted unless the uploader fixes it" class="icon icon_warning"></span>';
+    elseif ($Status == 'Okay') return '<span style="float:right;" title="This torrent has been checked and is okay" class="icon icon_okay"></span>';
+    else return '';
 }
 
 //Check if a givin string can be validated as a torrenthash

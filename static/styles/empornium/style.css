@@ -602,12 +602,9 @@ p.min_padding {
 }
 #top_info {
     display:inline-table;
-    /* width: 380px;
-    margin:8px 10px 0px 0px;
-    margin:7px auto;*/
     margin:10px auto 6px;
     border: 1px solid #7BA3C1;
-    padding:4px 12px;
+    padding:0px 6px 0px 12px;
     background: white; 
     -moz-border-radius: 8px;
     border-radius: 8px;
@@ -617,7 +614,7 @@ table.boxstat {
     border:none;
 }
 table.boxstat td { 
-    padding: 2px 6px;
+    padding: 4px 6px;
     border-top:none;
     border-right: none;
     border-left:1px solid #7BA3C1;
@@ -634,12 +631,60 @@ table.boxstat td:first-child {
 }
 .button.toggle {
     width: 80px;
-    margin: 4px 0px 0px 0px;
+    margin: 4px 0px 0px 8px;
     padding: 4px 12px;
     border: 1px solid #7BA3C1;
-    background: #5A8Bb8;    /* #024a7c;#BACBD8 #9AaBb8 */
+     /* background: #5A8Bb8;    #024a7c;#BACBD8 #9AaBb8 */
     color: #fff;
     cursor: pointer;
+}
+
+#user_message .button {
+    margin: 0px 0px 8px 8px;
+    padding: 4px 12px;
+    vertical-align: middle;
+}
+
+#staff_tools, #warning_status {
+    margin-bottom: 15px;
+}
+
+.warning {
+    font-size: 14pt;
+    font-weight: bold;
+    text-align: center;
+    padding: 4px 0px;
+}
+
+.icon {
+    display:inline-block;
+    width:20px;
+    height:20px;
+}
+
+.icon_warning {
+    background: url('images/warn_still.gif') no-repeat center center;
+}
+.icon_okay {
+    background: url('images/okay.png') no-repeat center center;
+}
+
+#top_info .icon_warning {
+    background: url('images/warning.gif') no-repeat center center;
+}
+
+#staff_tools .icon {
+    width:16px;
+    height:16px;
+    margin-top: -2px;
+    -moz-background-size: 16px 16px;
+    -o-background-size:16px 16px;
+    -webkit-background-size:16px 16px;
+    background-size: 16px 16px;
+}
+
+#staff_tools td {
+    padding: 5px 5px;
 }
 
 .details {
@@ -1333,6 +1378,7 @@ span.quote_label {
     float:left;
     font-size: 8pt;
     margin-left:10px;
+    margin-bottom: 4px;
 }
 blockquote.bbcode {
     clear:both;
@@ -1485,6 +1531,7 @@ a.button {
 	line-height: 12px;
 	font-family: Verdana, Geneva, sans-serif;
 	padding: 7px 15px;
+      /*font-weight: bold; */
 }
 
 .greenButton {
@@ -1501,6 +1548,21 @@ a.button {
 
 .blueButton:hover {
 	background: #187b8c;
+}
+
+.redButton {
+	background: #ab3041;
+}
+
+.redButton:hover {
+	background: #812;
+}
+
+.infoButton {
+    background: #5A8Bb8;    /* #024a7c;#BACBD8 #9AaBb8 */
+}
+.infoButton:hover {
+    background: #3A6B98;  
 }
 
 .overlay, .leftOverlay, .rightOverlay {

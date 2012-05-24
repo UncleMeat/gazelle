@@ -82,6 +82,8 @@
 	'users_mod' => 'Basic moderator tools.',
 
 	'torrents_edit' => 'Can edit any torrent.',
+              'torrents_review' => 'Can mark torrents for deletion.',
+              'torrents_review_override' => 'Can overide ongoing marked for deletion process.',
 	'torrents_delete' => 'Can delete torrents.',
 	'torrents_delete_fast' => 'Can delete more than 3 torrents at a time.',
 	'torrents_freeleech' => 'Can make torrents freeleech.',
@@ -226,7 +228,9 @@ function permissions_form(){ ?>
 				<td>
 			
 					<? display_perm('torrents_edit', 'Can edit any torrent'); ?>
-					
+                                      <? display_perm('torrents_review', 'Can mark torrents for deletion.'); ?>
+                                      <? display_perm('torrents_review_override', 'Can overide ongoing marked for deletion process.'); ?>
+
 					<? display_perm('torrents_delete', 'Can delete torrents'); ?>
 					<? display_perm('torrents_delete_fast', 'Can delete more than 3 torrents at a time.'); ?>
 					<? display_perm('torrents_freeleech', 'Can make torrents freeleech'); ?>
