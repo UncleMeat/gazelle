@@ -1636,7 +1636,7 @@ function get_groups($GroupIDs, $Return = true, $Torrents = true) {
 		
 		if ($Torrents) {
 			$DB->query("SELECT
-                                        t.ID, t.UserID, um.Username, GroupID, FileCount, FreeTorrent, Size, Leechers, Seeders, Snatched, Time, t.ID AS HasFile, r.ReportCount
+                                        t.ID, t.UserID, um.Username, GroupID, FileCount, FreeTorrent, double_seed, Size, Leechers, Seeders, Snatched, Time, t.ID AS HasFile, r.ReportCount
                                         FROM torrents AS t 
                                         JOIN users_main AS um ON t.UserID=um.ID
                                         LEFT JOIN (SELECT TorrentID, count(*) as ReportCount FROM reportsv2 WHERE Type != 'edited' AND Status != 'Resolved' GROUP BY TorrentID) AS r ON r.TorrentID=t.ID

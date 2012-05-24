@@ -463,7 +463,6 @@ span.user_name a {
 .Donor { color:#DAA520; }  /* #F4E649; */
 
 span.user_title {
-    font-weight: bold; 
     font-style: italic;
 }
 
@@ -1550,6 +1549,7 @@ a.button {
 	background: #187b8c;
 }
 
+
 .redButton {
 	background: #ab3041;
 }
@@ -1563,6 +1563,13 @@ a.button {
 }
 .infoButton:hover {
     background: #3A6B98;  
+}
+.orangeButton {
+	background: #ff7f26;
+}
+
+.orangeButton:hover {
+	background: #d96d21;
 }
 
 .overlay, .leftOverlay, .rightOverlay {

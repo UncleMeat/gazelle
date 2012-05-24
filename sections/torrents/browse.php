@@ -41,8 +41,8 @@ function header_link($SortKey, $DefaultWay = "desc") {
 
 $TokenTorrents = $Cache->get_value('users_tokens_' . $UserID);
 if (empty($TokenTorrents)) {
-    $DB->query("SELECT TorrentID FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
-    $TokenTorrents = $DB->collect('TorrentID');
+    $DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+    $TokenTorrents = $DB->to_array('TorrentID');
     $Cache->cache_value('users_tokens_' . $UserID, $TokenTorrents);
 }
 
@@ -538,7 +538,7 @@ $Bookmarks = all_bookmarks('torrent');
     <?
 // Start printing torrent list
 $row='b';
-    foreach ($Results as $GroupID => $Data) {       
+    foreach ($Results as $GroupID => $Data) {   
         list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, $NewCategoryID, $SearchText, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 
         $TagList = explode(' ', str_replace('_', '.', $TagList));
@@ -558,14 +558,20 @@ $row='b';
         $OverName = strlen($GroupName) <= 60 ? $GroupName : substr($GroupName, 0, 56) . '...';
         $SL = ($TotalSeeders == 0 ? "<span class=r00>" . number_format($TotalSeeders) . "</span>" : number_format($TotalSeeders)) . "/" . number_format($TotalLeechers);
         $Overlay = "<table class=overlay><tr><td class=overlay colspan=2><strong>" . $OverName . "</strong></td><tr><td class=leftOverlay><img style='max-width: 150px;' src=" . $OverImage . "></td><td class=rightOverlay><strong>Uploader:</strong><br />{$Data['Username']}<br /><br /><strong>Size:</strong><br />" . get_size($Data['Size']) . "<br /><br /><strong>Snatched:</strong><br />" . number_format($TotalSnatched) . "<br /><br /><strong>Seeders/Leechers:</strong><br />" . $SL . "</td></tr></table>";
-        
         $AddExtra = '';
         if ($Data['FreeTorrent'] == '1') {
             $AddExtra .= ' <strong>/ Freeleech!</strong>';
         } elseif ($Data['FreeTorrent'] == '2') {
             $AddExtra .= ' <strong>/ Neutral Leech!</strong>';
-        } elseif (in_array($TorrentID, $TokenTorrents)) {
+        }
+        if ($Data[double_seed] == '1') {
+            $AddExtra .= ' <strong>/ Doubleseed!</strong>';
+        }
+        
+        if (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'leech') {
             $AddExtra .= ' <strong>/ Personal Freeleech!</strong>';
+        } elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'seed') {
+            $AddExtra .= ' <strong>/ Personal Doubleseed!</strong>';
         }
         if ($Data['ReportCount'] > 0) {
             $Title = "This torrent has ".$Data['ReportCount']." active ".($Data['ReportCount'] > 1 ?'reports' : 'report');
@@ -582,7 +588,7 @@ $row='b';
                 <span>
                     [ <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">DL</a>
                     <? if (($LoggedUser['FLTokens'] > 0) && $Data['HasFile']
-                            && !in_array($TorrentID, $TokenTorrents) && empty($Data['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')) {
+                            && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'leech') && empty($Data['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')) {
                         ?>
                         | <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>&usetoken=1" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FL</a>
     <? } ?>				

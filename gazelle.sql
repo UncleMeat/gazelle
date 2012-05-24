@@ -1677,9 +1677,11 @@ CREATE TABLE IF NOT EXISTS `users_dupes` (
 CREATE TABLE IF NOT EXISTS `users_freeleeches` (
   `UserID` int(10) NOT NULL,
   `TorrentID` int(10) NOT NULL,
+  `Type` enum('leech','seed') NOT NULL DEFAULT 'leech',
   `Time` datetime NOT NULL,
   `Expired` tinyint(1) NOT NULL DEFAULT '0',
   `Downloaded` bigint(20) NOT NULL DEFAULT '0',
+  `Uploaded` bigint(20) NOT NULL DEFAULT '0',
   `Uses` int(10) NOT NULL DEFAULT '1',
   PRIMARY KEY (`UserID`,`TorrentID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

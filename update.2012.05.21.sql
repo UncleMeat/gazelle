@@ -1,0 +1,2 @@
+ALTER TABLE  `users_freeleeches` ADD  `Type` enum('leech','seed') NOT NULL DEFAULT 'leech' AFTER  `TorrentID` ;
+ALTER TABLE  `torrents` ADD `double_seed` enum('0','1') NOT NULL DEFAULT '0' AFTER `FreeLeechType` ;

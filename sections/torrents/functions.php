@@ -44,6 +44,7 @@ function get_group_info($GroupID, $Return = true) {
 			t.Leechers,
 			t.Snatched,
 			t.FreeTorrent,
+                        t.double_seed,
 			t.Time,
 			t.Description,
 			t.FileList,

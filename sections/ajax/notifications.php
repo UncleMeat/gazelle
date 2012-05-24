@@ -17,8 +17,8 @@ list($Page,$Limit) = page_limit(NOTIFICATIONS_PER_PAGE);
 
 $TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 if (empty($TokenTorrents)) {
-	$DB->query("SELECT TorrentID FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
-	$TokenTorrents = $DB->collect('TorrentID');
+	$DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+	$TokenTorrents = $DB->to_array('TorrentID');
 	$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
 }
 
@@ -35,6 +35,7 @@ $Results = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 		t.Leechers,
 		t.Time,
 		t.FreeTorrent,
+                t.double_seed,
 		tln.TorrentID AS LogInDB,
 		unt.UnRead,
 		unt.FilterID,
@@ -81,7 +82,7 @@ foreach($FilterGroups as $ID => $FilterResults) {
 	unset($FilterResults['FilterLabel']);
 	foreach($FilterResults as $Result) {
 		list($TorrentID, $GroupID, $GroupName, $GroupCategoryID, $TorrentTags, $Size, $FileCount,
-			$Snatched, $Seeders, $Leechers, $NotificationTime, $FreeTorrent, $LogInDB, 
+			$Snatched, $Seeders, $Leechers, $NotificationTime, $FreeTorrent, $DoubleSeed, $LogInDB, 
                         $UnRead) = $Result;
 		
 		if ($Unread) $NumNew++;
@@ -99,6 +100,7 @@ foreach($FilterGroups as $ID => $FilterResults) {
 			'leechers' => (int) $Leechers,
 			'notificationTime' => $NotificationTime,
 			'freeTorrent' => $FreeTorrent == 1,
+                        'doubleSeed' => $DoubleSeed == 1,
 			'logInDb' => $LogInDB,
 			'unread' => $UnRead == 1
 		);
