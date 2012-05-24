@@ -211,7 +211,13 @@ if(check_perms('torrents_review')){
                 <tr class="history hidden">
                     <td width="200px"><strong>Status:</strong>&nbsp;&nbsp;<?=$Stat?"$Stat&nbsp;".get_status_icon($Stat):'Not set'?></td>
                     <td><?=$StatDescription?'<strong>Reason:</strong>&nbsp;&nbsp;'.$StatDescription:''?>
-                        <?=$StatConvID>0?'<span style="float:right;"><a href="staffpm.php?action=viewconv&id='.$StatConvID.'">'.($Stat=='Pending'?'Message sent to staff':"reply sent to $Username").'</a></span>':''?>
+<?
+                         if ($StatConvID>0) {
+                             echo '<span style="float:right;">'.($Stat=='Pending'?'(user sent fixed message) &nbsp;&nbsp;':'').'<a href="staffpm.php?action=viewconv&id='.$StatConvID.'">'.($Stat=='Pending'?'Message sent to staff':"reply sent to $Username").'</a></span>';
+                         } elseif ($Stat == 'Warned') {
+                             echo '<span style="float:right;">(pm sent to '.$Username.')</span>';
+                         }
+?>
                     </td>
                     <td width="25%"><?=$Stat?'<strong>By:</strong>&nbsp;&nbsp;'.format_username($StatUserID, $StatUsername).'&nbsp;'.time_diff($StatTime):'';?></td>
                 </tr>      
@@ -222,7 +228,14 @@ if(check_perms('torrents_review')){
                 <tr>
                     <td width="200px"><strong>Current Status:</strong>&nbsp;&nbsp;<?=$Status?"$Status&nbsp;".get_status_icon($Status):'Not set'?></td>
                     <td><?=$StatusDescription?'<strong>Reason:</strong>&nbsp;&nbsp;'.$StatusDescription:''?>
-                            <?=$ConvID>0?'<span style="float:right;"><a href="staffpm.php?action=viewconv&id='.$ConvID.'">'.($Status=='Pending'?'Message sent to staff':"reply sent to $Username").'</a></span>':''?>
+                            <? //$ConvID>0?'<span style="float:right;">'.($Status=='Pending'?'(user sent fixed message) &nbsp;&nbsp;':'').'<a href="staffpm.php?action=viewconv&id='.$ConvID.'">'.($Status=='Pending'?'Message sent to staff':"reply sent to $Username").'</a></span>':''?>
+<?
+                         if ($ConvID>0) {
+                             echo '<span style="float:right;">'.($Status=='Pending'?'(user sent fixed message) &nbsp;&nbsp;':'').'<a href="staffpm.php?action=viewconv&id='.$ConvID.'">'.($Status=='Pending'?'Message sent to staff':"reply sent to $Username").'</a></span>';
+                         } elseif ($Status == 'Warned') {
+                             echo '<span style="float:right;">(pm sent to '.$Username.')</span>';
+                         }
+?>
                     </td>
                     <td width="25%"><?=$Status?'<strong>By:</strong>&nbsp;&nbsp;'.format_username($StatusUserID, $StatusUsername).'&nbsp;'.time_diff($StatusTime):'';?></td>
                 </tr>
