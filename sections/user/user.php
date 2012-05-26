@@ -163,7 +163,7 @@ $Badges.=($Enabled == '1' || $Enabled == '0' || !$Enabled) ? '': '<img src="'.ST
 show_header($Username,'user,bbcode,requests');
 ?>
 <div class="thin">
-	<h2><?=format_username($UserID, $Username, false, $Warned, $Enabled == 2 ? false : true, $ClassID, $CustomTitle, true)?></h2>
+	<h2><?=format_username($UserID, $Username, false, $Warned, $Enabled == 2 ? false : true, $ClassID, $CustomTitle)?></h2>
 	<div class="linkbox">
 <? if (!$OwnProfile) { ?>
 		[<a href="inbox.php?action=compose&amp;to=<?=$UserID?>">Send Message</a>]

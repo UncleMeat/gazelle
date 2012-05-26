@@ -95,6 +95,7 @@ list($NewDNU) = $DB->next_record();
 $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
 ?>
 <div class="thin">
+        <h2>Upload torrent</h2>
 <div class="box pad" style="margin:10px auto">
 	<span style="float:right;clear:right"><p><?=$NewDNU?'<strong class="important_text">':''?>Last Updated: <?=time_diff($Updated)?><?=$NewDNU?'</strong>':''?></p></span>
 	<h3 id="dnu_header">Do not upload from the following list</h3> 
