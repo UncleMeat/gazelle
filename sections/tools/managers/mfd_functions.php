@@ -1,5 +1,5 @@
-<?php
-
+<?
+ 
 /*
  * Possibly this should not be hardcoded... and should be changeable in the toolbox somewhere
  * while it is hardcoded it can go here
@@ -7,7 +7,11 @@
 
 // how long they get to fix their upload before autodeletion is set here
 function get_warning_time(){
-    return time() + (12 * 60 * 60); // 12 hours...   ?
+    global $DB;
+    //return time() + (12 * 60 * 60); // 12 hours...   ?
+    $DB->query("SELECT Hours FROM review_options");
+    list($Time) = $DB->next_record();
+    return time() + ((int)$Time * 3600);
 }
 
 
@@ -70,6 +74,87 @@ function get_user_okay_message($GroupID, $TorrentName, $KillTime, $Reason){
 function get_fixed_message($GroupID, $TorrentName){
     $Message = "[br]Thank-you for fixing your upload [url=http://". SITE_URL ."/torrents.php?id=$GroupID]{$TorrentName}[/url].";
     return $Message;
+}
+
+
+// message is in two parts so we can grab the bits around the reason for display etc.
+function get_deleted_message($GroupID, $TorrentName, $Reason){
+    
+    $Message = "[b][br]Your upload [/b][url=http://". SITE_URL ."/torrents.php?id=$GroupID]{$TorrentName}[/url] [b]has been auto-deleted.";
+    $Message .= "[br][br]Reason: &nbsp;[color=red]{$Reason}[/color][/b]";
+    $Message .= '[br][br]Before you upload something again please make sure you read the [url=http://'. SITE_URL .'/articles.php?topic=upload]Upload Rules[/url]';
+    $Message .= '[br]You will find useful guides in the [url=http://'. SITE_URL .'/articles.php?topic=tutorials]Tutorials section[/url]';
+    $Message .= '[br]If you need further help please post in the [url=http://'. SITE_URL .'/forums.php?action=viewforum&amp;forumid=17]Help & Support Forum[/url]';
+    
+    return $Message;
+}
+ 
+ 
+function get_torrents_under_review($ReturnPending = true, $ReturnOverdueOnly = false){
+      global $DB;
+      
+      $WHERE= "tr.Status = 'Warned' ";
+      if ($ReturnPending) $WHERE = "($WHERE OR tr.Status = 'Pending') ";
+      if ($ReturnOverdueOnly) $WHERE .=  "AND tr.KillTime < '".sqltime()."' "; 
+      //$sqltime = sqltime();
+      $DB->query("SELECT t.ID,
+                         t.GroupID,
+                         tg.Name,
+                         tr.Status,
+                         tr.ConvID,
+                         tr.KillTime,
+                         IF(tr.ReasonID = 0, tr.Reason, rr.Description) AS Reason,
+                         t.UserID,
+                         um.Username
+			  FROM torrents AS t
+                    JOIN torrents_group AS tg ON tg.ID = t.GroupID
+                    JOIN torrents_reviews AS tr ON tr.GroupID=t.GroupID
+               LEFT JOIN review_reasons AS rr ON rr.ID=tr.ReasonID
+               LEFT JOIN users_main AS um ON um.ID=t.UserID
+                   WHERE $WHERE 
+                     AND tr.Time=(SELECT MAX(torrents_reviews.Time) 
+                                         FROM torrents_reviews 
+                                         WHERE torrents_reviews.GroupID=t.GroupID)
+                ORDER BY KillTime");
+      
+	$Torrents = $DB->to_array();
+      return $Torrents;
+}
+      
+      
+
+
+function delete_torrents_list($Torrents){
+      global $DB;
+      
+	$LogEntries = array();
+	$i=0;
+	foreach ($Torrents as $TorrentID) {
+		list($ID, $GroupID, $Name, $Status, $ConvID, $KillTime, $Reason, $UserID, $Username) = $TorrentID;
+            
+            //echo "deleting $i : $ID, $GroupID, $Name, $Status, $ConvID, $KillTime, $Reason, $UserID, $Username";
+		delete_torrent($ID, $GroupID, $UserID);
+		$LogEntries[] = "Torrent ".$ID." (".$Name.") was auto-deleted for $Reason";
+		
+		$Msg = get_deleted_message($GroupID, $Name, $Reason);
+            
+            if($ConvID){ //
+                    send_message_reply($ConvID, $UserID, 0, $Msg, 'Resolved');
+            } else { 
+                    send_pm($UserID, 0, db_string("Your upload has been auto deleted."), $Msg);
+            }
+                                
+		++$i;
+	}
+		//echo "\nDeleted $i torrents for \n";
+	
+	$sqltime = sqltime();
+	if(count($LogEntries) > 0) {
+		$Values = "('".implode("', '".$sqltime."'), ('",$LogEntries)."', '".$sqltime."')";
+		$DB->query('INSERT INTO log (Message, Time) VALUES '.$Values);
+	}
+      
+      return $i;
 }
 
 ?>

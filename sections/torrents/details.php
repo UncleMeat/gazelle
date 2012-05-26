@@ -6,6 +6,7 @@ function compare($X, $Y){
 
 define(MAX_PERS_COLLAGES, 3); // How many personal collages should be shown by default
 
+include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
 include(SERVER_ROOT.'/sections/bookmarks/functions.php'); // has_bookmarked()
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = NEW TEXT;
@@ -247,7 +248,7 @@ if(check_perms('torrents_review')){
                         <input type="hidden" id="convid" name="convid" value="<?=$ConvID?>" />
                         <strong id="warn_insert" class="important_text" style="margin-right:20px;"></strong>
 <?              if ( !$Status || $Status == 'Okay' || check_perms('torrents_review_override') ) { // onsubmit="return Validate_Form_Reviews('<?=$Status ')"   ?> 
-                        <select id="reasonid" name="reasonid"  onchange="Select_Reason(<?=($Status == 'Warned' || $Status == 'Pending' || $Status == 'Okay')?>);" >
+                        <select id="reasonid" name="reasonid"  onchange="Select_Reason(<?=($Status == 'Warned' || $Status == 'Pending' || $Status == 'Okay')?'true':'false';?>);" >
                             <option value="-1" selected="selected">none&nbsp;&nbsp;</option> 
 <? 
                     $DB->query("SELECT ID, Name FROM review_reasons ORDER BY Sort");
@@ -283,7 +284,6 @@ if(check_perms('torrents_review')){
                                 <span id="message_insert"></span>
                                 <textarea id="reason_other" name="reason" class="hidden medium" style="vertical-align: middle;" rows="1" title="The reason entered here is also displayed in the warning notice, ie. keep it short and sweet"></textarea> 
 <?
-                                include('get_warning_functions.php'); // print the 2nd part of message
                                 echo $Text->full_format(get_warning_message(false, true), true);
 ?>
                             </blockquote>

@@ -112,6 +112,21 @@ These functions are run every hour.
 if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 	echo "Ran hourly functions\n";
 	
+      
+      //------------- Remove torrents that have expired their warning period ---------------------------------------//
+     
+      $DB->query("SELECT AutoDelete FROM review_options");
+      list($AutoDelete) = $DB->next_record();
+      if ($AutoDelete){
+          include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
+
+          $Torrents = get_torrents_under_review(false, true); 
+          $NumTorrents = count($Torrents);
+          if($NumTorrents>0){
+                $NumDeleted = delete_torrents_list($Torrents);
+          }
+      }
+      
 	//------------- Front page stats ----------------------------------------//
 
 	//Love or hate, this makes things a hell of a lot faster

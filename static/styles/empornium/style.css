@@ -655,6 +655,27 @@ table.boxstat td:first-child {
     padding: 4px 0px;
 }
 
+.redbar {
+    background: #d00;
+    color: white;
+    font-weight: bolder;
+}
+.orangebar {
+    background: #FF9900;
+    color: white;
+    font-weight: bolder;
+}
+.redbar a, .orangebar a {
+    color: white;
+    font-weight: bolder;
+    text-decoration: underline;
+}
+.redbar a:hover, .orangebar a:hover {
+    text-decoration: none;
+}
+
+ 
+
 .icon {
     display:inline-block;
     width:20px;

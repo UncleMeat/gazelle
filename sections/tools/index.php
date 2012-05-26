@@ -194,7 +194,52 @@ switch ($_REQUEST['action']){
 	case 'official_tags':
 		include('managers/official_tags.php');
 		break;
+        
+        
+        
+          case 'marked_for_deletion':
+                include('managers/mfd_functions.php');
+                include('managers/mfd_manager.php');
+                break;
+            
+          case 'save_mfd_options':
+                enforce_login();      
+		    authorize(); 
+                
+                if ( !check_perms('torrents_review_override')) error(403);
+                
+                if ( isset($_POST['hours']) && is_number($_POST['hours']) &&
+                     isset($_POST['autodelete']) && is_number($_POST['autodelete']) ) {
+                    
+                    $Hours = (int)$_POST['hours'];
+                    $AutoDelete = (int)$_POST['autodelete']==1?1:0;
+                    $DB->query("UPDATE review_options 
+                                   SET Hours=$Hours, AutoDelete=$AutoDelete");
+                }
+                include('managers/mfd_functions.php');
+                include('managers/mfd_manager.php');
+                break;
+                
+          case 'mfd_delete':
+                enforce_login();      
+		    authorize(); 
+              
+                include('managers/mfd_functions.php');
+                
+                if ( !check_perms('torrents_review')) error(403);
+                
+                if ($_POST['submit'] == 'Delete All Warned and Overdue torrents'){
+                    $Torrents = get_torrents_under_review(false, true);
+                    if (count($Torrents)){
+                        //$NumTorrents = count($Torrents); //echo "Num to delete: $NumTorrents";
+                        $NumDeleted = delete_torrents_list($Torrents);
+                    }
+                }
+                include('managers/mfd_manager.php');
+                break;
 
+            
+            
 	case 'permissions':
 		if (!check_perms('admin_manage_permissions')) { error(403); }
 

@@ -371,7 +371,7 @@ if(!empty($_REQUEST['action'])) {
 			enforce_login();
 			//authorize(); // who cares if somone fakes this
                   
-                  include('get_warning_functions.php');
+                  include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
                   include(SERVER_ROOT.'/classes/class_text.php');
                   $Text = new TEXT;
                    
@@ -398,7 +398,7 @@ if(!empty($_REQUEST['action'])) {
 			enforce_login();      // this sets the status from Warned to Pending
 			authorize(); 
                 
-                  include('get_warning_functions.php');
+                  include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
                   
                   if (!empty($_POST['groupid']) && is_number($_POST['groupid'])) {
                           
@@ -446,7 +446,7 @@ if(!empty($_REQUEST['action'])) {
                                 $DB->query("INSERT INTO torrents_reviews (GroupID, ReasonID, UserID, Time, ConvID, Status, Reason, KillTime)
                                          VALUES ($GroupID, $ReasonID, ".db_string($LoggedUser['ID']).", '".sqltime()."', $ConvID, 'Pending', '".db_string($Reason)."', '".$KillTime."')");
 
-                                echo "<div class=\"messagebar\"><a href=\"staffpm.php?action=viewconv&id=$ConvID\">Message sent to staff</a></div>";   // $ConvID";
+                                echo $ConvID;   // "<div class=\"messagebar\"><a href=\"staffpm.php?action=viewconv&id=$ConvID\">Message sent to staff</a></div>";   // $ConvID";
                             }
                         }
                   }
@@ -457,12 +457,11 @@ if(!empty($_REQUEST['action'])) {
 			enforce_login();
 			authorize(); 
                   
-                  include('get_warning_functions.php');
+                  include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
                             
                   if (check_perms('torrents_delete') && !empty($_POST['groupid']) && is_number($_POST['groupid'])) {
                       
                         $GroupID = (int)$_POST['groupid'];
-                        //$TorrentID = (int)$_POST['torrentid'];
                         $ReasonID = (int)$_POST['reasonid'];
                         $ConvID = (!empty($_POST['convid']) && is_number($_POST['convid']))?(int)$_POST['convid']:null;
                         $Time = sqltime();
@@ -473,7 +472,7 @@ if(!empty($_REQUEST['action'])) {
                         elseif ($_POST['submit'] == "Accept Fix") $Status = 'Fixed';     
                         else $Status = 'Okay'; // ($_POST['submit'] == "Mark as Okay")   
                         
-                        // logging - 
+                        //  get torrent details
                         $DB->query("SELECT Name, UserID, t.ID 
                                         FROM torrents_group AS tg
                                         LEFT JOIN torrents AS t ON t.GroupID = tg.ID
@@ -497,7 +496,7 @@ if(!empty($_REQUEST['action'])) {
                                     // send message 
                                     send_message_reply($ConvID, $UserID, $LoggedUser['ID'], 
                                         get_warning_message(true, true, $GroupID, $Name, $Description?$Description:$Reason, $KillTime), 'Open');
-                                } else { // if no conv id then this has been fixed without the user sending a msg to staff
+                                } else { 
                                     send_pm($UserID, 0, db_string("Important: Your upload has been marked for deletion!"), 
                                                     get_warning_message(true, true, $GroupID, $Name, $Description?$Description:$Reason, $KillTime));
                                 }
@@ -513,16 +512,17 @@ if(!empty($_REQUEST['action'])) {
                                                 FROM torrents_reviews AS tr 
                                                 LEFT JOIN review_reasons AS rr ON rr.ID = tr.ReasonID
                                                 WHERE tr.GroupID=$GroupID  
-                                                AND (tr.Time IS NULL OR tr.Time=(SELECT MAX(torrents_reviews.Time) 
+                                                AND tr.Status != 'Pending'
+                                                AND tr.Time=(SELECT MAX(torrents_reviews.Time) 
                                                                       FROM torrents_reviews 
                                                                       WHERE torrents_reviews.GroupID=tr.GroupID
-                                                                      AND torrents_reviews.Status != 'Pending'))
-                                                AND tr.Status != 'Pending'" );
+                                                                      AND torrents_reviews.Status != 'Pending')" );  // tr.Time IS NULL OR 
+                                
                                 // overwrite these to be passed through to new record
                                 list($Status, $KillTime, $ReasonID, $Reason, $Description) = $DB->next_record();
                                 $KillTime = strtotime($KillTime);
                                 $LogDetails = "Rejected Fix: ".$Description?$Description:$Reason;
-                                $LogDetails .= "; Delete at: ".  date('M d Y, H:i', $KillTime);
+                                $LogDetails .= " Delete at: ".  date('M d Y, H:i', $KillTime);
                                 
                                 if($ConvID){ 
                                     send_message_reply($ConvID, $UserID, $LoggedUser['ID'],
@@ -546,7 +546,7 @@ if(!empty($_REQUEST['action'])) {
                                 $LogDetails = "Upload Fixed";
                                 break;
                             default: // 'Okay'
-                                if($ConvID){  // shouldnt really be here but its not an impossible state... close the conversation
+                                if($ConvID){  // shouldnt normally be here but its not an impossible state... close the conversation
                                     // send message & resolve
                                     send_message_reply($ConvID, $UserID, $LoggedUser['ID'], get_fixed_message($GroupID, $Name), 'Resolved');
                                 }  // if no convid then this has just been checked for the first time, no msg needed
@@ -561,24 +561,9 @@ if(!empty($_REQUEST['action'])) {
 						 VALUES ($GroupID, $ReasonID, ".db_string($LoggedUser['ID']).", ".($ConvID?$ConvID:"null").", '$Time', '$Status', '".db_string($Reason)."', '".sqltime($KillTime)."')");
 			
                         // logging - 
-                        /*
-                        $DB->query("SELECT Name, UserID, t.ID 
-                                        FROM torrents_group AS tg
-                                        LEFT JOIN torrents AS t ON t.GroupID = tg.ID
-                                        WHERE tg.ID=$GroupID");
-                        list($Name, $AuthorID, $TorrentID) = $DB->next_record();
-                        */
-                        write_log("Torrent $TorrentID ($Name) status set to '$Status' by ".$LoggedUser['Username']." ($LogDetails)"); // TODO: this is probably broken
+                        write_log("Torrent $TorrentID ($Name) status set to $Status by ".$LoggedUser['Username']." ($LogDetails)"); // TODO: this is probably broken
                         write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], $LogDetails, 0);
 
-                        /*
-                        if ($Status == 'Warned'){
-                            send_pm($UserID, 0, db_string("Important: Your upload has been marked for deletion!"), 
-                                    get_warning_message(true, true, $GroupID, $Name, $Reason, $KillTime));
-                        } elseif ($Status == 'Rejected'){
-                            send_pm($UserID, 0, db_string("Important: Your fix was rejected!"), 
-                                    get_warning_message(true, true, $GroupID, $Name, $Reason, $KillTime, true));
-                        } */
                         
                         header('Location: torrents.php?id='.$GroupID);
                       

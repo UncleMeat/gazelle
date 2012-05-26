@@ -151,9 +151,22 @@ while(list($Message, $LogTime) = $DB->next_record()) {
 				}
 				$Message = $Message." ".$MessageParts[$i];
 				break;
+                  case "Okay":
+				if ($Color === false) {
+					$Color = '#060';
+				}
+				$Message = $Message." ".$MessageParts[$i];
+				break;
 			case "deleted":
+			case "auto-deleted":
 				if ($Color === false || $Color === 'green') {
 					$Color = 'red';
+				}
+				$Message = $Message." ".$MessageParts[$i];
+				break;
+                  case "Warned":
+				if ($Color === false || $Color === 'green') {
+					$Color = '#aa7700';
 				}
 				$Message = $Message." ".$MessageParts[$i];
 				break;

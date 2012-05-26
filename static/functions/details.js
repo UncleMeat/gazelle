@@ -9,7 +9,9 @@ function Send_Okay_Message(group_id, conv_id){
 	  ToPost['convid'] = conv_id; 
         ajax.post('?action=send_okay_message', ToPost, function (response) {
             // show  user response 
-            $('#user_message').raw().innerHTML = response;
+            conv_id = response;
+            $('#convid').raw().value = conv_id;
+            $('#user_message').raw().innerHTML = '<div class="messagebar"><a href="staffpm.php?action=viewconv&id=' + conv_id + '">Message sent to staff</a></div>';
             //$('#review_message').show(); 
         });
     }
@@ -32,7 +34,7 @@ function Select_Reason(overwrite_warn){
     if(value == -1){
         $('#mark_delete_button').disable(); 
         $('#review_message').hide(); 
-        $('#warn_insert').html();
+        $('#warn_insert').html('');
     } else { // is set
 	  var ToPost = [];
 	  ToPost['groupid'] = $('#groupid').raw().value;
