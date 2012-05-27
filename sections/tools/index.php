@@ -228,7 +228,7 @@ switch ($_REQUEST['action']){
                 
                 if ( !check_perms('torrents_review')) error(403);
                 
-                if ($_POST['submit'] == 'Delete All Warned and Overdue torrents'){
+                if (isset($_POST['submitdelall'])) {
                     $Torrents = get_torrents_under_review('warned', true);
                     if (count($Torrents)){
                         //$NumTorrents = count($Torrents); //echo "Num to delete: $NumTorrents";

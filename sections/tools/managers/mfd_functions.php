@@ -51,10 +51,12 @@ function send_message_reply($ConvID, $ToID, $FromID, $Message, $SetStatus = fals
     }
     
     if($FromStaff){
-        $Cache->delete_value('num_staff_pms_'.$FromID);
-        $Cache->delete_value('num_staff_pms_open_'.$FromID);
-        $Cache->delete_value('num_staff_pms_my_'.$FromID);
-    } 
+        if ($FromID>0){
+            $Cache->delete_value('num_staff_pms_'.$FromID);
+            $Cache->delete_value('num_staff_pms_open_'.$FromID);
+            $Cache->delete_value('num_staff_pms_my_'.$FromID);
+        }
+    }
     elseif($ToID>0)  // Clear cache for user
         $Cache->delete_value('staff_pm_new_'.$ToID);
     
@@ -90,19 +92,31 @@ function get_deleted_message($GroupID, $TorrentName, $Reason){
 }
  
 
-function get_num_overdue_torrents(){
+function get_num_overdue_torrents($WhereStatus = 'warned'){
     global $DB;
     
-    $DB->query("SELECT Count(t.Id)
+    switch ($WhereStatus) {
+        case 'pending':
+            $WHERE= "tr.Status = 'Pending' ";
+            break;
+        case 'both':
+            $WHERE= "(tr.Status = 'Warned' OR tr.Status = 'Pending') ";
+            break;
+        case 'warned':
+        default:
+            $WHERE= "tr.Status = 'Warned' ";
+            break;
+    }
+        
+    $DB->query("SELECT Count(*)
 			  FROM torrents AS t
                     JOIN torrents_reviews AS tr ON tr.GroupID=t.GroupID
-                   WHERE (tr.Status = 'Warned' OR tr.Status = 'Pending') 
+                   WHERE $WHERE
                      AND tr.Time=(SELECT MAX(torrents_reviews.Time) 
                                          FROM torrents_reviews 
                                          WHERE torrents_reviews.GroupID=t.GroupID)
-                     AND tr.KillTime < '".sqltime()."'
-                GROUP BY t.Id");
-      
+                     AND tr.KillTime < '".sqltime()."'");
+ 
     list($Num) = $DB->next_record();
     return $Num;
 }
@@ -172,7 +186,7 @@ function delete_torrents_list($Torrents){
 		list($ID, $GroupID, $Name, $Status, $ConvID, $KillTime, $Reason, $UserID, $Username) = $TorrentID;
             
             //echo "deleting $i : $ID, $GroupID, $Name, $Status, $ConvID, $KillTime, $Reason, $UserID, $Username";
-		delete_torrent($ID, $GroupID, $UserID);
+		//delete_torrent($ID, $GroupID, $UserID);
 		$LogEntries[] = "Torrent ".$ID." (".$Name.") was auto-deleted for $Reason";
 		
 		$Msg = get_deleted_message($GroupID, $Name, $Reason);

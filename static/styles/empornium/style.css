@@ -623,7 +623,7 @@ p.min_padding {
 }
 #top_info {
     display:inline-table;
-    margin:10px auto 6px;
+    margin:16px auto 16px;
     border: 1px solid #7BA3C1;
     padding:0px 6px 0px 12px;
     background: white; 
@@ -652,12 +652,13 @@ table.boxstat td:first-child {
 }
 .button.toggle {
     width: 80px;
-    margin: 4px 0px 0px 8px;
+    margin: 6px 0px 0px 8px;
     padding: 4px 12px;
     border: 1px solid #7BA3C1;
      /* background: #5A8Bb8;    #024a7c;#BACBD8 #9AaBb8 */
     color: #fff;
     cursor: pointer;
+    vertical-align: top;
 }
 
 #user_message .button {
@@ -1560,7 +1561,7 @@ a.button {
 	border-radius: 3px;
 	-webkit-border-radius: 3px;
 	/* margin: 3px 6px 3px 0; */
-      margin: 0px 8px 0px 0px;
+      margin: 0px 8px 4px 0px;
 	text-decoration: none;
 	color: #fff;	
 	border: none;

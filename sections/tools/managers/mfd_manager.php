@@ -11,8 +11,10 @@ $DB->query("SELECT Hours, AutoDelete FROM review_options LIMIT 1");
 list($Hours, $Delete) = $DB->next_record();
 
 $CanManage = check_perms('torrents_review_manage');
-$NumOverdue = get_num_overdue_torrents();
-if (!$NumOverdue) $OverdueOnly = 0;
+$NumOverdue = get_num_overdue_torrents('both');
+if ($NumOverdue) // 
+    $NumWarnedOverdue = get_num_overdue_torrents('warned');
+else $OverdueOnly = 0;
 
 show_header('Manage torrents marked for deletion');
   
@@ -95,7 +97,6 @@ show_header('Manage torrents marked for deletion');
             
 ?>
         <form method="post" action="tools.php" id="reviewform">
-            
             <div class="box pad">
                 <h3 style="float:right;margin:5px 10px 0 0;">Showing: <?=$ViewStatus=='both'?'pending and warned':$ViewStatus;?> <?=$OverdueOnly?'(overdue only)':'';?></h3>
 <?      if ($NumOverdue) {
@@ -103,13 +104,14 @@ show_header('Manage torrents marked for deletion');
                 <span style="position:absolute;">
                     <input type="submit" name="submit" title="Delete selected torrents" value="Delete selected" />
                 </span>     
-<?		}   ?> 
+<?		} 
+            if ($NumWarnedOverdue) {  ?> 
                 <!-- anyone with torrents_review permission can delete warned and overdue torrents  -->
-                <input type="submit" style="width:350px;margin-left:-175px;left:50%;position:relative;" name="submit" title="Delete All Warned and Overdue torrents (red background)" value="Delete All Warned and Overdue torrents" />
+                <input type="submit" name="submitdelall" style="width:350px;margin-left:-175px;left:50%;position:relative;" title="Delete <?=$NumWarnedOverdue?> Warned and Overdue torrents (red background)" value="Delete <?=$NumWarnedOverdue?> Warned and Overdue torrents" />
                     
-<?      } else {  ?> 
-                <br />
+<?          }   ?> 
 <?      }   ?> 
+                <br style="clear:both" />
              </div> 
         
             <table>

@@ -102,6 +102,26 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 <?
           }
       }
+      
+      if ($Status == 'Warned' || $Status == 'Pending') {
+?>
+	<div id="warning_status" class="box vertical_space">
+		<div class="colhead_red warning">
+                <strong>Status:&nbsp;Warned&nbsp; (<?=$StatusDescription?>)</strong>
+            </div>
+            <div class="pad"><strong>This torrent has been marked for deletion and will be automatically deleted unless the uploader fixes it.</strong><span style="float:right;"><?=time_diff($KillTime)?></span></div>
+<?      if ($UserID == $LoggedUser['ID']) { // if the uploader is looking at the warning message 
+            if ($Status == 'Warned') { ?>
+                <div id="user_message" class="center">If you have fixed this upload make sure you have told the staff: <a class="button greenButton" onclick="Send_Okay_Message(<?=$GroupID?>,<?=$ConvID?>);" title="send staff a message">By clicking here</a></div>
+<?          } else {  ?>
+                <div id="user_message" class="center"><div class="messagebar"><a href="staffpm.php?action=viewconv&id=<?=$ConvID?>">You sent a message to staff <?=time_diff($StatusTime)?></a></div></div>
+<?          }
+        }
+?>
+	</div>
+<?
+}
+
 ?>
 	<div class="linkbox" >
     <?	if( $CanEdit) {   ?>
@@ -164,24 +184,7 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
             <br style="clear:both" />
       </div>
 <?
-if ($Status == 'Warned' || $Status == 'Pending') {
-?>
-	<div id="warning_status" class="box vertical_space">
-		<div class="colhead_red warning">
-                <strong>Status:&nbsp;Warned&nbsp; (<?=$StatusDescription?>)</strong>
-            </div>
-            <div class="pad"><strong>This torrent has been marked for deletion and will be automatically deleted unless the uploader fixes it.</strong><span style="float:right;"><?=time_diff($KillTime)?></span></div>
-<?      if ($UserID == $LoggedUser['ID']) { // if the uploader is looking at the warning message 
-            if ($Status == 'Warned') { ?>
-                <div id="user_message" class="center">If you have fixed this upload make sure you have told the staff: <a class="button greenButton" onclick="Send_Okay_Message(<?=$GroupID?>,<?=$ConvID?>);" title="send staff a message">By clicking here</a></div>
-<?          } else {  ?>
-                <div id="user_message" class="center"><div class="messagebar"><a href="staffpm.php?action=viewconv&id=<?=$ConvID?>">You sent a message to staff <?=time_diff($StatusTime)?></a></div></div>
-<?          }
-        }
-?>
-	</div>
-<?
-}
+
 // For staff draw the tools section
 if(check_perms('torrents_review')){ 
         // get review history
