@@ -83,7 +83,7 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
         
         if (count($Reports) > 0) {
             $Title = "This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report');
-            $DisplayName .= ' <span style="background-color: red; padding: 2px 4px 2px 4px;" title="'.$Title.'">Reported</span>';
+            $DisplayName .= ' <span style="background-color: red; padding: 2px 4px 2px 4px;color:white;" title="'.$Title.'">Reported</span>';
         }
 ?>
 <div class="details">
@@ -173,7 +173,7 @@ if ($Status == 'Warned' || $Status == 'Pending') {
             <div class="pad"><strong>This torrent has been marked for deletion and will be automatically deleted unless the uploader fixes it.</strong><span style="float:right;"><?=time_diff($KillTime)?></span></div>
 <?      if ($UserID == $LoggedUser['ID']) { // if the uploader is looking at the warning message 
             if ($Status == 'Warned') { ?>
-                <div id="user_message" class="center">If you have fixed this upload make sure you have told the staff: <a class="button greenButton" onclick="Send_Okay_Message(<?=$GroupID?>,<?=$ConvID?$ConvID:'null'?>);" title="send staff a message">By clicking here</a></div>
+                <div id="user_message" class="center">If you have fixed this upload make sure you have told the staff: <a class="button greenButton" onclick="Send_Okay_Message(<?=$GroupID?>,<?=$ConvID?>);" title="send staff a message">By clicking here</a></div>
 <?          } else {  ?>
                 <div id="user_message" class="center"><div class="messagebar"><a href="staffpm.php?action=viewconv&id=<?=$ConvID?>">You sent a message to staff <?=time_diff($StatusTime)?></a></div></div>
 <?          }

@@ -117,13 +117,16 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
      
       $DB->query("SELECT AutoDelete FROM review_options");
       list($AutoDelete) = $DB->next_record();
+      echo "AutoDelete torrents marked for deletion: ". ($AutoDelete?'On':'Off')."\n";
       if ($AutoDelete){
           include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
 
-          $Torrents = get_torrents_under_review(false, true); 
+          $Torrents = get_torrents_under_review('warned', true); 
           $NumTorrents = count($Torrents);
+          //echo "Num to auto-delete: $NumTorrents\n";
           if($NumTorrents>0){
                 $NumDeleted = delete_torrents_list($Torrents);
+                echo "Num of torrents auto-deleted: $NumDeleted\n";
           }
       }
       

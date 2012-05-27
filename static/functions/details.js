@@ -10,8 +10,8 @@ function Send_Okay_Message(group_id, conv_id){
         ajax.post('?action=send_okay_message', ToPost, function (response) {
             // show  user response 
             conv_id = response;
-            $('#convid').raw().value = conv_id;
             $('#user_message').raw().innerHTML = '<div class="messagebar"><a href="staffpm.php?action=viewconv&id=' + conv_id + '">Message sent to staff</a></div>';
+            $('#convid').raw().value = conv_id;
             //$('#review_message').show(); 
         });
     }

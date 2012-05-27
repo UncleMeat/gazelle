@@ -89,14 +89,53 @@ function get_deleted_message($GroupID, $TorrentName, $Reason){
     return $Message;
 }
  
- 
-function get_torrents_under_review($ReturnPending = true, $ReturnOverdueOnly = false){
+
+function get_num_overdue_torrents(){
+    global $DB;
+    
+    $DB->query("SELECT Count(t.Id)
+			  FROM torrents AS t
+                    JOIN torrents_reviews AS tr ON tr.GroupID=t.GroupID
+                   WHERE (tr.Status = 'Warned' OR tr.Status = 'Pending') 
+                     AND tr.Time=(SELECT MAX(torrents_reviews.Time) 
+                                         FROM torrents_reviews 
+                                         WHERE torrents_reviews.GroupID=t.GroupID)
+                     AND tr.KillTime < '".sqltime()."'
+                GROUP BY t.Id");
+      
+    list($Num) = $DB->next_record();
+    return $Num;
+}
+
+ // passing an array of ints as last param makes the where clause ignores the first 2 params
+function get_torrents_under_review($ViewStatus = 'warned', $ReturnOverdueOnly = true, $InGroupIDs = false){
       global $DB;
       
-      $WHERE= "tr.Status = 'Warned' ";
-      if ($ReturnPending) $WHERE = "($WHERE OR tr.Status = 'Pending') ";
-      if ($ReturnOverdueOnly) $WHERE .=  "AND tr.KillTime < '".sqltime()."' "; 
-      //$sqltime = sqltime();
+      if ($InGroupIDs !== false && is_array($InGroupIDs)){
+          $WHERE = 't.GroupID IN (';
+          $Sep = '';
+          foreach ($InGroupIDs as &$ID) {
+                $ID = (int)$ID;
+                $WHERE .= "$Sep $ID";
+                $Sep = ',';
+          }
+          $WHERE .= ' ) ';
+      } else {
+          switch ($ViewStatus) {
+              case 'pending':
+                  $WHERE= "tr.Status = 'Pending' ";
+                  break;
+              case 'both':
+                  $WHERE= "(tr.Status = 'Warned' OR tr.Status = 'Pending') ";
+                  break;
+              case 'warned':
+              default:
+                  $WHERE= "tr.Status = 'Warned' ";
+                  break;
+          }
+          if ($ReturnOverdueOnly) $WHERE .=  "AND tr.KillTime < '".sqltime()."' "; 
+      }
+      
       $DB->query("SELECT t.ID,
                          t.GroupID,
                          tg.Name,
@@ -148,9 +187,8 @@ function delete_torrents_list($Torrents){
 	}
 		//echo "\nDeleted $i torrents for \n";
 	
-	$sqltime = sqltime();
 	if(count($LogEntries) > 0) {
-		$Values = "('".implode("', '".$sqltime."'), ('",$LogEntries)."', '".$sqltime."')";
+		$Values = "('".implode("', '".$sqltime."'), ('",$LogEntries)."', '".sqltime()."')";
 		$DB->query('INSERT INTO log (Message, Time) VALUES '.$Values);
 	}
       

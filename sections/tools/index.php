@@ -206,7 +206,7 @@ switch ($_REQUEST['action']){
                 enforce_login();      
 		    authorize(); 
                 
-                if ( !check_perms('torrents_review_override')) error(403);
+                if ( !check_perms('torrents_review_manage')) error(403);
                 
                 if ( isset($_POST['hours']) && is_number($_POST['hours']) &&
                      isset($_POST['autodelete']) && is_number($_POST['autodelete']) ) {
@@ -229,9 +229,17 @@ switch ($_REQUEST['action']){
                 if ( !check_perms('torrents_review')) error(403);
                 
                 if ($_POST['submit'] == 'Delete All Warned and Overdue torrents'){
-                    $Torrents = get_torrents_under_review(false, true);
+                    $Torrents = get_torrents_under_review('warned', true);
                     if (count($Torrents)){
                         //$NumTorrents = count($Torrents); //echo "Num to delete: $NumTorrents";
+                        $NumDeleted = delete_torrents_list($Torrents);
+                    }
+                } elseif ($_POST['submit'] == 'Delete selected'){
+                    // if ( !check_perms('torrents_review_manage')) error(403); ??
+                    
+                    $IDs = $_POST['id'];
+                    $Torrents = get_torrents_under_review('both', true, $IDs); 
+                    if (count($Torrents)){
                         $NumDeleted = delete_torrents_list($Torrents);
                     }
                 }
