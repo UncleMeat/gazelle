@@ -446,6 +446,7 @@ li.searchbars {
     margin: 0px;
     color: #000;
 }
+
 span.user_name a { 
     color: #000;
 }
@@ -489,23 +490,44 @@ input.hidden {
     margin-right:auto;
 }
  
-h2 {
+h2 { /*
     margin: 10px 0px 20px;
-    /* background: #000 url(images/colhead-grad.gif) repeat-x; 
-    height: 24px;*/
     text-align: center;
     color: #fff;
     background-color: #024a7c;
     padding: 2px 40px;
-    border-radius: 16px;       /* FF9+ IE9+ */
-    -moz-border-radius: 16px; /* for FF5 */
-    -webkit-border-radius: 16px; /* for opera */
+    border-radius: 16px; 
+    -moz-border-radius: 16px; 
+    -webkit-border-radius: 16px;  
+    */
+   
+    text-align: center;
+    margin: 10px auto 20px;
+    border-radius: 8px;       /* FF9+ IE9+ */
+    -moz-border-radius: 8px; /* for FF5 */
+    -webkit-border-radius: 8px; /* for opera */
+    font-size: 20px;
+    font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;;
+    background: white;
+    padding: 5px 20px;
+    border: 4px solid #000;
+    border-left-width: 3px;
+    border-right-width: 3px;
+    color: black;
 } 
 
 h2 a {
-    color: #eee;
+    color: #039;    /* #0261a3;  /* #eee; */
 }  
 
+.box h2 {
+    padding: 3px 60px;
+    font-size: 18px;
+    border: 3px solid #555;
+    border-left-width: 2px;
+    border-right-width: 2px;
+    color: black;
+}
 
 .contact_link {
     display: inline;
@@ -601,12 +623,9 @@ p.min_padding {
 }
 #top_info {
     display:inline-table;
-    /* width: 380px;
-    margin:8px 10px 0px 0px;
-    margin:7px auto;*/
-    margin:10px auto 6px;
+    margin:16px auto 16px;
     border: 1px solid #7BA3C1;
-    padding:4px 12px;
+    padding:0px 6px 0px 12px;
     background: white; 
     -moz-border-radius: 8px;
     border-radius: 8px;
@@ -616,7 +635,7 @@ table.boxstat {
     border:none;
 }
 table.boxstat td { 
-    padding: 2px 6px;
+    padding: 4px 6px;
     border-top:none;
     border-right: none;
     border-left:1px solid #7BA3C1;
@@ -633,12 +652,82 @@ table.boxstat td:first-child {
 }
 .button.toggle {
     width: 80px;
-    margin: 4px 0px 0px 0px;
+    margin: 6px 0px 0px 8px;
     padding: 4px 12px;
     border: 1px solid #7BA3C1;
-    background: #5A8Bb8;    /* #024a7c;#BACBD8 #9AaBb8 */
+     /* background: #5A8Bb8;    #024a7c;#BACBD8 #9AaBb8 */
     color: #fff;
     cursor: pointer;
+    vertical-align: top;
+}
+
+#user_message .button {
+    margin: 0px 0px 8px 8px;
+    padding: 4px 12px;
+    vertical-align: middle;
+}
+
+#staff_tools, #warning_status {
+    margin-bottom: 15px;
+}
+
+.warning {
+    font-size: 14pt;
+    font-weight: bold;
+    text-align: center;
+    padding: 4px 0px;
+}
+
+.redbar {
+    background: #d00;
+    color: white;
+    font-weight: bolder;
+}
+.orangebar {
+    background: #FF9900;
+    color: white;
+    font-weight: bolder;
+}
+.redbar a, .orangebar a {
+    color: white;
+    font-weight: bolder;
+    text-decoration: underline;
+}
+.redbar a:hover, .orangebar a:hover {
+    text-decoration: none;
+}
+
+ 
+
+.icon {
+    display:inline-block;
+    width:20px;
+    height:20px;
+}
+
+.icon_warning {
+    background: url('images/warn_still.gif') no-repeat center center;
+}
+.icon_okay {
+    background: url('images/okay.png') no-repeat center center;
+}
+
+#top_info .icon_warning {
+    background: url('images/warning.gif') no-repeat center center;
+}
+
+#staff_tools .icon {
+    width:16px;
+    height:16px;
+    margin-top: -2px;
+    -moz-background-size: 16px 16px;
+    -o-background-size:16px 16px;
+    -webkit-background-size:16px 16px;
+    background-size: 16px 16px;
+}
+
+#staff_tools td {
+    padding: 5px 5px;
 }
 
 .details {
@@ -660,16 +749,23 @@ table.boxstat td:first-child {
 
 .details .middle_column {
     margin: 0px 270px 10px;
-    max-height: 460px; /* should be 60px more than tag_inner max-height */
+   /* max-height: 460px;  should be 60px more than tag_inner max-height */
     /* overflow: auto; <- screws up chrome in linux */
 }
+.middle_column table {
+    margin-top: 20px;
+}
+
+.middle_column .torrent_table {
+    margin-top: 0px;
+}
+
 .details .main_column {
     margin: 0px 0px 10px 0px;
 }
 .details .tag_inner {
-   /* height: 310px;*/
-    max-height: 400px;
-    overflow: auto;
+   /*  max-height: 400px; 
+    overflow: auto; */
 }
 
 .details .tag_add {
@@ -680,8 +776,8 @@ table.boxstat td:first-child {
 
 .box_albumart{
     margin: 0px;
-    max-height: 460px; /* should be 60px more than tag_inner max-height */
-    overflow: auto;
+    /* max-height: 460px;  should be 60px more than tag_inner max-height
+    overflow: auto;   */
 }
 
 
@@ -1332,6 +1428,7 @@ span.quote_label {
     float:left;
     font-size: 8pt;
     margin-left:10px;
+    margin-bottom: 4px;
 }
 blockquote.bbcode {
     clear:both;
@@ -1471,7 +1568,7 @@ a.button {
 	border-radius: 3px;
 	-webkit-border-radius: 3px;
 	/* margin: 3px 6px 3px 0; */
-      margin: 0px 8px 0px 0px;
+      margin: 0px 8px 4px 0px;
 	text-decoration: none;
 	color: #fff;	
 	border: none;
@@ -1484,6 +1581,7 @@ a.button {
 	line-height: 12px;
 	font-family: Verdana, Geneva, sans-serif;
 	padding: 7px 15px;
+      /*font-weight: bold; */
 }
 
 .greenButton {
@@ -1502,6 +1600,21 @@ a.button {
 	background: #187b8c;
 }
 
+
+.redButton {
+	background: #ab3041;
+}
+
+.redButton:hover {
+	background: #812;
+}
+
+.infoButton {
+    background: #5A8Bb8;    /* #024a7c;#BACBD8 #9AaBb8 */
+}
+.infoButton:hover {
+    background: #3A6B98;  
+}
 .orangeButton {
 	background: #ff7f26;
 }

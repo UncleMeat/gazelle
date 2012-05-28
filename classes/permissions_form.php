@@ -82,6 +82,9 @@
 	'users_mod' => 'Basic moderator tools.',
 
 	'torrents_edit' => 'Can edit any torrent.',
+              'torrents_review' => 'Can mark torrents for deletion.',
+              'torrents_review_override' => 'Can overide ongoing marked for deletion process.',
+              'torrents_review_manage' => 'Can set site options for marked for deletion list.',
 	'torrents_delete' => 'Can delete torrents.',
 	'torrents_delete_fast' => 'Can delete more than 3 torrents at a time.',
 	'torrents_freeleech' => 'Can make torrents freeleech.',
@@ -226,15 +229,18 @@ function permissions_form(){ ?>
 				<td>
 			
 					<? display_perm('torrents_edit', 'Can edit any torrent'); ?>
-					
+                                      <? display_perm('torrents_review', 'Can mark torrents for deletion.'); ?>
+                                      <? display_perm('torrents_review_override', 'Can overide ongoing marked for deletion process.'); ?>
+                                      <? display_perm('torrents_review_manage', 'Can set site options for marked for deletion list.'); ?>
+
 					<? display_perm('torrents_delete', 'Can delete torrents'); ?>
 					<? display_perm('torrents_delete_fast', 'Can delete more than 3 torrents at a time.'); ?>
 					<? display_perm('torrents_freeleech', 'Can make torrents freeleech'); ?>
 					<? display_perm('torrents_search_fast', 'Unlimit search frequency (for scripts).'); ?>
 					<? display_perm('edit_unknowns', 'Can edit unknown release information.'); ?>
 					<? display_perm('site_add_logs', 'Can add logs to torrents after upload'); ?>
-					<? display_perm('torrents_hide_dnu', 'Hide the Do Not Upload list by default.'); ?>
-					    <? display_perm('torrents_hide_imagehosts', 'Hide the Imagehost Whitelist by default.'); ?>
+					<? display_perm('torrents_hide_dnu', 'Hide the do not upload list by default.'); ?>
+					    <? display_perm('torrents_hide_imagehosts', 'Hide the imagehost whitelist by default.'); ?>
 				</td> 
 			</tr>
 		</table>
@@ -259,7 +265,7 @@ function permissions_form(){ ?>
 					<? display_perm('admin_donor_log', 'Can view the donor log'); ?>
 					<? display_perm('admin_manage_ipbans', 'Can manage IP bans'); ?>
 					<? display_perm('admin_dnu', 'Can manage do not upload list'); ?> 
-					    <? display_perm('admin_imagehosts', 'Can manage Imagehosts Whitelist'); ?> 
+					    <? display_perm('admin_imagehosts', 'Can manage imagehosts whitelist'); ?> 
 					<? display_perm('admin_clear_cache', 'Can clear cached pages'); ?>
 					<? display_perm('admin_whitelist', 'Can manage the list of allowed clients.'); ?>
 					<? display_perm('admin_manage_permissions', 'Can edit permission classes/user permissions.'); ?>

@@ -17,7 +17,7 @@ if (empty($Page)) {
     }
 }
 
-$Body = $Text->full_format($Body);
+$Body = $Text->full_format($Body, true); // true so regardless of author permissions articles can use adv tags
 
 // Deal with special article tags.
 if (preg_match("/\[clientlist\]/i", $Body)) {

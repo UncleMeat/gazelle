@@ -167,6 +167,7 @@ show_header('Reports V2!', 'reportsv2,bbcode');
 include('header.php');
 
 ?>
+<div class="thin">
 <h2><?=$Title?></h2>
 <div class="buttonbox thin center">
 	<? if($View != "resolved") { ?>
@@ -571,6 +572,7 @@ if(count($Reports) == 0) {
 </div>
 <div class="linkbox">
 	<?=$PageLinks?>
+</div>
 </div>
 <?
 show_footer();

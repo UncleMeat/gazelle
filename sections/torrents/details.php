@@ -6,6 +6,7 @@ function compare($X, $Y){
 
 define(MAX_PERS_COLLAGES, 3); // How many personal collages should be shown by default
 
+include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
 include(SERVER_ROOT.'/sections/bookmarks/functions.php'); // has_bookmarked()
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = NEW TEXT;
@@ -58,7 +59,8 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 	list($TorrentID,
 		$FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $DoubleSeed, $TorrentTime, $Description, 
 		$FileList, $FilePath, $UserID, $Username, $LastActive,
-		$BadTags, $BadFolders, $BadFiles, $LastReseedRequest, $LogInDB, $HasFile) = $TorrentList[0];
+		$BadTags, $BadFolders, $BadFiles, $LastReseedRequest, $LogInDB, $HasFile,
+            $ReviewID, $Status, $ConvID, $StatusTime, $KillTime, $StatusDescription, $StatusUserID, $StatusUsername) = $TorrentList[0];
 
 	$CanEdit = (check_perms('torrents_edit') ||  ($UserID == $LoggedUser['ID']  ) );
 
@@ -81,7 +83,7 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
         
         if (count($Reports) > 0) {
             $Title = "This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report');
-            $DisplayName .= ' <span style="background-color: red; padding: 2px 4px 2px 4px;" title="'.$Title.'">Reported</span>';
+            $DisplayName .= ' <span style="background-color: red; padding: 2px 4px 2px 4px;color:white;" title="'.$Title.'">Reported</span>';
         }
 ?>
 <div class="details">
@@ -100,6 +102,26 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 <?
           }
       }
+      
+      if ($Status == 'Warned' || $Status == 'Pending') {
+?>
+	<div id="warning_status" class="box vertical_space">
+		<div class="colhead_red warning">
+                <strong>Status:&nbsp;Warned&nbsp; (<?=$StatusDescription?>)</strong>
+            </div>
+            <div class="pad"><strong>This torrent has been marked for deletion and will be automatically deleted unless the uploader fixes it.</strong><span style="float:right;"><?=time_diff($KillTime)?></span></div>
+<?      if ($UserID == $LoggedUser['ID']) { // if the uploader is looking at the warning message 
+            if ($Status == 'Warned') { ?>
+                <div id="user_message" class="center">If you have fixed this upload make sure you have told the staff: <a class="button greenButton" onclick="Send_Okay_Message(<?=$GroupID?>,<?=$ConvID?>);" title="send staff a message">By clicking here</a></div>
+<?          } else {  ?>
+                <div id="user_message" class="center"><div class="messagebar"><a href="staffpm.php?action=viewconv&id=<?=$ConvID?>">You sent a message to staff <?=time_diff($StatusTime)?></a></div></div>
+<?          }
+        }
+?>
+	</div>
+<?
+}
+
 ?>
 	<div class="linkbox" >
     <?	if( $CanEdit) {   ?>
@@ -130,6 +152,12 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
                             <td><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /> <?=number_format($Snatched)?></td>
                             <td><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /> <?=number_format($Seeders)?></td>
                             <td><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/leechers.png" alt="Leechers" title="Leechers" /> <?=number_format($Leechers)?></td>
+                 <?
+                    if ($Status) { // == 'Warned'
+                        // not sure if we want to display 'okay' status but for the moment its in
+                        echo '<td>'.get_status_icon($Status).'</td>';
+                    }
+                 ?>
                             </tr>
                          </table>
                        </div>
@@ -138,20 +166,142 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
           
                      <span id="torrent_buttons"  style="float: left;">
                                             <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
+ 
 <?	if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'leech') && ($FreeTorrent == '0') && ($LoggedUser['CanLeech'] == '1')) { ?>
                                             <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" class="button greenButton" title="This will use 1 slot" onClick="return confirm('Are you sure you want to use a freeleech slot here?');">FREELEECH TORRENT</a>
 <?	} ?>					
 <?	if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'seed') && ($DoubleSeed == '0')) { ?>
                                             <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=2" class="button orangeButton" title="This will use 1 slot" onClick="return confirm('Are you sure you want to use a doubleseed slot here?');">DOUBLESEED TORRENT</a>
 <?	} ?>					
-                                            
+                    
                      </span>
           
-                     
-                     <span style="float: right;"><a id="slide_button"  class="button toggle" onclick="Details_Toggle();" title="Toggle display">Hide Info</a></span>
+                     <span style="float: right;"><a id="slide_button"  class="button toggle infoButton" onclick="Details_Toggle();" title="Toggle display">Hide Info</a></span>
 	 
+<?		if(check_perms('torrents_review')){ ?>
+                     <span style="float: right;"><a id="slide_tools_button"  class="button toggle redButton" onclick="Tools_Toggle();" title="Toggle staff tools">Staff Tools</a></span>
+<?		} ?>
             <br style="clear:both" />
       </div>
+<?
+
+// For staff draw the tools section
+if(check_perms('torrents_review')){ 
+        // get review history
+        if($ReviewID && is_number($ReviewID)) { // if reviewID == null then no history
+            $DB->query("SELECT r.Status, r.Time, r.ConvID,
+                               IF(r.ReasonID = 0, r.Reason, rs.Description),
+                               r.UserID, um.Username  
+                      FROM torrents_reviews AS r 
+                      LEFT JOIN users_main AS um ON um.ID=r.UserID
+                      LEFT JOIN review_reasons AS rs ON rs.ID=r.ReasonID
+                      WHERE r.GroupID = $GroupID AND r.ID != $ReviewID ORDER BY Time");
+            $NumReviews = $DB->record_count();
+        } else $NumReviews = 0;
+?>
+    <table id="staff_tools" class="pad">
+        <form id="form_reviews" action="" method="post">
+                <tr class="colhead">
+                    <td colspan="3">
+                        <span style="float:left;"><strong>Review Tools</strong></span>
+                   <? if($NumReviews>0) { ?>
+                        <span style="float:right;"><a href="#" onclick="$('.history').toggle(); this.innerHTML=(this.innerHTML=='(Hide <?=$NumReviews?> Review Logs)'?'(View <?=$NumReviews?> Review Logs)':'(Hide <?=$NumReviews?> Review Logs)'); return false;">(View <?=$NumReviews?> Review Logs)</a></span>&nbsp;
+                   <? } ?>   
+                    </td>
+                </tr>
+<? 
+    if ($NumReviews>0){ // if there is review history show it
+        while(list($Stat, $StatTime, $StatConvID, $StatDescription, $StatUserID, $StatUsername) = $DB->next_record()) { ?>
+                <tr class="history hidden">
+                    <td width="200px"><strong>Status:</strong>&nbsp;&nbsp;<?=$Stat?"$Stat&nbsp;".get_status_icon($Stat):'Not set'?></td>
+                    <td><?=$StatDescription?'<strong>Reason:</strong>&nbsp;&nbsp;'.$StatDescription:''?>
+<?
+                         if ($StatConvID>0) {
+                             echo '<span style="float:right;">'.($Stat=='Pending'?'(user sent fixed message) &nbsp;&nbsp;':'').'<a href="staffpm.php?action=viewconv&id='.$StatConvID.'">'.($Stat=='Pending'?'Message sent to staff':"reply sent to $Username").'</a></span>';
+                         } elseif ($Stat == 'Warned') {
+                             echo '<span style="float:right;">(pm sent to '.$Username.')</span>';
+                         }
+?>
+                    </td>
+                    <td width="25%"><?=$Stat?'<strong>By:</strong>&nbsp;&nbsp;'.format_username($StatUserID, $StatUsername).'&nbsp;'.time_diff($StatTime):'';?></td>
+                </tr>      
+<?
+        }
+    } // end show history
+?>
+                <tr>
+                    <td width="200px"><strong>Current Status:</strong>&nbsp;&nbsp;<?=$Status?"$Status&nbsp;".get_status_icon($Status):'Not set'?></td>
+                    <td><?=$StatusDescription?'<strong>Reason:</strong>&nbsp;&nbsp;'.$StatusDescription:''?>
+                            <? //$ConvID>0?'<span style="float:right;">'.($Status=='Pending'?'(user sent fixed message) &nbsp;&nbsp;':'').'<a href="staffpm.php?action=viewconv&id='.$ConvID.'">'.($Status=='Pending'?'Message sent to staff':"reply sent to $Username").'</a></span>':''?>
+<?
+                         if ($ConvID>0) {
+                             echo '<span style="float:right;">'.($Status=='Pending'?'(user sent fixed message) &nbsp;&nbsp;':'').'<a href="staffpm.php?action=viewconv&id='.$ConvID.'">'.($Status=='Pending'?'Message sent to staff':"reply sent to $Username").'</a></span>';
+                         } elseif ($Status == 'Warned') {
+                             echo '<span style="float:right;">(pm sent to '.$Username.')</span>';
+                         }
+?>
+                    </td>
+                    <td width="25%"><?=$Status?'<strong>By:</strong>&nbsp;&nbsp;'.format_username($StatusUserID, $StatusUsername).'&nbsp;'.time_diff($StatusTime):'';?></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align:right">
+                        <input type="hidden" name="action" value="set_review_status" />
+                        <input type="hidden" id="groupid" name="groupid" value="<?=$GroupID?>" />
+                        <input type="hidden" id="authkey" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+                        <input type="hidden" id="convid" name="convid" value="<?=$ConvID?>" />
+                        <strong id="warn_insert" class="important_text" style="margin-right:20px;"></strong>
+<?              if ( !$Status || $Status == 'Okay' || check_perms('torrents_review_override') ) { // onsubmit="return Validate_Form_Reviews('<?=$Status ')"   ?> 
+                        <select id="reasonid" name="reasonid"  onchange="Select_Reason(<?=($Status == 'Warned' || $Status == 'Pending' || $Status == 'Okay')?'true':'false';?>);" >
+                            <option value="-1" selected="selected">none&nbsp;&nbsp;</option> 
+<? 
+                    $DB->query("SELECT ID, Name FROM review_reasons ORDER BY Sort");
+                    while(list($ReasonID, $ReasonName) = $DB->next_record()) { ?>
+                            
+                            <option value="<?=$ReasonID?>"><?=$ReasonName?>&nbsp;&nbsp;</option>
+<?                  }    ?>
+                            <option value="0">Other&nbsp;&nbsp;</option> 
+                        </select>
+                        <input id="mark_delete_button" type="submit" name="submit" value="Mark for Deletion" disabled="disabled" title="Mark this torrent for Deletion" />
+                      
+<?              } else {   ?> 
+    
+<?              }          ?>
+                    </td>
+                    <td>
+<?              if ($Status == 'Warned'|| $Status == 'Pending'){   ?>
+                        <input type="submit" name="submit" value="Accept Fix" title="Accept the fix this uploader has made" />
+                        <input type="submit" name="submit" value="Reject Fix" title="Reject the fix this uploader has made" />
+                        
+<?              } else  {   //  id="mark_okay_button"    ?>
+                        <input type="submit" name="submit" value="Mark as Okay" <?=$Status=='Okay'?'disabled="disabled" ':''?>title="Mark this torrent as Okay" />
+<?              }       ?>
+                    </td>
+                </tr>
+                <tr id="review_message" class="hidden">
+                    <td colspan="2">
+                        <div>
+                            <span class="quote_label">
+                                <strong>preview of PM that will automatically be sent to <?=format_username($UserID, $Username)?></strong>
+                            </span>
+                            <blockquote class="bbcode">
+                                <span id="message_insert"></span>
+                                <textarea id="reason_other" name="reason" class="hidden medium" style="vertical-align: middle;" rows="1" title="The reason entered here is also displayed in the warning notice, ie. keep it short and sweet"></textarea> 
+<?
+                                echo $Text->full_format(get_warning_message(false, true), true);
+?>
+                            </blockquote>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+        </form>
+    </table>
+    <script type="text/javascript">
+         addDOMLoadEvent(Load_Tools_Cookie);
+    </script>
+<?
+} // end draw staff tools 
+?>
  <div id="details_top">
 	<div class="sidebar" style="float: left;">
 		<div class="box box_albumart">

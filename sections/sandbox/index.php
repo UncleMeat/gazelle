@@ -1,4 +1,8 @@
 <?
+if ($_REQUEST['action']=='smilies') {
+    include(SERVER_ROOT.'/sections/sandbox/smilies.php');
+    die();
+}
 enforce_login();
 
 include(SERVER_ROOT.'/classes/class_text.php');

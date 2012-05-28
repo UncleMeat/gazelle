@@ -1210,14 +1210,14 @@ function send_irc($Raw) {
     fclose($IRCSocket);
 }
 
-function delete_torrent($ID, $GroupID=0) {
+function delete_torrent($ID, $GroupID=0, $UserID = 0) {
 	global $DB, $Cache, $LoggedUser;
 	if(!$GroupID) {
 		$DB->query("SELECT GroupID, UserID FROM torrents WHERE ID='$ID'");
 		list($GroupID, $UploaderID) = $DB->next_record();
 		
 	}
-	if(empty($UserID)) {
+	if(!$UserID) {
 		$DB->query("SELECT UserID FROM torrents WHERE ID='$ID'");
 		list($UserID) = $DB->next_record();
 	}
@@ -1255,6 +1255,7 @@ function delete_torrent($ID, $GroupID=0) {
 	}
 	$DB->query("DELETE FROM users_notify_torrents WHERE TorrentID='$ID'");
 
+      $DB->query("DELETE FROM torrents_reviews WHERE GroupID='$GroupID'");
 
 	$DB->query("UPDATE reportsv2 SET
 			Status='Resolved',
