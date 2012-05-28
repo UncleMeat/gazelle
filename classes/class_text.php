@@ -181,6 +181,7 @@ class TEXT {
            ':fez:'           => 'fez.gif',
            ':cap:'           => 'cap.gif',
            ':cowboy:'           => 'cowboy.gif',
+           ':gunslinger:'           => 'cowboygun.gif',
            ':pirate:'           => 'pirate.gif',
            ':pirate2:'           => 'pirate2.gif',
           ':piratehook:'           => 'piratehook.gif',
