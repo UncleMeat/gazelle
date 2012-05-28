@@ -749,16 +749,23 @@ table.boxstat td:first-child {
 
 .details .middle_column {
     margin: 0px 270px 10px;
-    max-height: 460px; /* should be 60px more than tag_inner max-height */
+   /* max-height: 460px;  should be 60px more than tag_inner max-height */
     /* overflow: auto; <- screws up chrome in linux */
 }
+.middle_column table {
+    margin-top: 20px;
+}
+
+.middle_column .torrent_table {
+    margin-top: 0px;
+}
+
 .details .main_column {
     margin: 0px 0px 10px 0px;
 }
 .details .tag_inner {
-   /* height: 310px;*/
-    max-height: 400px;
-    overflow: auto;
+   /*  max-height: 400px; 
+    overflow: auto; */
 }
 
 .details .tag_add {
@@ -769,8 +776,8 @@ table.boxstat td:first-child {
 
 .box_albumart{
     margin: 0px;
-    max-height: 460px; /* should be 60px more than tag_inner max-height */
-    overflow: auto;
+    /* max-height: 460px;  should be 60px more than tag_inner max-height
+    overflow: auto;   */
 }
 
 
