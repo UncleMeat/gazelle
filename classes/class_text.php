@@ -6,6 +6,7 @@ class TEXT {
 	private $Smileys = array(
            ':smile1:'           => 'smile1.gif',
            ':smile2:'           => 'smile2.gif',
+           ':D'           => 'biggrin.gif',
            ':grin:'           => 'grin.gif',
            ':laugh:'           => 'laugh.gif',
            ':w00t:'           => 'w00t.gif',
@@ -19,6 +20,7 @@ class TEXT {
            ':voodoo:'           => 'voodoo.gif',
            ':yaydance:'           => 'yaydance.gif',
            ':lol:'           => 'lol.gif',
+           ':gjob:'           => 'thumbup.gif',
           
           
            ':mad:'           => 'mad2.gif',
@@ -125,21 +127,26 @@ class TEXT {
            ':samurai:'           => 'samurai.gif',
            ':sasmokin:'           => 'sasmokin.gif',
           
-          
-          
           //----------------------------
+          
           
            ':sigh:'           => 'facepalm.gif',
            ':happydancing:'           => 'happydancing.gif',
-           ':emperor:'           => 'emperor.gif',
            ':argh:'           => 'frustrated.gif',
            ':tumble:'           => 'tumbleweed.gif',
           
            ':popcorn:'           => 'popcorn.gif',
           
+           ':fishing:'           => 'fishing.gif',
+           ':clover:'           => 'clover.gif',
+           ':shit:'           => 'shit.gif',
+           ':cheer:'           => 'cheerlead.gif',
+           ':whip:'           => 'whip.gif',
+           ':judge:'           => 'judge.gif',
+           ':chair:'           => 'chair.gif',
           
-           ':lsvader:'           => 'lsvader.gif',
-          
+           ':pythfoot:'           => 'pythfoot.gif',
+           ':rain:'           => 'rain.gif',
           
            ':boxing:'           => 'boxing.gif',
            ':shoot:'           => 'shoot.gif',
@@ -176,13 +183,163 @@ class TEXT {
            ':cowboy:'           => 'cowboy.gif',
            ':pirate:'           => 'pirate.gif',
            ':pirate2:'           => 'pirate2.gif',
-           ':rock:'           => 'rock.gif',
+          ':piratehook:'           => 'piratehook.gif',
+           ':piratewhistle:'           => 'pirate_whistle.gif',
+          
+           ':punk:'           => 'punk.gif',
+           ':rock:'           => 'rock.gif', 
+           ':rocker:'           => 'rock-smiley.gif',
+          
            ':cigar:'           => 'cigar.gif',
            ':oldtimer:'           => 'oldtimer.gif',
            ':trampoline:'           => 'trampoline.gif',
            ':bananadance:'           => 'bananadance.gif',
            ':smurf:'           => 'smurf.gif',
            ':yikes:'           => 'yikes.gif',
+          
+          //----------------------------
+          
+           ':vader-smiley:'           => 'vader-smiley.gif',
+           ':lsvader:'           => 'lsvader.gif',
+           ':emperor:'           => 'emperor.gif',
+          //----------------------------
+          
+          
+           ':punish:'           => 'punish.gif',
+           ':puppykisses:'           => 'puppykisses.gif',
+          
+           ':allbetter:'           => 'allbetter.gif',
+           ':bitchfight:'           => 'bitchfight.gif',
+           ':buddies:'           => 'buddies.gif',
+           ':chase:'           => 'chase.gif',
+           ':bugchases:'           => 'bugchases.gif',
+          
+           ':hello:'           => 'hellopink.gif',
+          
+          //----------------------------
+       
+           ':bombie:'           => 'bomb_ie.gif',
+          
+          
+          
+          
+           ':alcapone:'           => 'alcapone.gif',
+           ':aliendance:'           => 'Aliendance.gif',
+           ':badboy:'           => 'badboy.gif',
+           ':bash:'           => 'bash.gif',
+           ':bashfutile:'           => 'bashfutile.gif',
+           ':bath:'           => 'bath.gif',
+           ':bolt:'           => 'Bolt.gif',
+          
+          
+           ':boxerknockedout:'           => 'boxerknockedout.gif',
+           ':bunnysmiley:'           => 'bunny-smiley.gif',
+           ':buttshake:'           => 'buttshake.gif',
+           ':buttlicker:'           => 'sfun_butt-biting.gif',
+          
+           ':cavitysearch:'           => 'cavitysearch.gif',
+           ':cheerleader:'           => 'cheerleader.gif',
+           ':cigarpuff:'           => 'cigar-smiley.gif',
+           ':climbing:'           => 'climbing-smiley.gif',
+           ':clownhat:'           => 'clown-smiley.gif',
+          
+           ':coffee:'           => 'coffee1.gif',
+          
+           ':coffee2:'           => 'coffee3.gif',
+           ':coffee3:'           => 'coffee4.gif',
+           ':coffee4:'           => 'coffee5.gif',
+           ':computerpunch:'           => 'computer_punch_smiley.gif',
+        
+           ':dancelessons:'           => 'Dance_lessons.gif',
+           ':dancing:'           => 'dancing-smiley.gif',
+           ':diggin:'           => 'digg-in-smiley.gif',
+           ':drool:'           => 'drool.gif',
+           ':egyptdance:'           => 'egyptdance.gif',
+           ':usb:'           => 'fairy-smiley.gif',
+           ':fiesta:'           => 'fiesta-smiley.gif',
+           ':flirty2:'           => 'flirty2-smiley.gif',
+           ':flirty3:'           => 'flirty3-smiley.gif',
+           ':flirty4:'           => 'flirty4-smiley.gif',
+           ':flower1:'           => 'flower1-smiley.gif',
+           ':flower2:'           => 'flower2-smiley.gif',
+           ':flower3:'           => 'flower3-smiley.gif',
+           ':flowers:'           => 'flowers.gif',
+           ':swede:'           => 'free_swe34.gif',
+           ':freezin:'           => 'freez-in1-smiley.gif',
+          
+          
+           ':ghost:'           => 'ghost.gif',
+           ':ghostie:'           => 'ghostie.gif',
+           ':giraffe:'           => 'giraffe-smiley.gif',
+           ':giveup:'           => 'giveup.gif',
+           ':goldmedalist:'           => 'gold-medalist-smiley.gif',
+           ':goldstar:'           => 'goldstar.gif',
+           ':goldstar:'           => 'gold-star-smiley.gif',
+           ':greenchilli:'           => 'greenchilli.gif',
+           ':tinfoil:'           => 'hat-tin-foil-smiley.gif',
+           ':tinfoilhat:'           => 'tinfoilhatsmile.gif',
+        
+           ':hooked:'           => 'hooked.gif',
+           ':horsie:'           => 'horsiecharge.gif',
+           ':chainsaw:'           => 'icon_chainsaw.gif',
+
+           ':inlove:'           => 'inlove.gif',
+           ':jeeves:'           => 'jeeves-smiley.gif',
+           ':mrdick:'           => 'Mrdick.gif',
+           ':sofanap:'           => 'napsmileyff.gif',
+          
+           ':saw:'           => 'newsaw.gif',
+           ':officechair:'           => 'officechair.gif',
+           ':offtobed:'           => 'off-to-bed-smiley.gif',
+           ':otpatrol:'           => 'offtopic8mg.gif',
+           ':pickme:'           => 'pickme.gif',
+           
+           ':poker:'           => 'playing poker.gif',
+           ':pray:'           => 'pray.gif',
+           ':punchballs:'           => 'punchballs.gif',
+           ':puzzled:'           => 'puzzled.gif',
+           ':ranting:'           => 'ranting.gif',
+           ':reaper:'           => 'reaper.gif',
+           ':redchilli:'           => 'redchilli.gif',
+           ':redx:'           => 'redx-smiley.gif',
+           ':robot:'           => 'robot.gif',
+           ':rockingchair:'           => 'rocking-chair2-smiley.gif',
+         
+           ':roman:'           => 'roman-smiley.gif',
+           ':rtfm:'           => 'rtfm.gif',
+           ':running:'           => 'running-smiley.gif',
+          
+           ':goodevil:'           => 'samvete-smiley.gif',
+           ':savage:'           => 'savage1-smiley.gif',
+           ':scorer:'           => 'scorer-smiley.gif',
+          
+           ':smoking:'           => 'smoking-smiley.gif',
+           ':snapoutofit:'           => 'snap-out-of-it-smiley.gif',
+           ':sneaking:'           => 'sneaking-smiley.gif',
+           ':snooty:'           => 'snooty.gif',
+           ':snow:'           => 'snow.gif',
+           ':soapbox:'           => 'soapbox.gif',
+           ':starescreen:'           => 'stare-screen-smiley.gif',
+           ':stir:'           => 'stir.gif',
+           ':surrender:'           => 'surrender.gif',
+           ':swear1:'           => 'swear2-smiley.gif',
+           ':swear2:'           => 'swear1-smiley.gif',
+           ':crazyjacket:'           => 'th_crazy2.gif',
+          
+          
+           ':twocents:'           => 'twocents.gif',
+          
+           ':underweather:'           => 'underweather.gif',
+          
+           ':why:'           => 'why.gif',
+           ':zzz:'           => 'zzz.gif',
+          
+           
+          
+          
+          //----------------------------
+          
+          
            ':santa:'           => 'santa.gif',
            ':indian:'           => 'indian.gif',
            ':pimp:'           => 'pimp.gif',
@@ -199,16 +356,7 @@ class TEXT {
            ':police:'           => 'police.gif',
            ':detective:'           => 'detective.gif',
            ':bike:'           => 'bike.gif',
-           ':fishing:'           => 'fishing.gif',
-           ':clover:'           => 'clover.gif',
-           ':shit:'           => 'shit.gif',
-           ':cheer:'           => 'cheerlead.gif',
-           ':whip:'           => 'whip.gif',
-           ':judge:'           => 'judge.gif',
-           ':chair:'           => 'chair.gif',
           
-           ':pythfoot:'           => 'pythfoot.gif',
-           ':rain:'           => 'rain.gif',
           
            ':blind:'           => 'blind.gif',
            ':blah:'           => 'blah.gif',
@@ -217,6 +365,10 @@ class TEXT {
            ':dist:'           => 'dist.gif',
            ':urock:'           => 'urock.gif',
           
+           ':badass:'           => 'badass.gif',
+          
+             ':megarant:'           => 'megarant.gif',
+           ':adminpower:'           => 'hitler_admin.gif',
           
            ':stupid:'           => 'stupid.gif',
            ':dots:'           => 'dots.gif',
@@ -227,17 +379,21 @@ class TEXT {
            ':please:'           => 'please.gif',
            ':imsorry:'           => 'imsorry.gif',
            ':hi:'           => 'hi.gif',
+           ':liessign:'           => 'liessign.gif',
+           ':goodnight:'           => 'goodnightsign.gif',
+           ':respect:'           => 'sign_respect1.gif',
+           ':welcome3:'           => 'welcome3.gif',
+           ':banned:'           => 'banned1-smiley.gif',
           
           
-           ':punish:'           => 'punish.gif',
-           ':puppykisses:'           => 'puppykisses.gif',
+           ':elder:'           => 'elder-smiley.gif',
+           ':emu:'           => 'Emu.gif',
+           ':evilgenius:'           => 'evil-genius-smiley.gif',
+           ':lesson:'           => 'explanation-smiley.gif',
+          //=======================================================================
           
-           ':allbetter:'           => 'allbetter.gif',
-           ':bitchfight:'           => 'bitchfight.gif',
-           ':buddies:'           => 'buddies.gif',
-           ':chase:'           => 'chase.gif',
           
-           ':hello:'           => 'hellopink.gif',
+          
            ':lmao:'           => 'lmao.gif',
           
            ':rules:'           => 'rules.gif',
@@ -247,7 +403,7 @@ class TEXT {
            ':yay:'           => 'yay.gif',
            ':hbd:'           => 'hbd.gif',
            ':band:'           => 'band.gif',
-           ':punk:'           => 'punk.gif',
+          
            ':rofl:'           => 'rofl.gif',
            ':bounce:'           => 'bounce.gif',
            ':mbounce:'           => 'mbounce.gif',
@@ -255,6 +411,8 @@ class TEXT {
            ':gathering:'           => 'gathering.gif',
            ':colors:'           => 'colors.gif',
            ':oddoneout:'           => 'oddoneout.gif',
+          
+           ':ufo:'           => 'ufo-smiley.gif',
           
            ':tank:'           => 'tank.gif',
            ':guillotine:'           => 'guillotine.gif',
@@ -265,7 +423,33 @@ class TEXT {
            ':spamhammer:'           => 'spamhammer.gif',
            ':atomic:'           => 'atomic.gif',
           
+           ':ttiwwp:'           => 'ttiwwp.gif',
+           ':fireworks:'           => 'fireworks.gif',
+          
+           ':genie:'           => 'genie.gif',
+          
+           ':volleygoal:'           => 'volleygoal.gif',
+          
+           ':brick:'           => 'brick.gif',
            
+           ':banaalien:'           => 'banaAlien.gif',
+           ':banababydance:'           => 'banaBabydance.gif',
+           ':banabye:'           => 'banaBye.gif',
+           ':banacheer:'           => 'banaCheer.gif',
+           ':banacomputer:'           => 'banaComputer.gif',
+           ':banadoggy:'           => 'banaDoggy.gif',
+           ':banadressedup:'           => 'banaDressedup.gif',
+           ':banadrinking:'           => 'banaDrinking.gif',
+           ':banaelvis:'           => 'banaElvis.gif',
+           ':banaevildance:'           => 'banaEvildance.gif',
+           ':banaexercise:'           => 'banaExercise.gif',
+           ':banagunman:'           => 'banaGunman.gif',
+           ':banainvisible:'           => 'banaInvisible.gif',
+           ':banarasta:'           => 'banaRasta.gif',
+           ':banaskiing:'           => 'banaSkiing.gif',
+           ':banawhip:'           => 'banaWhip.gif',
+          
+          
 	);
 	
       //  font name (display) => fallback fonts (css)
@@ -1313,6 +1497,25 @@ EXPLANATION OF PARSER LOGIC
             reset($this->Smileys); 
       }
       
+      
+      function draw_all_smilies($Sort = true, $AZ = true){
+            $count=0;
+            if($Sort){
+                if($AZ) ksort($this->Smileys, SORT_STRING | SORT_FLAG_CASE);  
+                else krsort($this->Smileys, SORT_STRING | SORT_FLAG_CASE); 
+            }
+            echo '<div class="box center" style="font-size:1.2em;">';
+            foreach($this->Smileys as $Key=>$Val) { 
+                echo '<div class="bb_smiley pad center" style="display:inline-block;margin:8px 8px;">';
+                //echo '      <a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \',\''.$textarea.'\');">'.$Val.'</a>';
+                echo "      $Val <br /><br />$Key";
+                echo '</div>';
+                
+                $count++;
+            }
+            echo '</div>';
+            reset($this->Smileys); 
+      }
 }
 /*
 //Uncomment this part to test the class via command line: 
