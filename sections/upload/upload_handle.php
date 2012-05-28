@@ -264,8 +264,8 @@ $DB->query("
 		info_hash, FileCount, FileList, FilePath, Size, Time, 
 		Description, FreeTorrent, FreeLeechType) 
 	VALUES
-		(" . $GroupID . ", " . $LoggedUser['ID'] . ", '
-		" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", '" . sqltime() . "',
+		(" . $GroupID . ", " . $LoggedUser['ID'] . ",
+		'" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", '" . sqltime() . "',
 		" . $T['TorrentDescription'] . ", " . $T['FreeLeech'] . ", " . $T['FreeLeechType'] . ")");
 
 $Cache->increment('stats_torrent_count');
