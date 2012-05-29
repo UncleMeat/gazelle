@@ -1644,14 +1644,14 @@ function get_groups($GroupIDs, $Return = true, $Torrents = true) {
                                         WHERE GroupID IN($IDs) ORDER BY GroupID DESC, t.ID");
                                         */
             
-			$DB->query("SELECT t.ID, t.UserID, um.Username, GroupID, FileCount, FreeTorrent, double_seed, 
-                                     Size, Leechers, Seeders, Snatched, Time, t.ID AS HasFile, r.ReportCount,
+			$DB->query("SELECT t.ID, t.UserID, um.Username, t.GroupID, FileCount, FreeTorrent, double_seed, 
+                                     Size, Leechers, Seeders, Snatched, t.Time, t.ID AS HasFile, r.ReportCount,
                                      tr.Status, tr.KillTime
                                         FROM torrents AS t 
                                         JOIN users_main AS um ON t.UserID=um.ID
                                         LEFT JOIN (SELECT TorrentID, count(*) as ReportCount FROM reportsv2 WHERE Type != 'edited' AND Status != 'Resolved' GROUP BY TorrentID) AS r ON r.TorrentID=t.ID
                         LEFT JOIN torrents_reviews AS tr ON tr.GroupID=t.GroupID
-                                        WHERE GroupID IN($IDs) 
+                                        WHERE t.GroupID IN($IDs) 
                         AND (tr.Time IS NULL OR tr.Time=(SELECT MAX(torrents_reviews.Time) 
                                                               FROM torrents_reviews 
                                                               WHERE torrents_reviews.GroupID=t.GroupID))
