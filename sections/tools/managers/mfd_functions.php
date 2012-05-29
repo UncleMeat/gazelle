@@ -186,7 +186,7 @@ function delete_torrents_list($Torrents){
 		list($ID, $GroupID, $Name, $Status, $ConvID, $KillTime, $Reason, $UserID, $Username) = $TorrentID;
             
             //echo "deleting $i : $ID, $GroupID, $Name, $Status, $ConvID, $KillTime, $Reason, $UserID, $Username";
-		//delete_torrent($ID, $GroupID, $UserID);
+		delete_torrent($ID, $GroupID, $UserID);
 		$LogEntries[] = "Torrent ".$ID." (".$Name.") was auto-deleted for $Reason";
 		
 		$Msg = get_deleted_message($GroupID, $Name, $Reason);
