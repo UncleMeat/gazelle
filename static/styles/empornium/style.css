@@ -716,7 +716,7 @@ table.boxstat td:first-child {
     background: url('images/warning.gif') no-repeat center center;
 }
 
-#staff_tools .icon {
+#staff_tools .icon, .torrent .icon {
     width:16px;
     height:16px;
     margin-top: -2px;

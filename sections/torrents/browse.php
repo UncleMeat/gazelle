@@ -578,8 +578,9 @@ $row='b';
             $AddExtra .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
         }
         $row = ($row == 'a'? 'b' : 'a');
-        ?>
-        <tr class="torrent row<?=$row?>">
+        $IsMarkedForDeletion = $Data['Status'] == 'Warned' || $Data['Status'] == 'Pending';
+        ?> 
+        <tr class="torrent <?=($IsMarkedForDeletion?'redbar':"row$row")?>">
             <td class="center cats_col">
                 <? $CatImg = 'static/common/caticons/' . $NewCategories[$NewCategoryID]['image']; ?>
                 <div title="<?= $NewCategories[$NewCategoryID]['cat_desc'] ?>"><a href="torrents.php?filter_cat[<?=$NewCategoryID?>]=1"><img src="<?= $CatImg ?>" /></a></div>
@@ -593,6 +594,11 @@ $row='b';
                         | <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>&usetoken=1" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FL</a>
     <? } ?>				
                     | <a href="reportsv2.php?action=report&amp;id=<?= $TorrentID ?>" title="Report">RP</a>]
+               
+<?                if (check_perms('torrents_review') && $Data['Status'] == 'Okay') { 
+                        echo  '&nbsp;'.get_status_icon($Status);
+                  }        
+?>
                 </span>
 
                 <script>
