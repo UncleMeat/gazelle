@@ -100,7 +100,8 @@ switch($_GET['feed']) {
 		$Feed->channel('All Torrents', 'RSS feed for all new torrent uploads.');
 		$Feed->retrieve('torrents_all',$_GET['authkey'],$_GET['passkey']);
 		break;
-	case 'torrents_music': 
+/*  Lanz: keeping this here just for reference if we decide to expand this later on.
+ * 	case 'torrents_music': 
 		$Feed->channel('Music Torrents', 'RSS feed for all new music torrents.');
 		$Feed->retrieve('torrents_music',$_GET['authkey'],$_GET['passkey']); 
 		break;
@@ -147,7 +148,7 @@ switch($_GET['feed']) {
 	case 'torrents_lossless24': 
 		$Feed->channel('24bit Lossless Torrents', 'RSS feed for all new 24bit uploads.');
 		$Feed->retrieve('torrents_lossless24',$_GET['authkey'],$_GET['passkey']); 
-		break;
+		break; */
 	default:
 		// Personalized torrents
 		if(empty($_GET['name']) && substr($_GET['feed'], 0, 16) == 'torrents_notify_'){

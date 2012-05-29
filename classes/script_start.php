@@ -1280,7 +1280,6 @@ function delete_torrent($ID, $GroupID=0, $UserID = 0) {
 function delete_group($GroupID) {
 	global $DB, $Cache;
 
-	write_log("Group ".$GroupID." automatically deleted (No torrents have this group).");
 	//$DB->query("DELETE FROM group_log WHERE GroupID = ".$GroupID);
 
 	$Cache->decrement('stats_group_count');

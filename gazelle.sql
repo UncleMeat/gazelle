@@ -1919,11 +1919,6 @@ CREATE TABLE IF NOT EXISTS `users_notify_filters` (
   `Tags` varchar(500) NOT NULL DEFAULT '',
   `NotTags` varchar(500) NOT NULL DEFAULT '',
   `Categories` varchar(500) NOT NULL DEFAULT '',
-  `Formats` varchar(500) NOT NULL DEFAULT '',
-  `Encodings` varchar(500) NOT NULL DEFAULT '',
-  `Media` varchar(500) NOT NULL DEFAULT '',
-  `NewGroupsOnly` enum('1','0') NOT NULL DEFAULT '0',
-  `ReleaseTypes` varchar(500) NOT NULL DEFAULT '',
   PRIMARY KEY (`ID`),
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
