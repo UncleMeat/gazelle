@@ -5,7 +5,7 @@ show_header('Manage notifications');
 <div class="thin">
 	<h2>Notify me of all new torrents with...<a href="torrents.php?action=notify">(View)</a></h2>
 <?
-$DB->query("SELECT ID, Label, NewGroupsOnly, Tags, NotTags, Categories, Formats, Media FROM users_notify_filters WHERE UserID='$LoggedUser[ID]' UNION ALL SELECT NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL");
+$DB->query("SELECT ID, Label, Tags, NotTags, Categories FROM users_notify_filters WHERE UserID='$LoggedUser[ID]' UNION ALL SELECT NULL, NULL, NULL, 1, NULL");
 $i = 0;
 $NumFilters = $DB->record_count()-1;
 
@@ -15,8 +15,6 @@ foreach($Notifications as $N) { //$N stands for Notifications
 	$N['Tags']		= implode(', ', explode('|', substr($N['Tags'],1,-1)));
 	$N['NotTags']		= implode(', ', explode('|', substr($N['NotTags'],1,-1)));
 	$N['Categories'] 	= explode('|', substr($N['Categories'],1,-1));
-	$N['Formats'] 		= explode('|', substr($N['Formats'],1,-1));
-	$N['Media'] 		= explode('|', substr($N['Media'],1,-1));
 	$i++;
 
 	if($i>$NumFilters && $NumFilters>0){ ?>
@@ -70,13 +68,6 @@ foreach($Notifications as $N) { //$N stands for Notifications
 					<input type="checkbox" name="categories[]" id="<?=$Category['name']?>_<?=$N['ID']?>" value="<?=$Category['name']?>"<? if(in_array($Category['name'], $N['Categories'])) { echo ' checked="checked"';} ?> />
 					<label for="<?=$Category['name']?>_<?=$N['ID']?>"><?=$Category['name']?></label>
 <?	} ?>
-				</td>
-			</tr>
-			<tr>
-				<td class="label"><strong>Only new releases</strong></td>
-				<td>
-					<input type="checkbox" name="newgroupsonly" id="newgroupsonly_<?=$N['ID']?>"<? if($N['NewGroupsOnly']=="1") { echo ' checked="checked"';} ?> />
-<label for="newgroupsonly_<?=$N['ID']?>">Only notify for new releases, not new formats</label>
 				</td>
 			</tr>
 			<tr>

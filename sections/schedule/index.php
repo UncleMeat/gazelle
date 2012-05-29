@@ -94,12 +94,17 @@ while (list($UserID,$InfoHash) = $DB->next_record(MYSQLI_NUM, false)) {
 }
 $DB->query("UPDATE users_freeleeches SET Expired = True WHERE Time < '$sqltime' - INTERVAL 4 DAY");
 
-// Gives credits to users with active torrents
+
+//-------Gives credits to users with active torrents-------------------------//
+sleep(3);
 $DB->query("update users_main
             set Credits = Credits +
                 (select if(count(*) <= 60, count(*), 60) * 0.25 from xbt_files_users
                 where users_main.ID = xbt_files_users.uid AND xbt_files_users.remaining = 0 AND xbt_files_users.active = 1)");
 
+//------------Remove inactive peers every 15 minutes-------------------------//
+sleep(3);
+$DB->query("DELETE FROM xbt_files_users WHERE active='0'");
 
 /*************************************************************************\
 //--------------Run every hour ------------------------------------------//
@@ -278,7 +283,7 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 
 	//------------- Remove dead peers ---------------------------------------//
 	sleep(3);
-	$DB->query("DELETE FROM xbt_files_users WHERE mtime<unix_timestamp(now()-interval 6 hour)");
+        $DB->query("DELETE FROM xbt_files_users WHERE mtime<unix_timestamp(now()-interval 2 HOUR)");
 
 	//------------- Remove dead sessions ---------------------------------------//
 	sleep(3);

@@ -1351,6 +1351,7 @@ CREATE TABLE IF NOT EXISTS `torrents` (
   `last_action` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `FreeTorrent` enum('0','1','2') NOT NULL DEFAULT '0',
   `FreeLeechType` enum('0','1','2','3') NOT NULL DEFAULT '0',
+  `double_seed` enum('0','1') NOT NULL DEFAULT '0',
   `Dupable` enum('0','1') NOT NULL DEFAULT '0',
   `DupeReason` varchar(40) DEFAULT NULL,
   `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -1379,8 +1380,6 @@ CREATE TABLE IF NOT EXISTS `torrents` (
   UNIQUE KEY `InfoHash` (`info_hash`(40)),
   KEY `GroupID` (`GroupID`),
   KEY `UserID` (`UserID`),
-  KEY `Media` (`Media`),
-  KEY `Format` (`Format`),
   KEY `FileCount` (`FileCount`),
   KEY `Size` (`Size`),
   KEY `Seeders` (`Seeders`),
@@ -1920,11 +1919,6 @@ CREATE TABLE IF NOT EXISTS `users_notify_filters` (
   `Tags` varchar(500) NOT NULL DEFAULT '',
   `NotTags` varchar(500) NOT NULL DEFAULT '',
   `Categories` varchar(500) NOT NULL DEFAULT '',
-  `Formats` varchar(500) NOT NULL DEFAULT '',
-  `Encodings` varchar(500) NOT NULL DEFAULT '',
-  `Media` varchar(500) NOT NULL DEFAULT '',
-  `NewGroupsOnly` enum('1','0') NOT NULL DEFAULT '0',
-  `ReleaseTypes` varchar(500) NOT NULL DEFAULT '',
   PRIMARY KEY (`ID`),
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

@@ -264,8 +264,8 @@ $DB->query("
 		info_hash, FileCount, FileList, FilePath, Size, Time, 
 		Description, FreeTorrent, FreeLeechType) 
 	VALUES
-		(" . $GroupID . ", " . $LoggedUser['ID'] . ", '
-		" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", '" . sqltime() . "',
+		(" . $GroupID . ", " . $LoggedUser['ID'] . ",
+		'" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", '" . sqltime() . "',
 		" . $T['TorrentDescription'] . ", " . $T['FreeLeech'] . ", " . $T['FreeLeechType'] . ")");
 
 $Cache->increment('stats_torrent_count');
@@ -345,26 +345,15 @@ foreach ($Tags as $Tag) {
 }
 
 $SQL .= " AND ((";
+
 $TagSQL[] = "Tags=''";
 $SQL.=implode(' OR ', $TagSQL);
 
 $SQL.= ") AND !(" . implode(' OR ', $NotTagSQL) . ")";
-
-// TODO: Lanz: fix this! $Type was the old category id
-//$SQL.=" AND (Categories LIKE '%|" . db_string(trim($Type)) . "|%' OR Categories='') ";
-
-/*
-  Notify based on the following:
-  1. The torrent must match the formatbitrate filter on the notification
-  2. If they set NewGroupsOnly to 1, it must also be the first torrent in the group to match the formatbitrate filter on the notification
- */
-
-$SQL .= ")";
-
-$SQL.=" AND UserID != '" . $LoggedUser['ID'] . "' ";
+$SQL.=" AND (Categories LIKE '%|" . db_string($NewCategories[$NewCategory]['name']) . "|%' OR Categories='') ";
+$SQL .= ") AND UserID != '" . $LoggedUser['ID'] . "' ";
 
 $DB->query($SQL);
-
 
 if ($DB->record_count() > 0) {
     $UserArray = $DB->to_array('UserID');
@@ -380,7 +369,6 @@ if ($DB->record_count() > 0) {
     }
     $InsertSQL.=implode(',', $Rows);
     $DB->query($InsertSQL);
-
 
     foreach ($FilterArray as $Filter) {
         list($FilterID, $UserID, $Passkey) = $Filter;
@@ -399,8 +387,8 @@ while (list($UserID, $Passkey) = $DB->next_record()) {
 
 $Feed->populate('torrents_all', $Item);
 
-// TODO: Lanz this needs to be looked in to more. The code had one for each of the old categories here, look over and clean up!
-$Feed->populate('torrents_apps', $Item);
+// TODO: Lanz for reference only if we decide to expand with more feeds.
+//$Feed->populate('torrents_apps', $Item);
 
 if (!$Private) {
     show_header("Warning");

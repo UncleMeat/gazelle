@@ -5,17 +5,7 @@ authorize();
 $TagList = '';
 $NotTagList = '';
 $CategoryList = '';
-$FormatList = '';
-$EncodingList = '';
-$MediaList = '';
 $HasFilter = false;
-
-if($_POST['newgroupsonly']){
-	$NewGroupsOnly = '1';
-	$HasFilter = true;
-} else {
-	$NewGroupsOnly = '0';
-}
 
 if($_POST['tags']){
 	$TagList = '|';
@@ -43,31 +33,6 @@ if($_POST['categories']){
 	$HasFilter = true;
 }
 
-if($_POST['formats']){
-	$FormatList = '|';
-	foreach($_POST['formats'] as $Format){
-		$FormatList.=db_string(trim($Format)).'|';
-	}
-	$HasFilter = true;
-}
-
-
-if($_POST['bitrates']){
-	$EncodingList = '|';
-	foreach($_POST['bitrates'] as $Bitrate){
-		$EncodingList.=db_string(trim($Bitrate)).'|';
-	}
-	$HasFilter = true;
-}
-
-if($_POST['media']){
-	$MediaList = '|';
-	foreach($_POST['media'] as $Medium){
-		$MediaList.=db_string(trim($Medium)).'|';
-	}
-	$HasFilter = true;
-}
-
 if(!$HasFilter){
 	$Err = 'You must add at least one criterion to filter by';
 } elseif(!$_POST['label'] && !$_POST['id']) {
@@ -85,19 +50,15 @@ $NotTagList = str_replace('||','|',$NotTagList);
 
 if($_POST['id'] && is_number($_POST['id'])){
 	$DB->query("UPDATE users_notify_filters SET
-		NewGroupsOnly='$NewGroupsOnly',
 		Tags='$TagList',
 		NotTags='$NotTagList',
-		Categories='$CategoryList',
-		Formats='$FormatList',
-		Encodings='$EncodingList',
-		Media='$MediaList',
+		Categories='$CategoryList'
 		WHERE ID='".db_string($_POST['id'])."' AND UserID='$LoggedUser[ID]'");
 } else {
 	$DB->query("INSERT INTO users_notify_filters 
-		(UserID, Label, NewGroupsOnly, Tags, NotTags, Categories, Formats, Encodings, Media)
+		(UserID, Label, Tags, NotTags, Categories)
 		VALUES
-		('$LoggedUser[ID]','".db_string($_POST['label'])."','$NewGroupsOnly','$TagList', '$NotTagList', '$CategoryList','$FormatList','$EncodingList','$MediaList')");
+		('$LoggedUser[ID]','".db_string($_POST['label'])."', '$TagList', '$NotTagList', '$CategoryList')");
 }
 
 $Cache->delete_value('notify_filters_'.$LoggedUser['ID']);
