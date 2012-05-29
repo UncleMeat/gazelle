@@ -481,52 +481,38 @@ input.hidden {
 /* Layout (Any page) */
 
 .thin {
-    /* width: 850px; 
-    width: 80%;
-    min-width: 740px; */
     width: 96%;
     min-width: 920px;
     margin-left:auto;
     margin-right:auto;
 }
  
-h2 { /*
+h2 { 
     margin: 10px 0px 20px;
     text-align: center;
     color: #fff;
-    background-color: #024a7c;
-    padding: 2px 40px;
+    /* background-color: #024a7c; */
     border-radius: 16px; 
     -moz-border-radius: 16px; 
     -webkit-border-radius: 16px;  
-    */
-   
-    text-align: center;
-    margin: 10px auto 20px;
-    border-radius: 8px;       /* FF9+ IE9+ */
-    -moz-border-radius: 8px; /* for FF5 */
-    -webkit-border-radius: 8px; /* for opera */
-    font-size: 20px;
-    font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;;
-    background: white;
-    padding: 5px 20px;
-    border: 4px solid #000;
-    border-left-width: 3px;
-    border-right-width: 3px;
-    color: black;
+    
+    /* *** change to plain background if preferred ***  */
+    /* background-color: #0261a3; */
+    background: #0261a3 url(images/header2.jpg) repeat-x bottom;  
+    font-size: 18px;
+    padding: 5px 40px;
 } 
 
 h2 a {
-    color: #039;    /* #0261a3;  /* #eee; */
-}  
+    color: #fff; 
+}
 
 .box h2 {
-    padding: 3px 60px;
-    font-size: 18px;
-    border: 3px solid #555;
-    border-left-width: 2px;
-    border-right-width: 2px;
-    color: black;
+    padding: 3px 40px;
+    font-size: 14px;
+    border-radius: 14px; 
+    -moz-border-radius: 14px; 
+    -webkit-border-radius: 14px;
 }
 
 .contact_link {
@@ -716,7 +702,7 @@ table.boxstat td:first-child {
     background: url('images/warning.gif') no-repeat center center;
 }
 
-#staff_tools .icon {
+#staff_tools .icon, .torrent .icon {
     width:16px;
     height:16px;
     margin-top: -2px;

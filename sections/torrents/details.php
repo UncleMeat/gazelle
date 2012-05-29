@@ -106,7 +106,7 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
       if ($Status == 'Warned' || $Status == 'Pending') {
 ?>
 	<div id="warning_status" class="box vertical_space">
-		<div class="colhead_red warning">
+		<div class="redbar warning">
                 <strong>Status:&nbsp;Warned&nbsp; (<?=$StatusDescription?>)</strong>
             </div>
             <div class="pad"><strong>This torrent has been marked for deletion and will be automatically deleted unless the uploader fixes it.</strong><span style="float:right;"><?=time_diff($KillTime)?></span></div>
