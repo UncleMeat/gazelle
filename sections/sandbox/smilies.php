@@ -12,6 +12,27 @@ $ASC = (isset($_REQUEST['asc']) && !$_REQUEST['asc'])?0:1;
 
 show_header('Smilies', 'bbcode');
 
+//---------------------------------------------
+/*  // a debugging section for finding unused smiley images in the smiley folder
+$files = scandir(STATIC_SERVER.'common/smileys');
+$smilies = $Text->Smilies;
+$Unadded = array();
+foreach($files as $Val) {
+    if ( !in_array($Val, $smilies) ) $Unadded[] = $Val;
+}
+?>
+<div class="thin"><div class="box pad"> <?
+//foreach($smilies as $Val2) {
+//    echo "$Val2<br />";
+//}
+//    echo "<br /><br /><br /><br /><br /><br />";
+foreach($Unadded as $file) { 
+    echo "$file<br />";
+}  ?>
+</div></div>
+<?
+*/
+//---------------------------------------------
 ?>
 <div class="thin">
 	<h2>Smilies</h2>
