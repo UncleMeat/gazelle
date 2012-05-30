@@ -596,7 +596,7 @@ $row='b';
                     | <a href="reportsv2.php?action=report&amp;id=<?= $TorrentID ?>" title="Report">RP</a>]
                
 <?                if (check_perms('torrents_review') && $Data['Status'] == 'Okay') { 
-                        echo  '&nbsp;'.get_status_icon($Status);
+                        echo  '&nbsp;'.get_status_icon('Okay');
                   }        
 ?>
                 </span>

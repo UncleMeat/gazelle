@@ -39,6 +39,7 @@ class TEXT {
            ':panic:'           => 'panic.gif',
            ':worm:'           => 'worm2.gif',
           
+           ':evilbunny:'           => 'evilimu.gif',
           
           //=============================================
           
@@ -113,7 +114,7 @@ class TEXT {
            ':drunk:'           => 'drunk.gif',
            ':rant:'           => 'rant.gif',
            ':tease:'           => 'tease.gif',
-           /* ':box:'           => 'box.gif', */
+           ':box:'           => 'box.gif', 
           
            ':daisy:'           => 'daisy.gif',
            ':demon:'           => 'demon.gif',
@@ -127,6 +128,7 @@ class TEXT {
            ':samurai:'           => 'samurai.gif',
            ':sasmokin:'           => 'sasmokin.gif',
           
+           ':smallprint:'         =>  'deal.gif',
           //----------------------------
           
           
@@ -264,7 +266,7 @@ class TEXT {
            ':flower1:'           => 'flower1-smiley.gif',
            ':flower2:'           => 'flower2-smiley.gif',
            ':flower3:'           => 'flower3-smiley.gif',
-           ':flowers:'           => 'flowers.gif',
+           ':flowerrow:'           => 'flowersrow.gif',
            ':swede:'           => 'free_swe34.gif',
            ':freezin:'           => 'freez-in1-smiley.gif',
           
@@ -274,7 +276,7 @@ class TEXT {
            ':giraffe:'           => 'giraffe-smiley.gif',
            ':giveup:'           => 'giveup.gif',
            ':goldmedalist:'           => 'gold-medalist-smiley.gif',
-           ':goldstar:'           => 'goldstar.gif',
+           ':star:'           => 'goldstar.gif',
            ':goldstar:'           => 'gold-star-smiley.gif',
            ':greenchilli:'           => 'greenchilli.gif',
            ':tinfoil:'           => 'hat-tin-foil-smiley.gif',
@@ -357,6 +359,7 @@ class TEXT {
            ':police:'           => 'police.gif',
            ':detective:'           => 'detective.gif',
            ':bike:'           => 'bike.gif',
+           ':badass:'           => 'badass.gif',
           
           
            ':blind:'           => 'blind.gif',
@@ -365,9 +368,6 @@ class TEXT {
            ':goodjob:'           => 'gjob.gif',
            ':dist:'           => 'dist.gif',
            ':urock:'           => 'urock.gif',
-          
-           ':badass:'           => 'badass.gif',
-          
              ':megarant:'           => 'megarant.gif',
            ':adminpower:'           => 'hitler_admin.gif',
           
@@ -485,20 +485,19 @@ class TEXT {
 	private $NoImg = 0; // If images should be turned into URLs
 	private $Levels = 0; // nesting level
 	private $Advanced = false; // allow advanced tags to be printed
-      
+      //public $Smilies = array(); // for testing only
 	function __construct() {
 		foreach($this->Smileys as $Key=>$Val) {
 			$this->Smileys[$Key] = '<img src="'.STATIC_SERVER.'common/smileys/'.$Val.'" alt="'.$Key.'" />';
-		}
+                  //$this->Smilies[] = $Val;
+            }
 		reset($this->Smileys);
-            // asort($this->Smileys, SORT_STRING | SORT_FLAG_CASE); // do not uncomment - just for printing in a-z order in dev
-	
+            
 		foreach($this->Icons as $Key=>$Val) {
 			$this->Icons[$Key] = '<img src="'.STATIC_SERVER.'common/icons/'.$Val.'" alt="'.$Key.'" />';
 		}
 		reset($this->Icons);
       }
-	
 	function full_format($Str, $AdvancedTags = false) {
             $this->Advanced = $AdvancedTags;
 		$Str = display_str($Str);
