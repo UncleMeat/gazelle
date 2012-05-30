@@ -665,7 +665,7 @@ table.boxstat td:first-child {
 }
 
 .redbar {
-    background: #d00;
+    background: #ff4848;
     color: white;
     font-weight: bolder;
 }
