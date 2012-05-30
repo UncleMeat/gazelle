@@ -116,7 +116,7 @@ function get_group_info($GroupID, $Return = true) {
 
 function get_status_icon($Status){
     if ($Status == 'Warned' || $Status == 'Pending') return '<span style="float:right;" title="This torrent will be automatically deleted unless the uploader fixes it" class="icon icon_warning"></span>';
-    elseif ($Status == 'Okay') return '<span style="float:right;" title="This torrent has been checked and is okay" class="icon icon_okay"></span>';
+    elseif ($Status == 'Okay') return '<span style="float:right;" title="This torrent has been checked by staff and is okay" class="icon icon_okay"></span>';
     else return '';
 }
 

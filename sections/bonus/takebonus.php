@@ -28,14 +28,14 @@ if(!empty($ShopItem) && is_array($ShopItem)){
             $DB->query("SELECT ID From users_main WHERE Username='$Othername'"); 
             if(($DB->record_count()) > 0) {
                 list($OtherID) = $DB->next_record(); 
-                $OtherUserStats = get_user_stats($OtherID);
+                //$OtherUserStats = get_user_stats($OtherID);
             } else {
                 $OtherID=false;
                 $ResultMessage = "Could not find user $Othername";
             }
         } else {
-            $OtherID = false;
-            //$ResultMessage = "No name set";
+            $OtherID = false; // user cancelled js prompt so othername is not set
+            //$ResultMessage = "User cancelled operation";
         }
     }
     
@@ -45,7 +45,28 @@ if(!empty($ShopItem) && is_array($ShopItem)){
         $UpdateSet = array();
         $UpdateSetOther = array();
          
-        Switch($Action){  // atm hardcoded in db:  givecredits, givegb, gb, slot, title
+        Switch($Action){  // atm hardcoded in db:  givecredits, givegb, gb, slot, title, badge
+            case 'badge' :
+                
+                if (in_array($Value, $LoggedUser['Badges'])){
+                    $ResultMessage='Something bad happened (duplicate badge insertion)';
+                    break;
+                }
+                include(SERVER_ROOT.'/classes/class_badges.php');
+                $BadgeBuilder = new BADGES();
+                $BadgeTitle = $BadgeBuilder->get_title($Value);
+                
+                $Summary = sqltime().' - '.ucfirst("user bought $BadgeTitle badge. Cost: $Cost credits");	
+                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
+                $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought a $BadgeTitle badge.");
+                $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
+                $LoggedUser['Badges'][] = $Value;
+                $LoggedUser['Badges'] = $BadgeBuilder->get_user_badge_array($LoggedUser['Badges']);
+                $UpdateSet[]="m.Badges='".db_string( serialize($LoggedUser['Badges']) )."'";
+                $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
+                $ResultMessage=$Summary;
+                break;
+            
             case 'givecredits':
                 
                 $Summary = sqltime().' - '.ucfirst("user gave a gift of $Value credits to {$P['othername']} Cost: $Cost credits");

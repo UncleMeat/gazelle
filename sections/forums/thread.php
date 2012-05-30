@@ -12,7 +12,9 @@ Things to expect in $_GET:
 //---------- Things to sort out before it can start printing/generating content
 
 include(SERVER_ROOT.'/classes/class_text.php');
+include(SERVER_ROOT.'/classes/class_badges.php');
 $Text = new TEXT;
+$BadgeBuilder = new BADGES();
 
 // Check for lame SQL injection attempts
 if(!isset($_GET['threadid']) || !is_number($_GET['threadid'])) {
@@ -80,13 +82,14 @@ if(!$Catalogue = $Cache->get_value('thread_'.$ThreadID.'_catalogue_'.$CatalogueI
 		p.EditedUserID,
 		p.EditedTime,
 		ed.Username,
-            a.Signature
+            a.Signature,
+            a.Badges
 		FROM forums_posts as p
 		LEFT JOIN users_main AS ed ON ed.ID = p.EditedUserID
 		LEFT JOIN users_main AS a ON a.ID = p.AuthorID
 		WHERE p.TopicID = '$ThreadID' AND p.ID != '".$ThreadInfo['StickyPostID']."'
 		LIMIT $CatalogueLimit");
-	$Catalogue = $DB->to_array(false,MYSQLI_ASSOC);
+	$Catalogue = $DB->to_array(false,MYSQLI_ASSOC, array('Badges'));
 	if (!$ThreadInfo['IsLocked'] || $ThreadInfo['IsSticky']) {
 		$Cache->cache_value('thread_'.$ThreadID.'_catalogue_'.$CatalogueID, $Catalogue, 0);
 	}
@@ -364,9 +367,10 @@ if($ThreadInfo['StickyPostID']) {
 	}
 } 
 foreach($Thread as $Key => $Post){
-	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature) = array_values($Post);
+	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature, $Awards) = array_values($Post);
 	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
 	$AuthorPermissions = get_permissions($PermissionID);
+	$Awards = unserialize($Awards); 
       list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
       // we need to get custom permissions for this author
       $PermissionValues = get_permissions_for_user($AuthorID, false, $AuthorPermissions);
@@ -423,7 +427,7 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
 <? } 
 $AllowTags= isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues['site_advanced_tags'];
 ?>
-		<td class="body" valign="top"<? if(!empty($HeavyInfo['DisableAvatars'])) { echo ' colspan="2"'; } ?>>
+		<td class="postbody" valign="top"<? if(!empty($HeavyInfo['DisableAvatars'])) { echo ' colspan="2"'; } ?>>
 			<div id="content<?=$PostID?>" class="post_container">
                       <div class="post_content"><?=$Text->full_format($Body, $AllowTags) ?> </div>
        
@@ -433,8 +437,9 @@ $AllowTags= isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues
 <?	if(check_perms('site_admin_forums')) { ?>
 				<a href="#content<?=$PostID?>" onclick="LoadEdit('forums', <?=$PostID?>, 1); return false;">&laquo;</a> 
 <? 	} ?>
-				Last edited by
-				<?=format_username($EditedUserID, $EditedUsername) ?> <?=time_diff($EditedTime,2,true,true)?>
+                            <span class="editedby">Last edited by
+                            <?=format_username($EditedUserID, $EditedUsername) ?> <?=time_diff($EditedTime,2,true,true)?>
+                            </span>
                         </div>
         <? }   ?>  
 			</div>
@@ -442,9 +447,17 @@ $AllowTags= isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues
            if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength > 0) && !empty($Signature) ) {
                         
                         echo '<div class="sig post_footer">' . $Text->full_format($Signature, $AllowTags) . '</div>';
-           }      ?>
+           }
+?>
 		</td>
 	</tr>
+<?  if( empty($HeavyInfo['DisableSignatures']) && !empty($Awards) ) {  ?> 
+      <tr>
+          <td colspan="2" class="badgesrow">
+                      <div class="badges"><?=$BadgeBuilder->get_badges($Awards)?></div>
+          </td>
+      </tr>
+<?  }       ?>
 </table>
 <?	} ?>
 <div class="breadcrumbs">

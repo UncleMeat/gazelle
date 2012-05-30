@@ -6,6 +6,10 @@
 
 \*************************************************************************/
 
+include(SERVER_ROOT.'/classes/class_badges.php');
+$BadgeBuilder = new BADGES();
+
+
 // Are they being tricky blighters?
 if (!$_POST['userid'] || !is_number($_POST['userid'])) {
 	error(404);
@@ -29,7 +33,12 @@ $SupportFor = db_string(display_str($_POST['SupportFor']));
 $Pass = db_string($_POST['ChangePassword']);
 $Warned = (isset($_POST['Warned']))? 1 : 0;
 
- 
+    $Badges = $_POST['badge'];
+    if(!is_array($Badges)) {
+          $Badges = array();
+    }
+    $Badges = $BadgeBuilder->get_user_badge_array($Badges);
+
         $AdjustUpValue = ($_POST['adjustupvalue']  == "" ? 0 : $_POST['adjustupvalue']);
         if ( isset($AdjustUpValue) && $AdjustUpValue[0]=='+') $AdjustUpValue = substr($AdjustUpValue, 1);
         if (is_numeric($AdjustUpValue)){ 
@@ -124,7 +133,8 @@ $DB->query("SELECT
 	m.FLTokens,
 	i.RatioWatchEnds,
 	SHA1(i.AdminComment) AS CommentHash,
-	m.Credits
+	m.Credits,
+      m.Badges
 	FROM users_main AS m
 	JOIN users_info AS i ON i.UserID = m.ID
 	LEFT JOIN permissions AS p ON p.ID=m.PermissionID
@@ -278,6 +288,13 @@ if ($Visible!=$Cur['Visible']  && check_perms('users_make_invisible')) {
 	$UpdateSet[]="Visible='$Visible'";
 	$EditSummary[]="visibility changed";
 	$LightUpdates['Visible']=$Visible;
+}
+
+//----------------------------------------------------------- 
+$Cur['Badges'] =  unserialize($Cur['Badges']);
+if ($Badges != $Cur['Badges'] && check_perms('users_edit_titles')) {
+	$UpdateSet[]="Badges='". db_string(serialize($Badges)). "'";
+	$EditSummary[]="Badges changed from \'". implode(", ",  $Cur['Badges']) . "\' to \'" . implode(", ", $Badges)."\'"  ;
 }
 
 

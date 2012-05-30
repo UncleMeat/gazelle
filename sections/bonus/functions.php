@@ -9,10 +9,11 @@ function get_shop_items(){
                         Title, 
                         Description, 
                         Action, 
+                        Value,
                         Cost
 			FROM bonus_shop_actions
 			ORDER BY ID");
-		$ShopItems = $DB->to_array(false, MYSQLI_BOTH);     //, array(3,'Paranoia'));
+		$ShopItems = $DB->to_array(false, MYSQLI_BOTH);
 		$Cache->cache_value('shop_items', $ShopItems);
 	}
 	return $ShopItems;
@@ -30,7 +31,7 @@ function get_shop_item($ItemID){
                         Cost
 			FROM bonus_shop_actions
 			WHERE ID='$ItemID'");
-		$ShopItem = $DB->to_array(false, MYSQLI_BOTH);     //, array(3,'Paranoia'));
+		$ShopItem = $DB->to_array(false, MYSQLI_BOTH);
 		$Cache->cache_value('shop_item_' + $ItemID, $ShopItem);
 	}
 	return $ShopItem;

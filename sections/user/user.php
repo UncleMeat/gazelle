@@ -1,7 +1,9 @@
 <?
 
-include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
+include(SERVER_ROOT.'/classes/class_text.php');
+include(SERVER_ROOT.'/classes/class_badges.php');
 $Text = new TEXT;
+$BadgeBuilder = new BADGES();
 
 include(SERVER_ROOT.'/sections/requests/functions.php');
 
@@ -61,10 +63,11 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		i.HideCountryChanges,
 		m.FLTokens,
 		SHA1(i.AdminComment),
-                  m.Credits,
-                  i.BonusLog,
-                     p.MaxAvatarWidth,
-                     p.MaxAvatarHeight
+                m.Credits,
+                i.BonusLog,
+                p.MaxAvatarWidth,
+                p.MaxAvatarHeight,
+                m.Badges
 		FROM users_main AS m
 		JOIN users_info AS i ON i.UserID = m.ID
 		LEFT JOIN users_main AS inviter ON i.Inviter = inviter.ID
@@ -76,7 +79,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash,$BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight) = $DB->next_record(MYSQLI_NUM, array(8,11));
+	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash,$BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight, $Awards) = $DB->next_record(MYSQLI_NUM, array(8,11,47));
 
 } else { // Person viewing is a normal user
 	$DB->query("SELECT
@@ -106,10 +109,11 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		i.Inviter,
 		i.DisableInvites,
 		inviter.username,
-                  m.Credits,
-                  i.BonusLog,
-                     p.MaxAvatarWidth,
-                     p.MaxAvatarHeight
+                m.Credits,
+                i.BonusLog,
+                p.MaxAvatarWidth,
+                p.MaxAvatarHeight,
+                m.Badges
 		FROM users_main AS m
 		JOIN users_info AS i ON i.UserID = m.ID
 		LEFT JOIN permissions AS p ON p.ID=m.PermissionID
@@ -121,7 +125,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$BonusLog,$MaxAvatarWidth,$MaxAvatarHeight, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(9,11));
+	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$BonusLog,$MaxAvatarWidth,$MaxAvatarHeight, $Awards, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(9,11,30));
 }
  
 
@@ -133,6 +137,7 @@ if(check_perms('site_proxy_images') && !empty($CustomTitle)) {
 																	}, $CustomTitle);
 }
 
+      
 $Paranoia = unserialize($Paranoia);
 if(!is_array($Paranoia)) {
 	$Paranoia = array();
@@ -143,6 +148,11 @@ foreach($Paranoia as $P) {
 	if(strpos($P, '+')) {
 		$ParanoiaLevel++;
 	}
+}
+
+$Awards = unserialize($Awards); 
+if(!is_array($Awards)) {
+	$Awards = array();
 }
 
 $JoinedDate = time_diff($JoinDate);
@@ -163,7 +173,7 @@ $Badges.=($Enabled == '1' || $Enabled == '0' || !$Enabled) ? '': '<img src="'.ST
 show_header($Username,'user,bbcode,requests');
 ?>
 <div class="thin">
-	<h2><?=format_username($UserID, $Username, false, $Warned, $Enabled == 2 ? false : true, $ClassID, $CustomTitle)?></h2>
+	<h2><?=format_username($UserID, $Username, false, $Warned, $Enabled == 2 ? false : true, $ClassID, $CustomTitle, true)?></h2>
 	<div class="linkbox">
 <? if (!$OwnProfile) { ?>
 		[<a href="inbox.php?action=compose&amp;to=<?=$UserID?>">Send Message</a>]
@@ -570,20 +580,23 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 				<span style="float:left;">Profile<? if ($CustomTitle) { echo " - ".display_str(html_entity_decode($DisplayCustomTitle)); } ?></span>
 				<span style="float:right;"><?=!empty($Badges)?"$Badges&nbsp;&nbsp;":''?><a href="#" onclick="$('#profilediv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
 			</div>
-			<div class="pad" id="profilediv">
-<? if (!$Info) { ?>
+			<div id="profilediv">
+                    <div class="pad">
+<?      if (!$Info) { ?>
 				This profile is currently empty.
-<?
-} else {
-	echo $Text->full_format($Info, get_permissions_advtags($UserID));
-}
-
-?>
-			</div>
+<?      } else { 
+                        echo $Text->full_format($Info, get_permissions_advtags($UserID)); 
+        }   ?>
+                    </div>
+<?      if ($Awards) {  ?>
+                    <div class="badgesrow">
+                            <div class="badges"><?=$BadgeBuilder->get_badges($Awards)?></div>
+                    </div>
+<?      }   ?>
+                  </div>
 		</div>
 <?
-// TODO: Add proper perms for viewing user credits + bonus history
-// TODO: Add editing of bonus log (by admin/staff)... I am inclined to make this savable in frame + also teh staff notes edit could be the same.. dunno
+
 if (check_perms('users_view_bonuslog',$Class) || $OwnProfile) { ?>
 		<div class="box">
 			<div class="head">
@@ -918,7 +931,7 @@ if (check_perms('users_mod', $Class) || $IsFLS) {
 }
 
 if (check_perms('users_mod', $Class)) { ?>
-		<form id="form" action="user.php" method="post">
+        <form id="form" action="user.php" method="post">
 		<input type="hidden" name="action" value="moderate" />
 		<input type="hidden" name="userid" value="<?=$UserID?>" />
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
@@ -940,7 +953,7 @@ if (check_perms('users_mod', $Class)) { ?>
 				</script>
 			</div>
 		</div>
-
+            
 		<table>
 			<tr>
 				<td class="colhead" colspan="2">User Info</td>
@@ -1112,7 +1125,29 @@ if (check_perms('users_mod', $Class)) { ?>
 <?	} ?>
 		</table><!--<br />-->
 
-<?	if (check_perms('users_warn')) { ?>
+            
+            
+            
+<?	if (check_perms('users_delete_users')) { ?>
+             
+		<div class="box">
+			<div class="head">
+				<span style="float:left;">Manage User Badges</span>
+                        <span style="float:right;"><a href="#" onclick="$('#badgesadmin').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+			</div>
+                  <div class="pad hidden" id="badgesadmin"> 
+<?
+                        $BadgeBuilder->print_badges_admin($Awards);
+                        
+?> 
+			</div>
+		</div>
+<?	}
+
+
+
+
+    if (check_perms('users_warn')) { ?>
 		<table>
 			<tr class="colhead">
 				<td colspan="2">Warn User</td>
@@ -1267,7 +1302,7 @@ if (check_perms('users_mod', $Class)) { ?>
 				</td>
 			</tr>
 		</table>
-		</form>
+        </form>
 <? } ?>
 	</div>
 </div>

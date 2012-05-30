@@ -357,12 +357,12 @@ function user_heavy_info($UserID) {
 			i.PermittedForums,
 			m.FLTokens,
                   m.Credits,
-                  m.LastBonusTime,
-                    i.SupportFor
+                    i.SupportFor,
+                    m.Badges
 			FROM users_main AS m
 			INNER JOIN users_info AS i ON i.UserID=m.ID
 			WHERE m.ID='$UserID'");
-        $HeavyInfo = $DB->next_record(MYSQLI_ASSOC, array('CustomPermissions', 'SiteOptions'));
+        $HeavyInfo = $DB->next_record(MYSQLI_ASSOC, array('CustomPermissions', 'SiteOptions', 'Badges'));
 
         if (!empty($HeavyInfo['CustomPermissions'])) {
             $HeavyInfo['CustomPermissions'] = unserialize($HeavyInfo['CustomPermissions']);
@@ -400,6 +400,13 @@ function user_heavy_info($UserID) {
         }
         unset($HeavyInfo['SiteOptions']);
 
+        if (!empty($HeavyInfo['Badges'])) {
+            $HeavyInfo['Badges'] = unserialize($HeavyInfo['Badges']);
+            //$HeavyInfo = array_merge($HeavyInfo, $HeavyInfo['Badges']);
+        } else {
+            $HeavyInfo['Badges'] = array();
+        }
+        
         $Cache->cache_value('user_info_heavy_' . $UserID, $HeavyInfo, 0);
     }
     return $HeavyInfo;

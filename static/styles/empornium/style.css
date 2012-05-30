@@ -790,8 +790,12 @@ table.boxstat td:first-child {
     color: white;
 }
 .body {
+     padding: 3px 10px 10px 10px; 
+}/*
+div.body {
+    padding:0px;
     padding: 3px 10px 10px 10px;
-}
+}*/
 
 /*
 .main_column {
@@ -883,7 +887,9 @@ tr.itembuy {
 tr.itemnotbuy {
      background: #d33 url("images/bgredfade.png") repeat scroll 0% 0%;  
 }
-
+tr.itemduplicate {
+     background: #ccc url("images/bgfade.png") repeat scroll 0% 0%;  
+}
 input.shopbutton {
     width: 60px;
     background-color: white;
@@ -895,6 +901,10 @@ input.shopbutton {
 }
 input.shopbutton.itembuy:hover {
     border-color: #6f6;
+}
+
+.bonusshop td {
+    padding: 10px;
 }
 
 .itemnotbuy input.shopbutton, input.itemnotbuy {
@@ -1195,7 +1205,8 @@ table.forum_post {
 }
 
 table.forum_post td {
-    border: 1px solid #98AAB1;
+    /* border: 1px solid #98AAB1;  */
+    border: 1px solid #dcdde4;
 }
 
 table.forum_unread {
@@ -1227,15 +1238,46 @@ blockquote {
 /* Signatures layout */ 
 div.post_content  {
     min-height: 100px;  
+    padding: 10px 10px 20px;
 }  
 div.post_footer  { 
     margin-top: 4px; 
 }  
 div.sig { 
     margin-top: 6px; 
-    border-top: 1px solid #98AAB1;  
-    padding-top: 6px;
+    border-top: 1px solid #dcdde4;   /*  #98AAB1;   */
+    padding: 6px;
 }
+
+td.postbody {
+    padding:0px;
+}
+
+.editedby {
+    color:#999;
+}
+td.badgesrow, .badgesrow {
+    border-top: 1px solid #111;
+    padding:0px;
+}
+.badges {
+    padding: 4px;
+}
+.badges img {
+    max-width: 150px;
+    max-height: 60px;
+}
+#badgesadmin img {
+    margin-bottom: 6px;
+}
+#badgesadmin .badge {
+    margin: 8px;
+}
+.badge {
+   display:inline-block;
+   text-align: center;
+}
+
 
 /* Layout (Inbox) */
 

@@ -2,6 +2,9 @@
 enforce_login();
 show_header('Bonus Shop');
 
+include(SERVER_ROOT.'/classes/class_badges.php');
+$BadgeBuilder = new BADGES();
+
 $ShopItems = get_shop_items();
 ?>
 <div class="thin">
@@ -13,30 +16,37 @@ $ShopItems = get_shop_items();
 <?          }  ?>
             
 		<div class="box pad">
-                <h3 class="center">You have <?=number_format($LoggedUser['Credits'],2)?> credits to spend</h3> 
-             <? //   <p class="center">Next bonus update: <?=get_next_bonus_update($LoggedUser['LastBonusTime'])?\></p> ?>
+                <h3 class="center">You have <?=number_format($LoggedUser['Credits'],2)?> credits to spend</h3>
             </div>
             
-		<table>
+		<table class="bonusshop">
 			<tr class="colhead">
 				<td width="120px">Title</td>
-				<td width="530px">Description</td>
+				<td width="530px" colspan="2">Description</td>
 				<td width="90px" colspan="2">Price</td>
 				<!--<td width="50px"></td>-->
 			</tr>
 <?
 	$Row = 'a';
 	foreach($ShopItems as $BonusItem) {
-		list($ItemID, $Title, $Description, $Action, $Cost) = $BonusItem;
-            //$CanAfford = is_number($LoggedUser['Credits']) ? $LoggedUser['Credits'] >= $Cost: false;
-            $CanAfford = is_float((float)$LoggedUser['Credits']) ? $LoggedUser['Credits'] >= $Cost: false;
+		list($ItemID, $Title, $Description, $Action, $Value, $Cost) = $BonusItem;
+            $IsBadge = $Action=='badge'; 
+            // if user already has badge item dont allow buy
+            if ($IsBadge && in_array($Value, $LoggedUser['Badges'])) {
+                $CanBuy = false;
+                $BGClass= ' itemduplicate';
+            } else { //
+                $CanBuy = is_float((float)$LoggedUser['Credits']) ? $LoggedUser['Credits'] >= $Cost: false;
+                $BGClass= ($CanBuy?' itembuy' :' itemnotbuy');
+            }
 		$Row = ($Row == 'a') ? 'b' : 'a';
 ?> 
-			<tr class="row<?=$Row.($CanAfford ? ' itembuy' : ' itemnotbuy')?>">
-				<td width="120px"><strong><?=display_str($Title) ?></strong></td>
-				<td width="530px"><?=display_str($Description) ?></td>
-				<td width="40px" style="text-align: center;"><strong><?=display_str($Cost) ?>c</strong></td>
-				<td width="50px" style="text-align: center;">
+			<tr class="row<?=$Row.$BGClass?>">
+				<td width="160px"><strong><?=display_str($Title) ?></strong></td>
+				<td style="border-right:none;" <? if(!$IsBadge) { echo 'colspan="2"'; } ?>><?=display_str($Description)?></td>
+                    <?  if ($IsBadge) { echo '<td style="border-left:none;width:160px;text-align:center;">'.$BadgeBuilder->get_badges(array($Value)).'</td>' ; } ?>
+				<td width="60px" style="text-align: center;"><strong><?=number_format($Cost) ?>c</strong></td>
+				<td width="60px" style="text-align: center;">
                             <form method="post" action="">  
                                 <input type="hidden" name="action" value="buy" />
                                 <input type="hidden" id="othername<?=$ItemID?>" name="othername" value="" />
@@ -44,7 +54,7 @@ $ShopItems = get_shop_items();
                                 <input type="hidden" name="userid" value="<?=$LoggedUser['ID']?>" />
                                 <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
                                 <input type="hidden" name="itemid" value="<?=$ItemID?>" />
-                                <input <?=(strpos($Action, 'give') !==false ? 'onclick="SetUsername(\'othername'.$ItemID.'\'); "':'')?><?=($Action == 'title' ? 'onclick="SetTitle(\'title'.$ItemID.'\'); "':'')?>class="shopbutton<?=($CanAfford ? ' itembuy' : ' itemnotbuy')?>" name="submit" value="<?=($CanAfford?'Buy':'x')?>" type="submit"<?=($CanAfford ? '' : ' disabled="disabled"')?> />
+                                <input <?=(strpos($Action, 'give') !==false ? 'onclick="SetUsername(\'othername'.$ItemID.'\'); "':'')?><?=($Action == 'title' ? 'onclick="SetTitle(\'title'.$ItemID.'\'); "':'')?>class="shopbutton<?=($CanBuy ? ' itembuy' : ' itemnotbuy')?>" name="submit" value="<?=($CanBuy?'Buy':'x')?>" type="submit"<?=($CanBuy ? '' : ' disabled="disabled"')?> />
                                 <?=($Action == 'title' ? '<input type="hidden" id="title'.$ItemID.'" name="title" value="" />':'')?>
                             </form>
     <script type="text/javascript">

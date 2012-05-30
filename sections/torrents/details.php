@@ -9,7 +9,9 @@ define(MAX_PERS_COLLAGES, 3); // How many personal collages should be shown by d
 include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
 include(SERVER_ROOT.'/sections/bookmarks/functions.php'); // has_bookmarked()
 include(SERVER_ROOT.'/classes/class_text.php');
-$Text = NEW TEXT;
+include(SERVER_ROOT.'/classes/class_badges.php');
+$Text = new TEXT;
+$BadgeBuilder = new BADGES();
 
 $GroupID=ceil($_GET['id']);
 
@@ -109,7 +111,7 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 		<div class="redbar warning">
                 <strong>Status:&nbsp;Warned&nbsp; (<?=$StatusDescription?>)</strong>
             </div>
-            <div class="pad"><strong>This torrent has been marked for deletion and will be automatically deleted unless the uploader fixes it.</strong><span style="float:right;"><?=time_diff($KillTime)?></span></div>
+            <div class="pad"><strong>This torrent has been marked for deletion and will be automatically deleted unless the uploader fixes it. Download at your own risk.</strong><span style="float:right;"><?=time_diff($KillTime)?></span></div>
 <?      if ($UserID == $LoggedUser['ID']) { // if the uploader is looking at the warning message 
             if ($Status == 'Warned') { ?>
                 <div id="user_message" class="center">If you have fixed this upload make sure you have told the staff: <a class="button greenButton" onclick="Send_Okay_Message(<?=$GroupID?>,<?=$ConvID?>);" title="send staff a message">By clicking here</a></div>
@@ -670,14 +672,15 @@ if($Catalogue === false) {
 			c.EditedUserID,
 			c.EditedTime,
 			u.Username,
-            a.Signature
+                  a.Signature,
+                  a.Badges
 			FROM torrents_comments as c
 			LEFT JOIN users_main AS u ON u.ID=c.EditedUserID
-            LEFT JOIN users_main AS a ON a.ID = c.AuthorID
+                  LEFT JOIN users_main AS a ON a.ID = c.AuthorID
 			WHERE c.GroupID = '$GroupID'
 			ORDER BY c.ID
 			LIMIT $CatalogueLimit");
-	$Catalogue = $DB->to_array(false,MYSQLI_ASSOC);
+	$Catalogue = $DB->to_array(false,MYSQLI_ASSOC, array('Badges'));
 	$Cache->cache_value('torrent_comments_'.$GroupID.'_catalogue_'.$CatalogueID, $Catalogue, 0);
 }
 
@@ -694,9 +697,10 @@ echo $Pages;
 
 //---------- Begin printing
 foreach($Thread as $Key => $Post){
-	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature) = array_values($Post);
+	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature, $Awards) = array_values($Post);
 	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
       $AuthorPermissions = get_permissions($PermissionID);
+      $Awards = unserialize($Awards); 
       list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
       // we need to get custom permissions for this author
       //$PermissionValues = get_permissions_for_user($AuthorID, false, $AuthorPermissions);
@@ -730,7 +734,7 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 }
 $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 ?>
-		<td class="body" valign="top">
+		<td class="postbody" valign="top">
 			<div id="content<?=$PostID?>" class="post_container">
                       <div class="post_content"><?=$Text->full_format($Body, $AllowTags) ?> </div>
           
@@ -740,9 +744,9 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 <?	if(check_perms('site_admin_forums')) { ?>
 				<a href="#content<?=$PostID?>" onclick="LoadEdit('forums', <?=$PostID?>, 1); return false;">&laquo;</a> 
 <? 	} ?>
-				Last edited by
+                        <span class="editedby">Last edited by
 				<?=format_username($EditedUserID, $EditedUsername) ?> <?=time_diff($EditedTime,2,true,true)?>
-                        </div>
+                        </span></div>
         <? }   ?>  
 			</div>
 <?  
@@ -752,6 +756,13 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 ?>
 		</td>
 	</tr>
+<?  if( empty($HeavyInfo['DisableSignatures']) && !empty($Awards) ) {  ?> 
+      <tr>
+          <td colspan="2" class="badgesrow">
+                      <div class="badges"><?=$BadgeBuilder->get_badges($Awards)?></div>
+          </td>
+      </tr>
+<?  }       ?>
 </table>
 <?	} ?>
 		<div class="linkbox">
