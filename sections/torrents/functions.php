@@ -82,9 +82,8 @@ function get_group_info($GroupID, $Return = true) {
 			AND flags != 1
 			GROUP BY t.ID
 			ORDER BY t.ID");
- //                              
- //                                                           AND torrents_reviews.Status != 'Pending'
- //                              AND (tr.Status IS NULL OR tr.Status != 'Pending')
+
+            
 		$TorrentList = $DB->to_array();
 		if(count($TorrentList) == 0) {
 			//error(404,'','','',true);
@@ -102,7 +101,7 @@ function get_group_info($GroupID, $Return = true) {
 			$CacheTime = 3600;
 		}
 		// Store it all in cache
-                $Cache->cache_value('torrents_details_'.$GroupID,array($TorrentDetails,$TorrentList),$CacheTime);
+            $Cache->cache_value('torrents_details_'.$GroupID,array($TorrentDetails,$TorrentList),$CacheTime);
 
 	} else { // If we're reading from cache
 		$TorrentDetails=$TorrentCache[0];
@@ -141,3 +140,28 @@ function get_group_requests($GroupID) {
 	$Requests = get_requests($Requests);
 	return $Requests['matches'];
 }
+
+
+function get_tag_synomyn($Tag){
+	global $Cache, $DB;
+      
+      $Tag = sanitize_tag($Tag);
+      // =======================================
+      // i am a bit dubious about the value of caching this stuff... ?? 
+      // remove if appropriate
+      $TagName = $Cache->get_value('synomyn_for_'.$Tag);
+	if($TagName === false) { 
+          $DB->query("SELECT t.Name 
+                     FROM tag_synomyns AS ts JOIN tags as t ON t.ID = ts.TagID 
+                     WHERE Synomyn LIKE '".$Tag."'");
+          list($TagName) = $DB->next_record();
+          // cache a null result as 'not_found' ? there will be more null lookups than not probably
+          if ($TagName) $Cache->cache_value('synomyn_for_' . $Tag, $TagName);
+          else $Cache->cache_value('synomyn_for_' . $Tag, 'not_found');
+	}
+      if ($TagName && $TagName != 'not_found')
+            return $TagName;
+      else
+          return $Tag; 
+}
+

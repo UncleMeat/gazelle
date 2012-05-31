@@ -37,6 +37,8 @@
             'site_vote_tag' => 'Can vote on tags.',
             'site_add_tag' => 'Can add tags.',
 	'site_delete_tag' => 'Can delete tags.',
+            'site_manage_tags' => 'Can manage official tag list and synomyns.',
+     
 	'site_disable_ip_history' => 'Disable IP history.',
 	'zip_downloader' => 'Download multiple torrents at once.',
 	'site_debug' => 'Developer access.',
@@ -159,6 +161,8 @@ function permissions_form(){ ?>
                                           <? display_perm('site_vote_tag', 'Can vote on tags.'); ?>
                                           <? display_perm('site_add_tag', 'Can add tags.'); ?>
 					<? display_perm('site_delete_tag', 'Can delete tags.'); ?>
+                                          <? display_perm('site_manage_tags', 'Can manage official tag list and synomyns.'); ?>
+
 					<? display_perm('site_disable_ip_history', 'Disable IP history.'); ?>
 					<? display_perm('zip_downloader', 'Download multiple torrents at once.'); ?>
 					<? display_perm('site_debug', 'View site debug tables.'); ?>

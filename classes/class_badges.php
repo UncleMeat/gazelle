@@ -29,7 +29,8 @@ class BADGES {
            'medalgold'         =>  array('medalgold.png', 'Gold Medal','Awarded for XXXXXX. This is a placeholder! we need better text & gfx!'),
            
           
-          
+           'usb_award'        =>  array('usb_award.png', 'The USB Fairy Godmother Award','Awarded to USB for services to users above and beyond the call of duty.'),
+           
           
            'wealthy_wanker'           =>  array('wealthy_wanker.png','Wealthy Wanker','Plaque of Wealth. This user is a wealthy wanker. This is a placeholder! we need better text & gfx!'),
            'filthy_rich'          =>  array('filthy_rich.png', 'Filthy Rich','Plaque of Richness. This user is filthy rich. This is a placeholder! we need better text & gfx!'),

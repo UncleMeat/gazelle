@@ -1,6 +1,8 @@
 <?
 authorize();
 
+include(SERVER_ROOT.'/sections/torrents/functions.php');
+
 $UserID = $LoggedUser['ID'];
 $GroupID = db_string($_POST['groupid']);
 
@@ -9,16 +11,39 @@ if(!is_number($GroupID) || !$GroupID) {
 }
 
 $Tags = explode(',', $_POST['tagname']);
-foreach($Tags as $TagName) {
-	$TagName = sanitize_tag($TagName);
+foreach($Tags as $Tag) {
+	$Tag = sanitize_tag($Tag);
+      $TagName = get_tag_synomyn($Tag);
 	if(!empty($TagName)) {
+                /*
+                $DB->query("INSERT INTO tags (Name, UserID) VALUES ('".$TagName."', ".$UserID.") ON DUPLICATE KEY UPDATE Uses=Uses+1");
+                $TagID = $DB->inserted_id(); */
+                
+                $DB->query("SELECT ID FROM tags WHERE Name ='".$TagName."'"); 
+                list($TagID) = $DB->next_record();
+                if($TagID){
+                    $DB->query("SELECT TagID FROM torrents_tags_votes 
+                                WHERE GroupID='$GroupID' AND TagID='$TagID' AND UserID='$UserID'");
+                    if($DB->record_count()!=0) { // User has already added/voted on this tag+torrent so dont count again 
+                        if ($Tag != $TagName) // this was a synomyn replacement
+                            $Get = "&did=5&synomyn=".$Tag;
+                        else $Get = "&did=4";
+                        $Get .= "&addedtag=".$TagName;
+                        //header('Location: '.$_SERVER['HTTP_REFERER'].$Get);
+                        header("Location: torrents.php?id=".$GroupID.$Get);
+                        die();
+                    }
+                }
+                // if it gets to here then its a new tag for this torrent for this user, so count as a new use
                 $DB->query("INSERT INTO tags (Name, UserID) VALUES ('".$TagName."', ".$UserID.") ON DUPLICATE KEY UPDATE Uses=Uses+1");
                 $TagID = $DB->inserted_id();
+                
+                /*
                 $DB->query("SELECT TagID FROM torrents_tags_votes WHERE GroupID='$GroupID' AND TagID='$TagID' AND UserID='$UserID'");
                 if($DB->record_count()!=0) { // User has already voted on this tag, and is trying hax to make the rating go up
                         header('Location: '.$_SERVER['HTTP_REFERER']);
                         die();
-                }
+                }*/
 	
 		$DB->query("INSERT INTO torrents_tags 
 			(TagID, GroupID, PositiveVotes, UserID) VALUES 
@@ -33,5 +58,10 @@ foreach($Tags as $TagName) {
 }
 
 update_hash($GroupID); // Delete torrent group cache
-header('Location: '.$_SERVER['HTTP_REFERER']);
+if ($Tag != $TagName) // this was a synomyn replacement
+         $Get = "&did=3&synomyn=".$Tag;
+else $Get = "&did=3";
+$Get .= "&addedtag=".$TagName;
+//header('Location: '.$_SERVER['HTTP_REFERER'].$Get); 
+header("Location: torrents.php?id=".$GroupID.$Get);
 ?>

@@ -94,9 +94,19 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 	if(isset($_GET['did']) && is_number($_GET['did'])) {
           if($_GET['did'] == 1) $ResultMessage ='Successfully Edited Description';
           elseif($_GET['did'] == 2) $ResultMessage ='Successfully Renamed Title';
+          elseif($_GET['did'] == 3) {
+              $ResultMessage = 'Added '. display_str($_GET['addedtag']);
+              if (isset($_GET['synomyn'])) $ResultMessage .= ' as a synomyn of '. display_str($_GET['synomyn']);
+          } elseif($_GET['did'] == 4) {
+              $ResultMessage = display_str($_GET['addedtag']). ' is already added.';
+              $AlertClass = ' alert';
+          } elseif($_GET['did'] == 5) {
+              $ResultMessage = display_str($_GET['synomyn']). ' is a Synomyn for '. display_str($_GET['addedtag']). ' which is already added.';
+              $AlertClass = ' alert';
+          }
           if($ResultMessage){
           ?>
-			<div id="messagebar" class="messagebar"><?=$ResultMessage?></div>
+			<div id="messagebar" class="messagebar<?=$AlertClass?>"><?=$ResultMessage?></div>
                   <script type="text/javascript">
                         function Kill_Message(){ setTimeout("jQuery('#messagebar').fadeOut(400)", 3000); }
                         addDOMLoadEvent(Kill_Message);
@@ -328,7 +338,7 @@ if ($Image!="") {
 	<div class="sidebar" style="float: right;">
 
 		<div class="box box_tags">
-			<div class="head"><strong>Tags</strong> <span style="float:right;"><a href="articles.php?topic=tag">Tagging rules</a></span></div>
+			<div class="head"><strong>Tags</strong> <span style="float:right;"><a href="torrents.php?action=tag_synomyns">synomyns</a> | <a href="articles.php?topic=tag">Tagging rules</a></span></div>
                         <div class="tag_inner">
 <?
 if(count($Tags) > 0) {
@@ -371,9 +381,6 @@ if(count($Tags) > 0) {
 ?>
                         </div>
 <?	if(check_perms('site_add_tag')){ ?>
-		<!--</div>
-		<div class="box">
-			<div class="head"><strong>Add tag</strong> <span style="float:right;"><a href="articles.php?topic=tag">Tagging rules</a></span></div>-->
 			<div class="tag_add">
 				<form action="torrents.php" method="post">
 					<input type="hidden" name="action" value="add_tag" />
@@ -382,8 +389,6 @@ if(count($Tags) > 0) {
 					<input type="text" name="tagname" size="15" />
 					<input type="submit" value="+" />
 				</form>
-				<!--<br /><br />
-				<strong><a href="articles.php?topic=tag">Tagging rules</a></strong>-->
 			</div>
 <?
 }

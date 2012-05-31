@@ -218,21 +218,26 @@ if (!$GroupID) {
 // Tags
 $Tags = explode(' ', $Properties['TagList']);
 if (!$Properties['GroupID']) {
+    $TagsAdded=array();
     foreach ($Tags as $Tag) {
-        $Tag = sanitize_tag($Tag);
+        //$Tag = sanitize_tag($Tag);
+        $Tag = get_tag_synomyn($Tag);
         if (!empty($Tag)) {
-            $DB->query("INSERT INTO tags
-				(Name, UserID) VALUES
-				('" . $Tag . "', $LoggedUser[ID])
-				ON DUPLICATE KEY UPDATE Uses=Uses+1;
-			");
-            $TagID = $DB->inserted_id();
+            if (!in_array($Tag, $TagsAdded)){
+                $TagsAdded[] = $Tag;
+                $DB->query("INSERT INTO tags
+                            (Name, UserID) VALUES
+                            ('" . $Tag . "', $LoggedUser[ID])
+                            ON DUPLICATE KEY UPDATE Uses=Uses+1;
+                      ");
+                $TagID = $DB->inserted_id();
 
-            $DB->query("INSERT INTO torrents_tags
-				(TagID, GroupID, UserID, PositiveVotes) VALUES
-				($TagID, $GroupID, $LoggedUser[ID], 10)
-				ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+1;
-			");
+                $DB->query("INSERT INTO torrents_tags
+                            (TagID, GroupID, UserID, PositiveVotes) VALUES
+                            ($TagID, $GroupID, $LoggedUser[ID], 10)
+                            ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+1;
+                      ");
+            }
         }
     }
 }

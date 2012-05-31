@@ -1,7 +1,9 @@
 <?
+/*  // mifune: I think its okay to remove this as every link has its own perm check just to be visible.
 if (!check_perms('users_mod')) {
 	error(403);
 }
+ */
 show_header('Staff Tools');
 ?>
 <div class="permissions">
@@ -32,6 +34,7 @@ show_header('Staff Tools');
 <? } if (check_perms('users_mod')) { ?>
 			<tr><td><a href="tools.php?action=email_blacklist">Email Blacklist</a></td></tr>
 			<tr><td><a href="tools.php?action=tokens">Manage freeleech tokens</a></td></tr>
+<? } if (check_perms('site_manage_tags')) { ?>
 			<tr><td><a href="tools.php?action=official_tags">Official Tags Manager</a></td></tr> 
 <? } if (check_perms('torrents_review')) { ?>
 			<tr><td><a href="tools.php?action=marked_for_deletion">Marked for Deletion</a></td></tr>

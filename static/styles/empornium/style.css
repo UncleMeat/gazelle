@@ -1184,6 +1184,22 @@ ul.poll li.graph {
 }
 
 
+div.tagtable {
+    width: 900px;
+    display:block;
+    margin: 0px auto;
+}
+.tagtable {
+    display:inline;
+    width: 240px;
+    border:none;
+}
+.tagtable td {
+    width: 80px;
+    border: none;
+    text-align: center;
+}
+
 /* Layout (Forums) */
 
 .last_read {width: 15px; height: 15px; background: url(images/go_last_read.png) no-repeat center center; margin-left: 5px;}

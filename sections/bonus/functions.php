@@ -21,7 +21,7 @@ function get_shop_items(){
 function get_shop_item($ItemID){
 	global $Cache, $DB;
 	$ItemID = (int)$ItemID;
-	if(($ShopItem = $Cache->get_value('shop_item_' + $ItemID)) === false) {
+	if(($ShopItem = $Cache->get_value('shop_item_'.$ItemID)) === false) {
 		$DB->query("SELECT
                         ID, 
                         Title, 
@@ -32,7 +32,7 @@ function get_shop_item($ItemID){
 			FROM bonus_shop_actions
 			WHERE ID='$ItemID'");
 		$ShopItem = $DB->to_array(false, MYSQLI_BOTH);
-		$Cache->cache_value('shop_item_' + $ItemID, $ShopItem);
+		$Cache->cache_value('shop_item_'.$ItemID, $ShopItem);
 	}
 	return $ShopItem;
 }

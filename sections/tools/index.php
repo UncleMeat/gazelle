@@ -197,6 +197,98 @@ switch ($_REQUEST['action']){
         
         
         
+        
+        
+	case 'official_tags_alter':
+            enforce_login();
+            authorize();
+            
+            if (!check_perms('users_mod')) { error(403); }
+
+            if (isset($_POST['doit'])) {
+
+                  if (isset($_POST['oldtags'])) {
+                        $OldTagIDs = $_POST['oldtags'];
+                        foreach ($OldTagIDs AS $OldTagID) {
+                              if (!is_number($OldTagID)) { error(403); }
+                        }
+                        $OldTagIDs = implode(', ', $OldTagIDs);
+
+                        $DB->query("UPDATE tags SET TagType = 'other' WHERE ID IN ($OldTagIDs)");
+                  }
+
+                  if ($_POST['newtag']) {
+                        //$TagName = sanitize_tag($_POST['newtag']);
+include(SERVER_ROOT . '/sections/torrents/functions.php');
+                        $TagName = get_tag_synomyn($_POST['newtag']);
+
+                        $DB->query("SELECT t.ID FROM tags AS t WHERE t.Name LIKE '".$TagName."'");
+                        list($TagID) = $DB->next_record();
+
+                        if($TagID) {
+                              $DB->query("UPDATE tags SET TagType = 'genre' WHERE ID = $TagID");
+                        } else { // Tag doesn't exist yet - create tag
+                              $DB->query("INSERT INTO tags (Name, UserID, TagType, Uses) VALUES ('".$TagName."', ".$LoggedUser['ID'].", 'genre', 0)");
+                              $TagID = $DB->inserted_id();
+                        } 
+                  }
+                  $Cache->delete_value('genre_tags'); 
+            }
+            
+            
+            
+            // ======================================  del synomyn
+            
+            if (isset($_POST['delsynomyns'])){
+                
+                  if (isset($_POST['oldsyns'])) {
+                        $OldSynomyns = $_POST['oldsyns'];
+                        $DeleteCache = array();
+                        foreach ($OldSynomyns AS $OldSynID) {
+                              if (!is_number($OldSynID)) { error(403); }
+                              $DB->query("SELECT Synomyn FROM tag_synomyns WHERE ID = $OldSynID");
+                              list($SynName) = $DB->next_record();
+                              if($SynName) $DeleteCache[] ='synomyn_for_'.$SynName;
+                        }
+                        $OldSynomyns = implode(', ', $OldSynomyns);
+				$DB->query("DELETE FROM tag_synomyns WHERE ID IN ($OldSynomyns)");
+                        $Cache->delete_value('all_synomyns');
+                        foreach ($DeleteCache AS $Del) {
+                              $Cache->delete_value($Del);
+                        }
+                  }
+            }
+          
+            
+            
+            // ======================================  add synomyn
+            
+            if (isset($_POST['addsynomyn'])){
+                
+                  $ParentTagID = (int)$_POST['parenttagid'];
+                  
+                  if (isset($_POST['newsynname']) && $ParentTagID) {
+                      
+                        $TagName = sanitize_tag(trim($_POST['newsynname']));
+                        if ($TagName!=''){
+                            $DB->query("SELECT ID FROM tag_synomyns WHERE Synomyn LIKE '".$TagName."'");
+                            list($SynID) = $DB->next_record();
+                            if(!$SynID) { // Tag doesn't exist yet - create tag
+                                  $DB->query("INSERT INTO tag_synomyns (Synomyn, TagID, UserID) 
+                                                    VALUES ('".$TagName."', ".$ParentTagID.", ".$LoggedUser['ID']." )");
+                            }
+                            $Cache->delete_value('synomyn_for_' . $TagName); // in case there is a 'not_found' value cached 
+                            $Cache->delete_value('all_synomyns');
+                        }
+                  }
+            }
+          
+		header('Location: tools.php?action=official_tags');
+		break;
+
+            
+            
+            
           case 'marked_for_deletion':
                 include('managers/mfd_functions.php');
                 include('managers/mfd_manager.php');

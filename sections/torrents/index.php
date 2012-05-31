@@ -130,6 +130,11 @@ if(!empty($_REQUEST['action'])) {
 			authorize();
 			include(SERVER_ROOT.'/sections/torrents/delete_tag.php');
 			break;
+		
+		case 'tag_synomyns':
+			enforce_login();
+			include(SERVER_ROOT.'/sections/torrents/tag_synomyns.php');
+			break;
 	
 		case 'notify':
 			enforce_login();
