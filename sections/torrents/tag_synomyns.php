@@ -29,15 +29,15 @@ for ($i = 0; $i < $TagCount / 3; $i++) {
 	list($TagID3, $TagName3, $TagUses3) = $Tags[2*ceil($TagCount/3) + $i];
 ?>
 				<tr class="<?=(($i % 2)?'rowa':'rowb')?>">
-					<td><?=$TagName1?></td>
+					<td><a href="torrents.php?taglist=<?=$TagName1?>" ><?=$TagName1?></a></td>
 					<td><?=$TagUses1?></td>
 					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 					
-					<td><?=$TagName2?></td>
+					<td><a href="torrents.php?taglist=<?=$TagName2?>" ><?=$TagName2?></a></td>
 					<td><?=$TagUses2?></td>
 					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 					
-					<td><?=$TagName3?></td>
+					<td><a href="torrents.php?taglist=<?=$TagName3?>" ><?=$TagName3?></a></td>
 					<td><?=$TagUses3?></td>
 				</tr>
 <?
@@ -78,7 +78,7 @@ for ($i = 0; $i < $TagCount / 3; $i++) {
             
             <table  class="tagtable" style="width:200px">
                 <tr>
-                    <td class="colhead" colspan="2" style="width:200px"><? echo "$ParentTagName ($Uses)"?> </td>
+                    <td class="colhead" colspan="2" style="width:200px"><a href="torrents.php?taglist=<?=$ParentTagName?>" ><?=$ParentTagName?></a>&nbsp;(<?=$Uses?>)</td>
                 </tr>
 <?             
             $LastParentTagName = $ParentTagName;

@@ -271,14 +271,19 @@ include(SERVER_ROOT . '/sections/torrents/functions.php');
                       
                         $TagName = sanitize_tag(trim($_POST['newsynname']));
                         if ($TagName!=''){
+                            // check this synomyn is not already in syn table or tag table
                             $DB->query("SELECT ID FROM tag_synomyns WHERE Synomyn LIKE '".$TagName."'");
                             list($SynID) = $DB->next_record();
-                            if(!$SynID) { // Tag doesn't exist yet - create tag
-                                  $DB->query("INSERT INTO tag_synomyns (Synomyn, TagID, UserID) 
-                                                    VALUES ('".$TagName."', ".$ParentTagID.", ".$LoggedUser['ID']." )");
+                            if(!$SynID) {
+                                $DB->query("SELECT ID FROM tags WHERE Name LIKE '".$TagName."'");
+                                list($SynID) = $DB->next_record();
                             }
-                            $Cache->delete_value('synomyn_for_' . $TagName); // in case there is a 'not_found' value cached 
-                            $Cache->delete_value('all_synomyns');
+                            if(!$SynID) { // Tag doesn't exist yet - create tag
+                                $DB->query("INSERT INTO tag_synomyns (Synomyn, TagID, UserID) 
+                                                    VALUES ('".$TagName."', ".$ParentTagID.", ".$LoggedUser['ID']." )");
+                                $Cache->delete_value('synomyn_for_' . $TagName); // in case there is a 'not_found' value cached 
+                                $Cache->delete_value('all_synomyns');
+                            }
                         }
                   }
             }
