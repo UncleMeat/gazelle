@@ -142,10 +142,10 @@ function get_group_requests($GroupID) {
 }
 
 
-function get_tag_synomyn($Tag){
+function get_tag_synomyn($Tag, $Sanitise = true){
 	global $Cache, $DB;
       
-      $Tag = sanitize_tag($Tag);
+      if ($Sanitise) $Tag = sanitize_tag($Tag);
       // =======================================
       // i am a bit dubious about the value of caching this stuff... ?? 
       // remove if appropriate
@@ -153,7 +153,7 @@ function get_tag_synomyn($Tag){
 	if($TagName === false) { 
           $DB->query("SELECT t.Name 
                      FROM tag_synomyns AS ts JOIN tags as t ON t.ID = ts.TagID 
-                     WHERE Synomyn LIKE '".$Tag."'");
+                     WHERE Synomyn LIKE '".db_string($Tag)."'");
           list($TagName) = $DB->next_record();
           // cache a null result as 'not_found' ? there will be more null lookups than not probably
           if ($TagName) $Cache->cache_value('synomyn_for_' . $Tag, $TagName);

@@ -38,6 +38,7 @@
             'site_add_tag' => 'Can add tags.',
 	'site_delete_tag' => 'Can delete tags.',
             'site_manage_tags' => 'Can manage official tag list and synomyns.',
+            'site_convert_tags' => 'Can convert tags to synomyns.',
      
 	'site_disable_ip_history' => 'Disable IP history.',
 	'zip_downloader' => 'Download multiple torrents at once.',
@@ -162,6 +163,7 @@ function permissions_form(){ ?>
                                           <? display_perm('site_add_tag', 'Can add tags.'); ?>
 					<? display_perm('site_delete_tag', 'Can delete tags.'); ?>
                                           <? display_perm('site_manage_tags', 'Can manage official tag list and synomyns.'); ?>
+                                          <? display_perm('site_convert_tags', 'Can convert tags to synomyns.'); ?>
 
 					<? display_perm('site_disable_ip_history', 'Disable IP history.'); ?>
 					<? display_perm('zip_downloader', 'Download multiple torrents at once.'); ?>

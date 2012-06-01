@@ -22,5 +22,6 @@ if($DB->record_count() == 0) {
 	$DB->query("INSERT INTO torrents_tags_votes (GroupID, TagID, UserID, Way) VALUES ('$GroupID', '$TagID', '$UserID', '$Way')");
 	$Cache->delete_value('torrents_details_'.$GroupID); // Delete torrent group cache
 }
-header('Location: '.$_SERVER['HTTP_REFERER']);
+//header('Location: '.$_SERVER['HTTP_REFERER']);
+header("Location: torrents.php?id=$GroupID");
 ?>

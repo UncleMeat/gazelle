@@ -222,14 +222,20 @@ if (!$Properties['GroupID']) {
     foreach ($Tags as $Tag) {
         //$Tag = sanitize_tag($Tag);
         $Tag = get_tag_synomyn($Tag);
-        if (!empty($Tag)) {
-            if (!in_array($Tag, $TagsAdded)){
+        if (!empty($Tag)) { // mifune: modified this to not add duplicates in the same input string
+            if (!in_array($Tag, $TagsAdded)){ // and to create new tags as Uses=1 which seems more correct
                 $TagsAdded[] = $Tag;
+                $DB->query("INSERT INTO tags
+                            (Name, UserID, Uses) VALUES
+                            ('" . $Tag . "', $LoggedUser[ID], 1)
+                            ON DUPLICATE KEY UPDATE Uses=Uses+1;
+                      ");
+                /*
                 $DB->query("INSERT INTO tags
                             (Name, UserID) VALUES
                             ('" . $Tag . "', $LoggedUser[ID])
                             ON DUPLICATE KEY UPDATE Uses=Uses+1;
-                      ");
+                      "); */
                 $TagID = $DB->inserted_id();
 
                 $DB->query("INSERT INTO torrents_tags
@@ -240,6 +246,8 @@ if (!$Properties['GroupID']) {
             }
         }
     }
+    // replace the original tag array with corrected tags
+    $Tags = $TagsAdded;
 }
 
 // Use this section to control freeleeches

@@ -152,7 +152,21 @@ if (!$AdvancedSearch) {
         $TagList = explode(' ', $_GET['taglist']);
         $TagListEx = array();
         foreach ($TagList as $Key => &$Tag) {
-            $Tag = trim($Tag);
+            $Tag = strtolower(trim($Tag)) ;
+            
+            if ( ($Tag[0] != '-' && strlen($Tag)>= 2) || strlen($Tag)>= 3 ) {
+                if ($Tag[0] == '-') {
+                    $Tag = '-'. get_tag_synomyn( substr($Tag, 1), false);
+                    $TagListEx[] = '!' . $SS->EscapeString(substr($Tag, 1));
+                    unset($TagList[$Key]);
+                } else {
+                    $Tag = get_tag_synomyn($Tag, false);
+                    $Tag = $SS->EscapeString($Tag);
+                }
+            } else {
+                unset($TagList[$Key]);
+            }
+            /*
             if (strlen($Tag) >= 2) {
                 if ($Tag[0] == '-' && strlen($Tag) >= 3) {
                     $TagListEx[] = '!' . $SS->EscapeString(substr($Tag, 1));
@@ -162,7 +176,7 @@ if (!$AdvancedSearch) {
                 }
             } else {
                 unset($TagList[$Key]);
-            }
+            }*/
         }
         unset($Tag);
     }
@@ -190,7 +204,28 @@ if (!$AdvancedSearch) {
     }
     
     if (!empty($_GET['taglist'])) {
-        $TagList = trim(str_replace('.', '_', $_GET['taglist']));
+        // do synomyn replacement and skip <=2 length tags
+        $TagList = explode(' ', $_GET['taglist']);
+        //$TagListEx = array();
+        foreach ($TagList as $Key => &$Tag) {
+            $Tag = strtolower(trim($Tag)) ;
+           
+            if ( ($Tag[0] != '-' && strlen($Tag)>= 2) || strlen($Tag)>= 3 ) {
+                if ($Tag[0] == '-') {
+                    $Tag = '-'. get_tag_synomyn( substr($Tag, 1), false);
+                    //$TagListEx[] = '!' . $SS->EscapeString(substr($Tag, 1));
+                    //unset($TagList[$Key]);
+                } else {
+                    $Tag = get_tag_synomyn($Tag, false);
+                    //$Tag = $SS->EscapeString($Tag);
+                }
+            } else {
+                unset($TagList[$Key]);
+            }
+        }
+        unset($Tag);
+        $TagList = implode(' ', $TagList);
+        $TagList = trim(str_replace('.', '_', $TagList));       // $_GET['taglist']));
         $TagList = preg_replace(array('/ -/','/ not /i', '/ or /i', '/ and /i'), array(' !', ' -', ' | ', ' & '), $TagList);
         $TagList = trim($TagList);
         
