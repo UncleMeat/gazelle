@@ -328,11 +328,11 @@ switch ($_REQUEST['action']){
                                         $SQL ='INSERT IGNORE INTO torrents_tags 
                                               (TagID, GroupID, PositiveVotes, NegativeVotes, UserID) VALUES';
                                         $Div ='';
-                                        $MsgGroups = "Torrents (";
+                                        $MsgGroups = "torrents ";
                                         foreach($GroupInfos as $Group) {
                                             list($GroupID, $PVotes, $NVotes) = $Group;
                                             $SQL .= "$Div ('$ParentTagID', '$GroupID', '$PVotes', '$NVotes', '{$LoggedUser['ID']}')";
-                                            $MsgGroups .= "$Div $GroupID";
+                                            $MsgGroups .= "$Div$GroupID";
                                             $Div =',';
                                             // fix taglist in each torrent as we go
                                             $DB->query("SELECT TagList FROM torrents_group WHERE ID=$GroupID");
@@ -352,7 +352,7 @@ switch ($_REQUEST['action']){
                                             $DB->query("UPDATE torrents_group 
                                                            SET TagList='$NewTagList' WHERE ID=$GroupID");
                                         }
-                                        $MsgGroups .= ") ";
+                                        //$MsgGroups .= ") ";
                                         //$Message .= "   SQL= [ $SQL ] \n";
                                         // update torrents_tags with entries for parentTagID
                                         $DB->query($SQL);

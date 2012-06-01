@@ -88,6 +88,17 @@ while(list($Message, $LogTime) = $DB->next_record()) {
 			$MessageParts[$i] = '<a href="'.substr($MessageParts[$i], $Offset).'">'.substr($MessageParts[$i], $Offset).'</a>';
 		}
 		switch ($MessageParts[$i]) {
+			case "Tag":
+			case "tag":
+				$Tag = $MessageParts[$i + 1];
+				//$Tag = str_replace(',', '', $Tag);
+				if (is_string($Tag)) {
+					$Message = $Message.' '.$MessageParts[$i].' <a href="torrents.php?taglist='.str_replace(',', '', $Tag).'"> '.$Tag.'</a>';
+					$i++;
+				} else {
+					$Message = $Message.' '.$MessageParts[$i];
+				}
+				break;
 			case "Torrent":
 			case "torrent":
 				$TorrentID = $MessageParts[$i + 1];
@@ -97,6 +108,21 @@ while(list($Message, $LogTime) = $DB->next_record()) {
 				} else {
 					$Message = $Message.' '.$MessageParts[$i];
 				}
+				break;
+			case "Torrents":
+			case "torrents":
+                        $TorrentIDs = explode(',', $MessageParts[$i + 1]);
+				//$TorrentID = $MessageParts[$i + 1];
+                        $Links='';
+                        $Div='';
+                        foreach($TorrentIDs as $TorrentID){
+                            if (is_numeric($TorrentID)) {
+                                    $Links .= $Div .'<a href="torrents.php?torrentid='.$TorrentID.'">'.$TorrentID.'</a>';
+                                    $Div=', ';
+                            }
+                        }
+				$Message = $Message.' '.$MessageParts[$i] .' '. $Links;
+                        if ($Links != '') $i++;
 				break;
 			case "Request":
 				$RequestID = $MessageParts[$i + 1];
