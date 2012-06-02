@@ -57,6 +57,7 @@
      
 	'users_edit_titles' => 'Can edit titles.',
 	'users_edit_avatars' => 'Can edit avatars.',
+        'users_edit_badges' => 'Can edit badges.',
 	'users_edit_invites' => 'Can edit invite numbers and cancel sent invites.',
 	'users_edit_watch_hours' => 'Can edit contrib watch hours.',
 	'users_edit_reset_keys' => 'Can reset passkey/authkey.',
@@ -195,6 +196,8 @@ function permissions_form(){ ?>
       					
                               <? display_perm('users_edit_titles', 'Can edit titles.'); ?>
 					<? display_perm('users_edit_avatars', 'Can edit avatars.'); ?>
+                                                <? display_perm('users_edit_badges', 'Can edit badges.'); ?>
+                            
 					<? display_perm('users_edit_invites', 'Can edit invite numbers and cancel sent invites.'); ?>
 					<? display_perm('users_edit_watch_hours', 'Can edit contrib watch hours.'); ?>
 					<? display_perm('users_edit_reset_keys', 'Can reset any passkey/authkey.'); ?>

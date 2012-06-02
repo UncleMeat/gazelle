@@ -1128,7 +1128,7 @@ if (check_perms('users_mod', $Class)) { ?>
             
             
             
-<?	if (check_perms('users_delete_users')) { ?>
+<?	if (check_perms('users_edit_badges')) { ?>
              
 		<div class="box">
 			<div class="head">

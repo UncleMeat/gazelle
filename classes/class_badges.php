@@ -3,8 +3,9 @@
 class BADGES {
     // a harcoded array of shiney stuff
 	private $Badges = array(   
-          
-          
+           
+           'usb_award'        =>  array('usb_award.png', 'The USB Fairy Godmother Award','Awarded to USB for services to users above and beyond the call of duty.'),
+           
            'starred'           =>  array('star_red.png','Red Star','Red Star. This is a placeholder! we need better text & gfx!'),
            'starblue'          =>  array('star_blue.png', 'Blue Star','Blue Star. This is a placeholder! we need better text & gfx!'),
            'stargreen'         =>  array('star_green.png', 'Green Star','Green Star. This is a placeholder! we need better text & gfx!'),
@@ -27,9 +28,6 @@ class BADGES {
            'medalbronze'           =>  array('medalbronze.png','Bronze Medal','Awarded for XXXXXX. This is a placeholder! we need better text & gfx!'),
            'medalsilver'          =>  array('medalsilver.png', 'Silver Medal','Awarded for XXXXXX. This is a placeholder! we need better text & gfx!'),
            'medalgold'         =>  array('medalgold.png', 'Gold Medal','Awarded for XXXXXX. This is a placeholder! we need better text & gfx!'),
-           
-          
-           'usb_award'        =>  array('usb_award.png', 'The USB Fairy Godmother Award','Awarded to USB for services to users above and beyond the call of duty.'),
            
           
            'wealthy_wanker'           =>  array('wealthy_wanker.png','Wealthy Wanker','Plaque of Wealth. This user is a wealthy wanker. This is a placeholder! we need better text & gfx!'),
