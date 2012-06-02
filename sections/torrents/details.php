@@ -92,8 +92,8 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 	<h2><?=$DisplayName?></h2>
 <?
 	if(isset($_GET['did']) && is_number($_GET['did'])) {
-          if($_GET['did'] == 1) $ResultMessage ='Successfully Edited Description';
-          elseif($_GET['did'] == 2) $ResultMessage ='Successfully Renamed Title';
+          if($_GET['did'] == 1) $ResultMessage ='Successfully edited description';
+          elseif($_GET['did'] == 2) $ResultMessage ='Successfully renamed title';
           elseif($_GET['did'] == 3) {
               $ResultMessage = 'Added '. display_str($_GET['addedtag']);
               if (isset($_GET['synomyn'])) $ResultMessage .= ' as a synomyn of '. display_str($_GET['synomyn']);
@@ -101,7 +101,7 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
               $ResultMessage = display_str($_GET['addedtag']). ' is already added.';
               $AlertClass = ' alert';
           } elseif($_GET['did'] == 5) {
-              $ResultMessage = display_str($_GET['synomyn']). ' is a Synomyn for '. display_str($_GET['addedtag']). ' which is already added.';
+              $ResultMessage = display_str($_GET['synomyn']). ' is a synomyn for '. display_str($_GET['addedtag']). ' which is already added.';
               $AlertClass = ' alert';
           }
           if($ResultMessage){

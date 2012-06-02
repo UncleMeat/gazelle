@@ -148,7 +148,7 @@ if (!$AdvancedSearch) {
 
     if (!empty($_GET['taglist'])) {
         $_GET['taglist'] = cleanup_tags($_GET['taglist']);
-        $_GET['taglist'] = str_replace('.', '_', $_GET['taglist']);
+        //$_GET['taglist'] = str_replace('.', '_', $_GET['taglist']);
         $TagList = explode(' ', $_GET['taglist']);
         $TagListEx = array();
         foreach ($TagList as $Key => &$Tag) {
@@ -157,10 +157,12 @@ if (!$AdvancedSearch) {
             if ( ($Tag[0] != '-' && strlen($Tag)>= 2) || strlen($Tag)>= 3 ) {
                 if ($Tag[0] == '-') {
                     $Tag = '-'. get_tag_synomyn( substr($Tag, 1), false);
+                    $Tag = str_replace('.', '_', $Tag);
                     $TagListEx[] = '!' . $SS->EscapeString(substr($Tag, 1));
                     unset($TagList[$Key]);
                 } else {
                     $Tag = get_tag_synomyn($Tag, false);
+                    $Tag = str_replace('.', '_', $Tag);
                     $Tag = $SS->EscapeString($Tag);
                 }
             } else {
@@ -179,6 +181,8 @@ if (!$AdvancedSearch) {
             }*/
         }
         unset($Tag);
+        // moved this to bottom so we can grab synomyns more easily
+        $_GET['taglist'] = str_replace('.', '_', $_GET['taglist']);
     }
 
     if (empty($_GET['tags_type']) && !empty($TagList) && count($TagList) > 1) {
