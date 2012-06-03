@@ -356,9 +356,9 @@ if (is_array($DelBadges) && check_perms('users_edit_badges')) {
             $BadgesRemoved .= "$Div $Name";
             $Div = ',';
       }
+      $DB->query("DELETE FROM users_badges WHERE ID IN ( $SQL_IN )");
       $Cache->delete_value('user_badges_ids_'.$UserID);
       $Cache->delete_value('user_badges_'.$UserID);
-      $DB->query("DELETE FROM users_badges WHERE ID IN ( $SQL_IN )");
       $EditSummary[] = 'Badge'.(count($DelBadges)>1?'s':'')." removed: $BadgesRemoved";
 }
 
@@ -393,6 +393,12 @@ if ($FLTokens!=$Cur['FLTokens'] && ((check_perms('users_edit_tokens')  && $UserI
 if ($BonusCredits!=$Cur['Credits'] && ((check_perms('users_edit_credits') && $UserID != $LoggedUser['ID']) 
                         || (check_perms('users_edit_own_credits') && $UserID == $LoggedUser['ID']))) {
 	$UpdateSet[]="Credits=".$BonusCredits;
+      $Creditschange = $BonusCredits - $Cur['Credits'];
+      if ($Creditschange>=0) $Creditschange = "+".number_format ($Creditschange);
+      else $Creditschange = number_format ($Creditschange);
+      $BonusSummary = sqltime()." | $Creditschange | ".ucfirst("credits set to $BonusCredits from {$Cur['Credits']} by {$LoggedUser['Username']}");
+      $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$BonusSummary', i.BonusLog)";
+                
 	$EditSummary[]="Bonus Credits changed from ".$Cur['Credits']." to ".$BonusCredits;
 	$HeavyUpdates['Credits'] = $BonusCredits;
 }

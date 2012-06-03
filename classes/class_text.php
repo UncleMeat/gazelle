@@ -111,7 +111,7 @@ class TEXT {
            ':wizard:'           => 'wizard.gif',
            ':beer:'           => 'beer.gif',
            ':beer2:'           => 'beer2.gif',
-           ':drunk:'           => 'drunk.gif',
+           ':drunken:'           => 'drunk.gif',
            ':rant:'           => 'rant.gif',
            ':tease:'           => 'tease.gif',
            ':box:'           => 'box.gif', 
@@ -201,10 +201,78 @@ class TEXT {
            ':yikes:'           => 'yikes.gif',
           
           //----------------------------
+          //----------------------------
+          
+          
+           ':alarmed:'           => 'alarmed-smiley.gif',
+           ':amen:'           => 'amen.gif',
+           ':applause:'           => 'appl.gif',
+           ':argue:'           => 'argue.gif',
+           ':asshole:'           => 'asshole.gif',
+           ':backingout:'           => 'backingout.gif',
+           ':badday:'           => 'badday.gif',
+           ':bann:'           => 'bann.gif',
+           ':banstamp:'           => 'banned.gif',
+           ':blahblah:'           => 'blahblah.gif',
+           ':bulbar-smiley:'           => 'bulbar-smiley.gif',
+           ':bum:'           => 'bum.gif',
+           ':burgerking:'           => 'burgerking.gif',
+           ':carryon:'           => 'carryon.gif',
+           ':chatsmileys:'           => 'chatsmileys.gif',
+           ':delete:'           => 'delete1-smiley.gif',
+           ':drooling:'           => 'drooling_smiley.gif',
+           ':drunk:'           => 'drunk2.gif',
+           ':dupe:'           => 'dupe.gif',
+           ':fly:'           => 'fly.gif',
+           ':goldstars:'           => 'goldstars.gif',
+           ':hangin:'           => 'hangin.gif',
+           ':hat:'           => 'hat.gif',
+           ':help:'           => 'help.gif',
+           ':high5:'           => 'high5.gif',
+           ':hungry:'           => 'hungry.gif',
+           ':paper:'           => 'icon_paper.gif',
+           ':ideabulb:'           => 'ideabulb.gif',
+           ':ignore:'           => 'ignore.gif',
+           ':impatient:'           => 'impatient.gif',
+           ':irule:'           => 'irule.gif',
+           ':kickme:'           => 'kickme.gif',
+           ':kissass:'           => 'kissass.gif',
+           ':lgh:'           => 'lgh.gif',
+           ':Lurking:'           => 'Lurking.gif',
+           ':paranoia:'           => 'paranoia.gif',
+           ':paranoid:'           => 'paranoid.gif',
+           ':pillowfight:'           => 'pillowfight.gif',
+          
+           ':pplease:'           => 'pplease.gif',
+           ':pray:'           => 'pray.gif',
+           ':preach:'           => 'preach.gif',
+           ':protected:'           => 'protected.gif',
+           ':rantpin:'           => 'rant_pin.gif',
+           ':reap:'           => 'reaper2.gif',
+           ':run:'           => 'run.gif',
+           ':shower:'           => 'Shower.gif',
+           ':soapboxrant:'           => 'soapboxrant.gif',
+           ':preacher:'           => 'preacher.gif',
+           ':talkhand:'           => 'talkhand.gif',
+           ':pizza:'           => 'th_smiley_pizza.gif',
+           ':therethere:'           => 'therethere.gif',
+           ':topicclosed:'           => 'topicclosed.gif',
+           ':viking:'           => 'viking.gif',
+           ':whatdidimiss:'           => 'whatdidimiss.gif',
+           ':winnersmiley:'           => 'winnersmiley.gif',
+           ':wtfsign:'           => 'wtfsign.gif',
+           ':ridicule:'           => 'ridicule.gif',
+          
+          
+          
+          //----------------------------
+          
+          
           
            ':vader-smiley:'           => 'vader-smiley.gif',
            ':lsvader:'           => 'lsvader.gif',
            ':emperor:'           => 'emperor.gif',
+          
           //----------------------------
           
           
