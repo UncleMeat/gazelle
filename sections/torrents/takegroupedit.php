@@ -40,7 +40,7 @@ $Validate->SetFields('image', '0', 'image', 'The image URL you entered was not v
 
 $Validate->SetFields('body', '1', 'desc', 'Description', array('regex' => $whitelist_regex, 'maxlength' => 1000000, 'minlength' => 20));
 
-$Err = $Validate->ValidateForm($_POST); // Validate the form
+$Err = $Validate->ValidateForm($_POST, $Text); // Validate the form
 
 if ($Err) { // Show the upload form, with the data the user entered
     $HasDescriptionData = TRUE; /// tells editgroup to use $Body and $Image vars instead of requerying them
