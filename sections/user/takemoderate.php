@@ -317,7 +317,7 @@ if (is_array($AddBadges) && check_perms('users_edit_badges')) {
       $SQL_IN ='';
       foreach($AddBadges as $AddBadgeID) {
             $AddBadgeID = (int)$AddBadgeID;
-            $Tooltip = db_string( $_POST['addbadge'.$AddBadgeID] );
+            $Tooltip = db_string( display_str($_POST['addbadge'.$AddBadgeID]) );
             $SQL .= "$Div ('$UserID', '$AddBadgeID', '$Tooltip')";
             $SQL_IN .= "$Div $AddBadgeID";
             $Div = ',';
@@ -331,8 +331,8 @@ if (is_array($AddBadges) && check_perms('users_edit_badges')) {
             $BadgesAdded .= "$Div $Name";
             $Div = ',';
       }      
-      $Cache->delete_cache('user_badges_ids_'.$UserID);
-      $Cache->delete_cache('user_badges_'.$UserID);
+      $Cache->delete_value('user_badges_ids_'.$UserID);
+      $Cache->delete_value('user_badges_'.$UserID);
       $EditSummary[] = 'Badge'.(count($AddBadges)>1?'s':'')." added: $BadgesAdded";
 }
 
@@ -356,8 +356,8 @@ if (is_array($DelBadges) && check_perms('users_edit_badges')) {
             $BadgesRemoved .= "$Div $Name";
             $Div = ',';
       }
-      $Cache->delete_cache('user_badges_ids_'.$UserID);
-      $Cache->delete_cache('user_badges_'.$UserID);
+      $Cache->delete_value('user_badges_ids_'.$UserID);
+      $Cache->delete_value('user_badges_'.$UserID);
       $DB->query("DELETE FROM users_badges WHERE ID IN ( $SQL_IN )");
       $EditSummary[] = 'Badge'.(count($DelBadges)>1?'s':'')." removed: $BadgesRemoved";
 }
