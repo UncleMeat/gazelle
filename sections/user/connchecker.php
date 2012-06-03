@@ -32,11 +32,24 @@ if(isset($_GET['ip']) && isset($_GET['port'])){
 	}
 }
 
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+
+
+$DB->query("SELECT Body FROM articles WHERE TopicID='connchecker'");
+list($Body) = $DB->next_record();
+
+
 show_header('Connectability Checker');
 ?>
 <div class="thin">
 	<h2><a href="user.php?id=<?=$LoggedUser['ID']?>"><?=$LoggedUser['Username']?></a> &gt; Connectability Checker</h2>
-	<form action="javascript:check_ip();" method="get">
+<?  if ($Body){ ?>
+      <div class="box pad" style="padding:10px 10px 10px 20px;">
+            <?=$Text->full_format($Body, true)?>
+      </div>
+<?  }   ?>
+      <form action="javascript:check_ip();" method="get">
 		<table>
 			<tr>
 				<td class="label">IP</td>
