@@ -1,12 +1,12 @@
 
 function Send_Okay_Message(group_id, conv_id){
-    
+    if(conv_id==0) conv_id = null;
     if (confirm("Make sure you have really fixed the problem before sending this message!\n\nAre you sure it is fixed?")){
         
 	  var ToPost = [];
 	  ToPost['groupid'] = group_id; 
 	  ToPost['auth'] = authkey; 
-	  ToPost['convid'] = conv_id; 
+	  if (conv_id) ToPost['convid'] = conv_id; 
         ajax.post('?action=send_okay_message', ToPost, function (response) {
             // show  user response 
             conv_id = response;
