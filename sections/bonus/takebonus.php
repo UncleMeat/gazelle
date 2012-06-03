@@ -65,7 +65,8 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 
                 $DB->query( "INSERT INTO users_badges (UserID, BadgeID, Title) 
                                   VALUES ( '$UserID', '$Value', '$Title')");
-                
+                $Cache->delete_cache('user_badges_ids_'.$UserID);
+                $Cache->delete_cache('user_badges_'.$UserID);
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
                 $ResultMessage=$Summary;
                 
