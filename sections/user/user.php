@@ -1,9 +1,9 @@
 <?
 
 include(SERVER_ROOT.'/classes/class_text.php');
-include(SERVER_ROOT.'/classes/class_badges.php');
+//include(SERVER_ROOT.'/classes/class_badges.php');
 $Text = new TEXT;
-$BadgeBuilder = new BADGES();
+//$BadgeBuilder = new BADGES();
 
 include(SERVER_ROOT.'/sections/requests/functions.php');
 
@@ -169,6 +169,19 @@ $Badges=($Donor) ? '<a href="donate.php"><img src="'.STATIC_SERVER.'common/symbo
 $Badges.=($Warned!='0000-00-00 00:00:00') ? '<img src="'.STATIC_SERVER.'common/symbols/warned.png" alt="Warned" />' : '';
 $Badges.=($Enabled == '1' || $Enabled == '0' || !$Enabled) ? '': '<img src="'.STATIC_SERVER.'common/symbols/disabled.png" alt="Banned" />';
 
+//////$BadgeBuilder->insert_into_db();
+/*
+$DB->query("SELECT
+                ub.ID,
+                ub.BadgeID,
+                ub.Title,
+                b.Name,
+                b.Image
+           FROM users_badges AS ub
+           LEFT JOIN badges AS b ON b.ID = ub.BadgeID
+           WHERE ub.UserID = $UserID");
+*/
+$UserBadges = get_user_badges($UserID);
 
 show_header($Username,'user,bbcode,requests');
 ?>
@@ -588,9 +601,20 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
                         echo $Text->full_format($Info, get_permissions_advtags($UserID)); 
         }   ?>
                     </div>
-<?      if ($Awards) {  ?>
-                    <div class="badgesrow">
-                            <div class="badges"><?=$BadgeBuilder->get_badges($Awards)?></div>
+<?     
+          if ($UserBadges) {  ?>
+                    <div class="badgesrow badges">
+    <?
+     print_badges_array($UserBadges);
+     /*
+                            foreach ($UserBadges as $Badge) {
+                                list($ID,$BadgeID, $Tooltip, $Name, $Image ) = $Badge;
+                       
+                                //$UserBadgesIDs[] = $BadgeID;
+                                echo '<div class="badge"><img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="'.$Tooltip.'" alt="'.$Name.'" /></div>';
+                                
+                            } */
+   ?>
                     </div>
 <?      }   ?>
                   </div>
@@ -1137,9 +1161,60 @@ if (check_perms('users_mod', $Class)) { ?>
 			</div>
                   <div class="pad hidden" id="badgesadmin"> 
 <?
-                        $BadgeBuilder->print_badges_admin($Awards);
-                        
+                      $UserBadgesIDs = array(); // used in a mo to determine what badges user has for admin 
+                      if ($UserBadges){
+?>
+                      <div class="pad"><h3>Current user badges (select to remove)</h3>
+<?
+                            foreach ($UserBadges as $Badge) {
+                                list($ID,$BadgeID, $Tooltip, $Name, $Image ) = $Badge;
+                                $UserBadgesIDs[] = $BadgeID;
+?>
+                            <div class="badge">
+                                <?='<img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="'.$Tooltip.'" alt="'.$Name.'" />'?>
+                                <br />
+                                <input type="checkbox" name="delbadge[]" value="<?=$ID?>" />
+                                        <label for="delbadge[]"> <?=$Name?></label>
+                            </div>
+<?
+                            }
+?>
+                      </div><hr />
+<?
+                      }
+?>
+                      <div class="pad"><h3>Add user badges (select to add)</h3>
+                          <p>Shop and single type items can be owned once by each user, multiple type items many times, and unique items only by one user at once</p>
+<?
+                    $DB->query("SELECT
+                                    ID,
+                                    Type,
+                                    Name,
+                                    Description,
+                                    Image,
+                                    IF(Type != 'Unique', TRUE, 
+                                                        (SELECT COUNT(*) FROM users_badges 
+                                                            WHERE users_badges.BadgeID=badges.ID)=0) AS Available
+                               FROM badges 
+                               WHERE Type != 'Shop'
+                               ORDER BY Sort"); 
+
+                    while($Badge = $DB->next_record()){
+                        list($ID, $Type, $Name, $Tooltip, $Image, $Available) = $Badge;
+    ?>
+                        <div class="badge">
+                            <?='<img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="('.$Type.') '.$Tooltip.'" alt="'.$Name.'" />'?>
+                            <br />
+                            <input onchange="$('#addbadge<?=$ID?>').toggle();" type="checkbox" name="addbadge[]" value="<?=$ID?>" <?  
+                                        
+                    if (!$Available || ($Type != 'Multiple' && in_array($ID, $UserBadgesIDs) )) { ?>disabled="disabled"<? }  ?> />
+                                    <label for="addbadge[]"> <?=$Name; if($Type=='Unique') { echo "*"; } ?></label>
+                            <br /><input class="hidden" type="text" id="addbadge<?=$ID?>" name="addbadge<?=$ID?>" value="<?=$Tooltip?>" />
+                        </div>
+    <?
+                    }
 ?> 
+                      </div>
 			</div>
 		</div>
 <?	}

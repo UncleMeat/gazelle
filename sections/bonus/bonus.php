@@ -2,9 +2,37 @@
 enforce_login();
 show_header('Bonus Shop');
 
-include(SERVER_ROOT.'/classes/class_badges.php');
-$BadgeBuilder = new BADGES();
+//include(SERVER_ROOT.'/classes/class_badges.php');
+//$BadgeBuilder = new BADGES();
 
+
+//-------------------------------------------------------------
+/* Auto update shop items with applicable badge items
+ * This should probably be in a manager, or deleted
+$DB->query("DELETE FROM bonus_shop_actions WHERE Action='badge'");
+$SQL = 'INSERT INTO bonus_shop_actions (Title, Description, Action, Value, Cost) VALUES';
+$Div = '';
+$DB->query("SELECT ID, 
+                   Type,
+                   Cost,
+                   Name,
+                   Description,
+                   Image
+              FROM badges 
+             WHERE Type='Shop'
+             ORDER BY Sort");
+while(list($ID, $Type, $Cost, $Name, $Description, $Image)=$DB->next_record()) {
+    
+    $SQL .= "$Div ('$Name', '$Description', 'badge', '$ID', '$Cost')";
+    $i++;
+    $Div = ',';
+}
+$DB->query($SQL);
+ */
+//-------------------------------------------------------------
+               
+            
+            
 $ShopItems = get_shop_items();
 ?>
 <div class="thin">
@@ -41,11 +69,12 @@ $ShopItems = get_shop_items();
 			</tr>
 <?
 	$Row = 'a';
+      $UserBadgeIDs = get_user_shop_badges_ids($LoggedUser['ID']);
 	foreach($ShopItems as $BonusItem) {
-		list($ItemID, $Title, $Description, $Action, $Value, $Cost) = $BonusItem;
+		list($ItemID, $Title, $Description, $Action, $Value, $Cost, $Image) = $BonusItem;
             $IsBadge = $Action=='badge'; 
             // if user already has badge item dont allow buy
-            if ($IsBadge && in_array($Value, $LoggedUser['Badges'])) {
+            if ($IsBadge && in_array($Value, $UserBadgeIDs)) {
                 $CanBuy = false;
                 $BGClass= ' itemduplicate';
             } else { //
@@ -56,8 +85,14 @@ $ShopItems = get_shop_items();
 ?> 
 			<tr class="row<?=$Row.$BGClass?>">
 				<td width="160px"><strong><?=display_str($Title) ?></strong></td>
-				<td style="border-right:none;" <? if(!$IsBadge) { echo 'colspan="2"'; } ?>><?=display_str($Description)?></td>
-                    <?  if ($IsBadge) { echo '<td style="border-left:none;width:160px;text-align:center;">'.$BadgeBuilder->get_badges(array($Value)).'</td>' ; } ?>
+				<td style="border-right:none;" <? if(!$Image) { echo 'colspan="2"'; } ?>><?=display_str($Description)?></td>
+                    <?  if ($Image) {  ?>
+                        <td style="border-left:none;width:160px;text-align:center;">
+                            <div class="badge">
+                                <img src="<?=STATIC_SERVER.'common/badges/'.$Image?>" title="<?=$Title?>" alt="<?=$Title?>" />
+                            </div>
+                        </td>
+                   <?   } ?>
 				<td width="60px" style="text-align: center;"><strong><?=number_format($Cost) ?>c</strong></td>
 				<td width="60px" style="text-align: center;">
                             <form method="post" action="">  

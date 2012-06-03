@@ -48,6 +48,28 @@ if(!empty($ShopItem) && is_array($ShopItem)){
         Switch($Action){  // atm hardcoded in db:  givecredits, givegb, gb, slot, title, badge
             case 'badge' :
                 
+                $UserBadgeIDs = get_user_shop_badges_ids($UserID);
+                if ( in_array($Value, $UserBadgeIDs)) {
+                    $ResultMessage='Something bad happened (duplicate badge insertion)';
+                    break;
+                }
+                
+                
+                $Summary = sqltime().' - '.ucfirst("user bought $Title badge. Cost: $Cost credits");	
+                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
+                $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought a $Title badge.");
+                $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
+                //$LoggedUser['Badges'][] = $Value;
+                //$LoggedUser['Badges'] = $BadgeBuilder->get_user_badge_array($LoggedUser['Badges']);
+                //$UpdateSet[]="m.Badges='".db_string( serialize($LoggedUser['Badges']) )."'";
+                
+                $DB->query( "INSERT INTO users_badges (UserID, BadgeID, Title) 
+                                  VALUES ( '$UserID', '$Value', '$Title')");
+                
+                $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
+                $ResultMessage=$Summary;
+                
+                /*
                 if (in_array($Value, $LoggedUser['Badges'])){
                     $ResultMessage='Something bad happened (duplicate badge insertion)';
                     break;
@@ -65,6 +87,7 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 $UpdateSet[]="m.Badges='".db_string( serialize($LoggedUser['Badges']) )."'";
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
                 $ResultMessage=$Summary;
+                 */
                 break;
             
             case 'givecredits':

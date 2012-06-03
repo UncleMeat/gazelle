@@ -286,7 +286,7 @@ if(!empty($_REQUEST['action'])) {
 									VALUES ('torrents', ".db_string($_POST['post']).", ".db_string($LoggedUser['ID']).", '".sqltime()."', '".db_string($OldBody)."')");
 			
 			// This gets sent to the browser, which echoes it in place of the old body
-			echo $Text->full_format($_POST['body'], get_permissions_advtags($AuthorID));
+			echo '<div class="post_content">'.$Text->full_format($_POST['body'], get_permissions_advtags($AuthorID)).'</div>';
 			break;
 		
 		case 'delete_post':

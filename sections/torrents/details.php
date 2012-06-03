@@ -9,9 +9,9 @@ define(MAX_PERS_COLLAGES, 3); // How many personal collages should be shown by d
 include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
 include(SERVER_ROOT.'/sections/bookmarks/functions.php'); // has_bookmarked()
 include(SERVER_ROOT.'/classes/class_text.php');
-include(SERVER_ROOT.'/classes/class_badges.php');
+//include(SERVER_ROOT.'/classes/class_badges.php');
 $Text = new TEXT;
-$BadgeBuilder = new BADGES();
+//$BadgeBuilder = new BADGES();
 
 $GroupID=ceil($_GET['id']);
 
@@ -628,9 +628,6 @@ if(count($PersonalCollages)>0) {
 
 ?>
            
-		<!--<div class="box">
-		<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-            </div>-->
         </div>
       <div style="clear:both"></div>
     </div>
@@ -751,7 +748,8 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 <? 	} ?>
                         <span class="editedby">Last edited by
 				<?=format_username($EditedUserID, $EditedUsername) ?> <?=time_diff($EditedTime,2,true,true)?>
-                        </span></div>
+                        </span>
+                        </div>
         <? }   ?>  
 			</div>
 <?  
@@ -764,7 +762,13 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 <?  if( empty($HeavyInfo['DisableSignatures']) && !empty($Awards) ) {  ?> 
       <tr>
           <td colspan="2" class="badgesrow">
-                      <div class="badges"><?=$BadgeBuilder->get_badges($Awards)?></div>
+                <div class="badges">
+<?
+                    $UserBadges = get_user_badges($AuthorID);
+                    print_badges_array($UserBadges);
+                      //$BadgeBuilder->get_badges($Awards)
+?>
+                </div>
           </td>
       </tr>
 <?  }       ?>

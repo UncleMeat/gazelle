@@ -519,6 +519,53 @@ function get_permissions_advtags($UserID, $CustomPermissions = false, $UserPermi
       return isset($PermissionsValues['site_advanced_tags']) &&  $PermissionsValues['site_advanced_tags'];
 }
 
+
+function get_user_badges($UserID){
+    global $DB, $Cache;
+    $UserID = (int)$UserID;
+    $UserBadges = $Cache->get_value('user_badges_'.$UserID);
+    if (!is_array($UserBadges)) {
+        $DB->query("SELECT
+                        ub.ID,
+                        ub.BadgeID,
+                        ub.Title,
+                        b.Name,
+                        b.Image
+                   FROM users_badges AS ub
+                   LEFT JOIN badges AS b ON b.ID = ub.BadgeID
+                   WHERE ub.UserID = $UserID
+                   ORDER BY b.Sort");
+        $UserBadges = $DB->to_array();
+        $Cache->cache_value('user_badges_'.$UserID, $UserBadges);
+    }
+    return $UserBadges;
+}
+
+function get_user_shop_badges_ids($UserID){
+    global $DB, $Cache;
+    $UserID = (int)$UserID;
+    $UserBadges = $Cache->get_value('user_badges_ids_'.$UserID);
+    if (!is_array($UserBadges)) {
+        $DB->query("SELECT BadgeID
+                      FROM users_badges AS ub
+                 LEFT JOIN badges AS b ON b.ID = ub.BadgeID
+                     WHERE b.Type='Shop' AND UserID = $UserID");
+        $UserBadges = $DB->collect('BadgeID');
+        $Cache->cache_value('user_badges_ids_'.$UserID, $UserBadges);
+    }
+    return $UserBadges;
+}
+
+
+function print_badges_array($UserBadges){ 
+                            
+    foreach ($UserBadges as $Badge) {
+        list($ID,$BadgeID, $Tooltip, $Name, $Image ) = $Badge;
+        echo '<div class="badge"><img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="'.$Tooltip.'" alt="'.$Name.'" /></div>';
+    }
+  
+}
+
 // This function is slow. Don't call it unless somebody's logging in.
 function site_ban_ip($IP) {
     global $DB, $Cache;

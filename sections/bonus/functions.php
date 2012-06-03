@@ -1,4 +1,5 @@
-<?php
+<?
+/*
 function get_shop_items(){ 
 	global $Cache, $DB;
 	static $ShopItems;
@@ -17,20 +18,42 @@ function get_shop_items(){
 		$Cache->cache_value('shop_items', $ShopItems);
 	}
 	return $ShopItems;
+} */
+function get_shop_items(){ 
+	global $Cache, $DB;
+	static $ShopItems;
+	if(is_array($ShopItems)) return $ShopItems;
+	if(($ShopItems = $Cache->get_value('shop_items')) === false) {
+		$DB->query("SELECT
+                        s.ID, 
+                        s.Title, 
+                        s.Description, 
+                        s.Action, 
+                        s.Value,
+                        IF(Action='badge',b.Cost,s.Cost) AS Cost,
+                        IF(Action='badge',b.Image,NULL) AS Image
+			FROM bonus_shop_actions AS s
+                    LEFT JOIN badges AS b ON b.ID=s.Value
+			ORDER BY ID");
+		$ShopItems = $DB->to_array(false, MYSQLI_BOTH);
+		$Cache->cache_value('shop_items', $ShopItems);
+	}
+	return $ShopItems;
 }
 function get_shop_item($ItemID){
 	global $Cache, $DB;
 	$ItemID = (int)$ItemID;
 	if(($ShopItem = $Cache->get_value('shop_item_'.$ItemID)) === false) {
 		$DB->query("SELECT
-                        ID, 
-                        Title, 
-                        Description, 
-                        Action, 
-                        Value, 
-                        Cost
-			FROM bonus_shop_actions
-			WHERE ID='$ItemID'");
+                        s.ID,
+                        IF(Action='badge',b.Name,s.Title) AS Title, 
+                        s.Description, 
+                        s.Action, 
+                        s.Value, 
+                        IF(Action='badge',b.Cost,s.Cost) AS Cost
+			 FROM bonus_shop_actions AS s
+              LEFT JOIN badges AS b ON b.ID=s.Value
+			WHERE s.ID='$ItemID'");
 		$ShopItem = $DB->to_array(false, MYSQLI_BOTH);
 		$Cache->cache_value('shop_item_'.$ItemID, $ShopItem);
 	}

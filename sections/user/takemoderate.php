@@ -6,8 +6,8 @@
 
 \*************************************************************************/
 
-include(SERVER_ROOT.'/classes/class_badges.php');
-$BadgeBuilder = new BADGES();
+//include(SERVER_ROOT.'/classes/class_badges.php');
+//$BadgeBuilder = new BADGES();
 
 
 // Are they being tricky blighters?
@@ -32,13 +32,18 @@ $Invites = (int)$_POST['Invites'];
 $SupportFor = db_string(display_str($_POST['SupportFor']));
 $Pass = db_string($_POST['ChangePassword']);
 $Warned = (isset($_POST['Warned']))? 1 : 0;
-
+    /*
     $Badges = $_POST['badge'];
     if(!is_array($Badges)) {
           $Badges = array();
     }
     $Badges = $BadgeBuilder->get_user_badge_array($Badges);
-
+    */
+    
+    $AddBadges = $_POST['addbadge'];
+    $DelBadges = $_POST['delbadge'];
+    
+    
         $AdjustUpValue = ($_POST['adjustupvalue']  == "" ? 0 : $_POST['adjustupvalue']);
         if ( isset($AdjustUpValue) && $AdjustUpValue[0]=='+') $AdjustUpValue = substr($AdjustUpValue, 1);
         if (is_numeric($AdjustUpValue)){ 
@@ -291,11 +296,71 @@ if ($Visible!=$Cur['Visible']  && check_perms('users_make_invisible')) {
 }
 
 //----------------------------------------------------------- 
+/*
 $Cur['Badges'] =  unserialize($Cur['Badges']);
-if ($Badges != $Cur['Badges'] && check_perms('users_edit_titles')) {
+if ($Badges != $Cur['Badges'] && check_perms('users_edit_badges')) {
 	$UpdateSet[]="Badges='". db_string(serialize($Badges)). "'";
-	$EditSummary[]="Badges changed from \'". implode(", ",  $Cur['Badges']) . "\' to \'" . implode(", ", $Badges)."\'"  ;
+	//$EditSummary[]="Badges changed from \'". implode(", ",  $Cur['Badges']) . "\' to \'" . implode(", ", $Badges)."\'"  ;
+      $BadgesAdded = array_diff($Badges, $Cur['Badges']);
+      $BadgesDeleted = array_diff($Cur['Badges'], $Badges);
+      if ($BadgesDeleted && is_array($BadgesDeleted))
+        $EditSummary[] = 'Badge'.(count($BadgesDeleted)>1?'s':'').' removed: '. implode(', ',  $BadgesDeleted);
+      if ($BadgesAdded && is_array($BadgesAdded))
+        $EditSummary[] = 'Badge'.(count($BadgesAdded)>1?'s':'').' added: '. implode(', ',  $BadgesAdded);
+}   */
+
+
+if (is_array($AddBadges) && check_perms('users_edit_badges')) {
+	
+      $SQL = 'INSERT INTO users_badges (UserID, BadgeID, Title) VALUES';
+      $Div = '';
+      $SQL_IN ='';
+      foreach($AddBadges as $AddBadgeID) {
+            $AddBadgeID = (int)$AddBadgeID;
+            $Tooltip = db_string( $_POST['addbadge'.$AddBadgeID] );
+            $SQL .= "$Div ('$UserID', '$AddBadgeID', '$Tooltip')";
+            $SQL_IN .= "$Div $AddBadgeID";
+            $Div = ',';
+      }
+      $DB->query($SQL);
+      
+      $BadgesAdded = '';
+      $Div = '';
+      $DB->query("SELECT Name FROM badges WHERE ID IN ( $SQL_IN )");
+      while(list($Name)=$DB->next_record()) {
+            $BadgesAdded .= "$Div $Name";
+            $Div = ',';
+      }      
+      $EditSummary[] = 'Badge'.(count($AddBadges)>1?'s':'')." added: $BadgesAdded";
 }
+
+
+if (is_array($DelBadges) && check_perms('users_edit_badges')) {
+	
+      $Div = '';
+      $SQL_IN ='';
+      foreach($DelBadges as $UserBadgeID) { //  
+            $UserBadgeID = (int)$UserBadgeID;
+            $SQL_IN .= "$Div $UserBadgeID";
+            $Div = ',';
+      }
+      $BadgesRemoved = '';
+      $Div = '';
+      $DB->query("SELECT Name 
+                    FROM users_badges AS ub 
+                    LEFT JOIN badges AS b ON ub.BadgeID=b.ID 
+                    WHERE ub.ID IN ( $SQL_IN )");
+      while(list($Name)=$DB->next_record()) {
+            $BadgesRemoved .= "$Div $Name";
+            $Div = ',';
+      }
+      
+      $DB->query("DELETE FROM users_badges WHERE ID IN ( $SQL_IN )");
+      $EditSummary[] = 'Badge'.(count($DelBadges)>1?'s':'')." removed: $BadgesRemoved";
+}
+
+
+
 
 
 if ($AdjustUpValue != 0 && ((check_perms('users_edit_ratio') && $UserID != $LoggedUser['ID'])

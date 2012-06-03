@@ -454,7 +454,14 @@ $AllowTags= isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues
 <?  if( empty($HeavyInfo['DisableSignatures']) && !empty($Awards) ) {  ?> 
       <tr>
           <td colspan="2" class="badgesrow">
-                      <div class="badges"><?=$BadgeBuilder->get_badges($Awards)?></div>
+               <div class="badges">
+<?
+                    $UserBadges = get_user_badges($UserID);
+                    print_badges_array($UserBadges);
+                    
+                      //=$BadgeBuilder->get_badges($Awards)
+?>
+               </div>
           </td>
       </tr>
 <?  }       ?>
