@@ -189,6 +189,9 @@ $Contents = unserialize(base64_decode($Contents));
 $Tor = new TORRENT($Contents, true); // New TORRENT object
 // Set torrent announce URL
 $Tor->set_announce_url(ANNOUNCE_URL.'/'.$TorrentPass.'/announce');
+
+$Tor->set_comment('http://'. SITE_URL."/torrents.php?id=$GroupID");
+
 // Remove multiple trackers from torrent
 unset($Tor->Val['announce-list']);
 // Remove web seeds (put here for old torrents not caught by previous commit

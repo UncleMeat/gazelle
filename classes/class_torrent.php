@@ -246,6 +246,9 @@ class TORRENT extends BENCODE_DICT {
 		$this->Val['announce'] = $Announce;
 	}
 	
+	function set_comment($Comment) {
+		$this->Val['comment'] = $Comment;
+	}
 	// Returns an array of:
 	// 	* the files in the torrent 
 	//	* the total size of files described therein
