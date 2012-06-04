@@ -12,9 +12,9 @@ Things to expect in $_GET:
 //---------- Things to sort out before it can start printing/generating content
 
 include(SERVER_ROOT.'/classes/class_text.php');
-include(SERVER_ROOT.'/classes/class_badges.php');
+//include(SERVER_ROOT.'/classes/class_badges.php');
 $Text = new TEXT;
-$BadgeBuilder = new BADGES();
+//$BadgeBuilder = new BADGES();
 
 // Check for lame SQL injection attempts
 if(!isset($_GET['threadid']) || !is_number($_GET['threadid'])) {
@@ -451,12 +451,13 @@ $AllowTags= isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues
 ?>
 		</td>
 	</tr>
-<?  if( empty($HeavyInfo['DisableSignatures']) && !empty($Awards) ) {  ?> 
+<?  
+    $UserBadges = get_user_badges($AuthorID);
+    if( empty($HeavyInfo['DisableSignatures']) && !empty($UserBadges) ) {  ?> 
       <tr>
           <td colspan="2" class="badgesrow">
                <div class="badges">
 <?
-                    $UserBadges = get_user_badges($UserID);
                     print_badges_array($UserBadges);
                     
                       //=$BadgeBuilder->get_badges($Awards)

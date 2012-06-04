@@ -759,12 +759,13 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 ?>
 		</td>
 	</tr>
-<?  if( empty($HeavyInfo['DisableSignatures']) && !empty($Awards) ) {  ?> 
+<? 
+    $UserBadges = get_user_badges($AuthorID);
+    if( empty($HeavyInfo['DisableSignatures'])  ) {  ?> 
       <tr>
           <td colspan="2" class="badgesrow">
                 <div class="badges">
 <?
-                    $UserBadges = get_user_badges($AuthorID);
                     print_badges_array($UserBadges);
                       //$BadgeBuilder->get_badges($Awards)
 ?>
