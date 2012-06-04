@@ -51,7 +51,8 @@ if ($DB->record_count()>0) {
 	}
 }
 
-write_log($LoggedUser['Username']." sent mass notice to snatches of torrent $TorrentID in group $GroupID");
+//write_log($LoggedUser['Username']." sent mass notice to snatches of torrent $TorrentID in group $GroupID");
+write_log("Mass PM sent to snatches of torrent $TorrentID in group $GroupID by {$LoggedUser['Username']}");
 
 header("Location: torrents.php?id=$GroupID");
 

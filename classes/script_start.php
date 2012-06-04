@@ -1247,7 +1247,7 @@ function make_class_string($ClassID, $Usespan = false) {
 //Write to the group log
 function write_group_log($GroupID, $TorrentID, $UserID, $Message, $Hidden) {
     global $DB, $Time;
-    $DB->query("INSERT INTO group_log (GroupID, TorrentID, UserID, Info, Time, Hidden) VALUES (" . $GroupID . ", " . $TorrentID . ", " . $UserID . ", '" . db_string($Message) . "', '" . sqltime() . "', " . $Hidden . ")");
+    $DB->query("INSERT INTO group_log (GroupID, TorrentID, UserID, Info, Time, Hidden) VALUES (" . (int)$GroupID . ", " . (int)$TorrentID . ", " . (int)$UserID . ", '" . db_string($Message) . "', '" . sqltime() . "', " . (int)$Hidden . ")");
 }
 
 // Write a message to the system log

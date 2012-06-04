@@ -127,5 +127,22 @@ foreach($Snatchers as $UserID) {
 	}
 }
 
+$DB->query("SELECT NewCategoryID, Name, Body, Image FROM torrents_group WHERE ID=$GroupID");
+list($OrigCatID, $OrigName, $OrigBody, $OrigImage) = $DB->next_record();
+
+if($CategoryID != $OrigCatID) {
+    $LogDetails = "Category";
+    $Concat = ', ';
+}
+if($Body != $OrigBody) {
+    $LogDetails .= "{$Concat}Description";
+    $Concat = ', ';
+}
+if($Image != $OrigImage) $LogDetails .= "{$Concat}Image";
+
+write_log("Torrent $TorrentIDs ($OrigName) was edited by ".$LoggedUser['Username']." ($LogDetails)"); //in group $GroupID 
+write_group_log($GroupID, $TorrentIDs, $LoggedUser['ID'], $LogDetails, 0);
+
+
 header("Location: torrents.php?id=".$GroupID."&did=1");
 ?>
