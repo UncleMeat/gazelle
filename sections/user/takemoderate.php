@@ -256,7 +256,7 @@ if ($Classes[$Class]['Level']!=$Cur['Class'] && (
 }
 
 if ($Username!=$Cur['Username'] && check_perms('users_edit_usernames', $Cur['Class']-1)) {
-	$DB->query("SELECT ID FROM users_main WHERE Username = '".$Username."'");
+	$DB->query("SELECT ID FROM users_main WHERE Username = '".$Username."' AND ID != $UserID");
 	if($DB->next_record() > 0) {
 		list($UsedUsernameID) = $DB->next_record();
 		error("Username already in use by <a href='user.php?id=".$UsedUsernameID."'>".$Username."</a>");
