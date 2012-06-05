@@ -605,18 +605,11 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
           if ($UserBadges) {  ?>
                     <div class="badgesrow badges">
     <?
-     print_badges_array($UserBadges);
-     /*
-                            foreach ($UserBadges as $Badge) {
-                                list($ID,$BadgeID, $Tooltip, $Name, $Image ) = $Badge;
-                       
-                                //$UserBadgesIDs[] = $BadgeID;
-                                echo '<div class="badge"><img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="'.$Tooltip.'" alt="'.$Name.'" /></div>';
-                                
-                            } */
+            print_badges_array($UserBadges);
    ?>
                     </div>
-<?      }   ?>
+                           
+<?        }   ?>
                   </div>
 		</div>
 <?
