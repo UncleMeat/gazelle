@@ -123,7 +123,7 @@ switch ($_REQUEST['action']){
                 include('managers/awards_auto_list.php');
                 break;
        
-        case 'awards_auto_alter':
+        case 'awards_alter':
                 include('managers/awards_auto_alter.php');
                 break;
       
