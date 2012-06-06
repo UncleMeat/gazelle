@@ -40,7 +40,7 @@ $Validate->SetFields('image', '0', 'image', 'The image URL you entered was not v
 
 $Validate->SetFields('body', '1', 'desc', 'Description', array('regex' => $whitelist_regex, 'maxlength' => 1000000, 'minlength' => 20));
 
-$Err = $Validate->ValidateForm($_POST); // Validate the form
+$Err = $Validate->ValidateForm($_POST, $Text); // Validate the form
 
 if ($Err) { // Show the upload form, with the data the user entered
     $HasDescriptionData = TRUE; /// tells editgroup to use $Body and $Image vars instead of requerying them
@@ -126,6 +126,23 @@ foreach($Snatchers as $UserID) {
 		}
 	}
 }
+
+$DB->query("SELECT NewCategoryID, Name, Body, Image FROM torrents_group WHERE ID=$GroupID");
+list($OrigCatID, $OrigName, $OrigBody, $OrigImage) = $DB->next_record();
+
+if($CategoryID != $OrigCatID) {
+    $LogDetails = "Category";
+    $Concat = ', ';
+}
+if($Body != $OrigBody) {
+    $LogDetails .= "{$Concat}Description";
+    $Concat = ', ';
+}
+if($Image != $OrigImage) $LogDetails .= "{$Concat}Image";
+
+write_log("Torrent $TorrentIDs ($OrigName) was edited by ".$LoggedUser['Username']." ($LogDetails)"); //in group $GroupID 
+write_group_log($GroupID, $TorrentIDs, $LoggedUser['ID'], $LogDetails, 0);
+
 
 header("Location: torrents.php?id=".$GroupID."&did=1");
 ?>

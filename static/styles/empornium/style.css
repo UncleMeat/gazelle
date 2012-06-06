@@ -879,6 +879,9 @@ table.wid740 {
     border: 1px solid #98AAB1;
 }
 
+table.noborder td {
+    border:none;
+}
 /* Bonus SHop */
 
 tr.itembuy {
@@ -1293,6 +1296,14 @@ td.badgesrow, .badgesrow {
    display:inline-block;
    text-align: center;
 }
+
+.addbadges {
+   text-align: left;
+}
+.addbadges .badge {
+   display:block;
+}
+
 
 
 /* Layout (Inbox) */

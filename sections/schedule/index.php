@@ -106,19 +106,9 @@ $DB->query("update users_main
 sleep(3);
 $DB->query("DELETE FROM xbt_files_users WHERE active='0'");
 
-/*************************************************************************\
-//--------------Run every hour ------------------------------------------//
-
-These functions are run every hour.
-
-\*************************************************************************/
 
 
-if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
-	echo "Ran hourly functions\n";
-	
-      
-      //------------- Remove torrents that have expired their warning period ---------------------------------------//
+//------------- Remove torrents that have expired their warning period every 15 minutes ----------//
      
       $DB->query("SELECT AutoDelete FROM review_options");
       list($AutoDelete) = $DB->next_record();
@@ -133,6 +123,25 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
                 $NumDeleted = delete_torrents_list($Torrents);
                 echo "Num of torrents auto-deleted: $NumDeleted\n";
           }
+      }
+      
+      
+/*************************************************************************\
+//--------------Run every hour ------------------------------------------//
+
+These functions are run every hour.
+
+\*************************************************************************/
+
+
+if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
+	echo "Ran hourly functions\n";
+	
+      
+	//------------- Award Badges ----------------------------------------//
+      
+      if ($Hour == 3 || $Hour == 15){ // twice daily
+            include(SERVER_ROOT.'/sections/schedule/award_badges.php');
       }
       
 	//------------- Front page stats ----------------------------------------//

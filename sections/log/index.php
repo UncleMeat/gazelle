@@ -171,15 +171,21 @@ while(list($Message, $LogTime) = $DB->next_record()) {
 				}
 				$Message = $Message." by ".$URL;
 				break;
+			case "converted":
+				if ($Color === false) {
+					$Color = 'purple';
+				}
+				$Message = $Message." ".$MessageParts[$i];
+				break;
 			case "uploaded":
 				if ($Color === false) {
-					$Color = 'green';
+					$Color = 'blue';
 				}
 				$Message = $Message." ".$MessageParts[$i];
 				break;
                   case "Okay":
 				if ($Color === false) {
-					$Color = '#060';
+					$Color = 'green';
 				}
 				$Message = $Message." ".$MessageParts[$i];
 				break;
@@ -192,13 +198,13 @@ while(list($Message, $LogTime) = $DB->next_record()) {
 				break;
                   case "Warned":
 				if ($Color === false || $Color === 'green') {
-					$Color = '#aa7700';
+					$Color = '#a07100';
 				}
 				$Message = $Message." ".$MessageParts[$i];
 				break;
 			case "edited":
 				if ($Color === false) {
-					$Color = 'blue';
+					$Color = '#1E90FF';
 				}
 				$Message = $Message." ".$MessageParts[$i];
 				break;

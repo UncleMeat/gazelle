@@ -19,7 +19,7 @@ foreach($Tags as $Tag) {
                 $DB->query("INSERT INTO tags (Name, UserID) VALUES ('".$TagName."', ".$UserID.") ON DUPLICATE KEY UPDATE Uses=Uses+1");
                 $TagID = $DB->inserted_id(); */
                 
-                $DB->query("SELECT ID FROM tags WHERE Name ='".$TagName."'"); 
+                $DB->query("SELECT ID FROM tags WHERE Name LIKE '".$TagName."'"); 
                 list($TagID) = $DB->next_record();
                 if($TagID){
                     $DB->query("SELECT TagID FROM torrents_tags_votes 
@@ -33,11 +33,11 @@ foreach($Tags as $Tag) {
                         header("Location: torrents.php?id=".$GroupID.$Get);
                         die();
                     }
+                } else {
+                    // if it gets to here then its a new tag  
+                    $DB->query("INSERT INTO tags (Name, UserID) VALUES ('".$TagName."', ".$UserID.") ON DUPLICATE KEY UPDATE Uses=Uses+1");
+                    $TagID = $DB->inserted_id();
                 }
-                // if it gets to here then its a new tag for this torrent for this user, so count as a new use
-                $DB->query("INSERT INTO tags (Name, UserID) VALUES ('".$TagName."', ".$UserID.") ON DUPLICATE KEY UPDATE Uses=Uses+1");
-                $TagID = $DB->inserted_id();
-                
                 /*
                 $DB->query("SELECT TagID FROM torrents_tags_votes WHERE GroupID='$GroupID' AND TagID='$TagID' AND UserID='$UserID'");
                 if($DB->record_count()!=0) { // User has already voted on this tag, and is trying hax to make the rating go up

@@ -1025,8 +1025,10 @@ EXPLANATION OF PARSER LOGIC
 					$Array[$ArrayPos] = array('Type'=>$TagName, 'Val'=>$Block);
 					break;
 				case 'hide':
+					$ArrayPos--;
+					break; // not seen
 				case 'spoiler':
-					$Array[$ArrayPos] = array('Type'=>'hide', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
+					$Array[$ArrayPos] = array('Type'=>$TagName, 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
 					break;
 				case '#':
 				case '*':
@@ -1283,6 +1285,10 @@ EXPLANATION OF PARSER LOGIC
 					$this->NoImg--;
 					break;
 				case 'hide':
+					$Str.='<strong>'.(($Block['Attr']) ? $Block['Attr'] : 'Hidden text').'</strong>: <a href="javascript:void(0);" onclick="BBCode.spoiler(this);">Show</a>';
+					$Str.='<blockquote class="hidden spoiler">'.$this->to_html($Block['Val']).'</blockquote>';
+					break;
+				case 'spoiler':
 					$Str.='<strong>'.(($Block['Attr']) ? $Block['Attr'] : 'Hidden text').'</strong>: <a href="javascript:void(0);" onclick="BBCode.spoiler(this);">Show</a>';
 					$Str.='<blockquote class="hidden spoiler">'.$this->to_html($Block['Val']).'</blockquote>';
 					break;

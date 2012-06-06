@@ -6,9 +6,6 @@
 
 \*************************************************************************/
 
-//include(SERVER_ROOT.'/classes/class_badges.php');
-//$BadgeBuilder = new BADGES();
-
 
 // Are they being tricky blighters?
 if (!$_POST['userid'] || !is_number($_POST['userid'])) {
@@ -32,39 +29,33 @@ $Invites = (int)$_POST['Invites'];
 $SupportFor = db_string(display_str($_POST['SupportFor']));
 $Pass = db_string($_POST['ChangePassword']);
 $Warned = (isset($_POST['Warned']))? 1 : 0;
-    /*
-    $Badges = $_POST['badge'];
-    if(!is_array($Badges)) {
-          $Badges = array();
-    }
-    $Badges = $BadgeBuilder->get_user_badge_array($Badges);
-    */
+
     
-    $AddBadges = $_POST['addbadge'];
-    $DelBadges = $_POST['delbadge'];
+$AddBadges = $_POST['addbadge'];
+$DelBadges = $_POST['delbadge'];
     
     
-        $AdjustUpValue = ($_POST['adjustupvalue']  == "" ? 0 : $_POST['adjustupvalue']);
-        if ( isset($AdjustUpValue) && $AdjustUpValue[0]=='+') $AdjustUpValue = substr($AdjustUpValue, 1);
-        if (is_numeric($AdjustUpValue)){ 
-            $ByteMultiplier = isset($_POST['adjustup']) ? strtolower($_POST['adjustup']) : 'kb';
-            $AdjustUpValue = get_bytes($AdjustUpValue.$ByteMultiplier);
-        } else {
-            $AdjustUpValue = 0;
-        }
+$AdjustUpValue = ($_POST['adjustupvalue']  == "" ? 0 : $_POST['adjustupvalue']);
+if ( isset($AdjustUpValue) && $AdjustUpValue[0]=='+') $AdjustUpValue = substr($AdjustUpValue, 1);
+if (is_numeric($AdjustUpValue)){ 
+    $ByteMultiplier = isset($_POST['adjustup']) ? strtolower($_POST['adjustup']) : 'kb';
+    $AdjustUpValue = get_bytes($AdjustUpValue.$ByteMultiplier);
+} else {
+    $AdjustUpValue = 0;
+}
         
-        $AdjustDownValue = ($_POST['adjustdownvalue']  == "" ? 0 : $_POST['adjustdownvalue']);
-        if ( isset($AdjustDownValue) && $AdjustDownValue[0]=='+') $AdjustDownValue = substr($AdjustDownValue, 1);
-        if (is_numeric($AdjustDownValue)){ 
-            $ByteMultiplier = isset($_POST['adjustdown']) ? strtolower($_POST['adjustdown']) : 'kb';
-            $AdjustDownValue = get_bytes($AdjustDownValue.$ByteMultiplier);
-        } else {
-            $AdjustDownValue = 0;
-        }
-        // if we use is_number here (a better function really) we get errors with integer overflow with >2b bytes
-        if(!is_numeric($AdjustUpValue) || !is_numeric($AdjustDownValue)) {
-            error(0);
-        }
+$AdjustDownValue = ($_POST['adjustdownvalue']  == "" ? 0 : $_POST['adjustdownvalue']);
+if ( isset($AdjustDownValue) && $AdjustDownValue[0]=='+') $AdjustDownValue = substr($AdjustDownValue, 1);
+if (is_numeric($AdjustDownValue)){ 
+    $ByteMultiplier = isset($_POST['adjustdown']) ? strtolower($_POST['adjustdown']) : 'kb';
+    $AdjustDownValue = get_bytes($AdjustDownValue.$ByteMultiplier);
+} else {
+    $AdjustDownValue = 0;
+}
+// if we use is_number here (a better function really) we get errors with integer overflow with >2b bytes
+if(!is_numeric($AdjustUpValue) || !is_numeric($AdjustDownValue)) {
+    error(0);
+}
  
 $FLTokens = (int)$_POST['FLTokens'];
 $BonusCredits = (float)$_POST['BonusCredits'];
@@ -256,8 +247,8 @@ if ($Classes[$Class]['Level']!=$Cur['Class'] && (
 }
 
 if ($Username!=$Cur['Username'] && check_perms('users_edit_usernames', $Cur['Class']-1)) {
-	$DB->query("SELECT ID FROM users_main WHERE Username = '".$Username."'");
-	if($DB->next_record() > 0) {
+	$DB->query("SELECT ID FROM users_main WHERE Username = '".$Username."' AND ID != $UserID");
+	if($DB->record_count() > 0) {
 		list($UsedUsernameID) = $DB->next_record();
 		error("Username already in use by <a href='user.php?id=".$UsedUsernameID."'>".$Username."</a>");
 		header("Location: user.php?id=".$UserID);
@@ -294,20 +285,6 @@ if ($Visible!=$Cur['Visible']  && check_perms('users_make_invisible')) {
 	$EditSummary[]="visibility changed";
 	$LightUpdates['Visible']=$Visible;
 }
-
-//----------------------------------------------------------- 
-/*
-$Cur['Badges'] =  unserialize($Cur['Badges']);
-if ($Badges != $Cur['Badges'] && check_perms('users_edit_badges')) {
-	$UpdateSet[]="Badges='". db_string(serialize($Badges)). "'";
-	//$EditSummary[]="Badges changed from \'". implode(", ",  $Cur['Badges']) . "\' to \'" . implode(", ", $Badges)."\'"  ;
-      $BadgesAdded = array_diff($Badges, $Cur['Badges']);
-      $BadgesDeleted = array_diff($Cur['Badges'], $Badges);
-      if ($BadgesDeleted && is_array($BadgesDeleted))
-        $EditSummary[] = 'Badge'.(count($BadgesDeleted)>1?'s':'').' removed: '. implode(', ',  $BadgesDeleted);
-      if ($BadgesAdded && is_array($BadgesAdded))
-        $EditSummary[] = 'Badge'.(count($BadgesAdded)>1?'s':'').' added: '. implode(', ',  $BadgesAdded);
-}   */
 
 
 if (is_array($AddBadges) && check_perms('users_edit_badges')) {

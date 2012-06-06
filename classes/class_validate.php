@@ -33,9 +33,12 @@ class VALIDATE {
 		if(!empty($Options['regex'])) {
 			$this->Fields[$FieldName]['Regex']=$Options['regex'];
 		}
+		if(!empty($Options['minimages'])) {
+			$this->Fields[$FieldName]['MinImages']=$Options['minimages'];
+		}
 	}
 
-	function ValidateForm($ValidateArray) {
+	function ValidateForm($ValidateArray, $Text = null) {
 		reset($this->Fields);
 		foreach ($this->Fields as $FieldKey => $Field) {
 			$ValidateVar=$ValidateArray[$FieldKey];
@@ -121,12 +124,20 @@ class VALIDATE {
                             
                                 if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
                                 if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
+                                
+                                if(isset($Field['MinImages'])) { $MinImages=$Field['MinImages']; } else { $MinImages=1; }
 
-                                if(strlen($ValidateVar)>$MaxLength) { 
+                                if (!$Text){
+                                    include(SERVER_ROOT . '/classes/class_text.php');
+                                    $Text = new TEXT();
+                                }
+                                $TextLength =  strlen($Text->db_clean_search($ValidateVar));
+                                
+                                if($TextLength>$MaxLength) { 
                                     $Field['ErrorMessage'] =  "Your ".$Field['ErrorMessage']." must be less than $MaxLength characters long.";  
                                     return $Field['ErrorMessage'];
                                 }
-                                elseif(strlen($ValidateVar)<$MinLength) { 
+                                elseif($TextLength<$MinLength) { 
                                     $Field['ErrorMessage'] =  "Your ".$Field['ErrorMessage']." must be more than $MinLength characters long.";  
                                     return $Field['ErrorMessage'];
                                 }
@@ -140,7 +151,7 @@ class VALIDATE {
                                 // get all the image urls in the field ; inside [img][/img] 
                                 $num = preg_match_all('#\[img\](.*?)\[/img\]#ism', $ValidateVar, $imageurls);
                             
-                                if($num) { // if there are no img tags then it validates 
+                                if($num && $num >= $MinImages) { // if there are no img tags then it validates 
                                     for ($j=0;$j<$num;$j++) {  
                                          // validate each image url  
                                          // (for the moment use hardcoded image lengths but ideally they should
@@ -148,15 +159,19 @@ class VALIDATE {
                                         $result = $this->ValidateImageUrl($imageurls[1][$j], 12, 255, $WLRegex); 
                                         if ($result !== TRUE){ return $Field['ErrorMessage'].' field: ' .$result; } 
                                      }
-                                } /*else {  // if there are no img tags then it validates unless required flag is set
-                                    if (!empty($Field['Required'])) {   
+                                } else {  // if there are no img tags then it validates unless required flag is set
+                                    //if (!empty($Field['Required'])) {   
                                         // this kind of breaks the pattern of this class but screw it... 
                                         // we will hardcode a change to return message to avoid having to do the 
                                         // preg_match_all(regex) again or adding another return msg variable
-                                        $Field['ErrorMessage'] = "You are required to have screenshots for every scene";
+                                        if ($MinImages == 1)
+                                            $Field['ErrorMessage'] = "There are no images in your description. You are required to have screenshots for every scene.";
+                                        else
+                                            $Field['ErrorMessage'] = "There are not enough images in your description. You are required to have screenshots for every scene.";
+                                        
                                         return $Field['ErrorMessage'];
-                                    } 
-                                }*/
+                                    //} 
+                                }
                         
                         }
 			}  // if (dovalidation)

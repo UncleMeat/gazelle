@@ -20,16 +20,44 @@ list($Properties) = $DB->to_array(false,MYSQLI_BOTH);
 
 if(!$Properties) { error(404); }
 
-show_header('Edit torrent', 'upload');
+show_header('Send Mass PM', 'upload,bbcode,inbox');
 
 if(!check_perms('site_moderate_requests')) {
 	error(403);
 }
 
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+
 ?>
 <div class="thin">
 	<h2>Send PM To All Snatchers Of "<?=$Properties['Title']?>"</h2>
-	<form action="torrents.php" method="post">
+      
+        <div id="preview" class="hidden"></div>
+        <form action="torrents.php" method="post" id="messageform">
+            <div id="quickpost">  
+                <br/>
+                <div class="box pad">
+		<input type="hidden" name="action" value="takemasspm" />
+		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+		<input type="hidden" name="torrentid" value="<?=$TorrentID?>" />
+		<input type="hidden" name="groupid" value="<?=$GroupID?>" />
+                        <h3>Subject</h3>
+                        <input type="text" name="subject" class="long" value="<?=(!empty($Subject) ? $Subject : '')?>"/>
+                        <br />
+                        <h3>Message</h3>  
+                        <? $Text->display_bbcode_assistant("message", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
+                        <textarea id="message" name="message" class="long" rows="10"><?=(!empty($Body) ? $Body : '')?></textarea>
+                </div>
+            </div>
+		<div class="center">
+			 <input type="button" id="previewbtn" value="Preview" onclick="Inbox_Preview();" /> 
+			 <input type="submit" value="Send Mass PM" />
+		</div>
+        </form>
+        
+      <?  /*  
+	<form action="torrents.php" method="post" >
 		<input type="hidden" name="action" value="takemasspm" />
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 		<input type="hidden" name="torrentid" value="<?=$TorrentID?>" />
@@ -44,6 +72,7 @@ if(!check_perms('site_moderate_requests')) {
 			<tr>
 				<td class="label">Message</td>
 				<td>
+			 <? $Text->display_bbcode_assistant("message", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
 						<textarea name="message" id="message" cols="60" rows="8"></textarea>
 				</td>
 			</tr>
@@ -54,6 +83,8 @@ if(!check_perms('site_moderate_requests')) {
 			</tr>
 		</table>
 	</form>
+       
+       */ ?>
 </div>
 <?
 show_footer();

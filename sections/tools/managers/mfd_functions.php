@@ -200,9 +200,9 @@ function delete_torrents_list($Torrents){
 		++$i;
 	}
 		//echo "\nDeleted $i torrents for \n";
-	
+	$sqltime=sqltime();
 	if(count($LogEntries) > 0) {
-		$Values = "('".implode("', '".$sqltime."'), ('",$LogEntries)."', '".sqltime()."')";
+		$Values = "('".implode("', '".$sqltime."'), ('",$LogEntries)."', '".$sqltime."')";
 		$DB->query('INSERT INTO log (Message, Time) VALUES '.$Values);
 	}
       

@@ -71,7 +71,7 @@ $Validate->SetFields('category', '1', 'inarray', 'Please select a valid format.'
 
 $Validate->SetFields('rules', '1', 'require', 'Your torrent must abide by the rules.');
 
-$Err = $Validate->ValidateForm($_POST); // Validate the form
+$Err = $Validate->ValidateForm($_POST, $Text); // Validate the form
 
 
 

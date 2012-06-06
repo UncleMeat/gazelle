@@ -49,6 +49,7 @@ while(list($PMUserID, $Username, $PermissionID, $CustomPermissions, $Enabled, $D
 }
 $Users[0]['UserStr'] = 'System'; // in case it's a message from the system
 $Users[0]['Username'] = 'System';
+$Users[0]['AdvTags'] = true;
 
 
 

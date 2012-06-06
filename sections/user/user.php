@@ -605,18 +605,11 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
           if ($UserBadges) {  ?>
                     <div class="badgesrow badges">
     <?
-     print_badges_array($UserBadges);
-     /*
-                            foreach ($UserBadges as $Badge) {
-                                list($ID,$BadgeID, $Tooltip, $Name, $Image ) = $Badge;
-                       
-                                //$UserBadgesIDs[] = $BadgeID;
-                                echo '<div class="badge"><img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="'.$Tooltip.'" alt="'.$Name.'" /></div>';
-                                
-                            } */
+            print_badges_array($UserBadges);
    ?>
                     </div>
-<?      }   ?>
+                           
+<?        }   ?>
                   </div>
 		</div>
 <?
@@ -1147,7 +1140,7 @@ if (check_perms('users_mod', $Class)) { ?>
 				</td>
 			</tr>
 <?	} ?>
-		</table><!--<br />-->
+		</table>
 
             
             
@@ -1159,7 +1152,7 @@ if (check_perms('users_mod', $Class)) { ?>
 				<span style="float:left;">Manage User Badges</span>
                         <span style="float:right;"><a href="#" onclick="$('#badgesadmin').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
 			</div>
-                  <div class="pad hidden" id="badgesadmin"> 
+                  <div class="pad hidden" id="badgesadmin">
 <?
                       $UserBadgesIDs = array(); // used in a mo to determine what badges user has for admin 
                       if ($UserBadges){
@@ -1183,8 +1176,9 @@ if (check_perms('users_mod', $Class)) { ?>
 <?
                       }
 ?>
-                      <div class="pad"><h3>Add user badges (select to add)</h3>
+                      <div class="pad addbadges"><h3>Add user badges (select to add)</h3>
                           <p>Shop and single type items can be owned once by each user, multiple type items many times, and unique items only by one user at once</p>
+                          <table class="noborder">
 <?
                     $DB->query("SELECT
                                     ID,
@@ -1198,22 +1192,31 @@ if (check_perms('users_mod', $Class)) { ?>
                                FROM badges 
                                WHERE Type != 'Shop'
                                ORDER BY Sort"); 
-
+//onchange="$('#addbadge<?=$ID?/>').toggle();"
                     while($Badge = $DB->next_record()){
                         list($ID, $Type, $Name, $Tooltip, $Image, $Available) = $Badge;
-    ?>
-                        <div class="badge">
-                            <?='<img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="('.$Type.') '.$Tooltip.'" alt="'.$Name.'" />'?>
-                            <br />
-                            <input onchange="$('#addbadge<?=$ID?>').toggle();" type="checkbox" name="addbadge[]" value="<?=$ID?>" <?  
-                                        
-                    if (!$Available || ($Type != 'Multiple' && in_array($ID, $UserBadgesIDs) )) { ?>disabled="disabled"<? }  ?> />
-                                    <label for="addbadge[]"> <?=$Name; if($Type=='Unique') { echo "*"; } ?></label>
-                            <br /><input class="hidden" type="text" id="addbadge<?=$ID?>" name="addbadge<?=$ID?>" value="<?=$Tooltip?>" />
-                        </div>
-    <?
+?>
+                        <tr>
+                            <td width="60px">
+                            <div class="badge">
+    <? 
+                                echo '<img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="('.$Type.') '.$Tooltip.'" alt="'.$Name.'" />';
+
+                                if (!$Available || ($Type != 'Multiple' && in_array($ID, $UserBadgesIDs) )) $Disabled =' disabled="disabled" title="award is unavailable"';  
+                                else $Disabled='';                        
+    ?> 
+                            </div>
+                            </td>
+                            <td>
+                                <input  type="checkbox" name="addbadge[]" value="<?=$ID?>"<?=$Disabled?> />
+                                        <label for="addbadge[]"> <?=$Name; if($Type=='Unique') { echo "*"; } ?></label>
+                                <br />
+                                <input class="long" type="text" id="addbadge<?=$ID?>" name="addbadge<?=$ID?>"<?=$Disabled?> value="<?=$Tooltip?>" />
+                            </td>
+                        </tr>
+<?
                     }
-?> 
+?>                      </table>
                       </div>
 			</div>
 		</div>
