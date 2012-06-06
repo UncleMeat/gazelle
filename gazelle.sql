@@ -1146,13 +1146,13 @@ CREATE TABLE IF NOT EXISTS `sphinx_delta` (
   `NewCategoryID` int(11) NOT NULL,
   `Image` varchar(255) NOT NULL,
   `Time` int(12) DEFAULT NULL,
-  `ReleaseType` tinyint(2) DEFAULT NULL,
   `Size` bigint(20) DEFAULT NULL,
   `Snatched` int(10) DEFAULT NULL,
   `Seeders` int(10) DEFAULT NULL,
   `Leechers` int(10) DEFAULT NULL,
   `FreeTorrent` tinyint(1) DEFAULT NULL,
   `FileList` mediumtext,
+  `SearchText` text,
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1170,13 +1170,13 @@ CREATE TABLE IF NOT EXISTS `sphinx_hash` (
   `NewCategoryID` int(11) NOT NULL,
   `Image` varchar(255) NOT NULL,
   `Time` int(12) DEFAULT NULL,
-  `ReleaseType` tinyint(2) DEFAULT NULL,
   `Size` bigint(20) DEFAULT NULL,
   `Snatched` int(10) DEFAULT NULL,
   `Seeders` int(10) DEFAULT NULL,
   `Leechers` int(10) DEFAULT NULL,
   `FreeTorrent` tinyint(1) DEFAULT NULL,
   `FileList` mediumtext,
+  `SearchText` text,
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1335,8 +1335,7 @@ CREATE TABLE IF NOT EXISTS `stylesheets` (
 --
 
 INSERT INTO `stylesheets` (`ID`, `Name`, `Description`, `Default`) VALUES
-(1, 'empornium2', 'The new stylesheet mk2', '1'),
-(2, 'empornium', 'The new stylesheet', '0');
+(1, 'empornium', 'The default empornium stylesheet', '1');
 
 -- --------------------------------------------------------
 
@@ -1579,9 +1578,9 @@ CREATE TABLE IF NOT EXISTS `torrents_group` (
   `Image` varchar(255) NOT NULL,
   `SearchText` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`ID`),
-  KEY `CategoryID` (`CategoryID`),
+  KEY `NewCategoryID` (`NewCategoryID`),
   KEY `Name` (`Name`(255)),
-  KEY `Time` (`Time`),
+  KEY `Time` (`Time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1981,9 +1980,9 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `Language` char(2) NOT NULL DEFAULT '',
   `ipcc` varchar(2) NOT NULL DEFAULT '',
   `FLTokens` int(10) NOT NULL DEFAULT '0',
-  `Credits` DOUBLE( 11, 2 ) NOT NULL DEFAULT  '0',
-  `Signature` text DEFAULT NULL,
-  `LastBonusTime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `Credits` double(11,2) NOT NULL DEFAULT '0.00',
+  `Signature` text,
+  `Badges` text NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Username` (`Username`),
   KEY `Email` (`Email`),
@@ -1999,7 +1998,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   KEY `torrent_pass` (`torrent_pass`),
   KEY `RequiredRatio` (`RequiredRatio`),
   KEY `cc_index` (`ipcc`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=119928 ;
 
 -- --------------------------------------------------------
 

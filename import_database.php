@@ -1,9 +1,190 @@
-<?php
-error_reporting(E_ALL);
+<?php 
+       
+error_reporting(0);
 
 define('SERVER_ROOT', '/home/lanz/www/gazelle');
-define('EMDB', 'emtest');
+define('EMDB', 'emp');
 define('TORRENT_PATH', '/home/lanz/www/empornium.me/torrents');
+
+$smilies = array(
+  ":smile1:" => "smile1.gif",
+  ":smile2:" => "smile2.gif",
+  ":grin:" => "grin.gif",
+  ":laugh:" => "laugh.gif",
+  ":w00t:" => "w00t.gif",
+  ":tongue:" => "tongue.gif",
+  ":wink:" => "wink.gif",
+  ":noexpression:" => "noexpression.gif",
+  ":confused:" => "confused.gif",
+  ":sad:" => "sad.gif",
+  ":cry:" => "cry.gif",
+  ":weep:" => "weep.gif",
+  ":ohmy:" => "ohmy.gif",
+  ":clown:" => "clown.gif",
+  ":cool1:" => "cool1.gif",
+  ":sleeping:" => "sleeping.gif",
+  ":innocent:" => "innocent.gif",
+  ":whistle:" => "whistle.gif",
+  ":unsure:" => "unsure.gif",
+  ":closedeyes:" => "closedeyes.gif",
+  ":cool2:" => "cool2.gif",
+  ":fun:" => "fun.gif",
+  ":thumbsup:" => "thumbsup.gif",
+  ":thumbsdown:" => "thumbsdown.gif",
+  ":blush:" => "blush.gif",
+  ":yes:" => "yes.gif",
+  ":no:" => "no.gif",
+  ":love:" => "love.gif",
+  ":question:" => "question.gif",
+  ":excl:" => "excl.gif",
+  ":idea:" => "idea.gif",
+  ":arrow:" => "arrow.gif",
+  ":arrow2:" => "arrow2.gif",
+  ":hmm:" => "hmm.gif",
+  ":hmmm:" => "hmmm.gif",
+  ":huh:" => "huh.gif",
+  ":geek:" => "geek.gif",
+  ":look:" => "look.gif",
+  ":rolleyes:" => "rolleyes.gif",
+  ":kiss:" => "kiss.gif",
+  ":shifty:" => "shifty.gif",
+  ":blink:" => "blink.gif",
+  ":smartass:" => "smartass.gif",
+  ":sick:" => "sick.gif",
+  ":crazy:" => "crazy.gif",
+  ":wacko:" => "wacko.gif",
+  ":alien:" => "alien.gif",
+  ":wizard:" => "wizard.gif",
+  ":wave:" => "wave.gif",
+  ":wavecry:" => "wavecry.gif",
+  ":baby:" => "baby.gif",
+  ":angry:" => "angry.gif",
+  ":ras:" => "ras.gif",
+  ":sly:" => "sly.gif",
+  ":devil:" => "devil.gif",
+  ":evil:" => "evil.gif",
+  ":evilmad:" => "evilmad.gif",
+  ":sneaky:" => "sneaky.gif",
+
+  ":slap:" => "slap.gif",
+  ":wall:" => "wall.gif",
+  ":yucky:" => "yucky.gif",
+  ":nugget:" => "nugget.gif",
+  ":smart:" => "smart.gif",
+  ":shutup:" => "shutup.gif",
+  ":shutup2:" => "shutup2.gif",
+  ":crockett:" => "crockett.gif",
+  ":zorro:" => "zorro.gif",
+  ":snap:" => "snap.gif",
+  ":beer:" => "beer.gif",
+  ":beer2:" => "beer2.gif",
+  ":drunk:" => "drunk.gif",
+  ":strongbench:" => "strongbench.gif",
+  ":weakbench:" => "weakbench.gif",
+  ":dumbells:" => "dumbells.gif",
+  ":music:" => "music.gif",
+  
+    ":rant:" => "rant.gif",
+  ":jump:" => "jump.gif",
+  ":stupid:" => "stupid.gif",
+  ":dots:" => "dots.gif",
+  ":offtopic:" => "offtopic.gif",
+  ":spam:" => "spam.gif",
+  ":oops:" => "oops.gif",
+  ":lttd:" => "lttd.gif",
+  ":please:" => "please.gif",
+  ":sorry:" => "sorry.gif",
+  ":hi:" => "hi.gif",
+  ":yay:" => "yay.gif",
+  ":cake:" => "cake.gif",
+  ":hbd:" => "hbd.gif",
+  ":band:" => "band.gif",
+  ":punk:" => "punk.gif",
+	":rofl:" => "rofl.gif",
+  ":bounce:" => "bounce.gif",
+  ":mbounce:" => "mbounce.gif",
+  ":thankyou:" => "thankyou.gif",
+  ":gathering:" => "gathering.gif",
+
+
+  ":whip:" => "whip.gif",
+  ":judge:" => "judge.gif",
+  ":chair:" => "chair.gif",
+  ":tease:" => "tease.gif",
+  ":box:" => "box.gif",
+  ":boxing:" => "boxing.gif",
+  ":guns:" => "guns.gif",
+  ":shoot:" => "shoot.gif",
+  ":shoot2:" => "shoot2.gif",
+  ":flowers:" => "flowers.gif",
+  ":wub:" => "wub.gif",
+  ":lovers:" => "lovers.gif",
+  ":kissing:" => "kissing.gif",
+  ":kissing2:" => "kissing2.gif",
+  ":console:" => "console.gif",
+  ":group:" => "group.gif",
+  ":hump:" => "hump.gif",
+  ":hooray:" => "hooray.gif",
+  ":happy2:" => "happy2.gif",
+  ":clap:" => "clap.gif",
+  ":clap2:" => "clap2.gif",
+	":weirdo:" => "weirdo.gif",
+  ":yawn:" => "yawn.gif",
+  ":bow:" => "bow.gif",
+	":dawgie:" => "dawgie.gif",
+	":cylon:" => "cylon.gif",
+  ":book:" => "book.gif",
+  ":fish:" => "fish.gif",
+  ":mama:" => "mama.gif",
+  ":pepsi:" => "pepsi.gif",
+  ":medieval:" => "medieval.gif",
+  ":rambo:" => "rambo.gif",
+  ":ninja:" => "ninja.gif",
+
+  ":party:" => "party.gif",
+  ":snorkle:" => "snorkle.gif",
+
+  ":king:" => "king.gif",
+  ":chef:" => "chef.gif",
+  ":mario:" => "mario.gif",
+
+  ":fez:" => "fez.gif",
+  ":cap:" => "cap.gif",
+  ":cowboy:" => "cowboy.gif",
+  ":pirate:" => "pirate.gif",
+  ":pirate2:" => "pirate2.gif",
+  ":rock:" => "rock.gif",
+  ":cigar:" => "cigar.gif",
+  ":icecream:" => "icecream.gif",
+  ":oldtimer:" => "oldtimer.gif",
+	":trampoline:" => "trampoline.gif",
+	":bananadance:" => "bananadance.gif",
+  ":smurf:" => "smurf.gif",
+  ":yikes:" => "yikes.gif",
+
+  ":santa:" => "santa.gif",
+  ":indian:" => "indian.gif",
+  ":pimp:" => "pimp.gif",
+  ":nuke:" => "nuke.gif",
+  ":jacko:" => "jacko.gif",
+
+  ":greedy:" => "greedy.gif",
+	":super:" => "super.gif",
+  ":wolverine:" => "wolverine.gif",
+  ":spidey:" => "spidey.gif",
+  ":spider:" => "spider.gif",
+  ":bandana:" => "bandana.gif",
+  ":construction:" => "construction.gif",
+  ":sheep:" => "sheep.gif",
+  ":police:" => "police.gif",
+	":detective:" => "detective.gif",
+  ":bike:" => "bike.gif",
+	":fishing:" => "fishing.gif",
+  ":clover:" => "clover.gif",
+
+  ":shit:" => "shit.gif",
+
+);
 
 function is_number($Str) {
     $Return = true;
@@ -25,6 +206,41 @@ function make_secret2($Length = 32) {
     return str_shuffle($Secret);
 }
 
+function cleansearch($s)
+{
+    global $smilies;
+
+    foreach ($smilies as $key => $value)
+    {
+        $remove[] = "/$key/i";
+    }
+    $remove[] = '/\[img\].*?\[\/img\]/i';
+    $remove[] = '/\[img=.*?\].*?\[\/img\]/i';
+    $remove[] = '/\[url=.*?\].*?\[\/url\]/i';
+    $remove[] = '/\[url\].*?\[\/url\]/i';
+    $remove[] = '/\[flash\].*?\[\/flash\]/i';
+    $remove[] = '/\[audio\].*?\[\/audio\]/i';
+    $remove[] = '/\[thumb\].*?\[\/thumb\]/i';
+    $remove[] = '/\[banner\].*?\[\/banner\]/i';
+    $remove[] = '/\[media=.*?\].*?\[\/media\]/i';
+    $remove[] = '/\[video=.*?\]/i';
+    $remove[] = '/\[spoiler\]/i';
+    $remove[] = '/\[\/spoiler\]/i';
+    $remove[] = '/\[quote\]/i';
+    $remove[] = '/\[\/quote\]/i';
+    $remove[] = '/\[b\]/i';
+    $remove[] = '/\[\/b\]/i';
+    $remove[] = '/\[i\]/i';
+    $remove[] = '/\[\/i\]/i';
+    $remove[] = '/\[u\]/i';
+    $remove[] = '/\[\/u\]/i';
+    $remove[] = '/\[s\]/i';
+    $remove[] = '/\[\/s\]/i';
+
+    $s = preg_replace($remove, '', $s);
+    return $s;
+}
+
 require(SERVER_ROOT . '/classes/class_torrent.php');
 
 $time_start = microtime(true);
@@ -32,36 +248,206 @@ $time_start = microtime(true);
 echo "connecting to database\n";
 mysql_connect('localhost', 'root', 'password');
 
-/*
-$result = mysql_query('select count(*) as c from gazelle.users_info') or die(mysql_error());
-$count = mysql_result($result, 0);
 
-echo "creating new authkey strings and the invite_tree table for $count users (this will take a long time)\n";
+echo "Creating new authkeys for users\n";
 
-$result = mysql_query('select userid from gazelle.users_info') or die(mysql_error());
-$i = 0;
+mysql_query("UPDATE gazelle.users_info
+	SET AuthKey =
+		MD5(
+			CONCAT(
+				AuthKey, RAND(), '".mysql_real_escape_string(make_secret2())."',
+				SHA1(
+					CONCAT(
+						RAND(), RAND(), '".mysql_real_escape_string(make_secret2())."'
+					)
+				)
+			)
+		);"
+	) or die(mysql_error());
+
+echo "creating new invite_tree table for users\n";
+
+$result = mysql_query('select ID from gazelle.users_main') or die(mysql_error());
+
 $TreeIndex = 2;
-echo "0.00% ";
-while ($row = mysql_fetch_assoc($result)) {
-    $auth_key = make_secret2();
-
-    mysql_query("update gazelle.users_info set AuthKey='$auth_key' where userid={$row['userid']}") or die(mysql_error());
-    mysql_query("insert into gazelle.invite_tree values ({$row['userid']}, 0, $TreeIndex, 0, 2)") or die(mysql_error());
+$values = array();
+$comma = "";
+while (($row = mysql_fetch_assoc($result))) {
+    $values[] = "(".$row["ID"].", 0, $TreeIndex, 0, 2)";
     $TreeIndex++;
-
-    $i++;
-    if ($i % 1000 == 0)
-        echo "\n" . number_format($i / $count * 100, 2) . "% ";
-    elseif ($i % 100 == 0)
-        echo ".";
 }
-*/
+
+mysql_query("insert into gazelle.invite_tree values ".implode(',',$values)) or die(mysql_error());
 
 $result = mysql_query("select count(*) as c from " . EMDB . ".torrents") or die(mysql_error());
 $count = mysql_result($result, 0);
-echo "Moving $count torrents... (be prepared for another long wait)\n";
+echo "Importing $count torrents to database... (this will take a while)\n";
+
+$info_hash_array = array();
+$i = 0;
+$TagIDCounter = 0;
+$TorrentID = 0;
+$result = mysql_query("select * from " . EMDB . ".torrents") or die(mysql_error());
+
+$torrents_group_rows = array();
+$tagids = array();
+$tags_row = array();
+$torrents_tags_row = array();
+$torrents_row = array();
+$torrents_files_row = array();
+
+echo "0.00% ";
+while (($row = mysql_fetch_assoc($result))) {
+    $File = fopen(TORRENT_PATH . '/' . $row['id'] . '.torrent', 'rb'); // open file for reading
+    $Contents = fread($File, 10000000);
+    $Tor = new TORRENT($Contents); // New TORRENT object
+
+    $Tor->set_announce_url('ANNOUNCE_URL'); // We just use the string "ANNOUNCE_URL"
+    $Tor->make_private();
+
+    list($TotalSize, $FileList) = $Tor->file_list();
+
+    $TmpFileList = array();
+
+    foreach ($FileList as $File) {
+        list($Size, $Name) = $File;
+        $TmpFileList [] = $Name . '{{{' . $Size . '}}}'; // Name {{{Size}}}
+    }
+
+    $FilePath = $Tor->Val['info']->Val['files'] ? mysql_real_escape_string($Tor->Val['info']->Val['name']) : "";
+    // Name {{{Size}}}|||Name {{{Size}}}|||Name {{{Size}}}|||Name {{{Size}}}
+    $FileString = "'" . mysql_real_escape_string(implode('|||', $TmpFileList)) . "'";
+    $NumFiles = count($FileList);
+    $TorrentText = $Tor->enc();
+    $InfoHash = pack("H*", sha1($Tor->Val['info']->enc()));
+
+    // Check for duplicated info_hash values and skip if found since they can not be added.
+    if (in_array($InfoHash, $info_hash_array)) {
+        echo "x"; // just so we can see how many..
+        continue;        
+    }
+    $info_hash_array[] = $InfoHash;
+    
+    
+
+    // Make sure that the tags are all lowercase and unique.
+    $Tags = strtolower($row['tags']);
+    $Tags = str_replace('.', '_', $Tags); 
+    $Tags = explode(' ', $Tags);
+    $Tags = array_unique($Tags);
+    $Tags = implode(' ', $Tags);
+    
+    $torrents_group_rows[] .= "(" . $row['id'] . ", " . $row['category'] . ", '" . mysql_real_escape_string($row['name']) . "', '" . mysql_real_escape_string($Tags) . "', from_unixtime('" . $row['added'] . "'), '" . mysql_real_escape_string($row['descr']) . "', '" . mysql_real_escape_string($row['name']) . " " . mysql_real_escape_string(cleansearch($row['descr'])) . "')";
+   
+
+    
+    $Tags = explode(' ', strtolower($row['tags']));
+    $Tags = array_unique($Tags);
+    foreach ($Tags as $Tag) {
+        if (!empty($Tag)) {
+            
+            if (isset($tagids[$Tag])) {
+                $TagID = $tagids[$Tag];
+            } else {
+                $TagIDCounter++;
+                $tagids[$Tag] = $TagIDCounter;
+                $TagID = $TagIDCounter;
+            }          
+
+            $tags_row[] = "('".$TagID."', '" . $Tag . "', '" . $row['owner'] . "')";          
+            $torrents_tags_row[] = "($TagID, " . $row['id'] . ", " . $row['owner'] . ", 10)";            
+        }
+    }
+
+    $torrents_row[] = "(" . $row['id'] . ", " . $row['owner'] . ", 
+		'" . mysql_real_escape_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'))";
+
+   
+    $TorrentID++;
+    $torrents_files_row[] = "($TorrentID, '" . mysql_real_escape_string($Tor->dump_data()) . "')";
+    
+    
+    $i++;
+    if ($i % 1000 == 0) {
+        echo "\n" . number_format($i / $count * 100, 2) . "% ";        
+    }
+    elseif ($i % 50 == 0) {
+        mysql_query("INSERT INTO gazelle.torrents_group
+                    (ID, NewCategoryID, Name, TagList, Time, Body, SearchText) VALUES " . implode(',', $torrents_group_rows)) or die(mysql_error());
+        $torrents_group_rows = array();
+
+         mysql_query("
+                            INSERT INTO gazelle.tags
+                            (ID, Name, UserID) VALUES ". implode(',', $tags_row) .
+                            " ON DUPLICATE KEY UPDATE Uses=Uses+1;
+                    ") or die(mysql_error());
+         $tags_row = array();
+         
+        mysql_query("INSERT INTO gazelle.torrents_tags
+                            (TagID, GroupID, UserID, PositiveVotes) VALUES " . implode(',', $torrents_tags_row)
+                   ) or die(mysql_error());
+        $torrents_tags_row = array();
+        
+        mysql_query("INSERT INTO gazelle.torrents
+                            (GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action) 
+                        VALUES " . implode(',', $torrents_row)
+                ) or die(mysql_error());
+        $torrents_row = array();
+        
+        mysql_query("INSERT INTO gazelle.torrents_files (TorrentID, File) VALUES " . implode(',', $torrents_files_row)
+                ) or die(mysql_error());
+        $torrents_files_row = array();
+       
+        echo ".";
+    }
+}
+
+/*
+echo "<pre>";
+print_r($tags_row);
+print_r($torrents_tags_row);
+die();
+*/
+
+// flush anything that is left...
+if (count($torrents_group_rows) > 0) {
+    mysql_query("INSERT INTO gazelle.torrents_group
+                (ID, NewCategoryID, Name, TagList, Time, Body, SearchText) VALUES " . implode(',', $torrents_group_rows)) or die(mysql_error());
+}
+
+if (count($tags_row) > 0) {
+    mysql_query("
+                        INSERT INTO gazelle.tags
+                        (ID, Name, UserID) VALUES ". implode(',', $tags_row) .
+                        " ON DUPLICATE KEY UPDATE Uses=Uses+1;
+                ") or die(mysql_error());
+}
+
+if (count($torrents_tags_row) > 0) {
+    mysql_query("INSERT INTO gazelle.torrents_tags
+                        (TagID, GroupID, UserID, PositiveVotes) VALUES " . implode(',', $torrents_tags_row)
+                ) or die(mysql_error());
+}
+
+if (count($torrents_row) > 0) {
+    mysql_query("INSERT INTO gazelle.torrents
+                        (GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action) 
+                    VALUES " . implode(',', $torrents_row)
+            ) or die(mysql_error());
+}
+
+if (count($torrents_files_row) > 0) {
+    mysql_query("INSERT INTO gazelle.torrents_files (TorrentID, File) VALUES " . implode(',', $torrents_files_row)
+            ) or die(mysql_error());
+}
+
+/*
+$result = mysql_query("select count(*) as c from " . EMDB . ".torrents") or die(mysql_error());
+$count = mysql_result($result, 0);
+echo "Importing $count torrents to database... (be prepared for a long wait)\n";
 $i = 0;
 $result = mysql_query("select * from " . EMDB . ".torrents") or die(mysql_error());
+echo "0.00%";
 while ($row = mysql_fetch_assoc($result)) {
     $File = fopen(TORRENT_PATH . '/' . $row['id'] . '.torrent', 'rb'); // open file for reading
     $Contents = fread($File, 10000000);
@@ -86,9 +472,15 @@ while ($row = mysql_fetch_assoc($result)) {
     $TorrentText = $Tor->enc();
     $InfoHash = pack("H*", sha1($Tor->Val['info']->enc()));
 
+    $r = mysql_query("SELECT ID FROM gazelle.torrents WHERE info_hash='".mysql_real_escape_string($InfoHash)."'");
+    if (mysql_num_rows($r) != 0) {
+        echo "x"; // just so we can see how many..
+        continue;
+    }
+    
     mysql_query("INSERT INTO gazelle.torrents_group
-		(ID, CategoryID, NewCategoryID, Name, TagList, Time, WikiBody, SearchText) VALUES
-		(" . $row['id'] . ", 2, " . $row['category'] . ", '" . mysql_real_escape_string($row['name']) . "', '" . mysql_real_escape_string($row['tags']) . "', from_unixtime('" . $row['added'] . "'), '" . mysql_real_escape_string($row['descr']) . "', '" . mysql_real_escape_string($row['name']) . "')") or die(mysql_error());
+		(ID, NewCategoryID, Name, TagList, Time, Body, SearchText) VALUES
+		(" . $row['id'] . ", " . $row['category'] . ", '" . mysql_real_escape_string($row['name']) . "', '" . mysql_real_escape_string($row['tags']) . "', from_unixtime('" . $row['added'] . "'), '" . mysql_real_escape_string($row['descr']) . "', '" . mysql_real_escape_string($row['name']) . " " . mysql_real_escape_string(cleansearch($row['descr'])) . "')") or die(mysql_error());
 
     $Tags = explode(' ', $row['tags']);
     foreach ($Tags as $Tag) {
@@ -121,9 +513,7 @@ while ($row = mysql_fetch_assoc($result)) {
 
     $TorrentID = mysql_insert_id();
     mysql_query("INSERT INTO gazelle.torrents_files (TorrentID, File) VALUES ($TorrentID, '" . mysql_real_escape_string($Tor->dump_data()) . "')");
-
-
-// Update sphinx search     
+   
     mysql_query("UPDATE gazelle.torrents_group SET TagList=(SELECT REPLACE(GROUP_CONCAT(tags.Name SEPARATOR ' '),'.','_')
 		FROM gazelle.torrents_tags AS t
 		INNER JOIN gazelle.tags ON tags.ID=t.TagID
@@ -131,55 +521,15 @@ while ($row = mysql_fetch_assoc($result)) {
 		GROUP BY t.GroupID)
 		WHERE ID='" . $row['id'] . "'") or die(mysql_error());
 
-    mysql_query("REPLACE INTO gazelle.sphinx_delta (ID, GroupName, TagList, Year, CategoryID, Time, ReleaseType, CatalogueNumber, Size, Snatched, Seeders, Leechers, LogScore, Scene, HasLog, HasCue, FreeTorrent, Media, Format, Encoding, RemasterTitle, FileList)
-		SELECT
-		g.ID AS ID,
-		g.Name AS GroupName,
-		g.TagList,
-		g.Year,
-		g.CategoryID,
-		UNIX_TIMESTAMP(g.Time) AS Time,
-		g.ReleaseType,
-		g.CatalogueNumber,
-		MAX(CEIL(t.Size/1024)) AS Size,
-		SUM(t.Snatched) AS Snatched,
-		SUM(t.Seeders) AS Seeders,
-		SUM(t.Leechers) AS Leechers,
-		MAX(t.LogScore) AS LogScore,
-		MAX(t.Scene) AS Scene,
-		MAX(t.HasLog) AS HasLog,
-		MAX(t.HasCue) AS HasCue,
-		BIT_OR(t.FreeTorrent-1) AS FreeTorrent,
-		GROUP_CONCAT(DISTINCT t.Media SEPARATOR ' ') AS Media,
-		GROUP_CONCAT(DISTINCT t.Format SEPARATOR ' ') AS Format,
-		GROUP_CONCAT(DISTINCT t.Encoding SEPARATOR ' ') AS Encoding,
-		GROUP_CONCAT(DISTINCT t.RemasterTitle SEPARATOR ' ') AS RemasterTitle,
-		GROUP_CONCAT(REPLACE(REPLACE(FileList, '|||', '\n '), '_', ' ') SEPARATOR '\n ') AS FileList
-		FROM gazelle.torrents AS t
-		JOIN gazelle.torrents_group AS g ON g.ID=t.GroupID
-		WHERE g.ID=" . $row['id'] . "
-		GROUP BY g.ID") or die(mysql_error());
-
-    mysql_query("INSERT INTO gazelle.sphinx_delta
-		(ID, ArtistName)
-		SELECT
-		GroupID,
-		GROUP_CONCAT(aa.Name separator ' ')
-		FROM gazelle.torrents_artists AS ta
-		JOIN gazelle.artists_alias AS aa ON aa.AliasID=ta.AliasID
-		JOIN gazelle.torrents_group AS tg ON tg.ID=ta.GroupID
-		WHERE ta.GroupID=" . $row['id'] . " AND ta.Importance IN ('1', '4', '5', '6')
-		GROUP BY tg.ID
-		ON DUPLICATE KEY UPDATE ArtistName=values(ArtistName)") or die(mysql_error());
-
     $i++;
     if ($i % 1000 == 0)
         echo "\n" . number_format($i / $count * 100, 2) . "% ";
     elseif ($i % 100 == 0)
         echo ".";
 }
+*/
 
-echo "Moving torrent comments.\n";
+echo "\n\nCopying torrent comments.\n";
 mysql_query("INSERT INTO gazelle.torrents_comments (GroupID, AuthorID, AddedTime, Body, EditedUserID, EditedTime)
         SELECT torrent, user, FROM_UNIXTIME( added ) AS added, ori_text, editedby, FROM_UNIXTIME( editedat ) AS edited
         FROM ".EMDB.".comments    
