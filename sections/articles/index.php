@@ -108,7 +108,7 @@ if (preg_match("/\[ratiolist\]/i", $Body)) {
     
 }
 
-show_header($Page['Topic'], 'browse,overlib');
+show_header($Page['Topic'], 'browse,overlib,bbcode');
 ?>
 
 <div class="thin">
