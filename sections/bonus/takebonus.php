@@ -54,15 +54,11 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                     break;
                 }
                 
-                
                 $Summary = sqltime().' - '.ucfirst("user bought $Title badge. Cost: $Cost credits");	
                 $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
                 $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought a $Title badge.");
                 $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
-                //$LoggedUser['Badges'][] = $Value;
-                //$LoggedUser['Badges'] = $BadgeBuilder->get_user_badge_array($LoggedUser['Badges']);
-                //$UpdateSet[]="m.Badges='".db_string( serialize($LoggedUser['Badges']) )."'";
-                
+               
                 $DB->query( "INSERT INTO users_badges (UserID, BadgeID, Title) 
                                   VALUES ( '$UserID', '$Value', '$Title')");
                 
@@ -71,25 +67,6 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
                 $ResultMessage=$Summary;
                 
-                /*
-                if (in_array($Value, $LoggedUser['Badges'])){
-                    $ResultMessage='Something bad happened (duplicate badge insertion)';
-                    break;
-                }
-                include(SERVER_ROOT.'/classes/class_badges.php');
-                $BadgeBuilder = new BADGES();
-                $BadgeTitle = $BadgeBuilder->get_title($Value);
-                
-                $Summary = sqltime().' - '.ucfirst("user bought $BadgeTitle badge. Cost: $Cost credits");	
-                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
-                $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought a $BadgeTitle badge.");
-                $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
-                $LoggedUser['Badges'][] = $Value;
-                $LoggedUser['Badges'] = $BadgeBuilder->get_user_badge_array($LoggedUser['Badges']);
-                $UpdateSet[]="m.Badges='".db_string( serialize($LoggedUser['Badges']) )."'";
-                $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
-                $ResultMessage=$Summary;
-                 */
                 break;
             
             case 'givecredits':

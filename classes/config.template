@@ -113,7 +113,14 @@ $ForumsDoublePost = array();
 
 $CollageCats = array(0=>'Pesonal', 1=>'Theme', 2=>'Porn Star', 3=>'Studio', 4=>'Staff picks');
 $ArticleCats = array(0=>'Rules', 1=>'Tutorials');
+// badge types
+$BadgeTypes = array ('Single', 'Multiple', 'Shop', 'Unique');
+$AutoAwardTypes  = array ('NumPosts', 'NumComments', 'NumUploaded', 'NumNewTags', 'NumTags', 'NumTagVotes',
+                  'RequestsFilled', 'UploadedTB', 'DownloadedTB', 'MaxSnatches');
 
+$ShopActions = array('gb','givegb','givecredits','slot','title','badge');
+
+/*  dont think these are referenced anywhere anymore
 $ZIPGroups = array(
 	0 => 'MP3 (VBR) - High Quality',
 	1 => 'MP3 (VBR) - Low Quality',
@@ -150,7 +157,7 @@ $ZIPOptions = array(
 	'44' => array(4,4,'AAC - q5.5'),
 	'45' => array(4,5,'AAC - q5'),
 	'46' => array(4,6,'AAC - 192')
-);
+);  */
 
 // Ratio requirements, in descending order
 // Columns: Download amount, required ratio, grace period

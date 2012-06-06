@@ -40,6 +40,10 @@
             'site_manage_tags' => 'Can manage official tag list and synomyns.',
             'site_convert_tags' => 'Can convert tags to synomyns.',
      
+            'site_manage_shop' => 'Can manage shop.',
+            'site_manage_badges' => 'Can manage badges.',
+            'site_manage_awards' => 'Can manage awards schedule.',
+     
 	'site_disable_ip_history' => 'Disable IP history.',
 	'zip_downloader' => 'Download multiple torrents at once.',
 	'site_debug' => 'Developer access.',
@@ -163,9 +167,7 @@ function permissions_form(){ ?>
                                           <? display_perm('site_vote_tag', 'Can vote on tags.'); ?>
                                           <? display_perm('site_add_tag', 'Can add tags.'); ?>
 					<? display_perm('site_delete_tag', 'Can delete tags.'); ?>
-                                          <? display_perm('site_manage_tags', 'Can manage official tag list and synomyns.'); ?>
-                                          <? display_perm('site_convert_tags', 'Can convert tags to synomyns.'); ?>
-
+                                         
 					<? display_perm('site_disable_ip_history', 'Disable IP history.'); ?>
 					<? display_perm('zip_downloader', 'Download multiple torrents at once.'); ?>
 					<? display_perm('site_debug', 'View site debug tables.'); ?>
@@ -250,7 +252,8 @@ function permissions_form(){ ?>
 					<? display_perm('site_add_logs', 'Can add logs to torrents after upload'); ?>
 					<? display_perm('torrents_hide_dnu', 'Hide the do not upload list by default.'); ?>
 					    <? display_perm('torrents_hide_imagehosts', 'Hide the imagehost whitelist by default.'); ?>
-				</td> 
+				
+                        </td> 
 			</tr>
 		</table>
 	</div>
@@ -268,6 +271,13 @@ function permissions_form(){ ?>
 					<? display_perm('admin_manage_polls', 'Can manage polls'); ?>
 					<? display_perm('admin_manage_forums', 'Can manage forums (add/edit/delete)'); ?>
 					<? display_perm('admin_manage_fls', 'Can manage FLS'); ?>
+                            
+                                        <? display_perm('site_manage_tags', 'Can manage official tag list and synomyns.'); ?>
+                                        <? display_perm('site_convert_tags', 'Can convert tags to synomyns.'); ?>
+                                        <? display_perm('site_manage_badges', 'Can manage badges.'); ?>
+                                        <? display_perm('site_manage_awards', 'Can manage awards schedule.'); ?>
+                                        <? display_perm('site_manage_shop', 'Can manage bonus shop items.'); ?>
+                                         
 					<? display_perm('admin_reports', 'Can access reports system'); ?>
 					<? display_perm('admin_advanced_user_search', 'Can access advanced user search'); ?>
 					<? display_perm('admin_create_users', 'Can create users through an administrative form'); ?>

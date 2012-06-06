@@ -103,6 +103,29 @@ switch ($_REQUEST['action']){
 		break;
         
         
+        case 'shop_list':
+                include('managers/shop_list.php');
+                break;
+            
+        case 'shop_alter':
+                include('managers/shop_alter.php');
+                break;
+            
+        case 'badges_list':
+                include('managers/badges_list.php');
+                break;
+        
+        case 'badges_alter':
+                include('managers/badges_alter.php');
+                break;
+        
+        case 'awards_auto':
+                include('managers/awards_auto_list.php');
+                break;
+       
+        case 'awards_auto_alter':
+                include('managers/awards_auto_alter.php');
+                break;
       
         case 'categories':
                 include('managers/categories_list.php');
