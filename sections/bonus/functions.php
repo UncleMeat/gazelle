@@ -34,7 +34,7 @@ function get_shop_items(){
                         IF(Action='badge',b.Image,NULL) AS Image
 			FROM bonus_shop_actions AS s
                     LEFT JOIN badges AS b ON b.ID=s.Value
-			ORDER BY ID");
+			ORDER BY s.Sort");
 		$ShopItems = $DB->to_array(false, MYSQLI_BOTH);
 		$Cache->cache_value('shop_items', $ShopItems);
 	}

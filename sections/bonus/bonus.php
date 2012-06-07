@@ -1,37 +1,7 @@
 <?
 enforce_login();
 show_header('Bonus Shop');
-
-//include(SERVER_ROOT.'/classes/class_badges.php');
-//$BadgeBuilder = new BADGES();
-
-
-//-------------------------------------------------------------
-/* Auto update shop items with applicable badge items
- * This should probably be in a manager, or deleted
-$DB->query("DELETE FROM bonus_shop_actions WHERE Action='badge'");
-$SQL = 'INSERT INTO bonus_shop_actions (Title, Description, Action, Value, Cost) VALUES';
-$Div = '';
-$DB->query("SELECT ID, 
-                   Type,
-                   Cost,
-                   Name,
-                   Description,
-                   Image
-              FROM badges 
-             WHERE Type='Shop'
-             ORDER BY Sort");
-while(list($ID, $Type, $Cost, $Name, $Description, $Image)=$DB->next_record()) {
-    
-    $SQL .= "$Div ('$Name', '$Description', 'badge', '$ID', '$Cost')";
-    $i++;
-    $Div = ',';
-}
-$DB->query($SQL);
- */
-//-------------------------------------------------------------
-               
-            
+  
             
 $ShopItems = get_shop_items();
 ?>
