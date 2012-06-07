@@ -31,6 +31,8 @@ if(($UserInfo = $Cache->get_value('user_info_'.$UserID)) === FALSE) {
 		m.Username,
 		m.Enabled,
 		m.Title,
+              m.PermissionID,
+              m.CustomPermissions,
 		i.Avatar,
 		i.Donor,
 		i.Warned
@@ -41,9 +43,9 @@ if(($UserInfo = $Cache->get_value('user_info_'.$UserID)) === FALSE) {
 	if($DB->record_count() == 0){ // If user doesn't exist
 		error(404);
 	}
-	list($Username, $Enabled, $Title, $Avatar, $Donor, $Warned) = $DB->next_record();
+	list($Username, $Enabled, $Title, $PermissionID, $CustomPermissions, $Avatar, $Donor, $Warned) = $DB->next_record(MYSQLI_BOTH,array('CustomPermissions'));
 } else {
-	extract(array_intersect_key($UserInfo, array_flip(array('Username', 'Enabled', 'Title', 'Avatar', 'Donor', 'Warned'))));
+	extract(array_intersect_key($UserInfo, array_flip(array('Username', 'Enabled', 'Title', 'PermissionID', 'CustomPermissions', 'Avatar', 'Donor', 'Warned'))));
 }
 
 if(check_perms('site_proxy_images') && !empty($Avatar)) {
@@ -57,9 +59,9 @@ if($LoggedUser['CustomForums']) {
 	$RestrictedForums = implode("','", array_keys($LoggedUser['CustomForums'], 0));
 }
 
-// get the permission info for the author so we can test for adv bbcode tags 
-$PermissionsInfo = get_permissions_for_user($UserID);
-       
+$UserPermissions = get_permissions($PermissionID);
+$PermissionsInfo = get_permissions_for_user($UserID, $CustomPermissions, $UserPermissions);
+
 $ViewingOwn = ($UserID == $LoggedUser['ID']);
 $ShowUnread = ($ViewingOwn && (!isset($_GET['showunread']) || !!$_GET['showunread']));
 $ShowGrouped = ($ViewingOwn && (!isset($_GET['group']) || !!$_GET['group']));
@@ -300,8 +302,8 @@ if(empty($Results)) {
 ?>
 			<td class='avatar' valign="top">
 
-	<? if ($Avatar) { ?>
-			<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($PermissionsInfo['MaxAvatarWidth'], $PermissionsInfo['MaxAvatarHeight'])?>" alt="<?=$Username ?>'s avatar" />
+	<? if ($Avatar) {   ?>
+			<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($UserPermissions['MaxAvatarWidth'], $UserPermissions['MaxAvatarHeight'])?>" alt="<?=$Username ?>'s avatar" />
 	<? } else { ?>
 			<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 	<?
