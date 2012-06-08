@@ -27,12 +27,17 @@ function get_num_staff_pms($UserID, $UserLevel){
 
 
 
-function print_compose_staff_pm($Hidden = true, $Text = false) { 
+function print_compose_staff_pm($Hidden = true, $Assign = 0, $Subject ='', $Msg = '', $Text = false) { 
         global $LoggedUser;  
         if (!$Text){
             include(SERVER_ROOT.'/classes/class_text.php');
             $Text = new TEXT;
         }
+        if ($Msg=='changeusername'){
+            $Subject='Change Username';
+            $Msg="\n\nI would like to change my username to\n\nBecause";
+        }
+       
         ?>
 		<div id="compose" class="<?=($Hidden ? 'hide' : '')?>">
              <? if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {  ?>
@@ -47,12 +52,12 @@ function print_compose_staff_pm($Hidden = true, $Text = false) {
 				<input type="hidden" name="prependtitle" value="Staff PM - " />
                                           
 				<label for="subject"><h3>Subject</h3></label>
-				<input class="long" type="text" name="subject" id="subject" />
+				<input class="long" type="text" name="subject" id="subject" value="<?=display_str($Subject)?>" />
 				<br />
 				
 				<label for="message"><h3>Message</h3></label>
                             <? $Text->display_bbcode_assistant("message"); ?>
-				<textarea rows="10" class="long" name="message" id="message"></textarea>
+				<textarea rows="10" class="long" name="message" id="message"><?=display_str($Msg)?></textarea>
 				<br />
 				
                     </div>
@@ -60,9 +65,9 @@ function print_compose_staff_pm($Hidden = true, $Text = false) {
                         
 				<strong>Send to: </strong>
 				<select name="level">
-					<option value="0" selected="selected">First Line Support</option>
-					<option value="500">Mod Pervs</option>
-					<option value="600">Admins</option>
+					<option value="0"<?if(!$Assign)echo ' selected="selected"';?>>First Line Support</option>
+					<option value="500"<?if($Assign=='mod')echo ' selected="selected"';?>>Mod Pervs</option>
+					<option value="600"<?if($Assign=='admin')echo ' selected="selected"';?>>Admins</option>
 				</select>
 				<input type="button" id="previewbtn" value="Preview" onclick="Inbox_Preview();" /> 
                         <input type="submit" value="Send message" />
