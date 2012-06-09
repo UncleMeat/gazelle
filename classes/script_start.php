@@ -530,9 +530,11 @@ function get_user_badges($UserID){
                         ub.BadgeID,
                         ub.Title,
                         b.Name,
-                        b.Image
+                        b.Image,
+                        IF(ba.ID IS NULL,FALSE,TRUE) AS Auto
                    FROM users_badges AS ub
-                   LEFT JOIN badges AS b ON b.ID = ub.BadgeID
+                   JOIN badges AS b ON b.ID = ub.BadgeID
+                   LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
                    WHERE ub.UserID = $UserID
                    ORDER BY b.Sort");
         $UserBadges = $DB->to_array();

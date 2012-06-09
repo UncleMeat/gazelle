@@ -11,7 +11,7 @@ if($_POST['submit'] == 'Delete') {
       
 } elseif ($_POST['autosynch'] == 'autosynch') {
     
-      //*/ Auto update shop items with applicable badge items
+      // Auto update shop items with applicable badge items
 
       if ($_POST['delete']==1){
             $DB->query("DELETE FROM bonus_shop_actions WHERE Action='badge'");
@@ -43,14 +43,12 @@ if($_POST['submit'] == 'Delete') {
 	$Err=$Val->ValidateForm($_POST); // Validate the form
 	if($Err){ error($Err); }
       
-      $Action=db_string($_POST['shopaction']);
-      $Value=(int)$_POST['value'];
-      
       $Name=db_string($_POST['name']);
       $Desc=db_string($_POST['desc']);
-      
-      $Sort=(int)$_POST['sort'];
+      $Action=db_string($_POST['shopaction']);
+      $Value=(int)$_POST['value'];
       $Cost=(int)$_POST['cost'];
+      $Sort=(int)$_POST['sort'];
       
 	if($_POST['submit'] == 'Edit'){ //Edit
 		if(!is_number($_POST['id']) || $_POST['id'] == ''){ error(0); }
@@ -59,14 +57,14 @@ if($_POST['submit'] == 'Delete') {
                               Description='$Desc',
                               Action='$Action',
                               Value='$Value',
-                              Cost='$Cost'
+                              Cost='$Cost',
+                              Sort='$Sort'
                               WHERE ID='{$_POST['id']}'");
 	} else { //Create
 		$DB->query("INSERT INTO bonus_shop_actions 
-			(Title, Description, Action, Value, Cost) VALUES
-			('$Name','$Desc','$Action','$Value','$Cost')");
+			(Title, Description, Action, Value, Cost, Sort) VALUES
+			('$Name','$Desc','$Action','$Value','$Cost','$Sort')");
 	}
-        
 }
 
 // Go back

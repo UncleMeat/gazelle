@@ -859,10 +859,10 @@ tr {
     background-color: white;
 }
 
-tr.rowa {    /* original alternate row color: quite blue #E1E9F2;*/
+tr.rowa, .rowa {    /* original alternate row color: quite blue #E1E9F2;*/
     background-color: #eff3f6; /* lighter shade: #eff3f6;*/
 }
-tr.rowb {
+tr.rowb, .rowb {
     background-color: white;
 }
 

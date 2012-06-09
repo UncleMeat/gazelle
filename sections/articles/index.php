@@ -43,7 +43,69 @@ if (preg_match("/\[clientlist\]/i", $Body)) {
     }
     $list .= "</table>";
     $Body = preg_replace("/\[clientlist\]/i", $list, $Body);
-} 
+}
+
+// imagehost whitelist
+if (preg_match("/\[whitelist\]/i", $Body)) {
+       
+    $ImageWhitelist = $Cache->get_value('imagehost_whitelist');
+    if($ImageWhitelist === FALSE) {
+            $DB->query("SELECT Imagehost, Link, Comment, Time FROM imagehost_whitelist ORDER BY Time");
+            $ImageWhitelist = $DB->to_array();
+            $Cache->cache_value('imagehost_whitelist', $ImageWhitelist);
+    }
+    $list = '<table id="whitelist">
+                <tr class="colhead">
+        		<td style="width:50%;"><strong>Imagehost</strong></td>
+                  <td><strong>Comment</strong></td>
+		</tr>';                                        
+
+    $Row = 'a';
+    foreach($ImageWhitelist as $ImageHost) { 
+        
+        list($Host, $Link, $Comment, $Updated) = $ImageHost; 
+        $Row = ($Row == 'a') ? 'b' : 'a';
+        $list .= "<tr class=row$Row>
+                        <td>".$Text->full_format($Host);
+         if ( !empty($Link) && $Text->valid_url($Link)) { 
+                 $list .=   "<a href=\"$Link\"  target=\"_blank\"><img src=\"". STATIC_SERVER .'common/symbols/offsite.gif" width="16" height="16" alt="Goto '.$Host."\" /></a>\n";
+         }
+        
+         $list .=   "</td>
+                        <td>".$Text->full_format($Comment)."</td>
+                  </tr>";
+    }
+    $list .= "</table>";
+    
+    /*
+    ?>
+ 
+          <table id="whitelist" class="<?=($HideWL?'hidden':'')?>" style="">
+                <tr class="colhead">
+                      <td width="50%"><strong>Imagehost</strong></td>
+                      <td><strong>Comment</strong></td>
+                </tr>
+    <? foreach($Whitelist as $ImageHost) { 
+                list($Host, $Link, $Comment, $Updated) = $ImageHost;
+    ?>		
+                <tr>
+                      <td><?=$Text->full_format($Host)?>
+                   <?  // if a goto link is supplied and is a validly formed url make a link icon for it
+                   if ( !empty($Link) && $Text->valid_url($Link)) { 
+                       ?><a href="<?=$Link?>"  target="_blank"><img src="<?=STATIC_SERVER?>common/symbols/offsite.gif" width="16" height="16" style="" alt="Goto <?=$Host?>" /></a>
+                   <? } // endif has a link to imagehost ?>
+                      </td>
+                      <td><?=$Text->full_format($Comment)?></td>
+                </tr>
+    <? } ?>
+          </table> 
+   
+    <?
+    */
+    
+    $Body = preg_replace("/\[whitelist\]/i", $list, $Body);
+}
+
 
 if (preg_match("/\[ratiolist\]/i", $Body)) {
     $list = '<table>

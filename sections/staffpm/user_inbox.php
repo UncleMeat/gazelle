@@ -21,7 +21,13 @@ $StaffPMs = $DB->query("
 );
 
 // Start page
-                //<a href="#" onClick="$('#compose').toggle();">[Compose New]</a>
+
+$Show = isset($_REQUEST['show'])?($_REQUEST['show']==1?1:0):0;
+$Assign = isset($_REQUEST['assign'])?$_REQUEST['assign']:'';
+if ($Assign !== '' && !in_array($Assign, array('mod','admin'))) $Assign = '';
+$Subject = isset($_REQUEST['sub'])?$_REQUEST['sub']:'';
+$Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
+
 ?>
 <div class="thin">
 	<h2>Staff PMs</h2>
@@ -29,7 +35,7 @@ $StaffPMs = $DB->query("
           <div class="linkbox">
                 <a href="#" onClick="jQuery('#compose').slideToggle('slow');">[Compose New]</a>
           </div>
-          <? print_compose_staff_pm(true); ?>
+		<? print_compose_staff_pm(!$Show, $Assign, $Subject, $Msg);  ?>
       </div>
 	<div class="box pad" id="inbox">
 <?

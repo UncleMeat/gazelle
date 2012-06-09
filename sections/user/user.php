@@ -1160,14 +1160,15 @@ if (check_perms('users_mod', $Class)) { ?>
                       <div class="pad"><h3>Current user badges (select to remove)</h3>
 <?
                             foreach ($UserBadges as $Badge) {
-                                list($ID,$BadgeID, $Tooltip, $Name, $Image ) = $Badge;
+                                list($ID,$BadgeID, $Tooltip, $Name, $Image, $Auto ) = $Badge;
                                 $UserBadgesIDs[] = $BadgeID;
 ?>
                             <div class="badge">
                                 <?='<img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="'.$Tooltip.'" alt="'.$Name.'" />'?>
                                 <br />
                                 <input type="checkbox" name="delbadge[]" value="<?=$ID?>" />
-                                        <label for="delbadge[]"> <?=$Name?></label>
+                                        <label for="delbadge[]"> <?=$Name;
+                                                if ($Auto) echo " (auto)";?></label>
                             </div>
 <?
                             }
@@ -1180,21 +1181,27 @@ if (check_perms('users_mod', $Class)) { ?>
                           <p>Shop and single type items can be owned once by each user, multiple type items many times, and unique items only by one user at once</p>
                           <table class="noborder">
 <?
-                    $DB->query("SELECT
-                                    ID,
+                    $AvailableBadges = $Cache->get_value('available_badges');
+                    if (!is_array($AvailableBadges)) {
+                        $DB->query("SELECT
+                                    b.ID,
                                     Type,
                                     Name,
                                     Description,
                                     Image,
+                                    IF(ba.ID IS NULL,FALSE,TRUE) AS Auto,
                                     IF(Type != 'Unique', TRUE, 
                                                         (SELECT COUNT(*) FROM users_badges 
-                                                            WHERE users_badges.BadgeID=badges.ID)=0) AS Available
-                               FROM badges 
+                                                            WHERE users_badges.BadgeID=b.ID)=0) AS Available
+                               FROM badges AS b
+                               LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
                                WHERE Type != 'Shop'
                                ORDER BY Sort"); 
-//onchange="$('#addbadge<?=$ID?/>').toggle();"
-                    while($Badge = $DB->next_record()){
-                        list($ID, $Type, $Name, $Tooltip, $Image, $Available) = $Badge;
+                        $AvailableBadges = $DB->to_array();
+                        $Cache->cache_value('available_badges', $AvailableBadges);
+                    }
+                    foreach($AvailableBadges as $Badge){ // = $DB->next_record()
+                        list($ID, $Type, $Name, $Tooltip, $Image, $Auto, $Available) = $Badge;
 ?>
                         <tr>
                             <td width="60px">
@@ -1209,7 +1216,9 @@ if (check_perms('users_mod', $Class)) { ?>
                             </td>
                             <td>
                                 <input  type="checkbox" name="addbadge[]" value="<?=$ID?>"<?=$Disabled?> />
-                                        <label for="addbadge[]"> <?=$Name; if($Type=='Unique') { echo "*"; } ?></label>
+                                        <label for="addbadge[]"> <?=$Name; 
+                                                if($Type=='Unique') echo "*";
+                                                if ($Auto) echo " (automatically awarded)"; ?></label>
                                 <br />
                                 <input class="long" type="text" id="addbadge<?=$ID?>" name="addbadge<?=$ID?>"<?=$Disabled?> value="<?=$Tooltip?>" />
                             </td>

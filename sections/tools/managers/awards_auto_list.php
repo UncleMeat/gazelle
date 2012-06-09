@@ -93,10 +93,10 @@ function print_categories($SelectedCat=-1){
                 <? print_categories() ?>
 		</td>
 		<td class="center">
-			<input class="medium"  type="checkbox" name="sendpm" title="If checked then the user is sent a PM telling them when they recieve this award" />
+			<input class="medium"  type="checkbox" name="sendpm" value="1" title="If checked then the user is sent a PM telling them when they recieve this award" />
 		</td>
 		<td class="center">
-			<input class="medium"  type="checkbox" name="active" title="If checked this award will be automatically distributed to users who meet the specified requirements" />
+			<input class="medium"  type="checkbox" name="active" value="1" title="If checked this award will be automatically distributed to users who meet the specified requirements" />
 		</td>
 		<td>
 			<input type="submit" value="Create" />
@@ -125,7 +125,7 @@ function print_categories($SelectedCat=-1){
 
 $DB->query("SELECT ba.ID, ba.BadgeID, Name, Action, SendPM, Value, CategoryID, Description, Image , Active
               FROM badges_auto AS ba 
-              JOIN badges AS b ON b.ID=ba.BadgeID");
+              JOIN badges AS b ON b.ID=ba.BadgeID ORDER BY b.Sort");
 
 $Row = 'b';
 while(list($ID, $BadgeID, $Name, $Action, $SendPM, $Value, $CategoryID, $Description, $Image, $Active) = $DB->next_record()){  

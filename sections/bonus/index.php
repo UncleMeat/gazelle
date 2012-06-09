@@ -7,7 +7,10 @@ if(!isset($_REQUEST['action'])) {
 else
 {
     switch ($_REQUEST['action']){
-          case 'buy':
+        case 'awards':
+            include(SERVER_ROOT.'/sections/bonus/awards.php');
+            break;
+        case 'buy':
             include(SERVER_ROOT.'/sections/bonus/takebonus.php');
             break;
         default:

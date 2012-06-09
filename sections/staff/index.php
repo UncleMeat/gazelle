@@ -8,6 +8,12 @@ $SupportStaff = get_support();
 
 list($FrontLineSupport, $Staff, $Admins) = $SupportStaff;
 
+$Show = isset($_REQUEST['show'])?($_REQUEST['show']==1?1:0):0;
+$Assign = isset($_REQUEST['assign'])?$_REQUEST['assign']:'';
+if ($Assign !== '' && !in_array($Assign, array('mod','admin'))) $Assign = '';
+$Subject = isset($_REQUEST['sub'])?$_REQUEST['sub']:'';
+$Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
+
 ?>
 <div class="thin">
 	<h2><?=SITE_NAME?> Staff</h2>
@@ -19,7 +25,7 @@ list($FrontLineSupport, $Staff, $Admins) = $SupportStaff;
                               <a href="#"  class="contact_link" onClick="jQuery('#compose').slideToggle('slow');">sending a message to the Staff Inbox</a>
                               <em>Please do not PM individual staff members for support!</em> </p>
             </div>
-		<? print_compose_staff_pm(true); ?>
+		<? print_compose_staff_pm(!$Show, $Assign, $Subject, $Msg);  ?>
 		<br />
       </div>
 	<div class="box pad" style="padding:10px;">
