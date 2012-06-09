@@ -77,33 +77,37 @@ if (preg_match("/\[whitelist\]/i", $Body)) {
     }
     $list .= "</table>";
     
-    /*
-    ?>
- 
-          <table id="whitelist" class="<?=($HideWL?'hidden':'')?>" style="">
-                <tr class="colhead">
-                      <td width="50%"><strong>Imagehost</strong></td>
-                      <td><strong>Comment</strong></td>
-                </tr>
-    <? foreach($Whitelist as $ImageHost) { 
-                list($Host, $Link, $Comment, $Updated) = $ImageHost;
-    ?>		
-                <tr>
-                      <td><?=$Text->full_format($Host)?>
-                   <?  // if a goto link is supplied and is a validly formed url make a link icon for it
-                   if ( !empty($Link) && $Text->valid_url($Link)) { 
-                       ?><a href="<?=$Link?>"  target="_blank"><img src="<?=STATIC_SERVER?>common/symbols/offsite.gif" width="16" height="16" style="" alt="Goto <?=$Host?>" /></a>
-                   <? } // endif has a link to imagehost ?>
-                      </td>
-                      <td><?=$Text->full_format($Comment)?></td>
-                </tr>
-    <? } ?>
-          </table> 
-   
-    <?
-    */
-    
     $Body = preg_replace("/\[whitelist\]/i", $list, $Body);
+}
+
+// DNU list
+if (preg_match("/\[dnulist\]/i", $Body)) {
+ 
+    $DNUlist = $Cache->get_value('do_not_upload_list');
+    if($DNUlist === FALSE) {
+            $DB->query("SELECT  Name, Comment, Time FROM do_not_upload ORDER BY Time");
+            $DNUlist = $DB->to_array();
+            $Cache->cache_value('do_not_upload_list', $DNUlist);
+    }
+    $list = '<table id="dnulist">
+                <tr class="colhead">
+        		<td style="width:50%;"><strong>Name</strong></td>
+                  <td><strong>Comment</strong></td>
+                </tr>';                                        
+
+    $Row = 'a';
+    foreach($DNUlist as $BadUpload) { 
+        
+        list($Name, $Comment, $Updated) = $BadUpload; 
+        $Row = ($Row == 'a') ? 'b' : 'a';
+        $list .= "<tr class=row$Row>
+                        <td>".$Text->full_format($Name)."</td>
+                        <td>".$Text->full_format($Comment)."</td>
+                  </tr>";
+    }
+    $list .= "</table>";
+    
+    $Body = preg_replace("/\[dnulist\]/i", $list, $Body);
 }
 
 
