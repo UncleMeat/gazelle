@@ -39,7 +39,7 @@ show_header('News','bbcode');
 	if(is_number($FeaturedAlbum['GroupID'])) {
 ?>
 		<div class="box">
-			<div class="head colhead_dark"><strong>Featured Album</strong></div>
+			<div class="head colhead_dark"><strong>Featured Torrent</strong></div>
 			<div class="center pad"><a href="torrents.php?id=<?=$FeaturedAlbum['GroupID']?>"><?=$FeaturedAlbum['Name']?></a></div>
 			<div class="center"><a href="torrents.php?id=<?=$FeaturedAlbum['GroupID']?>" title="<?=$FeaturedAlbum['Name']?>"><img src="<?=$FeaturedAlbum['Image']?>" alt="<?=$FeaturedAlbum['Name']?>" width="100%" /></a></div>
 			<div class="center pad"><a href="forums.php?action=viewthread&amp;threadid=<?=$FeaturedAlbum['ThreadID']?>"><em>Read the interview with the band, discuss here</em></a></div>

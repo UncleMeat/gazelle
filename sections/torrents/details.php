@@ -599,7 +599,7 @@ if(count($PersonalCollages)>0) {
 ?>
 		<table id="personal_collages">
 			<tr class="colhead">
-				<td width="85%">This album is in <?=count($PersonalCollages)?> personal collage<?=((count($PersonalCollages)>1)?'s':'')?><?=$SeeAll?></td>
+				<td width="85%">This torrent is in <?=count($PersonalCollages)?> personal collage<?=((count($PersonalCollages)>1)?'s':'')?><?=$SeeAll?></td>
 				<td># torrents</td>
 			</tr>
 <?	foreach ($Indices as $i) { 
