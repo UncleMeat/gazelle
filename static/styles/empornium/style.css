@@ -1255,6 +1255,13 @@ blockquote {
 }
 
 /* Signatures layout */ 
+
+.post_container {
+    position: relative; 
+    width:100%;
+    height:100%; 
+}
+
 div.post_content  {
     min-height: 100px;  
     padding: 10px 10px 20px;
@@ -1262,15 +1269,25 @@ div.post_content  {
 div.post_footer  { 
     margin-top: 4px; 
 }  
-div.sig { 
-    margin-top: 6px; 
-    border-top: 1px solid #dcdde4;   /*  #98AAB1;   */
-    padding: 6px;
+td.sig { 
+     /* border-top: 1px solid #dcdde4;    */
+    padding: 8px;
+    vertical-align: top;
+}
+#sig { 
+    position: relative; 
+    max-width: 100%; 
+}
+
+#sig img.scale_image {
+    max-height:500px; 
+    max-width: 770px;  
 }
 
 td.postbody {
     padding:0px;
 }
+ 
 
 .editedby {
     color:#999;

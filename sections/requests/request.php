@@ -133,7 +133,8 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 			</table>
 		</div>
 	</div>
-	<div class="main_column">
+      <div class="main_column">
+          
 		<table>
 			<tr>
 				<td class="label">Created</td>
@@ -302,7 +303,7 @@ foreach($Thread as $Key => $Post){
       $AuthorPermissions = get_permissions($PermissionID);
       list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
       ?>
-<table class="forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>" id="post<?=$PostID?>">
+<table class="forum_post  vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>" id="post<?=$PostID?>">
 	<tr class="colhead_dark">
 		<td colspan="2">
 			<span style="float:left;"><a href='#post<?=$PostID?>'>#<?=$PostID?></a>
@@ -317,18 +318,17 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 		</td>
 	</tr>
 	<tr>
-<? if(empty($HeavyInfo['DisableAvatars'])) { ?>
+<?  if(empty($HeavyInfo['DisableAvatars'])) { ?>
 		<td class="avatar" valign="top">
 	<? if ($Avatar) { ?>
 			<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$Username ?>'s avatar" />
 	<? } else { ?>
 			<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 	<?
-	}
-?>
+         }  ?>
 		</td>
 <?
-}
+} 
 $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 ?>
 		<td class="body" valign="top">
@@ -339,20 +339,26 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 <?	if(check_perms('site_moderate_forums')) { ?>
 				<a href="#content<?=$PostID?>" onclick="LoadEdit('requests', <?=$PostID?>, 1); return false;">&laquo;</a> 
 <? 	} ?>
-				Last edited by
+                        <span class="editedby">Last edited by
 				<?=format_username($EditedUserID, $EditedUsername) ?> <?=time_diff($EditedTime,2,true,true)?>
+                        </span>
                         </div>
 <? } ?>
 			</div>
-<?  
-           if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength>0) && !empty($Signature) ) {
-                        echo '<div class="sig post_footer">' . $Text->full_format($Signature, $AllowTags) . '</div>';
-           }
-?>
 		</td>
 	</tr>
+<? /*
+      if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength > 0) && !empty($Signature) ) { //post_footer
+                        
+            echo '
+      <tr>
+            <td class="sig"><div id="sig"><div>' . $Text->full_format($Signature, $AllowTags) . '</div></div></td>
+      </tr>';
+           } */
+?>
 </table>
 <?	} ?>
+       
 		<div class="linkbox">
 		<?=$Pages?>
 		</div>
