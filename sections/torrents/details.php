@@ -722,15 +722,20 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 		</td>
 	</tr>
 	<tr>
-<? if(empty($HeavyInfo['DisableAvatars'])) { ?>
-		<td class="avatar" valign="top">
+<? if(empty($HeavyInfo['DisableAvatars'])) {?>
+		<td class="avatar" valign="top" rowspan="2">
 	<? if ($Avatar) { ?>
 			<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$Username ?>'s avatar" />
 	<? } else { ?>
 			<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 	<?
-	}
-	?>
+         }
+        $UserBadges = get_user_badges($AuthorID); 
+        if( !empty($UserBadges) ) {  ?>
+               <div class="badges">
+<?                  print_badges_array($UserBadges); ?>
+               </div>
+<?      }      ?>
 		</td>
 <?
 }
@@ -752,27 +757,17 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
                         </div>
         <? }   ?>  
 			</div>
-<?  
-           if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength>0) && !empty($Signature) ) {
-                        echo '<div class="sig post_footer">' . $Text->full_format($Signature, $AllowTags) . '</div>';
-           }
-?>
 		</td>
 	</tr>
 <? 
-    $UserBadges = get_user_badges($AuthorID);
-    if( empty($HeavyInfo['DisableSignatures'])  ) {  ?> 
+      if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength > 0) && !empty($Signature) ) { //post_footer
+                        
+            echo '
       <tr>
-          <td colspan="2" class="badgesrow">
-                <div class="badges">
-<?
-                    print_badges_array($UserBadges);
-                      //$BadgeBuilder->get_badges($Awards)
+            <td class="sig"><div id="sig"><div>' . $Text->full_format($Signature, $AllowTags) . '</div></div></td>
+      </tr>';
+           }
 ?>
-                </div>
-          </td>
-      </tr>
-<?  }       ?>
 </table>
 <?	} ?>
 		<div class="linkbox">
