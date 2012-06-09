@@ -12,8 +12,8 @@ $NumFilters = $DB->record_count()-1;
 $Notifications = $DB->to_array();
 
 foreach($Notifications as $N) { //$N stands for Notifications
-	$N['Tags']		= implode(', ', explode('|', substr($N['Tags'],1,-1)));
-	$N['NotTags']		= implode(', ', explode('|', substr($N['NotTags'],1,-1)));
+	$N['Tags']		= implode(' ', explode('|', substr($N['Tags'],1,-1)));
+	$N['NotTags']		= implode(' ', explode('|', substr($N['NotTags'],1,-1)));
 	$N['Categories'] 	= explode('|', substr($N['Categories'],1,-1));
 	$i++;
 
@@ -51,14 +51,14 @@ foreach($Notifications as $N) { //$N stands for Notifications
 				<td class="label"><strong>At least one of these tags</strong></td>
 				<td>
 					<textarea name="tags" style="width:100%" rows="2"><?=display_str($N['Tags'])?></textarea>
-					<p class="min_padding">Comma-separated list - eg. <em>rock, jazz, pop</em></p>
+					<p class="min_padding">Space-separated list - eg. <em>hardcore big.tits anal</em></p>
 				</td>
 			</tr>
 			<tr>
 				<td class="label"><strong>None of these tags</strong></td>
 				<td>
 					<textarea name="nottags" style="width:100%" rows="2"><?=display_str($N['NotTags'])?></textarea>
-					<p class="min_padding">Comma-separated list - eg. <em>rock, jazz, pop</em></p>
+					<p class="min_padding">Space-separated list - eg. <em>hardcore big.tits anal</em></p>
 				</td>
 			</tr>
 			<tr>

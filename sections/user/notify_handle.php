@@ -9,7 +9,7 @@ $HasFilter = false;
 
 if($_POST['tags']){
 	$TagList = '|';
-	$Tags = explode(',', $_POST['tags']);
+	$Tags = explode(' ', strtolower($_POST['tags']));
 	foreach($Tags as $Tag){
 		$TagList.=db_string(trim($Tag)).'|';
 	}
@@ -18,7 +18,7 @@ if($_POST['tags']){
 
 if($_POST['nottags']){
 	$NotTagList = '|';
-	$Tags = explode(',', $_POST['nottags']);
+	$Tags = explode(' ', strtolower($_POST['nottags']));
 	foreach($Tags as $Tag){
 		$NotTagList.=db_string(trim($Tag)).'|';
 	}

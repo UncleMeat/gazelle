@@ -74,9 +74,10 @@ if(($CollageCount < $LoggedUser['Permissions']['MaxCollages']) && check_perms('s
 				</td>
 			</tr>
 			<tr>
-				<td class="label"><strong>Tags (comma-separated)</strong></td>
+				<td class="label"><strong>Tags</strong></td>
 				<td>
 					<input type="text" id="tags" name="tags" class="long" value="<?=display_str($Tags)?>" />
+                                        <p class="min_padding">Space-separated list - eg. <em>hardcore big.tits anal</em></p>
 				</td>
 			</tr>
 			<tr>
