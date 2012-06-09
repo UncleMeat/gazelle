@@ -363,7 +363,7 @@ while (($row = mysql_fetch_assoc($result))) {
     }
 
     $torrents_row[] = "(" . $row['id'] . ", " . $row['owner'] . ", 
-		'" . mysql_real_escape_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'))";
+		'" . mysql_real_escape_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'".$row['hits']."', '".$row['times_completed']."'))";
 
    
     $TorrentID++;
@@ -392,7 +392,7 @@ while (($row = mysql_fetch_assoc($result))) {
         $torrents_tags_row = array();
         
         mysql_query("INSERT INTO gazelle.torrents
-                            (GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action) 
+                            (GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, completed) 
                         VALUES " . implode(',', $torrents_row)
                 ) or die(mysql_error());
         $torrents_row = array();
@@ -427,7 +427,7 @@ if (count($torrents_tags_row) > 0) {
 
 if (count($torrents_row) > 0) {
     mysql_query("INSERT INTO gazelle.torrents
-                        (GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action) 
+                        (GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, completed) 
                     VALUES " . implode(',', $torrents_row)
             ) or die(mysql_error());
 }

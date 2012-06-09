@@ -118,12 +118,7 @@ $BadgeTypes = array ('Single', 'Multiple', 'Shop', 'Unique');
 $AutoAwardTypes  = array ('NumPosts', 'NumComments', 'NumUploaded', 'NumNewTags', 'NumTags', 'NumTagVotes',
                   'RequestsFilled', 'UploadedTB', 'DownloadedTB', 'MaxSnatches');
 
-//============== I think this array is still missing from config.php =======
-// i hope its just this otherwise i have done something weird... its used in the bonus shop 
 $ShopActions = array('gb','givegb','givecredits','slot','title','badge');
-
-
- 
 
 // Ratio requirements, in descending order
 // Columns: Download amount, required ratio, grace period
