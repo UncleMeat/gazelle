@@ -178,9 +178,9 @@ class TORRENT_FORM {
 					<br /><br />
 					There is a list of official tags to the left of the text box. Please use these tags instead of 'unofficial' tags.  <strong>Please note that the '2000s' tag refers to produced between 2000 and 2009.</strong>
 					<br /><br />
-					Avoid abbreviations if at all possible. So instead of tagging an album as '<strong style="color:red;">hc</strong>', tag it as '<strong style="color:green;">hardcore</strong>'. Make sure that you use correct spelling. 
+					Avoid abbreviations if at all possible. So instead of tagging as '<strong style="color:red;">hc</strong>', tag it as '<strong style="color:green;">hardcore</strong>'. Make sure that you use correct spelling. 
 					<br /><br />
-					Avoid using multiple synonymous tags.  
+					Avoid using multiple synonymous tags, the tracker handle this automatically.
 					<br /><br />
 					Don't use 'useless' tags, such as '<strong style="color:red;">awesome</strong>', etc.
 					<br /><br />

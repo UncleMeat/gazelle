@@ -159,7 +159,7 @@ echo $Val->GenerateJS('userform');
 				</td>
 			</tr>-->
 			<tr>
-				<td class="label"><strong>Collage album covers to show per page</strong></td>
+				<td class="label"><strong>Collage torrent covers to show per page</strong></td>
 				<td>
 					<select name="collagecovers" id="collagecovers">
 						<option value="10"<? if ($SiteOptions['CollageCovers'] == 10) { ?>selected="selected"<? } ?>>10</option>
