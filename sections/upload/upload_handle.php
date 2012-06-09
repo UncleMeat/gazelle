@@ -67,7 +67,7 @@ $Validate->SetFields('image', '0', 'image', 'The image URL you entered was not v
 $Validate->SetFields('desc', '1', 'desc', 'Description', array('regex' => $whitelist_regex, 'maxlength' => 1000000, 'minlength' => 20));
 
 
-$Validate->SetFields('category', '1', 'inarray', 'Please select a valid format.', array('inarray' => array_keys($NewCategories)));
+$Validate->SetFields('category', '1', 'inarray', 'Please select a category.', array('inarray' => array_keys($NewCategories)));
 
 $Validate->SetFields('rules', '1', 'require', 'Your torrent must abide by the rules.');
 
@@ -215,8 +215,9 @@ if (!$GroupID) {
     $Cache->delete_value('detail_files_' . $GroupID);
 }
 
-// Tags
-$Tags = explode(' ', $Properties['TagList']);
+// lanz: insert the category tag here.
+$Tags = explode(' ', strtolower($NewCategories[$NewCategory]['tag']." ".$Properties['TagList']));
+$Tags = array_unique($Tags);
 if (!$Properties['GroupID']) {
     $TagsAdded=array();
     foreach ($Tags as $Tag) {
@@ -230,12 +231,7 @@ if (!$Properties['GroupID']) {
                             ('" . $Tag . "', $LoggedUser[ID], 1)
                             ON DUPLICATE KEY UPDATE Uses=Uses+1;
                       ");
-                /*
-                $DB->query("INSERT INTO tags
-                            (Name, UserID) VALUES
-                            ('" . $Tag . "', $LoggedUser[ID])
-                            ON DUPLICATE KEY UPDATE Uses=Uses+1;
-                      "); */
+
                 $TagID = $DB->inserted_id();
 
                 $DB->query("INSERT INTO torrents_tags
@@ -251,22 +247,6 @@ if (!$Properties['GroupID']) {
 }
 
 // Use this section to control freeleeches
-
-/* if($HasLog == "'4'" && $LogScoreAverage== 100){
-
-  $T['FreeLeech']="'1'";
-  $T['FreeLeechType']="'1'";
-  $DB->query("INSERT IGNORE INTO users_points (UserID, GroupID, Points) VALUES ('$LoggedUser[ID]', '$GroupID', '1')");
- */
-
-/* if($T['Format'] == "'FLAC'") {
-  $T['FreeLeech'] = "'1'";
-  $T['FreeLeechType'] = "'1'";
-  } else {
-  $T['FreeLeech']="'0'";
-  $T['FreeLeechType']="'0'";
-  } */
-
 $T['FreeLeech'] = "'0'";
 $T['FreeLeechType'] = "'0'";
 

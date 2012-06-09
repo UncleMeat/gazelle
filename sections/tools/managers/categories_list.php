@@ -10,7 +10,7 @@ $DB->query("SELECT
         id,
         name,
         image,
-        cat_desc
+        tag
         FROM categories");
 ?>
 
@@ -32,7 +32,7 @@ function change_image(display_image, cat_image) {
 <tr class="colhead">
         <td width="28%">Image</td>
         <td width="20%">Name</td>
-        <td width="39%">Description</td>
+        <td width="39%">Tag</td>
         <td width="13%">Submit</td>
 </tr>
 <tr>
@@ -53,7 +53,7 @@ function change_image(display_image, cat_image) {
                     <input class="medium" type="text" name="name" />
             </td>
             <td>
-                    <input class="long"  type="text" name="cat_desc" />
+                    <input class="long"  type="text" name="tag" />
             </td>                
             <td>
                     <input type="submit" value="Create" />
@@ -66,10 +66,10 @@ function change_image(display_image, cat_image) {
 <tr class="colhead">
         <td width="28%">Image</td>
         <td width="20%">Name</td>
-        <td width="39%">Description</td>
+        <td width="39%">Tag</td>
         <td width="13%">Submit</td>
 </tr>
-<?while(list($id, $name, $image, $cat_desc) = $DB->next_record()) { ?>        
+<?while(list($id, $name, $image, $tag) = $DB->next_record()) { ?>        
 <tr>
         <form action="tools.php" method="post">
             <td>
@@ -89,7 +89,7 @@ function change_image(display_image, cat_image) {
                 <input type="text" class="medium"  name="name" value="<?=display_str($name)?>" />
             </td>
             <td>
-                <input type="text" class="long"  name="cat_desc" value="<?=display_str($cat_desc)?>" />
+                <input type="text" class="long"  name="tag" value="<?=display_str($tag)?>" />
             </td>                
             <td>
                 <input type="submit" name="submit" value="Edit" />

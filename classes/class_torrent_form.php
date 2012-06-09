@@ -85,7 +85,8 @@ class TORRENT_FORM {
                                     Category
                                 </td>
                                 <td>
-                                    <select name="category">
+                                    <select id="category" name="category" onchange="change_tagtext();">
+                                        <option value="0">---</option>
                                     <? foreach($this->NewCategories as $category) { ?>
                                     <option value="<?=$category['id']?>"><?=$category['name']?></option>
                                     <? } ?>
@@ -164,6 +165,7 @@ class TORRENT_FORM {
 			<tr>
 				<td class="label">Tags</td>
 				<td>
+                                    <div id="tagtext"><strong>No category selected.</strong></div>
 <?			if($OfficialTags) { ?>
 					<select id="genre_tags" name="genre_tags" onchange="add_tag();return false;" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>>
 						<option>---</option>

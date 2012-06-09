@@ -248,9 +248,7 @@ $time_start = microtime(true);
 echo "connecting to database\n";
 mysql_connect('localhost', 'root', 'password');
 
-
 echo "Creating new authkeys for users\n";
-
 mysql_query("UPDATE gazelle.users_info
 	SET AuthKey =
 		MD5(
@@ -282,6 +280,14 @@ mysql_query("insert into gazelle.invite_tree values ".implode(',',$values)) or d
 $result = mysql_query("select count(*) as c from " . EMDB . ".torrents") or die(mysql_error());
 $count = mysql_result($result, 0);
 echo "Importing $count torrents to database... (this will take a while)\n";
+echo "Each dot is 50 torrents, an x means a torrent with an info hash that is already in the table.\n";
+
+// Get the categories from the gazelle db
+$result = mysql_query("select * from gazelle.categories") or die(mysql_error());
+$categories = array();
+while ($row = mysql_fetch_assoc($result)) {
+    $categories[$row['id']] = $row;
+}
 
 $info_hash_array = array();
 $i = 0;
@@ -327,21 +333,18 @@ while (($row = mysql_fetch_assoc($result))) {
         continue;        
     }
     $info_hash_array[] = $InfoHash;
-    
-    
-
-    // Make sure that the tags are all lowercase and unique.
-    $Tags = strtolower($row['tags']);
-    $Tags = str_replace('.', '_', $Tags); 
+        
+    // Make sure that the tags are all lowercase and unique and insert the category tag here.
+    $OriginalTags = strtolower($categories[$row['category']]['tag']." ".$row['tags']);
+    $Tags = str_replace('.', '_', $OriginalTags); 
     $Tags = explode(' ', $Tags);
     $Tags = array_unique($Tags);
-    $Tags = implode(' ', $Tags);
-    
-    $torrents_group_rows[] .= "(" . $row['id'] . ", " . $row['category'] . ", '" . mysql_real_escape_string($row['name']) . "', '" . mysql_real_escape_string($Tags) . "', from_unixtime('" . $row['added'] . "'), '" . mysql_real_escape_string($row['descr']) . "', '" . mysql_real_escape_string($row['name']) . " " . mysql_real_escape_string(cleansearch($row['descr'])) . "')";
-   
 
+    $TagList = implode(' ', $Tags);
     
-    $Tags = explode(' ', strtolower($row['tags']));
+    $torrents_group_rows[] .= "(" . $row['id'] . ", " . $row['category'] . ", '" . mysql_real_escape_string($row['name']) . "', '" . mysql_real_escape_string($TagList) . "', from_unixtime('" . $row['added'] . "'), '" . mysql_real_escape_string($row['descr']) . "', '" . mysql_real_escape_string($row['name']) . " " . mysql_real_escape_string(cleansearch($row['descr'])) . "')";
+    
+    $Tags = explode(' ', $OriginalTags);
     $Tags = array_unique($Tags);
     foreach ($Tags as $Tag) {
         if (!empty($Tag)) {
@@ -402,13 +405,6 @@ while (($row = mysql_fetch_assoc($result))) {
     }
 }
 
-/*
-echo "<pre>";
-print_r($tags_row);
-print_r($torrents_tags_row);
-die();
-*/
-
 // flush anything that is left...
 if (count($torrents_group_rows) > 0) {
     mysql_query("INSERT INTO gazelle.torrents_group
@@ -440,94 +436,6 @@ if (count($torrents_files_row) > 0) {
     mysql_query("INSERT INTO gazelle.torrents_files (TorrentID, File) VALUES " . implode(',', $torrents_files_row)
             ) or die(mysql_error());
 }
-
-/*
-$result = mysql_query("select count(*) as c from " . EMDB . ".torrents") or die(mysql_error());
-$count = mysql_result($result, 0);
-echo "Importing $count torrents to database... (be prepared for a long wait)\n";
-$i = 0;
-$result = mysql_query("select * from " . EMDB . ".torrents") or die(mysql_error());
-echo "0.00%";
-while ($row = mysql_fetch_assoc($result)) {
-    $File = fopen(TORRENT_PATH . '/' . $row['id'] . '.torrent', 'rb'); // open file for reading
-    $Contents = fread($File, 10000000);
-    $Tor = new TORRENT($Contents); // New TORRENT object
-
-    $Tor->set_announce_url('ANNOUNCE_URL'); // We just use the string "ANNOUNCE_URL"
-    $Tor->make_private();
-
-    list($TotalSize, $FileList) = $Tor->file_list();
-
-    $TmpFileList = array();
-
-    foreach ($FileList as $File) {
-        list($Size, $Name) = $File;
-        $TmpFileList [] = $Name . '{{{' . $Size . '}}}'; // Name {{{Size}}}
-    }
-
-    $FilePath = $Tor->Val['info']->Val['files'] ? mysql_real_escape_string($Tor->Val['info']->Val['name']) : "";
-    // Name {{{Size}}}|||Name {{{Size}}}|||Name {{{Size}}}|||Name {{{Size}}}
-    $FileString = "'" . mysql_real_escape_string(implode('|||', $TmpFileList)) . "'";
-    $NumFiles = count($FileList);
-    $TorrentText = $Tor->enc();
-    $InfoHash = pack("H*", sha1($Tor->Val['info']->enc()));
-
-    $r = mysql_query("SELECT ID FROM gazelle.torrents WHERE info_hash='".mysql_real_escape_string($InfoHash)."'");
-    if (mysql_num_rows($r) != 0) {
-        echo "x"; // just so we can see how many..
-        continue;
-    }
-    
-    mysql_query("INSERT INTO gazelle.torrents_group
-		(ID, NewCategoryID, Name, TagList, Time, Body, SearchText) VALUES
-		(" . $row['id'] . ", " . $row['category'] . ", '" . mysql_real_escape_string($row['name']) . "', '" . mysql_real_escape_string($row['tags']) . "', from_unixtime('" . $row['added'] . "'), '" . mysql_real_escape_string($row['descr']) . "', '" . mysql_real_escape_string($row['name']) . " " . mysql_real_escape_string(cleansearch($row['descr'])) . "')") or die(mysql_error());
-
-    $Tags = explode(' ', $row['tags']);
-    foreach ($Tags as $Tag) {
-        if (!empty($Tag)) {
-
-            $r = mysql_query("
-                                INSERT INTO gazelle.tags
-				(Name, UserID) VALUES
-				('" . $Tag . "', '" . $row['owner'] . "')
-				ON DUPLICATE KEY UPDATE Uses=Uses+1;
-			") or die(mysql_error());
-            
-            $TagID = mysql_insert_id();
-            
-            mysql_query("INSERT INTO gazelle.torrents_tags
-				(TagID, GroupID, UserID, PositiveVotes) VALUES
-				($TagID, " . $row['id'] . ", " . $row['owner'] . ", 10)
-				ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+1;
-			") or die(mysql_error());
-        }
-    }
-
-    $r = mysql_query("
-	INSERT INTO gazelle.torrents
-		(GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action) 
-	VALUES
-		(" . $row['id'] . ", " . $row['owner'] . ", 
-		'" . mysql_real_escape_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'))"
-            ) or die(mysql_error());
-
-    $TorrentID = mysql_insert_id();
-    mysql_query("INSERT INTO gazelle.torrents_files (TorrentID, File) VALUES ($TorrentID, '" . mysql_real_escape_string($Tor->dump_data()) . "')");
-   
-    mysql_query("UPDATE gazelle.torrents_group SET TagList=(SELECT REPLACE(GROUP_CONCAT(tags.Name SEPARATOR ' '),'.','_')
-		FROM gazelle.torrents_tags AS t
-		INNER JOIN gazelle.tags ON tags.ID=t.TagID
-		WHERE t.GroupID='" . $row['id'] . "'
-		GROUP BY t.GroupID)
-		WHERE ID='" . $row['id'] . "'") or die(mysql_error());
-
-    $i++;
-    if ($i % 1000 == 0)
-        echo "\n" . number_format($i / $count * 100, 2) . "% ";
-    elseif ($i % 100 == 0)
-        echo ".";
-}
-*/
 
 echo "\n\nCopying torrent comments.\n";
 mysql_query("INSERT INTO gazelle.torrents_comments (GroupID, AuthorID, AddedTime, Body, EditedUserID, EditedTime)

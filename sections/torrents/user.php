@@ -52,7 +52,7 @@ if(!empty($_GET['categories'])) {
 }
 
 if(!empty($_GET['tags'])) {
-	$Tags = explode(',',$_GET['tags']);
+	$Tags = explode(' ',$_GET['tags']);
 	$TagList = array();
 	foreach($Tags as $Tag) {
 		$Tag = trim(str_replace('.','_',$Tag));
@@ -60,7 +60,7 @@ if(!empty($_GET['tags'])) {
 		$TagList[]="tg.TagList LIKE '%".db_string($Tag)."%'";
 	}
 	if(!empty($TagList)) {
-		$SearchWhere[]='('.implode(' OR ', $TagList).')';
+		$SearchWhere[]='('.implode(' AND ', $TagList).')';
 	}
 }
 
@@ -245,7 +245,7 @@ foreach($NewCategories as $Cat) {
 ?>
 					<td>
                                             <input type="checkbox" name="categories[<?=($Cat['id'])?>]" id="cat_<?=($Cat['id'])?>" value="1" <? if(isset($_GET['filter_cat'][$Cat['id']])) { ?>checked="checked"<? } ?>/>
-                                            <label for="cat_<?=($Cat['id'])?>"><?=$Cat['name']?></label>
+                                            <label for="cat_<?=($Cat['id'])?>"><a href="torrents.php?filter_cat[<?=$Cat['id']?>]=1"><?= $Cat['name'] ?></a></label>
 					</td>
 <?
 }
@@ -309,7 +309,7 @@ foreach($NewCategories as $Cat) {
 		<tr>
 			<td class="center cats_col">
                     <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
-			<div title="<?=$NewCategories[$NewCategoryID]['cat_desc']?>"><img src="<?=$CatImg?>" />
+			<div title="<?=$NewCategories[$NewCategoryID]['tag']?>"><img src="<?=$CatImg?>" />
                         </div> 
 			</td>
 			<td>

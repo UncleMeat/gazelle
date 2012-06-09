@@ -94,6 +94,23 @@ $DB->query("SELECT IF(MAX(t.Time) < '$Updated' OR MAX(t.Time) IS NULL,1,0) FROM 
 list($NewDNU) = $DB->next_record();
 $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
 ?>
+
+<script type="text/javascript">//<![CDATA[
+function change_tagtext() {
+var tags = new Array();
+<?
+foreach ($NewCategories as $cat) {
+   echo 'tags['.$cat['id'].']="'.$cat['tag'].'"'.";\n";
+}
+?>
+if ($('#category').raw().value == 0) {
+    $('#tagtext').html("<strong>No category selected.</strong>");
+} else {
+    $('#tagtext').html("<strong>The tag "+tags[$('#category').raw().value]+" will be added automatically.</strong>");
+}
+}
+//]]></script>
+
 <div class="thin">
         <h2>Upload torrent</h2>
 <div class="box pad" style="margin:10px auto">

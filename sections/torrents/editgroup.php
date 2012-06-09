@@ -79,7 +79,8 @@ if(check_perms('torrents_edit')) {
 				<input type="hidden" name="groupid" value="<?=$GroupID?>" />
 				<input type="hidden" name="authorid" value="<?=$AuthorID?>" />
 				<input type="hidden" name="name" value="<?=$Name?>" />
-
+                                <input type="hidden" name="oldcategoryid" value="<?=$CategoryID?>" />
+                                
                                 <h3>Category</h3>
                                 <select name="categoryid">
                                 <? foreach($NewCategories as $category) { ?>

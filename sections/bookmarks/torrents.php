@@ -108,7 +108,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
 <tr class="torrent" id="group_<?=$GroupID?>">
         <td class="center">
                     <? $CatImg = 'static/common/caticons/' . $NewCategories[$NewCategoryID]['image']; ?>
-                <img src="<?= $CatImg ?>" alt="<?= $NewCategories[$NewCategoryID]['cat_desc'] ?>" title="<?= $NewCategories[$NewCategoryID]['cat_desc'] ?>"/>
+                <img src="<?= $CatImg ?>" alt="<?= $NewCategories[$NewCategoryID]['tag'] ?>" title="<?= $NewCategories[$NewCategoryID]['tag'] ?>"/>
         </td>
         <td>
                 <span>

@@ -15,8 +15,7 @@ if(!$_REQUEST['groupid'] || !is_number($_REQUEST['groupid'])) {
 }
 // End injection check
 
-
-    //check user has permission to edit
+//check user has permission to edit
 $CanEdit = check_perms('torrents_edit');
 if(!$CanEdit) { 
     $DB->query("SELECT UserID FROM torrents WHERE GroupID='$GroupID'");
@@ -30,6 +29,7 @@ if(!$CanEdit) { error(403); }
       
 // Variables for database input - with edit, the variables are passed with POST
 $GroupID = (int)$_REQUEST['groupid'];
+$OldCategoryID = (int)$_POST['oldcategoryid'];
 $CategoryID = (int)$_POST['categoryid'];
 $Body = $_POST['body'];
 $Image = $_POST['image'];
@@ -72,6 +72,35 @@ $DB->query("UPDATE torrents_group SET
 	Image='$Image',
         SearchText='$SearchText'
 	WHERE ID='$GroupID'");
+
+// The category has been changed, update the category tag
+if ($OldCategoryID != $CategoryID) {
+    $OldTag = $NewCategories[$OldCategoryID]['tag'];
+    $NewTag = $NewCategories[$CategoryID]['tag'];
+    
+    // Remove the old tag
+    $DB->query("DELETE tt
+                FROM torrents_tags AS tt
+                INNER JOIN tags t ON tt.TagID=t.ID
+                WHERE t.name='$OldTag' AND tt.GroupID='$GroupID'");    
+    
+    $DB->query("UPDATE tags SET Uses=Uses-1 WHERE Name='$OldTag'");
+
+    // And insert the new one.
+    $DB->query("INSERT INTO tags
+                (Name, UserID, Uses) VALUES
+                ('" . $NewTag . "', $LoggedUser[ID], 1)
+                ON DUPLICATE KEY UPDATE Uses=Uses+1;
+            ");
+
+    $TagID = $DB->inserted_id();
+
+    $DB->query("INSERT INTO torrents_tags
+                (TagID, GroupID, UserID, PositiveVotes) VALUES
+                ($TagID, $GroupID, $LoggedUser[ID], 10)
+                ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+1;
+            ");
+}
 
 // There we go, all done!
 $Cache->delete_value('torrents_details_'.$GroupID);

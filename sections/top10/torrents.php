@@ -295,7 +295,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 		<td style="padding:8px;text-align:center;"><strong><?=$Rank?></strong></td>
 		<td class="center cats_col">
                     <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
-                    <div title="<?=$NewCategories[$NewCategoryID]['cat_desc']?>"><img src="<?=$CatImg?>" /></div>
+                    <div title="<?=$NewCategories[$NewCategoryID]['tag']?>"><img src="<?=$CatImg?>" /></div>
                 </td>
 		<td>
                   <span>[<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>]</span>

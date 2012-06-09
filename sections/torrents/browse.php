@@ -622,7 +622,7 @@ $row='b';
         <tr class="torrent <?=($IsMarkedForDeletion?'redbar':"row$row")?>">
             <td class="center cats_col">
                 <? $CatImg = 'static/common/caticons/' . $NewCategories[$NewCategoryID]['image']; ?>
-                <div title="<?= $NewCategories[$NewCategoryID]['cat_desc'] ?>"><a href="torrents.php?filter_cat[<?=$NewCategoryID?>]=1"><img src="<?= $CatImg ?>" /></a></div>
+                <div title="<?= $NewCategories[$NewCategoryID]['tag'] ?>"><a href="torrents.php?filter_cat[<?=$NewCategoryID?>]=1"><img src="<?= $CatImg ?>" /></a></div>
             </td>
             <td>
                 <span>

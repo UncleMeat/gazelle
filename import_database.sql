@@ -1,12 +1,12 @@
 -- fetch data from emp.users into gazelle.users_main
 
-insert into `gazelle`.`users_main` (`ID`, `Username`, `Email`, `PassHash`, `Secret`, `Title`, `PermissionID`, `Enabled`, `Uploaded`, `Downloaded`, `LastLogin`, `LastAccess`, `IP`, `class`, `torrent_pass`, `Credits`)
-SELECT `Id`, `username`, `email`, `passhash`, `secret`, `title`, '2', '1', `uploaded`, `downloaded`, from_unixtime(`last_login`), from_unixtime(`last_access`), `Ip`, '0', `passkey`, `Bonuspoints` FROM emp.users;
+insert into `gazelle`.`users_main` (`ID`, `Username`, `Email`, `PassHash`, `Secret`, `Title`, `PermissionID`, `Enabled`, `Uploaded`, `Downloaded`, `LastLogin`, `LastAccess`, `IP`, `torrent_pass`, `Credits`)
+SELECT `Id`, `username`, `email`, `passhash`, `secret`, `title`, '2', '1', `uploaded`, `downloaded`, from_unixtime(`last_login`), from_unixtime(`last_access`), `Ip`, `passkey`, `Bonuspoints` FROM emp.users;
 
 -- fetch data from emp.users into gazelle.users_info
 
-insert into `gazelle`.`users_info` (`UserID`, `StyleID`, `Avatar`, `JoinDate`, `Inviter`)
-select `Id`, '1', `avatar`, from_unixtime(`added`), '0' from `emp`.`users`;
+insert into `gazelle`.`users_info` (`UserID`, `StyleID`, `Avatar`, `JoinDate`, `Inviter`, `AdminComment`, `Info`)
+select `Id`, '1', `avatar`, from_unixtime(`added`), '0', `modcomment`, `info` from `emp`.`users`;
 
 -- set gazelle.users_main.enabled to 1 where emp.users.enabled='yes'
 
