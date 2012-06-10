@@ -47,6 +47,12 @@ $DB->query("INSERT INTO comments_edits (Page, PostID, EditUser, EditTime, Body)
 								VALUES ('collages', ".$PostID.", ".$UserID.", '".sqltime()."', '".db_string($OldBody)."')");
 
 // This gets sent to the browser, which echoes it in place of the old body
-echo $Text->full_format($_POST['body']);
+//echo $Text->full_format($_POST['body']);
 
 ?>
+<div class="post_content">
+    <?=$Text->full_format($_POST['body'], isset($PermissionsInfo['site_advanced_tags']) &&  $PermissionsInfo['site_advanced_tags']);?>
+</div>
+<div class="post_footer">
+    <span class="editedby">Last edited by <a href="user.php?id=<?=$LoggedUser['ID']?>"><?=$LoggedUser['Username']?></a> just now</span>
+</div>

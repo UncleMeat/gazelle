@@ -1293,7 +1293,7 @@ td.postbody {
     color:#999;
 }
 td.badgesrow, .badgesrow {
-    border-top: 1px solid #111;
+    border-top: 1px solid #dcdde4;
     padding:0px;
 }
 .badges {

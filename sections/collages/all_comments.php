@@ -91,27 +91,38 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 	</tr>
 	<tr>
 <? if(empty($HeavyInfo['DisableAvatars'])) { ?>
-		<td class="avatar" valign="top">
+		<td class="avatar" valign="top" rowspan="2">
 <?      if ($Avatar) { ?>
 			<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$Username ?>'s avatar" />
 <?      } else { ?>
 			<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
-<?      } ?>
+<?      } 
+        $UserBadges = get_user_badges($AuthorID); 
+        if( !empty($UserBadges) ) {  ?>
+               <div class="badges">
+<?                  print_badges_array($UserBadges); ?>
+               </div>
+<?      }      ?>
 		</td>
 <? }
 $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 ?>
 		<td class="body" valign="top">
 			<div id="content<?=$PostID?>">
-                      <div class="post_content"><?=$Text->full_format($Body, $AllowTags) ?></div>
-			</div>
-<?  
-           if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength>0) && !empty($Signature) ) {
-                        echo '<div class="sig post_footer">' . $Text->full_format($Signature, $AllowTags) . '</div>';
-           }
-?>
+                      <div class="post_content"><?=$Text->full_format($Body, $AllowTags) ?> </div>
+                </div>
+
 		</td>
 	</tr>
+<? 
+      if( empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength > 0) && !empty($Signature) ) { //post_footer
+                        
+            echo '
+      <tr>
+            <td class="sig"><div id="sig"><div>' . $Text->full_format($Signature, $AllowTags) . '</div></div></td>
+      </tr>';
+           }
+?>
 </table>
 <?	}
 
@@ -167,32 +178,6 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
           
       }
 }
-
-
-/*
-
-if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
-	if($ThreadInfo['MinClassWrite'] <= $LoggedUser['Class'] && !$LoggedUser['DisablePosting']) {
-?>
-		<br />
-		<h3>Post reply</h3>
-		<div class="box pad" style="padding:20px 10px 10px 10px;">
-			<form id="quickpostform" action="" method="post" style="display: block; text-align: center;">
-				<input type="hidden" name="action" value="add_comment" />
-				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-				<input type="hidden" name="collageid" value="<?=$CollageID?>" />
-				<div id="quickreplypreview" class="box" style="text-align: left; display: none; padding: 10px;"></div>
-				<div id="quickreplytext">
-					<textarea id="quickpost" name="body"  cols="90"  rows="8"></textarea> <br />
-				</div>
-				<input type="submit" value="Post reply" />
-				<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit();}else{Quick_Preview();}" />
-			</form>
-		</div>
-<?
-	}
-}
-*/
 
 ?>
 	<div class="linkbox">
