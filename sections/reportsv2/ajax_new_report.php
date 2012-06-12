@@ -37,7 +37,6 @@ $DB->query("SELECT
 			t.Time,
 			t.Size,
 			t.UserID AS UploaderID,
-			t.Tasted,
 			uploader.Username
 			FROM reportsv2 AS r
 			LEFT JOIN torrents AS t ON t.ID=r.TorrentID
