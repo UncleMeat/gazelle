@@ -973,6 +973,10 @@ td.label {
 }
  
 
+.spacespans span {
+    margin-right:20px;
+}
+
 table.slice {
     margin-top: -1px;
 }

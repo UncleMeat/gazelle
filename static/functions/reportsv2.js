@@ -29,7 +29,7 @@ function Load(reportid) {
 		}
 	}
 	//Can't use ChangeResolve() because we need it to block to do the uploader==reporter part
-	ajax.get('reportsv2.php?action=ajax_change_resolve&id=' + reportid + '&type=' + $('#resolve_type' + reportid).raw().value + '&categoryid=' + $('#categoryid' + reportid).raw().value, function (response) {
+	ajax.get('reportsv2.php?action=ajax_change_resolve&id=' + reportid + '&type=' + $('#resolve_type' + reportid).raw().value , function (response) {
 		var x = json.decode(response);
 			$('#delete' + reportid).raw().checked = (x[0] == '1' ? true : false);
 			if($('#uploaderid' + reportid).raw().value == $('#reporterid' + reportid).raw().value) {
@@ -148,21 +148,25 @@ function UpdateComment(reportid) {
 function GiveBack(id) {
 	if(!id) {
 		var x = document.getElementsByName("reportid");
+            var str = ''; var div = '';
 		for(i = 0; i < x.length; i++) {
-			/*ajax.get("ajax.php?action=giveback_report&id=" + x[i].value, function (response) {
-				if(response) {
-					alert(response);
-				}
-			});*/
-			$('#report' + x[i].value).remove();
+                  str += div + x[i].value;
+			div=',';
 		}
+            if(str != ''){
+			ajax.get("ajax.php?action=giveback_report&id=" + str, function (response) {
+				//if(response) // alert(response);
+                        for(i = x.length - 1; i >= 0 ; i--) {
+                            $('#report' + x[i].value).remove();
+                        }
+			});
+            }
 	} else {
 		ajax.get("ajax.php?action=giveback_report&id=" + id, function (response) {
-			if(response) {
-				alert(response);
-			}
+			//if(response) alert(response);
+                  $('#report' + id).remove();
 		});
-		$('#report' + id).remove();
+		
 	}
 }
 

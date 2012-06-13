@@ -46,7 +46,7 @@ if(!$ID) {
 			$Order = "ORDER BY r.LastChangeTime DESC";
 			break;
 		case "unauto" :
-			$Title = "New reports, not auto assigned!";
+			$Title = "New reports (unassigned)";
 			$Where = "WHERE r.Status = 'New'";
 			break;
 		default :
@@ -222,11 +222,18 @@ if(count($Reports) == 0) {
 		</table>
 	</div>
 <?
-		} else {
-                        $ReportType = $Types;
-                        $RawName = $GroupName." (".number_format($Size/(1024*1024), 2)." MB)";
-                        $LinkName = "<a href='torrents.php?id=$GroupID'>$GroupName</a> (".number_format($Size/(1024*1024), 2)." MB)";
-                        $BBName = "[url=torrents.php?id=$GroupID]$GroupName"."[/url] (".number_format($Size/(1024*1024), 2)." MB)";
+		} else { 
+                        if (array_key_exists($Type, $Types)) {
+                              $ReportType = $Types[$Type];
+                        } else {
+                              //There was a type but it wasn't an option!
+                              $Type = 'other';
+                              $ReportType = $Types['other'];
+                        }
+                        $RawName = $GroupName." (".get_size($Size).")" ; // number_format($Size/(1024*1024), 2)." MB)";
+                        $LinkName = "<a href='torrents.php?id=$GroupID'>$GroupName</a> (".get_size($Size).")" ; // number_format($Size/(1024*1024), 2)." MB)";
+                        $BBName = "[url=torrents.php?id=$GroupID]$GroupName"."[/url] (".get_size($Size).")" ; // number_format($Size/(1024*1024), 2)." MB)";
+                        
 		?>	
 			<div id="report<?=$ReportID?>">
 				<form id="report_form<?=$ReportID?>" action="reports.php" method="post">
@@ -371,7 +378,7 @@ if(count($Reports) == 0) {
 							$ExtraSize, $ExtraUploaderID, $ExtraUploaderName) = display_array($DB->next_record());
 						
 						if($ExtraGroupName) {
-                                                    $ExtraLinkName = "<a href='torrents.php?id=$ExtraGroupID'>$ExtraGroupName</a> (".number_format($ExtraSize/(1024*1024), 2)." MB)";
+                                                    $ExtraLinkName = "<a href='torrents.php?id=$ExtraGroupID'>$ExtraGroupName</a> (". get_size($ExtraSize).")"; // number_format($ExtraSize/(1024*1024), 2)." MB)";
 ?>
 									<?=($First ? "" : "<br />")?>
 									<?=$ExtraLinkName?>
@@ -429,9 +436,9 @@ if(count($Reports) == 0) {
 								<input type="button" value="Update now" onclick="UpdateComment(<?=$ReportID?>)" />
 							</td>
 						</tr>
-						<tr>
+						<tr class="spacespans">
 							<td class="label">
-								<a href="javascript:Load('<?=$ReportID?>')">Resolve</a>
+								<a href="javascript:Load('<?=$ReportID?>')" title="Set back to <?=$ReportType['title']?>">Resolve</a>
 							</td>
 							<td colspan="3">
 								<select name="resolve_type" id="resolve_type<?=$ReportID?>" onchange="ChangeResolve(<?=$ReportID?>)">
@@ -458,22 +465,19 @@ if(count($Reports) == 0) {
 									<span title="Warning length in weeks">
 										<strong>Warning</strong>
 										<select name="warning" id="warning<?=$ReportID?>">
-	<?
-		for($i = 0; $i < 9; $i++) {
-	?>
-										<option value="<?=$i?>"><?=$i?></option>
-	<?
-		}
-	?>
+									<option value="0">none</option>
+									<option value="1">1 week</option>
+<?                                      for($i = 2; $i < 9; $i++) {  ?>
+									<option value="<?=$i?>"><?=$i?> weeks</option>
+<?                                      }       ?>
 										</select>
 									</span>
 									<span title="Remove upload privileges?">
-										<strong>Upload</strong>
+										<strong>Disable Upload</strong>
 										<input type="checkbox" name="upload" id="upload<?=$ReportID?>">
 									</span>
-									&nbsp;&nbsp;
-									<span title="Update resolve type">
-										<input type="button" name="update_resolve" id="update_resolve<?=$ReportID?>" value="Update now" onclick="UpdateResolve(<?=$ReportID?>)" />
+									<span title="Change report type / resolve action">
+										<input type="button" name="update_resolve" id="update_resolve<?=$ReportID?>" value="Change report type" onclick="UpdateResolve(<?=$ReportID?>)" />
 									</span>
 								</span>
 								</td>
@@ -484,7 +488,7 @@ if(count($Reports) == 0) {
 								<select name="pm_type" id="pm_type<?=$ReportID?>">
 									<option value="Uploader">Uploader</option>
 									<option value="Reporter">Reporter</option>
-								</select>:
+								</select>
 							</td> 
 							<td colspan="3">
 								<span title="Uploader: Appended to the regular message unless using send now. Reporter: Must be used with send now">
@@ -512,15 +516,15 @@ if(count($Reports) == 0) {
 						</tr>
 						<tr>
 							<td colspan="4" style="text-align: center;">
-								<input type="button" value="Invalid Report" onclick="Dismiss(<?=$ReportID?>);" />
-								<input type="button" value="Report resolved manually" onclick="ManualResolve(<?=$ReportID?>);" />
+								<input type="button" value="Invalid Report" onclick="Dismiss(<?=$ReportID?>);" title="Dismiss this as an invalid Report" />
+								<input type="button" value="Report resolved manually" onclick="ManualResolve(<?=$ReportID?>);" title="Set status to Resolved but take no automatic action" />
 			<?		if($Status == "InProgress" && $LoggedUser['ID'] == $ResolverID) { ?>
 								| <input type="button" value="Give back" onclick="GiveBack(<?=$ReportID?>);" />
 			<? 		} else { ?>
 								| <input id="grab<?=$ReportID?>" type="button" value="Grab!" onclick="Grab(<?=$ReportID?>);" />
 			<?		}	?>
-								| Multi-Resolve <input type="checkbox" name="multi" id="multi<?=$ReportID?>" checked="checked">
-								| <input type="button" id="submit_<?=$ReportID?>" value="Submit" onclick="TakeResolve(<?=$ReportID?>);" />
+								| <span  title="If checked then include when multi-resolving">Multi-Resolve <input type="checkbox" name="multi" id="multi<?=$ReportID?>" checked="checked" /></span>
+								| <input type="button" id="submit_<?=$ReportID?>" value="Resolve Report" onclick="TakeResolve(<?=$ReportID?>);" title="Resolve Report (carry out whatever actions are set)" />
 							</td>
 						</tr>
 			<?
