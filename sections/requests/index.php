@@ -89,11 +89,23 @@ if(!isset($_REQUEST['action'])) {
 		case 'get_post':
 			enforce_login();
 			if (!$_GET['post'] || !is_number($_GET['post'])) { error(0); }
-			$DB->query("SELECT Body FROM requests_comments WHERE ID='".db_string($_GET['post'])."'");
+                  $PostID = (int)$_GET['post'];
+			$DB->query("SELECT Body FROM requests_comments WHERE ID='$PostID'");
 			list($Body) = $DB->next_record(MYSQLI_NUM);
-			echo trim($Body);
-			break;
-		
+			
+                  //	echo trim($Body); 
+                   include(SERVER_ROOT.'/classes/class_text.php');
+                   
+                  $Text = new TEXT;
+
+  $Text->display_bbcode_assistant("editbox$PostID", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); 
+
+?>					
+        <textarea id="editbox<?=$PostID?>" class="long" onkeyup="resize('editbox<?=$PostID?>');" name="body" rows="10"><?=display_str($Body)?></textarea>
+
+<?
+		 
+                  break;
 		case 'takeedit_comment':
 			enforce_login();
 			authorize();
@@ -146,8 +158,17 @@ if(!isset($_REQUEST['action'])) {
 								VALUES ('requests', ".db_string($_POST['post']).", ".db_string($LoggedUser['ID']).", '".sqltime()."', '".db_string($OldBody)."')");
 			
 			// This gets sent to the browser, which echoes it in place of the old body
-			echo $Text->full_format($_POST['body']);
-			break;
+			//echo '<div class="post_content">' .$Text->full_format($_POST['body'], get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])). '</div>';
+?>
+<div class="post_content">
+    <?=$Text->full_format($_POST['body'], get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions']));?>
+</div>
+<div class="post_footer">
+    <span class="editedby">Last edited by <a href="user.php?id=<?=$LoggedUser['ID']?>"><?=$LoggedUser['Username']?></a> just now</span>
+</div>        
+<?
+                  
+                  break;
 		
 		case 'delete_comment':
 			enforce_login();

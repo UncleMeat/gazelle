@@ -17,7 +17,7 @@ if(!$_GET['post'] || !is_number($_GET['post'])){
 }
 
 // Variables for database input
-$PostID = $_GET['post'];
+$PostID = (int)$_GET['post'];
 
 // Mainly 
 $DB->query("SELECT
@@ -33,6 +33,12 @@ if(!check_forumperm($ForumID)) {
 
 // This gets sent to the browser, which echoes it wherever 
 
-echo trim($Body);
+//echo trim($Body);
 
-?>
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+
+  $Text->display_bbcode_assistant("editbox$PostID", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); 
+
+?>					
+<textarea id="editbox<?=$PostID?>" class="long" onkeyup="resize('editbox<?=$PostID?>');" name="body" rows="10"><?=display_str($Body)?></textarea>

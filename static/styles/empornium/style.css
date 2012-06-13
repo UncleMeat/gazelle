@@ -1053,7 +1053,7 @@ ul.poll li.graph {
     margin: 2px auto 15px;
     height:20px;
     text-align: center;
-    background-color: white;
+    background-color: white; /* #D7E2EF; */
     border: 1px solid #98AAB1;
     padding: 6px;
     font-weight: bold;
@@ -1088,6 +1088,14 @@ ul.poll li.graph {
 
 .cat_list tr td {
     border:none;
+    background-color: #eff3f6;  /* #e0e8eb; /* #D7E2EF; */
+}
+.taglist {
+    margin-bottom: 15px;
+}
+.taglist tr td {
+    border:none;
+    text-align: center;
 }
 
 .select_container {
@@ -1293,7 +1301,7 @@ td.postbody {
     color:#999;
 }
 td.badgesrow, .badgesrow {
-    border-top: 1px solid #111;
+    border-top: 1px solid #dcdde4;
     padding:0px;
 }
 .badges {
