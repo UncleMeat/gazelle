@@ -133,11 +133,6 @@ if(in_array($ThreadID, $UserSubscriptions)) {
 show_header('Forums'.' > '.$Forums[$ForumID]['Name'].' > '.$ThreadInfo['Title'],'comments,subscriptions,bbcode,jquery');
 ?>
 <div class="thin">
-	<h2>
-		<a href="forums.php">Forums</a> &gt;
-		<a href="forums.php?action=viewforum&amp;forumid=<?=$ThreadInfo['ForumID']?>"><?=$Forums[$ForumID]['Name']?></a> &gt;
-		<?=display_str($ThreadInfo['Title'])?>
-	</h2>
 	<div class="linkbox">
 		<div class="center">
 			<a href="reports.php?action=report&amp;type=thread&amp;id=<?=$ThreadID?>">[Report Thread]</a>
@@ -163,11 +158,18 @@ show_header('Forums'.' > '.$Forums[$ForumID]['Name'].' > '.$ThreadInfo['Title'],
 				<br />
 			</div>
 		</div>
+            
 <?
 $Pages=get_pages($Page,$ThreadInfo['Posts'],$PerPage,9);
 echo $Pages;
 ?>
-	</div>
+</div>
+<div class="head">
+    <a href="forums.php">Forums</a> &gt;
+    <a href="forums.php?action=viewforum&amp;forumid=<?=$ThreadInfo['ForumID']?>"><?=$Forums[$ForumID]['Name']?></a> &gt;
+    <?=display_str($ThreadInfo['Title'])?>
+</div>
+
 <?
 if ($ThreadInfo['NoPoll'] == 0) {
 	if (!list($Question,$Answers,$Votes,$Featured,$Closed) = $Cache->get_value('polls_'.$ThreadID)) {
@@ -211,7 +213,7 @@ if ($ThreadInfo['NoPoll'] == 0) {
 		}
 	}
 
-?>
+?>        
 	<div class="box thin clear">
 		<div class="head colhead_dark"><strong>Poll<? if ($Closed) { echo ' [Closed]'; } ?><? if ($Featured && $Featured !== '0000-00-00 00:00:00') { echo ' [Featured]'; } ?></strong> <a href="#" onclick="$('#threadpoll').toggle();log_hit();return false;">(View)</a></div>
 		<div class="pad<? if (/*$LastRead !== null || */$ThreadInfo['IsLocked']) { echo ' hidden'; } ?>" id="threadpoll">
@@ -382,7 +384,7 @@ foreach($Thread as $Key => $Post){
 	}
 ?>
 <table class="forum_post box vertical_margin<? if (((!$ThreadInfo['IsLocked'] || $ThreadInfo['IsSticky']) && $PostID>$LastRead && strtotime($AddedTime)>$LoggedUser['CatchupTime']) || (isset($RequestKey) && $Key==$RequestKey)) { echo ' forum_unread'; } if($HeavyInfo['DisableAvatars']) { echo ' noavatar'; } ?>" id="post<?=$PostID?>">
-	<tr class="colhead_dark">
+	<tr class="smallhead">
 		<td colspan="2">
 			<span style="float:left;"><a class="post_id" href='forums.php?action=viewthread&amp;threadid=<?=$ThreadID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>'>#<?=$PostID?></a>
 				<?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, $UserTitle, true)?>

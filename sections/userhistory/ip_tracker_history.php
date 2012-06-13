@@ -46,8 +46,8 @@ $DB->set_query_id($TrackerIps);
 $Pages=get_pages($Page,$NumResults,IPS_PER_PAGE,9);
 
 ?>
-	<h2>Tracker IP history for <a href="/user.php?id=<?=$UserID?>"><?=$Username?></a></h2>
 	<div class="linkbox"><?=$Pages?></div>
+        <div class="head">Tracker IP history for <a href="/user.php?id=<?=$UserID?>"><?=$Username?></a></div>
 	<table>
 		<tr class="colhead">
 			<td>IP address</td>

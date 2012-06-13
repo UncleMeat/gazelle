@@ -63,11 +63,11 @@ list($NumResults) = $DB->next_record();
 $Pages=get_pages($Page, $NumResults, 25);
 
 ?>
-<h2>Slots history for <?=format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'])?></h2>
 
 <div class="linkbox"><?=$Pages?></div>
+<div class="head">Slots history for <?=format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'])?></div>
 <table>
-	<tr class="colhead_dark">
+	<tr class="colhead">
 		<td>Torrent</td>
 		<td>Time</td>
 		<td>Expired</td>

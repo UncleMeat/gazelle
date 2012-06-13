@@ -85,7 +85,7 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
         
         if (count($Reports) > 0) {
             $Title = "This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report');
-            $DisplayName .= ' <span style="background-color: red; padding: 2px 4px 2px 4px;color:white;" title="'.$Title.'">Reported</span>';
+            $DisplayName .= ' <span style="color: red; padding: 2px 4px 2px 4px;" title="'.$Title.'">Reported</span>';
         }
 ?>
 <div class="details">
@@ -316,8 +316,9 @@ if(check_perms('torrents_review')){
 ?>
  <div id="details_top">
 	<div class="sidebar" style="float: left;">
-		<div class="box box_albumart">
-			<div class="head"><strong>Cover</strong></div>
+                <div class="head"><strong>Cover</strong></div>
+                <div class="box box_albumart">
+			
 <?
 if ($Image!="") {
 	if(check_perms('site_proxy_images')) {
@@ -337,8 +338,8 @@ if ($Image!="") {
           
 	<div class="sidebar" style="float: right;">
 
-		<div class="box box_tags">
-			<div class="head"><strong>Tags</strong> <span style="float:right;"><a href="torrents.php?action=tag_synomyns">synomyns</a> | <a href="articles.php?topic=tag">Tagging rules</a></span></div>
+                <div class="head"><strong>Tags</strong> <span style="float:right;"><a href="torrents.php?action=tag_synomyns">synomyns</a> | <a href="articles.php?topic=tag">Tagging rules</a></span></div>
+                <div class="box box_tags">			
                         <div class="tag_inner">
 <?
 if(count($Tags) > 0) {
@@ -396,12 +397,13 @@ if(count($Tags) > 0) {
 		</div>
 	</div>
 	<div class="middle_column">
+            <div class="head">Torrent Info</div>
 		<table class="torrent_table">
-			<tr class="colhead_dark">
+			<tr class="colhead">
                         <td width="80%">
-                          <strong>Torrent Info</strong>
+                          Name
                         </td>
-				<td><strong>Size</strong></td>
+				<td>Size</td>
 				<td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
 				<td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>
 				<td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/leechers.png" alt="Leechers" title="Leechers" /></td>
@@ -418,7 +420,7 @@ $EditionID = 0;
         if(count($Reports) > 0) {
 		$Reported = true;
 		include(SERVER_ROOT.'/sections/reportsv2/array.php');
-		$ReportInfo = "<table><tr class='colhead_red' style='font-weight: bold;'><td>This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report').":</td></tr>";
+		$ReportInfo = "<table><tr class='smallhead'><td>This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report').":</td></tr>";
 
 		foreach($Reports as $Report) {
 			list($ReportID, $ReporterID, $ReportType, $ReportReason, $ReportedTime) = $Report;
@@ -441,7 +443,7 @@ $EditionID = 0;
 	$FileList = str_replace(array('_','-'), ' ', $FileList);
 	$FileList = str_replace('|||','<tr><td>',display_str($FileList));
 	$FileList = preg_replace_callback('/\{\{\{([^\{]*)\}\}\}/i','filelist',$FileList);
-	$FileList = '<table style="overflow-x:auto;"><tr class="colhead_dark"><td><strong><div style="float: left; display: block;">File Name'.(check_perms('users_mod') ? ' [<a href="torrents.php?action=regen_filelist&amp;torrentid='.$TorrentID.'">Regenerate</a>]' : '').'</div></strong><div style="float:right; display:block;">'.(empty($FilePath) ? '' : '/'.$FilePath.'/' ).'</div></td><td><strong>Size</strong></td></tr><tr><td>'.$FileList."</table>";
+	$FileList = '<table style="overflow-x:auto;"><tr class="smallhead"><td colspan="2">'.(empty($FilePath) ? '' : '/'.$FilePath.'/' ).'</td></tr><tr class="colhead"><td><strong><div style="float: left; display: block;">File Name'.(check_perms('users_mod') ? ' [<a href="torrents.php?action=regen_filelist&amp;torrentid='.$TorrentID.'">Regenerate</a>]' : '').'</div></strong></td><td><strong>Size</strong></td></tr><tr><td>'.$FileList."</table>";
 
 	$TorrentUploader = $Username; // Save this for "Uploaded by:" below
 
@@ -633,8 +635,8 @@ if(count($PersonalCollages)>0) {
     </div>
       <div style="clear:both"></div>
 	<div class="main_column">
+		<div class="head"><strong>Description</strong></div>
 		<div class="box">
-			<div class="head"><strong>Description</strong></div>
 			<div class="body"><? if ($Body!="") { echo $Body; } else { echo "There is no information on this torrent."; } ?></div>
 		</div>
 <?
@@ -777,7 +779,7 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 if(!$LoggedUser['DisablePosting']) { ?>
 			<br />
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
-                  <h3>Post reply</h3>
+                  <div class="head">Post reply</div>
 			<div class="box pad">
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
 					<tr class="colhead_dark">

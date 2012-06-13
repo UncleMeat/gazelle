@@ -97,12 +97,12 @@ function generate_tag_table($Caption, $Tag, $Details, $Limit, $ShowVotes=true, $
 		$URLString = 'torrents.php?taglist=';
 	}
 ?>
-	<h3>Top <?=$Limit.' '.$Caption?>
+	<div class="head">Top <?=$Limit.' '.$Caption?>
 		<small>
 			- [<a href="top10.php?type=tags&amp;limit=100&amp;details=<?=$Tag?>">Top 100</a>]
 			- [<a href="top10.php?type=tags&amp;limit=250&amp;details=<?=$Tag?>">Top 250</a>]
 		</small>
-	</h3>
+	</div>
 	<table class="border">
 	<tr class="colhead">
 		<td class="center">Rank</td>
@@ -128,7 +128,7 @@ function generate_tag_table($Caption, $Tag, $Details, $Limit, $ShowVotes=true, $
 	$Rank = 0;
 	foreach($Details as $Detail) {
 		$Rank++;
-		$Highlight = ($Rank%2 ? 'a' : 'b');
+		$Highlight = ($Rank%2 ? 'b' : 'a');
 
 		// print row
 ?>

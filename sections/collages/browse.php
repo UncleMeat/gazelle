@@ -143,9 +143,9 @@ show_header(($BookmarkView)?'Your bookmarked collages':'Browse collages');
 ?>
 <div class="thin">
 <? if ($BookmarkView) { ?>
-	<h2>Your bookmarked collages</h2>
+	<div class="head">Your bookmarked collages</div>
 <? } else { ?>
-	<h2>Browse collages<?=(!empty($UserLink) ? (isset($CollageIDs) ? ' with contributions by '.$UserLink : ' started by '.$UserLink) : '')?></h2>
+	<div class="head">Browse collages<?=(!empty($UserLink) ? (isset($CollageIDs) ? ' with contributions by '.$UserLink : ' started by '.$UserLink) : '')?></div>
 <? } ?>
 <? if (!$BookmarkView) { ?>
 	<div>

@@ -166,12 +166,11 @@ function user_dupes_table($UserID) {
 			<input type="hidden" name="userid" value="<?=$UserID?>">
 			<input type="hidden" id="auth" name="auth" value="<?=$LoggedUser['AuthKey']?>">
 			<input type="hidden" id="form_comment_hash" name="form_comment_hash" value="<?=$CommentHash?>">
-			<div class="box">
-				<!--<div class="head"><?=max($DupeCount - 1, 0)?> Linked Account<?=(($DupeCount == 2)?'':'s')?> <a href="#" onclick="$('.linkedaccounts').toggle(); return false;">(View)</a></div>-->
-				<div class="head">
+            		<div class="head">
                             <span style="float:left;"><?=max($DupeCount - 1, 0)?> Linked Account<?=(($DupeCount == 2)?'':'s')?></span>
                             <span style="float:right;"><a href="#" onclick="$('.linkedaccounts').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
                         </div>
+                        <div class="box">
                  <table width="100%" class="hidden linkedaccounts">
 					<?=$DupeCount?'<tr>':''?>
 <?

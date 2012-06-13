@@ -54,7 +54,7 @@ foreach ($Forums as $Forum) {
 		if($OpenTable) { ?>
 	</table>
 <? 		} ?>
-<h3><?=$ForumCats[$CategoryID]?></h3>
+<div class="head"><?=$ForumCats[$CategoryID]?></div>
 	<table class="forum_index">
 		<tr class="colhead">
 			<td style="width:2%;"></td>

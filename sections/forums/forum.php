@@ -69,7 +69,6 @@ if($LoggedUser['CustomForums'][$ForumID] != 1 && $Forums[$ForumID]['MinClassRead
 show_header('Forums > '. $Forums[$ForumID]['Name']);
 ?>
 <div class="thin">
-	<h2><a href="forums.php">Forums</a> &gt; <?=$Forums[$ForumID]['Name']?></h2>
 	<div class="linkbox">
 <? if(check_forumperm($ForumID, 'Write') && check_forumperm($ForumID, 'Create')){ ?>
 		[<a href="forums.php?action=new&amp;forumid=<?=$ForumID?>">New Thread</a>]
@@ -125,6 +124,7 @@ $Pages=get_pages($Page,$Forums[$ForumID]['NumTopics'],TOPICS_PER_PAGE,9);
 echo $Pages;
 ?>
 	</div>
+        <div class="head"><a href="forums.php">Forums</a> &gt; <?=$Forums[$ForumID]['Name']?></div>
 	<table class="forum_list" width="100%">
 		<tr class="colhead">
 			<td style="width:2%;"></td>

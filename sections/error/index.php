@@ -46,7 +46,7 @@ if(!empty($_GET['e']) && in_array($_GET['e'],$Errors)) {
 		show_header($Title);
 ?>
 	<div class="thin">
-		<h2><?=$Title?></h2>
+		<div class="head"><?=$Title?></div>
 		<div class="box pad">
 			<p><?=$Description?></p>
 		</div>

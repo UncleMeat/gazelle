@@ -211,7 +211,6 @@ show_header($Title, 'requests');
 
 ?>
 <div class="thin">
-	<h2><?=$Title?></h2>
 	<div class="linkbox">
 <?	if (!$BookmarkView) { ?>
 <?		if(check_perms('site_submit_requests')){ ?> 
@@ -227,6 +226,8 @@ show_header($Title, 'requests');
 		<a href="bookmarks.php?type=requests">[Requests]</a>
 <?	} ?>
 	</div>
+    	<div class="head"><?=$Title?></div>
+
 	<div>
 		<form action="" method="get">
 <?	if ($BookmarkView) { ?>
@@ -280,14 +281,16 @@ show_header($Title, 'requests');
 <?
 $x=0;
 reset($NewCategories);
+$row = 'a';
 foreach($NewCategories as $Cat) {
 	if($x%7==0) {
 		if($x > 0) {
 ?>
 			</tr>
 <?		} ?>
-			<tr>
+			<tr class="row<?=$row?>">
 <?
+            $row = ($row == 'a' ? 'b' :'a');
 	}
 	$x++;
 ?>
@@ -314,30 +317,30 @@ foreach($NewCategories as $Cat) {
 		<?=$PageLinks?>
 	</div>
 	<table id="request_table" cellpadding="6" cellspacing="1" border="0" class="border" width="100%">
-		<tr class="colhead_dark">
+		<tr class="colhead">
 			<td style="width: 38%;" class="nobr">
-				<strong>Request Name</strong>
+				Request Name
 			</td>
 			<td class="nobr">
-				<a href="?order=votes&amp;sort=<?=(($CurrentOrder == 'votes') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>"><strong>Votes</strong></a>
+				<a href="?order=votes&amp;sort=<?=(($CurrentOrder == 'votes') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>">Votes</a>
 			</td>
 			<td class="nobr">
-				<a href="?order=bounty&amp;sort=<?=(($CurrentOrder == 'bounty') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>"><strong>Bounty</strong></a>
+				<a href="?order=bounty&amp;sort=<?=(($CurrentOrder == 'bounty') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>">Bounty</a>
 			</td>
 			<td class="nobr">
-				<a href="?order=filled&amp;sort=<?=(($CurrentOrder == 'filled') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>"><strong>Filled</strong></a>
+				<a href="?order=filled&amp;sort=<?=(($CurrentOrder == 'filled') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>">Filled</a>
 			</td>
 			<td class="nobr">
-				<strong>Filled by</strong>
+				Filled by
 			</td>
 			<td class="nobr">
-				<strong>Requested by</strong>
+				Requested by
 			</td>
 			<td class="nobr">
-				<a href="?order=created&amp;sort=<?=(($CurrentOrder == 'created') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>"><strong>Created</strong></a>
+				<a href="?order=created&amp;sort=<?=(($CurrentOrder == 'created') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>">Created</a>
 			</td>
 			<td class="nobr">
-				<a href="?order=lastvote&amp;sort=<?=(($CurrentOrder == 'lastvote') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>"><strong>Last Vote</strong></a>
+				<a href="?order=lastvote&amp;sort=<?=(($CurrentOrder == 'lastvote') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>">Last Vote</a>
 			</td>
 		</tr>
 <?	if($NumResults == 0) { ?>

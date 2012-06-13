@@ -183,8 +183,7 @@ if (!empty($Pending)) {
 }
 
 ?> 
-	<h3>Invitee list</h3>
-	<div class="box pad">
+	<div class="head">Invitee list</div>
 		<table width="100%">
 			<tr class="colhead">
 				<td><a href="user.php?action=invite&amp;order=username&amp;sort=<?=(($CurrentOrder == 'username') ? $NewSort : 'desc')?>&amp;<?=$CurrentURL ?>">Username</a></td>
@@ -212,7 +211,7 @@ if (!empty($Pending)) {
 			</tr>
 <? } ?>
 		</table>
-	</div>
+
 </div>
 <?
 show_footer();

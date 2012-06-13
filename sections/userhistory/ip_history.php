@@ -82,9 +82,9 @@ $DB->set_query_id($RS);
 $Pages=get_pages($Page,$NumResults,IPS_PER_PAGE,9);
 
 ?>
-	<h2>IP history for <a href="/user.php?id=<?=$UserID?>"><?=$Username?></a></h2>
 	<div class="linkbox"><?=$Pages?></div>
-	<table>
+        <div class="head">IP history for <a href="/user.php?id=<?=$UserID?>"><?=$Username?></a></div>
+        <table>
 		<tr class="colhead">
 			<td>IP address</td>
 			<td>Started</td>

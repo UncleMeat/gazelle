@@ -231,8 +231,8 @@ if (check_perms('users_mod')) {
 			$Avatar = 'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?c=1&avatar='.$UserID.'&i='.urlencode($Avatar);
 		}  
 ?> 
-		<div class="box">
-			<div class="head colhead_dark">Avatar</div>
+		<div class="head colhead_dark">Avatar</div>
+                <div class="box">
 			<div align="center">
 			<? if ($Avatar) { ?>
 					<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$Username?>'s avatar" />
@@ -242,8 +242,8 @@ if (check_perms('users_mod')) {
                   </div>
             </div>
 <? } ?>
+		<div class="head colhead_dark">Stats</div>
 		<div class="box">
-			<div class="head colhead_dark">Stats</div>
 			<ul class="stats nobullet">
 				<li>Joined: <?=$JoinedDate?></li>
 <? if (check_paranoia_here('lastseen')) { ?>
@@ -309,8 +309,8 @@ if($Downloaded == 0) {
 $OverallRank = $Rank->overall_score($UploadedRank, $DownloadedRank, $UploadsRank, $RequestRank, $PostRank, $BountyRank, $Ratio);
 
 ?>
+		<div class="head colhead_dark">Percentile Rankings (Hover for values)</div>
 		<div class="box">
-			<div class="head colhead_dark">Percentile Rankings (Hover for values)</div>
 			<ul class="stats nobullet">
 <? if (check_paranoia_here('uploaded')) { ?>
 				<li title="<?=get_size($Uploaded)?>">Data uploaded: <?=number_format($UploadedRank)?></li>
@@ -352,8 +352,8 @@ $OverallRank = $Rank->overall_score($UploadedRank, $DownloadedRank, $UploadsRank
 			list($EmailChanges) = $DB->next_record();
 		}
 ?>
+	<div class="head colhead_dark">History</div>
 	<div class="box">
-		<div class="head colhead_dark">History</div>
 		<ul class="stats nobullet">
 <?	if (check_perms('users_view_email',$Class)) { ?>
 <li>Emails: <?=number_format($EmailChanges)?> [<a href="userhistory.php?action=email2&amp;userid=<?=$UserID?>">View</a>]&nbsp;[<a href="userhistory.php?action=email&amp;userid=<?=$UserID?>">Legacy view</a>]</li>
@@ -383,8 +383,8 @@ $OverallRank = $Rank->overall_score($UploadedRank, $DownloadedRank, $UploadsRank
 		</ul>
 	</div>
 <?	} ?>
+		<div class="head colhead_dark">Personal</div>
 		<div class="box">
-			<div class="head colhead_dark">Personal</div>
 			<ul class="stats nobullet">
 				<li>Class: <?=$ClassLevels[$Class]['Name']?></li>
 <?
@@ -485,8 +485,8 @@ $DB->query("SELECT COUNT(DISTINCT GroupID) FROM torrents WHERE UserID = '$UserID
 list($UniqueGroups) = $DB->next_record();
 
 ?>
+		<div class="head colhead_dark">Community</div>
 		<div class="box">
-			<div class="head colhead_dark">Community</div>
 			<ul class="stats nobullet">
 				<li>Forum Posts: <?=number_format($ForumPosts)?> [<a href="userhistory.php?action=posts&amp;userid=<?=$UserID?>" title="View">View</a>]</li>
 <? if (check_paranoia_here('torrentcomments')) { ?>
@@ -583,18 +583,18 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 		&& ($Downloaded*$RequiredRatio)>$Uploaded
 		) {
 ?>
-		<div class="box">
-			<div class="head">Ratio watch</div>
+                <div class="head">Ratio watch</div>
+		<div class="box">			
 			<div class="pad">This user is currently on ratio watch, and must upload <?=get_size(($Downloaded*$RequiredRatio)-$Uploaded)?> in the next <?=time_diff($RatioWatchEnds)?>, or their leeching privileges will be revoked. Amount downloaded while on ratio watch: <?=get_size($Downloaded-$RatioWatchDownload)?></div>
 		</div>
 <? } ?>
-		<div class="box">
-			<div class="head">
-				<span style="float:left;">Profile<? if ($CustomTitle) { echo " - ".display_str(html_entity_decode($DisplayCustomTitle)); } ?></span>
-				<span style="float:right;"><?=!empty($Badges)?"$Badges&nbsp;&nbsp;":''?><a href="#" onclick="$('#profilediv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
-			</div>
-			<div id="profilediv">
-                    <div class="pad">
+                <div class="head">
+                        <span style="float:left;">Profile<? if ($CustomTitle) { echo " - ".display_str(html_entity_decode($DisplayCustomTitle)); } ?></span>
+                        <span style="float:right;"><?=!empty($Badges)?"$Badges&nbsp;&nbsp;":''?><a href="#" onclick="$('#profilediv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+                </div>
+                <div class="box">
+                    <div id="profilediv">
+                <div class="pad">
 <?      if (!$Info) { ?>
 				This profile is currently empty.
 <?      } else { 
@@ -615,11 +615,11 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 <?
 
 if (check_perms('users_view_bonuslog',$Class) || $OwnProfile) { ?>
-		<div class="box">
-			<div class="head">
-				<span style="float:left;">Bonus Credits</span>
+                <div class="head">
+                        <span style="float:left;">Bonus Credits</span>
                         <span style="float:right;"><a href="#" onclick="$('#bonusdiv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
-			</div>
+                </div>
+		<div class="box">
 			<div class="pad" id="bonusdiv">
                       <h4 class="center">Credits: <?=(!$BonusCredits ? '0.00' : number_format($BonusCredits,2))?></h4>
                       <span style="float:right;"><a href="#" onclick="$('#bonuslogdiv').toggle(); this.innerHTML=(this.innerHTML=='(Show Log)'?'(Hide Log)':'(Show Log)'); return false;">(Show Log)</a></span>&nbsp;
@@ -764,16 +764,15 @@ if ((check_perms('users_view_invites')) && $Invited > 0) {
 	include(SERVER_ROOT.'/classes/class_invite_tree.php');
 	$Tree = new INVITE_TREE($UserID, array('visible'=>false));
 ?>
-		<div class="box">
-			<!--<div class="head">Invite Tree <a href="#" onclick="$('#invitetree').toggle();return false;">(View)</a></div>-->
-                  <div class="head">
-				<span style="float:left;">Invite Tree</span>
+                <div class="head">
+			<span style="float:left;">Invite Tree</span>
                         <span style="float:right;"><a href="#" onclick="$('#invitetree').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
-			</div>
-                  <div id="invitetree" class="hidden">
+		</div>
+		<div class="box">
+                         <div id="invitetree" class="hidden">
 				<? $Tree->make_tree(); ?>
 			</div>
-		</div>
+		</div> 
 <?
 }
 
@@ -797,13 +796,12 @@ if (check_paranoia_here('requestsvoted_list')) {
 	if($DB->record_count() > 0) {
 		$Requests = $DB->to_array();
 ?>
-		<div class="box">
-			<!--<div class="head">Requests <a href="#" onclick="$('#requests').toggle();return false;">(View)</a></div>-->
-			<div class="head">
-				<span style="float:left;">Requests</span>
-                        <span style="float:right;"><a href="#" onclick="$('#requests').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
-			</div>
-                  <div id="requests" class="hidden">
+            <div class="head">
+                    <span style="float:left;">Requests</span>
+                    <span style="float:right;"><a href="#" onclick="$('#requests').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+            </div>                
+            <div class="box">			
+                    <div id="requests" class="hidden">
 				<table cellpadding="6" cellspacing="1" border="0" class="border" width="100%">
 					<tr class="colhead_dark">
 						<td style="width:48%;">
@@ -899,13 +897,12 @@ if (check_perms('users_mod', $Class) || $IsFLS) {
 	if ($DB->record_count()) {
 		$StaffPMs = $DB->to_array();
 ?>
-		<div class="box">
-			<!--<div class="head">Staff PMs <a href="#" onclick="$('#staffpms').toggle();return false;">(View)</a></div>-->
-			<div class="head">
-				<span style="float:left;">Staff PMs</span>
+                <div class="head">
+                        <span style="float:left;">Staff PMs</span>
                         <span style="float:right;"><a href="#" onclick="$('#staffpms').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
-			</div>
-                  <table width="100%" class="hidden" id="staffpms">
+                </div>
+		<div class="box">
+                    <table width="100%" class="hidden" id="staffpms">
 				<tr class="colhead">
 					<td>Subject</td>
 					<td>Date</td>
@@ -953,13 +950,11 @@ if (check_perms('users_mod', $Class)) { ?>
 		<input type="hidden" name="userid" value="<?=$UserID?>" />
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 
-		<div class="box">
-		<!--<div class="head">Staff Notes <a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">(Edit)</a></div>-->
-			<div class="head">
-				<span style="float:left;">Staff Notes</span>
-                        <!--<span style="float:left;"><a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">(Edit)</a></span>-->
+                <div class="head">
+                        <span style="float:left;">Staff Notes</span>
                         <span style="float:right;"><a href="#" onclick="$('#staffnotes').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
-			</div>
+                </div>               
+		<div class="box">		
                   <div class="pad" id="staffnotes">
 				<input type="hidden" name="comment_hash" value="<?=$CommentHash?>">
 				<div id="admincommentlinks" class="AdminComment box pad"><?=$Text->full_format($AdminComment)?></div>
@@ -971,10 +966,8 @@ if (check_perms('users_mod', $Class)) { ?>
 			</div>
 		</div>
             
+                <div class="head">User Info</div>
 		<table>
-			<tr>
-				<td class="colhead" colspan="2">User Info</td>
-			</tr>
 <?	if (check_perms('users_edit_usernames', $Class)) { ?>
 			<tr>
 				<td class="label">Username:</td>
@@ -1146,12 +1139,12 @@ if (check_perms('users_mod', $Class)) { ?>
             
             
 <?	if (check_perms('users_edit_badges')) { ?>
-             
-		<div class="box">
-			<div class="head">
-				<span style="float:left;">Manage User Badges</span>
+
+                <div class="head">
+                        <span style="float:left;">Manage User Badges</span>
                         <span style="float:right;"><a href="#" onclick="$('#badgesadmin').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
-			</div>
+                </div>                
+		<div class="box">
                   <div class="pad hidden" id="badgesadmin">
 <?
                       $UserBadgesIDs = array(); // used in a mo to determine what badges user has for admin 
@@ -1235,10 +1228,8 @@ if (check_perms('users_mod', $Class)) { ?>
 
 
     if (check_perms('users_warn')) { ?>
-		<table>
-			<tr class="colhead">
-				<td colspan="2">Warn User</td>
-			</tr>
+		<div class="head">Warn User</div>
+                <table>
 			<tr>
 				<td class="label">Warned:</td>
 				<td>
@@ -1279,9 +1270,9 @@ if (check_perms('users_mod', $Class)) { ?>
 				</td>
 			</tr>
 <?	} ?>
-		</table><!--<br />-->
+		</table>
+                <div class="head">User Privileges</div>
 		<table>
-			<tr class="colhead"><td colspan="2">User Privileges</td></tr>
 <?	if (check_perms('users_disable_posts') || check_perms('users_disable_any')) {
 		$DB->query("SELECT DISTINCT Email, IP FROM users_history_emails WHERE UserID = ".$UserID." ORDER BY Time ASC");
 		$Emails = $DB->to_array();
@@ -1361,8 +1352,8 @@ if (check_perms('users_mod', $Class)) { ?>
 <?	} ?>
 		</table><!--<br />-->
 <?	if(check_perms('users_logout')) { ?>
+                <div class="head">Session</div>
 		<table>
-			<tr class="colhead"><td colspan="2">Session</td></tr>
 			<tr>
 				<td class="label">Reset session:</td>
 				<td><input type="checkbox" name="ResetSession" id="ResetSession" /></td>
@@ -1374,8 +1365,8 @@ if (check_perms('users_mod', $Class)) { ?>
 
 		</table>
 <?	} ?>
+                <div class="head">Submit</div>
 		<table>
-			<tr class="colhead"><td colspan="2">Submit</td></tr>
 			<tr>
 				<td class="label">Reason:</td>
 				<td>
