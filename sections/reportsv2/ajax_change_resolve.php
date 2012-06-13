@@ -29,5 +29,6 @@ $Array = array();
 $Array[0] = $ReportType['resolve_options']['delete'];
 $Array[1] = $ReportType['resolve_options']['upload'];
 $Array[2] = $ReportType['resolve_options']['warn'];
+$Array[3] = $ReportType['resolve_options']['bounty'];
 
 echo json_encode($Array);

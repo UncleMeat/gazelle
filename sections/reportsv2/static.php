@@ -180,7 +180,7 @@ include('header.php');
 <div class="linkbox">
 <?=$PageLinks?>
 </div>
-<div id="all_reports" style="width: 80%; margin-left: auto; margin-right: auto">
+<div id="all_reports" >
 
 <?
 if(count($Reports) == 0) {
@@ -235,7 +235,7 @@ if(count($Reports) == 0) {
                         $BBName = "[url=torrents.php?id=$GroupID]$GroupName"."[/url] (".get_size($Size).")" ; // number_format($Size/(1024*1024), 2)." MB)";
                         
 		?>	
-			<div id="report<?=$ReportID?>">
+			<div id="report<?=$ReportID?>" class="reports">
 				<form id="report_form<?=$ReportID?>" action="reports.php" method="post">
 					<? 
 						/*
@@ -459,7 +459,7 @@ if(count($Reports) == 0) {
 <? if(check_perms('users_mod')) { ?>
 									<span title="Delete Torrent?">	
 										<strong>Delete</strong>
-										<input type="checkbox" name="delete" id="delete<?=$ReportID?>">
+										<input type="checkbox" name="delete" id="delete<?=$ReportID?>"/>
 									</span>
 <? } ?>
 									<span title="Warning length in weeks">
@@ -474,8 +474,14 @@ if(count($Reports) == 0) {
 									</span>
 									<span title="Remove upload privileges?">
 										<strong>Disable Upload</strong>
-										<input type="checkbox" name="upload" id="upload<?=$ReportID?>">
+										<input type="checkbox" name="upload" id="upload<?=$ReportID?>"/>
 									</span>
+<?                                      if ($ReportType['resolve_options']['bounty'] != '0') {  ?>
+                                                      <span title="Pay bounty to reporter (<?=$ReporterName?>)">
+                                                            <strong>Pay Bounty (<?=$ReportType['resolve_options']['bounty']?>)</strong>
+                                                            <input type="checkbox" name="bounty" id="bounty<?=$ReportID?>"/>
+                                                      </span>
+<?                                      }       ?>
 									<span title="Change report type / resolve action">
 										<input type="button" name="update_resolve" id="update_resolve<?=$ReportID?>" value="Change report type" onclick="UpdateResolve(<?=$ReportID?>)" />
 									</span>
@@ -490,8 +496,8 @@ if(count($Reports) == 0) {
 									<option value="Reporter">Reporter</option>
 								</select>
 							</td> 
-							<td colspan="3">
-								<span title="Uploader: Appended to the regular message unless using send now. Reporter: Must be used with send now">
+							<td colspan="3">A PM is automatically generated for the uploader (and if a bounty is paid to the reporter). Any text here is appended to the uploaders auto PM unless using 'Send Now' to immediately send a message.<br />
+                                                <span title="Uploader: Appended to the regular message unless using send now. Reporter: Must be used with send now">
 									<textarea name="uploader_pm" id="uploader_pm<?=$ReportID?>" cols="50" rows="1"></textarea>
 								</span>
 								<input type="button" value="Send Now" onclick="SendPM(<?=$ReportID?>)" />
@@ -500,7 +506,7 @@ if(count($Reports) == 0) {
 						<tr>
 							<td class="label"><strong>Extra</strong> Log Message:</td> 
 							<td>
-								<input type="text" name="log_message" id="log_message<?=$ReportID?>" size="40" <? if($ExtraIDs) {
+								<input type="text" name="log_message" id="log_message<?=$ReportID?>" class="long" <? if($ExtraIDs) {
 											$Extras = explode(" ", $ExtraIDs);
 											$Value = "";
 											foreach($Extras as $ExtraID) {
@@ -511,7 +517,7 @@ if(count($Reports) == 0) {
 							</td>
 							<td class="label"><strong>Extra</strong> Staff Notes:</td> 
 							<td>
-								<input type="text" name="admin_message" id="admin_message<?=$ReportID?>" size="40" />
+								<input type="text" name="admin_message" id="admin_message<?=$ReportID?>" class="long" />
 							</td>
 						</tr>
 						<tr>

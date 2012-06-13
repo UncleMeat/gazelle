@@ -43,6 +43,14 @@ if(!is_number($UploaderID)) {
 	die();
 }
 
+if (isset($Escaped['reporterid'])){
+    $ReporterID = (int)$Escaped['reporterid'];
+    if(!is_number($ReporterID)) {
+          echo 'Hax occuring on the reporterid';
+          die();
+    }
+}
+
 $Warning = (int)$Escaped['warning'];
 if(!is_number($Warning)) {
 	echo 'Hax occuring on the warning';
@@ -137,6 +145,11 @@ if($DB->affected_rows() > 0 || !$Report) {
 		$Upload = false;
 	}
 
+	if(isset($Escaped['bounty'])) {
+		$Bounty = true;
+	} else {
+		$Bounty = false;
+	}
 
 	if($_POST['resolve_type'] == "tags_lots") {
 		$DB->query("INSERT IGNORE INTO torrents_bad_tags (TorrentID, UserID, TimeAdded) VALUES (".$TorrentID.", ".$LoggedUser['ID']." , '".sqltime()."')");
@@ -191,6 +204,25 @@ if($DB->affected_rows() > 0 || !$Report) {
 			WHERE UserID=".$UploaderID);
 	}
 	
+      if($Bounty && $ReporterID){
+          $Bounty = (int)$ResolveType['resolve_options']['bounty'];
+          if ($Bounty>0){
+              
+                $SET = "m.Credits=(m.Credits+$Bounty)";
+                $Summary = sqltime()." - User received a bounty payment of $Bounty credits.";	
+                $SET .=",i.AdminComment=CONCAT_WS( '\n', '".db_string($Summary)."', i.AdminComment)";
+                $Summary = sqltime()." | +$Bounty credits | You got a bounty payment.";
+                $SET .=",i.BonusLog=CONCAT_WS( '\n', '".db_string($Summary)."', i.BonusLog)";
+                
+                $DB->query("UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET $SET WHERE m.ID='$ReporterID'");
+                $Cache->delete_value('users_stats_'.$ReporterID);
+            
+                $Body = "Thank-you for your {$ResolveType['title']} report re: [url=http://".NONSSL_SITE_URL."/torrents.php?torrentid=$TorrentID]{$RawName}[/url]\n\nYou received a bounty payment of $Bounty credits.";
+               
+                send_pm($ReporterID, 0, "Received Bounty Payment", $Body);
+          }
+      }
+      
 	if($Warning > 0) {
 		$WarnLength = $Warning * (7*24*60*60); 
 		$Reason = "Uploader of torrent (".$TorrentID.") ".$RawName." which was resolved with the preset: ".$ResolveType['title'].".";

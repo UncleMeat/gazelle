@@ -31,7 +31,8 @@ $Types = array(
             'upload' => '0',
             'warn' => '0',
             'delete' => '1',
-            'pm' => 'Your torrent has been deleted for being a duplicate of another torrent.'
+            'pm' => 'Your torrent has been deleted for being a duplicate of another torrent.',
+            'bounty' => 400
         )
     ),
     'banned' => array(
@@ -46,7 +47,8 @@ $Types = array(
             'upload' => '0',
             'warn' => '4',
             'delete' => '1',
-            'pm' => 'The releases on the Do Not Upload list (on the upload page) are currently forbidden from being uploaded from the site. Do not upload them unless your torrent meets a condition specified in the comment.'
+            'pm' => 'The releases on the Do Not Upload list (on the upload page) are currently forbidden from being uploaded from the site. Do not upload them unless your torrent meets a condition specified in the comment.',
+            'bounty' => 400
         )
     ),
     'urgent' => array(
@@ -67,7 +69,8 @@ $Types = array(
             'upload' => '0',
             'warn' => '0',
             'delete' => '0',
-            'pm' => ''
+            'pm' => '',
+            'bounty' => 0
         )
     ),
     'other' => array(
@@ -82,9 +85,10 @@ $Types = array(
             'upload' => '0',
             'warn' => '0',
             'delete' => '0',
-            'pm' => ''
+            'pm' => '',
+            'bounty' => 0
         )
-    ),
+    ),/*  // should we remove this one? i guess in rare cases it could be applicable but so rare its probably not worth having an option for it
     'missing_crack' => array(
         'priority' => '7',
         'title' => 'No Crack/Keygen/Patch',
@@ -98,9 +102,10 @@ $Types = array(
             'upload' => '0',
             'warn' => '1',
             'delete' => '1',
-            'pm' => 'All applications must come with a crack, keygen, or other method of ensuring that downloaders can install them easily. App torrents with keygens, cracks, or patches that do not work and torrents missing clear installation instructions are deleted if reported. No exceptions.'
+            'pm' => 'All applications must come with a crack, keygen, or other method of ensuring that downloaders can install them easily. App torrents with keygens, cracks, or patches that do not work and torrents missing clear installation instructions are deleted if reported. No exceptions.',
+            'bounty' => 0
         )
-    ),
+    ),*/
     'images' => array(
         'priority' => '8',
         'title' => 'No Images',
@@ -114,7 +119,8 @@ $Types = array(
             'upload' => '0',
             'warn' => '1',
             'delete' => '0',
-            'pm' => 'The torrent must have an image.'
+            'pm' => 'The torrent must have an image.',
+            'bounty' => 0
         )
     ),
     'description' => array(
@@ -130,7 +136,8 @@ $Types = array(
             'upload' => '0',
             'warn' => '1',
             'delete' => '0',
-            'pm' => 'Torrents must have a description that describes the content of the torrent.'
+            'pm' => 'Torrents must have a description that describes the content of the torrent.',
+            'bounty' => 0
         )
     ),
     'pack' => array(
@@ -146,7 +153,8 @@ $Types = array(
             'upload' => '0',
             'warn' => '1',
             'delete' => '1',
-            'pm' => 'Torrents can not contain compressed files such as .rar or .zip, unless it contains a large number of images.'
+            'pm' => 'Torrents can not contain compressed files such as .rar or .zip, unless it contains a large number of images.',
+            'bounty' => 0
         )
     ),
     'virus' => array(
@@ -162,7 +170,8 @@ $Types = array(
             'upload' => '0',
             'warn' => '1',
             'delete' => '1',
-            'pm' => 'The torrent was determined to be infected with a virus/trojan. In the future, please scan all potential uploads with an antivirus program such as AVG, Avast, or MS Security Essentials.'
+            'pm' => 'The torrent was determined to be infected with a virus/trojan. In the future, please scan all potential uploads with an antivirus program such as AVG, Avast, or MS Security Essentials.',
+            'bounty' => 0
         )
     ),
     'notwork' => array(
@@ -178,7 +187,8 @@ $Types = array(
             'upload' => '0',
             'warn' => '0',
             'delete' => '1',
-            'pm' => 'The torrent content was determined to be not fully functional.'
+            'pm' => 'The torrent content was determined to be not fully functional.',
+            'bounty' => 0
         )
     )
 );

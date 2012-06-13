@@ -88,9 +88,9 @@ if(check_perms('admin_reports')) {
 		$Type = 'other';
 		$ReportType = $Types['master']['other'];
 	}
-        $RawName = $GroupName." (".number_format($Size/(1024*1024), 2)." MB)";
-        $LinkName = "<a href='torrents.php?id=$GroupID'>$GroupName</a> (".number_format($Size/(1024*1024), 2)." MB)";
-        $BBName = "[url=torrents.php?id=$GroupID]$GroupName"."[/url] (".number_format($Size/(1024*1024), 2)." MB)";
+        $RawName = $GroupName." (". get_size($Size).")" ; // number_format($Size/(1024*1024), 2)." MB)";
+        $LinkName = "<a href='torrents.php?id=$GroupID'>$GroupName</a> (". get_size($Size).")" ; 
+        $BBName = "[url=torrents.php?id=$GroupID]$GroupName"."[/url] (".get_size($Size).")" ; 
 ?>	
 	<div id="report<?=$ReportID?>">
 		<form id="report_form<?=$ReportID?>" action="reports.php" method="post">
@@ -170,9 +170,9 @@ if(check_perms('admin_reports')) {
 					</td>
 				</tr>
 				<? // END REPORTED STUFF :|: BEGIN MOD STUFF ?>
-				<tr>
+				<tr class="spacespans">
 					<td class="label">
-						<a href="javascript:Load('<?=$ReportID?>')">Resolve</a>
+						<a href="javascript:Load('<?=$ReportID?>')" title="Set back to <?=$ReportType['title']?>">Resolve</a>
 					</td>
 					<td colspan="3">
 						<select name="resolve_type" id="resolve_type<?=$ReportID?>" onchange="ChangeResolve(<?=$ReportID?>)">
@@ -197,13 +197,15 @@ foreach($TypeList as $IType => $Data) {
 							<span title="Warning length in weeks">
 								<strong>Warning</strong>
 								<select name="warning" id="warning<?=$ReportID?>">
-<? for($i = 0; $i < 9; $i++) { ?>
-								<option value="<?=$i?>"<?=(($ReportType['resolve_options']['warn'] == $i)?' selected="selected"':'')?>><?=$i?></option>
-<? } ?>
+									<option value="0">none</option>
+									<option value="1"<?=(($ReportType['resolve_options']['warn'] == 1)?' selected="selected"':'')?>>1 week</option>
+<?                                      for($i = 2; $i < 9; $i++) {  ?>
+									<option value="<?=$i?>"<?=(($ReportType['resolve_options']['warn'] == $i)?' selected="selected"':'')?>><?=$i?> weeks</option>
+<?                                      }       ?>
 								</select>
 							</span>
 							<span title="Remove upload privileges?">
-								<strong>Upload</strong>
+								<strong>Disable Upload</strong>
 								<input type="checkbox" name="upload" id="upload<?=$ReportID?>"<?=($ReportType['resolve_options']['upload']?' checked="checked"':'')?>>
 							</span>
 						</span>
@@ -211,8 +213,8 @@ foreach($TypeList as $IType => $Data) {
 				</tr>
 				<tr>
 					<td class="label">PM Uploader</td> 
-					<td colspan="3">
-						<span title="Appended to the regular message unless using send now.">
+					<td colspan="3">A PM is automatically generated for the uploader (and if a bounty is paid to the reporter). Any text here is appended to the uploaders auto PM unless using 'Send Now' to immediately send a message.<br />
+                                    <span title="Appended to the regular message unless using send now.">
 							<textarea name="uploader_pm" id="uploader_pm<?=$ReportID?>" cols="50" rows="1"></textarea>
 						</span>
 						<input type="button" value="Send Now" onclick="SendPM(<?=$ReportID?>)" />
@@ -230,7 +232,7 @@ foreach($TypeList as $IType => $Data) {
 				</tr>
 				<tr>
 					<td colspan="4" style="text-align: center;">
-						<input type="button" value="Submit" onclick="TakeResolve(<?=$ReportID?>);" />
+						<input type="button" value="Resolve Report" onclick="TakeResolve(<?=$ReportID?>);"  title="Resolve Report (carry out whatever actions are set)" />
 					</td>
 				</tr>
 			</table>

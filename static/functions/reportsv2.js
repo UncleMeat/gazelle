@@ -11,9 +11,13 @@ function ChangeResolve(reportid) {
 			if($('#uploaderid' + reportid).raw().value == $('#reporterid' + reportid).raw().value) {
 				$('#warning' + reportid).raw().selectedIndex = 0;
 				$('#upload' + reportid).raw().checked = false;
+				$('#bounty' + reportid).raw().checked = false;
+				$('#bounty' + reportid).raw().disabled = (x[3] == '0' ? true : false);
 			} else {
 				$('#upload' + reportid).raw().checked = (x[1] == '1' ? true : false);
 				$('#warning' + reportid).raw().selectedIndex = x[2];
+				$('#bounty' + reportid).raw().checked = (x[3] != '0' ? true : false);
+				$('#bounty' + reportid).raw().disabled = (x[3] == '0' ? true : false);
 			}
 			$('#update_resolve' + reportid).raw().disabled = false;
 		}
@@ -35,9 +39,13 @@ function Load(reportid) {
 			if($('#uploaderid' + reportid).raw().value == $('#reporterid' + reportid).raw().value) {
 				$('#warning' + reportid).raw().selectedIndex = 0;
 				$('#upload' + reportid).raw().checked = false;
+				$('#bounty' + reportid).raw().checked = false;
+				$('#bounty' + reportid).raw().disabled = (x[3] == '0' ? true : false);
 			} else {
 				$('#upload' + reportid).raw().checked = (x[1] == '1' ? true : false);
 				$('#warning' + reportid).raw().selectedIndex = x[2];
+				$('#bounty' + reportid).raw().checked = (x[3] != '0' ? true : false);
+				$('#bounty' + reportid).raw().disabled = (x[3] == '0' ? true : false);
 			}
 			$('#update_resolve' + reportid).raw().disabled = false;
 		}
@@ -227,8 +235,9 @@ function MultiResolve() {
 function UpdateResolve(reportid) {
 	var newresolve = $('#resolve_type' + reportid).raw().options[$('#resolve_type' + reportid).raw().selectedIndex].value;
 	ajax.get("reportsv2.php?action=ajax_update_resolve&reportid=" + reportid + "&newresolve=" + newresolve, function (response) {
-		$('#update_resolve' + reportid).raw().disabled = true;
-	});
+		//$('#update_resolve' + reportid).raw().disabled = true;
+		window.location.reload(true); 
+      });
 }
 
 

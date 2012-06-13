@@ -972,7 +972,10 @@ td.label {
     width: 100px;
 }
  
-
+.reports {
+   max-width: 1100px;
+   margin: 0px auto ;
+}
 .spacespans span {
     margin-right:20px;
 }

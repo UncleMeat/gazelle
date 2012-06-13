@@ -38,7 +38,7 @@ include('header.php');
 </div>
 </div>
 <br />
-<div id="all_reports" style="width: 80%; margin-left: auto; margin-right: auto">
+<div id="all_reports" class="reports">
 </div>
 <?
 show_footer();
