@@ -247,7 +247,7 @@ $time_start = microtime(true);
 
 echo "connecting to database\n";
 mysql_connect('localhost', 'root', 'password');
-
+/*
 echo "Creating new authkeys for users\n";
 mysql_query("UPDATE gazelle.users_info
 	SET AuthKey =
@@ -276,7 +276,7 @@ while (($row = mysql_fetch_assoc($result))) {
 }
 
 mysql_query("insert into gazelle.invite_tree values ".implode(',',$values)) or die(mysql_error());
-
+*/
 $result = mysql_query("select count(*) as c from " . EMDB . ".torrents") or die(mysql_error());
 $count = mysql_result($result, 0);
 echo "Importing $count torrents to database... (this will take a while)\n";
@@ -363,7 +363,7 @@ while (($row = mysql_fetch_assoc($result))) {
     }
 
     $torrents_row[] = "(" . $row['id'] . ", " . $row['owner'] . ", 
-		'" . mysql_real_escape_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'".$row['hits']."', '".$row['times_completed']."'))";
+		'" . mysql_real_escape_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'), '".$row['hits']."', '".$row['times_completed']."')";
 
    
     $TorrentID++;
@@ -374,8 +374,8 @@ while (($row = mysql_fetch_assoc($result))) {
     if ($i % 1000 == 0) {
         echo "\n" . number_format($i / $count * 100, 2) . "% ";        
     }
-    elseif ($i % 50 == 0) {
-        mysql_query("INSERT INTO gazelle.torrents_group
+    elseif ($i % 5 == 0) {
+/*        mysql_query("INSERT INTO gazelle.torrents_group
                     (ID, NewCategoryID, Name, TagList, Time, Body, SearchText) VALUES " . implode(',', $torrents_group_rows)) or die(mysql_error());
         $torrents_group_rows = array();
 
@@ -390,7 +390,11 @@ while (($row = mysql_fetch_assoc($result))) {
                             (TagID, GroupID, UserID, PositiveVotes) VALUES " . implode(',', $torrents_tags_row)
                    ) or die(mysql_error());
         $torrents_tags_row = array();
-        
+  */    
+        echo "INSERT INTO gazelle.torrents
+                            (GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, completed) 
+                        VALUES " . implode(',', $torrents_row);
+        die();
         mysql_query("INSERT INTO gazelle.torrents
                             (GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, completed) 
                         VALUES " . implode(',', $torrents_row)
