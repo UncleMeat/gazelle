@@ -460,5 +460,5 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
             </div>
     </div>
 </div>
-<div id="main-logo"></div>
+
 <div id="content">
