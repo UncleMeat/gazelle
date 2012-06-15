@@ -125,7 +125,7 @@ class VALIDATE {
                                 if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
                                 if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
                                 
-                                if(isset($Field['MinImages'])) { $MinImages=$Field['MinImages']; } else { $MinImages=1; }
+                                if(isset($Field['MinImages'])) { $MinImages=$Field['MinImages']; } else { $MinImages=0; }
 
                                 if (!$Text){
                                     include(SERVER_ROOT . '/classes/class_text.php');
@@ -159,7 +159,7 @@ class VALIDATE {
                                         $result = $this->ValidateImageUrl($imageurls[1][$j], 12, 255, $WLRegex); 
                                         if ($result !== TRUE){ return $Field['ErrorMessage'].' field: ' .$result; } 
                                      }
-                                } else {  // if there are no img tags then it validates unless required flag is set
+                                } elseif($MinImages> 0 && $num < $MinImages) {  // if there are no img tags then it validates unless required flag is set
                                     //if (!empty($Field['Required'])) {   
                                         // this kind of breaks the pattern of this class but screw it... 
                                         // we will hardcode a change to return message to avoid having to do the 
