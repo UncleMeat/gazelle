@@ -28,21 +28,21 @@ darker shade (very top of header):
 
 body {
     width: 100%;
-    background: #ebebeb;
+    background: #0d245a;
     font: normal 11pt "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
-    color: #555;
+    color: #000000;
 }
 
 /* Common elements */
 
 a {
-    color:#333;
+    color:#023174;  /* #225de1;        /* #32475F;  */
     text-decoration: none;
+    border: none;
 }
-
 a:hover {
-    text-decoration: none;
-    color: #0088CC;
+    text-decoration: underline;
+    color:#FF6600;  /* 121dd4;  /* #839FBC;  */
 }
 
 h1,h2,h3,h4 {
@@ -50,7 +50,7 @@ h1,h2,h3,h4 {
 }
 
 h2 {
-    text-align: center;    
+    text-align: center;
 }
 
 h4 {
@@ -116,6 +116,7 @@ span.size10 { font-size:3em; }
 code {
     font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 }
+
 ul.thin { margin:0px 0px 0px 25px; padding:0px; }
 ul.thin li { margin:0px 0px; padding:0px; }
 
@@ -125,34 +126,30 @@ ul.thin li { margin:0px 0px; padding:0px; }
     width: 100%;
     min-width:960px; 
     padding: 0;
-    background-color: #2b709e;
+    background-color: #161d29;
     font-weight: normal;
 
 }
 
-#main-logo {
-    margin: 20px auto 0 auto;
-    width: 367px; 
-    height: 100px;
-    background: url('images/empornium-black-header.png') no-repeat center center;
-}    
-
 #content {
     width: 90%;
     min-width: 940px;
-    max-width: 1100px;
+    max-width: 1200px;
+    background-color: #003875;
     margin: 40px auto 0px auto;
+    padding: 35px 10px 35px;
+    border: 1px solid #0054b0;
     overflow: hidden;
 }
 
 #footer {
-    font-size: 0.75em;
     margin-top: 40px;
     width: 100%;
     min-width:960px; 
     text-align: center;
     padding: 1em 0 0;
-    color: #555;
+    color: #eee;
+    font-size: 0.8em;
 }
 
 #header_top {
@@ -185,8 +182,10 @@ ul.thin li { margin:0px 0px; padding:0px; }
     height: 20px;
     width: 65%;
     text-align: center;
+    font-size: 9pt;
     margin: 0px auto;
     padding-top: 12px;
+    font-size: 1.1em;
 }
 
 #menu ul {
@@ -208,11 +207,12 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 
 #menu a {
-    color: #f2f2f2;
+    color: #fff;
     font-weight: bold;
 }
 
 #menu a:hover {
+   background-color: #FF6600;
    color: #fff;
    text-decoration: none;
 }
@@ -221,7 +221,6 @@ span.infinity {
     font-weight: bold;
 }
 #stats_block {
-    font-size: 0.8em;
     text-align: right;
     color: white;
     height: 54px;
@@ -229,6 +228,7 @@ span.infinity {
     right: 20px ;
     margin-top:-27px;
     top:50%; 
+    font-size: 0.9em;
 }
 
 #stats_block ul li, #header_bottom ul li {
@@ -239,26 +239,22 @@ span.infinity {
 }
 
 #stats_block a, #stats_block a:visited, #header_bottom a, #header_bottom a:visited {
-    font-size: 1.1em;
     text-decoration: none;
-    color: #f2f2f2;
+    color: #fff;
 }
 #stats_block a:hover, #header_bottom a:hover {
     text-decoration: none;
-    color: white;
+    color: #FF6600;
 }
 
 #header_bottom {
     background-color: #00436b;
-    padding: 0px 20px 4px;
+    padding: 2px 10px 4px;
     position: relative;
     height: 15px;
 }
 
 #footer_bottom {
-    height: 24px;
-    width:100%;
-    min-width:960px; 
 }
 
 
@@ -266,24 +262,21 @@ span.infinity {
     float:left;
     margin: 0px;
 }
-#major_stats { 
+
+#major_stats {
     float:right;
     margin: 0 0 0 10px;
 }
 
-#major_stats #userinfo_username li ul {
-    display: none;
-}
-
-#userinfo_username {
-    font-size: 0.85em;
+#userinfo_username { 
     display:inline;
+    font-size: 0.8em;
 } 
 
 #userinfo_major {
-    font-size: 0.85em;
     display:inline;
-    margin-right: 20px;
+    margin-right: 10px;
+    font-size: 0.8em;
 }
  
 span.inside_stat {
@@ -291,22 +284,25 @@ span.inside_stat {
 }
  
 #userinfo_minor {
-    font-size: 0.85em;
     display:inline;
+    font-size: 0.8em;
 }
-  
+ 
+ 
 span.stat {
     font-weight: bold; 
 }
-
 .highlight {
     font-weight: bold; 
 }
 
+
+
 #searchbars {
     padding: 6px 0px 0px 0px;
+    background-position: bottom;
     text-align: center;
-    height: 25px;
+    height: 33px;
 }
 
 #searchbars form {
@@ -314,17 +310,11 @@ span.stat {
 }
 
 #searchbars input {
-    background-color: #ffffff;     /*  #F4F6FB; */
-    border: 0px;
-    padding: 1px 5px 1px 5px;
-    margin: 0px 1px 0px 1px;
+    background-color: #e4ebef;     /*  #F4F6FB; */
+    border: 1px solid black;
     font-size: 0.9em;
-    color: #666;
+    color: #222;
     position: relative;
-    border-radius: 10px;       /* FF9+ IE9+ */
-    -moz-border-radius: 10px; /* for FF5 */
-    -webkit-border-radius: 10px; /* for opera */
-    
 }
 
 #searchbars ul {
@@ -386,7 +376,7 @@ li.searchbars {
     -webkit-border-radius: 10px; /* for opera */
 }
 .alertbar a {
-    text-decoration: underline;
+    text-decoration: none;
     color: white;
 }
 .alertbar a:hover {
@@ -395,19 +385,18 @@ li.searchbars {
 
 .blend {
     padding: 2px 40px 2px;
-    background-color: #2b709e;
+    background-color: #161d29;
     color: white;
 }
 
 .blend a {
-    font-size: 0.9em;
-    color: f2f2f2;
+    color: white;
     padding: 2px 2px;
-    text-decoration: none;
 } 
 
 .blend a:hover {
-   color: white;
+   background-color: #FF6600;
+   color: #fff;
    text-decoration: none;
 }
 
@@ -427,7 +416,7 @@ li.searchbars {
     height: 20px;
     margin: 0px auto 10px auto;
 }
-.messagebar {  
+.messagebar {  /* #0261a3; */
     padding-top: 3px; 
     height: 20px;
     background-color: #1a1; 
@@ -449,6 +438,11 @@ li.searchbars {
 /* user classes */
 .user_name { 
     font-weight: normal;
+    background-color:#e3eefd;
+    border: 1px solid #005488;
+    border-radius: 8px;       /* FF9+ IE9+ */
+    -moz-border-radius: 8px; /* for FF5 */
+    -webkit-border-radius: 8px; /* for opera */
     padding: 1px 8px;
     margin: 0px;
     color: #000;
@@ -471,7 +465,7 @@ span.user_name a {
 .Donor { color:#DAA520; }  /* #F4E649; */
 
 span.user_title {
-    
+    font-style: italic;
 }
 
 /* IE doesn't appear to like a simple display:none in our header. Random things start fucking up pretty badly. */
@@ -496,35 +490,22 @@ input.hidden {
  
 h2 { 
     margin: 10px 0px 20px;
-    text-align: center;   
-    font-weight: bold;
-    font-color: black;
-    line-height: 33px;
-    padding: 5px 40px;
-
-    height: 33px;
-    border: 1px solid #c7c7c7 !important;
-
-    background: #f8f8f8; /* old browsers */
-    background: -moz-linear-gradient(top, #FFFFFF 0%, #F5F5F5 80%, #e9e9e9 100%); /* firefox */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFFFFF), color-stop(80%,#F5F5F5), color-stop(100%,#e9e9e9)); /* webkit */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F5F5F5', endColorstr='#F5F5F5',GradientType=0 ); /* ie */
-
-    -moz-box-shadow:inset 0px 0px 3px #fff;
-    -webkit-box-shadow:inset 0px 0px 3px #fff;
-    box-shadow:inset 0px 0px 3px #fff;
-
-    font-size:1.1em !important;
-    border-radius: 14px; 
-    -moz-border-radius: 14px; 
-    -webkit-border-radius: 14px;
-    padding: 3px 10px;
-    overflow: hidden;  
+    text-align: center;
+    color: #fff;
+    /* background-color: #024a7c; */
+    border-radius: 16px; 
+    -moz-border-radius: 16px; 
+    -webkit-border-radius: 16px;  
     
+    /* *** change to plain background if preferred ***  */
+    /* background-color: #0261a3; */
+    background: #0261a3 url(images/header2.jpg) repeat-x bottom;  
+    font-size: 18px;
+    padding: 5px 40px;
 } 
 
 h2 a {
-    color: black; 
+    color: #fff; 
 }
 
 .box h2 {
@@ -533,11 +514,6 @@ h2 a {
     border-radius: 14px; 
     -moz-border-radius: 14px; 
     -webkit-border-radius: 14px;
-}
-
-.small {
-    font-weight: normal;
-    font-size: 0.6em;
 }
 
 .contact_link {
@@ -605,9 +581,9 @@ p.min_padding {
 }
 
 .box {
-    font-size: 0.85em;
-    border: 1px solid #ccc;
+    font-size: 8pt;
     background-color: white;
+    padding: 1px 0 1px 0;
 }
 
 .pad h3, .pad h4, .padbox h3, .padbox h4 {
@@ -620,13 +596,15 @@ p.min_padding {
     overflow: auto;
 }
 
+
+
 #details_top {
     margin-bottom: 10px;
 }
 #top_info {
     display:inline-table;
     margin:16px auto 16px;
-    border: 1px solid #c7c7c7;
+    border: 1px solid #7BA3C1;
     padding:0px 6px 0px 12px;
     background: white; 
     -moz-border-radius: 8px;
@@ -640,7 +618,7 @@ table.boxstat td {
     padding: 4px 6px;
     border-top:none;
     border-right: none;
-    border-left:1px solid #c7c7c7;
+    border-left:1px solid #7BA3C1;
     border-bottom:none;
     background: white; 
     text-align:center;
@@ -656,6 +634,8 @@ table.boxstat td:first-child {
     width: 80px;
     margin: 6px 0px 0px 8px;
     padding: 4px 12px;
+    border: 1px solid #7BA3C1;
+     /* background: #5A8Bb8;    #024a7c;#BACBD8 #9AaBb8 */
     color: #fff;
     cursor: pointer;
     vertical-align: top;
@@ -679,7 +659,7 @@ table.boxstat td:first-child {
 }
 
 .redbar {
-    background: #F08080;
+    background: #f397a7;
     color: white;
     font-weight: bolder;
 }
@@ -696,6 +676,8 @@ table.boxstat td:first-child {
 .redbar a:hover, .orangebar a:hover {
     text-decoration: none;
 }
+
+ 
 
 .icon {
     display:inline-block;
@@ -742,14 +724,12 @@ table.boxstat td:first-child {
 
 .details .sidebar {
     width: 260px;
-  /*  height: 380px; */ 
 }
 
 .details .middle_column {
     margin: 0px 270px 10px;
-   /* max-height: 460px;  should be 60px more than tag_inner max-height */
-    /* overflow: auto; <- screws up chrome in linux */
 }
+
 .middle_column table {
     margin-top: 20px;
 }
@@ -778,7 +758,6 @@ table.boxstat td:first-child {
     overflow: auto;   */
 }
 
-
 .sidebar .box {
     margin: 0px 5px 10px 5px;
 }
@@ -792,48 +771,40 @@ table.boxstat td:first-child {
 }
 
 .head {
-        height: 30px;
-        padding: 16px 0 0 10px !important;
+    padding-left: 10px;
+    height: 30px;
+    background: #0074b7; /* old browsers */
+    background: -moz-linear-gradient(top, #0074b7 0%, #0074b7 40%, #004b9d 100%); /* firefox */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0074b7), color-stop(40%,#0074b7), color-stop(100%,#004b9d)); /* webkit */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0074b7', endColorstr='#004b9d',GradientType=0 ); /* ie */
 
-        border-top: 1px solid #c7c7c7 !important;
-        border-left: 1px solid #c7c7c7 !important;
-        border-right: 1px solid #c7c7c7 !important;
+    -moz-box-shadow:inset 1px 1px 3px #6a9bb7;
+    -webkit-box-shadow:inset 1px 1px 3px #6a9bb7;
+    box-shadow:inset 1px 1px 3px #6a9bb7;
 
-        background: #f8f8f8; /* old browsers */
-	background: -moz-linear-gradient(top, #FFFFFF 0%, #F5F5F5 80%, #e9e9e9 100%); /* firefox */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFFFFF), color-stop(80%,#F5F5F5), color-stop(100%,#e9e9e9)); /* webkit */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F5F5F5', endColorstr='#F5F5F5',GradientType=0 ); /* ie */
+    -moz-border-radius: 3px 3px 0 0;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    
+    color: #eee;
+    border-bottom: 1px solid #004689;
+    line-height: 30px;
+    font-weight: normal;
+    font-size:1.1em !important;
+}
 
-	-moz-box-shadow:inset 0px 0px 3px #fff;
-  	-webkit-box-shadow:inset 0px 0px 3px #fff;
-  	box-shadow:inset 0px 0px 3px #fff;
+.head a {
+    color: white;
+}
 
-	font-size:1.1em !important;
-	font-weight: normal;
-	-moz-border-radius: 5px 5px 0 0;
-	-webkit-border-top-left-radius: 5px;
-	-webkit-border-top-right-radius: 5px;
-	padding: 3px 10px !important;
-	margin: 0px !important;
-	overflow: hidden;  
-        line-height: 30px;
+.small {
+    font-weight: normal;
+    font-size: 0.7em;
 }
 
 .body {
      padding: 3px 10px 10px 10px; 
-}/*
-div.body {
-    padding:0px;
-    padding: 3px 10px 10px 10px;
-}*/
-
-/*
-.main_column {
-    margin: 0px 255px 10px 0px;
-    // width: 590px;  
-    width: 70%;  
 }
-*/
 
 .sidebar {
     float: right;
@@ -882,40 +853,31 @@ span.green {
 table {
     width: 100%;
     border-collapse: collapse;
-    border: 1px solid #c7c7c7;
+    border: 1px solid #0d245a;
 }
 
 tr {
     background-color: white;
 }
 
-tr.rowa, .rowa {    
-    background-color: #f8f8f8; 
+tr.rowa, .rowa {    /* original alternate row color: quite blue #E1E9F2;*/
+    background-color: #eff3f6; /* lighter shade: #eff3f6;*/
 }
-
 tr.rowb, .rowb {
     background-color: white;
 }
 
 td {
-    border: 1px solid #c7c7c7;
+    border: 1px solid #98AAB1;
     padding: 5px;
     text-align: left;
-}
-
-td.cola {
-    background-color: #f8f8f8; 
-}
-
-td.colb {
-    background-color: white;
 }
 
 table.wid740 {
     margin: auto;
     width: 740px; 
     border-collapse: collapse;
-    border: 1px solid #c7c7c7;
+    border: 1px solid #0d245a;
 }
 
 table.noborder td {
@@ -964,20 +926,17 @@ input.shopbutton.itembuy:hover {
     /*color: #700;*/
 }
 
-.smallhead {
-    background-color: #f8f8f8;
-}
-
 .colhead {
-    font-size: 0.8em;
+    background: #0261A3 url(images/colhead-grad.gif) repeat-x;  /*  #0261A3  #C6D3E4   */
+    font-weight: bold;
+    color: #eee;
 }
 
 .colhead a {
+    color: white;
 }
 
 td.colhead, .colhead td {
-    border: 0px;
-    background-color: #f8f8f8;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -991,9 +950,16 @@ td.colhead, .colhead td {
 }
 
 .colhead_dark {
+    height: 20px;
+    line-height: 20px;
+    font-weight: normal;
+    font-size: 0.9em !important;
+    color: #eee; 
 }
 
 .colhead_dark a {
+    font-weight: normal;
+    color: white;
 }
 
 .colhead_red {
@@ -1011,6 +977,13 @@ td.label {
     width: 100px;
 }
  
+.reports {
+   max-width: 1100px;
+   margin: 0px auto ;
+}
+.spacespans span {
+    margin-right:20px;
+}
 
 table.slice {
     margin-top: -1px;
@@ -1087,7 +1060,6 @@ ul.poll li.graph {
     margin-bottom:0px;
     /*margin-bottom:15px; */
 }
-
 .filter_slidetoggle {
     width:836px;
     margin: 2px auto 15px;
@@ -1095,32 +1067,9 @@ ul.poll li.graph {
     text-align: center;
     background-color: white; /* #D7E2EF; */
     border: 1px solid #98AAB1;
+    padding: 6px;
     font-weight: bold;
     font-size: 14pt;
-
-        height: 38px;
-        border-top: 1px solid #c7c7c7 !important;
-        border-left: 1px solid #c7c7c7 !important;
-        border-right: 1px solid #c7c7c7 !important;
-
-        background: #f8f8f8; /* old browsers */
-	background: -moz-linear-gradient(top, #FFFFFF 0%, #F5F5F5 80%, #e9e9e9 100%); /* firefox */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFFFFF), color-stop(80%,#F5F5F5), color-stop(100%,#e9e9e9)); /* webkit */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F5F5F5', endColorstr='#F5F5F5',GradientType=0 ); /* ie */
-
-	-moz-box-shadow:inset 0px 0px 3px #fff;
-  	-webkit-box-shadow:inset 0px 0px 3px #fff;
-  	box-shadow:inset 0px 0px 3px #fff;
-
-	font-size:1.1em !important;
-	font-weight: normal;
-	-moz-border-radius: 0 0 5px 5px;
-	-webkit-border-bottom-left-radius: 5px;
-	-webkit-border-bottom-right-radius: 5px;
-	padding: 3px 7px;
-	overflow: hidden;  
-        line-height: 38px;
-    
 }
 
 
@@ -1150,7 +1099,8 @@ ul.poll li.graph {
 }
 
 .cat_list tr td {
-    border:none;    
+    border:none;
+    background-color: #eff3f6;  /* #e0e8eb; /* #D7E2EF; */
 }
 .taglist {
     margin-bottom: 15px;
@@ -1164,9 +1114,6 @@ ul.poll li.graph {
     margin:5px;
 }
 
-.torrent {
-    font-size: 0.85em;
-}
 .torrent_table tr {
     vertical-align:top;
 }
@@ -1180,7 +1127,6 @@ ul.poll li.graph {
     background-color:#D7E2EF;
 }
 .group_torrent {
-    font-size: 0.85em;
     background-color: white;
 }
 .group_torrent span {
@@ -1293,28 +1239,17 @@ div.tagtable {
 .unread{background: url(images/unread.png) no-repeat center center;}
 .read{background: url(images/read.png) no-repeat center center;}
 
-table.forum_index {
-    font-size: 0.9em;
-    margin-bottom: 20px;
-}
-
-table.forum_list {
-    font-size: 0.9em;
-}
-
-span.last_topic, span.last_read, span.last_poster {
-    font-size: 0.9em;
-}
-
 table.forum_post {
     margin: 10px 0px;
 }
 
 table.forum_post td {
+    /* border: 1px solid #98AAB1;  */
+    border: 1px solid #dcdde4;
 }
 
 table.forum_unread {
-    /* border: 2px solid #98AAB1; Lanz: hmm fix later... */
+    border: 2px solid #98AAB1;
 }
 
 td.avatar {
@@ -1581,6 +1516,7 @@ td.bbcode {
 }
 
 span.quote_label {
+  /*  text-align:left; */
     float:left;
     font-size: 8pt;
     margin-left:10px;
@@ -1591,6 +1527,7 @@ blockquote.bbcode {
     background-color: #f4f4f4;
     color: #333;
     text-align: left;
+   /* font-size: 0.9em; */
 }
 
 /*  Stuff for the bbcode assistant  */
@@ -1666,12 +1603,15 @@ a.bb_button:hover {
 }
 
 .overflow_button {
+  /*  position: relative;
+    bottom: 0px;
+    height: 16px; */
     padding: 1px; 
     margin:3px 1px 2px; 
     font-weight: bold; 
     text-align: center; 
-    border: 1px solid #7BA3C1; 
-    background: none repeat scroll 0% 0% #BACBD8;
+    border: 1px solid #7BA3C1;  
+    background: none repeat scroll 0% 0% #BACBD8; 
 }
 .overflow_button a {
     padding:0px 8px; 
@@ -1698,11 +1638,11 @@ a.bb_button:hover {
 }
 
 .color_pick, .color_pick td { 
-	border: 1px solid #c7c7c7; 
+	border:1px solid #333333; 
 }
 
 .color_pick td:hover { 
-    border: 1px solid #c7c7c7; 
+    border:1px solid #333333; 
 }
 
 /*  Torrent Buttons  */
@@ -1717,7 +1657,6 @@ a.button {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	-webkit-border-radius: 3px;
-	/* margin: 3px 6px 3px 0; */
       margin: 0px 8px 4px 0px;
 	text-decoration: none;
 	color: #fff;	
@@ -1731,7 +1670,6 @@ a.button {
 	line-height: 12px;
 	font-family: Verdana, Geneva, sans-serif;
 	padding: 7px 15px;
-      /*font-weight: bold; */
 }
 
 .greenButton {
@@ -1760,7 +1698,7 @@ a.button {
 }
 
 .infoButton {
-    background: #5A8Bb8;    /* #024a7c;#BACBD8 #9AaBb8 */
+    background: #5A8Bb8;
 }
 .infoButton:hover {
     background: #3A6B98;  
@@ -1774,10 +1712,8 @@ a.button {
 }
 
 .overlay, .leftOverlay, .rightOverlay {
-    background-color:  #2b709e;
-    border: 1px solid #00436b;
-    color: #f2f2f2;
-   
+    background-color: black;
+    color: #eee;
 }
 
 .overlay .leftOverlay {

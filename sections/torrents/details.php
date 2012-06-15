@@ -85,7 +85,7 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
         
         if (count($Reports) > 0) {
             $Title = "This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report');
-            $DisplayName .= ' <span style="color: red; padding: 2px 4px 2px 4px;" title="'.$Title.'">Reported</span>';
+            $DisplayName .= ' <span style="color: #FF3030; padding: 2px 4px 2px 4px;" title="'.$Title.'">Reported</span>';
         }
 ?>
 <div class="details">

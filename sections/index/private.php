@@ -132,7 +132,7 @@ for($i = 0; $i < $Limit; $i++) {
 ?>
 			</ul>
 		</div>
-                <div class="head colhead_dark"><strong>Stats</strong></div>
+                <div class="head colhead_dark">Stats</div>
                 <div class="box">
 			<ul class="stats nobullet">
 <? if (USER_LIMIT>0) { ?>
@@ -225,7 +225,7 @@ $PeerCount = $SeederCount + $LeecherCount;
 				<li>Leechers: <?=number_format($LeecherCount) ?></li>
 				<li>Seeder/Leecher Ratio: <?=$Ratio?></li>
 			</ul>
-		</div>
+                </div>
 <?
 if(($TopicID = $Cache->get_value('polls_featured')) === false) {
 	$DB->query("SELECT TopicID FROM forums_polls ORDER BY Featured DESC LIMIT 1");
@@ -329,7 +329,7 @@ foreach ($News as $NewsItem) {
 	}
 ?>
 		<div class="head">
-			<strong><?=$Text->full_format($Title)?></strong> <span class="small"><?=time_diff($NewsTime);?></span>
+			<?=$Text->full_format($Title)?> <span class="small"><?=time_diff($NewsTime);?></span>
 <? if(check_perms('admin_manage_news')) {?>
 			- <a href="tools.php?action=editnews&amp;id=<?=$NewsID?>">[Edit]</a> 
 <? } ?>

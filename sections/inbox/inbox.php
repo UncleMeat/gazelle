@@ -15,7 +15,6 @@ list($Page,$Limit) = page_limit(MESSAGES_PER_PAGE);
 show_header('Inbox');
 ?>
 <div class="thin">
-	<h2><?= ($Section == 'sentbox') ? 'Sentbox' : 'Inbox' ?></h2>
 	<div class="linkbox">
 <?
 
@@ -92,6 +91,7 @@ echo $Pages;
 ?>
 	</div>
 
+    <div class="head"><?= ($Section == 'sentbox') ? 'Sentbox' : 'Inbox' ?></div>
 	<div class="box pad">
 <? if($DB->record_count()==0) { ?>
 	<h2>Your <?= ($Section == 'sentbox') ? 'sentbox' : 'inbox' ?> is currently empty</h2>

@@ -30,22 +30,6 @@ switch ($View) {
 		$ViewString = "All unanswered";
 		$WhereCondition = "WHERE (Level <= $UserLevel OR AssignedToUser='".$LoggedUser['ID']."') AND Status='Unanswered'";
 		break;
-        /*
-	default:
-		if ($UserLevel >= 600) {        // 700) {
-			$ViewString = "My unanswered";
-			//$WhereCondition = "WHERE ((Level >= ".max($Classes[MOD]['Level'],700)." AND Level <= $UserLevel) OR AssignedToUser='".$LoggedUser['ID']."') AND Status='Unanswered'";
-			$WhereCondition = "WHERE ((Level >= 600 AND Level <= $UserLevel) OR AssignedToUser='".$LoggedUser['ID']."') AND Status='Unanswered'";
-		} elseif ($UserLevel == 500) {        //650) {
-			// Forum Mods
-			$ViewString = "My Unanswered";
-			$WhereCondition = "WHERE (Level = $UserLevel OR AssignedToUser='".$LoggedUser['ID']."') AND Status='Unanswered'";
-		} else {
-			// FLS
-			$ViewString = "Unanswered";
-			$WhereCondition = "WHERE (Level <= $UserLevel OR AssignedToUser='".$LoggedUser['ID']."') AND Status='Unanswered'";
-		}
-		break; */
 }
 
 list($Page,$Limit) = page_limit(MESSAGES_PER_PAGE);
@@ -85,7 +69,6 @@ $Row = 'a';
 // Start page
 ?>
 <div class="thin">
-	<h2><?=$ViewString?> Staff PMs</h2>
 	<div class="linkbox">
 <? 	if ($IsStaff) { ?>
 		[ &nbsp;<a href="staffpm.php?view=my">My unanswered<?=$NumMy>0?" ($NumMy)":''?></a>&nbsp; ] &nbsp; 
@@ -98,6 +81,7 @@ $Row = 'a';
 		<br />
 		<?=$Pages?>
 	</div>
+	<div class="head"><?=$ViewString?> Staff PMs</div>    
 	<div class="box pad" id="inbox">
 <?
 
