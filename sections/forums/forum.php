@@ -69,15 +69,15 @@ if($LoggedUser['CustomForums'][$ForumID] != 1 && $Forums[$ForumID]['MinClassRead
 show_header('Forums > '. $Forums[$ForumID]['Name']);
 ?>
 <div class="thin">
-	<h2><a href="forums.php">Forums</a> &gt; <?=$Forums[$ForumID]['Name']?></h2>
 	<div class="linkbox">
 <? if(check_forumperm($ForumID, 'Write') && check_forumperm($ForumID, 'Create')){ ?>
 		[<a href="forums.php?action=new&amp;forumid=<?=$ForumID?>">New Thread</a>]
 <? } ?>
 		[<a href="#" onclick="$('#searchforum').toggle(); this.innerHTML = (this.innerHTML == 'Search this Forum'?'Hide Search':'Search this Forum'); return false;">Search this Forum</a>]
-		<div id="searchforum" class="hidden center">
+		<div id="searchforum" class="hidden">
 			<div style="display: inline-block;">
-				<h3>Search this forum:</h3>
+                            <br />
+				<div class="head">Search this forum</div>
 				<form action="forums.php" method="get">
 					<table cellpadding="6" cellspacing="1" border="0" class="border">	
 						<input type="hidden" name="action" value="search" />
@@ -125,6 +125,7 @@ $Pages=get_pages($Page,$Forums[$ForumID]['NumTopics'],TOPICS_PER_PAGE,9);
 echo $Pages;
 ?>
 	</div>
+        <div class="head"><a href="forums.php">Forums</a> &gt; <?=$Forums[$ForumID]['Name']?></div>
 	<table class="forum_list" width="100%">
 		<tr class="colhead">
 			<td style="width:2%;"></td>

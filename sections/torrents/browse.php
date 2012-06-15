@@ -352,185 +352,23 @@ show_header('Browse Torrents', 'browse,overlib,jquery,jquery.cookie');
 
 // List of pages  
 $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
+?>
 
- /* ?>
-
-<form name="filter" method="get" action=''>
+<form name="filter" method="get" action=''>  
     <div id="search_box" class="filter_torrents"> 
-        <h3>
-            Filter		
-            <? if ($AdvancedSearch) { ?>
-                (<a href="torrents.php?action=basic&amp;<?=get_url(array('action')); ?>">Basic Search</a>)
-            <? } else { ?>
-                (<a href="torrents.php?action=advanced&amp;<?= get_url(array('action')) ?>">Advanced Search</a>)
-            <? } ?>
-        </h3>
-        <div class="box pad">
-            <table>
-                <? if ($AdvancedSearch) { ?>
-                    <tr>
-                        <td colspan="3">
-                            The advanced search supports full boolean search, click <a href="articles.php?topic=search">here</a> for more information.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="label">Search Term:</td>
-                        <td colspan="3">
-                            <input type="text" spellcheck="false" size="40" name="searchtext" class="inputtext" title="Supports full boolean search" value="<? form('searchtext') ?>" />
-                            <input type="hidden" name="action" value="advanced" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="label">File List:</td>
-                        <td colspan="3">
-                            <input type="text" spellcheck="false" size="40" name="filelist" class="inputtext" value="<? form('filelist') ?>" />
-                        </td>
-                    </tr>
-                <? } else { // BASIC SEARCH ?>
-                    <tr>
-                        <td class="label">Search terms:</td>
-                        <td colspan="3">
-                            <input type="text" spellcheck="false" size="40" name="searchtext" class="inputtext" title="Use -word to exclude a word" value="<? form('searchtext') ?>" />
-                            <input type="radio" name="search_type" id="search_type0" value="0" <? selected('search_type', 0, 'checked') ?> /><label for="search_type0"> Any</label>&nbsp;&nbsp;
-                            <input type="radio" name="search_type" id="search_type1" value="1"  <? selected('search_type', 1, 'checked') ?> /><label for="search_type1"> All</label>
-                            <? if (!empty($LoggedUser['SearchType'])) { ?>
-                                <input type="hidden" name="action" value="basic" />
-                            <? } ?>
-                        </td>
-                    </tr>
-                <? } ?>
-                <? if ($AdvancedSearch) { ?>                    
-                <tr>                    
-                    <td class="label">Tags:</td>
-                    <td colspan="3">
-                        <input type="text" size="40" id="tags" name="taglist" class="inputtext" title="Supports full boolean search" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />&nbsp;					
-                    </td>
-                </tr>
-                <? } else { // BASIC SEARCH ?>
-                <tr>                    
-                    <td class="label">Tags:</td>
-                    <td colspan="3">
-                        <input type="text" size="40" id="tags" name="taglist" class="inputtext" title="Use -tag to exclude tag" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />&nbsp;					
-                        <input type="radio" name="tags_type" id="tags_type0" value="0" <? selected('tags_type', 0, 'checked') ?> /><label for="tags_type0"> Any</label>&nbsp;&nbsp;
-                        <input type="radio" name="tags_type" id="tags_type1" value="1"  <? selected('tags_type', 1, 'checked') ?> /><label for="tags_type1"> All</label>
-                    </td>
-                </tr>
-                <? } ?>
-                <tr>
-                    <td class="label">Order by:</td>
-                    <td colspan="<?= ($AdvancedSearch) ? '3' : '1' ?>">
-                        <select name="order_by" style="width:auto;">
-                            <option value="time"<? selected('order_by', 'time') ?>>Time added</option>
-                            <option value="size"<? selected('order_by', 'size') ?>>Size</option>
-                            <option value="snatched"<? selected('order_by', 'snatched') ?>>Snatched</option>
-                            <option value="seeders"<? selected('order_by', 'seeders') ?>>Seeders</option>
-                            <option value="leechers"<? selected('order_by', 'leechers') ?>>Leechers</option>
-                            <option value="random"<? selected('order_by', 'random') ?>>Random</option>
-                        </select>
-                        <select name="order_way">
-                            <option value="desc"<? selected('order_way', 'desc') ?>>Descending</option>
-                            <option value="asc" <? selected('order_way', 'asc') ?>>Ascending</option>
-                        </select>
-                    </td>
-                </tr>
-                <? if (check_perms('site_search_many')) { ?>
-                    <tr>
-                        <td class="label">Limited search results:</td>
-                        <td><input type="checkbox" value="1" name="limit_matches" <? selected('limit_matches', 1, 'checked') ?> /></td>
-                    </tr>
-                <? } ?>
-            </table>
-            <table class="cat_list">
-                <?
-                $x = 0;
-                reset($NewCategories);
-                foreach ($NewCategories as $Cat) {
-                    if ($x % 7 == 0) {
-                        if ($x > 0) {
-                            ?>
-                            </tr>
-                        <? } ?>
-                        <tr>
-                            <?
-                        }
-                        $x++;
-                        ?>
-                        <td>
-                            <input type="checkbox" name="filter_cat[<?= ($Cat['id']) ?>]" id="cat_<?= ($Cat['id']) ?>" value="1" <? if (isset($_GET['filter_cat'][$Cat['id']])) { ?>checked="checked"<? } ?>/>
-                            <label for="cat_<?= ($Cat['id']) ?>"><a href="torrents.php?filter_cat[<?=$Cat['id']?>]=1"><?= $Cat['name'] ?></a></label>
-                        </td>
-                    <? } ?>                           
-                    <td colspan="<?= 7 - ($x % 7) ?>"></td>
-                </tr>
-            </table>
-            <table class="cat_list <? if (empty($LoggedUser['ShowTags'])) { ?>hidden<? } ?>" id="taglist">
-                <tr>
-                    <?
-                    $GenreTags = $Cache->get_value('genre_tags');
-                    if (!$GenreTags) {
-                        $DB->query('SELECT Name FROM tags WHERE TagType=\'genre\' ORDER BY Name');
-                        $GenreTags = $DB->collect('Name');
-                        $Cache->cache_value('genre_tags', $GenreTags, 3600 * 6);
-                    }
-
-                    $x = 0;
-                    foreach ($GenreTags as $Tag) {
-                        ?>
-                        <td width="12.5%"><a href="#" onclick="add_tag('<?= $Tag ?>');return false;"><?= $Tag ?></a></td>
-                        <?
-                        $x++;
-                        if ($x % 7 == 0) {
-                            ?>
-                        </tr>
-                        <tr>
-                            <?
-                        }
-                    }
-                    if ($x % 7 != 0) { // Padding
-                        ?>
-                        <td colspan="<?= 7 - ($x % 7) ?>"> </td>
-                    <? } ?>
-                </tr>
-            </table>
-            <table class="cat_list" width="100%">
-                <tr>
-                    <td class="label">
-                        <a href="#" onclick="$('#taglist').toggle(); if(this.innerHTML=='(View Tags)'){this.innerHTML='(Hide Tags)';} else {this.innerHTML='(View Tags)';}; return false;"><?= (empty($LoggedUser['ShowTags'])) ? '(View Tags)' : '(Hide Tags)' ?></a>
-                    </td>
-                </tr>
-            </table>
-            <div class="submit">
-                <span style="float:left;"><?= number_format($TorrentCount) . ($TorrentCount < SPHINX_MAX_MATCHES && $TorrentCount == $MaxMatches ? '+' : '') ?> Results</span>
-                <input type="submit" value="Filter Torrents" />
-                <input type="button" value="Reset" onclick="location.href='torrents.php<? if (isset($_GET['action']) && $_GET['action'] == "advanced") { ?>?action=advanced<? } ?>'" />
-                &nbsp;&nbsp;
-                <? if (count($Queries) > 0 || count($SS->Filters) > 0) { ?>
-                    <input type="submit" name="setdefault" value="Make Default" />
-                    <?
-                }
-
-                if (!empty($LoggedUser['DefaultSearch'])) {
-                    ?>
-                    <input type="submit" name="cleardefault" value="Clear Default" />
-                <? } ?>
-            </div>
-        </div>
+    <div class="head">
+        Filter		
+        <? if ($AdvancedSearch) { ?>
+            (<a href="torrents.php?action=basic&amp;<?=get_url(array('action')); ?>">Basic Search</a>)
+        <? } else { ?>
+            (<a href="torrents.php?action=advanced&amp;<?= get_url(array('action')) ?>">Advanced Search</a>)
+        <? } ?>
     </div>
-</form> */ ?>
 
-<form name="filter" method="get" action=''>
-    <div id="search_box" class="filter_torrents"> 
-        <h3>
-            Filter		
-            <? if ($AdvancedSearch) { ?>
-                (<a href="torrents.php?action=basic&amp;<?=get_url(array('action')); ?>">Basic Search</a>)
-            <? } else { ?>
-                (<a href="torrents.php?action=advanced&amp;<?= get_url(array('action')) ?>">Advanced Search</a>)
-            <? } ?>
-        </h3>
         <div class="box pad">
             <table class="cat_list">
                 <?
+                $row = 'a';
                 $x = 0;
                 reset($NewCategories);
                 foreach ($NewCategories as $Cat) {
@@ -539,8 +377,9 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                             ?>
                             </tr>
                         <? } ?>
-                        <tr>
+                        <tr class="row<?=$row?>">
                             <?
+                            $row = $row == 'a' ? 'b' : 'a';
                         }
                         $x++;
                         ?>
@@ -719,7 +558,7 @@ if (count($Results) == 0) {
 $Bookmarks = all_bookmarks('torrent');
 ?>
 
-
+ <div class="head">Torrents</div>
 <table class="torrent_table grouping" id="torrent_table">
     <tr class="colhead">
         <td class="small cats_col"></td>
@@ -734,7 +573,7 @@ $Bookmarks = all_bookmarks('torrent');
     </tr>
     <?
 // Start printing torrent list
-$row='b';
+$row='a';
     foreach ($Results as $GroupID => $Data) {   
         list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, $NewCategoryID, $SearchText, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 
@@ -802,7 +641,7 @@ $row='b';
                     var overlay<?=$GroupID?> = <?=json_encode($Overlay)?>
                 </script>
                 
-                <a href="torrents.php?id=<?=$GroupID?>"  onmouseover="return overlib(overlay<?=$GroupID?>, FULLHTML);" onmouseout="return nd();"><?=$GroupName?></a> <?=$AddExtra?>
+                <a href="torrents.php?id=<?=$GroupID?>" onmouseover="return overlib(overlay<?=$GroupID?>, FULLHTML);" onmouseout="return nd();"><?=$GroupName?></a> <?=$AddExtra?>
                 <br />
                 <div class="tags">
     <?= $TorrentTags ?>

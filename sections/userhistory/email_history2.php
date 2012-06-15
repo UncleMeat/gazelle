@@ -153,13 +153,8 @@ if ($Old) {
 
 // Start page with current email
 ?>
-<h2>Email history for <a href="user.php?id=<?=$UserID ?>"><?=$Username ?></a></h2>
 <div class="thin">
-	<br />
-	<div class="center">
-		<a href="userhistory.php?action=email&userid=<?=$UserID?>"><strong>Old email history</strong></a>
-	</div>
-	<br />
+        <div class="head">Old email history for <a href="user.php?id=<?=$UserID ?>"><?=$Username ?></a></div>
 	<table width="100%">
 		<tr class="colhead">
 			<td>Current email</td>

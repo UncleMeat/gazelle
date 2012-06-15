@@ -288,7 +288,7 @@ if(check_perms('admin_reports')) {
 			<li id="nav_irc"><a href="chat.php">IRC</a></li>
 			<li id="nav_top10"><a href="top10.php">Top 10</a></li>
 			<li id="nav_rules"><a href="articles.php?topic=rules">Rules</a></li>
-                        <li id="nav_rules"><a href="articles.php?topic=tutorials">Tutorials</a></li>
+                        <li id="nav_rules"><a href="articles.php?topic=tutorials">Help</a></li>
 			<li id="nav_staff"><a href="staff.php">Staff</a></li>
 		</ul>
 	</div>
@@ -418,28 +418,31 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 
             <div id="minor_stats">
                 <ul id="userinfo_minor">
-                      <li id="nav_inbox"<?=$NewMessages ? ' class="highlight"' : ''?>><a onmousedown="Stats('inbox');" href="inbox.php">Inbox<?=$NewMessages ? "($NewMessages)" : ''?></a></li>
-                      <li id="nav_staffmessages"<?=$NewStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffpm');" href="staffpm.php?action=user_inbox">Staff Messages<?=$NewStaffPMs ? "($NewStaffPMs)" : ''?></a></li>
-    <? if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {  ?>
-                      <li id="nav_staffinbox"<?=$NumStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffinbox');" href="staffpm.php?action=staff_inbox">Staff Inbox<?=$NumStaffPMs ? "($NumStaffPMs)" : ''?></a></li>
+    <? if ( $LoggedUser['SupportFor'] ="" && $LoggedUser['DisplayStaff'] != 1 ) {  ?>
+                      <li id="nav_staffmessages"<?=$NewStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffpm');" href="staffpm.php?action=user_inbox">Message Staff<?=$NewStaffPMs ? "($NewStaffPMs)" : ''?></a></li>                      
     <? }  ?>
-                      <li id="nav_uploaded"><a onmousedown="Stats('uploads');" href="torrents.php?type=uploaded&amp;userid=<?=$LoggedUser['ID']?>">Uploads</a></li>
-                      <li id="nav_bookmarks"><a onmousedown="Stats('bookmarks');" href="bookmarks.php?type=torrents">Bookmarks</a></li>
-    <? if (check_perms('site_torrents_notify')) { ?>
-                      <li id="nav_notifications"<?=($NewNotifications ? ' class="highlight"' : '')?>><a onmousedown="Stats('notifications');" href="user.php?action=notify">Notifications<?=$NewNotifications ? "($NewNotifications)" : ''?></a></li>
-    <? }  ?>
-                      <li id="nav_subscriptions"<?=($NewSubscriptions ? ' class="highlight"' : '')?>><a onmousedown="Stats('subscriptions');" href="userhistory.php?action=subscriptions"<?=($NewSubscriptions ? ' class="new-subscriptions"' : '')?>>Subscriptions<?=$NewSubscriptions ? "($NewSubscriptions)" : ''?></a></li>
-                      <li id="nav_comments"><a onmousedown="Stats('comments');" href="comments.php">Comments</a></li>
-                      <li id="nav_friends"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>
-                      <li id="nav_logs"><a onmousedown="Stats('logs');" href="log.php">Logs</a></li>
-                      <li id="nav_bonus"><a onmousedown="Stats('bonus');" href="bonus.php">Bonus</a></li>
-                      <li id="nav_bonus"><a onmousedown="Stats('sandbox');" href="sandbox.php">Sandbox</a></li>
-                      <li id="nav_bonus"><a onmousedown="Stats('conncheck');" href="user.php?action=connchecker">Conn-Checker</a></li>
                 </ul>
             </div>
             <div id="major_stats">
                 <ul id="userinfo_major">
                       <li id="nav_upload" class="brackets"><a href="upload.php">Upload</a></li>
+                      <li id="nav_donate" class="brackets"><a href="donate.php">Donate</a></li>
+                </ul>
+                <ul id="userinfo_username">
+                      <li id="nav_userinfo"><a href="user.php?id=<?=$LoggedUser['ID']?>" class="username"><?=$LoggedUser['Username']?></a>
+                          <ul>
+                                <li id="nav_inbox"<?=$NewMessages ? ' class="highlight"' : ''?>><a onmousedown="Stats('inbox');" href="inbox.php">Inbox<?=$NewMessages ? "($NewMessages)" : ''?></a></li>
+                                <li id="nav_uploaded"><a onmousedown="Stats('uploads');" href="torrents.php?type=uploaded&amp;userid=<?=$LoggedUser['ID']?>">Uploads</a></li>
+                                <li id="nav_bookmarks"><a onmousedown="Stats('bookmarks');" href="bookmarks.php?type=torrents">Bookmarks</a></li>
+<? if (check_perms('site_torrents_notify')) { ?>
+                                <li id="nav_notifications"<?=($NewNotifications ? ' class="highlight"' : '')?>><a onmousedown="Stats('notifications');" href="user.php?action=notify">Notifications<?=$NewNotifications ? "($NewNotifications)" : ''?></a></li>
+<? } ?>
+                                <li id="nav_subscriptions"<?=($NewSubscriptions ? ' class="highlight"' : '')?>><a onmousedown="Stats('subscriptions');" href="userhistory.php?action=subscriptions"<?=($NewSubscriptions ? ' class="new-subscriptions"' : '')?>>Subscriptions<?=$NewSubscriptions ? "($NewSubscriptions)" : ''?></a></li>
+                                <li id="nav_comments"><a onmousedown="Stats('comments');" href="comments.php">Comments</a></li>
+                                <li id="nav_friends"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>
+                                <li id="nav_logs"><a onmousedown="Stats('logs');" href="log.php">Logs</a></li>
+                                <li id="nav_bonus"><a onmousedown="Stats('bonus');" href="bonus.php">Bonus</a></li>
+                                <li id="nav_bonus"><a onmousedown="Stats('sandbox');" href="sandbox.php">Sandbox</a></li>
     <?
     if(check_perms('site_send_unlimited_invites')) {
           $Invites = ' (∞)';
@@ -449,15 +452,15 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
           $Invites = '';
     }
     ?>
-                      <li id="nav_invite" class="brackets"><a href="user.php?action=invite">Invite<?=$Invites?></a></li>
-                      <li id="nav_donate" class="brackets"><a href="donate.php">Donate</a></li>
-                </ul>
-                <ul id="userinfo_username">
-                      <li id="nav_userinfo"><a href="user.php?id=<?=$LoggedUser['ID']?>" class="username"><?=$LoggedUser['Username']?></a></li>
+                                <li id="nav_invite" class="brackets"><a href="user.php?action=invite">Invite<?=$Invites?></a></li>
+                                <li id="nav_bonus"><a onmousedown="Stats('conncheck');" href="user.php?action=connchecker">Conn-Checker</a></li>                                    
+                          </ul>
+                      </li>
                       <li id="nav_useredit" class="brackets"><a href="user.php?action=edit&amp;userid=<?=$LoggedUser['ID']?>">Edit</a></li>
                       <li id="nav_logout" class="brackets"><a href="logout.php?auth=<?=$LoggedUser['AuthKey']?>">Logout</a></li>
                 </ul>
             </div>
     </div>
 </div>
+
 <div id="content">

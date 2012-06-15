@@ -79,37 +79,39 @@ if(check_perms('admin_manage_blog')) {
                     <div id="contentpreview" style="text-align:left;"></div>
                 </div>  
             </div>
-		<div class="box thin">
-			<div class="head">
-				<?=((empty($_GET['action'])) ? 'Create a blog post' : 'Edit blog post')?>
-			</div>
-			<form  id="quickpostform" action="blog.php" method="post">
-				<div class="pad">
-				 <div id="quickreplytext">
-                                <input type="hidden" name="action" value="<?=((empty($_GET['action'])) ? 'takenewblog' : 'takeeditblog')?>" />
-					<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-	<? if(!empty($_GET['action']) && $_GET['action'] == 'editblog'){?> 
-					<input type="hidden" name="blogid" value="<?=$BlogID; ?>" />
-	<? }?> 
-					<h3>Title</h3>
-					<input type="text" name="title" class="long"  <? if(!empty($Title)) { echo 'value="'.display_str($Title).'"'; } ?> /><br />
-					<h3>Body</h3>
-                           <? $Text->display_bbcode_assistant('textbody', true)  ?>
-					<textarea id="textbody" name="body" class="long" rows="15"><? if(!empty($Body)) { echo display_str($Body); } ?></textarea> <br />
-					<h3>Thread ID</h3>
-					<input type="text" name="thread" size="8"<? if(!empty($ThreadID)) { echo 'value="'.display_str($ThreadID).'"'; } ?> />
-					(Leave blank to create thread automatically)
-					<br /><br />
-					<input id="subscribebox" type="checkbox" name="subscribe"<?=!empty($HeavyInfo['AutoSubscribe'])?' checked="checked"':''?> tabindex="2" />
-					<label for="subscribebox">Subscribe</label>
-                         </div>
-					<div class="center">
-						<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit_Blog();}else{Quick_Preview_Blog();}" />
-                                    <input type="submit" value="<?=((!isset($_GET['action'])) ? 'Create blog post' : 'Edit blog post') ?>" />
-					</div>
-				</div>
-			</form>
-		</div>
+                <div class="thin">
+                        <div class="head">
+                                <?=((empty($_GET['action'])) ? 'Create a blog post' : 'Edit blog post')?>
+                        </div>
+                    <div class="box">
+                            <form  id="quickpostform" action="blog.php" method="post">
+                                    <div class="pad">
+                                    <div id="quickreplytext">
+                                    <input type="hidden" name="action" value="<?=((empty($_GET['action'])) ? 'takenewblog' : 'takeeditblog')?>" />
+                                            <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+            <? if(!empty($_GET['action']) && $_GET['action'] == 'editblog'){?> 
+                                            <input type="hidden" name="blogid" value="<?=$BlogID; ?>" />
+            <? }?> 
+                                            <h3>Title</h3>
+                                            <input type="text" name="title" class="long"  <? if(!empty($Title)) { echo 'value="'.display_str($Title).'"'; } ?> /><br />
+                                            <h3>Body</h3>
+                            <? $Text->display_bbcode_assistant('textbody', true)  ?>
+                                            <textarea id="textbody" name="body" class="long" rows="15"><? if(!empty($Body)) { echo display_str($Body); } ?></textarea> <br />
+                                            <h3>Thread ID</h3>
+                                            <input type="text" name="thread" size="8"<? if(!empty($ThreadID)) { echo 'value="'.display_str($ThreadID).'"'; } ?> />
+                                            (Leave blank to create thread automatically)
+                                            <br /><br />
+                                            <input id="subscribebox" type="checkbox" name="subscribe"<?=!empty($HeavyInfo['AutoSubscribe'])?' checked="checked"':''?> tabindex="2" />
+                                            <label for="subscribebox">Subscribe</label>
+                            </div>
+                                            <div class="center">
+                                                    <input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit_Blog();}else{Quick_Preview_Blog();}" />
+                                        <input type="submit" value="<?=((!isset($_GET['action'])) ? 'Create blog post' : 'Edit blog post') ?>" />
+                                            </div>
+                                    </div>
+                            </form>
+                    </div>
+                </div>
 		<br />
 <? 
 }
@@ -134,14 +136,14 @@ if (!$Blog = $Cache->get_value('blog')) {
 foreach ($Blog as $BlogItem) {
 	list($BlogID, $Author, $Title, $Body, $BlogTime, $ThreadID) = $BlogItem;
 ?>
+                        <div class="head">
+                                <strong><?=$Title?></strong> - posted <?=time_diff($BlogTime);?> by <?=$Author?>
+        <? if(check_perms('admin_manage_blog')) { ?> 
+                                - <a href="blog.php?action=editblog&amp;id=<?=$BlogID?>">[Edit]</a>
+                                <a href="blog.php?action=deleteblog&amp;id=<?=$BlogID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">[Delete]</a>
+            <? } ?>
+                        </div>
 			<div id="blog<?=$BlogID?>" class="box">
-				<div class="head">
-					<strong><?=$Title?></strong> - posted <?=time_diff($BlogTime);?> by <?=$Author?>
-		<? if(check_perms('admin_manage_blog')) { ?> 
-					- <a href="blog.php?action=editblog&amp;id=<?=$BlogID?>">[Edit]</a>
-					<a href="blog.php?action=deleteblog&amp;id=<?=$BlogID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">[Delete]</a>
-		 <? } ?>
-				</div>
 				<div class="pad">
 					<?=$Text->full_format($Body, true)?>
 		<? if($ThreadID) { ?>

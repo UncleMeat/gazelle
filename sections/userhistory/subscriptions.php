@@ -90,8 +90,6 @@ if($NumResults > $PerPage*($Page-1)) {
 }
 ?>
 <div class="thin">
-	<h2><?='Subscribed topics'.($ShowUnread?' with unread posts':'')?></h2>
-
 	<div class="linkbox">
 <?
 if(!$ShowUnread) {
@@ -141,6 +139,8 @@ foreach($Posts as $Post){
           list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
       
 ?>
+	<div class="head"><?='Subscribed topics'.($ShowUnread?' with unread posts':'')?></div>
+    
 	<table class='forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>'>
 		<tr class='colhead_dark'>
 			<td colspan="2">

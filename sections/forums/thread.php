@@ -133,11 +133,6 @@ if(in_array($ThreadID, $UserSubscriptions)) {
 show_header('Forums'.' > '.$Forums[$ForumID]['Name'].' > '.$ThreadInfo['Title'],'comments,subscriptions,bbcode,jquery');
 ?>
 <div class="thin">
-	<h2>
-		<a href="forums.php">Forums</a> &gt;
-		<a href="forums.php?action=viewforum&amp;forumid=<?=$ThreadInfo['ForumID']?>"><?=$Forums[$ForumID]['Name']?></a> &gt;
-		<?=display_str($ThreadInfo['Title'])?>
-	</h2>
 	<div class="linkbox">
 		<div class="center">
 			<a href="reports.php?action=report&amp;type=thread&amp;id=<?=$ThreadID?>">[Report Thread]</a>
@@ -146,7 +141,8 @@ show_header('Forums'.' > '.$Forums[$ForumID]['Name'].' > '.$ThreadInfo['Title'],
 		</div>
 		<div id="searchthread" class="hidden center">
 			<div style="display: inline-block;">
-				<h3>Search this thread:</h3>
+                            <br />
+				<div class="head">Search this thread:</div>
 				<form action="forums.php" method="get">
 					<table cellpadding="6" cellspacing="1" border="0" class="border">	
 						<input type="hidden" name="action" value="search" />
@@ -163,11 +159,18 @@ show_header('Forums'.' > '.$Forums[$ForumID]['Name'].' > '.$ThreadInfo['Title'],
 				<br />
 			</div>
 		</div>
+            
 <?
 $Pages=get_pages($Page,$ThreadInfo['Posts'],$PerPage,9);
 echo $Pages;
 ?>
-	</div>
+</div>
+<div class="head">
+    <a href="forums.php">Forums</a> &gt;
+    <a href="forums.php?action=viewforum&amp;forumid=<?=$ThreadInfo['ForumID']?>"><?=$Forums[$ForumID]['Name']?></a> &gt;
+    <?=display_str($ThreadInfo['Title'])?>
+</div>
+
 <?
 if ($ThreadInfo['NoPoll'] == 0) {
 	if (!list($Question,$Answers,$Votes,$Featured,$Closed) = $Cache->get_value('polls_'.$ThreadID)) {
@@ -211,7 +214,7 @@ if ($ThreadInfo['NoPoll'] == 0) {
 		}
 	}
 
-?>
+?>        
 	<div class="box thin clear">
 		<div class="head colhead_dark"><strong>Poll<? if ($Closed) { echo ' [Closed]'; } ?><? if ($Featured && $Featured !== '0000-00-00 00:00:00') { echo ' [Featured]'; } ?></strong> <a href="#" onclick="$('#threadpoll').toggle();log_hit();return false;">(View)</a></div>
 		<div class="pad<? if (/*$LastRead !== null || */$ThreadInfo['IsLocked']) { echo ' hidden'; } ?>" id="threadpoll">
@@ -382,7 +385,7 @@ foreach($Thread as $Key => $Post){
 	}
 ?>
 <table class="forum_post box vertical_margin<? if (((!$ThreadInfo['IsLocked'] || $ThreadInfo['IsSticky']) && $PostID>$LastRead && strtotime($AddedTime)>$LoggedUser['CatchupTime']) || (isset($RequestKey) && $Key==$RequestKey)) { echo ' forum_unread'; } if($HeavyInfo['DisableAvatars']) { echo ' noavatar'; } ?>" id="post<?=$PostID?>">
-	<tr class="colhead_dark">
+	<tr class="smallhead">
 		<td colspan="2">
 			<span style="float:left;"><a class="post_id" href='forums.php?action=viewthread&amp;threadid=<?=$ThreadID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>'>#<?=$PostID?></a>
 				<?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, $UserTitle, true)?>
@@ -417,7 +420,7 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
 	</tr>
 	<tr>
 <? if(empty($HeavyInfo['DisableAvatars'])) {   ?>
-          <td class="avatar" valign="top" rowspan="2">
+          <td class="avatar" valign="top" <?=(empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength > 0) && !empty($Signature)) ? 'rowspan="2"' : ''?>>
 	<? if ($Avatar) { ?>
 			<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$Username ?>'s avatar" />
 	<? } else { ?>
@@ -430,12 +433,12 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
 <?                  print_badges_array($UserBadges);  ?>
                </div>
 <?      }      ?>
-            </td>
+           </td>
 <? }
 $AllowTags= isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues['site_advanced_tags'];
 ?>
 		<td class="postbody" valign="top"<? if(!empty($HeavyInfo['DisableAvatars'])) { echo ' colspan="2"'; } ?>>
-			<div id="content<?=$PostID?>" class="post_container">
+                    <div id="content<?=$PostID?>" class="post_container">
                       <div class="post_content"><?=$Text->full_format($Body, $AllowTags) ?> </div>
        
                       
@@ -449,7 +452,7 @@ $AllowTags= isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues
                             </span>
                         </div>
         <? }   ?>  
-			</div>
+                    </div>
 		</td>
 	</tr>
 <? 
@@ -477,7 +480,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 	//TODO: Preview, come up with a standard, make it look like post or just a block of formatted bbcode, but decide and write some proper html
 ?>
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
-                  <h3>Post reply</h3>
+                  <div class="head">Post reply</div>
 			<div class="box pad">
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
 					<tr class="colhead_dark">
@@ -539,7 +542,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 if(check_perms('site_moderate_forums')) {
 ?>
 	<br />
-	<h3>Edit thread</h3>
+	<div class="head">Edit thread</div>
 	<form action="forums.php" method="post">
 		<div>
 		<input type="hidden" name="action" value="mod_thread" />

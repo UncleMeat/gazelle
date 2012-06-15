@@ -36,11 +36,14 @@ if(count($UserIDs)>0) {
 
 
 ?>
-<h4>Downloadlist</h4>
+
 <? if($NumResults>100) { ?>
 <div class="linkbox"><?=js_pages('show_downloads', $_GET['torrentid'], $NumResults, $Page)?></div>
 <? } ?>
 <table>
+        <tr class="smallhead">
+                <td colspan="4">Downloadlist</td>
+        </tr>
 	<tr class="colhead_dark" style="font-weight: bold;">
 		<td>User</td>
 		<td>Time</td>

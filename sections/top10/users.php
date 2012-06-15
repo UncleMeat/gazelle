@@ -99,12 +99,12 @@ exit;
 function generate_user_table($Caption, $Tag, $Details, $Limit) {
 	global $Time;
 ?>
-	<h3>Top <?=$Limit.' '.$Caption;?>
+	<div class="head">Top <?=$Limit.' '.$Caption;?>
 		<small>
 			- [<a href="top10.php?type=users&amp;limit=100&amp;details=<?=$Tag?>">Top 100</a>]
 			- [<a href="top10.php?type=users&amp;limit=250&amp;details=<?=$Tag?>">Top 250</a>]
 		</small>
-	</h3>
+	</div>
 	<table class="border">
 	<tr class="colhead">
 		<td class="center">Rank</td>
@@ -132,7 +132,7 @@ function generate_user_table($Caption, $Tag, $Details, $Limit) {
 	$Rank = 0;
 	foreach($Details as $Detail) {
 		$Rank++;
-		$Highlight = ($Rank%2 ? 'a' : 'b');
+		$Highlight = ($Rank%2 ? 'b' : 'a');
 ?>
 	<tr class="row<?=$Highlight?>">
 		<td class="center"><?=$Rank?></td>

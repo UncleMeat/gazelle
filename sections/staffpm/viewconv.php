@@ -74,12 +74,12 @@ if ($ConvID = (int)$_GET['id']) {
 
 		}
 ?>
-		<div class="box vertical_space">
-			<div class="head">
-					<?=$UserString?>
-				<?=time_diff($SentDate, 2, true)?>
+                <div class="head">
+                                <?=$UserString?>
+                        <span class="small"><?=time_diff($SentDate, 2, true)?></span>
 
-			</div>
+                </div>
+		<div class="box vertical_space">
 			<div class="body"><?=$Text->full_format($Message, get_permissions_advtags($UserID))?></div>
 		</div>
 		<div align="center" style="display: none"></div>

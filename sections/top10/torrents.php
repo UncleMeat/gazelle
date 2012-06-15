@@ -226,26 +226,26 @@ show_footer();
 function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 	global $LoggedUser, $NewCategories, $Debug;
 ?>
-		<h3>Top <?=$Limit.' '.$Caption?>
+		<div class="head">Top <?=$Limit.' '.$Caption?>
 <?	if(empty($_GET['advanced'])){ ?> 
 		<small>
 			- [<a href="top10.php?type=torrents&amp;limit=100&amp;details=<?=$Tag?>">Top 100</a>]
 			- [<a href="top10.php?type=torrents&amp;limit=250&amp;details=<?=$Tag?>">Top 250</a>]
 		</small>
 <?	} ?> 
-		</h3>
+		</div>
 	<table class="border torrent_table">
 	<tr class="colhead">
 		<td class="center" style="width:15px;"></td>
 		<td style="width:32px;"></td>
-		<td><strong>Name</strong></td>
-		<td class="top10 statlong"><strong>Data</strong></td>
-		<td class="top10 statlong"><strong>Size</strong></td>
+		<td>Name</td>
+		<td class="top10 statlong">Data</td>
+		<td class="top10 statlong">Size</td>
 		<td class="top10 stat"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
 		<td class="top10 stat"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>
 		<td class="top10 stat"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/leechers.png" alt="Leechers" title="Leechers" /></td>
-		<td class="top10 stat"><strong>Peers</strong></td>
-		<td class="top10 statname"><strong>Uploader</strong></td>
+		<td class="top10 stat">Peers</td>
+		<td class="top10 statname">Uploader</td>
 	</tr>
 <?
 	// in the unlikely event that query finds 0 rows...
@@ -270,7 +270,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 			$Snatched,$Seeders,$Leechers,$Data,$Size,$UploaderID,$UploaderName) = $Detail;
 		// highlight every other row
 		$Rank++;
-		$Highlight = ($Rank % 2 ? 'a' : 'b');
+		$Highlight = ($Rank % 2 ? 'b' : 'a');
 
 		// generate torrent's title
 		$DisplayName = "<a href='torrents.php?id=$GroupID&amp;torrentid=$TorrentID'  title='View Torrent'>$GroupName</a>";
@@ -313,7 +313,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 <?
 	}
 ?>
-	</table>
+	</table><br />
 <?
 }
 ?>

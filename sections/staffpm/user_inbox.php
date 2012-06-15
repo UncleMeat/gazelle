@@ -30,7 +30,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 
 ?>
 <div class="thin">
-	<h2>Staff PMs</h2>
+	<div class="head">Staff PMs</div>
 	<div class="box pad">
           <div class="linkbox">
                 <a href="#" onClick="jQuery('#compose').slideToggle('slow');">[Compose New]</a>

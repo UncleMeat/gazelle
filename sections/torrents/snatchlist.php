@@ -23,13 +23,15 @@ $DB->query("SELECT FOUND_ROWS()");
 list($NumResults) = $DB->next_record();
 
 ?>
-<h4>Snatches</h4>
 
 <? if($NumResults>100) { ?>
 <div class="linkbox"><?=js_pages('show_snatches', $_GET['torrentid'], $NumResults, $Page)?></div>
 <? } ?>
 
 <table>
+        <tr class="smallhead">
+                <td colspan="4">Snatches</td>
+        </tr>    
 	<tr class="colhead_dark" style="font-weight: bold;">
 		<td>User</td>
 		<td>Time</td>

@@ -38,8 +38,8 @@ show_header('News','bbcode');
 	}
 	if(is_number($FeaturedAlbum['GroupID'])) {
 ?>
+                <div class="head colhead_dark"><strong>Featured Torrent</strong></div>
 		<div class="box">
-			<div class="head colhead_dark"><strong>Featured Torrent</strong></div>
 			<div class="center pad"><a href="torrents.php?id=<?=$FeaturedAlbum['GroupID']?>"><?=$FeaturedAlbum['Name']?></a></div>
 			<div class="center"><a href="torrents.php?id=<?=$FeaturedAlbum['GroupID']?>" title="<?=$FeaturedAlbum['Name']?>"><img src="<?=$FeaturedAlbum['Image']?>" alt="<?=$FeaturedAlbum['Name']?>" width="100%" /></a></div>
 			<div class="center pad"><a href="forums.php?action=viewthread&amp;threadid=<?=$FeaturedAlbum['ThreadID']?>"><em>Read the interview with the band, discuss here</em></a></div>
@@ -49,8 +49,9 @@ show_header('News','bbcode');
 	if (check_perms('users_mod')) {
 ?>
 
+                <div class="head colhead_dark"><a href="staffblog.php">Latest staff blog posts</a></div>
 		<div class="box">
-			<div class="head colhead_dark"><strong><a href="staffblog.php">Latest staff blog posts</a></strong></div>
+			
 <?
 if(($Blog = $Cache->get_value('staff_blog')) === false) {
 	$DB->query("SELECT
@@ -94,8 +95,9 @@ for($i = 0; $i < $Limit; $i++) {
 			</ul>
 		</div>
 <?	}  ?>
+                <div class="head colhead_dark"><a href="blog.php">Latest blog posts</a></div>
 		<div class="box">
-			<div class="head colhead_dark"><strong><a href="blog.php">Latest blog posts</a></strong></div>
+			
 <?
 if(($Blog = $Cache->get_value('blog')) === false) {
 	$DB->query("SELECT
@@ -130,8 +132,8 @@ for($i = 0; $i < $Limit; $i++) {
 ?>
 			</ul>
 		</div>
-		<div class="box">
-			<div class="head colhead_dark"><strong>Stats</strong></div>
+                <div class="head colhead_dark">Stats</div>
+                <div class="box">
 			<ul class="stats nobullet">
 <? if (USER_LIMIT>0) { ?>
 				<li>Maximum Users: <?=number_format(USER_LIMIT) ?></li>
@@ -223,7 +225,7 @@ $PeerCount = $SeederCount + $LeecherCount;
 				<li>Leechers: <?=number_format($LeecherCount) ?></li>
 				<li>Seeder/Leecher Ratio: <?=$Ratio?></li>
 			</ul>
-		</div>
+                </div>
 <?
 if(($TopicID = $Cache->get_value('polls_featured')) === false) {
 	$DB->query("SELECT TopicID FROM forums_polls ORDER BY Featured DESC LIMIT 1");
@@ -269,8 +271,8 @@ if($TopicID) {
 	}
 	
 ?>
+                <div class="head colhead_dark"><strong>Poll<? if ($Closed) { echo ' ['.'Closed'.']'; } ?></strong></div>
 		<div class="box">
-			<div class="head colhead_dark"><strong>Poll<? if ($Closed) { echo ' ['.'Closed'.']'; } ?></strong></div>
 			<div class="pad">
 				<p><strong><?=display_str($Question)?></strong></p>
 <?	if ($UserResponse !== null || $Closed) { ?>
@@ -326,14 +328,14 @@ foreach ($News as $NewsItem) {
 		continue;
 	}
 ?>
-		<div id="news<?=$NewsID?>" class="box">
-			<div class="head">
-				<strong><?=$Text->full_format($Title)?></strong> <?=time_diff($NewsTime);?>
+		<div class="head">
+			<?=$Text->full_format($Title)?> <span class="small"><?=time_diff($NewsTime);?></span>
 <? if(check_perms('admin_manage_news')) {?>
-				- <a href="tools.php?action=editnews&amp;id=<?=$NewsID?>">[Edit]</a> 
+			- <a href="tools.php?action=editnews&amp;id=<?=$NewsID?>">[Edit]</a> 
 <? } ?>
 			</div>
-			<div class="pad"><?=$Text->full_format($Body, true)?></div>
+                 <div id="news<?=$NewsID?>" class="box">
+                    <div class="pad"><?=$Text->full_format($Body, true)?></div>
 		</div>
 <?
 	if (++$Count > 4) {
@@ -341,11 +343,9 @@ foreach ($News as $NewsItem) {
 	}
 }
 ?>
-		<div id="more_news" class="box">
-			<div class="head">
-				<em>For older news posts, <a href="forums.php?action=viewforum&amp;forumid=19">click here</a></em>
-			</div>
-		</div>
+                <div class="head">
+                        <em>For older news posts, <a href="forums.php?action=viewforum&amp;forumid=19">click here</a></em>
+                </div>
 	</div>
 </div>
 <?
@@ -375,8 +375,8 @@ function contest() {
 
 ?>
 <!-- Contest Section -->
+		<div class="head colhead_dark"><strong>Quality time scoreboard</strong></div>
 		<div class="box">
-			<div class="head colhead_dark"><strong>Quality time scoreboard</strong></div>
 			<div class="pad">
 				<ol style="padding-left:5px;">
 <?
