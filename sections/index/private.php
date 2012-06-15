@@ -49,7 +49,7 @@ show_header('News','bbcode');
 	if (check_perms('users_mod')) {
 ?>
 
-                <div class="head colhead_dark"><strong><a href="staffblog.php">Latest staff blog posts</a></strong></div>
+                <div class="head colhead_dark"><a href="staffblog.php">Latest staff blog posts</a></div>
 		<div class="box">
 			
 <?
@@ -95,7 +95,7 @@ for($i = 0; $i < $Limit; $i++) {
 			</ul>
 		</div>
 <?	}  ?>
-                <div class="head colhead_dark"><strong><a href="blog.php">Latest blog posts</a></strong></div>
+                <div class="head colhead_dark"><a href="blog.php">Latest blog posts</a></div>
 		<div class="box">
 			
 <?

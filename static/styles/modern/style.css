@@ -271,7 +271,34 @@ span.infinity {
 #userinfo_username { 
     display:inline;
     font-size: 0.8em;
+    position: relative;
 } 
+
+#userinfo_username li ul a {
+    display: block; 
+}
+
+#userinfo_username li:hover ul {
+    display: block; 
+}
+
+#userinfo_username li ul {
+    list-style: none;
+    display: none;
+    position: absolute;
+    top: 15px;
+    left: 0px;
+    background-color: #00436b;
+}
+
+#userinfo_username li ul li a {
+    padding: 3px 6px 3px 6px;
+}
+
+#userinfo_username li ul li a:hover {
+    background-color: white;
+    color: #00436b;
+}
 
 #userinfo_major {
     display:inline;

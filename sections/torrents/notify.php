@@ -52,10 +52,10 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 
 
 ?>
-<h2>Latest notifications <a href="torrents.php?action=notify_clear&amp;auth=<?=$LoggedUser['AuthKey']?>">(clear all)</a> <a href="javascript:SuperGroupClear()">(clear selected)</a> <a href="user.php?action=notify">(edit filters)</a></h2>
 <div class="linkbox">
 	<?=$Pages?>
 </div>
+<div class="head">Latest notifications <a href="torrents.php?action=notify_clear&amp;auth=<?=$LoggedUser['AuthKey']?>">(clear all)</a> <a href="javascript:SuperGroupClear()">(clear selected)</a> <a href="user.php?action=notify">(edit filters)</a></div>
 <? if($DB->record_count()==0) { ?>
 <table class="border">
 	<tr class="rowb">

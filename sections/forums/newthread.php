@@ -24,7 +24,6 @@ if(!check_forumperm($ForumID, 'Write') || !check_forumperm($ForumID, 'Create')) 
 show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode,jquery');
 ?>
 <div class="thin">
-	<h2><a href="forums.php">Forums</a> &gt; <a href="forums.php?action=viewforum&amp;forumid=<?=$ForumID?>"><?=$Forum['Name']?></a> &gt; <span id="newthreadtitle">New Topic</span></h2>
 	<div class="hidden" id="newthreadpreview">
 		<div class="linkbox">
 			<div class="center">
@@ -72,8 +71,9 @@ show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode,jquery');
 			</tr>
 		</table>
 	</div>
-	<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
-      <div class="box pad">
+        <div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
+	<div class="head"><a href="forums.php">Forums</a> &gt; <a href="forums.php?action=viewforum&amp;forumid=<?=$ForumID?>"><?=$Forum['Name']?></a> &gt; <span id="newthreadtitle">New Topic</span></div>
+        <div class="box pad">
 		<form action="" id="newthreadform" method="post" onsubmit="return Validate_Form('message',new Array('title','posttext'))">
 			<input type="hidden" name="action" value="new" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />

@@ -32,14 +32,14 @@ $ThreadIDs = $DB->collect('ThreadID');
 
 show_header();
 ?>
-<div class="thin box pad">
-	<h2>
+<div class="thin">
+	<div class="head">
 		<a href="forums.php">Forums</a>
 		&gt;
 		<a href="forums.php?action=viewforum&amp;forumid=<?=$ForumID?>"><?=$Forums[$ForumID]['Name']?></a>
 		&gt;
 		Edit forum specific rules
-	</h2>
+	</div>
 	<table>
 		<tr class="colhead">
 			<td>Thread ID</td>

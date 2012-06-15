@@ -3,7 +3,7 @@ if(!check_perms('site_torrents_notify')){ error(403); }
 show_header('Manage notifications');
 ?>
 <div class="thin">
-	<h2>Notify me of all new torrents with...<a href="torrents.php?action=notify">(View)</a></h2>
+	<div class="head">Notify me of all new torrents with...<a href="torrents.php?action=notify">(View)</a></div>
 <?
 $DB->query("SELECT ID, Label, Tags, NotTags, Categories FROM users_notify_filters WHERE UserID='$LoggedUser[ID]' UNION ALL SELECT NULL, NULL, NULL, 1, NULL");
 $i = 0;

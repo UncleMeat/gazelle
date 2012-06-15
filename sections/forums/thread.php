@@ -141,7 +141,8 @@ show_header('Forums'.' > '.$Forums[$ForumID]['Name'].' > '.$ThreadInfo['Title'],
 		</div>
 		<div id="searchthread" class="hidden center">
 			<div style="display: inline-block;">
-				<h3>Search this thread:</h3>
+                            <br />
+				<div class="head">Search this thread:</div>
 				<form action="forums.php" method="get">
 					<table cellpadding="6" cellspacing="1" border="0" class="border">	
 						<input type="hidden" name="action" value="search" />
@@ -432,12 +433,12 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
 <?                  print_badges_array($UserBadges);  ?>
                </div>
 <?      }      ?>
-            </td>
+           </td>
 <? }
 $AllowTags= isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues['site_advanced_tags'];
 ?>
 		<td class="postbody" valign="top"<? if(!empty($HeavyInfo['DisableAvatars'])) { echo ' colspan="2"'; } ?>>
-			<div id="content<?=$PostID?>" class="post_container">
+                    <div id="content<?=$PostID?>" class="post_container">
                       <div class="post_content"><?=$Text->full_format($Body, $AllowTags) ?> </div>
        
                       
@@ -451,7 +452,7 @@ $AllowTags= isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues
                             </span>
                         </div>
         <? }   ?>  
-			</div>
+                    </div>
 		</td>
 	</tr>
 <? 
@@ -479,7 +480,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 	//TODO: Preview, come up with a standard, make it look like post or just a block of formatted bbcode, but decide and write some proper html
 ?>
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
-                  <h3>Post reply</h3>
+                  <div class="head">Post reply</div>
 			<div class="box pad">
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
 					<tr class="colhead_dark">
@@ -541,7 +542,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 if(check_perms('site_moderate_forums')) {
 ?>
 	<br />
-	<h3>Edit thread</h3>
+	<div class="head">Edit thread</div>
 	<form action="forums.php" method="post">
 		<div>
 		<input type="hidden" name="action" value="mod_thread" />

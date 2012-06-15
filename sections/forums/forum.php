@@ -74,9 +74,10 @@ show_header('Forums > '. $Forums[$ForumID]['Name']);
 		[<a href="forums.php?action=new&amp;forumid=<?=$ForumID?>">New Thread</a>]
 <? } ?>
 		[<a href="#" onclick="$('#searchforum').toggle(); this.innerHTML = (this.innerHTML == 'Search this Forum'?'Hide Search':'Search this Forum'); return false;">Search this Forum</a>]
-		<div id="searchforum" class="hidden center">
+		<div id="searchforum" class="hidden">
 			<div style="display: inline-block;">
-				<h3>Search this forum:</h3>
+                            <br />
+				<div class="head">Search this forum</div>
 				<form action="forums.php" method="get">
 					<table cellpadding="6" cellspacing="1" border="0" class="border">	
 						<input type="hidden" name="action" value="search" />

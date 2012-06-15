@@ -142,11 +142,6 @@ list($NumResults) = $DB->next_record();
 show_header(($BookmarkView)?'Your bookmarked collages':'Browse collages');
 ?>
 <div class="thin">
-<? if ($BookmarkView) { ?>
-	<div class="head">Your bookmarked collages</div>
-<? } else { ?>
-	<div class="head">Browse collages<?=(!empty($UserLink) ? (isset($CollageIDs) ? ' with contributions by '.$UserLink : ' started by '.$UserLink) : '')?></div>
-<? } ?>
 <? if (!$BookmarkView) { ?>
 	<div>
 		<form action="" method="get">
@@ -202,7 +197,7 @@ show_header(($BookmarkView)?'Your bookmarked collages':'Browse collages');
 			</table>	
 		</form>
 	</div>
-<? } // if (!$BookmarkView) ?>
+<? }  ?>
 	<div class="linkbox">
 <? if (!$BookmarkView) {
 if (check_perms('site_collages_create')) { ?>
@@ -241,12 +236,16 @@ if (check_perms('site_collages_create') || check_perms('site_collages_personal')
 		<a href="bookmarks.php?type=collages">[Collages]</a>
 		<a href="bookmarks.php?type=requests">[Requests]</a>
 <? } ?>
-<br /><br />
 <?
 $Pages=get_pages($Page,$NumResults,COLLAGES_PER_PAGE,9);
 echo $Pages;
 ?>
 	</div>
+<? if ($BookmarkView) { ?>
+	<div class="head">Your bookmarked collages</div>
+<? } else { ?>
+	<div class="head">Browse collages<?=(!empty($UserLink) ? (isset($CollageIDs) ? ' with contributions by '.$UserLink : ' started by '.$UserLink) : '')?></div>
+<? } ?>    
 <? if (count($Collages) == 0) { ?>
 <div class="box pad" align="center">
 <?	if ($BookmarkView) { ?>

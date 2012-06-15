@@ -6,8 +6,7 @@ show_header('Bonus Shop');
 $ShopItems = get_shop_items();
 ?>
 <div class="thin">
-	<h2>Bonus Shop</h2>
-            <div class="box pad" style="max-width: 100%; margin: 35px auto 5px;border: 4px solid green">
+            <div class="box pad">
                 <h3>What is a credit?</h3>
                 <p>Credits are distributed as a bonus to people who are seeding torrents. You can find your total credit amount at the top of this page, or on your user details page.</p><br/>
                 <h4>How is the credit calculated?</h4>
@@ -26,16 +25,13 @@ $ShopItems = get_shop_items();
                 </div>
 <?          }  ?>
             
-		<div class="box pad">
-                <h3 class="center">You have <?=number_format($LoggedUser['Credits'],2)?> credits to spend</h3>
-            </div>
+	<div class="head">Bonus Shop</div>
             
 		<table class="bonusshop">
 			<tr class="colhead">
 				<td width="120px">Title</td>
 				<td width="530px" colspan="2">Description</td>
 				<td width="90px" colspan="2">Price</td>
-				<!--<td width="50px"></td>-->
 			</tr>
 <?
 	$Row = 'a';

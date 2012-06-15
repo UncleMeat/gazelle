@@ -66,13 +66,14 @@ if(check_perms('admin_manage_blog')) {
                     <div id="contentpreview" style="text-align:left;"></div>
                 </div>  
             </div>
-		<div class="box thin">  
+                <div class="thin">
 			<div class="head">
 				<?=((empty($_GET['action'])) ? 'Create a staff blog post' : 'Edit staff blog post')?>
 				<span style="float:right;">
 					<a href="#" onclick="$('#postform').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;"><?=($_REQUEST['action']!='editblog')?'(Show)':'(Hide)'?></a>
 				</span>
 			</div>
+                <div class="box">  
 			<form  id="quickpostform" action="staffblog.php" method="post">
 				<div id="postform" class="pad<?=($_REQUEST['action']!='editblog')?' hidden':''?>">	
                 <div id="quickreplytext">
@@ -97,6 +98,7 @@ if(check_perms('admin_manage_blog')) {
 				</div>
 			</form>
 		</div>
+                </div>
 		<br />
 <? 
 }
@@ -123,14 +125,15 @@ $Cache->delete_value('staff_blog_read_'.$LoggedUser['ID']);
 foreach ($Blog as $BlogItem) {
 	list($BlogID, $Author, $Title, $Body, $BlogTime) = $BlogItem;
 ?>
-			<div id="blog<?=$BlogID?>" class="box">
 				<div class="head">
-					<strong><?=$Title?></strong> - posted <?=time_diff($BlogTime);?> by <?=$Author?>
+					<?=$Title?> - <?=time_diff($BlogTime);?> by <?=$Author?>
 		<? if(check_perms('admin_manage_blog')) { ?> 
 					- <a href="staffblog.php?action=editblog&amp;id=<?=$BlogID?>">[Edit]</a>
 					<a href="staffblog.php?action=deleteblog&amp;id=<?=$BlogID?>&amp;auth=<?=$LoggedUser['AuthKey']?>" onClick="return confirm('Do you want to delete this?')">[Delete]</a>
 		 <? } ?>
 				</div>
+    
+			<div id="blog<?=$BlogID?>" class="box">
 				<div class="pad">
 					<?=$Text->full_format($Body,true)?>
 				</div>
