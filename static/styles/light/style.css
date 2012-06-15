@@ -285,11 +285,15 @@ span.infinity {
     display: block; 
 }
 
+#userinfo_username li a {
+    padding: 2px 0 2px 0;
+}
+
 #userinfo_username li ul {
     list-style: none;
     display: none;
     position: absolute;
-    top: 15px;
+    top: 17px;
     left: 0px;
     background-color: #00436b;
 }
@@ -313,7 +317,6 @@ span.infinity {
     margin-right: 6px !important;
     background-image: url(images/dropdown_arrow.png);
     background-repeat:no-repeat;
-    
     background-position: right center;
 }
 
