@@ -420,7 +420,7 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
 	</tr>
 	<tr>
 <? if(empty($HeavyInfo['DisableAvatars'])) {   ?>
-          <td class="avatar" valign="top">
+          <td class="avatar" valign="top" <?=(empty($HeavyInfo['DisableSignatures']) && ($MaxSigLength > 0) && !empty($Signature)) ? 'rowspan="2"' : ''?>>
 	<? if ($Avatar) { ?>
 			<img src="<?=$Avatar?>" class="avatar" style="<?=get_avatar_css($MaxAvatarWidth, $MaxAvatarHeight)?>" alt="<?=$Username ?>'s avatar" />
 	<? } else { ?>
