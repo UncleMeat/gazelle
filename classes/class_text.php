@@ -1080,9 +1080,12 @@ EXPLANATION OF PARSER LOGIC
                     foreach($attributes as $att) {
                         if($AllowColor && $this->is_color_attrib($att)) {
                             $InlineStyle .= 'background-color:'.$att.';';
-                        } elseif ($AllowWidth && preg_match('/^[0-9]{1,3}$/', $att)) {
-                            if ( (int)$att > 100 ) $att = '100';
-                            $InlineStyle .= 'width:'.$att.'%;';
+                        } elseif ($AllowWidth && preg_match('/^([0-9]{1,4})px$/', $att, $matches)) {
+                            if ( (int)$matches[1] > 900 ) $matches[1] = '900';
+                            $InlineStyle .= 'width:'.$matches[1].'px;';
+                        } elseif ($AllowWidth && preg_match('/^([0-9]{1,3})%$/', $att, $matches)) {
+                            if ( (int)$matches[1] > 100 ) $matches[1] = '100';
+                            $InlineStyle .= 'width:'.$matches[1].'%;';
                         } elseif ($AllowMargin && in_array($att, array('left','center','right') )) {
                             switch($att){
                                 case 'left':

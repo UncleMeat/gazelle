@@ -124,7 +124,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
 
 #header {
     width: 100%;
-    min-width:960px; 
+    min-width:1000px; 
     padding: 0;
     background: #000 url('images/header.png') repeat-x;  
     font-weight: normal;
@@ -133,7 +133,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
 
 #content {
     width: 90%;
-    min-width: 940px;
+    min-width: 980px;
     max-width: 1200px;
     background-color: #e0e8eb;
     margin: 0px auto 0px auto;
@@ -145,7 +145,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
 #footer {
     margin-top: 40px;
     width: 100%;
-    min-width:960px; 
+    min-width:1000px; 
     text-align: center;
     padding: 1em 0 0;
     color: #eee;
@@ -524,7 +524,7 @@ input.hidden {
 
 .thin {
     width: 96%;
-    min-width: 920px;
+    min-width: 960px;
     margin-left:auto;
     margin-right:auto;
 }
@@ -1345,7 +1345,7 @@ td.sig {
 
 #sig img.scale_image {
     max-height:500px; 
-    max-width: 770px;  
+    max-width: 800px;  
 }
 
 td.postbody {
