@@ -221,12 +221,12 @@ if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {
 		//$DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE Status='Unanswered' AND (AssignedToUser=".$LoggedUser['ID']." OR (Level >= 500 AND Level <=".$LoggedUser['Class']."))");
 		//removed Level>=500 clause so staff see num of all unanswered pm's they can answer
             $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations 
-                               WHERE Status='Unanswered' 
+                               WHERE (Status='Unanswered' OR Status='Open')
                                  AND (AssignedToUser=".$LoggedUser['ID']." OR Level <={$LoggedUser['Class']})");
 		list($NumStaffPMs) = $DB->next_record();
 		$Cache->cache_value('num_staff_pms_'.$LoggedUser['ID'], $NumStaffPMs , 1000);
 	}
-	if ($NumStaffPMs > 0) $ModBar[] = '<a href="staffpm.php">'.$NumStaffPMs.' Staff PMs</a>';
+	if ($NumStaffPMs > 0) $ModBar[] = '<a href="staffpm.php?view=open">'.$NumStaffPMs.' Staff PMs</a>';
 }
 
 if(check_perms('admin_reports')) {
