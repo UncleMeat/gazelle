@@ -178,37 +178,34 @@ show_header($Page['Topic'], 'browse,overlib,bbcode');
 ?>
 
 <div class="thin">
-    <h2 class="center"><?= $Title ?></h2>
+    <div class="head"><?= $Title ?></div>
     <div class="box pad" style="padding:10px 10px 10px 20px;">
         <?=$Body?>
     </div>
 
-<h3 id="jump">Other <?=strtolower($ArticleCats[$Category])?></h3>
-<div class="box pad" style="padding:10px 10px 10px 20px;">
-	<table width="100%">
-		<tr class="colhead">
-			<td style="width:150px;">Title</td>
-			<td style="width:400px;">Additional Info</td>
-		</tr>
+    <div class="head">Other <?=strtolower($ArticleCats[$Category])?></div>
+    <table width="100%">
+            <tr class="colhead">
+                    <td style="width:150px;">Title</td>
+                    <td style="width:400px;">Additional Info</td>
+            </tr>
 <?
-    $Row = 'a';
-    $DB->query("SELECT TopicID, Title, Description FROM articles WHERE Category='$Category' AND TopicID<>'$TopicID'");
-    while(list($TopicID, $Title, $Description) = $DB->next_record()) {
-        $Row = ($Row == 'a') ? 'b' : 'a';
+$Row = 'a';
+$DB->query("SELECT TopicID, Title, Description FROM articles WHERE Category='$Category' AND TopicID<>'$TopicID'");
+while(list($TopicID, $Title, $Description) = $DB->next_record()) {
+    $Row = ($Row == 'a') ? 'b' : 'a';
 ?>
-		<tr class="row<?=$Row?>">
+            <tr class="row<?=$Row?>">
 
-                        <td class="nobr">
-				<a href="articles.php?topic=<?=$TopicID?>"><?=$Title?></a>
-			</td>
-			<td class="nobr">
-				<?=$Description?>
-			</td>
-		</tr>
+                    <td class="nobr">
+                            <a href="articles.php?topic=<?=$TopicID?>"><?=$Title?></a>
+                    </td>
+                    <td class="nobr">
+                            <?=$Description?>
+                    </td>
+            </tr>
 <?  } ?>
-        </table>
-</div>
-    
+    </table>
 </div>
 
 

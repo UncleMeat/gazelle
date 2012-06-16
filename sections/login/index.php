@@ -172,6 +172,18 @@ else {
 	// Function to log a user's login attempt
 	function log_attempt($UserID) {
 		global $DB, $AttemptID, $Attempts, $Bans, $BannedUntil, $Time;
+                
+                // The user exists in the database, inform the user about the failed login attempt.
+                if ($UserID > 0) {
+                    $DB->query("SELECT Username FROM users_main WHERE ID='$UserID'");
+                    list($Username) = $DB->next_record(MYSQLI_BOTH, false);
+                    send_pm($UserID, 0, db_string('Security Alert'), db_string( 
+                            "Somebody (probably you, $Username) tried to login but failed!\n".
+                            "Their IP Address was : {$_SERVER['REMOTE_ADDR']}\n".
+                            "If this wasn't you please report this event to a staff member\n".
+                            "- Thank you."));
+                }
+                
 		if($AttemptID) { // User has attempted to log in recently
 			$Attempts++;
 			if ($Attempts>5) { // Only 6 allowed login attempts, ban user's IP
