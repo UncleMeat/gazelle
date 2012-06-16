@@ -413,14 +413,16 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
     </div>
     
     <div id="header_bottom">
-
+<?  /*  //unless it was intended for the user to have this link seperate from the drop down menu this bit should be removed? ?>
             <div id="minor_stats">
                 <ul id="userinfo_minor">
-    <? if ( $LoggedUser['SupportFor'] ="" && $LoggedUser['DisplayStaff'] != 1 ) {  ?>
+    <? if ( $LoggedUser['SupportFor'] =="" && $LoggedUser['DisplayStaff'] != 1 ) {  ?>
                       <li id="nav_staffmessages"<?=$NewStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffpm');" href="staffpm.php?action=user_inbox">Message Staff<?=$NewStaffPMs ? "($NewStaffPMs)" : ''?></a></li>                      
     <? }  ?>
                 </ul>
             </div>
+ <?  */  ?>
+
             <div id="major_stats">
                 <ul id="userinfo_major">
                       <li id="nav_upload" class="brackets"><a href="upload.php">Upload</a></li>
@@ -433,9 +435,9 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
     <? if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {  ?>
                       <li id="nav_staffinbox"<?=$NumStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffinbox');" href="staffpm.php?action=staff_inbox&view=open">Staff Inbox<?=$NumStaffPMs ? "($NumStaffPMs)" : ''?></a></li>
     <? } ?>                  
-    <? if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {  ?>
+    <? //if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) { //both staff and users should see this link? ?>
                                 <li id="nav_staffmessages"<?=$NewStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffpm');" href="staffpm.php?action=user_inbox">Message Staff<?=$NewStaffPMs ? "($NewStaffPMs)" : ''?></a></li>                      
-     <? }  ?>
+     <? //}  ?>
 
                                 <li id="nav_uploaded"><a onmousedown="Stats('uploads');" href="torrents.php?type=uploaded&amp;userid=<?=$LoggedUser['ID']?>">Uploads</a></li>
                                 <li id="nav_bookmarks"><a onmousedown="Stats('bookmarks');" href="bookmarks.php?type=torrents">Bookmarks</a></li>
