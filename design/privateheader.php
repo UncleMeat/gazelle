@@ -218,8 +218,6 @@ if (check_perms('users_mod')) {
 if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {
 	$NumStaffPMs = $Cache->get_value('num_staff_pms_'.$LoggedUser['ID']);
 	if ($NumStaffPMs === false) {
-		//$DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE Status='Unanswered' AND (AssignedToUser=".$LoggedUser['ID']." OR (Level >= 500 AND Level <=".$LoggedUser['Class']."))");
-		//removed Level>=500 clause so staff see num of all unanswered pm's they can answer
             $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations 
                                WHERE (Status='Unanswered' OR Status='Open')
                                  AND (AssignedToUser=".$LoggedUser['ID']." OR Level <={$LoggedUser['Class']})");
@@ -433,7 +431,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
                           <ul>
                                 <li id="nav_inbox"<?=$NewMessages ? ' class="highlight"' : ''?>><a onmousedown="Stats('inbox');" href="inbox.php">Inbox<?=$NewMessages ? "($NewMessages)" : ''?></a></li>
     <? if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {  ?>
-                      <li id="nav_staffinbox"<?=$NumStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffinbox');" href="staffpm.php?action=staff_inbox">Staff Inbox<?=$NumStaffPMs ? "($NumStaffPMs)" : ''?></a></li>
+                      <li id="nav_staffinbox"<?=$NumStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffinbox');" href="staffpm.php?action=staff_inbox&view=open">Staff Inbox<?=$NumStaffPMs ? "($NumStaffPMs)" : ''?></a></li>
     <? } ?>                  
     <? if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {  ?>
                                 <li id="nav_staffmessages"<?=$NewStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffpm');" href="staffpm.php?action=user_inbox">Message Staff<?=$NewStaffPMs ? "($NewStaffPMs)" : ''?></a></li>                      
