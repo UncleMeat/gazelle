@@ -30,7 +30,6 @@ if(!empty($TopicIDs)) {
 show_header('Forums');
 ?>
 <div class="thin">
-	<h2>Forums</h2>
 <?
 
 $Row = 'a';
