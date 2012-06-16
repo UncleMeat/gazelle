@@ -48,7 +48,7 @@ $StaffPMs = $DB->query("
 		ResolverID
 	FROM staff_pm_conversations
 	$WhereCondition
-	ORDER BY $SortStr Level DESC, Date DESC
+	ORDER BY $SortStr Status DESC, Date DESC
 	LIMIT $Limit
 ");
 
