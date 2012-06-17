@@ -518,6 +518,23 @@ function get_permissions_advtags($UserID, $CustomPermissions = false, $UserPermi
       return isset($PermissionsValues['site_advanced_tags']) &&  $PermissionsValues['site_advanced_tags'];
 }
 
+function get_latest_forum_topics($PermissionID) {
+    global $Classes, $DB, $Cache;
+    $LatestTopics = $Cache->get_value('latest_topics_'.$PermissionID);
+    if (!$LatestTopics) {
+        $Level = $Classes[$PermissionID]['Level'];
+        $DB->query("SELECT ft.ID AS ThreadID, fp.ID AS PostID, ft.Title, um.Username, fp.AddedTime FROM forums_posts AS fp
+                    INNER JOIN forums_topics AS ft ON ft.ID=fp.TopicID
+                    INNER JOIN forums AS f ON f.ID=ft.ForumID
+                    INNER JOIN users_main AS um ON um.ID=fp.AuthorID
+                    WHERE f.MinClassRead<='$Level'
+                    ORDER BY AddedTime DESC
+                    LIMIT 6");
+        $LatestTopics = $DB->to_array('ThreadID');
+        $Cache->cache_value('latest_topics_'.$LoggedUser['PermissionID'], $LatestTopics);
+    }
+    return $LatestTopics;
+}
 
 function get_user_badges($UserID){
     global $DB, $Cache;

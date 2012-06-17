@@ -30,8 +30,18 @@ if(!empty($TopicIDs)) {
 show_header('Forums');
 ?>
 <div class="thin">
+<? if (empty($LoggedUser['DisableLatestTopics'])) {       
+        $LatestTopics = get_latest_forum_topics($LoggedUser['PermissionID']);
+?>
+        <div class="head">Latest forum topics</div>
+        <div class="box pad">
+        <? foreach($LatestTopics as $Key=>$Value) { ?>
+            <a href="forums.php?action=viewthread&threadid=<?=$Value['ThreadID']?>&postid=<?=$Value['PostID']?>#post<?=$Value['PostID']?>"><strong><?=$Value['Title']?></strong></a> by <?=$Value['Username']?> (<?=time_diff($Value['AddedTime'], 1)?>)&nbsp;
+        <? } ?>   
+        </div>
+<? } ?>
+    
 <?
-
 $Row = 'a';
 $LastCategoryID=0;
 $OpenTable = false;
@@ -53,6 +63,7 @@ foreach ($Forums as $Forum) {
 		if($OpenTable) { ?>
 	</table>
 <? 		} ?>
+                
 <div class="head"><?=$ForumCats[$CategoryID]?></div>
 	<table class="forum_index">
 		<tr class="colhead">

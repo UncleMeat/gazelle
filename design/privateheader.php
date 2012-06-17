@@ -471,30 +471,3 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 </div>
 
 <div id="content">
-<? if (empty($LoggedUser['DisableLatestTopics'])) { ?>
-    <div class="thin">
-        
-<?
-    $LatestTopics = $Cache->get_value('latest_topics_'.$LoggedUser['PermissionID']);
-    if (!$LastTopics) {
-        $Level = $Classes[$LoggedUser['PermissionID']]['Level'];
-        $DB->query("SELECT ft.ID AS ThreadID, fp.ID AS PostID, ft.Title, um.Username, fp.AddedTime FROM forums_posts AS fp
-                    INNER JOIN forums_topics AS ft ON ft.ID=fp.TopicID
-                    INNER JOIN forums AS f ON f.ID=ft.ForumID
-                    INNER JOIN users_main AS um ON um.ID=fp.AuthorID
-                    WHERE f.MinClassRead<='$Level'
-                    ORDER BY AddedTime DESC
-                    LIMIT 6");
-        $LatestTopics = $DB->to_array('ThreadID');
-        $Cache->cache_value('latest_topics_'.$LoggedUser['PermissionID']);
-    }
-?>
-        <div class="head">Latest forum topics</div>
-        <div class="box pad">
-        <? foreach($LatestTopics as $Key=>$Value) { ?>
-            <a href="forums.php?action=viewthread&threadid=<?=$Value['ThreadID']?>&postid=<?=$Value['PostID']?>#post<?=$Value['PostID']?>"><strong><?=$Value['Title']?></strong></a> by <?=$Value['Username']?> (<?=time_diff($Value['AddedTime'], 1)?>)&nbsp;
-        <? } ?>   
-        </div>
-    </div>
-
-<? } ?>

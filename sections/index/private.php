@@ -27,6 +27,17 @@ if ($LoggedUser['LastReadNews'] != $News[0][0]) {
 show_header('News','bbcode');
 ?>
 <div class="thin">
+<? if (empty($LoggedUser['DisableLatestTopics'])) {       
+        $LatestTopics = get_latest_forum_topics($LoggedUser['PermissionID']);
+?>
+        <div class="head">Latest forum topics</div>
+        <div class="box pad">
+        <? foreach($LatestTopics as $Key=>$Value) { ?>
+            <a href="forums.php?action=viewthread&threadid=<?=$Value['ThreadID']?>&postid=<?=$Value['PostID']?>#post<?=$Value['PostID']?>"><strong><?=$Value['Title']?></strong></a> by <?=$Value['Username']?> (<?=time_diff($Value['AddedTime'], 1)?>)&nbsp;
+        <? } ?>   
+        </div>
+<? } ?>
+    
 	<div class="sidebar">
 <?
 	$FeaturedAlbum = $Cache->get_value('featured_album');

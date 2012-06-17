@@ -69,7 +69,7 @@ function update_latest_topics() {
                         ORDER BY AddedTime DESC
                         LIMIT 6");
             $LatestTopics = $DB->to_array('ThreadID');
-            $Cache->cache_value('latest_topics_'.$Class['ID']);
+            $Cache->cache_value('latest_topics_'.$Class['ID'], $LatestTopics);
         }
     
 }
