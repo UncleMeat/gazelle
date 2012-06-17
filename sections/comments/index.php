@@ -110,6 +110,7 @@ $GroupIDs = $DB->collect('GroupID');
 $DB->set_query_id($Comments); 
 
 ?><div class="thin">
+    <h2><?=$Header?></h2>    
 	<div class="linkbox">
 	<?=$OtherLink?>&nbsp;&nbsp;&nbsp;
 			<a href="userhistory.php?action=posts&amp;userid=<?=$LoggedUser['ID']?>">Go to post history</a>&nbsp;&nbsp;&nbsp;
@@ -127,9 +128,7 @@ foreach($Posts as $Post){
 //while(list($UserID, $Username, $Class, $Enabled, $CustomPermissions, $Avatar, $Donor, $Warned, $TorrentID, $GroupID, $Title, $PostID, $Body, $AddedTime, $EditedTime, $EditorID, $EditorUsername) = $DB->next_record(MYSQLI_BOTH,  array('CustomPermissions'))) {
 	$AuthorPermissions = get_permissions($Class);
       list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
-?>
-	<div class="head"><?=$Header?></div>
-    
+?>   
 	<table class='forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>' id="post<?=$PostID?>">
 		<tr class='colhead_dark'>
 			<td  colspan="2">

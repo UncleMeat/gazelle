@@ -348,14 +348,24 @@ $Results = $Results['matches'];
 
 show_header('Browse Torrents', 'browse,overlib,jquery,jquery.cookie');
 
-
-
 // List of pages  
 $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
 ?>
 
+<div class="thin">
+<? if (empty($LoggedUser['DisableLatestTopics'])) {       
+        $LatestTopics = get_latest_forum_topics($LoggedUser['PermissionID']);
+?>
+        <div class="head">Latest forum topics</div>
+        <div class="box pad">
+        <? foreach($LatestTopics as $Key=>$Value) { ?>
+            <a href="forums.php?action=viewthread&threadid=<?=$Value['ThreadID']?>&postid=<?=$Value['PostID']?>#post<?=$Value['PostID']?>"><strong><?=$Value['Title']?></strong></a> by <?=$Value['Username']?> (<?=time_diff($Value['AddedTime'], 1)?>)&nbsp;
+        <? } ?>   
+        </div>
+<? } ?>
+    
 <form name="filter" method="get" action=''>  
-    <div id="search_box" class="filter_torrents"> 
+    <div id="search_box" class="filter_torrents">
     <div class="head">
         Filter		
         <? if ($AdvancedSearch) { ?>
@@ -558,7 +568,7 @@ if (count($Results) == 0) {
 $Bookmarks = all_bookmarks('torrent');
 ?>
 
- <div class="head">Torrents</div>
+<div class="head">Torrents</div>
 <table class="torrent_table grouping" id="torrent_table">
     <tr class="colhead">
         <td class="small cats_col"></td>
@@ -659,5 +669,6 @@ $row='a';
     }
     ?>
 </table>
+</div>
 <div class="linkbox"><?= $Pages ?></div>
 <? show_footer(array('disclaimer' => false)); ?>

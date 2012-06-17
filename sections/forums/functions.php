@@ -55,3 +55,21 @@ function check_forumperm($ForumID, $Perm = 'Read') {
 	}
 	return true;
 }
+
+function update_latest_topics() {
+        global $LoggedUser, $Classes, $Cache, $DB;
+
+        foreach($Classes as $Class) {
+            $Level = $Class['Level'];
+            $DB->query("SELECT ft.ID AS ThreadID, fp.ID AS PostID, ft.Title, um.Username, fp.AddedTime FROM forums_posts AS fp
+                        INNER JOIN forums_topics AS ft ON ft.ID=fp.TopicID
+                        INNER JOIN forums AS f ON f.ID=ft.ForumID
+                        INNER JOIN users_main AS um ON um.ID=fp.AuthorID
+                        WHERE f.MinClassRead<='$Level'
+                        ORDER BY AddedTime DESC
+                        LIMIT 6");
+            $LatestTopics = $DB->to_array('ThreadID');
+            $Cache->cache_value('latest_topics_'.$Class['ID'], $LatestTopics);
+        }
+    
+}

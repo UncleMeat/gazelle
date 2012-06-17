@@ -173,6 +173,7 @@ $Options['PostsPerPage'] = (int) $_POST['postsperpage'];
 $Options['CollageCovers'] = empty($_POST['collagecovers']) ? 0 : $_POST['collagecovers'];
 $Options['ShowTags'] = (!empty($_POST['showtags']) ? 1 : 0);
 $Options['AutoSubscribe'] = (!empty($_POST['autosubscribe']) ? 1 : 0);
+$Options['DisableLatestTopics'] = (!empty($_POST['disablelatesttopics']) ? 1 : 0);
 $Options['DisableSmileys'] = (!empty($_POST['disablesmileys']) ? 1 : 0);
 $Options['DisableAvatars'] = (!empty($_POST['disableavatars']) ? 1 : 0);
 $Options['DisablePMAvatars'] = (!empty($_POST['disablepmavatars']) ? 1 : 0);

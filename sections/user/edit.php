@@ -188,6 +188,13 @@ echo $Val->GenerateJS('userform');
 				</td>
 			</tr>
 			<tr>
+				<td class="label"><strong>Forum topics</strong></td>
+				<td>
+					<input type="checkbox" name="disablelatesttopics" id="autosubscribe" <? if (!empty($SiteOptions['DisableLatestTopics'])) { ?>checked="checked"<? } ?> />
+					<label for="autosubscribe">Disable latest forum topics</label>
+				</td>
+			</tr>
+                        <tr>
 				<td class="label"><strong>Smileys</strong></td>
 				<td>
 					<input type="checkbox" name="disablesmileys" id="disablesmileys" <? if (!empty($SiteOptions['DisableSmileys'])) { ?>checked="checked"<? } ?> />
