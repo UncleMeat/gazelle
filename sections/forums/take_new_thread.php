@@ -176,6 +176,8 @@ if ($Forum = $Cache->get_value('forums_'.$ForumID)) {
 	$Cache->delete_value('forums_list');
 }
 
+update_latest_topics();
+
 $Cache->begin_transaction('thread_'.$TopicID.'_catalogue_0');
 $Post = array(
 	'ID'=>$PostID,

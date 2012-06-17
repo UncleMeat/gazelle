@@ -37,8 +37,6 @@ if(isset($_POST['forum']) && !is_number($_POST['forum'])) {
 //If you're not sending anything, go back
 if(empty($_POST['body'])) {
 	error('You cannot post a reply with no content.');
-	//header('Location: '.$_SERVER['HTTP_REFERER']);
-	//die();
 }
 
 $Body = $_POST['body'];
@@ -217,6 +215,8 @@ if ($ThreadInfo['LastPostAuthorID'] == $LoggedUser['ID'] && ((!check_perms('site
 	//Increment this now to make sure we redirect to the correct page
 	$ThreadInfo['Posts']++;
 }
+
+update_latest_topics();
 
 $DB->query("SELECT UserID FROM users_subscriptions WHERE TopicID = ".$TopicID);
 if($DB->record_count() > 0) {

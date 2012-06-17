@@ -71,7 +71,7 @@ $Debug->set_flag('Debug constructed');
 
 $DB = new DB_MYSQL;
 $Cache = new CACHE;
-$Cache->flush();
+//$Cache->flush(); // Lanz: this was enabled as default, no wonder caching didn't work properly...
 $Enc = new CRYPT;
 $UA = new USER_AGENT;
 $SS = new SPHINX_SEARCH;
@@ -96,7 +96,6 @@ if (!$Classes || !$ClassLevels) {
     $Cache->cache_value('classes', array($Classes, $ClassLevels), 0);
 }
 $Debug->set_flag('Loaded permissions');
-
 $NewCategories = $Cache->get_value('new_categories');
 if (!$NewCategories) {
     $DB->query('SELECT id, name, image, tag FROM categories ORDER BY name ASC');
