@@ -64,7 +64,7 @@ $Validate->SetFields('image', '0', 'image', 'The image URL you entered was not v
 //$Validate->SetFields('desc',
 //	'1','string','The description has a minimum length of 100 characters.',array('maxlength'=>1000000, 'minlength'=>100));
 
-$Validate->SetFields('desc', '1', 'desc', 'Description', array('regex' => $whitelist_regex, 'minimages'=>0, 'maxlength' => 1000000, 'minlength' => 20));
+$Validate->SetFields('desc', '1', 'desc', 'Description', array('regex' => $whitelist_regex, 'minimages'=>1, 'maxlength' => 1000000, 'minlength' => 20));
 
 
 $Validate->SetFields('category', '1', 'inarray', 'Please select a category.', array('inarray' => array_keys($NewCategories)));
