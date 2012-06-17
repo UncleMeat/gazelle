@@ -50,7 +50,6 @@ list($Results) = $DB->next_record();
 // Start printing stuff
 ?>
 <div class="thin">
-	<h2>Friends list</h2>
 	<div class="linkbox">
 <?
 // Pagination
@@ -65,6 +64,7 @@ if($Results > 0) {
 }
 ?>
 	</div>
+	<div class="head">Friends list</div>
 	<div class="box pad">
 <?
 if($Results == 0) {

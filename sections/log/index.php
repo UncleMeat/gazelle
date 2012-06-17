@@ -56,9 +56,7 @@ $DB->set_query_id($Log);
 			</table>	
 		</form>
 	</div>
-	
-	
-	
+		
 	<div class="linkbox">
 <?
 $Pages=get_pages($Page,$Results,LOG_ENTRIES_PER_PAGE,9);

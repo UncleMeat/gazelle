@@ -348,14 +348,13 @@ $Results = $Results['matches'];
 
 show_header('Browse Torrents', 'browse,overlib,jquery,jquery.cookie');
 
-
-
 // List of pages  
 $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
 ?>
 
+<div class="thin">
 <form name="filter" method="get" action=''>  
-    <div id="search_box" class="filter_torrents"> 
+    <div id="search_box" class="filter_torrents">
     <div class="head">
         Filter		
         <? if ($AdvancedSearch) { ?>
@@ -558,7 +557,7 @@ if (count($Results) == 0) {
 $Bookmarks = all_bookmarks('torrent');
 ?>
 
- <div class="head">Torrents</div>
+<div class="head">Torrents</div>
 <table class="torrent_table grouping" id="torrent_table">
     <tr class="colhead">
         <td class="small cats_col"></td>
@@ -659,5 +658,6 @@ $row='a';
     }
     ?>
 </table>
+</div>
 <div class="linkbox"><?= $Pages ?></div>
 <? show_footer(array('disclaimer' => false)); ?>
