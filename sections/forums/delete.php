@@ -77,6 +77,8 @@ if($LastID < $PostID) { // Last post in a topic was removed
 	$UpdateArrayThread = array('Posts' => '-1');
 }
 
+update_latest_topics();
+
 //We need to clear all subsequential catalogues as they've all been bumped with the absence of this post
 $ThisCatalogue = floor((POSTS_PER_PAGE*$Page-POSTS_PER_PAGE)/THREAD_CATALOGUE);
 $LastCatalogue = floor((POSTS_PER_PAGE*$Pages-POSTS_PER_PAGE)/THREAD_CATALOGUE);

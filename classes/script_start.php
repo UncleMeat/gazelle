@@ -530,8 +530,8 @@ function get_latest_forum_topics($PermissionID) {
                     WHERE f.MinClassRead<='$Level'
                     ORDER BY AddedTime DESC
                     LIMIT 6");
-        $LatestTopics = $DB->to_array('ThreadID');
-        $Cache->cache_value('latest_topics_'.$LoggedUser['PermissionID'], $LatestTopics);
+        $LatestTopics = $DB->to_array();
+        $Cache->cache_value('latest_topics_'.$PermissionID, $LatestTopics);
     }
     return $LatestTopics;
 }

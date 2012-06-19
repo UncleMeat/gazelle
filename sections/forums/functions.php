@@ -68,7 +68,7 @@ function update_latest_topics() {
                         WHERE f.MinClassRead<='$Level'
                         ORDER BY AddedTime DESC
                         LIMIT 6");
-            $LatestTopics = $DB->to_array('ThreadID');
+            $LatestTopics = $DB->to_array();
             $Cache->cache_value('latest_topics_'.$Class['ID'], $LatestTopics);
         }
     
