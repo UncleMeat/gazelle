@@ -87,19 +87,26 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 break;
             
             case 'gb':
-                
-                $Summary = sqltime().' - '.ucfirst("user bought -$Value gb. Cost: $Cost credits");	
-                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
-      
-                $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought -$Value gb.");	
-                $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
-                $Value = get_bytes($Value.'gb');
-                $UpdateSet[]="m.Downloaded=(m.Downloaded-'$Value')";
-                $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
-                $ResultMessage=$Summary;
+                $ValueBytes = get_bytes($Value.'gb');
+                if($LoggedUser['BytesDownloaded'] <= 0){
+                    $ResultMessage= "You have no download to deduct from!";
+                } else {
+                    $Summary = sqltime().' - '.ucfirst("user bought -$Value gb. Cost: $Cost credits");	
+                    $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
+
+                    $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought -$Value gb.");	
+                    $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
+                    //$Value = get_bytes($Value.'gb');
+                    $UpdateSet[]="m.Downloaded=(m.Downloaded-'$ValueBytes')";
+                    $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
+                    $ResultMessage=$Summary;
+                    if($LoggedUser['BytesDownloaded'] < $ValueBytes) {
+                        $ResultMessage .= " | NOTE: Could only remove ". get_size($ValueBytes - $LoggedUser['BytesDownloaded']);
+                    }
+                }
                 break;
             
-            case 'givegb':
+            case 'givegb':  // no test if user had download to remove as this could violate privacy settings
                 $Summary = sqltime().' - '.ucfirst("user gave a gift of -$Value gb to {$P['othername']} Cost: $Cost credits");	
                 $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
                 
