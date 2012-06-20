@@ -199,13 +199,25 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 	//------------- Promote users -------------------------------------------//
 	sleep(5);
 	$Criteria = array();
-	$Criteria[]=array('From'=>APPRENTICE, 'To'=>PERV, 'MinUpload'=>10*1024*1024*1024, 'MinRatio'=>0.7, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7));
-	$Criteria[]=array('From'=>PERV, 'To'=>GOOD_PERV, 'MinUpload'=>25*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7*4));
-	$Criteria[]=array('From'=>GOOD_PERV, 'To'=>SEXTREME_PERV, 'MinUpload'=>1*1024*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7*26));
-	$Criteria[]=array('From'=>SEXTREME_PERV, 'To'=>SMUT_PEDDLER, 'MinUpload'=>10*1024*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>0, 'MaxTime'=>time_minus(3600*24*7*52));
+	$Criteria[]=array('From'=>APPRENTICE, 'To'=>PERV, 'MinUpload'=>10*1024*1024*1024, 'MinRatio'=>0.7, 'MinUploads'=>0, 'TotalUploaded'=>0, 'MaxTime'=>time_minus(3600*24*7));
+	$Criteria[]=array('From'=>PERV, 'To'=>GOOD_PERV, 'MinUpload'=>25*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>0, 'TotalUploaded'=>0, 'MaxTime'=>time_minus(3600*24*7*4));
+	$Criteria[]=array('From'=>GOOD_PERV, 'To'=>SEXTREME_PERV, 'MinUpload'=>1*1024*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>50, 'TotalUploaded'=>0, 'MaxTime'=>time_minus(3600*24*7*26));
+	$Criteria[]=array('From'=>SEXTREME_PERV, 'To'=>SMUT_PEDDLER, 'MinUpload'=>10*1024*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>500, 'TotalUploaded'=>0, 'MaxTime'=>time_minus(3600*24*7*52));
 
-	 foreach($Criteria as $L){ // $L = Level
-		$Query = "SELECT ID FROM users_main JOIN users_info ON users_main.ID = users_info.UserID
+      foreach($Criteria as $L){ // $L = Level
+            if ($L[TotalUploaded]>0){
+            /*      This Query uses MinUploads OR TotalUploaded (from users torrents) as torrents up criteria  -- used if TotalUploaded is set      */
+                $Query = "SELECT ID FROM users_main JOIN users_info ON users_main.ID = users_info.UserID
+                        WHERE PermissionID=".$L['From']."
+                        AND Warned= '0000-00-00 00:00:00'
+                        AND JoinDate<'$L[MaxTime]'
+                        AND (Uploaded/Downloaded >='$L[MinRatio]' OR (Uploaded/Downloaded IS NULL))
+                        AND Uploaded>='$L[MinUpload]'
+                        AND ((SELECT COUNT(ID) FROM torrents WHERE UserID=users_main.ID)>='$L[MinUploads]'
+                            OR (SELECT SUM(Size) FROM torrents WHERE UserID=users_main.ID)>='$L[TotalUploaded]')
+                        AND Enabled='1'";
+            } else {   // if  TotalUploaded (from users torrents)==0 then just use MinUploads as torrents up criteria
+                $Query = "SELECT ID FROM users_main JOIN users_info ON users_main.ID = users_info.UserID
                         WHERE PermissionID=".$L['From']."
                         AND Warned= '0000-00-00 00:00:00'
                         AND Uploaded>='$L[MinUpload]'
@@ -213,6 +225,7 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
                         AND JoinDate<'$L[MaxTime]'
                         AND (SELECT COUNT(ID) FROM torrents WHERE UserID=users_main.ID)>='$L[MinUploads]'
                         AND Enabled='1'";
+            }
 		if (!empty($L['Extra'])) {
 			$Query .= ' AND '.$L['Extra'];
 		}
@@ -220,8 +233,9 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 		$DB->query($Query);
 
 		$UserIDs = $DB->collect('ID');
-
-		if (count($UserIDs) > 0) {
+            $NumPromotions = count($UserIDs);
+            
+		if ($NumPromotions > 0) {
 			foreach($UserIDs as $UserID) {
 				/*$Cache->begin_transaction('user_info_'.$UserID);
 				$Cache->update_row(false, array('PermissionID'=>$L['To']));
@@ -233,7 +247,9 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 				$DB->query("UPDATE users_info SET AdminComment = CONCAT('".sqltime()." - Class changed to ".make_class_string($L['To'])." by System\n\n', AdminComment) WHERE UserID = ".$UserID);
 			}		
 			$DB->query("UPDATE users_main SET PermissionID=".$L['To']." WHERE ID IN(".implode(',',$UserIDs).")");
-		}
+		
+                  echo "Promoted $NumPromotions user".($NumPromotions>1?'s':'')." to ".make_class_string($L['To'])."\n";
+            }
 
 /*
  * Lanz: Lets not demote anyone that doesn't have the required upload today but perhaps "unfairly" got promoted earlier.
