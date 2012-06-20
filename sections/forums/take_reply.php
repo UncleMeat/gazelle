@@ -194,6 +194,9 @@ if ($ThreadInfo['LastPostAuthorID'] == $LoggedUser['ID'] && ((!check_perms('site
 	//This calculates the block of 500 posts that this one will fall under
 	$CatalogueID = floor((POSTS_PER_PAGE*ceil($ThreadInfo['Posts']/POSTS_PER_PAGE)-POSTS_PER_PAGE)/THREAD_CATALOGUE);
 	
+      $DB->query("SELECT Signature FROM users_main WHERE ID='{$LoggedUser['ID']}'");
+      if ($DB->record_count()>0) list($Sig)= $DB->next_record();
+      
 	//Insert the post into the thread catalogue (block of 500 posts)
 	$Cache->begin_transaction('thread_'.$TopicID.'_catalogue_'.$CatalogueID);
 	$Cache->insert('', array(
@@ -203,6 +206,7 @@ if ($ThreadInfo['LastPostAuthorID'] == $LoggedUser['ID'] && ((!check_perms('site
 		'Body'=>$Body,
 		'EditedUserID'=>0,
 		'EditedTime'=>'0000-00-00 00:00:00',
+            'Signature'=>$Sig,
 		'Username'=>$LoggedUser['Username'] //TODO: Remove, it's never used?
 		));
 	$Cache->commit_transaction(0);
