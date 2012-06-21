@@ -39,19 +39,27 @@ $ShopItems = get_shop_items();
 	foreach($ShopItems as $BonusItem) {
 		list($ItemID, $Title, $Description, $Action, $Value, $Cost, $Image) = $BonusItem;
             $IsBadge = $Action=='badge'; 
+            $IsBuyGB = $Action=='gb'; 
+            $DescExtra='';
             // if user already has badge item dont allow buy
             if ($IsBadge && in_array($Value, $UserBadgeIDs)) {
                 $CanBuy = false;
                 $BGClass= ' itemduplicate';
+            } elseif ($IsBuyGB && $LoggedUser['BytesDownloaded'] <=0) {
+                $CanBuy = false;
+                $BGClass= ' itemnotbuy';
             } else { //
                 $CanBuy = is_float((float)$LoggedUser['Credits']) ? $LoggedUser['Credits'] >= $Cost: false;
                 $BGClass= ($CanBuy?' itembuy' :' itemnotbuy');
+                if ($IsBuyGB && $LoggedUser['BytesDownloaded'] < get_bytes($Value.'gb') ) {
+                    $DescExtra = "<br/>(WARNING: will only remove ".get_size(get_bytes($Value.'gb') - $LoggedUser['BytesDownloaded']).")";
+                }
             }
 		$Row = ($Row == 'a') ? 'b' : 'a';
 ?> 
 			<tr class="row<?=$Row.$BGClass?>">
 				<td width="160px"><strong><?=display_str($Title) ?></strong></td>
-				<td style="border-right:none;" <? if(!$Image) { echo 'colspan="2"'; } ?>><?=display_str($Description)?></td>
+				<td style="border-right:none;" <? if(!$Image) { echo 'colspan="2"'; } ?>><?=display_str($Description).$DescExtra?></td>
                     <?  if ($Image) {  ?>
                         <td style="border-left:none;width:160px;text-align:center;">
                             <div class="badge">
