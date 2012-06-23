@@ -247,8 +247,13 @@ if (!$Properties['GroupID']) {
 }
 
 // Use this section to control freeleeches
-$T['FreeLeech'] = "'0'";
-$T['FreeLeechType'] = "'0'";
+if ($TotalSize < (20*1024*1024*1024)){
+    $T['FreeLeech'] = "'0'";
+    $T['FreeLeechType'] = "'0'";
+} else {
+    $T['FreeLeech'] = "'1'";
+    $T['FreeLeechType'] = "'2'";
+}
 
 // Torrent
 $DB->query("
