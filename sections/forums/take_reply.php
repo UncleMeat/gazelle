@@ -206,8 +206,8 @@ if ($ThreadInfo['LastPostAuthorID'] == $LoggedUser['ID'] && ((!check_perms('site
 		'Body'=>$Body,
 		'EditedUserID'=>0,
 		'EditedTime'=>'0000-00-00 00:00:00',
-            'Signature'=>$Sig,
-		'Username'=>$LoggedUser['Username'] //TODO: Remove, it's never used?
+		'Username'=>$LoggedUser['Username'],
+            'Signature'=>$Sig
 		));
 	$Cache->commit_transaction(0);
 
