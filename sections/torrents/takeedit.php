@@ -37,7 +37,7 @@ if(check_perms('torrents_freeleech')) {
 		error(404);
 	}
 	$Properties['FreeLeech'] = $Free;
-
+      /*
 	if($Free == 0) {
 		$FreeType = 0;
 	} else {
@@ -47,6 +47,7 @@ if(check_perms('torrents_freeleech')) {
 		}
 	}
 	$Properties['FreeLeechType'] = $FreeType;
+       */
 }
 
 //******************************************************************************//
@@ -147,7 +148,7 @@ $SQL = "
 
 if(check_perms('torrents_freeleech')) {
 	$SQL .= "FreeTorrent=$T[FreeLeech],";
-	$SQL .= "FreeLeechType=$T[FreeLeechType],";
+	//$SQL .= "FreeLeechType=$T[FreeLeechType],";
 }
 
 if(check_perms('users_mod')) {
@@ -189,7 +190,7 @@ $SQL .= "
 $DB->query($SQL);
 
 if(check_perms('torrents_freeleech') && $Properties['FreeLeech'] != $CurFreeLeech) {
-	freeleech_torrents($TorrentID, $Properties['FreeLeech'], $Properties['FreeLeechType']);
+	freeleech_torrents($TorrentID, $Properties['FreeLeech']);     //, $Properties['FreeLeechType']);
 }
 
 $DB->query("SELECT GroupID, Time FROM torrents WHERE ID='$TorrentID'");

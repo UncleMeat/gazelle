@@ -23,12 +23,13 @@ if($HasDescriptionData !== TRUE) {
           tg.Name,
           tg.Image,
           tg.Body,
-          t.UserID
+          t.UserID,
+          t.FreeTorrent
           FROM torrents_group AS tg
           JOIN torrents AS t ON t.GroupID = tg.ID
           WHERE tg.ID='$GroupID'");
     if($DB->record_count() == 0) { error(404); }
-    list($CategoryID, $Name, $Image, $Body, $AuthorID) = $DB->next_record();
+    list($CategoryID, $Name, $Image, $Body, $AuthorID, $Free) = $DB->next_record();
     $CanEdit = check_perms('torrents_edit') || ($AuthorID == $LoggedUser['ID']);
 }
 
@@ -120,16 +121,10 @@ if(check_perms('torrents_edit')) {
 				<tr>
 					<td class="label">Freeleech</td>
 					<td>
-						<input type="checkbox" name="unfreeleech" /> Reset
-						<input type="checkbox" name="freeleech" /> Freeleech
-						<input type="checkbox" name="neutralleech" /> Neutralleech
-						 because 
-						<select name="freeleechtype">
-	<?	$FL = array("N/A", "Staff Pick", "Perma-FL", "Vanity House");
-		foreach($FL as $Key => $FLType) { ?>	
-							<option value="<?=$Key?>" <?=($Key == $Torrent['FreeLeechType'] ? ' selected="selected"' : '')?>><?=$FLType?></option>
-	<?	} ?>
-						</select>
+                                  
+                                    <input name="freeleech" value="0" type="radio"<? if($Free!=1) echo ' checked="checked"';?>/> None&nbsp;&nbsp;
+                                    <input name="freeleech" value="1" type="radio"<? if($Free==1) echo ' checked="checked"';?>/> Freeleech&nbsp;&nbsp;
+                              
 					</td>
 				</tr>	
 <? } ?>

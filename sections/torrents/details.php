@@ -87,9 +87,22 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
             $Title = "This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report');
             $DisplayName .= ' <span style="color: #FF3030; padding: 2px 4px 2px 4px;" title="'.$Title.'">Reported</span>';
         }
+        
+$Icons = '';
+if ( $DoubleSeed == '1' ) $SeedTooltip = "Unlimited Doubleseed"; // a theoretical state?
+elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'seed') $SeedTooltip = "Personal DoubleSeed";
+if ($SeedTooltip) 
+    $Icons = '<img src="static/common/symbols/doubleseed.gif" alt="DoubleSeed" title="'.$SeedTooltip.'" />&nbsp;&nbsp;';          
+ 
+if ( $FreeTorrent == '1' ) $FreeTooltip = "Unlimited Freeleech";
+elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'leech') $FreeTooltip = "Personal Freeleech";
+if ($FreeTooltip) 
+    $Icons .= '<img src="static/common/symbols/freedownload.gif" alt="Freeleech" title="'.$FreeTooltip.'" />&nbsp;&nbsp;';          
+
+ 
 ?>
 <div class="details">
-	<h2><?=$DisplayName?></h2>
+	<h2><?="$Icons$DisplayName"?></h2>
 <?
 	if(isset($_GET['did']) && is_number($_GET['did'])) {
           if($_GET['did'] == 1) $ResultMessage ='Successfully edited description';

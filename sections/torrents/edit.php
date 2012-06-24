@@ -18,7 +18,6 @@ $TorrentID = $_GET['id'];
 
 $DB->query("SELECT 
 	t.FreeTorrent, 
-	t.FreeLeechType, 
 	t.Dupable, 
 	t.DupeReason, 
 	t.Description AS TorrentDescription, 

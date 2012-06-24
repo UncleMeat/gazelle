@@ -112,16 +112,9 @@ class TORRENT_FORM {
 				<td class="label">Freeleech</td>
 				<td>
 					<select name="freeleech">
-<?	$FL = array("Normal", "Free", "Neutral");
+<?	$FL = array("Normal", "Free");    //, "Neutral");
 	foreach($FL as $Key => $Name) { ?>	
 						<option value="<?=$Key?>" <?=($Key == $Torrent['FreeTorrent'] ? ' selected="selected"' : '')?>><?=$Name?></option>
-<?	} ?>
-					</select>
-					 because 
-					<select name="freeleechtype">
-<?	$FL = array("N/A", "Staff Pick", "Perma-FL", "Vanity House");
-	foreach($FL as $Key => $Name) { ?>	
-						<option value="<?=$Key?>" <?=($Key == $Torrent['FreeLeechType'] ? ' selected="selected"' : '')?>><?=$Name?></option>
 <?	} ?>
 					</select>
 				</td>
