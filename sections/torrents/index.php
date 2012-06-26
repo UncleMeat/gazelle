@@ -480,7 +480,7 @@ if(!empty($_REQUEST['action'])) {
                   
                   include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
                             
-                  if (check_perms('torrents_delete') && !empty($_POST['groupid']) && is_number($_POST['groupid'])) {
+                  if (check_perms('torrents_review') && !empty($_POST['groupid']) && is_number($_POST['groupid'])) {
                       
                         $GroupID = (int)$_POST['groupid'];
                         $ReasonID = (int)$_POST['reasonid'];
@@ -581,6 +581,10 @@ if(!empty($_REQUEST['action'])) {
                         $DB->query("INSERT INTO torrents_reviews (GroupID, ReasonID, UserID, ConvID, Time, Status, Reason, KillTime)
 						 VALUES ($GroupID, $ReasonID, ".db_string($LoggedUser['ID']).", ".($ConvID?$ConvID:"null").", '$Time', '$Status', '".db_string($Reason)."', '".sqltime($KillTime)."')");
 			
+                        $Cache->delete_value('torrent_group_' . $GroupID);
+                        $Cache->delete_value('torrent_group_light_' . $GroupID);
+                        $Cache->delete_value('torrents_details_' . $GroupID);
+                        
                         // logging - 
                         write_log("Torrent $TorrentID ($Name) status set to $Status by ".$LoggedUser['Username']." ($LogDetails)"); // TODO: this is probably broken
                         write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], $LogDetails, 0);
