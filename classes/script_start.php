@@ -356,12 +356,11 @@ function user_heavy_info($UserID) {
 			i.PermittedForums,
 			m.FLTokens,
                   m.Credits,
-                    i.SupportFor,
-                    m.Badges
+                    i.SupportFor
 			FROM users_main AS m
 			INNER JOIN users_info AS i ON i.UserID=m.ID
 			WHERE m.ID='$UserID'");
-        $HeavyInfo = $DB->next_record(MYSQLI_ASSOC, array('CustomPermissions', 'SiteOptions', 'Badges'));
+        $HeavyInfo = $DB->next_record(MYSQLI_ASSOC, array('CustomPermissions', 'SiteOptions'));
 
         if (!empty($HeavyInfo['CustomPermissions'])) {
             $HeavyInfo['CustomPermissions'] = unserialize($HeavyInfo['CustomPermissions']);

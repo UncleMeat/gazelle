@@ -9,9 +9,7 @@ define(MAX_PERS_COLLAGES, 3); // How many personal collages should be shown by d
 include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
 include(SERVER_ROOT.'/sections/bookmarks/functions.php'); // has_bookmarked()
 include(SERVER_ROOT.'/classes/class_text.php');
-//include(SERVER_ROOT.'/classes/class_badges.php');
 $Text = new TEXT;
-//$BadgeBuilder = new BADGES();
 
 $GroupID=ceil($_GET['id']);
 
@@ -689,8 +687,7 @@ if($Catalogue === false) {
 			c.EditedUserID,
 			c.EditedTime,
 			u.Username,
-                  a.Signature,
-                  a.Badges
+                  a.Signature
 			FROM torrents_comments as c
 			LEFT JOIN users_main AS u ON u.ID=c.EditedUserID
                   LEFT JOIN users_main AS a ON a.ID = c.AuthorID
@@ -714,10 +711,9 @@ echo $Pages;
 
 //---------- Begin printing
 foreach($Thread as $Key => $Post){
-	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature, $Awards) = array_values($Post);
+	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature) = array_values($Post);
 	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
       $AuthorPermissions = get_permissions($PermissionID);
-      $Awards = unserialize($Awards); 
       list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
       // we need to get custom permissions for this author
       //$PermissionValues = get_permissions_for_user($AuthorID, false, $AuthorPermissions);
