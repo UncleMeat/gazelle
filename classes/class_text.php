@@ -1,7 +1,7 @@
 <?
 class TEXT {
 	// tag=>max number of attributes
-	private $ValidTags = array('mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, '#'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
+	private $ValidTags = array('goto'=>1, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
 	);
 	private $Smileys = array(
            ':smile1:'           => 'smile1.gif',
@@ -610,6 +610,12 @@ class TEXT {
                     $remove[] = "/$key/i";
                 }
 
+                // anchors
+                $remove[] = '/\[\#.*?\]/i';
+                $remove[] = '/\[\/\#\]/i';
+                $remove[] = '/\[anchor.*?\]/i';
+                $remove[] = '/\[\/anchor\]/i';
+                
                 $remove[] = '/\[align.*?\]/i';
                 $remove[] = '/\[\/align\]/i';
 
@@ -643,6 +649,9 @@ class TEXT {
                 $remove[] = '/\[font.*?\]/i';
                 $remove[] = '/\[\/font\]/i';
 
+                $remove[] = '/\[goto.*?\]/i';
+                $remove[] = '/\[\/goto\]/i';
+                
                 $remove[] = '/\[hide\]/i';
                 $remove[] = '/\[\/hide\]/i';
 
@@ -899,7 +908,7 @@ EXPLANATION OF PARSER LOGIC
 				$i += $CloseTag; // 5d) Move the pointer past the end of the [/close] tag. 
 			} elseif($WikiLink == true || $TagName == 'n' || $TagName == 'br' || $TagName == 'hr' || $TagName == 'cast' || $TagName == 'details' || $TagName == 'info' || $TagName == 'plot' || $TagName == 'screens') { 
 				// Don't need to do anything - empty tag with no closing 
-			} elseif($TagName === '*' || $TagName === '#') {
+			} elseif($TagName === '*') {   //  || $TagName === '#' - no longer list tag
 				// We're in a list. Find where it ends
 				$NewLine = $i;
 				do { // Look for \n[*]
@@ -958,6 +967,13 @@ EXPLANATION OF PARSER LOGIC
 			
 			// 6) Depending on what type of tag we're dealing with, create an array with the attribute and block.
 			switch($TagName) {
+				case 'goto':
+					$Array[$ArrayPos] = array('Type'=>'goto', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
+					break;
+				case 'anchor':
+				case '#':
+					$Array[$ArrayPos] = array('Type'=>'anchor', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
+					break;
 				case 'br':
 				case 'hr':
 				case 'cast':
@@ -1030,7 +1046,7 @@ EXPLANATION OF PARSER LOGIC
 				case 'spoiler':
 					$Array[$ArrayPos] = array('Type'=>$TagName, 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
 					break;
-				case '#':
+				//case '#': using this for anchor short tag... not used on old emp so figure should be okay
 				case '*':
 						$Array[$ArrayPos] = array('Type'=>'list');
 						$Array[$ArrayPos]['Val'] = explode('['.$TagName.']', $Block);
@@ -1133,6 +1149,21 @@ EXPLANATION OF PARSER LOGIC
 				continue;
 			}
 			switch($Block['Type']) {
+                        case 'goto': 
+                              if (!preg_match('/^[a-z0-9\-\_]+$/', $Block['Attr'] ) ){
+                                  $Str.='[goto='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/goto]';
+                              } else {
+                                  $Str.='<a class="goto" href="#'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
+					}
+					break;
+				case 'anchor':
+                              if (!preg_match('/^[a-z0-9\-\_]+$/', $Block['Attr'] ) ){
+                                  $Str.='[anchor='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/anchor]';
+                              } else {
+                                  $Str.='<a class="anchor" id="'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
+					}
+					break;
+                              
                         case 'mcom':  // doh! cannot be advanced if we want to mod comment normal users posts
                               $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[ <a href="forums.php?action=viewforum&forumid=17">Help</a> | <a href="articles.php?topic=rules">Rules</a> ]</div><div class="clear"></div></div>';
                               break;

@@ -1571,7 +1571,11 @@ blockquote.bbcode {
     background-color: #f4f4f4;
     color: #333;
     text-align: left;
-   /* font-size: 0.9em; */
+}
+a.anchor, a.anchor:visited, a.anchor:hover {
+    font-weight: bold;
+    font-size: larger;
+    color: #333;
 }
 
 /*  Stuff for the bbcode assistant  */

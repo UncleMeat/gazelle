@@ -1677,6 +1677,13 @@ blockquote.bbcode {
     text-align: left;
 }
 
+a.anchor, a.anchor:visited, a.anchor:hover {
+    font-weight: bold;
+    font-size: larger;
+    color: #333;
+}
+
+
 /*  Stuff for the bbcode assistant  */
 
 .bb_holder {
