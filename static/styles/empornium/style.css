@@ -1778,3 +1778,65 @@ span.reported {
     color: red;
     float: none;
 }
+
+.reels, .reelsi {
+    background-color: #eee;
+}
+.reels.play {
+    background-color: #fff;
+}
+
+.reels img {
+    border: 3px solid #ddd;
+}
+.reelsi img {
+    border: 1px solid #ccc;
+}
+img.win {
+    border: 3px solid black;  
+}
+img.win.flash {
+    border: 3px solid gold; 
+}
+.payout {
+    width:74px;
+    vertical-align: middle;
+    display:inline-block;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    color:black;
+}
+
+.fm input[type=button] {
+    background-color: white;
+    padding: 2px 10px 2px;
+    border: 2px solid darkblue;
+    width:80px;
+    color: darkblue;
+    cursor:pointer;
+}
+
+.fm input[type=text] {
+    text-align: center;
+    color: darkblue;
+    cursor:default;
+    width:70px;
+}
+
+.chip {
+    text-align: center;
+    width:60px;
+    height:60px;
+    position:absolute;
+    left:-50px;
+    background: url('images/betchip.png') no-repeat center center;
+}
+.chip span {
+    position:relative;
+    text-align: center;
+    top:18px;
+    font-size: 18px;
+    font-weight: bold;
+    color:black;
+}

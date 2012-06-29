@@ -1190,10 +1190,24 @@ INSERT INTO `schedule` (`NextHour`, `NextDay`, `NextBiWeekly`) VALUES
 (0, 0, 0);
 
 -- --------------------------------------------------------
+-- --------------------------------------------------------
 
 --
--- Tabellstruktur `sphinx_delta`
+-- Table structure for table `sm_results`
 --
+
+CREATE TABLE IF NOT EXISTS `sm_results` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `UserID` int(11) NOT NULL,
+  `Spins` smallint(1) NOT NULL,
+  `Won` int(11) NOT NULL,
+  `Bet` mediumint(5) NOT NULL,
+  `Result` varchar(12) CHARACTER SET utf8 NOT NULL,
+  `Time` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `UserID` (`UserID`),
+  KEY `Won` (`Won`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2039,7 +2053,6 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `FLTokens` int(10) NOT NULL DEFAULT '0',
   `Credits` double(11,2) NOT NULL DEFAULT '0.00',
   `Signature` text,
-  `Badges` text NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Username` (`Username`),
   KEY `Email` (`Email`),
