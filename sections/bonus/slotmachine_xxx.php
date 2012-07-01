@@ -86,7 +86,7 @@ echo "var reelPix = ". json_encode($Reel) . ";\n"; ?>
             $DB->query("SELECT Count(ID), SUM(Spins), SUM(Won),SUM(Bet*Spins),(SUM(Won)/SUM(Bet*Spins)) 
                       FROM sm_results");
 		$TotalResults = $DB->next_record();
-		$Cache->cache_value('sm_sum_history', $TotalResults, 3600*24);
+		$Cache->cache_value('sm_sum_history', $TotalResults, 300);
 	  }
         list($Num, $NumSpins, $TotalWon, $TotalBet, $TotalReturn) = $TotalResults;
         

@@ -54,7 +54,12 @@ $HighPayout = $Cache->get_value('sm_lowest_top_payout');
 }
 
 $DB->query("UPDATE users_main SET Credits=(Credits+$Win-$TotalBet) WHERE ID=$UserID");
-$LoggedUser['Credits']+=($Win-$TotalBet);
+//$LoggedUser['Credits']+=($Win-$TotalBet);
+$HeavyUpdates = array();
+$HeavyUpdates['Credits'] = $LoggedUser['Credits']+($Win-$TotalBet);
+$Cache->begin_transaction('user_info_heavy_'.$UserID);
+$Cache->update_row(false, $HeavyUpdates);
+$Cache->commit_transaction(0);
 
 $Results = array();
 $Results[0] = $Pos[0];
