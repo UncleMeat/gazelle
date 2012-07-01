@@ -1,7 +1,7 @@
 <?
 class TEXT {
 	// tag=>max number of attributes
-	private $ValidTags = array('goto'=>1, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
+	private $ValidTags = array('link'=>1, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
 	);
 	private $Smileys = array(
            ':smile1:'           => 'smile1.gif',
@@ -649,8 +649,8 @@ class TEXT {
                 $remove[] = '/\[font.*?\]/i';
                 $remove[] = '/\[\/font\]/i';
 
-                $remove[] = '/\[goto.*?\]/i';
-                $remove[] = '/\[\/goto\]/i';
+                $remove[] = '/\[link.*?\]/i';
+                $remove[] = '/\[\/link\]/i';
                 
                 $remove[] = '/\[hide\]/i';
                 $remove[] = '/\[\/hide\]/i';
@@ -967,8 +967,8 @@ EXPLANATION OF PARSER LOGIC
 			
 			// 6) Depending on what type of tag we're dealing with, create an array with the attribute and block.
 			switch($TagName) {
-				case 'goto':
-					$Array[$ArrayPos] = array('Type'=>'goto', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
+				case 'link':
+					$Array[$ArrayPos] = array('Type'=>'link', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
 					break;
 				case 'anchor':
 				case '#':
@@ -1149,12 +1149,12 @@ EXPLANATION OF PARSER LOGIC
 				continue;
 			}
 			switch($Block['Type']) {
-                        case 'goto': 
-                              if (!preg_match('/^[a-z0-9\-\_]+$/', $Block['Attr'] ) ){
-                                  $Str.='[goto='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/goto]';
-                              } else {
-                                  $Str.='<a class="goto" href="#'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
-					}
+                        case 'link': // local links and same page links to anchors
+                              if (!preg_match('/^#[a-z0-9\-\_]+$|^\/[a-z0-9\&\-\_]+\.php[a-z0-9\=\?\#\&\-\_]*$/', $Block['Attr'] ) ){
+                                  $Str.='[link='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/link]';
+					} else {
+                                  $Str.='<a class="link" href="'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
+                              }
 					break;
 				case 'anchor':
                               if (!preg_match('/^[a-z0-9\-\_]+$/', $Block['Attr'] ) ){
@@ -1164,7 +1164,7 @@ EXPLANATION OF PARSER LOGIC
 					}
 					break;
                               
-                        case 'mcom':  // doh! cannot be advanced if we want to mod comment normal users posts
+                        case 'mcom':  
                               $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[ <a href="forums.php?action=viewforum&forumid=17">Help</a> | <a href="articles.php?topic=rules">Rules</a> ]</div><div class="clear"></div></div>';
                               break;
 				case 'table':
