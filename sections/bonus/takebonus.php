@@ -91,18 +91,20 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 if($LoggedUser['BytesDownloaded'] <= 0){
                     $ResultMessage= "You have no download to deduct from!";
                 } else {
-                    $Summary = sqltime().' - '.ucfirst("user bought -$Value gb. Cost: $Cost credits");	
+                    $Summary = sqltime().' - '.ucfirst("user bought -$Value gb. Cost: $Cost credits");
+                    if($LoggedUser['BytesDownloaded'] < $ValueBytes) 
+                        $Summary .= " | NOTE: Could only remove ". get_size($LoggedUser['BytesDownloaded']);	
                     $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
 
-                    $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought -$Value gb.");	
+                    $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought -$Value gb.");
+                    if($LoggedUser['BytesDownloaded'] < $ValueBytes) 
+                        $Summary .= " | NOTE: Could only remove ". get_size($LoggedUser['BytesDownloaded']);	
                     $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                     //$Value = get_bytes($Value.'gb');
                     $UpdateSet[]="m.Downloaded=(m.Downloaded-'$ValueBytes')";
                     $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
                     $ResultMessage=$Summary;
-                    if($LoggedUser['BytesDownloaded'] < $ValueBytes) {
-                        $ResultMessage .= " | NOTE: Could only remove ". get_size($ValueBytes - $LoggedUser['BytesDownloaded']);
-                    }
+                     
                 }
                 break;
             
