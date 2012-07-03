@@ -1618,7 +1618,7 @@ div.modcomment {
     text-align: left;
     margin: 12px auto;
     padding: 10px;
-    border: 3px solid #600;
+    border: 2px solid #600;
     color: black;
     font-size: 9pt;
     font-weight: normal;
@@ -1709,12 +1709,14 @@ select.bb_button {
     cursor:pointer;
     color: #000000; 
     height: 24px;
+    margin-top:-4px;
 }
 
 .bb_buttons_left {
     float: left; 
     text-align: left; 
-    margin-top: 0px;
+    margin: 6px 4px 0px 0px;
+    min-height: 20px;
 }
 
 .bb_buttons_right {
@@ -1724,7 +1726,7 @@ select.bb_button {
 .bb_buttons_right div {
     float: left; 
     text-align: left;
-    margin: 3px 20px 0 0;
+    margin: 3px 4px 0 0;
 }
 
 
@@ -1733,6 +1735,7 @@ a.bb_button {
     background:white;
     cursor:pointer;
     color: #000000; 
+    border: 1px solid #7BA3C1; /* #005488; */
 }
 
 a.bb_button:hover { 
@@ -1743,9 +1746,10 @@ a.bb_button:hover {
 
 .bb_icon { 
     padding:2px; 
-    margin:0px 1px; 
+    margin:-2px 1px 0px 0px; 
     background:white;
     cursor:pointer; 
+    border: 1px solid #7BA3C1;
 }
 
 .bb_smiley img {

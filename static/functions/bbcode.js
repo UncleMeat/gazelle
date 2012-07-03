@@ -211,18 +211,53 @@ function tagwrap(opentag, closetag, textID) {
 }
 
 
-function clink(textID) {
-  var linkTitle;
-  var linkAddr;
+function video(textID) {
+    var linkAddr = prompt("Please enter the url ", "http://www.youtube.com/");
 
-  linkAddr = prompt("Please enter the full URL", "http://");
-  if (linkAddr && linkAddr != "http://") linkTitle = prompt("Please enter the title", " ");
-
-  if (linkAddr && linkTitle) wrap('url', linkTitle, linkAddr, textID);
-
+    if (linkAddr && linkAddr != "http://www.youtube.com/") em('[video=' + linkAddr + ']', textID);
 }
 
-function cimage(textID) {
+function flash(textID) {
+    var linkAddr = prompt("Please enter the url for the flash object", "http://");
+    if (linkAddr && linkAddr != "http://") {
+        var linkSize = prompt("Please enter the size for the flash object", "400,400");
+        if (linkAddr && linkSize) wrap('flash', linkAddr, linkSize, textID);
+    }
+}
+
+function anchor(textID) {
+    var linkName = prompt("Please enter the name for the anchored heading", " ");
+    if (linkName && linkName != " ") {
+        var linkTitle = prompt("Please enter the heading text", " ");
+        if (linkName && linkTitle) wrap('anchor', linkTitle, linkName, textID);
+    }
+}
+
+function link(textID) {
+    var linkAddr = prompt("Please enter the relative page url\nNOTE: only local pages!", "/");
+    if (linkAddr && linkAddr != "/") {
+        var linkTitle = prompt("Please enter the link text", " ");
+        if (linkAddr && linkTitle) wrap('link', linkTitle, linkAddr, textID);
+    }
+}
+
+function url(textID) {
+    var linkAddr = prompt("Please enter the full URL", "http://");
+    if (linkAddr && linkAddr != "http://") {
+        var linkTitle = prompt("Please enter the title", " ");
+        if (linkAddr && linkTitle) wrap('url', linkTitle, linkAddr, textID);
+    }
+}
+
+function spoiler(textID) {
+    var spoilertext = prompt("Please enter the spoiler text", " ");
+    if (spoilertext && spoilertext != " ") {
+        var linkTitle = prompt("Please enter the title", " ");
+        if (spoilertext && linkTitle) wrap('spoiler', spoilertext, linkTitle, textID);
+    }
+}
+
+function image(textID) {
   var link;
   link = prompt("Please enter the full URL for your image\nOnly .png, .jpg, .gif images", "http://");
   var re_text = /\.jpg|\.gif|\.png|\.jpeg/i;
@@ -231,7 +266,6 @@ function cimage(textID) {
     link = prompt("Please enter the full URL for your image\nOnly .png, .jpg, .gif images", "http://");
   }
   if (link != "http://" && link) wrap('img', link, '', textID);
-
 }
 
 function table(textID) {
