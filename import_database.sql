@@ -14,11 +14,16 @@ UPDATE `gazelle`.`users_main`
 SET `enabled` = '1'
 WHERE EXISTS (SELECT 1 from `emp`.`users` WHERE `emp`.`users`.`id`=`gazelle`.`users_main`.`id` and `enabled`='yes');
 
--- set gazelle.users_main.enabled to 0 where emp.users.enabled='no'
+-- lets auto confirm users stuck in pending status or we'll lose them
 
 UPDATE `gazelle`.`users_main`
-SET `enabled` = '0'
-WHERE EXISTS (SELECT 1 from `emp`.`users` WHERE `emp`.`users`.`id`=`gazelle`.`users_main`.`id` and `enabled`='no');
+SET `enabled` = '1'
+WHERE EXISTS (SELECT 1 from `emp`.`users` WHERE `emp`.`users`.`id`=`gazelle`.`users_main`.`id` and `status`='pending' and `enabled`='no');
+
+-- disable users that are confirmed and enable=0, banned users.
+UPDATE `gazelle`.`users_main`
+SET `enabled` = '2'
+WHERE EXISTS (SELECT 1 from `emp`.`users` WHERE `emp`.`users`.`id`=`gazelle`.`users_main`.`id` and `status`='confirmed' and `enabled`='no');
 
 -- set the correct class for the user
 
