@@ -1,7 +1,7 @@
 <?
 class TEXT {
 	// tag=>max number of attributes
-	private $ValidTags = array('video'=>1, 'vid'=>1, 'flash'=>1, 'banner'=>0, 'thumb'=>0, 'link'=>1, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
+	private $ValidTags = array('video'=>1, 'flash'=>1, 'banner'=>0, 'thumb'=>0, 'link'=>1, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
 	);
 	private $Smileys = array(
            ':smile1:'           => 'smile1.gif',
@@ -582,6 +582,7 @@ class TEXT {
 		$Str = preg_replace('/\=\=\=([^=].*)\=\=\=/i', '[inlinesize=5]$1[/inlinesize]', $Str);
 		$Str = preg_replace('/\=\=([^=].*)\=\=/i', '[inlinesize=7]$1[/inlinesize]', $Str);
 		
+		$Str = preg_replace('/\[vid\=/i', '[video=', $Str);
 		$Str = $this->parse($Str);
 		
 		$HTML = $this->to_html($Str);
@@ -888,7 +889,7 @@ EXPLANATION OF PARSER LOGIC
 			if($TagName == 'img' && !empty($Tag[3][0])) { //[img=...]
 				$Block = ''; // Nothing inside this tag
 				// Don't need to touch $i
-                  } elseif ($TagName == 'vid') {
+                  } elseif ($TagName == 'video') {
 				$Block = '';
 			} elseif($TagName == 'inlineurl') { // We did a big replace early on to turn http:// into [inlineurl]http://
 				
@@ -971,7 +972,7 @@ EXPLANATION OF PARSER LOGIC
 			
 			// 6) Depending on what type of tag we're dealing with, create an array with the attribute and block.
 			switch($TagName) {
-				case 'vid':
+				case 'video':
 					$Array[$ArrayPos] = array('Type'=>'video', 'Attr'=>$Attrib, 'Val'=>'');
 					break;
 				case 'flash':
@@ -1173,10 +1174,12 @@ EXPLANATION OF PARSER LOGIC
 			switch($Block['Type']) {
                         case 'video':
 					//actually a youtube only tag inherited from emp
-					if(!$this->valid_url($Block['Attr']) || strpos($Block['Attr'], 'http://www.youtube.com/') === FALSE ) {
+					//if(!$this->valid_url($Block['Attr']) || strpos($Block['Attr'], 'http://www.youtube.com/') === FALSE ) {
+                              if ( !preg_match('/^http:\/\/www\.youtube\.com\/.*v=(.*)$/i', $Block['Attr'], $matches ) ) {
 						$Str.='[video='.$Block['Attr'].']';
 					} else {
-                                    $Str.='<object height="385" width="640"><param name="movie" value="'.$Block['Attr'].'"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><embed src="'.$Block['Attr'].'" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" height="385" width="640"></object>';
+                                    $vidurl = "http://www.youtube.com/v/{$matches[1]}";
+                                    $Str.='<object height="385" width="640"><param name="movie" value="'.$vidurl.'"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><embed src="'.$vidurl.'" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" height="385" width="640"></object>';
                               }
                               break;
                         case 'flash':
@@ -1317,7 +1320,7 @@ EXPLANATION OF PARSER LOGIC
 					$Str.='<pre>'.$Block['Val'].'</pre>';
 					break;
 				case 'code':
-					$Str.='<code>'.$Block['Val'].'</code>';
+					$Str.='<code class="bbcode">'.$Block['Val'].'</code>';
 					break;
 				case 'list':
 					$Str .= '<'.$Block['ListType'].'>';
@@ -1546,6 +1549,8 @@ EXPLANATION OF PARSER LOGIC
                     <a class="bb_button" onclick="tag('i', '<?=$textarea;?>')" title="Italic text: [i]text[/i]" alt="I"><i>I</i></a>
                     <a class="bb_button" onclick="tag('u', '<?=$textarea;?>')" title="Underline text: [u]text[/u]" alt="U"><u>U</u></a>
                     <a class="bb_button" onclick="tag('s', '<?=$textarea;?>')" title="Strikethrough text: [s]text[/s]" alt="S"><s>S</s></a>
+                    <a class="bb_button" onclick="em('[hr]', '<?=$textarea;?>')" title="Horizontal Line: [hr]" alt="HL">hr</a>
+                    
                     <a class="bb_button" onclick="url('<?=$textarea;?>')" title="URL: [url]http://url[/url] or [url=http://url]URL text[/url]" alt="Url">Url</a>
                     <a class="bb_button" onclick="anchor('<?=$textarea;?>')" title="Anchored heading: [anchor=name]Heading text[/anchor] or [#=name]Heading text[/#]" alt="Anchor">Anchor</a>
                     <a class="bb_button" onclick="link('<?=$textarea;?>')" title="Local link: [link=/localpage.php]Link text[/link] or [link=#anchorname]Link text[/link]" alt="Link">Link</a>
@@ -1584,7 +1589,6 @@ EXPLANATION OF PARSER LOGIC
                       <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low', '<?=$textarea;?>')" title="To Lowercase" alt="Low" />
               </div>
                 
-                
               <div class="bb_buttons_left">
                     <select class="bb_button" name="fontfont" id="fontfont<?=$textarea;?>" onchange="font('font',this.value,'<?=$textarea;?>');" title="Font: [font=fontfamily]text[/font]">
                         <option value="0">Font Type</option>
@@ -1609,7 +1613,13 @@ EXPLANATION OF PARSER LOGIC
                       <option value="10">10</option>
                     </select>
                     <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','color');" title="Text Color: [color=colorname]text[/color] or [color=#hexnumber]text[/color]" alt="Color">Color</a>
-              
+                    
+                    <a class="bb_button" onclick="em('[cast]', '<?=$textarea;?>')" title="cast icon: [quote]" alt="cast">cast</a>
+                    <a class="bb_button" onclick="em('[details]', '<?=$textarea;?>')" title="details icon: [details]" alt="details">details</a>
+                    <a class="bb_button" onclick="em('[info]', '<?=$textarea;?>')" title="info icon: [info]" alt="info">info</a>
+                    <a class="bb_button" onclick="em('[plot]', '<?=$textarea;?>')" title="plot icon: [plot]" alt="plot">plot</a>
+                    <a class="bb_button" onclick="em('[screens]', '<?=$textarea;?>')" title="Screens icon: [screens]" alt="screens">screens</a>
+                    
               </div>
               </td>
           </tr> 

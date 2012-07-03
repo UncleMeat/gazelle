@@ -1677,6 +1677,13 @@ blockquote.bbcode {
     text-align: left;
 }
 
+code.bbcode {
+    display:inline-block;
+    background-color: #fffff3;
+    color: black;
+    padding:0px 2px;
+}
+
 a.anchor, a.anchor:visited, a.anchor:hover {
     font-weight: bold;
     font-size: larger;
@@ -1752,6 +1759,11 @@ a.bb_button:hover {
     border: 1px solid #7BA3C1;
 }
 
+.bb_help {
+    color: #005689;
+    font-weight: bold;
+    padding: 2px 8px;
+}
 .bb_smiley img {
     padding: 1px 1px 2px; 
 }

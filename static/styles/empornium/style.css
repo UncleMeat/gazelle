@@ -1572,6 +1572,12 @@ blockquote.bbcode {
     color: #333;
     text-align: left;
 }
+code.bbcode {
+    display:inline-block;
+    background-color: #fffff3;
+    color: black;
+    padding:0px 2px;
+}
 a.anchor, a.anchor:visited, a.anchor:hover {
     font-weight: bold;
     font-size: larger;
