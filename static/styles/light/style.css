@@ -1619,7 +1619,7 @@ div.modcomment {
     text-align: left;
     margin: 12px auto;
     padding: 10px;
-    border: 3px solid #600;
+    border: 2px solid #600;
     color: black;
     font-size: 9pt;
     font-weight: normal;
@@ -1678,6 +1678,20 @@ blockquote.bbcode {
     text-align: left;
 }
 
+code.bbcode {
+    display:inline-block;
+    background-color: #fffff3;
+    color: black;
+    padding:0px 2px;
+}
+
+a.anchor, a.anchor:visited, a.anchor:hover {
+    font-weight: bold;
+    font-size: larger;
+    color: #333;
+}
+
+
 /*  Stuff for the bbcode assistant  */
 
 .bb_holder {
@@ -1703,12 +1717,14 @@ select.bb_button {
     cursor:pointer;
     color: #000000; 
     height: 24px;
+    margin-top:-4px;
 }
 
 .bb_buttons_left {
     float: left; 
     text-align: left; 
-    margin-top: 0px;
+    margin: 6px 4px 0px 0px;
+    min-height: 20px;
 }
 
 .bb_buttons_right {
@@ -1718,7 +1734,7 @@ select.bb_button {
 .bb_buttons_right div {
     float: left; 
     text-align: left;
-    margin: 3px 20px 0 0;
+    margin: 3px 4px 0 0;
 }
 
 
@@ -1727,6 +1743,7 @@ a.bb_button {
     background:white;
     cursor:pointer;
     color: #000000; 
+    border: 1px solid #7BA3C1; /* #005488; */
 }
 
 a.bb_button:hover { 
@@ -1737,11 +1754,17 @@ a.bb_button:hover {
 
 .bb_icon { 
     padding:2px; 
-    margin:0px 1px; 
+    margin:-2px 1px 0px 0px; 
     background:white;
     cursor:pointer; 
+    border: 1px solid #7BA3C1;
 }
 
+.bb_help {
+    color: #005689;
+    font-weight: bold;
+    padding: 2px 8px;
+}
 .bb_smiley img {
     padding: 1px 1px 2px; 
 }
@@ -1818,6 +1841,10 @@ a.button {
 	font-family: Verdana, Geneva, sans-serif;
 	padding: 7px 15px;
 }
+a.button:visited {
+	text-decoration: none;
+	color: #fff;	
+}
 
 .greenButton {
 	background: #5da53a;
@@ -1878,4 +1905,66 @@ span.reported {
     font-weight: bold;
     color: red;
     float: none;
+}
+
+.reels, .reelsi {
+    background-color: #eee;
+}
+.reels.play {
+    background-color: #fff;
+}
+
+.reels img {
+    border: 3px solid #ddd;
+}
+.reelsi img {
+    border: 1px solid #ccc;
+}
+img.win {
+    border: 3px solid black;  
+}
+img.win.flash {
+    border: 3px solid gold; 
+}
+.payout {
+    width:74px;
+    vertical-align: middle;
+    display:inline-block;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    color:black;
+}
+
+.fm input[type=button] {
+    background-color: white;
+    padding: 2px 10px 2px;
+    border: 2px solid darkblue;
+    width:80px;
+    color: darkblue;
+    cursor:pointer;
+}
+
+.fm input[type=text] {
+    text-align: center;
+    color: darkblue;
+    cursor:default;
+    width:70px;
+}
+
+.chip {
+    text-align: center;
+    width:60px;
+    height:60px;
+    position:absolute;
+    left:-50px;
+    background: url('images/betchip.png') no-repeat center center;
+}
+.chip span {
+    position:relative;
+    text-align: center;
+    top:18px;
+    font-size: 18px;
+    font-weight: bold;
+    color:black;
 }

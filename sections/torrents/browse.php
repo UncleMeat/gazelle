@@ -605,24 +605,39 @@ $row='a';
         $SL = ($TotalSeeders == 0 ? "<span class=r00>" . number_format($TotalSeeders) . "</span>" : number_format($TotalSeeders)) . "/" . number_format($TotalLeechers);
         $Overlay = "<table class=overlay><tr><td class=overlay colspan=2><strong>" . $OverName . "</strong></td><tr><td class=leftOverlay><img style='max-width: 150px;' src=" . $OverImage . "></td><td class=rightOverlay><strong>Uploader:</strong><br />{$Data['Username']}<br /><br /><strong>Size:</strong><br />" . get_size($Data['Size']) . "<br /><br /><strong>Snatched:</strong><br />" . number_format($TotalSnatched) . "<br /><br /><strong>Seeders/Leechers:</strong><br />" . $SL . "</td></tr></table>";
         $AddExtra = '';
+        $SeedTooltip='';
+        $FreeTooltip='';
         if ($Data['FreeTorrent'] == '1') {
             $AddExtra .= ' <strong>/ Freeleech!</strong>';
+            $FreeTooltip = "Unlimited Freeleech";
         } elseif ($Data['FreeTorrent'] == '2') {
             $AddExtra .= ' <strong>/ Neutral Leech!</strong>';
+            $FreeTooltip = "Neutral Freeleech";
         }
         if ($Data[double_seed] == '1') {
             $AddExtra .= ' <strong>/ Doubleseed!</strong>';
+            $SeedTooltip = "Unlimited Doubleseed";
         }
         
         if (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'leech') {
             $AddExtra .= ' <strong>/ Personal Freeleech!</strong>';
+            $FreeTooltip = "Freeleech Slot";
         } elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'seed') {
             $AddExtra .= ' <strong>/ Personal Doubleseed!</strong>';
+            $SeedTooltip = "Doubleseed Slot";
         }
+        
+        $Icons = '';
+        if ($SeedTooltip) 
+            $Icons = '&nbsp;&nbsp;<img src="static/common/symbols/doubleseed.gif" alt="DoubleSeed" title="'.$SeedTooltip.'" />';          
+        if ($FreeTooltip) 
+            $Icons .= '&nbsp;&nbsp;<img src="static/common/symbols/freedownload.gif" alt="Freeleech" title="'.$FreeTooltip.'" />';          
+        
         if ($Data['ReportCount'] > 0) {
             $Title = "This torrent has ".$Data['ReportCount']." active ".($Data['ReportCount'] > 1 ?'reports' : 'report');
             $AddExtra .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
         }
+        $AddExtra .= $Icons;
         $row = ($row == 'a'? 'b' : 'a');
         $IsMarkedForDeletion = $Data['Status'] == 'Warned' || $Data['Status'] == 'Pending';
         ?> 

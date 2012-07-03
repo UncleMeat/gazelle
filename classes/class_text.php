@@ -1,7 +1,7 @@
 <?
 class TEXT {
 	// tag=>max number of attributes
-	private $ValidTags = array('mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, '#'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
+	private $ValidTags = array('video'=>1, 'flash'=>1, 'banner'=>0, 'thumb'=>0, 'link'=>1, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
 	);
 	private $Smileys = array(
            ':smile1:'           => 'smile1.gif',
@@ -570,7 +570,8 @@ class TEXT {
             $this->Advanced = $AdvancedTags;
 		$Str = display_str($Str);
 		//Inline links
-		$URLPrefix = '(\[url\]|\[url\=|\[img\=|\[img\])';
+		$Str = preg_replace('/\[video/i', '[vid', $Str);
+		$URLPrefix = '(\[url\]|\[url\=|\[vid\=|\[img\=|\[img\])';
 		$Str = preg_replace('/'.$URLPrefix.'\s+/i', '$1', $Str);
 		$Str = preg_replace('/(?<!'.$URLPrefix.')http(s)?:\/\//i', '$1[inlineurl]http$2://', $Str);
 		// For anonym.to and archive.org links, remove any [inlineurl] in the middle of the link
@@ -581,6 +582,7 @@ class TEXT {
 		$Str = preg_replace('/\=\=\=([^=].*)\=\=\=/i', '[inlinesize=5]$1[/inlinesize]', $Str);
 		$Str = preg_replace('/\=\=([^=].*)\=\=/i', '[inlinesize=7]$1[/inlinesize]', $Str);
 		
+		$Str = preg_replace('/\[vid\=/i', '[video=', $Str);
 		$Str = $this->parse($Str);
 		
 		$HTML = $this->to_html($Str);
@@ -610,6 +612,12 @@ class TEXT {
                     $remove[] = "/$key/i";
                 }
 
+                // anchors
+                $remove[] = '/\[\#.*?\]/i';
+                $remove[] = '/\[\/\#\]/i';
+                $remove[] = '/\[anchor.*?\]/i';
+                $remove[] = '/\[\/anchor\]/i';
+                
                 $remove[] = '/\[align.*?\]/i';
                 $remove[] = '/\[\/align\]/i';
 
@@ -643,6 +651,9 @@ class TEXT {
                 $remove[] = '/\[font.*?\]/i';
                 $remove[] = '/\[\/font\]/i';
 
+                $remove[] = '/\[link.*?\]/i';
+                $remove[] = '/\[\/link\]/i';
+                
                 $remove[] = '/\[hide\]/i';
                 $remove[] = '/\[\/hide\]/i';
 
@@ -712,6 +723,7 @@ class TEXT {
                 $remove[] = '/\[user\]/i';
                 $remove[] = '/\[\/user\]/i';
 
+                $remove[] = '/\[vid.*?\]/i';
                 $remove[] = '/\[video.*?\]/i';
 
                 $Str = preg_replace($remove, '', $Str);
@@ -877,6 +889,8 @@ EXPLANATION OF PARSER LOGIC
 			if($TagName == 'img' && !empty($Tag[3][0])) { //[img=...]
 				$Block = ''; // Nothing inside this tag
 				// Don't need to touch $i
+                  } elseif ($TagName == 'video') {
+				$Block = '';
 			} elseif($TagName == 'inlineurl') { // We did a big replace early on to turn http:// into [inlineurl]http://
 				
 				// Let's say the block can stop at a newline or a space
@@ -899,7 +913,7 @@ EXPLANATION OF PARSER LOGIC
 				$i += $CloseTag; // 5d) Move the pointer past the end of the [/close] tag. 
 			} elseif($WikiLink == true || $TagName == 'n' || $TagName == 'br' || $TagName == 'hr' || $TagName == 'cast' || $TagName == 'details' || $TagName == 'info' || $TagName == 'plot' || $TagName == 'screens') { 
 				// Don't need to do anything - empty tag with no closing 
-			} elseif($TagName === '*' || $TagName === '#') {
+			} elseif($TagName === '*') {   //  || $TagName === '#' - no longer list tag
 				// We're in a list. Find where it ends
 				$NewLine = $i;
 				do { // Look for \n[*]
@@ -958,6 +972,19 @@ EXPLANATION OF PARSER LOGIC
 			
 			// 6) Depending on what type of tag we're dealing with, create an array with the attribute and block.
 			switch($TagName) {
+				case 'video':
+					$Array[$ArrayPos] = array('Type'=>'video', 'Attr'=>$Attrib, 'Val'=>'');
+					break;
+				case 'flash':
+					$Array[$ArrayPos] = array('Type'=>'flash', 'Attr'=>$Attrib, 'Val'=>$Block);
+					break;
+				case 'link':
+					$Array[$ArrayPos] = array('Type'=>'link', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
+					break;
+				case 'anchor':
+				case '#':
+					$Array[$ArrayPos] = array('Type'=>'anchor', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
+					break;
 				case 'br':
 				case 'hr':
 				case 'cast':
@@ -989,6 +1016,8 @@ EXPLANATION OF PARSER LOGIC
 					break;
 				case 'img':
 				case 'image':
+				case 'banner':
+				case 'thumb':
 					if(empty($Block)) {
 						$Block = $Attrib;
 					}
@@ -1030,7 +1059,7 @@ EXPLANATION OF PARSER LOGIC
 				case 'spoiler':
 					$Array[$ArrayPos] = array('Type'=>$TagName, 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
 					break;
-				case '#':
+				//case '#': using this for anchor short tag... not used on old emp so figure should be okay
 				case '*':
 						$Array[$ArrayPos] = array('Type'=>'list');
 						$Array[$ArrayPos]['Val'] = explode('['.$TagName.']', $Block);
@@ -1121,6 +1150,16 @@ EXPLANATION OF PARSER LOGIC
             }
       }
       
+      function get_size_attributes($Attrib){
+            if ( $Attrib == '' || preg_match('/^([0-9]{2,4})\,([0-9]{2,4})$/', $Attrib, $matches ) ) {
+                if ( $Attrib == '' || count( $matches) < 3 ) {
+                    if (!$matches[1]) $matches[1] = 500;
+                    if (!$matches[2]) $matches[2] = $matches[1];
+                }
+                return ' width="'.$matches[1].'" height="'.$matches[2].'"';
+            }
+            return '';
+      }
       
 	function to_html($Array) {
 		$this->Levels++;
@@ -1133,7 +1172,46 @@ EXPLANATION OF PARSER LOGIC
 				continue;
 			}
 			switch($Block['Type']) {
-                        case 'mcom':  // doh! cannot be advanced if we want to mod comment normal users posts
+                        case 'video':
+					//actually a youtube only tag inherited from emp
+					//if(!$this->valid_url($Block['Attr']) || strpos($Block['Attr'], 'http://www.youtube.com/') === FALSE ) {
+                              if ( !preg_match('/^http:\/\/www\.youtube\.com\/.*v=(.*)$/i', $Block['Attr'], $matches ) ) {
+						$Str.='[video='.$Block['Attr'].']';
+					} else {
+                                    $vidurl = "http://www.youtube.com/v/{$matches[1]}";
+                                    $Str.='<object height="385" width="640"><param name="movie" value="'.$vidurl.'"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><embed src="'.$vidurl.'" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" height="385" width="640"></object>';
+                              }
+                              break;
+                        case 'flash':
+                              // note: as a non attribute the link has been auto-formatted as [inlinelink]link.url 
+                              if ( ($Block['Attr'] != '' && !preg_match('/^([0-9]{2,4})\,([0-9]{2,4})$/', $Block['Attr'], $matches ))
+                                      || strpos($Block['Val'], '[inlineurl]') === FALSE  ) {
+                                  $Str.='[flash='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/flash]';
+					} else {
+                                  if ( $Block['Attr'] == '' || count( $matches) < 3 ) {
+                                      if (!$matches[1]) $matches[1] = 500;
+                                      if (!$matches[2]) $matches[2] = $matches[1];
+                                  }
+                                  $Block['Val'] = str_replace('[inlineurl]', '', $Block['Val']);
+                                  $Str .= '<object classid="clsid:D27CDB6E-AE6D-11CF-96B8-444553540000" codebase="http://active.macromedia.com/flash2/cabs/swflash.cab#version=5,0,0,0" height="'.$matches[2].'" width="'.$matches[1].'"><param name="movie" value="'.$Block['Val'].'"><param name="play" value="false"><param name="loop" value="false"><param name="quality" value="high"><param name="allowScriptAccess" value="never"><param name="allowNetworking" value="internal"><embed  type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" play="false" loop="false" quality="high" allowscriptaccess="never" allownetworking="internal"  src="'.$Block['Val'].'" height="'.$matches[2].'" width="'.$matches[1].'"><param name="wmode" value="transparent"></object>';
+                              }
+                              break;  
+                        case 'link': // local links and same page links to anchors
+                              if (!preg_match('/^#[a-z0-9\-\_]+$|^\/[a-z0-9\&\-\_]+\.php[a-z0-9\=\?\#\&\-\_]*$/', $Block['Attr'] ) ){
+                                  $Str.='[link='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/link]';
+					} else {
+                                  $Str.='<a class="link" href="'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
+                              }
+					break;
+				case 'anchor':
+                              if (!preg_match('/^[a-z0-9\-\_]+$/', $Block['Attr'] ) ){
+                                  $Str.='[anchor='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/anchor]';
+                              } else {
+                                  $Str.='<a class="anchor" id="'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
+					}
+					break;
+                              
+                        case 'mcom':  
                               $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[ <a href="forums.php?action=viewforum&forumid=17">Help</a> | <a href="articles.php?topic=rules">Rules</a> ]</div><div class="clear"></div></div>';
                               break;
 				case 'table':
@@ -1242,7 +1320,7 @@ EXPLANATION OF PARSER LOGIC
 					$Str.='<pre>'.$Block['Val'].'</pre>';
 					break;
 				case 'code':
-					$Str.='<code>'.$Block['Val'].'</code>';
+					$Str.='<code class="bbcode">'.$Block['Val'].'</code>';
 					break;
 				case 'list':
 					$Str .= '<'.$Block['ListType'].'>';
@@ -1463,68 +1541,86 @@ EXPLANATION OF PARSER LOGIC
 
         <table class="bb_holder">
           <tbody><tr>
-            <td class="colhead" style="padding: 2px 6px">
+            <td class="colhead" style="padding: 2px 6px 0px 6px">
+                
                 <div class="bb_buttons_left">
              
                     <a class="bb_button" onclick="tag('b', '<?=$textarea;?>')" title="Bold text: [b]text[/b]" alt="B"><b>B</b></a>
                     <a class="bb_button" onclick="tag('i', '<?=$textarea;?>')" title="Italic text: [i]text[/i]" alt="I"><i>I</i></a>
                     <a class="bb_button" onclick="tag('u', '<?=$textarea;?>')" title="Underline text: [u]text[/u]" alt="U"><u>U</u></a>
                     <a class="bb_button" onclick="tag('s', '<?=$textarea;?>')" title="Strikethrough text: [s]text[/s]" alt="S"><s>S</s></a>
-                    <a class="bb_button" onclick="clink('<?=$textarea;?>')" title="Insert URL: [url]http://url[/url] or [url=http://url]URL text[/url]" alt="Url">Url</a>
-                <!-- <a class="bb_button" onclick="tag('img')" title="Insert image: [img]http://image_url[/img]" alt="Img">Img</a>-->
-                    <a class="bb_button" onclick="cimage('<?=$textarea;?>')" title="Insert image: [img]http://image_url[/img]" alt="Image">img</a>
+                    <a class="bb_button" onclick="em('[hr]', '<?=$textarea;?>')" title="Horizontal Line: [hr]" alt="HL">hr</a>
+                    
+                    <a class="bb_button" onclick="url('<?=$textarea;?>')" title="URL: [url]http://url[/url] or [url=http://url]URL text[/url]" alt="Url">Url</a>
+                    <a class="bb_button" onclick="anchor('<?=$textarea;?>')" title="Anchored heading: [anchor=name]Heading text[/anchor] or [#=name]Heading text[/#]" alt="Anchor">Anchor</a>
+                    <a class="bb_button" onclick="link('<?=$textarea;?>')" title="Local link: [link=/localpage.php]Link text[/link] or [link=#anchorname]Link text[/link]" alt="Link">Link</a>
+                    
+                    <a class="bb_button" onclick="image('<?=$textarea;?>')" title="Image: [img]http://image_url[/img]" alt="Image">Img</a>
                     <a class="bb_button" onclick="tag('code', '<?=$textarea;?>')" title="Code display: [code]code[/code]" alt="Code">Code</a>
                     <a class="bb_button" onclick="tag('quote', '<?=$textarea;?>')" title="Quote text: [quote]text[/quote]" alt="Quote">Quote</a>
-
-                <select class="bb_button" name="fontfont" id="fontfont<?=$textarea;?>" onchange="font('font',this.value,'<?=$textarea;?>');" title="Font face">
-                    <option value="0">Font Type</option>
-                <?  foreach($this->Fonts as $Key=>$Val) {
-                        echo  '
-                            <option value="'.$Key.'"  style="font-family: '.$Val.'">'.$Key.'</option>';
-                    }  ?>
-                </select>
+ 
+                    <a class="bb_button" onclick="video('<?=$textarea;?>')" title="Youtube video: [video=http://www.youtube.com/v/abcd]" alt="Youtube">Video</a>
+                    <a class="bb_button" onclick="flash('<?=$textarea;?>')" title="Flash object: [flash]http://url.swf[/flash]" alt="Flash">Flash</a>
+                    <a class="bb_button" onclick="spoiler('<?=$textarea;?>')" title="Spoiler: [spoiler=title]hidden text[/spoiler]" alt="Spoiler">Spoiler</a>
                     
-                    
-                <select  class="bb_button" name="fontsize" id="fontsize<?=$textarea;?>" onchange="font('size',this.value,'<?=$textarea;?>');" title="Font size">
-                  <option value="0" selected="selected">Font size</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                </select>
-                    
-                <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','color');" title="Select Text Color" alt="Colors">Colors</a>
-              
-              </div>
-              <div  class="bb_buttons_right">
-                <div> 
+                </div>
+                
+              <div class="bb_buttons_right">
+                <div>
 
                <?   //   isset($LoggedUser['Permissions']['site_advanced_tags']) &&  $LoggedUser['Permissions']['site_advanced_tags']
                   if ( $AllowAdvancedTags ) { ?>
 
-                        <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','bg');" title="Background: [bg=color]text[/bg]" alt="Background">Bg</a>
+                        <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','bg');" title="Background: [bg=color,width% or widthpx,align]text[/bg]" alt="Background">Bg</a>
 
-                        <a class="bb_button" onclick="table('<?=$textarea;?>')" title="Table: [table][tr][td]text[/td][td]text[/td][/tr][/table]" alt="Table">Table</a>
+                        <a class="bb_button" onclick="table('<?=$textarea;?>')" title="Table: [table=color,width% or widthpx,align][tr][td]text[/td][td]text[/td][/tr][/table]" alt="Table">Table</a>
                <? }  ?>
 
 
               <?  if(check_perms('site_moderate_forums')) { ?>
-                        <a class="bb_button" style="border: 3px solid #600;" onclick="tag('mcom', '<?=$textarea;?>')" title="Staff Comment: [mcom]text[/mcom]" alt="Mod comment">Mod</a>
+                        <a class="bb_button" style="border: 2px solid #600;" onclick="tag('mcom', '<?=$textarea;?>')" title="Staff Comment: [mcom]text[/mcom]" alt="Mod comment">Mod</a>
                <? }  ?>  
                  </div>
-                      <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center', '<?=$textarea;?>')" title="Align - center" alt="Center" /> 
-                      <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left', '<?=$textarea;?>')" title="Align - left" alt="Left" /> 
-                      <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify', '<?=$textarea;?>')" title="Align - justify" alt="Justify" />
-                      <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right', '<?=$textarea;?>')" title="Align - right" alt="Right" /> 
+                      <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center', '<?=$textarea;?>')" title="Center Align text: [align=center]text[/align]" alt="Center" /> 
+                      <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left', '<?=$textarea;?>')" title="Left Align text: [align=left]text[/align]" alt="Left" /> 
+                      <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify', '<?=$textarea;?>')" title="Justify text: [align=justify]text[/align]" alt="Justify" />
+                      <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right', '<?=$textarea;?>')" title="Right Align text: [align=right]text[/align]" alt="Right" /> 
                       <img class="bb_icon" src="<?=get_symbol_url('text_uppercase.png') ?>" onclick="text('up', '<?=$textarea;?>')" title="To Uppercase" alt="Up" /> 
                       <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low', '<?=$textarea;?>')" title="To Lowercase" alt="Low" />
-              </div> 
+              </div>
+                
+              <div class="bb_buttons_left">
+                    <select class="bb_button" name="fontfont" id="fontfont<?=$textarea;?>" onchange="font('font',this.value,'<?=$textarea;?>');" title="Font: [font=fontfamily]text[/font]">
+                        <option value="0">Font Type</option>
+                    <?  foreach($this->Fonts as $Key=>$Val) {
+                            echo  '
+                                <option value="'.$Key.'"  style="font-family: '.$Val.'">'.$Key.'</option>';
+                        }  ?>
+                    </select>
+
+
+                    <select  class="bb_button" name="fontsize" id="fontsize<?=$textarea;?>" onchange="font('size',this.value,'<?=$textarea;?>');" title="Text Size: [size=number]text[/size]">
+                      <option value="0" selected="selected">Font size</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                    </select>
+                    <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','color');" title="Text Color: [color=colorname]text[/color] or [color=#hexnumber]text[/color]" alt="Color">Color</a>
+                    
+                    <a class="bb_button" onclick="em('[cast]', '<?=$textarea;?>')" title="cast icon: [quote]" alt="cast">cast</a>
+                    <a class="bb_button" onclick="em('[details]', '<?=$textarea;?>')" title="details icon: [details]" alt="details">details</a>
+                    <a class="bb_button" onclick="em('[info]', '<?=$textarea;?>')" title="info icon: [info]" alt="info">info</a>
+                    <a class="bb_button" onclick="em('[plot]', '<?=$textarea;?>')" title="plot icon: [plot]" alt="plot">plot</a>
+                    <a class="bb_button" onclick="em('[screens]', '<?=$textarea;?>')" title="Screens icon: [screens]" alt="screens">screens</a>
+                    
+              </div>
               </td>
           </tr> 
           <tr>

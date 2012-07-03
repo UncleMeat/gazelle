@@ -1,9 +1,7 @@
 <?
 
 include(SERVER_ROOT.'/classes/class_text.php');
-//include(SERVER_ROOT.'/classes/class_badges.php');
 $Text = new TEXT;
-//$BadgeBuilder = new BADGES();
 
 include(SERVER_ROOT.'/sections/requests/functions.php');
 
@@ -66,8 +64,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
                 m.Credits,
                 i.BonusLog,
                 p.MaxAvatarWidth,
-                p.MaxAvatarHeight,
-                m.Badges
+                p.MaxAvatarHeight
 		FROM users_main AS m
 		JOIN users_info AS i ON i.UserID = m.ID
 		LEFT JOIN users_main AS inviter ON i.Inviter = inviter.ID
@@ -79,7 +76,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash,$BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight, $Awards) = $DB->next_record(MYSQLI_NUM, array(8,11,47));
+	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash,$BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight) = $DB->next_record(MYSQLI_NUM, array(8,11));
 
 } else { // Person viewing is a normal user
 	$DB->query("SELECT
@@ -112,8 +109,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
                 m.Credits,
                 i.BonusLog,
                 p.MaxAvatarWidth,
-                p.MaxAvatarHeight,
-                m.Badges
+                p.MaxAvatarHeight
 		FROM users_main AS m
 		JOIN users_info AS i ON i.UserID = m.ID
 		LEFT JOIN permissions AS p ON p.ID=m.PermissionID
@@ -125,7 +121,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$BonusLog,$MaxAvatarWidth,$MaxAvatarHeight, $Awards, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(9,11,30));
+	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$BonusLog,$MaxAvatarWidth,$MaxAvatarHeight, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(9,11));
 }
  
 
@@ -150,11 +146,6 @@ foreach($Paranoia as $P) {
 	}
 }
 
-$Awards = unserialize($Awards); 
-if(!is_array($Awards)) {
-	$Awards = array();
-}
-
 $JoinedDate = time_diff($JoinDate);
 $LastAccess = time_diff($LastAccess);
 
@@ -169,18 +160,7 @@ $Badges=($Donor) ? '<a href="donate.php"><img src="'.STATIC_SERVER.'common/symbo
 $Badges.=($Warned!='0000-00-00 00:00:00') ? '<img src="'.STATIC_SERVER.'common/symbols/warned.png" alt="Warned" />' : '';
 $Badges.=($Enabled == '1' || $Enabled == '0' || !$Enabled) ? '': '<img src="'.STATIC_SERVER.'common/symbols/disabled.png" alt="Banned" />';
 
-//////$BadgeBuilder->insert_into_db();
-/*
-$DB->query("SELECT
-                ub.ID,
-                ub.BadgeID,
-                ub.Title,
-                b.Name,
-                b.Image
-           FROM users_badges AS ub
-           LEFT JOIN badges AS b ON b.ID = ub.BadgeID
-           WHERE ub.UserID = $UserID");
-*/
+
 $UserBadges = get_user_badges($UserID);
 
 show_header($Username,'user,bbcode,requests');
