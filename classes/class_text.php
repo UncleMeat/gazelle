@@ -1563,12 +1563,26 @@ EXPLANATION OF PARSER LOGIC
                     <a class="bb_button" onclick="flash('<?=$textarea;?>')" title="Flash object: [flash]http://url.swf[/flash]" alt="Flash">Flash</a>
                     <a class="bb_button" onclick="spoiler('<?=$textarea;?>')" title="Spoiler: [spoiler=title]hidden text[/spoiler]" alt="Spoiler">Spoiler</a>
                     
+                    <a class="bb_button" onclick="em('[*]', '<?=$textarea;?>')" title="List item: [*]text" alt="List">List</a>
+                    
                 </div>
                 
-              <div class="bb_buttons_right">
-                <div>
+                <div class="bb_buttons_right">
+                    <a class="bb_help" href="<?="http://".SITE_URL."/articles.php?topic=bbcode"?>" target="_blank">Help</a>
+                </div>
+                <div class="bb_buttons_right">
+                      <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center', '<?=$textarea;?>')" title="Center Align text: [align=center]text[/align]" alt="Center" /> 
+                      <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left', '<?=$textarea;?>')" title="Left Align text: [align=left]text[/align]" alt="Left" /> 
+                      <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify', '<?=$textarea;?>')" title="Justify text: [align=justify]text[/align]" alt="Justify" />
+                      <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right', '<?=$textarea;?>')" title="Right Align text: [align=right]text[/align]" alt="Right" /> 
+                      <img class="bb_icon" src="<?=get_symbol_url('text_uppercase.png') ?>" onclick="text('up', '<?=$textarea;?>')" title="To Uppercase" alt="Up" /> 
+                      <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low', '<?=$textarea;?>')" title="To Lowercase" alt="Low" />
+                </div>
+                
+                <div class="bb_buttons_right">
+                    <div>
 
-               <?   //   isset($LoggedUser['Permissions']['site_advanced_tags']) &&  $LoggedUser['Permissions']['site_advanced_tags']
+               <?   
                   if ( $AllowAdvancedTags ) { ?>
 
                         <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','bg');" title="Background: [bg=color,width% or widthpx,align]text[/bg]" alt="Background">Bg</a>
@@ -1580,16 +1594,11 @@ EXPLANATION OF PARSER LOGIC
               <?  if(check_perms('site_moderate_forums')) { ?>
                         <a class="bb_button" style="border: 2px solid #600;" onclick="tag('mcom', '<?=$textarea;?>')" title="Staff Comment: [mcom]text[/mcom]" alt="Mod comment">Mod</a>
                <? }  ?>  
-                 </div>
-                      <img class="bb_icon" src="<?=get_symbol_url('align_center.png') ?>" onclick="wrap('align','','center', '<?=$textarea;?>')" title="Center Align text: [align=center]text[/align]" alt="Center" /> 
-                      <img class="bb_icon" src="<?=get_symbol_url('align_left.png') ?>" onclick="wrap('align','','left', '<?=$textarea;?>')" title="Left Align text: [align=left]text[/align]" alt="Left" /> 
-                      <img class="bb_icon" src="<?=get_symbol_url('align_justify.png') ?>" onclick="wrap('align','','justify', '<?=$textarea;?>')" title="Justify text: [align=justify]text[/align]" alt="Justify" />
-                      <img class="bb_icon" src="<?=get_symbol_url('align_right.png') ?>" onclick="wrap('align','','right', '<?=$textarea;?>')" title="Right Align text: [align=right]text[/align]" alt="Right" /> 
-                      <img class="bb_icon" src="<?=get_symbol_url('text_uppercase.png') ?>" onclick="text('up', '<?=$textarea;?>')" title="To Uppercase" alt="Up" /> 
-                      <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low', '<?=$textarea;?>')" title="To Lowercase" alt="Low" />
-              </div>
+                    </div>    
+                    
+                </div>
                 
-              <div class="bb_buttons_left">
+                <div class="bb_buttons_left">
                     <select class="bb_button" name="fontfont" id="fontfont<?=$textarea;?>" onchange="font('font',this.value,'<?=$textarea;?>');" title="Font: [font=fontfamily]text[/font]">
                         <option value="0">Font Type</option>
                     <?  foreach($this->Fonts as $Key=>$Val) {
@@ -1597,7 +1606,6 @@ EXPLANATION OF PARSER LOGIC
                                 <option value="'.$Key.'"  style="font-family: '.$Val.'">'.$Key.'</option>';
                         }  ?>
                     </select>
-
 
                     <select  class="bb_button" name="fontsize" id="fontsize<?=$textarea;?>" onchange="font('size',this.value,'<?=$textarea;?>');" title="Text Size: [size=number]text[/size]">
                       <option value="0" selected="selected">Font size</option>
@@ -1614,13 +1622,15 @@ EXPLANATION OF PARSER LOGIC
                     </select>
                     <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','color');" title="Text Color: [color=colorname]text[/color] or [color=#hexnumber]text[/color]" alt="Color">Color</a>
                     
-                    <a class="bb_button" onclick="em('[cast]', '<?=$textarea;?>')" title="cast icon: [quote]" alt="cast">cast</a>
-                    <a class="bb_button" onclick="em('[details]', '<?=$textarea;?>')" title="details icon: [details]" alt="details">details</a>
-                    <a class="bb_button" onclick="em('[info]', '<?=$textarea;?>')" title="info icon: [info]" alt="info">info</a>
-                    <a class="bb_button" onclick="em('[plot]', '<?=$textarea;?>')" title="plot icon: [plot]" alt="plot">plot</a>
+                    <a class="bb_button" onclick="em('[cast]', '<?=$textarea;?>')" title="Cast icon: [quote]" alt="cast">cast</a>
+                    <a class="bb_button" onclick="em('[details]', '<?=$textarea;?>')" title="Details icon: [details]" alt="details">details</a>
+                    <a class="bb_button" onclick="em('[info]', '<?=$textarea;?>')" title="Info icon: [info]" alt="info">info</a>
+                    <a class="bb_button" onclick="em('[plot]', '<?=$textarea;?>')" title="Plot icon: [plot]" alt="plot">plot</a>
                     <a class="bb_button" onclick="em('[screens]', '<?=$textarea;?>')" title="Screens icon: [screens]" alt="screens">screens</a>
                     
-              </div>
+                </div>
+                
+                
               </td>
           </tr> 
           <tr>

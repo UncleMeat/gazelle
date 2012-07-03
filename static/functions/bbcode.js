@@ -180,9 +180,10 @@ function wrap(tag, replacetext, attribute, textID) {
     var end = obj.selectionEnd;
     var sel = obj.value.substring(start, end);
     var opentag = "[" + v + (e ? "=" + e : "") + "]";
-    obj.value = obj.value.substring(0, start) + opentag + (r ? r : sel) + "[/" + v + "]" + obj.value.substring(end, len);
+    var closetag = "[/" + v + "]";
+    obj.value = obj.value.substring(0, start) + opentag + (r ? r : sel) + closetag + obj.value.substring(end, len);
     obj.selectionStart = start + opentag.length;
-    obj.selectionEnd = end + opentag.length;
+    obj.selectionEnd = start + opentag.length + (r ? r : sel).length ;
   }
   obj.focus();
 }
@@ -226,9 +227,9 @@ function flash(textID) {
 }
 
 function anchor(textID) {
-    var linkName = prompt("Please enter the name for the anchored heading", " ");
-    if (linkName && linkName != " ") {
-        var linkTitle = prompt("Please enter the heading text", " ");
+    var linkName = prompt("Please enter the name for the anchored heading", "");
+    if (linkName && linkName != "") {
+        var linkTitle = prompt("Please enter the heading text", "");
         if (linkName && linkTitle) wrap('anchor', linkTitle, linkName, textID);
     }
 }
