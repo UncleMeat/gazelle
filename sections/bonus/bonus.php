@@ -52,7 +52,7 @@ $ShopItems = get_shop_items();
                 $CanBuy = is_float((float)$LoggedUser['Credits']) ? $LoggedUser['Credits'] >= $Cost: false;
                 $BGClass= ($CanBuy?' itembuy' :' itemnotbuy');
                 if ($IsBuyGB && $LoggedUser['BytesDownloaded'] < get_bytes($Value.'gb') ) {
-                    $DescExtra = "<br/>(WARNING: will only remove ".get_size(get_bytes($Value.'gb') - $LoggedUser['BytesDownloaded']).")";
+                    $DescExtra = "<br/>(WARNING: will only remove ".get_size($LoggedUser['BytesDownloaded']) .")"; // get_size(get_bytes($Value.'gb') - 
                 }
             }
 		$Row = ($Row == 'a') ? 'b' : 'a';

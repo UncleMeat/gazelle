@@ -129,8 +129,7 @@ $DB->query("SELECT
 	m.FLTokens,
 	i.RatioWatchEnds,
 	SHA1(i.AdminComment) AS CommentHash,
-	m.Credits,
-      m.Badges
+	m.Credits
 	FROM users_main AS m
 	JOIN users_info AS i ON i.UserID = m.ID
 	LEFT JOIN permissions AS p ON p.ID=m.PermissionID
