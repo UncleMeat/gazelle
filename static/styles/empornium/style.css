@@ -731,6 +731,7 @@ table.boxstat td:first-child {
     display:inline-block;
     width:20px;
     height:20px;
+    margin-left: 4px;
 }
 
 .icon_warning {
@@ -738,6 +739,18 @@ table.boxstat td:first-child {
 }
 .icon_okay {
     background: url('images/okay.png') no-repeat center center;
+}
+
+.icon_disk_none {
+    background: url('images/disk.png') no-repeat center center;
+}
+
+.icon_disk_leech {
+    background: url('images/diskdown.png') no-repeat center center;
+}
+
+.icon_disk_seed {
+    background: url('images/diskup.png') no-repeat center center;
 }
 
 #top_info .icon_warning {

@@ -328,7 +328,7 @@ $TorrentCount = $SS->TotalResults;
 // These ones were not found in the cache, run SQL
 if (!empty($Results['notfound'])) {
 
-    $SQLResults = get_groups($Results['notfound']);
+    $SQLResults = get_groups($Results['notfound'], true, true, true);
 
     if (is_array($SQLResults['notfound'])) { // Something wasn't found in the db, remove it from results
         reset($SQLResults['notfound']);
@@ -599,7 +599,6 @@ $row='a';
         // Viewing a type that does not require grouping
 
         list($TorrentID, $Data) = each($Torrents);
-
         $OverImage = $Image != '' ? $Image : '/static/common/noartwork/noimage.png';
         $OverName = strlen($GroupName) <= 60 ? $GroupName : substr($GroupName, 0, 56) . '...';
         $SL = ($TotalSeeders == 0 ? "<span class=r00>" . number_format($TotalSeeders) . "</span>" : number_format($TotalSeeders)) . "/" . number_format($TotalLeechers);
@@ -648,20 +647,26 @@ $row='a';
             </td>
             <td>
                 <span>
-                    [ <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">DL</a>
-                    <? if (($LoggedUser['FLTokens'] > 0) && $Data['HasFile']
-                            && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'leech') && empty($Data['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')) {
-                        ?>
-                        | <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>&usetoken=1" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FL</a>
-    <? } ?>				
-                    | <a href="reportsv2.php?action=report&amp;id=<?= $TorrentID ?>" title="Report">RP</a>]
-               
+                  <?if ($Data['PeerStatus'] == 'none') { ?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">
+                            <span class="icon icon_disk_none"></span>
+                        </a>
+                  <?} elseif ($Data['PeerStatus'] == 'leech') {?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="You are leeching this">
+                            <span class="icon icon_disk_leech"></span>
+                        </a>
+                  <?} elseif ($Data['PeerStatus'] == 'seed') {?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="You are seeding this">
+                            <span class="icon icon_disk_seed"></span>
+                        </a>
+                  <? } ?>
+                </span>
+
 <?                if (check_perms('torrents_review') && $Data['Status'] == 'Okay') { 
                         echo  '&nbsp;'.get_status_icon('Okay');
                   }        
 ?>
-                </span>
-
+                
                 <script>
                     var overlay<?=$GroupID?> = <?=json_encode($Overlay)?>
                 </script>
