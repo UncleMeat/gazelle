@@ -673,9 +673,11 @@ $row='a';
                 
                 <a href="torrents.php?id=<?=$GroupID?>" onmouseover="return overlib(overlay<?=$GroupID?>, FULLHTML);" onmouseout="return nd();"><?=$GroupName?></a> <?=$AddExtra?>
                 <br />
+                <? if ($LoggedUsers['HideTagsInLists'] !== 1) { ?>
                 <div class="tags">
-    <?= $TorrentTags ?>
+                   <?= $TorrentTags ?>
                 </div>
+                <? } ?>
             </td>
             <td><?= $Data['FileCount'] ?></td>
             <td class="nobr"><?= time_diff($GroupTime, 1) ?></td>

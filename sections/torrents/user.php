@@ -320,9 +320,11 @@ foreach($NewCategories as $Cat) {
 				</span>
 				<?=$DisplayName?>
 				<br />
+                                <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                                
 				<div class="tags">
 					<?=$TorrentTags?>
 				</div>
+                                <? } ?>
 			</td>
 			<td class="nobr"><?=time_diff($Time,1)?></td>
 			<td class="nobr"><?=get_size($Torrent['Size'])?></td>

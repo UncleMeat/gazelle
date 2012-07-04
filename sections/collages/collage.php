@@ -164,7 +164,9 @@ foreach ($TorrentList as $GroupID=>$Group) {
                         | <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">RP</a>]
                 </span>
                 <strong><?=$DisplayName?></strong>
+                <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
                 <?=$TorrentTags?>
+                <? } ?>
         </td>
         <td class="nobr"><?=get_size($Torrent['Size'])?></td>
         <td><?=number_format($Torrent['Snatched'])?></td>

@@ -172,12 +172,19 @@ echo $Val->GenerateJS('userform');
 				</td>
 			</tr>
 			<tr>
-				<td class="label"><strong>Browse Page Tag list</strong></td>
+				<td class="label"><strong>Tag list in torrent search</strong></td>
 				<td>
 					<select name="showtags" id="showtags">
 						<option value="1"<? if ($SiteOptions['ShowTags'] == 1) { ?>selected="selected"<? } ?>>Open by default.</option>
 						<option value="0"<? if ($SiteOptions['ShowTags'] == 0) { ?>selected="selected"<? } ?>>Closed by default.</option>
 					</select>
+				</td>
+			</tr>                       
+			<tr>
+				<td class="label"><strong>Tags in lists</strong></td>
+				<td>
+					<input type="checkbox" name="hidetagsinlists" id="autosubscribe" <? if (!empty($SiteOptions['HideTagsInLists'])) { ?>checked="checked"<? } ?> />
+					<label for="hidetagsinlists">Hide tags in lists</label>
 				</td>
 			</tr>
 			<tr>
