@@ -71,7 +71,7 @@ $Debug->set_flag('Debug constructed');
 
 $DB = new DB_MYSQL;
 $Cache = new CACHE;
-$Cache->flush(); // Lanz: this was enabled as default, no wonder caching didn't work properly...
+//$Cache->flush(); // Lanz: this was enabled as default, no wonder caching didn't work properly...
 $Enc = new CRYPT;
 $UA = new USER_AGENT;
 $SS = new SPHINX_SEARCH;
