@@ -1177,6 +1177,13 @@ EXPLANATION OF PARSER LOGIC
             
 		foreach($Array as $Block) {
 			if(is_string($Block)) {
+                      // FIX FOR BAD BBCODE!!
+                      // -- expermimental : lets see if this has unintended consequences, but if not its a viable 
+                      // bandaid for out of order tags (it removes orphaned closing tags from outputted text)
+                      // - by this stage all tags have been replaced by html, so this removes any closing tags still in text
+                      // (which are usually the end result of out of synch tags in input, if you want to write text 
+                      // in [/*] pattern it will need to be in a code or pre tag)
+                        $Block = preg_replace('/\[\/.*\]/', '', $Block) ;
 				$Str.=$this->smileys($Block);
 				continue;
 			}
@@ -1205,7 +1212,7 @@ EXPLANATION OF PARSER LOGIC
                               }
                               break;  
                         case 'link': // local links and same page links to anchors
-                              if (!preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\-\_]*$/', $Block['Attr'] ) ){
+                              if (!preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\;\-\_]*$/', $Block['Attr'] ) ){
                                   $Str.='[link='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/link]';
 					} else {
                                   $Str.='<a class="link" href="'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
