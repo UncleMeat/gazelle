@@ -300,7 +300,9 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 		<td>
                   <span>[<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>]</span>
 			<strong><?=$DisplayName?></strong>
+                        <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
 			<?=$TorrentTags?>
+                        <? } ?>
 		</td>
 		<td class="top10 nobr"><?=get_size($Data)?></td>
 		<td class="top10"><?=get_size($Size)?></td>

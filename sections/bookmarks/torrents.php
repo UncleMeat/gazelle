@@ -120,7 +120,9 @@ foreach ($TorrentList as $GroupID=>$Group) {
                         | <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">RP</a> ]
                 </span>
                 <strong><?=$DisplayName?></strong>
+                <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                
                 <?=$TorrentTags?>
+                <? } ?>
 <? if(!$Sneaky){ ?>
                 <span style="float:left;"><a href="#group_<?=$GroupID?>" onclick="Unbookmark('torrent', <?=$GroupID?>, '');return false;">Remove Bookmark</a></span>
 <? } ?>

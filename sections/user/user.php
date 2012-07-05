@@ -817,7 +817,9 @@ if (check_paranoia_here('requestsvoted_list')) {
 					<tr class="row<?=$Row?>">
 						<td>
 							<?=$FullName?>
+                                                        <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
 							<div class="tags">
+                                                        <? } ?>
 <?			
 			$Tags = $Request['Tags'];
 			$TagList = array();

@@ -138,7 +138,9 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 			</span>
 			<strong><?=$DisplayName?></strong> <?=$ExtraInfo ?>
 			<? if($UnRead) { echo '<strong>New!</strong>'; } ?>
+                        <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
 			<?=$TorrentTags?>
+                        <? } ?>
 		</td>
 		<td><?=$FileCount ?></td>
 		<td style="text-align:right" class="nobr"><?=time_diff($NotificationTime)?></td>

@@ -378,6 +378,7 @@ foreach($NewCategories as $Cat) {
 		<tr class="row<?=$Row?>">
 			<td>
 				<?=$FullName?>
+                                <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
 				<div class="tags">
 <?			
 			$TagList = array();
@@ -388,6 +389,7 @@ foreach($NewCategories as $Cat) {
 ?>
 					<?=$TagList?>
 				</div>
+                                <? } ?>
 			</td>
 			<td class="nobr">
 				<form id="form_<?=$RequestID?>">

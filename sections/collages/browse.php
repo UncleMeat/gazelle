@@ -290,9 +290,11 @@ foreach ($Collages as $Collage) {
 				<a href="#" onclick="Unbookmark('collage', <?=$ID?>,'');return false;">[Remove bookmark]</a>
 			</span>
 <?	} ?>
+                        <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
 			<div class="tags">
 				<?=$Tags?>
 			</div>
+                        <? } ?>
 		</td>
 		<td><?=(int)$NumTorrents?></td>
 		<td><?=format_username($UserID, $Username)?></td>
