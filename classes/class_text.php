@@ -939,13 +939,22 @@ EXPLANATION OF PARSER LOGIC
 				}
 				$InOpenRegex.='\]/i';
 				
-				
+				$closetaglength = strlen($TagName)+3;
+                        
 				// Every time we find an internal open tag of the same type, search for the next close tag 
 				// (as the first close tag won't do - it's been opened again)
 				do {
 					$CloseTag = stripos($Str, '[/'.$TagName.']', $CloseTag+1);
 					if($CloseTag === false) {
-						$CloseTag = $Len;
+                                    if($TagName == '#' || $TagName == 'anchor'){
+                                        // automatically close open anchor tags (otherwise it wraps the entire text 
+                                        // in an <a> tag which then get stripped from the end as they are way out of place and you have 
+                                        // open <a> tags in the code - but links without any href so its a subtle break
+                                        $CloseTag = $i; 
+                                        $closetaglength =0;
+                                    } else {
+                                        $CloseTag = $Len;
+                                    }
 						break;
 					} else {
 						$NumInCloses++; // Majority of cases
@@ -966,7 +975,7 @@ EXPLANATION OF PARSER LOGIC
 				// Find the internal block inside the tag
 				$Block = substr($Str, $i, $CloseTag-$i); // 5c) Get the contents between [open] and [/close] and call it the block.
 				
-				$i = $CloseTag+strlen($TagName)+3; // 5d) Move the pointer past the end of the [/close] tag. 
+				$i = $CloseTag+$closetaglength; // 5d) Move the pointer past the end of the [/close] tag. 
 				
 			}
 			
