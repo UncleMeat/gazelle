@@ -212,8 +212,8 @@ if ($ThreadInfo['NoPoll'] == 0) {
 	}
 
 ?>        
-	<div class="box thin clear">
-		<div class="head colhead_dark"><strong>Poll<? if ($Closed) { echo ' [Closed]'; } ?><? if ($Featured && $Featured !== '0000-00-00 00:00:00') { echo ' [Featured]'; } ?></strong> <a href="#" onclick="$('#threadpoll').toggle();log_hit();return false;">(View)</a></div>
+	<div class="box clear">
+		<div class="colhead_dark"><strong>Poll<? if ($Closed) { echo ' [Closed]'; } ?><? if ($Featured && $Featured !== '0000-00-00 00:00:00') { echo ' [Featured]'; } ?></strong> <a href="#" onclick="$('#threadpoll').toggle();log_hit();return false;">(View)</a></div>
 		<div class="pad<? if (/*$LastRead !== null || */$ThreadInfo['IsLocked']) { echo ' hidden'; } ?>" id="threadpoll">
 			<p><strong><?=display_str($Question)?></strong></p>
 <?	if ($UserResponse !== null || $Closed || $ThreadInfo['IsLocked'] || !check_forumperm($ForumID)) { ?>
