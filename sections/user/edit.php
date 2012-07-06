@@ -183,7 +183,7 @@ echo $Val->GenerateJS('userform');
 			<tr>
 				<td class="label"><strong>Tags in lists</strong></td>
 				<td>
-					<input type="checkbox" name="hidetagsinlists" id="autosubscribe" <? if (!empty($SiteOptions['HideTagsInLists'])) { ?>checked="checked"<? } ?> />
+					<input type="checkbox" name="hidetagsinlists" id="hidetagsinlists" <? if (!empty($SiteOptions['HideTagsInLists'])) { ?>checked="checked"<? } ?> />
 					<label for="hidetagsinlists">Hide tags in lists</label>
 				</td>
 			</tr>
@@ -197,8 +197,8 @@ echo $Val->GenerateJS('userform');
 			<tr>
 				<td class="label"><strong>Forum topics</strong></td>
 				<td>
-					<input type="checkbox" name="disablelatesttopics" id="autosubscribe" <? if (!empty($SiteOptions['DisableLatestTopics'])) { ?>checked="checked"<? } ?> />
-					<label for="autosubscribe">Disable latest forum topics</label>
+					<input type="checkbox" name="disablelatesttopics" id="disablelatesttopics" <? if (!empty($SiteOptions['DisableLatestTopics'])) { ?>checked="checked"<? } ?> />
+					<label for="disablelatesttopics">Disable latest forum topics</label>
 				</td>
 			</tr>
                         <tr>
