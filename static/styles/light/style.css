@@ -312,6 +312,7 @@ span.infinity {
     top: 16px;
     left: 0px;
     background-color: #00436b;
+    z-index: 10;
 }
 
 #userinfo_username li ul li a {
