@@ -156,6 +156,7 @@ div#AddArtists a {
 
 .scale_image {
 	max-width: 100%;
+        margin: 5px;
 }
  
 /*
