@@ -132,7 +132,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
           
 ?>
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
-                  <h3>Post reply</h3>
+                  <h3>Post comment</h3>
 			<div class="box pad">
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
 					<tr class="colhead_dark">
@@ -169,7 +169,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 						<textarea id="quickpost" name="body" class="long"  rows="8"></textarea> <br />
 					</div>
 					<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit();}else{Quick_Preview();}" />
-					<input type="submit" value="Post reply" />
+					<input type="submit" value="Post comment" />
 				</form>
 			</div>
 <?

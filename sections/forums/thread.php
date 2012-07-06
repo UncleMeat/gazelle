@@ -528,7 +528,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 						<label for="mergebox">Merge</label>
 <? } ?>
 						<input id="post_preview" type="button" value="Preview" tabindex="1" onclick="if(this.preview){Quick_Edit();}else{Quick_Preview();}" />
-						<input type="submit" value="Post reply" tabindex="1" />
+						<input type="submit" value="Post" tabindex="1" />
 					</div>
 				</form>
 			</div>
