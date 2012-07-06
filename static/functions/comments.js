@@ -4,7 +4,7 @@ var postid;
 function Quote(post, user) {
 	username = user;
 	postid = post;
-	ajax.get("?action=get_post&post=" + postid, function(response){
+	ajax.get("?action=get_post&body=1&post=" + postid, function(response){
 		if ($('#quickpost').raw().value !== '') {
 			$('#quickpost').raw().value = $('#quickpost').raw().value + "\n\n";
 		}

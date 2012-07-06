@@ -93,18 +93,20 @@ if(!isset($_REQUEST['action'])) {
 			$DB->query("SELECT Body FROM requests_comments WHERE ID='$PostID'");
 			list($Body) = $DB->next_record(MYSQLI_NUM);
 			
-                  //	echo trim($Body); 
-                   include(SERVER_ROOT.'/classes/class_text.php');
+                  if (isset($_REQUEST['body']) && $_REQUEST['body']==1){
+                  	echo trim($Body); 
+                  } else {
+                        include(SERVER_ROOT.'/classes/class_text.php');
                    
-                  $Text = new TEXT;
+                        $Text = new TEXT;
 
-  $Text->display_bbcode_assistant("editbox$PostID", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); 
+                        $Text->display_bbcode_assistant("editbox$PostID", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); 
 
 ?>					
         <textarea id="editbox<?=$PostID?>" class="long" onkeyup="resize('editbox<?=$PostID?>');" name="body" rows="10"><?=display_str($Body)?></textarea>
 
 <?
-		 
+                  }
                   break;
 		case 'takeedit_comment':
 			enforce_login();

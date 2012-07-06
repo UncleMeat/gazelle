@@ -1106,7 +1106,7 @@ EXPLANATION OF PARSER LOGIC
       function is_color_attrib($Attrib) {
             static $ColorAttribs;
             if (!$ColorAttribs) // only build it once per page  
-                $ColorAttribs = array('aqua', 'aquamarine', 'magenta', 'darkmagenta', 'slategrey', 'pink', 'hotpink', 'black', 'wheat', 'midnightblue', 'forestgreen', 'blue', 'lightblue', 'fuchsia', 'lightgreen', 'green', 'grey', 'lightgrey', 'lime', 'maroon', 'navy', 'olive', 'khaki', 'darkkhaki', 'gold', 'goldenrod', 'darkgoldenrod', 'purple', 'violet', 'red', 'crimson', 'firebrick', 'gainsboro', 'silver', 'teal', 'linen', 'aliceblue', 'lavender', 'white', 'whitesmoke', 'lightyellow', 'yellow');
+                $ColorAttribs = array('orange', 'aqua', 'aquamarine', 'magenta', 'darkmagenta', 'slategrey', 'pink', 'hotpink', 'black', 'wheat', 'midnightblue', 'forestgreen', 'blue', 'lightblue', 'fuchsia', 'lightgreen', 'green', 'grey', 'lightgrey', 'lime', 'maroon', 'navy', 'olive', 'khaki', 'darkkhaki', 'gold', 'goldenrod', 'darkgoldenrod', 'purple', 'violet', 'red', 'crimson', 'firebrick', 'gainsboro', 'silver', 'teal', 'linen', 'aliceblue', 'lavender', 'white', 'whitesmoke', 'lightyellow', 'yellow');
 		
             return (in_array($Attrib, $ColorAttribs) || preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/', $Attrib));
       }
