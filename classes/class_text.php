@@ -1183,7 +1183,7 @@ EXPLANATION OF PARSER LOGIC
                       // - by this stage all tags have been replaced by html, so this removes any closing tags still in text
                       // (which are usually the end result of out of synch tags in input, if you want to write text 
                       // in [/*] pattern it will need to be in a code or pre tag)
-                        $Block = preg_replace('/\[\/.*\]/', '', $Block) ;
+                       // $Block = preg_replace('/\[\/.*\]/', '', $Block) ;  // DISABLE FOR NOW 
 				$Str.=$this->smileys($Block);
 				continue;
 			}
