@@ -647,19 +647,9 @@ $row='a';
             </td>
             <td>
                 <span>
-                  <?if ($Data['PeerStatus'] == 'none') { ?>
                         <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">
                             <span class="icon icon_disk_none"></span>
                         </a>
-                  <?} elseif ($Data['PeerStatus'] == 'leech') {?>
-                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="You are leeching this">
-                            <span class="icon icon_disk_leech"></span>
-                        </a>
-                  <?} elseif ($Data['PeerStatus'] == 'seed') {?>
-                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="You are seeding this">
-                            <span class="icon icon_disk_seed"></span>
-                        </a>
-                  <? } ?>
                 </span>
 
 <?                if (check_perms('torrents_review') && $Data['Status'] == 'Okay') { 
