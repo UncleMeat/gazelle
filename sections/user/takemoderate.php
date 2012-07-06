@@ -348,7 +348,7 @@ if ($AdjustUpValue != 0 && ((check_perms('users_edit_ratio') && $UserID != $Logg
       if ($Uploaded<0) $Uploaded=0;
 	$UpdateSet[]="Uploaded='".$Uploaded."'";
 	$EditSummary[]="uploaded changed from ".get_size($Cur['Uploaded'])." to ".get_size($Uploaded);
-	$Cache->delete_value('users_stats_'.$UserID);
+	$Cache->delete_value('user_stats_'.$UserID);
 }
 if ($AdjustDownValue != 0 && ((check_perms('users_edit_ratio') && $UserID != $LoggedUser['ID'])
                         || (check_perms('users_edit_own_ratio') && $UserID == $LoggedUser['ID']))){
@@ -356,7 +356,7 @@ if ($AdjustDownValue != 0 && ((check_perms('users_edit_ratio') && $UserID != $Lo
       if ($Downloaded<0) $Downloaded=0;
 	$UpdateSet[]="Downloaded='".$Downloaded."'";
 	$EditSummary[]="downloaded changed from ".get_size($Cur['Downloaded'])." to ".get_size($Downloaded);
-	$Cache->delete_value('users_stats_'.$UserID);
+	$Cache->delete_value('user_stats_'.$UserID);
 }
 
 if ($FLTokens!=$Cur['FLTokens'] && ((check_perms('users_edit_tokens')  && $UserID != $LoggedUser['ID'])
