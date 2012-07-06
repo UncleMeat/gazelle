@@ -14,6 +14,7 @@ if(!$_REQUEST['groupid'] || !is_number($_REQUEST['groupid'])) {
 	error(404);
 }
 // End injection check
+$GroupID = (int)$_REQUEST['groupid'];
 
 //check user has permission to edit
 $CanEdit = check_perms('torrents_edit');
@@ -28,7 +29,7 @@ if(!$CanEdit) { error(403); }
 
       
 // Variables for database input - with edit, the variables are passed with POST
-$GroupID = (int)$_REQUEST['groupid'];
+//$GroupID = (int)$_REQUEST['groupid'];
 $OldCategoryID = (int)$_POST['oldcategoryid'];
 $CategoryID = (int)$_POST['categoryid'];
 $Body = $_POST['body'];
