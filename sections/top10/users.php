@@ -39,8 +39,8 @@ $BaseQuery = "SELECT
 	JOIN users_info AS ui ON ui.UserID = u.ID
 	LEFT JOIN torrents AS t ON t.UserID=u.ID
 	WHERE u.Enabled='1'
-	AND Uploaded>'". 5*1024*1024*1024 ."' 
-	AND Downloaded>'". 5*1024*1024*1024 ."' 
+	AND Uploaded>'". 1024*1024*1024 ."' 
+	AND Downloaded>'". 1024*1024*1024 ."' 
 	AND (Paranoia IS NULL OR (Paranoia NOT LIKE '%\"uploaded\"%' AND Paranoia NOT LIKE '%\"downloaded\"%'))
 	GROUP BY u.ID";
 
