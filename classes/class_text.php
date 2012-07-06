@@ -570,8 +570,9 @@ class TEXT {
             $this->Advanced = $AdvancedTags;
 		$Str = display_str($Str);
 		//Inline links
-		$Str = preg_replace('/\[video/i', '[vid', $Str);
-		$URLPrefix = '(\[url\]|\[url\=|\[vid\=|\[img\=|\[img\])';
+		$Str = preg_replace('/\[link=/i', '[lnk=', $Str);
+		$Str = preg_replace('/\[video\=/i', '[vid=', $Str);
+		$URLPrefix = '(\[url\]|\[url\=|\[vid\=|\[img\=|\[img\]|\[lnk\=)';
 		$Str = preg_replace('/'.$URLPrefix.'\s+/i', '$1', $Str);
 		$Str = preg_replace('/(?<!'.$URLPrefix.')http(s)?:\/\//i', '$1[inlineurl]http$2://', $Str);
 		// For anonym.to and archive.org links, remove any [inlineurl] in the middle of the link
@@ -583,6 +584,7 @@ class TEXT {
 		$Str = preg_replace('/\=\=([^=].*)\=\=/i', '[inlinesize=7]$1[/inlinesize]', $Str);
 		
 		$Str = preg_replace('/\[vid\=/i', '[video=', $Str);
+		$Str = preg_replace('/\[lnk\=/i', '[link=', $Str);
 		$Str = $this->parse($Str);
 		
 		$HTML = $this->to_html($Str);
@@ -1212,6 +1214,7 @@ EXPLANATION OF PARSER LOGIC
                               }
                               break;  
                         case 'link': // local links and same page links to anchors
+                              $Block['Attr'] = str_replace('http://'.SITE_URL, '', $Block['Attr']);
                               if (!preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\;\-\_]*$/', $Block['Attr'] ) ){
                                   $Str.='[link='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/link]';
 					} else {
