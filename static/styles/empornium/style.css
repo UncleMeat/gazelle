@@ -1351,6 +1351,7 @@ td.sig {
     padding: 8px;
     vertical-align: top;
 }
+/*
 #sig { 
     position: relative; 
     max-width: 100%; 
@@ -1359,6 +1360,12 @@ td.sig {
 #sig img.scale_image {
     max-height:500px; 
     max-width: 800px;  
+}*/
+table .scale_image {
+	max-width: 800px;
+}
+#collage table .scale_image {
+	max-width: 600px;
 }
 
 td.postbody {

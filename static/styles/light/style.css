@@ -1451,14 +1451,11 @@ td.sig {
     vertical-align: top;
 }
 
-#sig { 
-    position: relative; 
-    max-width: 100%; 
+table .scale_image {
+	max-width: 800px;
 }
-
-#sig img.scale_image {
-    max-height:500px; 
-    max-width: 800px;  
+#collage table .scale_image {
+	max-width: 600px;
 }
 
 td.postbody {

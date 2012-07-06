@@ -939,13 +939,22 @@ EXPLANATION OF PARSER LOGIC
 				}
 				$InOpenRegex.='\]/i';
 				
-				
+				$closetaglength = strlen($TagName)+3;
+                        
 				// Every time we find an internal open tag of the same type, search for the next close tag 
 				// (as the first close tag won't do - it's been opened again)
 				do {
 					$CloseTag = stripos($Str, '[/'.$TagName.']', $CloseTag+1);
 					if($CloseTag === false) {
-						$CloseTag = $Len;
+                                    if($TagName == '#' || $TagName == 'anchor'){
+                                        // automatically close open anchor tags (otherwise it wraps the entire text 
+                                        // in an <a> tag which then get stripped from the end as they are way out of place and you have 
+                                        // open <a> tags in the code - but links without any href so its a subtle break
+                                        $CloseTag = $i; 
+                                        $closetaglength =0;
+                                    } else {
+                                        $CloseTag = $Len;
+                                    }
 						break;
 					} else {
 						$NumInCloses++; // Majority of cases
@@ -966,7 +975,7 @@ EXPLANATION OF PARSER LOGIC
 				// Find the internal block inside the tag
 				$Block = substr($Str, $i, $CloseTag-$i); // 5c) Get the contents between [open] and [/close] and call it the block.
 				
-				$i = $CloseTag+strlen($TagName)+3; // 5d) Move the pointer past the end of the [/close] tag. 
+				$i = $CloseTag+$closetaglength; // 5d) Move the pointer past the end of the [/close] tag. 
 				
 			}
 			
@@ -983,7 +992,7 @@ EXPLANATION OF PARSER LOGIC
 					break;
 				case 'anchor':
 				case '#':
-					$Array[$ArrayPos] = array('Type'=>'anchor', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
+					$Array[$ArrayPos] = array('Type'=>$TagName, 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
 					break;
 				case 'br':
 				case 'hr':
@@ -1168,18 +1177,24 @@ EXPLANATION OF PARSER LOGIC
             
 		foreach($Array as $Block) {
 			if(is_string($Block)) {
+                      // FIX FOR BAD BBCODE!!
+                      // -- expermimental : lets see if this has unintended consequences, but if not its a viable 
+                      // bandaid for out of order tags (it removes orphaned closing tags from outputted text)
+                      // - by this stage all tags have been replaced by html, so this removes any closing tags still in text
+                      // (which are usually the end result of out of synch tags in input, if you want to write text 
+                      // in [/*] pattern it will need to be in a code or pre tag)
+                        $Block = preg_replace('/\[\/.*\]/', '', $Block) ;
 				$Str.=$this->smileys($Block);
 				continue;
 			}
 			switch($Block['Type']) {
                         case 'video':
 					//actually a youtube only tag inherited from emp
-					//if(!$this->valid_url($Block['Attr']) || strpos($Block['Attr'], 'http://www.youtube.com/') === FALSE ) {
-                              if ( !preg_match('/^http:\/\/www\.youtube\.com\/.*v=(.*)$/i', $Block['Attr'], $matches ) ) {
-						$Str.='[video='.$Block['Attr'].']';
+					if ( !preg_match('/^http:\/\/www\.youtube\.com\/.*v=(.*)$/i', $Block['Attr'], $matches ) ) {
+                                  $Str.='[video='.$Block['Attr'].']';
 					} else {
-                                    $vidurl = "http://www.youtube.com/v/{$matches[1]}";
-                                    $Str.='<object height="385" width="640"><param name="movie" value="'.$vidurl.'"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><embed src="'.$vidurl.'" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" height="385" width="640"></object>';
+                                  $vidurl = "http://www.youtube.com/v/{$matches[1]}";
+                                  $Str.='<object height="385" width="640"><param name="movie" value="'.$vidurl.'"><param name="allowFullScreen" value="true"><param name="allowscriptaccess" value="always"><embed src="'.$vidurl.'" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" height="385" width="640"></object>';
                               }
                               break;
                         case 'flash':
@@ -1197,15 +1212,16 @@ EXPLANATION OF PARSER LOGIC
                               }
                               break;  
                         case 'link': // local links and same page links to anchors
-                              if (!preg_match('/^#[a-z0-9\-\_]+$|^\/[a-z0-9\&\-\_]+\.php[a-z0-9\=\?\#\&\-\_]*$/', $Block['Attr'] ) ){
+                              if (!preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\;\-\_]*$/', $Block['Attr'] ) ){
                                   $Str.='[link='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/link]';
 					} else {
                                   $Str.='<a class="link" href="'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
                               }
 					break;
 				case 'anchor':
-                              if (!preg_match('/^[a-z0-9\-\_]+$/', $Block['Attr'] ) ){
-                                  $Str.='[anchor='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/anchor]';
+				case '#':
+                              if (!preg_match('/^[a-zA-Z0-9\-\_]+$/', $Block['Attr'] ) ){
+                                  $Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
                               } else {
                                   $Str.='<a class="anchor" id="'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
 					}
@@ -1462,9 +1478,12 @@ EXPLANATION OF PARSER LOGIC
                                 case 'colour':
 				case 'size':
 				case 'quote':
+				case 'spoiler':
 				case 'align':
 				case 'center':
 				case 'mcom':
+                        case 'anchor':
+                        case '#':
 					$Str.=$this->raw_text($Block['Val']);
 					break;
 				case 'tex': //since this will never strip cleanly, just remove it
@@ -1484,6 +1503,7 @@ EXPLANATION OF PARSER LOGIC
 					break;
 					
 				case 'url':
+				case 'link':
                                         if ($StripURL) break;
 					// Make sure the URL has a label
 					if(empty($Block['Val'])) {
@@ -1565,6 +1585,14 @@ EXPLANATION OF PARSER LOGIC
                     
                     <a class="bb_button" onclick="em('[*]', '<?=$textarea;?>')" title="List item: [*]text" alt="List">List</a>
                     
+               <?   
+                  if ( $AllowAdvancedTags ) { ?>
+
+                        <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','bg');" title="Background: [bg=color,width% or widthpx,align]text[/bg]" alt="Background">Bg</a>
+
+                        <a class="bb_button" onclick="table('<?=$textarea;?>')" title="Table: [table=color,width% or widthpx,align][tr][td]text[/td][td]text[/td][/tr][/table]" alt="Table">Table</a>
+               <? }  ?>
+ 
                 </div>
                 
                 <div class="bb_buttons_right">
@@ -1579,24 +1607,6 @@ EXPLANATION OF PARSER LOGIC
                       <img class="bb_icon" src="<?=get_symbol_url('text_lowercase.png') ?>" onclick="text('low', '<?=$textarea;?>')" title="To Lowercase" alt="Low" />
                 </div>
                 
-                <div class="bb_buttons_right">
-                    <div>
-
-               <?   
-                  if ( $AllowAdvancedTags ) { ?>
-
-                        <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','bg');" title="Background: [bg=color,width% or widthpx,align]text[/bg]" alt="Background">Bg</a>
-
-                        <a class="bb_button" onclick="table('<?=$textarea;?>')" title="Table: [table=color,width% or widthpx,align][tr][td]text[/td][td]text[/td][/tr][/table]" alt="Table">Table</a>
-               <? }  ?>
-
-
-              <?  if(check_perms('site_moderate_forums')) { ?>
-                        <a class="bb_button" style="border: 2px solid #600;" onclick="tag('mcom', '<?=$textarea;?>')" title="Staff Comment: [mcom]text[/mcom]" alt="Mod comment">Mod</a>
-               <? }  ?>  
-                    </div>    
-                    
-                </div>
                 
                 <div class="bb_buttons_left">
                     <select class="bb_button" name="fontfont" id="fontfont<?=$textarea;?>" onchange="font('font',this.value,'<?=$textarea;?>');" title="Font: [font=fontfamily]text[/font]">
@@ -1628,6 +1638,10 @@ EXPLANATION OF PARSER LOGIC
                     <a class="bb_button" onclick="em('[plot]', '<?=$textarea;?>')" title="Plot icon: [plot]" alt="plot">plot</a>
                     <a class="bb_button" onclick="em('[screens]', '<?=$textarea;?>')" title="Screens icon: [screens]" alt="screens">screens</a>
                     
+
+              <?  if(check_perms('site_moderate_forums')) { ?>
+                        <a class="bb_button" style="border: 2px solid #600;" onclick="tag('mcom', '<?=$textarea;?>')" title="Staff Comment: [mcom]text[/mcom]" alt="Mod comment">Mod</a>
+               <? }  ?> 
                 </div>
                 
                 
