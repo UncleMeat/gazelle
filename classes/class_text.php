@@ -1,7 +1,7 @@
 <?
 class TEXT {
-	// tag=>max number of attributes
-	private $ValidTags = array('video'=>1, 'flash'=>1, 'banner'=>0, 'thumb'=>0, 'link'=>1, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
+	// tag=>max number of attributes 'link'=>1, 
+	private $ValidTags = array('video'=>1, 'flash'=>1, 'banner'=>0, 'thumb'=>0, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
 	);
 	private $Smileys = array(
            ':smile1:'           => 'smile1.gif',
@@ -570,9 +570,9 @@ class TEXT {
             $this->Advanced = $AdvancedTags;
 		$Str = display_str($Str);
 		//Inline links
-		$Str = preg_replace('/\[link=/i', '[lnk=', $Str);
+		//$Str = preg_replace('/\[link=/i', '[lnk=', $Str); |\[lnk\=
 		$Str = preg_replace('/\[video\=/i', '[vid=', $Str);
-		$URLPrefix = '(\[url\]|\[url\=|\[vid\=|\[img\=|\[img\]|\[lnk\=)';
+		$URLPrefix = '(\[url\]|\[url\=|\[vid\=|\[img\=|\[img\])';
 		$Str = preg_replace('/'.$URLPrefix.'\s+/i', '$1', $Str);
 		$Str = preg_replace('/(?<!'.$URLPrefix.')http(s)?:\/\//i', '$1[inlineurl]http$2://', $Str);
 		// For anonym.to and archive.org links, remove any [inlineurl] in the middle of the link
@@ -584,7 +584,7 @@ class TEXT {
 		$Str = preg_replace('/\=\=([^=].*)\=\=/i', '[inlinesize=7]$1[/inlinesize]', $Str);
 		
 		$Str = preg_replace('/\[vid\=/i', '[video=', $Str);
-		$Str = preg_replace('/\[lnk\=/i', '[link=', $Str);
+		//$Str = preg_replace('/\[lnk\=/i', '[link=', $Str);
 		$Str = $this->parse($Str);
 		
 		$HTML = $this->to_html($Str);
@@ -989,9 +989,9 @@ EXPLANATION OF PARSER LOGIC
 				case 'flash':
 					$Array[$ArrayPos] = array('Type'=>'flash', 'Attr'=>$Attrib, 'Val'=>$Block);
 					break;
-				case 'link':
+				/*case 'link':
 					$Array[$ArrayPos] = array('Type'=>'link', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
-					break;
+					break; */
 				case 'anchor':
 				case '#':
 					$Array[$ArrayPos] = array('Type'=>$TagName, 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
@@ -1213,6 +1213,39 @@ EXPLANATION OF PARSER LOGIC
                                   $Str .= '<object classid="clsid:D27CDB6E-AE6D-11CF-96B8-444553540000" codebase="http://active.macromedia.com/flash2/cabs/swflash.cab#version=5,0,0,0" height="'.$matches[2].'" width="'.$matches[1].'"><param name="movie" value="'.$Block['Val'].'"><param name="play" value="false"><param name="loop" value="false"><param name="quality" value="high"><param name="allowScriptAccess" value="never"><param name="allowNetworking" value="internal"><embed  type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" play="false" loop="false" quality="high" allowscriptaccess="never" allownetworking="internal"  src="'.$Block['Val'].'" height="'.$matches[2].'" width="'.$matches[1].'"><param name="wmode" value="transparent"></object>';
                               }
                               break;  
+                              
+				case 'url':
+					// Make sure the URL has a label
+					if(empty($Block['Val'])) {
+						$Block['Val'] = $Block['Attr'];
+						$NoName = true; // If there isn't a Val for this
+					} else {
+						$Block['Val'] = $this->to_html($Block['Val']);
+						$NoName = false;
+					}
+                              
+                              //remove the local host from address if present
+					$Block['Attr'] = str_replace('http://'.SITE_URL, '', $Block['Attr']);
+                              
+                              // first test if is in format /local.php or #anchorname
+                              if (preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\;\-\_]*$/', $Block['Attr'] ) ){
+                                    // a local link or anchor link
+                                    $Str.='<a class="link" href="'.$Block['Attr'].'">'.$Block['Val'].'</a>';
+                              } elseif (!$this->valid_url($Block['Attr']) ){
+                                    // not a valid tag
+						$Str.='[url='.$Block['Attr'].']'.$Block['Val'].'[/url]';
+					} else {
+						$LocalURL = $this->local_url($Block['Attr']);
+						if($LocalURL) {
+							if($NoName) { $Block['Val'] = substr($LocalURL,1); }
+							$Str.='<a href="'.$LocalURL.'">'.$Block['Val'].'</a>';
+						} else {
+							$Str.='<a rel="noreferrer" target="_blank" href="'.$Block['Attr'].'">'.$Block['Val'].'</a>';
+						}
+					}
+					break;
+					
+                              /*
                         case 'link': // local links and same page links to anchors
                               $Block['Attr'] = str_replace('http://'.SITE_URL, '', $Block['Attr']);
                               if (!preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\;\-\_]*$/', $Block['Attr'] ) ){
@@ -1220,7 +1253,7 @@ EXPLANATION OF PARSER LOGIC
 					} else {
                                   $Str.='<a class="link" href="'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
                               }
-					break;
+					break; */
 				case 'anchor':
 				case '#':
                               if (!preg_match('/^[a-zA-Z0-9\-\_]+$/', $Block['Attr'] ) ){
@@ -1416,7 +1449,7 @@ EXPLANATION OF PARSER LOGIC
 						$Str.='<audio controls="controls" src="'.$Block['Val'].'"><a rel="noreferrer" target="_blank" href="'.$Block['Val'].'">'.$Block['Val'].'</a></audio>';
 					}
 					break;
-					
+					/*
 				case 'url':
 					// Make sure the URL has a label
 					if(empty($Block['Val'])) {
@@ -1439,7 +1472,7 @@ EXPLANATION OF PARSER LOGIC
 						}
 					}
 					break;
-					
+					*/
 				case 'inlineurl':
 					if(!$this->valid_url($Block['Attr'], '', true)) {
 						$Array = $this->parse($Block['Attr']);
@@ -1576,7 +1609,7 @@ EXPLANATION OF PARSER LOGIC
                     
                     <a class="bb_button" onclick="url('<?=$textarea;?>')" title="URL: [url]http://url[/url] or [url=http://url]URL text[/url]" alt="Url">Url</a>
                     <a class="bb_button" onclick="anchor('<?=$textarea;?>')" title="Anchored heading: [anchor=name]Heading text[/anchor] or [#=name]Heading text[/#]" alt="Anchor">Anchor</a>
-                    <a class="bb_button" onclick="link('<?=$textarea;?>')" title="Local link: [link=/localpage.php]Link text[/link] or [link=#anchorname]Link text[/link]" alt="Link">Link</a>
+                    <!-- <a class="bb_button" onclick="link('<?=$textarea;?>')" title="Local link: [link=/localpage.php]Link text[/link] or [link=#anchorname]Link text[/link]" alt="Link">Link</a> -->
                     
                     <a class="bb_button" onclick="image('<?=$textarea;?>')" title="Image: [img]http://image_url[/img]" alt="Image">Img</a>
                     <a class="bb_button" onclick="tag('code', '<?=$textarea;?>')" title="Code display: [code]code[/code]" alt="Code">Code</a>
