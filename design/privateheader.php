@@ -360,7 +360,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 <? if(isset($LoggedUser['SearchType']) && $LoggedUser['SearchType']) { // Advanced search ?> 
 						value="Torrents" type="text" name="groupname" size="17" title="Search Torrents"
 <? } else { ?>
-						value="Torrents" type="text" name="searchstr" size="17" title="Search Torrents"
+						value="Torrents" type="text" name="searchtext" size="17" title="Search Torrents"
 <? } ?>
 					/>
 				</form>
