@@ -115,7 +115,7 @@ function Open_Smilies(alreadyloaded, loadincrement, textID) {
                 for (i=0;i<x.length;i++) {
                     xx=x[i].getElementsByTagName("bbcode"); 
                     try {
-                        txt=txt +'<a class="bb_smiley" title="' + xx[0].firstChild.nodeValue + '" href="javascript:em(\' ' + xx[0].firstChild.nodeValue + ' \', \'' + textID + '\' );">';
+                        txt=txt +'<a class="bb_smiley" title="' + xx[0].firstChild.nodeValue + '" href="javascript:insert(\' ' + xx[0].firstChild.nodeValue + ' \', \'' + textID + '\' );">';
                     } catch (er) { }
                     xx=x[i].getElementsByTagName("url"); 
                     try {
@@ -215,7 +215,7 @@ function tagwrap(opentag, closetag, textID) {
 function video(textID) {
     var linkAddr = prompt("Please enter the url ", "http://www.youtube.com/");
 
-    if (linkAddr && linkAddr != "http://www.youtube.com/") em('[video=' + linkAddr + ']', textID);
+    if (linkAddr && linkAddr != "http://www.youtube.com/") insert('[video=' + linkAddr + ']', textID);
 }
 
 function flash(textID) {
@@ -290,7 +290,7 @@ function table(textID) {
       }
       closetag += ' [/td]\n[/tr]\n[/table]\n';
       tagwrap(opentag, closetag, textID);
-      // em("[table]\n[tr]\n[td] [/td][td] [/td]\n[/tr]\n[/table]\n", textID) 
+      // insert("[table]\n[tr]\n[td] [/td][td] [/td]\n[/tr]\n[/table]\n", textID) 
 }
 
 function tag(v , textID) {
@@ -366,7 +366,7 @@ function font(w, f, textID) {
   obj.focus();
 }
 
-function em(f, textID) {
+function insert(f, textID) {
   var obj = document.getElementById(textID);
 
   if (document.selection) {

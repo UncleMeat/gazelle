@@ -1608,7 +1608,7 @@ EXPLANATION OF PARSER LOGIC
                     <a class="bb_button" onclick="tag('i', '<?=$textarea;?>')" title="Italic text: [i]text[/i]" alt="I"><i>I</i></a>
                     <a class="bb_button" onclick="tag('u', '<?=$textarea;?>')" title="Underline text: [u]text[/u]" alt="U"><u>U</u></a>
                     <a class="bb_button" onclick="tag('s', '<?=$textarea;?>')" title="Strikethrough text: [s]text[/s]" alt="S"><s>S</s></a>
-                    <a class="bb_button" onclick="em('[hr]', '<?=$textarea;?>')" title="Horizontal Line: [hr]" alt="HL">hr</a>
+                    <a class="bb_button" onclick="insert('[hr]', '<?=$textarea;?>')" title="Horizontal Line: [hr]" alt="HL">hr</a>
                     
                     <a class="bb_button" onclick="url('<?=$textarea;?>')" title="URL: [url]http://url[/url] or [url=http://url]URL text[/url]" alt="Url">Url</a>
                     <a class="bb_button" onclick="anchor('<?=$textarea;?>')" title="Anchored heading: [anchor=name]Heading text[/anchor] or [#=name]Heading text[/#]" alt="Anchor">Anchor</a>
@@ -1622,7 +1622,7 @@ EXPLANATION OF PARSER LOGIC
                     <a class="bb_button" onclick="flash('<?=$textarea;?>')" title="Flash object: [flash]http://url.swf[/flash]" alt="Flash">Flash</a>
                     <a class="bb_button" onclick="spoiler('<?=$textarea;?>')" title="Spoiler: [spoiler=title]hidden text[/spoiler]" alt="Spoiler">Spoiler</a>
                     
-                    <a class="bb_button" onclick="em('[*]', '<?=$textarea;?>')" title="List item: [*]text" alt="List">List</a>
+                    <a class="bb_button" onclick="insert('[*]', '<?=$textarea;?>')" title="List item: [*]text" alt="List">List</a>
                     
                <?   
                   if ( $AllowAdvancedTags ) { ?>
@@ -1672,11 +1672,11 @@ EXPLANATION OF PARSER LOGIC
                     </select>
                     <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','color');" title="Text Color: [color=colorname]text[/color] or [color=#hexnumber]text[/color]" alt="Color">Color</a>
                     
-                    <a class="bb_button" onclick="em('[cast]', '<?=$textarea;?>')" title="Cast icon: [quote]" alt="cast">cast</a>
-                    <a class="bb_button" onclick="em('[details]', '<?=$textarea;?>')" title="Details icon: [details]" alt="details">details</a>
-                    <a class="bb_button" onclick="em('[info]', '<?=$textarea;?>')" title="Info icon: [info]" alt="info">info</a>
-                    <a class="bb_button" onclick="em('[plot]', '<?=$textarea;?>')" title="Plot icon: [plot]" alt="plot">plot</a>
-                    <a class="bb_button" onclick="em('[screens]', '<?=$textarea;?>')" title="Screens icon: [screens]" alt="screens">screens</a>
+                    <a class="bb_button" onclick="insert('[cast]', '<?=$textarea;?>')" title="Cast icon: [quote]" alt="cast">cast</a>
+                    <a class="bb_button" onclick="insert('[details]', '<?=$textarea;?>')" title="Details icon: [details]" alt="details">details</a>
+                    <a class="bb_button" onclick="insert('[info]', '<?=$textarea;?>')" title="Info icon: [info]" alt="info">info</a>
+                    <a class="bb_button" onclick="insert('[plot]', '<?=$textarea;?>')" title="Plot icon: [plot]" alt="plot">plot</a>
+                    <a class="bb_button" onclick="insert('[screens]', '<?=$textarea;?>')" title="Screens icon: [screens]" alt="screens">screens</a>
                     
 
               <?  if(check_perms('site_moderate_forums')) { ?>
@@ -1727,7 +1727,7 @@ EXPLANATION OF PARSER LOGIC
             foreach($this->Smileys as $Key=>$Val) { 
                 if ($indexto >= 0 && $count >= $indexto) { break; }
                 if ($count >= $indexfrom){  // ' &nbsp;' .$Key. - jsut for printing in dev
-                    echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \',\''.$textarea.'\');">'.$Val.'</a>';
+                    echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:insert(\' '.$Key.' \',\''.$textarea.'\');">'.$Val.'</a>';
                 }
                 $count++;
             }
