@@ -349,7 +349,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 			<li id="searchbar_torrents">
 				<span class="hidden">Torrents: </span>
 				<form action="torrents.php" method="get">
-<? if(isset($LoggedUser['SearchType']) && $LoggedUser['SearchType']) { // Advanced search ?> 
+<? if(isset($LoggedUser['SearchType']) && $LoggedUser['SearchType']) { // Advanced search searchtext=anal&action=advanced ?> 
 					<input type="hidden" name="action" value="advanced" />
 <? } ?>
 					<input
@@ -357,11 +357,8 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 						spellcheck="false"
 						onfocus="if (this.value == 'Torrents') this.value='';"
 						onblur="if (this.value == '') this.value='Torrents';"
-<? if(isset($LoggedUser['SearchType']) && $LoggedUser['SearchType']) { // Advanced search ?> 
-						value="Torrents" type="text" name="groupname" size="17" title="Search Torrents"
-<? } else { ?>
 						value="Torrents" type="text" name="searchtext" size="17" title="Search Torrents"
-<? } ?>
+ 
 					/>
 				</form>
 			</li>
