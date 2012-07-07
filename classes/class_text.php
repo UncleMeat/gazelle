@@ -1113,7 +1113,7 @@ EXPLANATION OF PARSER LOGIC
       
       function get_multi_attributes($Attrib, $AllowMargin = true, $AllowColor = true, $AllowWidth = true) {
             $InlineStyle = '';
-            if ( isset($Attrib) ) {
+            if ( isset($Attrib) && $Attrib) {
                 $attributes = explode(",", $Attrib);
                 if ($attributes) {
                     $InlineStyle = ' style="';
