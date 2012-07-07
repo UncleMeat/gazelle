@@ -511,6 +511,8 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                     <td class="label">Tags:</td>
                     <td colspan="3">
                         <input type="text" size="40" id="tags" name="taglist" class="inputtext" title="Supports full boolean search" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />&nbsp;					
+                    
+                        <input style="float:right" type="submit" value="Filter Torrents" />
                     </td>
                 </tr>
                 <? } else { // BASIC SEARCH ?>
