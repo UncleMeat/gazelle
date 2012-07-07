@@ -1091,7 +1091,7 @@ EXPLANATION OF PARSER LOGIC
 						// Basic tags, like [b] or [size=5]
 						
 						$Array[$ArrayPos] = array('Type'=>$TagName, 'Val'=>$this->parse($Block));
-						if(!empty($Attrib) && $MaxAttribs>0) {
+						if(isset($Attrib) && $MaxAttribs>0) {
 							$Array[$ArrayPos]['Attr'] = strtolower($Attrib);
 						}
 					}
@@ -1402,7 +1402,7 @@ EXPLANATION OF PARSER LOGIC
 					break;
 				case 'inlinesize':
 				case 'size':
-					$ValidAttribs = array('1','2','3','4','5','6','7','8','9','10');
+					$ValidAttribs = array('0','1','2','3','4','5','6','7','8','9','10');
 					if(!in_array($Block['Attr'], $ValidAttribs)) {
 						$Str.='[size='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/size]';
 					} else {
@@ -1646,7 +1646,7 @@ EXPLANATION OF PARSER LOGIC
                 
                 <div class="bb_buttons_left">
                     <select class="bb_button" name="fontfont" id="fontfont<?=$textarea;?>" onchange="font('font',this.value,'<?=$textarea;?>');" title="Font: [font=fontfamily]text[/font]">
-                        <option value="0">Font Type</option>
+                        <option value="-1">Font Type</option>
                     <?  foreach($this->Fonts as $Key=>$Val) {
                             echo  '
                                 <option value="'.$Key.'"  style="font-family: '.$Val.'">'.$Key.'</option>';
@@ -1654,7 +1654,8 @@ EXPLANATION OF PARSER LOGIC
                     </select>
 
                     <select  class="bb_button" name="fontsize" id="fontsize<?=$textarea;?>" onchange="font('size',this.value,'<?=$textarea;?>');" title="Text Size: [size=number]text[/size]">
-                      <option value="0" selected="selected">Font size</option>
+                      <option value="-1" selected="selected">Font size</option>
+                      <option value="0">0</option>
                       <option value="1">1</option>
                       <option value="2">2</option>
                       <option value="3">3</option>
