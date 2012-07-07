@@ -1141,7 +1141,7 @@ EXPLANATION OF PARSER LOGIC
                             }
                         } elseif ($AllowNoBorder && in_array($att, array('nb','noborder') )) {
                             $InlineStyle .= 'border:none;';
-                        } else {
+                        } elseif ( $att != 'nball' ) {
                             return FALSE;
                         }
                     }
@@ -1275,7 +1275,10 @@ EXPLANATION OF PARSER LOGIC
                                   	$Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
                               } else  {
                                     $this->remove_text_between_tags($Block['Val'], "/^tr$/");
-                                    $Str.='<table class="bbcode"'.$InlineStyle.'><tbody>'.$this->to_html($Block['Val']).'</tbody></table>';
+                                    $tableclass= "bbcode";
+                                    if ($Block['Attr'] != '' && stripos($Block['Attr'], 'nball') !== FALSE)
+                                            $tableclass .= ' noborder';
+                                    $Str.='<table class="'.$tableclass.'"'.$InlineStyle.'><tbody>'.$this->to_html($Block['Val']).'</tbody></table>';
                               }
 					break;
 				case 'tr':

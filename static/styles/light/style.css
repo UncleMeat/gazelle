@@ -1691,6 +1691,9 @@ td.bbcode {
     background-color: inherit; 
     text-align: inherit;
 }
+table.bbcode.noborder tr, table.bbcode.noborder th, table.bbcode.noborder td {
+    border: none;
+}
 
 span.quote_label {
     float:left;
