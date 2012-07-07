@@ -1121,7 +1121,7 @@ EXPLANATION OF PARSER LOGIC
                         if($AllowColor && $this->is_color_attrib($att)) {
                             $InlineStyle .= 'background-color:'.$att.';';
                         } elseif ($AllowWidth && preg_match('/^([0-9]{1,3})px$/', $att, $matches)) {
-                            if ( (int)$matches[1] > 900 ) $matches[1] = '900';
+                            if ( (int)$matches[1] > 920 ) $matches[1] = '920';
                             $InlineStyle .= 'width:'.$matches[1].'px;';
                         } elseif ($AllowWidth && preg_match('/^([0-9]{1,3})%?$/', $att, $matches)) {
                             if ( (int)$matches[1] > 100 ) $matches[1] = '100';
