@@ -117,22 +117,19 @@ if(!empty($ReceiverIDs) && (empty($LoggedUser['DisablePM']) || array_intersect($
 
 			<table width="100%">
 				<tr>
-					<td class="label"><label for="sticky">Sticky</label></td>
-					<td>
+					<td class="center" width="33%"><label for="sticky">Sticky</label>
 						<input type="checkbox" id="sticky" name="sticky"<? if($Sticky) { echo ' checked="checked"'; } ?> />
 					</td>
-					<td class="label"><label for="mark_unread">Mark as unread</label></td>
-					<td>
+					<td class="center" width="33%"><label for="mark_unread">Mark as unread</label>
 						<input type="checkbox" id="mark_unread" name="mark_unread" />
 					</td>
-					<td class="label"><label for="delete">Delete conversation</label></td>
-					<td>
+					<td class="center" width="33%"><label for="delete">Delete conversation</label>
 						<input type="checkbox" id="delete" name="delete" />
 					</td>
 
 				</tr>
 				<tr>
-					<td class="center" colspan="6"><input type="submit" value="Manage conversation" /></td>
+					<td class="center" colspan="3"><input type="submit" value="Manage conversation" /></td>
 				</tr>
 			</table>
 		</div>

@@ -30,7 +30,7 @@ body {
     width: 100%;
     background: #0261a3;
     font-family: Verdana,Arial,Helvetica,sans-serif;
-    font-size: 8pt;
+    font-size: 9pt;
     color: #000000;
 }
 
@@ -1604,6 +1604,7 @@ a.anchor, a.anchor:visited, a.anchor:hover {
     font-weight: bold;
     font-size: larger;
     color: #333;
+    text-decoration: none;
 }
 
 /*  Stuff for the bbcode assistant  */
