@@ -5,8 +5,11 @@ if(!check_perms('users_mod') || !check_perms('admin_clear_cache')) {
 
 show_header('Clear a cache key');
 
+if (!empty($_GET['flush'])) {
+   $Cache->flush();
+}
 //Make sure the form was sent
-if(!empty($_GET['key']) && $_GET['type'] == "clear") {
+else if(!empty($_GET['key']) && $_GET['type'] == "clear") {
 	if(preg_match('/(.*?)(\d+)\.\.(\d+)$/', $_GET['key'], $Matches) && is_number($Matches[2]) && is_number($Matches[3])) {
 		for($i=$Matches[2]; $i<=$Matches[3]; $i++) {
 			$Cache->delete_value($Matches[1].$i);
@@ -32,6 +35,7 @@ if(!empty($_GET['key']) && $_GET['type'] == "clear") {
 						<option value="clear">Clear</option>
 					</select>
 					<input type="submit" value="key" class="submit" />
+                                        <input type="submit" name="flush" value="Flush all Cache Keys" class="submit" />
 				</td>
 			</tr>
 <? if(!empty($_GET['key']) && $_GET['type'] == "view") { ?>
