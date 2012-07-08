@@ -787,7 +787,7 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 if(!$LoggedUser['DisablePosting']) { ?>
 			<br />
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
-                  <div class="head">Post reply</div>
+                  <div class="head">Post comment</div>
 			<div class="box pad">
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
 					<tr class="colhead_dark">
@@ -824,7 +824,7 @@ if(!$LoggedUser['DisablePosting']) { ?>
 						<textarea id="quickpost" name="body" class="long"  rows="8"></textarea> <br />
 					</div>
 					<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit();}else{Quick_Preview();}" />
-					<input type="submit" value="Post" />
+					<input type="submit" value="Post comment" />
 				</form>
 			</div>
 <? } ?>

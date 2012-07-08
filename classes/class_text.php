@@ -1,7 +1,7 @@
 <?
 class TEXT {
-	// tag=>max number of attributes
-	private $ValidTags = array('video'=>1, 'flash'=>1, 'banner'=>0, 'thumb'=>0, 'link'=>1, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
+	// tag=>max number of attributes 'link'=>1, 
+	private $ValidTags = array('video'=>1, 'flash'=>1, 'banner'=>0, 'thumb'=>0, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
 	);
 	private $Smileys = array(
            ':smile1:'           => 'smile1.gif',
@@ -570,9 +570,9 @@ class TEXT {
             $this->Advanced = $AdvancedTags;
 		$Str = display_str($Str);
 		//Inline links
-		$Str = preg_replace('/\[link=/i', '[lnk=', $Str);
+		//$Str = preg_replace('/\[link=/i', '[lnk=', $Str); |\[lnk\=
 		$Str = preg_replace('/\[video\=/i', '[vid=', $Str);
-		$URLPrefix = '(\[url\]|\[url\=|\[vid\=|\[img\=|\[img\]|\[lnk\=)';
+		$URLPrefix = '(\[url\]|\[url\=|\[vid\=|\[img\=|\[img\])';
 		$Str = preg_replace('/'.$URLPrefix.'\s+/i', '$1', $Str);
 		$Str = preg_replace('/(?<!'.$URLPrefix.')http(s)?:\/\//i', '$1[inlineurl]http$2://', $Str);
 		// For anonym.to and archive.org links, remove any [inlineurl] in the middle of the link
@@ -584,7 +584,7 @@ class TEXT {
 		$Str = preg_replace('/\=\=([^=].*)\=\=/i', '[inlinesize=7]$1[/inlinesize]', $Str);
 		
 		$Str = preg_replace('/\[vid\=/i', '[video=', $Str);
-		$Str = preg_replace('/\[lnk\=/i', '[link=', $Str);
+		//$Str = preg_replace('/\[lnk\=/i', '[link=', $Str);
 		$Str = $this->parse($Str);
 		
 		$HTML = $this->to_html($Str);
@@ -989,9 +989,9 @@ EXPLANATION OF PARSER LOGIC
 				case 'flash':
 					$Array[$ArrayPos] = array('Type'=>'flash', 'Attr'=>$Attrib, 'Val'=>$Block);
 					break;
-				case 'link':
+				/*case 'link':
 					$Array[$ArrayPos] = array('Type'=>'link', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
-					break;
+					break; */
 				case 'anchor':
 				case '#':
 					$Array[$ArrayPos] = array('Type'=>$TagName, 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
@@ -1091,7 +1091,7 @@ EXPLANATION OF PARSER LOGIC
 						// Basic tags, like [b] or [size=5]
 						
 						$Array[$ArrayPos] = array('Type'=>$TagName, 'Val'=>$this->parse($Block));
-						if(!empty($Attrib) && $MaxAttribs>0) {
+						if(isset($Attrib) && $MaxAttribs>0) {
 							$Array[$ArrayPos]['Attr'] = strtolower($Attrib);
 						}
 					}
@@ -1106,14 +1106,14 @@ EXPLANATION OF PARSER LOGIC
       function is_color_attrib($Attrib) {
             static $ColorAttribs;
             if (!$ColorAttribs) // only build it once per page  
-                $ColorAttribs = array('aqua', 'aquamarine', 'magenta', 'darkmagenta', 'slategrey', 'pink', 'hotpink', 'black', 'wheat', 'midnightblue', 'forestgreen', 'blue', 'lightblue', 'fuchsia', 'lightgreen', 'green', 'grey', 'lightgrey', 'lime', 'maroon', 'navy', 'olive', 'khaki', 'darkkhaki', 'gold', 'goldenrod', 'darkgoldenrod', 'purple', 'violet', 'red', 'crimson', 'firebrick', 'gainsboro', 'silver', 'teal', 'linen', 'aliceblue', 'lavender', 'white', 'whitesmoke', 'lightyellow', 'yellow');
+                $ColorAttribs = array('orange', 'aqua', 'aquamarine', 'magenta', 'darkmagenta', 'slategrey', 'pink', 'hotpink', 'black', 'wheat', 'midnightblue', 'forestgreen', 'blue', 'lightblue', 'fuchsia', 'lightgreen', 'green', 'grey', 'lightgrey', 'lime', 'maroon', 'navy', 'olive', 'khaki', 'darkkhaki', 'gold', 'goldenrod', 'darkgoldenrod', 'purple', 'violet', 'red', 'crimson', 'firebrick', 'gainsboro', 'silver', 'teal', 'linen', 'aliceblue', 'lavender', 'white', 'whitesmoke', 'lightyellow', 'yellow');
 		
             return (in_array($Attrib, $ColorAttribs) || preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/', $Attrib));
       }
       
-      function get_multi_attributes($Attrib, $AllowMargin = true, $AllowColor = true, $AllowWidth = true) {
+      function get_multi_attributes($Attrib, $AllowMargin = true, $AllowColor = true, $AllowWidth = true, $AllowNoBorder = true) {
             $InlineStyle = '';
-            if ( isset($Attrib) ) {
+            if ( isset($Attrib) && $Attrib) {
                 $attributes = explode(",", $Attrib);
                 if ($attributes) {
                     $InlineStyle = ' style="';
@@ -1121,7 +1121,7 @@ EXPLANATION OF PARSER LOGIC
                         if($AllowColor && $this->is_color_attrib($att)) {
                             $InlineStyle .= 'background-color:'.$att.';';
                         } elseif ($AllowWidth && preg_match('/^([0-9]{1,3})px$/', $att, $matches)) {
-                            if ( (int)$matches[1] > 900 ) $matches[1] = '900';
+                            if ( (int)$matches[1] > 920 ) $matches[1] = '920';
                             $InlineStyle .= 'width:'.$matches[1].'px;';
                         } elseif ($AllowWidth && preg_match('/^([0-9]{1,3})%?$/', $att, $matches)) {
                             if ( (int)$matches[1] > 100 ) $matches[1] = '100';
@@ -1139,7 +1139,9 @@ EXPLANATION OF PARSER LOGIC
                                         $InlineStyle .= 'margin: 0px auto;';
                                     break;
                             }
-                        } else {
+                        } elseif ($AllowNoBorder && in_array($att, array('nb','noborder') )) {
+                            $InlineStyle .= 'border:none;';
+                        } elseif ( $att != 'nball' ) {
                             return FALSE;
                         }
                     }
@@ -1213,6 +1215,39 @@ EXPLANATION OF PARSER LOGIC
                                   $Str .= '<object classid="clsid:D27CDB6E-AE6D-11CF-96B8-444553540000" codebase="http://active.macromedia.com/flash2/cabs/swflash.cab#version=5,0,0,0" height="'.$matches[2].'" width="'.$matches[1].'"><param name="movie" value="'.$Block['Val'].'"><param name="play" value="false"><param name="loop" value="false"><param name="quality" value="high"><param name="allowScriptAccess" value="never"><param name="allowNetworking" value="internal"><embed  type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash" play="false" loop="false" quality="high" allowscriptaccess="never" allownetworking="internal"  src="'.$Block['Val'].'" height="'.$matches[2].'" width="'.$matches[1].'"><param name="wmode" value="transparent"></object>';
                               }
                               break;  
+                              
+				case 'url':
+					// Make sure the URL has a label
+					if(empty($Block['Val'])) {
+						$Block['Val'] = $Block['Attr'];
+						$NoName = true; // If there isn't a Val for this
+					} else {
+						$Block['Val'] = $this->to_html($Block['Val']);
+						$NoName = false;
+					}
+                              
+                              //remove the local host from address if present
+					$Block['Attr'] = str_replace('http://'.SITE_URL, '', $Block['Attr']);
+                              
+                              // first test if is in format /local.php or #anchorname
+                              if (preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\;\-\_]*$/', $Block['Attr'] ) ){
+                                    // a local link or anchor link
+                                    $Str.='<a class="link" href="'.$Block['Attr'].'">'.$Block['Val'].'</a>';
+                              } elseif (!$this->valid_url($Block['Attr']) ){
+                                    // not a valid tag
+						$Str.='[url='.$Block['Attr'].']'.$Block['Val'].'[/url]';
+					} else {
+						$LocalURL = $this->local_url($Block['Attr']);
+						if($LocalURL) {
+							if($NoName) { $Block['Val'] = substr($LocalURL,1); }
+							$Str.='<a href="'.$LocalURL.'">'.$Block['Val'].'</a>';
+						} else {
+							$Str.='<a rel="noreferrer" target="_blank" href="'.$Block['Attr'].'">'.$Block['Val'].'</a>';
+						}
+					}
+					break;
+					
+                              /*
                         case 'link': // local links and same page links to anchors
                               $Block['Attr'] = str_replace('http://'.SITE_URL, '', $Block['Attr']);
                               if (!preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\;\-\_]*$/', $Block['Attr'] ) ){
@@ -1220,7 +1255,7 @@ EXPLANATION OF PARSER LOGIC
 					} else {
                                   $Str.='<a class="link" href="'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
                               }
-					break;
+					break; */
 				case 'anchor':
 				case '#':
                               if (!preg_match('/^[a-zA-Z0-9\-\_]+$/', $Block['Attr'] ) ){
@@ -1233,21 +1268,21 @@ EXPLANATION OF PARSER LOGIC
                         case 'mcom':  
                               $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[ <a href="articles.php?topic=tutorials">Help</a> | <a href="articles.php?topic=rules">Rules</a> ]</div><div class="clear"></div></div>';
                               break;
+                          
 				case 'table':
                               $InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr']) : FALSE;
 					if ($InlineStyle === FALSE) {
                                   	$Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
                               } else  {
                                     $this->remove_text_between_tags($Block['Val'], "/^tr$/");
-                                    $Str.='<table class="bbcode"'.$InlineStyle.'><tbody>'.$this->to_html($Block['Val']).'</tbody></table>';
+                                    $tableclass= "bbcode";
+                                    if ($Block['Attr'] != '' && stripos($Block['Attr'], 'nball') !== FALSE)
+                                            $tableclass .= ' noborder';
+                                    $Str.='<table class="'.$tableclass.'"'.$InlineStyle.'><tbody>'.$this->to_html($Block['Val']).'</tbody></table>';
                               }
 					break;
 				case 'tr':
-                              if (!$this->Advanced)
-                                    $InlineStyle = FALSE;
-                              else if($this->is_color_attrib( $Block['Attr']))
-                                    $InlineStyle = ' style="background-color:'.$Block['Attr'].';"';
-                              else $InlineStyle = '';
+                              $InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr'], false, true, false, true) : FALSE;
 					if ($InlineStyle === FALSE) {
                                   	$Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
                               } else  {
@@ -1264,12 +1299,13 @@ EXPLANATION OF PARSER LOGIC
                                   $Str.='<'.$Block['Type'].' class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</'.$Block['Type'].'>';
 					break;
 				case 'bg':
-                              $InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr']) : FALSE;
+                              $InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr'], true, true, true, false) : FALSE;
 					if (!$InlineStyle || $InlineStyle =='') {
                                   	$Str.='[bg='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/bg]';
                               } else  
                                   $Str.='<div class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</div>';
                               break;
+                              
 				case 'cast':
 				case 'details':
 				case 'info':
@@ -1369,7 +1405,7 @@ EXPLANATION OF PARSER LOGIC
 					break;
 				case 'inlinesize':
 				case 'size':
-					$ValidAttribs = array('1','2','3','4','5','6','7','8','9','10');
+					$ValidAttribs = array('0','1','2','3','4','5','6','7','8','9','10');
 					if(!in_array($Block['Attr'], $ValidAttribs)) {
 						$Str.='[size='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/size]';
 					} else {
@@ -1416,7 +1452,7 @@ EXPLANATION OF PARSER LOGIC
 						$Str.='<audio controls="controls" src="'.$Block['Val'].'"><a rel="noreferrer" target="_blank" href="'.$Block['Val'].'">'.$Block['Val'].'</a></audio>';
 					}
 					break;
-					
+					/*
 				case 'url':
 					// Make sure the URL has a label
 					if(empty($Block['Val'])) {
@@ -1439,7 +1475,7 @@ EXPLANATION OF PARSER LOGIC
 						}
 					}
 					break;
-					
+					*/
 				case 'inlineurl':
 					if(!$this->valid_url($Block['Attr'], '', true)) {
 						$Array = $this->parse($Block['Attr']);
@@ -1572,11 +1608,11 @@ EXPLANATION OF PARSER LOGIC
                     <a class="bb_button" onclick="tag('i', '<?=$textarea;?>')" title="Italic text: [i]text[/i]" alt="I"><i>I</i></a>
                     <a class="bb_button" onclick="tag('u', '<?=$textarea;?>')" title="Underline text: [u]text[/u]" alt="U"><u>U</u></a>
                     <a class="bb_button" onclick="tag('s', '<?=$textarea;?>')" title="Strikethrough text: [s]text[/s]" alt="S"><s>S</s></a>
-                    <a class="bb_button" onclick="em('[hr]', '<?=$textarea;?>')" title="Horizontal Line: [hr]" alt="HL">hr</a>
+                    <a class="bb_button" onclick="insert('[hr]', '<?=$textarea;?>')" title="Horizontal Line: [hr]" alt="HL">hr</a>
                     
                     <a class="bb_button" onclick="url('<?=$textarea;?>')" title="URL: [url]http://url[/url] or [url=http://url]URL text[/url]" alt="Url">Url</a>
                     <a class="bb_button" onclick="anchor('<?=$textarea;?>')" title="Anchored heading: [anchor=name]Heading text[/anchor] or [#=name]Heading text[/#]" alt="Anchor">Anchor</a>
-                    <a class="bb_button" onclick="link('<?=$textarea;?>')" title="Local link: [link=/localpage.php]Link text[/link] or [link=#anchorname]Link text[/link]" alt="Link">Link</a>
+                    <!-- <a class="bb_button" onclick="link('<?=$textarea;?>')" title="Local link: [link=/localpage.php]Link text[/link] or [link=#anchorname]Link text[/link]" alt="Link">Link</a> -->
                     
                     <a class="bb_button" onclick="image('<?=$textarea;?>')" title="Image: [img]http://image_url[/img]" alt="Image">Img</a>
                     <a class="bb_button" onclick="tag('code', '<?=$textarea;?>')" title="Code display: [code]code[/code]" alt="Code">Code</a>
@@ -1586,7 +1622,7 @@ EXPLANATION OF PARSER LOGIC
                     <a class="bb_button" onclick="flash('<?=$textarea;?>')" title="Flash object: [flash]http://url.swf[/flash]" alt="Flash">Flash</a>
                     <a class="bb_button" onclick="spoiler('<?=$textarea;?>')" title="Spoiler: [spoiler=title]hidden text[/spoiler]" alt="Spoiler">Spoiler</a>
                     
-                    <a class="bb_button" onclick="em('[*]', '<?=$textarea;?>')" title="List item: [*]text" alt="List">List</a>
+                    <a class="bb_button" onclick="insert('[*]', '<?=$textarea;?>')" title="List item: [*]text" alt="List">List</a>
                     
                <?   
                   if ( $AllowAdvancedTags ) { ?>
@@ -1613,7 +1649,7 @@ EXPLANATION OF PARSER LOGIC
                 
                 <div class="bb_buttons_left">
                     <select class="bb_button" name="fontfont" id="fontfont<?=$textarea;?>" onchange="font('font',this.value,'<?=$textarea;?>');" title="Font: [font=fontfamily]text[/font]">
-                        <option value="0">Font Type</option>
+                        <option value="-1">Font Type</option>
                     <?  foreach($this->Fonts as $Key=>$Val) {
                             echo  '
                                 <option value="'.$Key.'"  style="font-family: '.$Val.'">'.$Key.'</option>';
@@ -1621,7 +1657,8 @@ EXPLANATION OF PARSER LOGIC
                     </select>
 
                     <select  class="bb_button" name="fontsize" id="fontsize<?=$textarea;?>" onchange="font('size',this.value,'<?=$textarea;?>');" title="Text Size: [size=number]text[/size]">
-                      <option value="0" selected="selected">Font size</option>
+                      <option value="-1" selected="selected">Font size</option>
+                      <option value="0">0</option>
                       <option value="1">1</option>
                       <option value="2">2</option>
                       <option value="3">3</option>
@@ -1635,11 +1672,11 @@ EXPLANATION OF PARSER LOGIC
                     </select>
                     <a class="bb_button" onclick="colorpicker('<?=$textarea;?>','color');" title="Text Color: [color=colorname]text[/color] or [color=#hexnumber]text[/color]" alt="Color">Color</a>
                     
-                    <a class="bb_button" onclick="em('[cast]', '<?=$textarea;?>')" title="Cast icon: [quote]" alt="cast">cast</a>
-                    <a class="bb_button" onclick="em('[details]', '<?=$textarea;?>')" title="Details icon: [details]" alt="details">details</a>
-                    <a class="bb_button" onclick="em('[info]', '<?=$textarea;?>')" title="Info icon: [info]" alt="info">info</a>
-                    <a class="bb_button" onclick="em('[plot]', '<?=$textarea;?>')" title="Plot icon: [plot]" alt="plot">plot</a>
-                    <a class="bb_button" onclick="em('[screens]', '<?=$textarea;?>')" title="Screens icon: [screens]" alt="screens">screens</a>
+                    <a class="bb_button" onclick="insert('[cast]', '<?=$textarea;?>')" title="Cast icon: [quote]" alt="cast">cast</a>
+                    <a class="bb_button" onclick="insert('[details]', '<?=$textarea;?>')" title="Details icon: [details]" alt="details">details</a>
+                    <a class="bb_button" onclick="insert('[info]', '<?=$textarea;?>')" title="Info icon: [info]" alt="info">info</a>
+                    <a class="bb_button" onclick="insert('[plot]', '<?=$textarea;?>')" title="Plot icon: [plot]" alt="plot">plot</a>
+                    <a class="bb_button" onclick="insert('[screens]', '<?=$textarea;?>')" title="Screens icon: [screens]" alt="screens">screens</a>
                     
 
               <?  if(check_perms('site_moderate_forums')) { ?>
@@ -1690,7 +1727,7 @@ EXPLANATION OF PARSER LOGIC
             foreach($this->Smileys as $Key=>$Val) { 
                 if ($indexto >= 0 && $count >= $indexto) { break; }
                 if ($count >= $indexfrom){  // ' &nbsp;' .$Key. - jsut for printing in dev
-                    echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:em(\' '.$Key.' \',\''.$textarea.'\');">'.$Val.'</a>';
+                    echo '<a class="bb_smiley" title="' .$Key. '" href="javascript:insert(\' '.$Key.' \',\''.$textarea.'\');">'.$Val.'</a>';
                 }
                 $count++;
             }

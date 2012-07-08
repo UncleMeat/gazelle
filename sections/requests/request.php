@@ -409,7 +409,7 @@ if(!$LoggedUser['DisablePosting']) { ?>
                                     <textarea id="quickpost" name="body" class="long" rows="8"></textarea> <br />
 					</div>
 					<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit();}else{Quick_Preview();}" />
-					<input type="submit" value="Post reply" />
+					<input type="submit" value="Post comment" />
 				</form>
 			</div>
 <? } ?>
