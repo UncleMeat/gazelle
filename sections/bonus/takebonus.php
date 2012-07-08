@@ -157,14 +157,16 @@ if(!empty($ShopItem) && is_array($ShopItem)){
             $SET = implode(', ', $UpdateSetOther);
             $sql = "UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET $SET WHERE m.ID='$OtherID'";
             $DB->query($sql);
-            $Cache->delete_value('users_stats_'.$OtherID);
+            $Cache->delete_value('user_stats_'.$OtherID);
+            $Cache->delete_value('user_info_heavy_'.$OtherID);
         }
         
         if($UpdateSet){
             $SET = implode(', ', $UpdateSet);
             $sql = "UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET $SET WHERE m.ID='$UserID'";
             $DB->query($sql);
-            $Cache->delete_value('users_stats_'.$UserID);
+            $Cache->delete_value('user_stats_'.$UserID);
+            $Cache->delete_value('user_info_heavy_'.$UserID);
         }
     }
 }
