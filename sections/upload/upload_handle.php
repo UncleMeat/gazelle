@@ -248,9 +248,9 @@ if (!$Properties['GroupID']) {
 
 // Use this section to control freeleeches
 if ($TotalSize < (20*1024*1024*1024)){
-    $Properties['FreeLeech']=0;
+    $Properties['FreeTorrent']=0;
 } else {
-    $Properties['FreeLeech']=1;
+    $Properties['FreeTorrent']=1;
 }
 
 // Torrent
@@ -262,7 +262,7 @@ $DB->query("
 	VALUES
 		(" . $GroupID . ", " . $LoggedUser['ID'] . ",
 		'" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", '" . sqltime() . "',
-		" . $T['TorrentDescription'] . ", " . $Properties['FreeLeech'] . ")"); // , " . $T['FreeLeechType'] . "
+		'" . $T['TorrentDescription'] . "', '" . $Properties['FreeTorrent'] . "')");
 
 $Cache->increment('stats_torrent_count');
 $TorrentID = $DB->inserted_id();

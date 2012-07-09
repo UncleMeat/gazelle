@@ -368,15 +368,17 @@ if ($FLTokens!=$Cur['FLTokens'] && ((check_perms('users_edit_tokens')  && $UserI
 
 if ($BonusCredits!=$Cur['Credits'] && ((check_perms('users_edit_credits') && $UserID != $LoggedUser['ID']) 
                         || (check_perms('users_edit_own_credits') && $UserID == $LoggedUser['ID']))) {
-	$UpdateSet[]="Credits=".$BonusCredits;
-      $Creditschange = $BonusCredits - $Cur['Credits'];
-      if ($Creditschange>=0) $Creditschange = "+".number_format ($Creditschange);
-      else $Creditschange = number_format ($Creditschange);
-      $BonusSummary = sqltime()." | $Creditschange | ".ucfirst("credits set to $BonusCredits from {$Cur['Credits']} by {$LoggedUser['Username']}");
-      $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$BonusSummary', i.BonusLog)";
+        $UpdateSet[]="Credits=".$BonusCredits;
+        $Creditschange = $BonusCredits - $Cur['Credits'];
+        if ($Creditschange>=0) $Creditschange = "+".number_format ($Creditschange);
+        else $Creditschange = number_format ($Creditschange);
+        $BonusSummary = sqltime()." | $Creditschange | ".ucfirst("credits set to $BonusCredits from {$Cur['Credits']} by {$LoggedUser['Username']}");
+        $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$BonusSummary', i.BonusLog)";
                 
-	$EditSummary[]="Bonus Credits changed from ".$Cur['Credits']." to ".$BonusCredits;
-	$HeavyUpdates['Credits'] = $BonusCredits;
+        $EditSummary[]="Bonus Credits changed from ".$Cur['Credits']." to ".$BonusCredits;
+	$Cache->delete_value('user_stats_'.$UserID);
+        $HeavyUpdates['Credits'] = $BonusCredits;
+        
 }
 
 

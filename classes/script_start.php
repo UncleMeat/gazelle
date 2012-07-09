@@ -71,7 +71,6 @@ $Debug->set_flag('Debug constructed');
 
 $DB = new DB_MYSQL;
 $Cache = new CACHE;
-//$Cache->flush(); // Lanz: this was enabled as default, no wonder caching didn't work properly...
 $Enc = new CRYPT;
 $UA = new USER_AGENT;
 $SS = new SPHINX_SEARCH;
@@ -165,7 +164,7 @@ if (isset($LoginCookie)) {
     // Up/Down stats
     $UserStats = $Cache->get_value('user_stats_' . $LoggedUser['ID']);
     if (!is_array($UserStats)) {
-        $DB->query("SELECT Uploaded AS BytesUploaded, Downloaded AS BytesDownloaded, RequiredRatio FROM users_main WHERE ID='$LoggedUser[ID]'");
+        $DB->query("SELECT Uploaded AS BytesUploaded, Downloaded AS BytesDownloaded, RequiredRatio, Credits as TotalCredits FROM users_main WHERE ID='$LoggedUser[ID]'");
         $UserStats = $DB->next_record(MYSQLI_ASSOC);
         $Cache->cache_value('user_stats_' . $LoggedUser['ID'], $UserStats, 3600);
     }

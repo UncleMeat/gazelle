@@ -92,7 +92,7 @@ if ($Mobile) { ?>
         if($LoggedUser['FLTokens'] > 0) { ?>
                       <li id="fl_tokens"><a href="bonus.php">Slots</a>: <span class="stat"><?=$LoggedUser['FLTokens']?></span></li>
     <?	} ?>  
-                      <li id="credits"><a href="bonus.php">Credits</a>: <span class="stat"><?=number_format((int)$LoggedUser['Credits'])?></span></li>
+                      <li id="credits"><a href="bonus.php">Credits</a>: <span class="stat"><?=number_format((int)$LoggedUser['TotalCredits'])?></span></li>
 
                 </span>
                 <span class="inside_stat">

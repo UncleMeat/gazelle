@@ -59,7 +59,7 @@ if (empty($TokenTorrents)) {
 
 // If he's trying use a token on this, we need to make sure he has one,
 // deduct it, add this to the FLs table, and update his cache key.
-if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == '0') {
+if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 	if (isset($LoggedUser)) {
 		$FLTokens = $LoggedUser['FLTokens'];
 		if ($LoggedUser['CanLeech'] != '1') {
@@ -73,7 +73,7 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == '0') {
 		}
 		$FLTokens = $UInfo['FLTokens'];
 	}
-	
+
 	// First make sure this isn't already FL, and if it is, do nothing
         // if it's currently using a double seed slot, switch to FL.
 	if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'leech') {
@@ -111,7 +111,7 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == '0') {
 			$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
 		}
 	}
-} elseif ($_REQUEST['usetoken'] == 2 && $DoubleSeed == '0') {
+} elseif ($_REQUEST['usetoken'] == 2 && $DoubleSeed == 0) {
 
 	// First make sure this isn't already DS, and if it is, do nothing
 	if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'seed') {
