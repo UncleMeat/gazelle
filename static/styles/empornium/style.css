@@ -358,6 +358,7 @@ span.stat {
     font-size: 0.9em;
     color: #222;
     position: relative;
+    width:11%;
 }
 
 #searchbars ul {
