@@ -328,7 +328,7 @@ $TorrentCount = $SS->TotalResults;
 // These ones were not found in the cache, run SQL
 if (!empty($Results['notfound'])) {
 
-    $SQLResults = get_groups($Results['notfound'], true, true, true);
+    $SQLResults = get_groups($Results['notfound']);
 
     if (is_array($SQLResults['notfound'])) { // Something wasn't found in the db, remove it from results
         reset($SQLResults['notfound']);
@@ -353,16 +353,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
 ?>
 
 <div class="thin">
-<? if (empty($LoggedUser['DisableLatestTopics'])) {       
-        $LatestTopics = get_latest_forum_topics($LoggedUser['PermissionID']);
-?>
-        <div class="head">Latest forum topics</div>
-        <div class="box pad">
-        <? foreach($LatestTopics as $Key=>$Value) { ?>
-            <a href="forums.php?action=viewthread&threadid=<?=$Value['ThreadID']?>&postid=<?=$Value['PostID']?>#post<?=$Value['PostID']?>"><strong><?=$Value['Title']?></strong></a> by <?=$Value['Username']?> (<?=time_diff($Value['AddedTime'], 1)?>)&nbsp;
-        <? } ?>   
-        </div>
-<? } ?>
+<? print_latest_forum_topics(); ?>
     
 <form name="filter" method="get" action=''>  
     <div id="search_box" class="filter_torrents">
@@ -649,9 +640,20 @@ $row='a';
             </td>
             <td>
                 <span>
+                    <? if (empty($TorrentUserStatus[$TorrentID])) { ?>
                         <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">
                             <span class="icon icon_disk_none"></span>
                         </a>
+                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') { ?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Seeding Torrent">
+                            <span class="icon icon_disk_seed"></span>
+                        </a>                    
+                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') { ?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Leeching Torrent">
+                            <span class="icon icon_disk_leech"></span>
+                        </a>                    
+
+                    <? } ?>
                 </span>
 
 <?                if (check_perms('torrents_review') && $Data['Status'] == 'Okay') { 

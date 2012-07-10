@@ -69,6 +69,7 @@ if($LoggedUser['CustomForums'][$ForumID] != 1 && $Forums[$ForumID]['MinClassRead
 show_header('Forums > '. $Forums[$ForumID]['Name']);
 ?>
 <div class="thin">
+<? print_latest_forum_topics(); ?>
 	<div class="linkbox">
 <? if(check_forumperm($ForumID, 'Write') && check_forumperm($ForumID, 'Create')){ ?>
 		[<a href="forums.php?action=new&amp;forumid=<?=$ForumID?>">New Thread</a>]

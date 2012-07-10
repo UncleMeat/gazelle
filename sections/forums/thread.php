@@ -130,6 +130,7 @@ if(in_array($ThreadID, $UserSubscriptions)) {
 show_header('Forums'.' > '.$Forums[$ForumID]['Name'].' > '.$ThreadInfo['Title'],'comments,subscriptions,bbcode,jquery');
 ?>
 <div class="thin">
+    <? print_latest_forum_topics(); ?>
 	<div class="linkbox">
 		<div class="center">
 			<a href="reports.php?action=report&amp;type=thread&amp;id=<?=$ThreadID?>">[Report Thread]</a>
