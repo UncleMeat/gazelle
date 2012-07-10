@@ -540,6 +540,7 @@ function get_latest_forum_topics($PermissionID) {
                     LIMIT 6");
         $LatestTopics = $DB->to_array();
         $Cache->cache_value('latest_topics_'.$PermissionID, $LatestTopics);
+        die('getting topics');
     }
     return $LatestTopics;
 }
@@ -592,6 +593,19 @@ function print_badges_array($UserBadges){
   
 }
 
+function print_latest_forum_topics() {
+    global $LoggedUser;
+    if (empty($LoggedUser['DisableLatestTopics'])) {    
+        $LatestTopics = get_latest_forum_topics($LoggedUser['PermissionID']);
+
+        echo "<div class='head'>Latest forum topics</div>";
+        echo "<div class='box pad'>";
+        foreach($LatestTopics as $Key=>$Value) {
+            echo "<span class='sicon unread'></span><a href='forums.php?action=viewthread&threadid=".$Value['ThreadID']."&postid=".$Value['PostID']."#post".$Value['PostID']."'><strong>".$Value['Title']."</strong></a> by ".$Value['Username']." (".time_diff($Value['AddedTime'], 1).")&nbsp;";
+        }
+        echo "</div>";
+    }
+}
 // This function is slow. Don't call it unless somebody's logging in.
 function site_ban_ip($IP) {
     global $DB, $Cache;

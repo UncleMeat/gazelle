@@ -104,7 +104,6 @@ if(isset($_POST['delete'])) {
 		$Cache->delete_value('thread_'.$TopicID.'_info');
                 
                 update_latest_topics();
-                
 		header('Location: forums.php?action=viewforum&forumid='.$ForumID);
 	} else {
 		error(403);
@@ -231,7 +230,6 @@ if(isset($_POST['delete'])) {
 		$Cache->update_row($ForumID, $UpdateArray);
 		
 		$Cache->commit_transaction(0);
-                update_latest_topics();
 	} else { // Editing 
 		$DB->query("SELECT LastPostTopicID FROM forums WHERE ID='$ForumID'");
 		list($LastTopicID) = $DB->next_record();
@@ -244,7 +242,6 @@ if(isset($_POST['delete'])) {
 			$Cache->begin_transaction('forums_list');
 			$Cache->update_row($ForumID, $UpdateArray);
 			$Cache->commit_transaction(0);
-                        update_latest_topics();
 		}
 	}
 	if($Locked) {
@@ -257,5 +254,6 @@ if(isset($_POST['delete'])) {
 		$DB->query('UPDATE forums_polls SET Closed=\'0\' WHERE TopicID=\''.$TopicID.'\'');
 		$Cache->delete_value('polls_'.$TopicID);
 	}
+        update_latest_topics();
 	header('Location: forums.php?action=viewthread&threadid='.$TopicID.'&page='.$Page);
 }
