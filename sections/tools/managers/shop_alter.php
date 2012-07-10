@@ -8,6 +8,8 @@ if($_POST['submit'] == 'Delete') {
     
 	if(!is_number($_POST['id']) || $_POST['id'] == ''){ error(0); }
 	$DB->query('DELETE FROM bonus_shop_actions WHERE ID='.$_POST['id']); 
+      $Cache->delete_value('shop_items');
+      $Cache->delete_value('shop_item_'.$_POST['id']);
       
 } elseif ($_POST['autosynch'] == 'autosynch') {
     
@@ -34,6 +36,7 @@ if($_POST['submit'] == 'Delete') {
             $Sort++;
       }
       $DB->query($SQL);
+      $Cache->delete_value('shop_items');
 
 } else {
 	
@@ -60,10 +63,13 @@ if($_POST['submit'] == 'Delete') {
                               Cost='$Cost',
                               Sort='$Sort'
                               WHERE ID='{$_POST['id']}'");
+           $Cache->delete_value('shop_items');
+           $Cache->delete_value('shop_item_'.$_POST['id']);
 	} else { //Create
 		$DB->query("INSERT INTO bonus_shop_actions 
 			(Title, Description, Action, Value, Cost, Sort) VALUES
 			('$Name','$Desc','$Action','$Value','$Cost','$Sort')");
+            $Cache->delete_value('shop_items');
 	}
 }
 
