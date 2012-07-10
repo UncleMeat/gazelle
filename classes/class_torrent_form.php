@@ -179,7 +179,7 @@ class TORRENT_FORM {
 					<br /><br />
 					Don't use 'useless' tags, such as '<strong style="color:red;">awesome</strong>', etc.
 					<br /><br />
-					<strong>You should be able to build up a list of tags using only the official tags to the left of the text box besides porn star names. If you are in any doubt about whether or not a tag is acceptable, do not add it.</strong>
+					<strong>Try to use offical tags first before adding non offical tags, besides porn star names.</strong>
 				</td>
 			</tr>
 		</table> 
@@ -191,7 +191,8 @@ class TORRENT_FORM {
                  
 			<tr>
 				<td class="label">Cover Image</td>
-				<td>  
+				<td>
+                                    Do not add a thumbnail image as cover, rather leave this field blank if you don't have a good cover image or an image of the actor(s).
                              <input type="text" id="image" class="long" name="image" value="<?=display_str($Torrent['Image']) ?>" <?=$this->Disabled?>/>
                         </td>
 			</tr> 
