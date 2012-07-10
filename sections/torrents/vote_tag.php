@@ -16,7 +16,7 @@ if($DB->record_count() == 0) {
 	if($Way == 'down') {
 		$Change = 'NegativeVotes=NegativeVotes+1';
 	} else {
-		$Change = 'PositiveVotes=PositiveVotes+2';
+		$Change = 'PositiveVotes=PositiveVotes+1';
 	}
 	$DB->query("UPDATE torrents_tags SET $Change WHERE TagID='$TagID' AND GroupID='$GroupID'");
 	$DB->query("INSERT INTO torrents_tags_votes (GroupID, TagID, UserID, Way) VALUES ('$GroupID', '$TagID', '$UserID', '$Way')");
