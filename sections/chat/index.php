@@ -2,6 +2,7 @@
 enforce_login();
 show_header('IRC');	
 
+/*
 $DB->query("SELECT IRCKey FROM users_main WHERE ID = $LoggedUser[ID]");
 list($IRCKey) = $DB->next_record();
 
@@ -17,6 +18,7 @@ if(empty($IRCKey)) {
 </div>
 <?
 } else {
+    */
 	if(!isset($_POST["accept"])) {
 ?>
 <div class="thin">
@@ -91,11 +93,21 @@ if(empty($IRCKey)) {
 ?>
 <div class="thin">
 	<div class="head">IRC</div>
-	<div class="box pad" style="padding:10px 0px 10px 0px;">
-		<div style="padding:0px 10px 10px 20px;">
-			<p>If you have an IRC client, visit <a href="articles.php?topic=IRC_How_to_join">this article</a> for more information how to connect. (IRC Applet users are automatically identified with Drone.)</p>
-		</div>
+	<div class="box pad">
+		 
 		<center>
+ 
+                <iframe src="http://chat.efnet.org:9090/?nick=<?=$nick?>&channels=empornium" width="80%" height="600"></iframe>
+
+<? /*
+                $nick = ($CURUSER ? $CURUSER['username'] : ('Guest' . rand(1000, 9999)));
+
+$irc_url = 'irc.efnet.net';
+
+$irc_channel = '#empornium';
+
+
+
 			<applet codebase="static/irc/" code="IRCApplet.class" archive="irc.jar,sbox.jar" width=800 height=600>
 				<param name="nick" value="<?=$nick?>">
 				<param name="alternatenick" value="WhatGuest????">
@@ -109,13 +121,13 @@ if(empty($IRCKey)) {
 				<param name="pixx:highlightnick" value="true">
 				<param name="pixx:prefixops" value="true">
 				<param name="sbox:scrollspeed" value="5">
-			</applet>
+			</applet> */ ?>
 		</center>
 	</div>
 </div>
 <?
 	}
-}
+ 
 
 show_footer();
 ?>
