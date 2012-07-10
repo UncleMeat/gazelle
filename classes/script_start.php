@@ -282,7 +282,7 @@ if (!$TorrentUserStatus) {
         FROM xbt_files_users AS xbt
             WHERE active='1' AND uid =  '".$LoggedUser['ID']."'");
     $TorrentUserStatus = $DB->to_array('TorrentID');
-    $Cache->cache_value('torrent_user_status_'.$LoggedUser['ID'], $TorrentStatus, 600);
+    $Cache->cache_value('torrent_user_status_'.$LoggedUser['ID'], $TorrentUserStatus, 600);
 }
 
 $Debug->set_flag('start function definitions');
