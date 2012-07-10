@@ -85,6 +85,16 @@ show_header('Badges','badges');
     <h3>Sort</h3>
     <ul><li>the sort order defines what order badges are displayed in on a users profile and posts</li></ul>
 </div><br/>
+<div class="head">available images<span style="float:right;"><a href="#" onclick="$('#badgeimages').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span></div>
+<div id="badgeimages" class="box pad hidden">
+<?      foreach ($imagefiles as $image) {    ?>
+    <div style="display: inline-block;margin: 3px;">
+        <img src="<?=STATIC_SERVER.'common/badges/'.$image?>" title="<?=$image?>" alt="<?=$image?>" />
+        <br/><?=$image?>
+    </div>
+<?      } ?>
+</div>
+<br/>
 <table>
     <tr class="colhead">
 		<td width="8px">ID</td>
