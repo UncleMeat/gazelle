@@ -453,7 +453,7 @@ $EditionID = 0;
 	$FileList = str_replace(array('_','-'), ' ', $FileList);
 	$FileList = str_replace('|||','<tr><td>',display_str($FileList));
 	$FileList = preg_replace_callback('/\{\{\{([^\{]*)\}\}\}/i','filelist',$FileList);
-	$FileList = '<table style="overflow-x:auto;"><tr class="smallhead"><td colspan="2">'.(empty($FilePath) ? '' : '/'.$FilePath.'/' ).'</td></tr><tr class="colhead"><td><strong><div style="float: left; display: block;">File Name'.(check_perms('users_mod') ? ' [<a href="torrents.php?action=regen_filelist&amp;torrentid='.$TorrentID.'">Regenerate</a>]' : '').'</div></strong></td><td><strong>Size</strong></td></tr><tr><td>'.$FileList."</table>";
+	$FileList = '<table style="overflow-x:auto;"><tr class="smallhead"><td colspan="2">'.(empty($FilePath) ? '/' : '/'.$FilePath.'/' ).'</td></tr><tr class="colhead"><td><strong><div style="float: left; display: block;">File Name'.(check_perms('users_mod') ? ' [<a href="torrents.php?action=regen_filelist&amp;torrentid='.$TorrentID.'">Regenerate</a>]' : '').'</div></strong></td><td><strong>Size</strong></td></tr><tr><td>'.$FileList."</table>";
 
 	$TorrentUploader = $Username; // Save this for "Uploaded by:" below
 
@@ -526,9 +526,6 @@ $EditionID = 0;
 <?  if($Reported) { ?> 
 					<div id="reported_<?=$TorrentID?>"><?=$ReportInfo?></div>
 <? } ?>
-					<? if(!empty($Description)) {
-						echo '<blockquote>'.$Text->full_format($Description).'</blockquote>';}
-					?>
 				</td>
 			</tr>
 		</table>
@@ -549,7 +546,7 @@ if (count($Requests) > 0) {
 		$RequestVotes = get_votes_array($Request['ID']);
 ?>
 				<tr class="requestrows <?=(++$i%2?'rowa':'rowb')?>">
-					<td><a href="requests.php?action=view&id=<?=$Request['ID']?>">xxx</a></td>
+					<td><a href="requests.php?action=view&id=<?=$Request['ID']?>"></a></td>
 					<td>
 						<form id="form_<?=$Request['ID']?>">
 							<span id="vote_count_<?=$Request['ID']?>"><?=count($RequestVotes['Voters'])?></span>
