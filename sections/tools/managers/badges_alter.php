@@ -6,9 +6,24 @@ authorize();
 
 if($_POST['submit'] == 'Delete') {
     
-	if(!is_number($_POST['id']) || $_POST['id'] == ''){ error(0); }
-	$DB->query('DELETE FROM badges WHERE ID='.$_POST['id']); 
+    if(!is_number($_POST['id']) || $_POST['id'] == ''){ error(0); }
+    $BadgeID = (int)$_POST['id'];
       
+      
+    $DB->query('SELECT DISTINCT UserID FROM users_badges WHERE BadgeID='.$BadgeID);
+    if ($DB->record_count()>0) {
+        $Users = $DB->to_array();
+
+        foreach ($Users as $UserID) {
+              $Cache->delete_value('user_badges_ids_'.$UserID);
+              $Cache->delete_value('user_badges_'.$UserID);
+        }
+
+        $DB->query('DELETE FROM users_badges WHERE BadgeID='.$BadgeID); 
+    }
+    
+    $DB->query('DELETE FROM badges WHERE ID='.$BadgeID); 
+    
 } else {
     
 	$Val->SetFields('name', '1','string','The name must be set, and has a max length of 64 characters', array('maxlength'=>64, 'minlength'=>1));
