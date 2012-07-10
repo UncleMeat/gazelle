@@ -83,7 +83,6 @@ $OperatingSystem = $UA->operating_system($_SERVER['HTTP_USER_AGENT']);
 //$Mobile = $UA->mobile($_SERVER['HTTP_USER_AGENT']);
 $Mobile = in_array($_SERVER['HTTP_HOST'], array('m.' . NONSSL_SITE_URL, 'm.' . NONSSL_SITE_URL));
 
-
 $Debug->set_flag('start user handling');
 
 // Get permissions
@@ -274,6 +273,17 @@ if (isset($LoginCookie)) {
 
 
 $Debug->set_flag('end user handling');
+
+$TorrentUserStatus = $Cache->get_value('torrent_user_status_'.$LoggedUser['ID']);
+if (!$TorrentUserStatus) {
+    $DB->query("
+        SELECT fid as TorrentID,
+            IF(xbt.remaining >  '0', 'L', 'S') AS PeerStatus
+        FROM xbt_files_users AS xbt
+            WHERE active='1' AND uid =  '".$LoggedUser['ID']."'");
+    $TorrentUserStatus = $DB->to_array('TorrentID');
+    $Cache->cache_value('torrent_user_status_'.$LoggedUser['ID'], $TorrentStatus, 600);
+}
 
 $Debug->set_flag('start function definitions');
 
@@ -1671,10 +1681,7 @@ function check_perms($PermissionName, $MinClass = 0) {
 
 // Function to get data and torrents for an array of GroupIDs.
 // In places where the output from this is merged with sphinx filters, it will be in a different order.
-// 
-// $UsePeerStatus=true will return additional peer status for the user browsing the list.
-// at this moment it's only used on the browse page for displaying the different download icons.
-function get_groups($GroupIDs, $Return = true, $Torrents = true, $UserPeerStatus = false) {
+function get_groups($GroupIDs, $Return = true, $Torrents = true) {
 	global $DB, $Cache, $LoggedUser;
 	
 	$Found = array_flip($GroupIDs);
@@ -1708,37 +1715,17 @@ function get_groups($GroupIDs, $Return = true, $Torrents = true, $UserPeerStatus
 		}
 		
 		if ($Torrents) {          
-                        if ($UserPeerStatus) {
-                            $uid = $LoggedUser['ID'];
-                            $DB->query("SELECT t.ID, t.UserID, um.Username, t.GroupID, FileCount, FreeTorrent, double_seed, 
-                                            Size, Leechers, Seeders, Snatched, t.Time, t.ID AS HasFile, r.ReportCount,
-                                            tr.Status, tr.KillTime,
-                                            (CASE WHEN xbt.active=1 AND xbt.completed=0 AND xbt.uid=$uid THEN 'leech'
-                                                WHEN xbt.active=1 AND xbt.completed=1 AND xbt.uid=$uid THEN 'seed'
-                                                ELSE 'none'
-                                            END) AS PeerStatus
-                                        FROM torrents AS t 
-                                            JOIN users_main AS um ON t.UserID=um.ID
-                                            LEFT JOIN (SELECT TorrentID, count(*) as ReportCount FROM reportsv2 WHERE Type != 'edited' AND Status != 'Resolved' GROUP BY TorrentID) AS r ON r.TorrentID=t.ID
-                                            LEFT JOIN xbt_files_users AS xbt ON xbt.fid=t.id   
-                                            LEFT JOIN torrents_reviews AS tr ON tr.GroupID=t.GroupID
-                                                WHERE t.GroupID IN($IDs) AND (tr.Time IS NULL OR tr.Time=(SELECT MAX(torrents_reviews.Time) 
-                                                FROM torrents_reviews 
-                                                WHERE torrents_reviews.GroupID=t.GroupID))
-                                        ORDER BY GroupID DESC, t.ID");
-                        } else {
-                            $DB->query("SELECT t.ID, t.UserID, um.Username, t.GroupID, FileCount, FreeTorrent, double_seed, 
-                                            Size, Leechers, Seeders, Snatched, t.Time, t.ID AS HasFile, r.ReportCount,
-                                            tr.Status, tr.KillTime
-                                        FROM torrents AS t 
-                                            JOIN users_main AS um ON t.UserID=um.ID
-                                            LEFT JOIN (SELECT TorrentID, count(*) as ReportCount FROM reportsv2 WHERE Type != 'edited' AND Status != 'Resolved' GROUP BY TorrentID) AS r ON r.TorrentID=t.ID
-                                            LEFT JOIN torrents_reviews AS tr ON tr.GroupID=t.GroupID
-                                                WHERE t.GroupID IN($IDs) AND (tr.Time IS NULL OR tr.Time=(SELECT MAX(torrents_reviews.Time) 
-                                                FROM torrents_reviews 
-                                                WHERE torrents_reviews.GroupID=t.GroupID))
-                                        ORDER BY GroupID DESC, t.ID");
-                        }
+                        $DB->query("SELECT t.ID, t.UserID, um.Username, t.GroupID, FileCount, FreeTorrent, double_seed, 
+                                        Size, Leechers, Seeders, Snatched, t.Time, t.ID AS HasFile, r.ReportCount,
+                                        tr.Status, tr.KillTime
+                                    FROM torrents AS t 
+                                        JOIN users_main AS um ON t.UserID=um.ID
+                                        LEFT JOIN (SELECT TorrentID, count(*) as ReportCount FROM reportsv2 WHERE Type != 'edited' AND Status != 'Resolved' GROUP BY TorrentID) AS r ON r.TorrentID=t.ID
+                                        LEFT JOIN torrents_reviews AS tr ON tr.GroupID=t.GroupID
+                                            WHERE t.GroupID IN($IDs) AND (tr.Time IS NULL OR tr.Time=(SELECT MAX(torrents_reviews.Time) 
+                                            FROM torrents_reviews 
+                                            WHERE torrents_reviews.GroupID=t.GroupID))
+                                    ORDER BY GroupID DESC, t.ID");
 			while($Torrent = $DB->next_record(MYSQLI_ASSOC, true)) {
 				$Found[$Torrent['GroupID']]['Torrents'][$Torrent['ID']] = $Torrent;
 		

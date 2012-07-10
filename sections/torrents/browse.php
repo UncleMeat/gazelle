@@ -328,7 +328,7 @@ $TorrentCount = $SS->TotalResults;
 // These ones were not found in the cache, run SQL
 if (!empty($Results['notfound'])) {
 
-    $SQLResults = get_groups($Results['notfound'], true, true, true);
+    $SQLResults = get_groups($Results['notfound']);
 
     if (is_array($SQLResults['notfound'])) { // Something wasn't found in the db, remove it from results
         reset($SQLResults['notfound']);
@@ -649,9 +649,20 @@ $row='a';
             </td>
             <td>
                 <span>
-                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">
+                    <? if (empty($TorrentUserStatus[$TorrentID])) { ?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download Torrent">
                             <span class="icon icon_disk_none"></span>
                         </a>
+                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') { ?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Seeding Torrent">
+                            <span class="icon icon_disk_seed"></span>
+                        </a>                    
+                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') { ?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Leeching Torrent">
+                            <span class="icon icon_disk_leech"></span>
+                        </a>                    
+
+                    <? } ?>
                 </span>
 
 <?                if (check_perms('torrents_review') && $Data['Status'] == 'Okay') { 
