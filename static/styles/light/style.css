@@ -393,7 +393,8 @@ span.stat {
     position: relative;
     border-radius: 10px;       /* FF9+ IE9+ */
     -moz-border-radius: 10px; /* for FF5 */
-    -webkit-border-radius: 10px; /* for opera */    
+    -webkit-border-radius: 10px; /* for opera */  
+    width:11%;  
 }
 
 #searchbars ul {

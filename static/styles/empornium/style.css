@@ -30,7 +30,7 @@ body {
     width: 100%;
     background: #0261a3;
     font-family: Verdana,Arial,Helvetica,sans-serif;
-    font-size: 9pt;
+    font-size: 8pt;
     color: #000000;
 }
 
@@ -358,6 +358,7 @@ span.stat {
     font-size: 0.9em;
     color: #222;
     position: relative;
+    width:11%;
 }
 
 #searchbars ul {
@@ -843,7 +844,7 @@ table.boxstat td:first-child {
     background: none;
     color: black;
     border-bottom: none;
-    font-size: 1.4em;
+    font-size: 1.2em;
 }
 #top10 div.head a, #forums div.head a {
     color: black;
@@ -992,12 +993,12 @@ input.shopbutton.itembuy:hover {
     background: #0261A3 url(images/colhead-grad.gif) repeat-x;  /*  #0261A3  #C6D3E4   */
     font-weight: bold;
     color: #eee;
+    padding: 5px;
 }
 
 .colhead a, .smallhead a {
     color: white;
 }
-
 
 td.colhead, .colhead td , td.smallhead , .smallhead td{
     padding-left: 10px;
@@ -1019,6 +1020,16 @@ td.colhead, .colhead td , td.smallhead , .smallhead td{
 
 .colhead_dark a {
     color: white;
+}
+
+.box td.colhead {
+    background:none;
+    background-color: #f8f8f8;
+    color:black;
+    font-weight: normal;
+}
+.box td.colhead a {
+    color:#023174;
 }
 
 .colhead_red {
@@ -1623,6 +1634,13 @@ table.bb_holder td {
     padding:0px;
 }
 
+table.bb_holder td.colhead {
+    background:none;
+    background-color: #f8f8f8;
+    color:black;
+    font-weight: normal;
+}
+
 .bb_smiley_holder {
     text-align: center; 
     padding: 0px; 
@@ -1661,6 +1679,7 @@ a.bb_button {
     background:white;
     cursor:pointer;
     color: #000000; 
+    border: 1px solid #7BA3C1;
 }
 
 a.bb_button:hover { 
@@ -1674,6 +1693,7 @@ a.bb_button:hover {
     margin:-2px 1px 0px 0px; 
     background:white;
     cursor:pointer; 
+    border: 1px solid #7BA3C1;
 }
 
 .bb_smiley img {

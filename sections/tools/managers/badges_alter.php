@@ -40,6 +40,7 @@ if($_POST['submit'] == 'Delete') {
 			('{$_POST['type']}','$Sort','$Cost','$Name','$Desc','$Image')");
 	}
 }
+$Cache->delete_value('available_badges');
 
 // Go back
 header('Location: tools.php?action=badges_list');
