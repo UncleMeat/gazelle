@@ -132,6 +132,10 @@ ul.thin li { margin:0px 0px; padding:0px; }
 
 }
 
+#adbar {
+    text-align: center;
+    margin: 0px auto 20px;
+}
 #content {
     width: 90%;
     min-width: 980px;
@@ -253,7 +257,7 @@ span.infinity {
     background: #0261a3 url('images/pagetop.jpg') repeat-x;  
     padding: 2px 20px 4px;
     position: relative;
-    height: 40px;
+    height: 30px;
     font-size: 1.2em;
 }
 
@@ -1411,6 +1415,7 @@ td.badgesrow, .badgesrow {
 .badges img {
     max-width: 150px;
     max-height: 60px;
+    margin:2px;
 }
 #badgesadmin img {
     margin-bottom: 6px;

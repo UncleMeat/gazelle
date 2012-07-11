@@ -165,11 +165,15 @@ ul.thin li { margin:0px 0px; padding:0px; }
     background: url('images/empornium-black-header.png') no-repeat center center;
 }    
 
+#adbar {
+    text-align: center;
+    margin: 10px auto 0px;
+}
 #content {
     width: 90%;
     min-width: 980px;
     max-width: 1100px;
-    margin: 40px auto 0px auto;
+    margin: 10px auto 0px auto;
     overflow: hidden;
 }
 
@@ -1518,6 +1522,7 @@ td.badgesrow, .badgesrow {
 .badges img {
     max-width: 150px;
     max-height: 60px;
+    margin:2px;
 }
 
 #badgesadmin img {

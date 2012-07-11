@@ -286,7 +286,7 @@ if(check_perms('admin_reports')) {
 			<li id="nav_irc"><a href="chat.php">IRC</a></li>
 			<li id="nav_top10"><a href="top10.php">Top 10</a></li>
 			<li id="nav_rules"><a href="articles.php?topic=rules">Rules</a></li>
-                        <li id="nav_rules"><a href="articles.php?topic=tutorials">Help</a></li>
+                  <li id="nav_help"><a href="articles.php?topic=tutorials">Help</a></li>
 			<li id="nav_staff"><a href="staff.php">Staff</a></li>
 		</ul>
 	</div>
@@ -506,5 +506,19 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
             </div>
     </div>
 </div>
-
+<div id="adbar">
+    <script type="text/javascript">
+        var AdBrite_Title_Color = '0000FF';
+        var AdBrite_Text_Color = '000000';
+        var AdBrite_Background_Color = 'FFFFFF';
+        var AdBrite_Border_Color = 'FFFFFF';
+        var AdBrite_URL_Color = '008000';
+        try{var AdBrite_Iframe=window.top!=window.self?2:1;var AdBrite_Referrer=document.referrer==''?document.location:document.referrer;AdBrite_Referrer=encodeURIComponent(AdBrite_Referrer);}catch(e){var AdBrite_Iframe='';var AdBrite_Referrer='';}
+    </script>
+    <script type="text/javascript">
+        document.write(String.fromCharCode(60,83,67,82,73,80,84));
+        document.write(' src="http://ads.adbrite.com/mb/text_group.php?sid=1979187&amp;zs=3732385f3930&amp;ifr='+AdBrite_Iframe+'&amp;ref='+AdBrite_Referrer+'" type="text/javascript">');
+        document.write(String.fromCharCode(60,47,83,67,82,73,80,84,62))
+    </script>
+</div>
 <div id="content">
