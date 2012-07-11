@@ -16,6 +16,11 @@ function js_pages($Action, $TorrentID, $NumResults, $CurrentPage) {
 
 if(!empty($_REQUEST['action'])) {
 	switch($_REQUEST['action']){
+            case 'grouplog':
+			enforce_login();
+			include(SERVER_ROOT.'/sections/torrents/grouplog.php');
+			break;
+                    
 		case 'edit':
 			enforce_login();
 			include(SERVER_ROOT.'/sections/torrents/edit.php');

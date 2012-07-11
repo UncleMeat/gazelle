@@ -540,7 +540,7 @@ function get_latest_forum_topics($PermissionID) {
                     LIMIT 6");
         $LatestTopics = $DB->to_array();
         $Cache->cache_value('latest_topics_'.$PermissionID, $LatestTopics);
-        die('getting topics');
+        //die('getting topics');
     }
     return $LatestTopics;
 }
