@@ -409,44 +409,84 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 	</div>
     </div>
     
-    <div id="header_bottom">
-<?  /*  //unless it was intended for the user to have this link seperate from the drop down menu this bit should be removed? ?>
-            <div id="minor_stats">
-                <ul id="userinfo_minor">
-    <? if ( $LoggedUser['SupportFor'] =="" && $LoggedUser['DisplayStaff'] != 1 ) {  ?>
-                      <li id="nav_staffmessages"<?=$NewStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffpm');" href="staffpm.php?action=user_inbox">Message Staff<?=$NewStaffPMs ? "($NewStaffPMs)" : ''?></a></li>                      
-    <? }  ?>
-                </ul>
-            </div>
- <?  */  ?>
+    <div id="header_bottom"> 
 
             <div id="major_stats">
+<?
+
+if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {
+?>
+                <ul id="userinfo_tools">
+                    <li id="nav_tools"><a href="tools.php">tools</a>
+                        <ul>
+<?                      if (check_perms('admin_manage_categories')) { ?>
+                            <li id=""><a href="tools.php?action=categories">Categories</a></li>                    
+<?                      } if (check_perms('admin_manage_permissions')) { ?>
+                            <li id=""><a href="tools.php?action=permissions">User Classes</a></li>
+<?                      } if (check_perms('admin_whitelist')) { ?>
+                            <li id=""><a href="tools.php?action=whitelist">Client Whitelist</a></li>
+<?                      } if (check_perms('admin_manage_ipbans')) { ?>
+                            <li id=""><a href="tools.php?action=ip_ban">IP Bans</a></li>
+
+<?                      } if (check_perms('users_view_ips')) { ?>
+                            <li id=""><a href="tools.php?action=login_watch">Login Watch</a></li>
+<?                      } if (check_perms('admin_manage_forums')) { ?>
+                            <li id=""><a href="tools.php?action=forum">Forums</a></li>
+<?                      } if (check_perms('admin_manage_news')) { ?>
+                            <li id=""><a href="tools.php?action=news">News</a></li>
+<?                      } if (check_perms('admin_manage_articles')) { ?>
+                            <li id=""><a href="tools.php?action=articles">Articles</a></li>                        
+<?                      } if (check_perms('admin_dnu')) { ?> 
+                            <li id=""><a href="tools.php?action=dnu">Do not upload list</a></li>
+<?                      } if (check_perms('admin_imagehosts')) { ?>
+                                <li id=""><a href="tools.php?action=imghost_whitelist">Imagehost Whitelist</a></li>
+<?                      } if (check_perms('users_mod')) { ?>
+                            <li id=""><a href="tools.php?action=email_blacklist">Email Blacklist</a></li>
+                            <li id=""><a href="tools.php?action=tokens">Manage freeleech tokens</a></li>
+<?                      } if (check_perms('site_manage_tags')) { ?>
+                            <li id=""><a href="tools.php?action=official_tags">Official Tags Manager</a></li> 
+<?                      } if (check_perms('torrents_review')) { ?>
+                            <li id=""><a href="tools.php?action=marked_for_deletion">Marked for Deletion</a></li>
+
+<?                      } if (check_perms('site_manage_shop')) { ?>
+                            <li id=""><a href="tools.php?action=shop_list">Bonus Shop</a></li>
+                  
+<?                      } if (check_perms('site_manage_badges')) { ?>
+                            <li id=""><a href="tools.php?action=badges_list">Badges</a></li>
+                  
+<?                      } if (check_perms('site_manage_awards')) { ?>
+                            <li id=""><a href="tools.php?action=awards_auto">Automatic Awards</a></li>
+<?                      } ?> 
+                          </ul>
+                      </li>
+                </ul>       
+<? } ?> 
                 <ul id="userinfo_major">
                       <li id="nav_upload" class="brackets"><a href="upload.php">Upload</a></li>
                       <li id="nav_donate" class="brackets"><a href="donate.php">Donate</a></li>
                 </ul>
                 <ul id="userinfo_username">
-                      <li id="nav_userinfo"><a href="user.php?id=<?=$LoggedUser['ID']?>" class="username"><?=$LoggedUser['Username']?></a>
+                      <li id="nav_userinfo" class="<?=($NewMessages||$NumStaffPMs||$NewStaffPMs||$NewNotifications||$NewSubscriptions)? 'highlight' : 'normal'?>"><a href="user.php?id=<?=$LoggedUser['ID']?>" class="username"><?=$LoggedUser['Username']?></a>
                           <ul>
-                                <li id="nav_inbox"<?=$NewMessages ? ' class="highlight"' : ''?>><a onmousedown="Stats('inbox');" href="inbox.php">Inbox<?=$NewMessages ? "($NewMessages)" : ''?></a></li>
+                                <li id="nav_inbox" class="<?=$NewMessages ? 'highlight' : 'normal'?>"><a onmousedown="Stats('inbox');" href="inbox.php">Inbox<?=$NewMessages ? "($NewMessages)" : ''?></a></li>
     <? if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {  ?>
-                      <li id="nav_staffinbox"<?=$NumStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffinbox');" href="staffpm.php?action=staff_inbox&view=open">Staff Inbox<?=$NumStaffPMs ? "($NumStaffPMs)" : ''?></a></li>
+                      <li id="nav_staffinbox" class="<?=$NumStaffPMs ? 'highlight' : 'normal'?>"><a onmousedown="Stats('staffinbox');" href="staffpm.php?action=staff_inbox&amp;view=open">Staff Inbox<?=$NumStaffPMs ? "($NumStaffPMs)" : ''?></a></li>
     <? } ?>                  
     <? //if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) { //both staff and users should see this link? ?>
-                                <li id="nav_staffmessages"<?=$NewStaffPMs ? ' class="highlight"' : ''?>><a onmousedown="Stats('staffpm');" href="staffpm.php?action=user_inbox">Message Staff<?=$NewStaffPMs ? "($NewStaffPMs)" : ''?></a></li>                      
+                                <li id="nav_staffmessages" class="<?=$NewStaffPMs ? 'highlight' : 'normal'?>"><a onmousedown="Stats('staffpm');" href="staffpm.php?action=user_inbox">Message Staff<?=$NewStaffPMs ? "($NewStaffPMs)" : ''?></a></li>                      
      <? //}  ?>
 
-                                <li id="nav_uploaded"><a onmousedown="Stats('uploads');" href="torrents.php?type=uploaded&amp;userid=<?=$LoggedUser['ID']?>">Uploads</a></li>
-                                <li id="nav_bookmarks"><a onmousedown="Stats('bookmarks');" href="bookmarks.php?type=torrents">Bookmarks</a></li>
+                                <li id="nav_uploaded" class="normal"><a onmousedown="Stats('uploads');" href="torrents.php?type=uploaded&amp;userid=<?=$LoggedUser['ID']?>">Uploads</a></li>
+                                <li id="nav_bookmarks" class="normal"><a onmousedown="Stats('bookmarks');" href="bookmarks.php?type=torrents">Bookmarks</a></li>
 <? if (check_perms('site_torrents_notify')) { ?>
-                                <li id="nav_notifications"<?=($NewNotifications ? ' class="highlight"' : '')?>><a onmousedown="Stats('notifications');" href="user.php?action=notify">Notifications<?=$NewNotifications ? "($NewNotifications)" : ''?></a></li>
+                                <li id="nav_notifications" class="<?=$NewNotifications ? 'highlight' : 'normal'?>"><a onmousedown="Stats('notifications');" href="user.php?action=notify">Notifications<?=$NewNotifications ? "($NewNotifications)" : ''?></a></li>
 <? } ?>
-                                <li id="nav_subscriptions"<?=($NewSubscriptions ? ' class="highlight"' : '')?>><a onmousedown="Stats('subscriptions');" href="userhistory.php?action=subscriptions"<?=($NewSubscriptions ? ' class="new-subscriptions"' : '')?>>Subscriptions<?=$NewSubscriptions ? "($NewSubscriptions)" : ''?></a></li>
-                                <li id="nav_comments"><a onmousedown="Stats('comments');" href="comments.php">Comments</a></li>
-                                <li id="nav_friends"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>
-                                <li id="nav_logs"><a onmousedown="Stats('logs');" href="log.php">Logs</a></li>
-                                <li id="nav_bonus"><a onmousedown="Stats('bonus');" href="bonus.php">Bonus</a></li>
-                                <li id="nav_bonus"><a onmousedown="Stats('sandbox');" href="sandbox.php">Sandbox</a></li>
+                                <li id="nav_subscriptions" class="<?=$NewSubscriptions ? 'highlight' : 'normal'?>"><a onmousedown="Stats('subscriptions');" href="userhistory.php?action=subscriptions"<?=($NewSubscriptions ? ' class="new-subscriptions"' : '')?>>Subscriptions<?=$NewSubscriptions ? "($NewSubscriptions)" : ''?></a></li>
+                                <li id="nav_comments" class="normal"><a onmousedown="Stats('comments');" href="comments.php">Comments</a></li>
+                                <li id="nav_friends" class="normal"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>
+                                <li id="nav_logs" class="normal"><a onmousedown="Stats('logs');" href="log.php">Logs</a></li>
+                                <li id="nav_bonus" class="normal"><a onmousedown="Stats('bonus');" href="bonus.php">Bonus</a></li>
+                                <li id="nav_sandbox" class="normal"><a onmousedown="Stats('sandbox');" href="sandbox.php">Sandbox</a></li>
     <?
     if(check_perms('site_send_unlimited_invites')) {
           $Invites = ' (∞)';
@@ -456,8 +496,8 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
           $Invites = '';
     }
     ?>
-                                <li id="nav_invite" class="brackets"><a href="user.php?action=invite">Invite<?=$Invites?></a></li>
-                                <li id="nav_bonus"><a onmousedown="Stats('conncheck');" href="user.php?action=connchecker">Conn-Checker</a></li>                                    
+                                <li id="nav_invite" class="normal brackets"><a href="user.php?action=invite">Invite<?=$Invites?></a></li>
+                                <li id="nav_bonus" class="normal"><a onmousedown="Stats('conncheck');" href="user.php?action=connchecker">Conn-Checker</a></li>                                    
                           </ul>
                       </li>
                       <li id="nav_useredit" class="brackets"><a href="user.php?action=edit&amp;userid=<?=$LoggedUser['ID']?>" title="Edit User Settings">Settings</a></li>

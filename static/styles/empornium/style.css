@@ -235,6 +235,9 @@ span.infinity {
     padding: 0px;
     display:inline;
 }
+#header_bottom ul li {
+    margin: 0 7px;
+}
 
 #stats_block a, #stats_block a:visited, #header_bottom a, #header_bottom a:visited {
     text-decoration: none;
@@ -270,21 +273,23 @@ span.infinity {
     float:right;
     margin: 0 0 0 10px;
 }
+ 
+#userinfo_username li ul a, #userinfo_tools li ul a {
+    display: block; 
+}
+#userinfo_tools li ul a {
+    width: 160px;
+}
 
-
-#userinfo_username li ul a {
+#userinfo_username li:hover ul, #userinfo_tools li:hover ul {
     display: block; 
 }
 
-#userinfo_username li:hover ul {
-    display: block; 
-}
-
-#userinfo_username li a {
+#userinfo_username li a, #userinfo_tools li a {
     padding: 2px 0 2px 0;
 }
 
-#userinfo_username li ul {
+#userinfo_username li ul, #userinfo_tools li ul {
     list-style: none;
     display: none;
     position: absolute;
@@ -294,28 +299,27 @@ span.infinity {
     z-index: 10;
 }
 
-#userinfo_username li ul li a {
+#userinfo_username li ul li a, #userinfo_tools li ul li a {
     padding: 3px 6px 3px 6px;
 }
 
-#userinfo_username li ul li a:hover {
+#userinfo_username li ul li a:hover, #userinfo_tools li ul li a:hover {
     background-color: white;
     color: #00436b;
 }
 
-#userinfo_username {
+#userinfo_username, #userinfo_tools {
     display:inline;
     position: relative;
 } 
 
-#nav_userinfo {
+#nav_userinfo, #nav_tools {
     padding-right: 8px !important;
     margin-right: 6px !important;
     background-image: url(images/dropdown_arrow.png);
     background-repeat:no-repeat;
     background-position: right center;
-}
-
+}	
 
 #userinfo_major {
     display:inline;
@@ -336,6 +340,9 @@ span.stat {
 }
 .highlight {
     font-weight: bold; 
+}
+.normal {
+    font-weight:normal; 
 }
 
 
