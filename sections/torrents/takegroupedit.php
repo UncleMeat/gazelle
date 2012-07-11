@@ -171,7 +171,7 @@ if($Body != $OrigBody) {
 if($Image != $OrigImage) $LogDetails .= "{$Concat}Image";
 
 write_log("Torrent $TorrentIDs ($OrigName) was edited by ".$LoggedUser['Username']." ($LogDetails)"); //in group $GroupID 
-write_group_log($GroupID, $TorrentIDs, $LoggedUser['ID'], $LogDetails, 0);
+write_group_log($GroupID, $TorrentIDs, $LoggedUser['ID'], "Torrent edited: $LogDetails", 0);
 
 
 header("Location: torrents.php?id=".$GroupID."&did=1");

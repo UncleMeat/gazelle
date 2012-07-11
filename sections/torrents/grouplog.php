@@ -2,6 +2,9 @@
 $GroupID = $_GET['groupid'];
 if (!is_number($GroupID)) { error(404); }
 
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+
 show_header("History for Group $GroupID");
 
 $Groups = get_groups(array($GroupID), true, false);
@@ -44,7 +47,7 @@ if (!empty($Groups['matches'][$GroupID])) {
 			$DB->set_query_id($Log);  */
 ?>
 			<td><?=format_username($UserID, $Username)?></td>
-			<td><?=$Info?></td>
+			<td><?=$Text->full_format($Info)?></td>
 		</tr>
 <?
 	}

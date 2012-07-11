@@ -520,7 +520,7 @@ if(!empty($_REQUEST['action'])) {
                                     $LogDetails = "Reason: $Description";
                                 }
                                 $KillTime = get_warning_time(); // 12 hours...  ?
-                                $LogDetails .= "; Delete at: ".  date('M d Y, H:i', $KillTime);
+                                $LogDetails .= ", Delete at: ".  date('M d Y, H:i', $KillTime);
                                 if($ConvID){ // possible if a new mark for deletion is made on a warned/pending/Okay(fixed) torrent
                                     // send message 
                                     send_message_reply($ConvID, $UserID, $LoggedUser['ID'], 
@@ -595,7 +595,7 @@ if(!empty($_REQUEST['action'])) {
                         
                         // logging - 
                         write_log("Torrent $TorrentID ($Name) status set to $Status by ".$LoggedUser['Username']." ($LogDetails)"); // TODO: this is probably broken
-                        write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], $LogDetails, 0);
+                        write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], "[b]Status:[/b] $Status $LogDetails", 0);
 
                         
                         header('Location: torrents.php?id='.$GroupID);
