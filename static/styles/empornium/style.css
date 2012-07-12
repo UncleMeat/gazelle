@@ -856,13 +856,13 @@ table.boxstat td:first-child {
 }
 /* , #user div.head */
 
-#top10 div.head, #forums div.head {
+#top10 div.head, #forums div.head, #groups div.head {
     background: none;
     color: black;
     border-bottom: none;
     font-size: 1.2em;
 }
-#top10 div.head a, #forums div.head a {
+#top10 div.head a, #forums div.head a, #groups div.head a {
     color: black;
 }
 
