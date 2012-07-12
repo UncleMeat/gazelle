@@ -1520,8 +1520,8 @@ td.badgesrow, .badgesrow {
 }
 
 .badges img {
-    max-width: 10px;
-    max-height: 20px;
+    max-width: 80px;
+    max-height: 40px;
     margin:1px;
 }
 
