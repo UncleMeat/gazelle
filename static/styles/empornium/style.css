@@ -1413,9 +1413,9 @@ td.badgesrow, .badgesrow {
     padding: 4px;
 }
 .badges img {
-    max-width: 150px;
-    max-height: 60px;
-    margin:2px;
+    max-width: 10px;
+    max-height: 20px;
+    margin:1px;
 }
 #badgesadmin img {
     margin-bottom: 6px;
