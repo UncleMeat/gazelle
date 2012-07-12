@@ -112,7 +112,8 @@ if(empty($_POST['action'])) {
             
             $Items = array();
             // split on both whitespace and commas
-            $Preitems = explode(",", $P[userlist]);
+            $Preitems = str_replace('\n', ' ',$P[userlist]);
+            $Preitems = explode(",", $Preitems);
             foreach($Preitems as $pitem){
                 $Items = array_merge($Items, explode(" ", $pitem));
             }
