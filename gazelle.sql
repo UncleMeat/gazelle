@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `badges` (
   `Type` enum('Shop','Single','Multiple','Unique') NOT NULL,
   `Sort` int(10) NOT NULL,
   `Cost` int(20) NOT NULL DEFAULT '0',
-  `Name` varchar(64) NOT NULL,
+  `Title` varchar(64) NOT NULL,
   `Description` varchar(255) NOT NULL,
   `Image` varchar(255) NOT NULL,
   PRIMARY KEY (`ID`),

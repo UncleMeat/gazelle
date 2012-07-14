@@ -149,8 +149,7 @@ if ($FreeTooltip)
 	<div class="linkbox" >
     <?	if( $CanEdit) {   ?>
                 <a href="torrents.php?action=editgroup&amp;groupid=<?=$GroupID?>">[Edit Torrent]</a>
-    <?	} ?>
-                <a href="torrents.php?action=history&amp;groupid=<?=$GroupID?>">[View history]</a>
+    <?	} ?> 
     <?	if(has_bookmarked('torrent', $GroupID)) { ?>
                 <a href="#" id="bookmarklink_torrent_<?=$GroupID?>" onclick="Unbookmark('torrent', <?=$GroupID?>,'[Bookmark]');return false;">[Remove bookmark]</a>
     <?	} else { ?>

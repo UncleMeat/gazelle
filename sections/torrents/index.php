@@ -89,10 +89,6 @@ if(!empty($_REQUEST['action'])) {
 			break;
 			
 			
-		case 'history':
-			enforce_login();
-			include(SERVER_ROOT.'/sections/torrents/history.php');
-			break;
 		
 		case 'delete':
 			enforce_login();
