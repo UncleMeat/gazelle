@@ -158,8 +158,6 @@ if (isset($LoginCookie)) {
         logout();
     }
 
-
-
     // Up/Down stats
     $UserStats = $Cache->get_value('user_stats_' . $LoggedUser['ID']);
     if (!is_array($UserStats)) {
@@ -275,7 +273,7 @@ if (isset($LoginCookie)) {
 $Debug->set_flag('end user handling');
 
 $TorrentUserStatus = $Cache->get_value('torrent_user_status_'.$LoggedUser['ID']);
-if (!$TorrentUserStatus) {
+if ($TorrentUserStatus === false) {
     $DB->query("
         SELECT fid as TorrentID,
             IF(xbt.remaining >  '0', 'L', 'S') AS PeerStatus
@@ -529,7 +527,7 @@ function get_permissions_advtags($UserID, $CustomPermissions = false, $UserPermi
 function get_latest_forum_topics($PermissionID) {
     global $Classes, $DB, $Cache;
     $LatestTopics = $Cache->get_value('latest_topics_'.$PermissionID);
-    if (!$LatestTopics) {
+    if ($LatestTopics === false) {
         $Level = $Classes[$PermissionID]['Level'];
         $DB->query("SELECT ft.ID AS ThreadID, fp.ID AS PostID, ft.Title, um.Username, fp.AddedTime FROM forums_posts AS fp
                     INNER JOIN forums_topics AS ft ON ft.ID=fp.TopicID
@@ -540,7 +538,6 @@ function get_latest_forum_topics($PermissionID) {
                     LIMIT 6");
         $LatestTopics = $DB->to_array();
         $Cache->cache_value('latest_topics_'.$PermissionID, $LatestTopics);
-        //die('getting topics');
     }
     return $LatestTopics;
 }
