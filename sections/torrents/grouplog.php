@@ -2,6 +2,9 @@
 $GroupID = $_GET['groupid'];
 if (!is_number($GroupID)) { error(404); }
 
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+
 show_header("History for Group $GroupID");
 
 $Groups = get_groups(array($GroupID), true, false);
@@ -11,7 +14,7 @@ if (!empty($Groups['matches'][$GroupID])) {
 } else {
 	$Title = "Group $GroupID";
 }
-die('sdlfkjldsaf');
+//die('sdlfkjldsaf');
 ?>
 
 <div class="thin">
@@ -25,22 +28,26 @@ die('sdlfkjldsaf');
 			<td>Info</td>
 		</tr>
 <?
-	$Log = $DB->query("SELECT TorrentID, UserID, Info, Time FROM group_log WHERE GroupID = ".$GroupID." ORDER BY Time DESC");
+	$Log = $DB->query("SELECT TorrentID, t.Name, g.UserID, Username, Info, g.Time 
+                           FROM group_log AS g 
+                           LEFT JOIN users_main AS u ON u.ID=g.UserID
+                           LEFT JOIN torrents_group AS t ON t.ID=g.GroupID
+                           WHERE GroupID = ".$GroupID." ORDER BY Time DESC");
 
-	while (list($TorrentID, $UserID, $Info, $Time) = $DB->next_record())
+	while (list($TorrentID, $Name, $UserID, $Username, $Info, $Time) = $DB->next_record())
 	{
 ?>
 		<tr class="rowa">
 			<td><?=$Time?></td>
-                        
-                        <td />
-			
+			<td><?=$Name?></td>
+
+<? /*
 			$DB->query("SELECT Username FROM users_main WHERE ID = ".$UserID);
 			list($Username) = $DB->next_record();
-			$DB->set_query_id($Log);
+			$DB->set_query_id($Log);  */
 ?>
 			<td><?=format_username($UserID, $Username)?></td>
-			<td><?=$Info?></td>
+			<td><?=$Text->full_format($Info)?></td>
 		</tr>
 <?
 	}

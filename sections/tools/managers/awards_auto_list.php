@@ -14,7 +14,7 @@ show_header('Automatic Awards','badges');
 $AutoAwardTypes = array ('NumPosts', 'NumComments', 'NumUploaded', 'NumNewTags', 'NumTags', 'NumTagVotes',
                   'RequestsFilled', 'UploadedTB', 'DownloadedTB', 'MaxSnatches');
 
-$DB->query("SELECT ID, Name
+$DB->query("SELECT ID, Title
               FROM badges WHERE Type='Single' ORDER BY Sort");
 $BadgesArray = $DB->to_array();
 
@@ -46,28 +46,30 @@ function print_categories($SelectedCat=-1){
 <?
 }
 ?>
+<div class="thin">
 <h2>Automatic Awards</h2>
-<div>
 <table>
     <tr>
         <td colspan="9" class="colhead">Add Automatic Award item</td>
     </tr>
     <tr class="colhead">
-		<td width="40px"></td>
+		<td width="40px" rowspan="2"></td>
 		<td width="100px">Badge</td>
-		<td>Description (from badges)</td>
 		<td width="80px">For</td>
 		<td width="60px">Value</td>
 		<td width="80px">Category<br />(NumUploaded only)</td>
 		<td width="40px">Send PM</td>
 		<td width="40px">Active</td>
-		<td width="120px"></td>
+		<td width="60px" rowspan="2"></td>
     </tr>
-<tr class="rowa">
-	<form action="tools.php" method="post">
+    <tr class="colhead">
+		<td colspan="6">Description (from badges)</td>
+    </tr>
+    <form action="tools.php" method="post">
+    <tr class="rowb">
 		<input type="hidden" name="action" value="awards_alter" />
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-		<td class="center">
+		<td class="center" rowspan="2">
                 <div class="badge">
                     <span id="image0">
                     </span>
@@ -75,9 +77,6 @@ function print_categories($SelectedCat=-1){
 		</td>
 		<td>  
 <?                  print_badges_select(0); ?> 
-		</td>
-		<td> 
-                <span id="desc0"></span>
 		</td>
 		<td>
                 <select name="type" >
@@ -98,32 +97,40 @@ function print_categories($SelectedCat=-1){
 		<td class="center">
 			<input class="medium"  type="checkbox" name="active" value="1" title="If checked this award will be automatically distributed to users who meet the specified requirements" />
 		</td>
-		<td>
+		<td rowspan="2">
 			<input type="submit" value="Create" />
 		</td>
-	</form>
-</tr>
+    </tr>
+    <tr class="rowb">
+		<td colspan="6"> 
+                <span id="desc0"></span>
+		</td>
+    </tr>
+    </form>
 </table>
 <br/><br/>
 <div class="box pad">
     When awarding these the system checks for users that do not have this badge, then checks those results against the Parameter and Value settings to determine who should get the award.
     Do not have the same badge being awarded by 2 different active items, or at least be aware the user will only get one and then be blocked from receiving the other.
+    <p><strong>note:</strong> Badges are defined in the <a href="/tools.php?action=badges_list">Badges Manager</a></p>
 </div><br/>
 <table>
     <tr class="colhead">
-		<td width="40px"></td>
+		<td width="40px" rowspan="2"></td>
 		<td width="120px">Badge</td>
-		<td>Description (from badges)</td>
 		<td width="80px">Parameter</td>
 		<td width="60px">Value</td>
 		<td width="80px">Category<br />(NumUploaded only)</td>
 		<td width="40px">Send PM</td>
 		<td width="40px">Active</td>
-		<td width="120px"></td>
+		<td width="60px" rowspan="2"></td>
+    </tr>
+    <tr class="colhead"> 
+		<td colspan="6">Description (from badges)</td>
     </tr>
 <? 
 
-$DB->query("SELECT ba.ID, ba.BadgeID, Name, Action, SendPM, Value, CategoryID, Description, Image , Active
+$DB->query("SELECT ba.ID, ba.BadgeID, Title, Action, SendPM, Value, CategoryID, Description, Image , Active
               FROM badges_auto AS ba 
               JOIN badges AS b ON b.ID=ba.BadgeID ORDER BY b.Sort");
 
@@ -131,13 +138,13 @@ $Row = 'b';
 while(list($ID, $BadgeID, $Name, $Action, $SendPM, $Value, $CategoryID, $Description, $Image, $Active) = $DB->next_record()){  
 	$Row = ($Row === 'a' ? 'b' : 'a');
 ?>
-    <tr class="row<?=$Row?>">
-	  <form action="tools.php" method="post">
+    <form action="tools.php" method="post">
                 <input type="hidden" name="action" value="awards_alter" />
                 <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
                 <input type="hidden" name="id" value="<?=$ID?>" />
                 
-		<td class="center">
+        <tr class="rowb">
+		<td class="center" rowspan="2">
                 <div class="badge">
                     <span id="image<?=$ID?>">
                         <img src="<?=STATIC_SERVER.'common/badges/'.$Image?>" title="<?=$Name.'. '.$Description?>" alt="<?=$Name?>" />
@@ -146,9 +153,6 @@ while(list($ID, $BadgeID, $Name, $Action, $SendPM, $Value, $CategoryID, $Descrip
 		</td>
 		<td>
 <?                  print_badges_select($ID, $BadgeID); ?> 
-		</td>
-		<td>
-			<span id="desc<?=$ID?>"><?=display_str($Description)?></span>
 		</td>
 		<td>
                 <select name="type" >
@@ -169,12 +173,21 @@ while(list($ID, $BadgeID, $Name, $Action, $SendPM, $Value, $CategoryID, $Descrip
 		<td class="center">
 			<input class="medium" type="checkbox" name="active" value="1" <?=($Active?'checked="checked"':'')?> title="If checked this award will be automatically distributed to users who meet the specified requirements" />
 		</td>
-		<td>
+		<td rowspan="2">
                 <input type="submit" name="submit" value="Edit" />
                 <input type="submit" name="submit" value="Delete" />
 		</td>
-	  </form>
-    </tr>
+        </tr>
+        <tr class="rowb">
+		<td colspan="6">
+			<span id="desc<?=$ID?>"><?=display_str($Description)?></span>
+		</td>
+        </tr>
+        <tr class="rowa">
+		<td colspan="8">
+		</td>
+        </tr>
+    </form>
 <? }  ?>
 </table>
 </div>

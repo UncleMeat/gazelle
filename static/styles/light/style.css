@@ -165,11 +165,15 @@ ul.thin li { margin:0px 0px; padding:0px; }
     background: url('images/empornium-black-header.png') no-repeat center center;
 }    
 
+#adbar {
+    text-align: center;
+    margin: 10px auto 0px;
+}
 #content {
     width: 90%;
     min-width: 980px;
     max-width: 1100px;
-    margin: 40px auto 0px auto;
+    margin: 10px auto 0px auto;
     overflow: hidden;
 }
 
@@ -267,6 +271,9 @@ span.infinity {
     padding: 0px;
     display:inline;
 }
+#header_bottom ul li {
+    margin: 0 7px;
+}
 
 #stats_block a, #stats_block a:visited, #header_bottom a, #header_bottom a:visited, #userinfo_username li ul, #userinfo_username li ul li a {
     font-size: 1.1em;
@@ -301,24 +308,24 @@ span.infinity {
     float:right;
     margin: 0 0 0 10px;
 }
+ 
 
-#userinfo_username {
-    position: relative;
+#userinfo_username li ul a, #userinfo_tools li ul a {
+    display: block; 
+}
+#userinfo_tools li ul a {
+    width: 160px;
 }
 
-#userinfo_username li ul a {
+#userinfo_username li:hover ul, #userinfo_tools li:hover ul {
     display: block; 
 }
 
-#userinfo_username li:hover ul {
-    display: block; 
-}
-
-#userinfo_username li a {
+#userinfo_username li a, #userinfo_tools li a {
     padding: 2px 0 2px 0;
 }
 
-#userinfo_username li ul {
+#userinfo_username li ul, #userinfo_tools li ul {
     list-style: none;
     display: none;
     position: absolute;
@@ -328,19 +335,28 @@ span.infinity {
     z-index: 10;
 }
 
-#userinfo_username li ul li a {
+#userinfo_username li ul li a, #userinfo_tools li ul li a {
     padding: 3px 6px 3px 6px;
 }
 
-#userinfo_username li ul li a:hover {
+#userinfo_username li ul li a:hover, #userinfo_tools li ul li a:hover {
     background-color: white;
     color: #00436b;
 }
 
-#userinfo_username {
+#userinfo_username, #userinfo_tools {
+    position: relative;
     font-size: 0.85em;
     display:inline;
 } 
+
+#nav_userinfo, #nav_tools {
+    padding-right: 8px !important;
+    margin-right: 6px !important;
+    background-image: url(images/dropdown_arrow.png);
+    background-repeat:no-repeat;
+    background-position: right center;
+}
 
 #nav_userinfo {
     padding-right: 8px !important;
@@ -372,6 +388,9 @@ span.stat {
 .highlight {
     font-weight: bold; 
 }
+.normal {
+    font-weight:normal; 
+}
 
 #searchbars {
     padding: 6px 0px 0px 0px;
@@ -384,7 +403,8 @@ span.stat {
 }
 
 #searchbars input {
-    background-color: #ffffff;     /*  #F4F6FB; */
+    /* background-color: #ffffff;       #F4F6FB; */
+    background: white url('images/mglass.png') no-repeat scroll 98% 0%;
     border: 0px;
     padding: 1px 5px 1px 5px;
     margin: 0px 1px 0px 1px;
@@ -1501,8 +1521,9 @@ td.badgesrow, .badgesrow {
 }
 
 .badges img {
-    max-width: 150px;
-    max-height: 60px;
+    max-width: 80px;
+    max-height: 40px;
+    margin:1px;
 }
 
 #badgesadmin img {

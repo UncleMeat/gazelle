@@ -26,7 +26,7 @@ function get_shop_item($ItemID){
 	if(($ShopItem = $Cache->get_value('shop_item_'.$ItemID)) === false) {
 		$DB->query("SELECT
                         s.ID,
-                        IF(Action='badge',b.Name,s.Title) AS Title, 
+                        s.Title, 
                         s.Description, 
                         s.Action, 
                         s.Value, 

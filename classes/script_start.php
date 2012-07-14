@@ -527,7 +527,7 @@ function get_permissions_advtags($UserID, $CustomPermissions = false, $UserPermi
 function get_latest_forum_topics($PermissionID) {
     global $Classes, $DB, $Cache;
     $LatestTopics = $Cache->get_value('latest_topics_'.$PermissionID);
-    if (!$LatestTopics) {
+    if ($LatestTopics === false) {
         $Level = $Classes[$PermissionID]['Level'];
         $DB->query("SELECT ft.ID AS ThreadID, fp.ID AS PostID, ft.Title, um.Username, fp.AddedTime FROM forums_posts AS fp
                     INNER JOIN forums_topics AS ft ON ft.ID=fp.TopicID
@@ -550,10 +550,11 @@ function get_user_badges($UserID){
         $DB->query("SELECT
                         ub.ID,
                         ub.BadgeID,
-                        ub.Title,
-                        b.Name,
+                        ub.Description,
+                        b.Title,
                         b.Image,
-                        IF(ba.ID IS NULL,FALSE,TRUE) AS Auto
+                        IF(ba.ID IS NULL,FALSE,TRUE) AS Auto,
+                        b.Type
                    FROM users_badges AS ub
                    JOIN badges AS b ON b.ID = ub.BadgeID
                    LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
@@ -585,7 +586,7 @@ function print_badges_array($UserBadges){
                             
     foreach ($UserBadges as $Badge) {
         list($ID,$BadgeID, $Tooltip, $Name, $Image ) = $Badge;
-        echo '<div class="badge"><img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="'.$Tooltip.'" alt="'.$Name.'" /></div>';
+        echo '<div class="badge"><img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="The '.$Name.'. '.$Tooltip.'" alt="'.$Name.'" /></div>';
     }
   
 }

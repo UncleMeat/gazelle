@@ -287,26 +287,38 @@ if ($Visible!=$Cur['Visible']  && check_perms('users_make_invisible')) {
 
 
 if (is_array($AddBadges) && check_perms('users_edit_badges')) {
-	
-      $SQL = 'INSERT INTO users_badges (UserID, BadgeID, Title) VALUES';
-      $Div = '';
-      $SQL_IN ='';
-      foreach($AddBadges as $AddBadgeID) {
+ 
+      foreach($AddBadges as &$AddBadgeID) {
             $AddBadgeID = (int)$AddBadgeID;
-            $Tooltip = db_string( display_str($_POST['addbadge'.$AddBadgeID]) );
-            $SQL .= "$Div ('$UserID', '$AddBadgeID', '$Tooltip')";
-            $SQL_IN .= "$Div $AddBadgeID";
-            $Div = ',';
       }
-      $DB->query($SQL);
+      $SQL_IN = implode(',',$AddBadges);
+      $DB->query("SELECT ID, Title, Badge, Rank, Image FROM badges WHERE ID IN ( $SQL_IN )");
+      $BadgeInfos = $DB->to_array();
       
-      $BadgesAdded = '';
-      $Div = '';
-      $DB->query("SELECT Name FROM badges WHERE ID IN ( $SQL_IN )");
-      while(list($Name)=$DB->next_record()) {
-            $BadgesAdded .= "$Div $Name";
-            $Div = ',';
-      }      
+      $SQL = ''; $Div = ''; $BadgesAdded = ''; 
+      
+      foreach($BadgeInfos as $BadgeInfo) {
+          list($BadgeID, $Name, $Badge, $Rank, $Image) = $BadgeInfo;
+          
+          $Tooltip = db_string( display_str($_POST['addbadge'.$BadgeID]) );
+          $SQL .= "$Div ('$UserID', '$BadgeID', '$Tooltip')";
+          $BadgesAdded .= "$Div $Name";
+          $Div = ',';
+            
+          // remove lower ranked badges of same badge set
+          $DB->query("DELETE ub 
+                          FROM users_badges AS ub
+                     LEFT JOIN badges AS b ON b.ID=ub.BadgeID 
+                         WHERE ub.UserID = '$UserID'
+                           AND b.Badge='$Badge' AND b.Rank<$Rank");
+          
+          
+          send_pm($UserID, 0, "Congratulations you have been awarded the $Name", 
+                            "[center][br][br][img]http://".SITE_NAME.'/'.STATIC_SERVER."common/badges/{$Image}[/img][br][br][size=5][color=white][bg=#0261a3][br]{$Tooltip}[br][br][/bg][/color][/size][/center]");
+                
+      }
+      $DB->query("INSERT INTO users_badges (UserID, BadgeID, Description) VALUES $SQL");
+          
       $Cache->delete_value('user_badges_ids_'.$UserID);
       $Cache->delete_value('user_badges_'.$UserID);
       $EditSummary[] = 'Badge'.(count($AddBadges)>1?'s':'')." added: $BadgesAdded";
@@ -324,7 +336,7 @@ if (is_array($DelBadges) && check_perms('users_edit_badges')) {
       }
       $BadgesRemoved = '';
       $Div = '';
-      $DB->query("SELECT Name 
+      $DB->query("SELECT b.Title 
                     FROM users_badges AS ub 
                     LEFT JOIN badges AS b ON ub.BadgeID=b.ID 
                     WHERE ub.ID IN ( $SQL_IN )");

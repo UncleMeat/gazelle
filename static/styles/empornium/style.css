@@ -132,6 +132,10 @@ ul.thin li { margin:0px 0px; padding:0px; }
 
 }
 
+#adbar {
+    text-align: center;
+    margin: 0px auto 20px;
+}
 #content {
     width: 90%;
     min-width: 980px;
@@ -235,6 +239,9 @@ span.infinity {
     padding: 0px;
     display:inline;
 }
+#header_bottom ul li {
+    margin: 0 7px;
+}
 
 #stats_block a, #stats_block a:visited, #header_bottom a, #header_bottom a:visited {
     text-decoration: none;
@@ -250,7 +257,7 @@ span.infinity {
     background: #0261a3 url('images/pagetop.jpg') repeat-x;  
     padding: 2px 20px 4px;
     position: relative;
-    height: 40px;
+    height: 30px;
     font-size: 1.2em;
 }
 
@@ -270,21 +277,23 @@ span.infinity {
     float:right;
     margin: 0 0 0 10px;
 }
+ 
+#userinfo_username li ul a, #userinfo_tools li ul a {
+    display: block; 
+}
+#userinfo_tools li ul a {
+    width: 160px;
+}
 
-
-#userinfo_username li ul a {
+#userinfo_username li:hover ul, #userinfo_tools li:hover ul {
     display: block; 
 }
 
-#userinfo_username li:hover ul {
-    display: block; 
-}
-
-#userinfo_username li a {
+#userinfo_username li a, #userinfo_tools li a {
     padding: 2px 0 2px 0;
 }
 
-#userinfo_username li ul {
+#userinfo_username li ul, #userinfo_tools li ul {
     list-style: none;
     display: none;
     position: absolute;
@@ -294,28 +303,27 @@ span.infinity {
     z-index: 10;
 }
 
-#userinfo_username li ul li a {
+#userinfo_username li ul li a, #userinfo_tools li ul li a {
     padding: 3px 6px 3px 6px;
 }
 
-#userinfo_username li ul li a:hover {
+#userinfo_username li ul li a:hover, #userinfo_tools li ul li a:hover {
     background-color: white;
     color: #00436b;
 }
 
-#userinfo_username {
+#userinfo_username, #userinfo_tools {
     display:inline;
     position: relative;
 } 
 
-#nav_userinfo {
+#nav_userinfo, #nav_tools {
     padding-right: 8px !important;
     margin-right: 6px !important;
     background-image: url(images/dropdown_arrow.png);
     background-repeat:no-repeat;
     background-position: right center;
-}
-
+}	
 
 #userinfo_major {
     display:inline;
@@ -337,6 +345,9 @@ span.stat {
 .highlight {
     font-weight: bold; 
 }
+.normal {
+    font-weight:normal; 
+}
 
 
 
@@ -353,12 +364,16 @@ span.stat {
 }
 
 #searchbars input {
-    background-color: #e4ebef;     /*  #F4F6FB; */
+   /*  background-color: #e4ebef;      #F4F6FB; */
+    background: white url('images/mglass.png') no-repeat scroll 96% 0%;
     border: 1px solid black;
     font-size: 0.9em;
     color: #222;
     position: relative;
     width:11%;
+    border-radius: 6px;       /* FF9+ IE9+ */
+    -moz-border-radius: 6px; /* for FF5 */
+    -webkit-border-radius: 6px; /* for opera */ 
 }
 
 #searchbars ul {
@@ -526,7 +541,7 @@ input.hidden {
 /* Layout (Any page) */
 
 .thin {
-    width: 96%;
+    width: 90%;
     min-width: 960px;
     margin-left:auto;
     margin-right:auto;
@@ -845,13 +860,13 @@ table.boxstat td:first-child {
 }
 /* , #user div.head */
 
-#top10 div.head, #forums div.head {
+#top10 div.head, #forums div.head, #groups div.head {
     background: none;
     color: black;
     border-bottom: none;
     font-size: 1.2em;
 }
-#top10 div.head a, #forums div.head a {
+#top10 div.head a, #forums div.head a, #groups div.head a {
     color: black;
 }
 
@@ -1402,8 +1417,9 @@ td.badgesrow, .badgesrow {
     padding: 4px;
 }
 .badges img {
-    max-width: 150px;
-    max-height: 60px;
+    max-width: 80px;
+    max-height: 40px;
+    margin:1px;
 }
 #badgesadmin img {
     margin-bottom: 6px;

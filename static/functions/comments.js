@@ -5,10 +5,10 @@ function Quote(post, user) {
 	username = user;
 	postid = post;
 	ajax.get("?action=get_post&body=1&post=" + postid, function(response){
-		/*
-            /forums.php?action=viewthread&postid=23998#post23998
-           */
-            insert( "\n\n[quote="+username+"]" +  html_entity_decode(response) + "[/quote]", 'quickpost');
+		/*  forums.php?action=viewthread&postid=23998#post23998  */
+            var s = "[quote="+username+"]" +  html_entity_decode(response) + "[/quote]";
+            if ( $('#quickpost').raw().value != '')   s = "\n" + s + "\n";
+            insert( s, 'quickpost');
 		resize('quickpost');
 	});
 }
@@ -25,23 +25,6 @@ function Edit_Form(post,key) {
 	});
 }
 
-/*
-function Edit_Form(post,key) {
-	postid = post;
-	if (location.href.match(/torrents\.php/)) {
-		boxWidth="50";
-	} else {
-		boxWidth="80";
-	}
-	$('#bar' + postid).raw().cancel = $('#content' + postid).raw().innerHTML;
-	$('#bar' + postid).raw().oldbar = $('#bar' + postid).raw().innerHTML;
-	$('#content' + postid).raw().innerHTML = "<div id=\"preview" + postid + "\"></div><form id=\"form" + postid + "\" method=\"post\"><input type=\"hidden\" name=\"auth\" value=\"" + authkey + "\" /><input type=\"hidden\" name=\"key\" value=\"" + key + "\" /><input type=\"hidden\" name=\"post\" value=\"" + postid + "\" /><textarea id=\"editbox" + postid + "\" class=\"long\" onkeyup=\"resize('editbox" + postid + "');\" name=\"body\" cols=\""+boxWidth+"\" rows=\"10\"></textarea></form>";
-	$('#bar' + postid).raw().innerHTML = "<input type=\"button\" value=\"Preview\" onclick=\"Preview_Edit(" + postid + ");\" /><input type=\"button\" value=\"Post\" onclick=\"Save_Edit(" + postid + ")\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit(" + postid + ");\" />";
-	ajax.get("?action=get_post&post=" + postid, function(response){
-		$('#editbox' + postid).raw().value = html_entity_decode(response);
-		resize('editbox' + postid);
-	});
-} */
 
 function Cancel_Edit(postid) {
 	$('#bar' + postid).raw().innerHTML = $('#bar' + postid).raw().oldbar;
