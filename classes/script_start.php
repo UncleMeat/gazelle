@@ -158,8 +158,6 @@ if (isset($LoginCookie)) {
         logout();
     }
 
-
-
     // Up/Down stats
     $UserStats = $Cache->get_value('user_stats_' . $LoggedUser['ID']);
     if (!is_array($UserStats)) {
@@ -275,7 +273,7 @@ if (isset($LoginCookie)) {
 $Debug->set_flag('end user handling');
 
 $TorrentUserStatus = $Cache->get_value('torrent_user_status_'.$LoggedUser['ID']);
-if (!$TorrentUserStatus) {
+if ($TorrentUserStatus === false) {
     $DB->query("
         SELECT fid as TorrentID,
             IF(xbt.remaining >  '0', 'L', 'S') AS PeerStatus
@@ -540,7 +538,6 @@ function get_latest_forum_topics($PermissionID) {
                     LIMIT 6");
         $LatestTopics = $DB->to_array();
         $Cache->cache_value('latest_topics_'.$PermissionID, $LatestTopics);
-        die('getting topics');
     }
     return $LatestTopics;
 }
