@@ -363,9 +363,9 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					<input
 						accesskey="t"
 						spellcheck="false"
-						onfocus="if (this.value == 'Torrents') this.value='';"
-						onblur="if (this.value == '') this.value='Torrents';"
-						value="Torrents" type="text" name="searchtext" size="17" title="Search Torrents"
+						onfocus="if (this.value == 'Search Torrents') this.value='';"
+						onblur="if (this.value == '') this.value='Search Torrents';"
+						value="Search Torrents" type="text" name="searchtext" size="17" title="Search Torrents"
  
 					/>
 				</form>
@@ -375,9 +375,9 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 				<form action="requests.php" method="get">
 					<input
 						spellcheck="false"
-						onfocus="if (this.value == 'Requests') this.value='';"
-						onblur="if (this.value == '') this.value='Requests';"
-						value="Requests" type="text" name="search" size="17" title="Search Requests"
+						onfocus="if (this.value == 'Search Requests') this.value='';"
+						onblur="if (this.value == '') this.value='Search Requests';"
+						value="Search Requests" type="text" name="search" size="17" title="Search Requests"
 					/>
 				</form>
 			</li>
@@ -386,9 +386,9 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 				<form action="forums.php" method="get">
 					<input value="search" type="hidden" name="action" />
 					<input
-						onfocus="if (this.value == 'Forums') this.value='';"
-						onblur="if (this.value == '') this.value='Forums';"
-						value="Forums" type="text" name="search" size="17" title="Search Forums"
+						onfocus="if (this.value == 'Search Forums') this.value='';"
+						onblur="if (this.value == '') this.value='Search Forums';"
+						value="Search Forums" type="text" name="search" size="17" title="Search Forums"
 					/>
 				</form>
 			</li>
@@ -396,9 +396,9 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 				<span class="hidden">Log: </span>
 				<form action="log.php" method="get">
 					<input
-						onfocus="if (this.value == 'Log') this.value='';"
-						onblur="if (this.value == '') this.value='Log';"
-						value="Log" type="text" name="search" size="17" title="Search Logs"
+						onfocus="if (this.value == 'Search Log') this.value='';"
+						onblur="if (this.value == '') this.value='Search Log';"
+						value="Search Log" type="text" name="search" size="17" title="Search Log"
 					/>
 				</form>
 			</li>
@@ -407,9 +407,9 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 				<form action="user.php" method="get">
 					<input type="hidden" name="action" value="search" />
 					<input
-						onfocus="if (this.value == 'Users') this.value='';"
-						onblur="if (this.value == '') this.value='Users';"
-						value="Users" type="text" name="search" size="20" title="Search Users"
+						onfocus="if (this.value == 'Search Users') this.value='';"
+						onblur="if (this.value == '') this.value='Search Users';"
+						value="Search Users" type="text" name="search" size="20" title="Search Users"
 					/>
 				</form>
 			</li>

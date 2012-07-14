@@ -59,8 +59,8 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought a $Title badge.");
                 $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                
-                $DB->query( "INSERT INTO users_badges (UserID, BadgeID, Title) 
-                                  VALUES ( '$UserID', '$Value', '$Title')");
+                $DB->query( "INSERT INTO users_badges (UserID, BadgeID, Description) 
+                                  VALUES ( '$UserID', '$Value', '$Description')");
                 
                 $Cache->delete_value('user_badges_ids_'.$UserID);
                 $Cache->delete_value('user_badges_'.$UserID);

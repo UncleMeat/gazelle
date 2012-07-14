@@ -4,7 +4,7 @@
 $Text = new TEXT;
 
 // Number of users per page 
-define('FRIENDS_PER_PAGE', '20');
+define('USERS_PER_PAGE', '50');
 
 if (isset($_REQUEST['userid']) && $_REQUEST['userid'] >0) $SelectUserID = (int)$_REQUEST['userid'];
 
@@ -20,7 +20,7 @@ show_header("User Group : $Name",'jquery,groups');
  
 
 
-list($Page,$Limit) = page_limit(FRIENDS_PER_PAGE);
+list($Page,$Limit) = page_limit(USERS_PER_PAGE);
 
 // Main query
 $DB->query("SELECT 
@@ -42,7 +42,7 @@ $DB->query("SELECT
 	JOIN users_main AS m ON u.UserID=m.ID
 	JOIN users_info AS i ON u.UserID=i.UserID
 	WHERE u.GroupID='$GroupID'
-	ORDER BY u.AddedTime ASC LIMIT $Limit");
+	ORDER BY m.Username ASC LIMIT $Limit");
 $Users = $DB->to_array(false, MYSQLI_BOTH, array(7));
 
 // Number of results (for pagination)
@@ -135,7 +135,7 @@ list($Results) = $DB->next_record();
     <div class="linkbox">
 <?
             // Pagination
-            $Pages=get_pages($Page,$Results,FRIENDS_PER_PAGE,9);
+            $Pages=get_pages($Page,$Results,USERS_PER_PAGE,9);
             echo $Pages;
 
             if($Results > 0) { ?>

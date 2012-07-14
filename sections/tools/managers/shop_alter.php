@@ -15,7 +15,7 @@ if($_POST['submit'] == 'Delete') {
     
       // Auto update shop items with applicable badge items
 
-      if ($_POST['delete']==1){
+      if ($_POST['delete']=='1'){
             $DB->query("DELETE FROM bonus_shop_actions WHERE Action='badge'");
       }
       $Sort=(int)$_POST['sort'];
@@ -24,7 +24,7 @@ if($_POST['submit'] == 'Delete') {
       $Div = '';
       $DB->query("SELECT ID, 
                        Cost,
-                       Name,
+                       Title,
                        Description,
                        Image
                   FROM badges 

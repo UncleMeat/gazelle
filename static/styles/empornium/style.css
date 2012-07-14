@@ -364,12 +364,16 @@ span.stat {
 }
 
 #searchbars input {
-    background-color: #e4ebef;     /*  #F4F6FB; */
+   /*  background-color: #e4ebef;      #F4F6FB; */
+    background: white url('images/mglass.png') no-repeat scroll 96% 0%;
     border: 1px solid black;
     font-size: 0.9em;
     color: #222;
     position: relative;
     width:11%;
+    border-radius: 6px;       /* FF9+ IE9+ */
+    -moz-border-radius: 6px; /* for FF5 */
+    -webkit-border-radius: 6px; /* for opera */ 
 }
 
 #searchbars ul {
@@ -537,7 +541,7 @@ input.hidden {
 /* Layout (Any page) */
 
 .thin {
-    width: 96%;
+    width: 90%;
     min-width: 960px;
     margin-left:auto;
     margin-right:auto;

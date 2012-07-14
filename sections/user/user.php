@@ -1134,16 +1134,18 @@ if (check_perms('users_mod', $Class)) { ?>
 ?>
                       <div class="pad"><h3>Current user badges (select to remove)</h3>
 <?
-                            foreach ($UserBadges as $Badge) {
-                                list($ID,$BadgeID, $Tooltip, $Name, $Image, $Auto ) = $Badge;
+                            foreach ($UserBadges as $UBadge) {
+                                list($ID, $BadgeID, $Tooltip, $Name, $Image, $Auto, $Type ) = $UBadge;
                                 $UserBadgesIDs[] = $BadgeID;
 ?>
                             <div class="badge">
-                                <?='<img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="'.$Tooltip.'" alt="'.$Name.'" />'?>
+                                <?='<img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="The '.$Name.'. '.$Tooltip.'" alt="'.$Name.'" />'?>
                                 <br />
                                 <input type="checkbox" name="delbadge[]" value="<?=$ID?>" />
-                                        <label for="delbadge[]"> <?=$Name;
-                                                if ($Auto) echo " (auto)";?></label>
+                                        <label for="delbadge[]"> <?=$Name.'<br/>';
+                                                if($Type=='Unique') echo " *(unique)";
+                                                elseif ($Auto) echo " (automatically awarded)";
+                                                else echo " ($Type)";  ?></label>
                             </div>
 <?
                             }
@@ -1155,50 +1157,61 @@ if (check_perms('users_mod', $Class)) { ?>
                       <div class="pad addbadges"><h3>Add user badges (select to add)</h3>
                           <p>Shop and single type items can be owned once by each user, multiple type items many times, and unique items only by one user at once</p>
                           <table class="noborder">
-<?
-                    $AvailableBadges = $Cache->get_value('available_badges');
-                    if (!is_array($AvailableBadges)) {
+<? 
                         $DB->query("SELECT
-                                    b.ID,
-                                    Type,
-                                    Name,
-                                    Description,
-                                    Image,
-                                    IF(ba.ID IS NULL,FALSE,TRUE) AS Auto,
-                                    IF(Type != 'Unique', TRUE, 
+                                    b.ID As Bid,
+                                    b.Badge,
+                                    b.Rank,
+                                    b.Type,
+                                    b.Title,
+                                    b.Description,
+                                    b.Image,
+                                    IF(b.Type != 'Unique', TRUE, 
                                                         (SELECT COUNT(*) FROM users_badges 
-                                                            WHERE users_badges.BadgeID=b.ID)=0) AS Available
+                                                            WHERE users_badges.BadgeID=b.ID)=0) AS Available,
+                                (SELECT Max(b2.Rank) 
+                                        FROM users_badges AS ub2
+                                   LEFT JOIN badges AS b2 ON b2.ID=ub2.BadgeID
+                                       WHERE b2.Badge = b.Badge
+                                         AND ub2.UserID = $UserID) As MaxRank
+                                
                                FROM badges AS b
                                LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
-                               WHERE Type != 'Shop'
-                               ORDER BY Sort"); 
+                               WHERE b.Type != 'Shop' 
+                                 AND ba.ID IS NULL
+                               ORDER BY b.Sort");
+ 
                         $AvailableBadges = $DB->to_array();
-                        $Cache->cache_value('available_badges', $AvailableBadges);
-                    }
-                    foreach($AvailableBadges as $Badge){ // = $DB->next_record()
-                        list($ID, $Type, $Name, $Tooltip, $Image, $Auto, $Available) = $Badge;
-?>
+                     
+                    foreach($AvailableBadges as $ABadge){ // = $DB->next_record()
+                        list($BadgeID, $Badge, $Rank, $Type, $Name, $Tooltip, $Image, $Available, $MaxRank) = $ABadge; 
+
+                        if (!in_array($Type, array('Single','Shop')) || !$MaxRank || $MaxRank < $Rank ) {
+                        ?>
                         <tr>
                             <td width="60px">
                             <div class="badge">
     <? 
-                                echo '<img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="('.$Type.') '.$Tooltip.'" alt="'.$Name.'" />';
+                                echo '<img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="The '.$Name.'. '.$Tooltip.'" alt="'.$Name.'" />';
 
-                                if (!$Available || ($Type != 'Multiple' && in_array($ID, $UserBadgesIDs) )) $Disabled =' disabled="disabled" title="award is unavailable"';  
+                                if (!$Available ||  
+                                     ($Type != 'Multiple' && in_array($BadgeID, $UserBadgesIDs) )  )
+                                            $Disabled =' disabled="disabled" title="award is unavailable"';  
                                 else $Disabled='';                        
     ?> 
                             </div>
                             </td>
                             <td>
-                                <input  type="checkbox" name="addbadge[]" value="<?=$ID?>"<?=$Disabled?> />
+                                <input  type="checkbox" name="addbadge[]" value="<?=$BadgeID?>"<?=$Disabled?> />
                                         <label for="addbadge[]"> <?=$Name; 
-                                                if($Type=='Unique') echo "*";
-                                                if ($Auto) echo " (automatically awarded)"; ?></label>
+                                                if($Type=='Unique') echo " *(unique)";
+                                                elseif ($Auto) echo " (automatically awarded)";
+                                                else echo " ($Type)";?></label>
                                 <br />
-                                <input class="long" type="text" id="addbadge<?=$ID?>" name="addbadge<?=$ID?>"<?=$Disabled?> value="<?=$Tooltip?>" />
+                                <input class="long" type="text" id="addbadge<?=$BadgeID?>" name="addbadge<?=$BadgeID?>"<?=$Disabled?> value="<?=$Tooltip?>" />
                             </td>
                         </tr>
-<?
+<?                      }
                     }
 ?>                      </table>
                       </div>

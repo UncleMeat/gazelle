@@ -73,7 +73,7 @@ function Select_Action(element_id) {
             <label for="sort" style="margin-left:40px">Add sort values starting from this number</label>
 			<input size="3" type="text" name="sort" value="100" />
             
-            <input class="medium" style="margin-left:40px"  type="checkbox" name="delete" checked="checked" title="If checked all current badge items will be removed from the shop before adding items from badge table" />
+            <input class="medium" style="margin-left:40px"  type="checkbox" value="1" name="delete" checked="checked" title="If checked all current badge items will be removed from the shop before adding items from badge table" />
             <label for="delete">Delete current badges before insertion</label>
 		
 		<input type="submit" style="margin-left:40px" value="Auto synchronise shop items from badges table" />

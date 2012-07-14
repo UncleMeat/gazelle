@@ -43,10 +43,10 @@ $Text = new TEXT;
 <?           }      ?>
       </div>
   
-      <div class="colhead">Select Awards</div>
+      <div class="colhead">Select Award</div>
       <div class="pad box addbadges">
             <p>Shop and single type items can be awarded once to each user and multiple type items many times by every user<br/>
-              note: if you award a single or shop type award to users who already have it they cannot receive it again</p>
+              note: if you award a single or shop type award to users who already have it they will not receive it again</p>
           
             <form action="groups.php" method="post">
                     <input type="hidden" name="action" value="takemassaward" />
@@ -58,13 +58,14 @@ $Text = new TEXT;
                     $DB->query("SELECT
                                     b.ID,
                                     Type,
-                                    Name,
+                                    Title,
                                     Description,
                                     Image,
                                     IF(ba.ID IS NULL,FALSE,TRUE) AS Auto
                                FROM badges AS b
                                LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
                                WHERE Type != 'Shop' AND Type!='Unique'
+                                 AND ba.ID is NULL
                                ORDER BY Sort"); 
                     $AvailableBadges = $DB->to_array();
                    
@@ -81,11 +82,11 @@ $Text = new TEXT;
                             </div>
                             </td>
                             <td>
-                                <input  type="checkbox" name="addbadge[]" value="<?=$ID?>" />
-                                        <label for="addbadge[]"> <?=$Name; 
+                                <input  type="radio" name="addbadge" value="<?=$ID?>" />
+                                        <label for="addbadge"> <?=$Name; 
                                                 if($Type=='Unique') echo " *(unique)";
-                                                else echo " ($Type)"; //  if($Type=='Single')
-                                                if ($Auto) echo " (automatically awarded)"; ?></label>
+                                                elseif ($Auto) echo " (automatically awarded)";
+                                                else echo " ($Type)";  ?></label>
                                 <br />
                                 <input class="long" type="text" id="addbadge<?=$ID?>" name="addbadge<?=$ID?>" value="<?=$Tooltip?>" />
                             </td>
@@ -95,7 +96,7 @@ $Text = new TEXT;
 ?>    
                         <tr>
                             <td colspan="2" class="center">
-                                <input type="submit" name="submit" value="give awards" title="Give selected awards to all members in this group" /><br />
+                                <input type="submit" name="submit" value="give award" title="Give selected award to all members in this group" /><br />
                             </td>
                         </tr>
                             

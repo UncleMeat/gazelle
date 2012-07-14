@@ -140,9 +140,10 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
       
 	//------------- Award Badges ----------------------------------------//
       
-      if ($Hour == 3 || $Hour == 15){ // twice daily
-            include(SERVER_ROOT.'/sections/schedule/award_badges.php');
-      }
+      //if ($Hour == 3 || $Hour == 15) // twice daily
+           // include(SERVER_ROOT.'/sections/schedule/award_badges.php');
+       
+      include(SERVER_ROOT.'/sections/schedule/award_badges.php');
       
 	//------------- Front page stats ----------------------------------------//
 
@@ -244,7 +245,7 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 				$Cache->delete_value('user_info_heavy_'.$UserID);
 				$Cache->delete_value('user_stats_'.$UserID);
 				$Cache->delete_value('enabled_'.$UserID);
-				$DB->query("UPDATE users_info SET AdminComment = CONCAT('".sqltime()." - Class changed to ".make_class_string($L['To'])." by System\n\n', AdminComment) WHERE UserID = ".$UserID);
+				$DB->query("UPDATE users_info SET AdminComment = CONCAT('".sqltime()." - Class changed to ".make_class_string($L['To'])." by System\n', AdminComment) WHERE UserID = ".$UserID);
 			}		
 			$DB->query("UPDATE users_main SET PermissionID=".$L['To']." WHERE ID IN(".implode(',',$UserIDs).")");
 		
@@ -462,7 +463,7 @@ if($Day != next_day() || $_GET['runday']){
 			SET ui.RatioWatchEnds='0000-00-00 00:00:00',
 			ui.RatioWatchDownload='0',
 			um.can_leech='1',
-			ui.AdminComment = CONCAT('".$sqltime." - Leeching re-enabled by adequate ratio.\n\n', ui.AdminComment)
+			ui.AdminComment = CONCAT('".$sqltime." - Leeching re-enabled by adequate ratio.\n', ui.AdminComment)
 			WHERE ui.UserID IN(".implode(",", $OffRatioWatch).")");
 	}
 	
@@ -600,7 +601,7 @@ if($Day != next_day() || $_GET['runday']){
 		SET um.Enabled='2',
 		ui.BanDate='$sqltime',
 		ui.BanReason='3',
-		ui.AdminComment=CONCAT('$sqltime - Disabled for inactivity (never logged in)', ui.AdminComment)
+		ui.AdminComment=CONCAT('$sqltime - Disabled for inactivity (never logged in)\n', ui.AdminComment)
 		WHERE um.LastAccess='0000-00-00 00:00:00'
 		AND ui.JoinDate<'".time_minus(60*60*24*7)."'
 		AND um.Enabled!='2'
@@ -720,7 +721,7 @@ if($Day != next_day() || $_GET['runday']){
 */
 	foreach($DeleteNotes as $UserID => $MessageInfo){
 		$Singular = ($MessageInfo['Count'] == 1) ? true : false;
-		send_pm($UserID,0,db_string($MessageInfo['Count'].' of your torrents '.($Singular?'has':'have').' been deleted for inactivity'), db_string(($Singular?'One':'Some').' of your uploads '.($Singular?'has':'have').' been deleted for being unseeded.  Since '.($Singular?'it':'they').' didn\'t break any rules (we hope), please feel free to re-upload '.($Singular?'it':'them').".\n\nThe following torrent".($Singular?' was':'s were').' deleted:'.$MessageInfo['Msg']));
+		send_pm($UserID,0,db_string($MessageInfo['Count'].' of your torrents '.($Singular?'has':'have').' been deleted for inactivity'), db_string(($Singular?'One':'Some').' of your uploads '.($Singular?'has':'have').' been deleted for being unseeded.  Since '.($Singular?'it':'they').' didn\'t break any rules (we hope), please feel free to re-upload '.($Singular?'it':'them').".\nThe following torrent".($Singular?' was':'s were').' deleted:'.$MessageInfo['Msg']));
 	}	
 	unset($DeleteNotes);
 	

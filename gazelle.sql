@@ -117,6 +117,8 @@ CREATE TABLE IF NOT EXISTS `bad_passwords` (
 
 CREATE TABLE IF NOT EXISTS `badges` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
+  `Badge` varchar( 12 ) NOT NULL,
+  `Sort` int(10) NOT NULL,
   `Type` enum('Shop','Single','Multiple','Unique') NOT NULL,
   `Sort` int(10) NOT NULL,
   `Cost` int(20) NOT NULL DEFAULT '0',
@@ -126,35 +128,9 @@ CREATE TABLE IF NOT EXISTS `badges` (
   PRIMARY KEY (`ID`),
   KEY `Type` (`Type`),
   KEY `Sort` (`Sort`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
---
--- Dumping data for table `badges`
---
 
-INSERT IGNORE INTO `badges` (`ID`, `Type`, `Sort`, `Cost`, `Name`, `Description`, `Image`) VALUES
-(1, 'Unique', 0, 0, 'The USB Award', 'Awarded to USB for services to users above and beyond the call of duty.', 'usb_award.png'),
-(2, 'Shop', 1, 30000, 'Red Star', 'Red Star. This is a placeholder! we need better text & gfx!', 'star_red.png'),
-(3, 'Shop', 2, 30000, 'Blue Star', 'Blue Star. This is a placeholder! we need better text & gfx!', 'star_blue.png'),
-(4, 'Shop', 3, 40000, 'Green Star', 'Green Star. This is a placeholder! we need better text & gfx!', 'star_green.png'),
-(5, 'Shop', 4, 40000, 'Yellow Star', 'Yellow Star. This is a placeholder! we need better text & gfx!', 'star_yellow.png'),
-(6, 'Shop', 5, 60000, 'Bronze Star', 'Bronze Star. This is a placeholder! we need better text & gfx!', 'bronze-icon.png'),
-(7, 'Shop', 6, 70000, 'Silver Star', 'Silver Star. This is a placeholder! we need better text & gfx!', 'silver-icon.png'),
-(8, 'Shop', 7, 80000, 'Gold Star', 'Gold Star. This is a placeholder! we need better text & gfx!', 'gold-icon.png'),
-(9, 'Shop', 8, 100000, 'Diamond', 'Diamond. This is a placeholder! we need better text & gfx!', 'diamond-icon.png'),
-(10, 'Multiple', 9, 0, 'Bronze Heart', 'Awarded for XXXXXX. This is a placeholder! we need better text & gfx!', 'award_bronze.png'),
-(11, 'Multiple', 10, 0, 'Silver Heart', 'Awarded for XXXXXX. This is a placeholder! we need better text & gfx!', 'award_silver.png'),
-(12, 'Multiple', 11, 0, 'Gold Heart', 'Awarded for XXXXXX. This is a placeholder! we need better text & gfx!', 'award_gold.png'),
-(13, 'Multiple', 12, 0, 'Bronze Cup', 'Awarded for XXXXXX. This is a placeholder! we need better text & gfx!', 'bronze_small.png'),
-(14, 'Multiple', 13, 0, 'Silver Cup', 'Awarded for XXXXXX. This is a placeholder! we need better text & gfx!', 'silver_small.png'),
-(15, 'Multiple', 14, 0, 'Gold Cup', 'Awarded for XXXXXX. This is a placeholder! we need better text & gfx!', 'gold_small.png'),
-(16, 'Single', 15, 0, 'Bronze Medal', 'Awarded for XXXXXX. This is a placeholder! we need better text & gfx!', 'medalbronze.png'),
-(17, 'Single', 16, 0, 'Silver Medal', 'Awarded for XXXXXX. This is a placeholder! we need better text & gfx!', 'medalsilver.png'),
-(18, 'Single', 17, 0, 'Gold Medal', 'Awarded for XXXXXX. This is a placeholder! we need better text & gfx!', 'medalgold.png'),
-(19, 'Shop', 18, 200000, 'Wealthy Wanker', 'Plaque of Wealth. This user is a wealthy wanker. This is a placeholder! we need better text & gfx!', 'wealthy_wanker.png'),
-(20, 'Shop', 19, 400000, 'Filthy Rich', 'Plaque of Richness. This user is filthy rich. This is a placeholder! we need better text & gfx!', 'filthy_rich.png'),
-(21, 'Shop', 20, 770000, 'Awesome Muthafucka', 'Plaque of Awesomeness. This user is an awesome muthafucka. This is a placeholder! we need better text & gfx!', 'awesome_mutha.png'),
-(22, 'Shop', 21, 1000000, 'Millionaires Club', 'Millionaires Plaque. This user is a millionaire. This is a placeholder! we need better text & gfx!', 'mill_club.png');
 
 -- --------------------------------------------------------
 
@@ -175,16 +151,8 @@ CREATE TABLE IF NOT EXISTS `badges_auto` (
   KEY `Active` (`Active`),
   KEY `BadgeID` (`BadgeID`),
   KEY `SendPM` (`SendPM`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
---
--- Dumping data for table `badges_auto`
---
-
-INSERT INTO `badges_auto` (`ID`, `BadgeID`, `Action`, `Active`, `SendPM`, `Value`, `CategoryID`) VALUES
-(1, 12, 'NumPosts', 0, 0, 10, 0),
-(2, 13, 'NumUploaded', 0, 0, 3, 30),
-(3, 14, 'UploadedTB', 0, 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -238,19 +206,7 @@ INSERT INTO `bonus_shop_actions` (`ID`, `Title`, `Description`, `Action`, `Value
 (9, '-10 GB to other', 'Do you know a friend or perhaps someone else who has a shitty ratio? Here you can give someone a happy surprise by taking away 10GB from the person''s downloaded traffic!', 'givegb', 10, 8500, 25),
 (10, '1 Slot', 'A slot will give you the option to either freeleech or doubleseed a torrent. Freeleech will allow you to download the torrent without counting the downloaded amount, while doubleseed will count the uploaded amount times 2.', 'slot', 1, 11000, 30),
 (11, '2 Slots', 'A slot will give you the option to either freeleech or doubleseed a torrent. Freeleech will allow you to download the torrent without counting the downloaded amount, while doubleseed will count the uploaded amount times 2.', 'slot', 2, 21000, 31),
-(12, 'Custom Title', 'A super seeder like you deserves a custom title on the tracker!', 'title', 1, 20000, 50),
-(13, 'Red Star', 'Red Star. This is a placeholder! we need better text &amp; gfx!', 'badge', 2, 30000, 88),
-(14, 'Blue Star', 'Blue Star. This is a placeholder! we need better text &amp; gfx!', 'badge', 3, 30000, 89),
-(15, 'Green Star', 'Awarded for greenery.', 'badge', 4, 40000, 90),
-(16, 'Yellow Star', 'Yellow Star. This is a placeholder! we need better text &amp; gfx!', 'badge', 5, 40000, 91),
-(17, 'Bronze Star', 'Bronze Star. This is a placeholder! we need better text &amp; gfx!', 'badge', 6, 60000, 92),
-(18, 'Silver Star', 'Silver Star. This is a placeholder! we need better text &amp; gfx!', 'badge', 7, 70000, 93),
-(19, 'Gold Star', 'Gold Star. This is a placeholder! we need better text &amp; gfx!', 'badge', 8, 80000, 94),
-(20, 'Diamond', 'Diamond. This is a placeholder! we need better text &amp; gfx!', 'badge', 9, 100000, 95),
-(21, 'Wealthy Wanker', 'Plaque of Wealth. This user is a wealthy wanker. This is a placeholder! we need better text &amp; gfx!', 'badge', 19, 200000, 96),
-(22, 'Filthy Rich', 'Plaque of Richness. This user is filthy rich. This is a placeholder! we need better text &amp; gfx!', 'badge', 20, 400000, 97),
-(23, 'Awesome Muthafucka', 'Plaque of Awesomeness. This user is an awesome muthafucka. This is a placeholder! we need better text &amp; gfx!', 'badge', 21, 600000, 98),
-(24, 'Millionaires Club', 'Millionaires Plaque. This user is a millionaire. This is a placeholder! we need better text &amp; gfx!', 'badge', 22, 1000000, 99);
+(12, 'Custom Title', 'A super seeder like you deserves a custom title on the tracker!', 'title', 1, 20000, 50);
 
 
 -- --------------------------------------------------------
@@ -1844,7 +1800,7 @@ CREATE TABLE IF NOT EXISTS `users_badges` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
   `UserID` int(10) NOT NULL,
   `BadgeID` int(10) NOT NULL,
-  `Title` varchar(255) NOT NULL,
+  `Description` varchar(255) NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

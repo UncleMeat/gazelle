@@ -8,91 +8,72 @@ authorize();
 
 enforce_login();
 
-
-$GroupID = (int) $_POST['groupid'];
-$AddBadges = $_POST['addbadge'];
-
-$DB->query("SELECT Name, Comment from groups WHERE ID=$GroupID");
-if ($DB->record_count() == 0)
-    error(0);
-list($GName, $GDescription) = $DB->next_record();
-
-
 // FIXME: Still need a better perm name
 if (!check_perms('site_moderate_requests')) {
     error(403);
 }
- 
-$DB->query('SELECT UserID 
-              FROM users_groups 
-             WHERE GroupID=' . $GroupID);
- 
-if ($DB->record_count() > 0) {
-    $Users = $DB->to_array();
 
-    foreach ($Users as $UserID) {
+$GroupID = (int) $_POST['groupid'];
+if (!$GroupID) error(0);
+//$AddBadges = $_POST['addbadge'];
+//if (!is_array($AddBadges)) error(0);
 
-        $UserID = $UserID[0];
-
-        if (is_array($AddBadges)) {
+$BadgeID = (int)$_POST['addbadge'];
+if (!$BadgeID) error(0);
             
-            $DB->query("SELECT BadgeID
-                          FROM users_badges 
-                         WHERE UserID = $UserID");
-            $UserBadgeIDs = $DB->collect('BadgeID');
+    
+$DB->query("SELECT Name, Comment FROM groups WHERE ID=$GroupID");
+if ($DB->record_count() == 0) error(0);
+list($GName, $GDescription) = $DB->next_record();
+ 
+$DB->query("SELECT Badge, Rank, Title, Image 
+              FROM badges 
+             WHERE ID=$BadgeID");
+if ($DB->record_count() == 0) error(0);
+list($Badge, $Rank, $Name, $Image) = $DB->next_record();
+       
+ 
+$DB->query("SELECT UserID FROM users_groups 
+             WHERE GroupID=$GroupID
+               AND UserID NOT IN (SELECT DISTINCT u2.ID 
+                                        FROM users_main AS u2 
+                                        JOIN users_badges AS ub ON u2.ID = ub.UserID
+                                        JOIN badges AS b ON b.ID=ub.BadgeID
+                                       WHERE ub.BadgeID = $BadgeID
+                                          OR (b.Badge='$Badge' AND b.Rank>=$Rank))");
+$UserIDs = $DB->collect('UserID');
+$CountUsers = count($UserIDs);
 
-            $SQL = 'INSERT INTO users_badges (UserID, BadgeID, Title) VALUES';
-            $Div = '';
-            $SQL_IN = '';
-            $count = 0;
-            foreach ($AddBadges as $AddBadgeID) {
-                $AddBadgeID = (int)$AddBadgeID;
-                if (!in_array($AddBadgeID, $UserBadgeIDs)) {
-                    $Tooltip = db_string(display_str($_POST['addbadge' . $AddBadgeID]));
-                    $SQL .= "$Div ('$UserID', '$AddBadgeID', '$Tooltip')";
-                    $SQL_IN .= "$Div $AddBadgeID";
-                    $Div = ',';
-                    $count++;
-                }
-            }
-            if ($count>0) {
-                $DB->query($SQL);
+if ($CountUsers > 0) {
+  
+    $Description = db_string(display_str($_POST['addbadge' . $BadgeID]));
+    //error($CountUsers);
+    $SQL_IN = implode(',',$UserIDs);
+    $DB->query("UPDATE users_info SET AdminComment = CONCAT('".sqltime()." - Recieved Award ". db_string($Name)." ". db_string($Description).db_string(" Given to all members of [url=/groups.php?groupid=$GroupID]$GName group[/url]") ."\n', AdminComment) WHERE UserID IN ($SQL_IN)");
 
-                $BadgesAdded = '';
-                $Div = '';
-                $DB->query("SELECT Name FROM badges WHERE ID IN ( $SQL_IN )");
-                while (list($Name) = $DB->next_record()) {
-                    $BadgesAdded .= "$Div $Name";
-                    $Div = ',';
-                }
-                $Cache->delete_value('user_badges_ids_' . $UserID);
-                $Cache->delete_value('user_badges_' . $UserID);
-
-
-                $Summary = sqltime() . " - Group Award: $BadgesAdded have been awarded to the $GName group.";
-                $DB->query("UPDATE users_info SET AdminComment=CONCAT_WS( '\n', '$Summary', AdminComment) WHERE UserID='$UserID'");
-
-                send_pm($UserID, 0, "Congratulations you have received an award.", "Congratulations you have received the $BadgesAdded award.");
-            }
-        }
+    $Values = "('".implode("', '".$BadgeID."', '".db_string($Description)."'), ('", $UserIDs)."', '".$BadgeID."', '".db_string($Description)."')";
+    $DB->query("INSERT INTO users_badges (UserID, BadgeID, Description) VALUES $Values");
+ 
+     
+    // remove lower ranked badges of same badge set
+    $DB->query("DELETE ub 
+                      FROM users_badges AS ub
+                 LEFT JOIN badges AS b ON b.ID=ub.BadgeID 
+                     WHERE ub.UserID IN ($SQL_IN) 
+                       AND b.Badge='$Badge' AND b.Rank<$Rank");
+         
+    foreach($UserIDs as $UserID) {
+                   
+        send_pm($UserID, 0, "Congratulations you have been awarded the $Name", 
+                            "[center][br][br][img]http://".SITE_NAME.'/'.STATIC_SERVER."common/badges/{$Image}[/img][br][br][size=5][color=white][bg=#0261a3][br]{$Description}[br][br][/bg][/color][/size][/center]");
+                
     }
+ 
+    $Log = sqltime() . " - [color=magenta]Mass Award given[/color] by [user]{$LoggedUser['Username']}[/user] - award: $Name";
+    $DB->query("UPDATE groups SET Log=CONCAT_WS( '\n', '$Log', Log) WHERE ID='$GroupID'");
 }
-
-            
-foreach ($AddBadges as $AddBadgeID) {
-    $AddBadgeID = (int)$AddBadgeID;
-    $SQL_IN .= "$Div $AddBadgeID";
-}
-$BadgesAdded = '';
-$Div = '';
-$DB->query("SELECT Name FROM badges WHERE ID IN ( $SQL_IN )");
-while (list($Name) = $DB->next_record()) {
-    $BadgesAdded .= "$Div $Name";
-    $Div = ',';
-}
-
-$Log = sqltime() . " - [color=magenta]Mass Award given[/color] by [user]{$LoggedUser['Username']}[/user] - award: $BadgesAdded";
-$DB->query("UPDATE groups SET Log=CONCAT_WS( '\n', '$Log', Log) WHERE ID='$GroupID'");
 
 header("Location: groups.php?groupid=$GroupID");
+     
+ 
 ?>
