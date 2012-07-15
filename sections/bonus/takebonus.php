@@ -62,6 +62,17 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 $DB->query( "INSERT INTO users_badges (UserID, BadgeID, Description) 
                                   VALUES ( '$UserID', '$Value', '$Description')");
                 
+                $DB->query("SELECT Badge, Rank FROM badges WHERE ID='$Value'");
+                if ($DB->record_count() == 0) error(0);
+                list($Badge, $Rank) = $DB->next_record(); 
+                
+                // remove lower ranked badges of same badge set
+                $DB->query("DELETE ub 
+                          FROM users_badges AS ub
+                     LEFT JOIN badges AS b ON b.ID=ub.BadgeID 
+                         WHERE ub.UserID = '$UserID'
+                           AND b.Badge='$Badge' AND b.Rank<$Rank");
+          
                 $Cache->delete_value('user_badges_ids_'.$UserID);
                 $Cache->delete_value('user_badges_'.$UserID);
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
@@ -84,6 +95,10 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
                 $ResultMessage=$Summary;
+                    
+                send_pm($OtherID, 0, "Bonus Shop - You recieved a gift of credits", 
+                            "[br]You recieved a gift of ".number_format ($Value)." credits from [user={$LoggedUser['Username']}]{$LoggedUser['Username']}[/user]");
+                
                 break;
             
             case 'gb':
@@ -120,9 +135,15 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 $Summary = sqltime()." | -$Cost credits | ".ucfirst("you gave a gift of -$Value gb to {$P['othername']}.");	
                 $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
+                
+                send_pm($OtherID, 0, "Bonus Shop - You recieved a gift of -gb", 
+                            "[br]You recieved a gift of -$Value gb from [user={$LoggedUser['Username']}]{$LoggedUser['Username']}[/user]");
+                
+                            
                 $Value = get_bytes($Value.'gb');
                 $UpdateSetOther[]="m.Downloaded=(m.Downloaded-'$Value')";
                 $ResultMessage=$Summary;
+                
                 break;
             
             case 'slot':
