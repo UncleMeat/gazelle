@@ -314,7 +314,7 @@ if (is_array($AddBadges) && check_perms('users_edit_badges')) {
           
           
           send_pm($UserID, 0, "Congratulations you have been awarded the $Name", 
-                            "[center][br][br][img]http://".SITE_NAME.'/'.STATIC_SERVER."common/badges/{$Image}[/img][br][br][size=5][color=white][bg=#0261a3][br]{$Tooltip}[br][br][/bg][/color][/size][/center]");
+                            "[center][br][br][img]http://".SITE_URL.'/'.STATIC_SERVER."common/badges/{$Image}[/img][br][br][size=5][color=white][bg=#0261a3][br]{$Tooltip}[br][br][/bg][/color][/size][/center]");
                 
       }
       $DB->query("INSERT INTO users_badges (UserID, BadgeID, Description) VALUES $SQL");
