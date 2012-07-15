@@ -302,7 +302,8 @@ function user_info($UserID) {
 			m.Enabled,
 			m.Title,
 			i.CatchupTime,
-			m.Visible
+			m.Visible,
+                  m.Signature
 			FROM users_main AS m
 			INNER JOIN users_info AS i ON i.UserID=m.ID
 			WHERE m.ID='$UserID'");

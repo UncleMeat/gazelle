@@ -79,8 +79,7 @@ if(!$Catalogue = $Cache->get_value('thread_'.$ThreadID.'_catalogue_'.$CatalogueI
 		p.Body,
 		p.EditedUserID,
 		p.EditedTime,
-		ed.Username,
-            a.Signature
+		ed.Username
 		FROM forums_posts as p
 		LEFT JOIN users_main AS ed ON ed.ID = p.EditedUserID
 		LEFT JOIN users_main AS a ON a.ID = p.AuthorID
@@ -368,8 +367,8 @@ if($ThreadInfo['StickyPostID']) {
 	}
 } 
 foreach($Thread as $Key => $Post){
-	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $Signature) = array_values($Post);
-	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
+	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername) = array_values($Post);
+	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle,,,$Signature) = array_values(user_info($AuthorID));
 	$AuthorPermissions = get_permissions($PermissionID);
       list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
       // we need to get custom permissions for this author

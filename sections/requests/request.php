@@ -273,8 +273,7 @@ if($Catalogue === false) {
 			c.Body,
 			c.EditedUserID,
 			c.EditedTime,
-			u.Username,
-            a.Signature
+			u.Username
 			FROM requests_comments as c
 			LEFT JOIN users_main AS u ON u.ID=c.EditedUserID
             LEFT JOIN users_main AS a ON a.ID = c.AuthorID
@@ -298,8 +297,8 @@ echo $Pages;
 
 //---------- Begin printing
 foreach($Thread as $Key => $Post){
-	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername,$Signature) = array_values($Post);
-	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
+	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername) = array_values($Post);
+	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle,,,$Signature) = array_values(user_info($AuthorID));
       $AuthorPermissions = get_permissions($PermissionID);
       list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
       ?>

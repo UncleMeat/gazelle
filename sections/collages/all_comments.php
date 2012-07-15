@@ -33,8 +33,7 @@ if(!list($Catalogue,$Posts) = $Cache->get_value('collage_'.$CollageID.'_catalogu
 		cc.ID,
 		cc.UserID,
 		cc.Time,
-		cc.Body,
-            a.Signature
+		cc.Body
 		FROM collages_comments AS cc
             LEFT JOIN users_main AS a ON a.ID = UserID
 		WHERE CollageID = '$CollageID'
@@ -69,8 +68,8 @@ echo $Pages;
 
 //---------- Begin printing
 foreach($Thread as $Post){
-	list($PostID, $AuthorID, $AddedTime, $Body,$Signature) = $Post;
-	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle) = array_values(user_info($AuthorID));
+	list($PostID, $AuthorID, $AddedTime, $Body) = $Post;
+	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle,,,$Signature) = array_values(user_info($AuthorID));
       $AuthorPermissions = get_permissions($PermissionID);
       list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
             

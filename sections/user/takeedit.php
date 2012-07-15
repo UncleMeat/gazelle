@@ -212,7 +212,8 @@ if($DownloadAlt != $LoggedUser['DownloadAlt']) {
 $Cache->begin_transaction('user_info_'.$UserID);
 $Cache->update_row(false, array(
 		'Avatar'=>$_POST['avatar'],
-		'Paranoia'=>$Paranoia
+		'Paranoia'=>$Paranoia,
+		'Signature'=>$_POST['signature']
 
 ));
 $Cache->commit_transaction(0);
