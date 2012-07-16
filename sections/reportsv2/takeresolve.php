@@ -60,6 +60,10 @@ if(!is_number($Warning)) {
 $TorrentID = $Escaped['torrentid'];
 $RawName = $Escaped['raw_name'];
 
+// GroupID is only used to delete the torrent group cache key.
+$DB->query("SELECT GroupID FROM torrents WHERE ID='$TorrentID'");
+list($GroupID) = $DB->next_record();
+
 if(($Escaped['resolve_type'] == "manual" || $Escaped['resolve_type'] == "dismiss" ) && $Report) {
 	if($Escaped['comment']) {
 		$Comment = $Escaped['comment'];
@@ -82,6 +86,7 @@ if(($Escaped['resolve_type'] == "manual" || $Escaped['resolve_type'] == "dismiss
 	if($DB->affected_rows() > 0) {
 		$Cache->delete_value('num_torrent_reportsv2');
 		$Cache->delete_value('reports_torrent_'.$TorrentID);
+                $Cache->delete_value('torrent_group_'.$GroupID);
 	} else {
 	//Someone beat us to it. Inform the staffer.
 ?>
@@ -291,7 +296,8 @@ if($DB->affected_rows() > 0 || !$Report) {
 	}
 
 	$Cache->delete_value('reports_torrent_'.$TorrentID);
-	
+	$Cache->delete_value('torrent_group_'.$GroupID);
+        
 	//Now we've done everything, update the DB with values
 	if($Report) { 
 		$DB->query("UPDATE reportsv2 SET

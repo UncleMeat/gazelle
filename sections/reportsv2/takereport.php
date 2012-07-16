@@ -116,7 +116,12 @@ $ReportID = $DB->inserted_id();
 
 
 $Cache->delete_value('reports_torrent_'.$TorrentID);
-
 $Cache->increment('num_torrent_reportsv2');
+
+// Find the group id for the torrent and delete the cached torrent.
+$DB->query("SELECT GroupID FROM torrents WHERE ID='$TorrentID'");
+list($GroupID) = $DB->next_record();
+$Cache->delete_value('torrent_group_'.$GroupID);
+
 header('Location: torrents.php?torrentid='.$TorrentID);
 ?>
