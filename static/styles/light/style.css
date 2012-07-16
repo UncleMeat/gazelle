@@ -358,13 +358,6 @@ span.infinity {
     background-position: right center;
 }
 
-#nav_userinfo {
-    padding-right: 8px !important;
-    margin-right: 6px !important;
-    background-image: url(images/dropdown_arrow.png);
-    background-repeat:no-repeat;
-    background-position: right center;
-}
 
 #userinfo_major {
     font-size: 0.85em;

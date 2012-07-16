@@ -237,7 +237,8 @@ function anchor(textID) {
 function link(textID) {
     var linkAddr = prompt("Please enter the relative page url\nNOTE: only local pages!", "/");
     if (linkAddr && linkAddr != "/") {
-        var linkTitle = prompt("Please enter the link text", " ");
+        var linkTitle = prompt("Please enter the link text", "");
+        if (linkTitle == "") linkTitle = linkAddr;
         if (linkAddr && linkTitle) wrap('link', linkTitle, linkAddr, textID);
     }
 }
@@ -245,15 +246,16 @@ function link(textID) {
 function url(textID) {
     var linkAddr = prompt("Please enter the full URL", "http://");
     if (linkAddr && linkAddr != "http://") {
-        var linkTitle = prompt("Please enter the title", " ");
+        var linkTitle = prompt("Please enter the title", "");
+        if (linkTitle == "") linkTitle = linkAddr;
         if (linkAddr && linkTitle) wrap('url', linkTitle, linkAddr, textID);
     }
 }
 
 function spoiler(textID) {
-    var spoilertext = prompt("Please enter the spoiler text", " ");
-    if (spoilertext && spoilertext != " ") {
-        var linkTitle = prompt("Please enter the title", " ");
+    var spoilertext = prompt("Please enter the spoiler text", "");
+    if (spoilertext && spoilertext != "") {
+        var linkTitle = prompt("Please enter the title", "");
         if (spoilertext && linkTitle) wrap('spoiler', spoilertext, linkTitle, textID);
     }
 }

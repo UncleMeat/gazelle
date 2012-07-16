@@ -569,6 +569,8 @@ class TEXT {
 	function full_format($Str, $AdvancedTags = false) {
             $this->Advanced = $AdvancedTags;
 		$Str = display_str($Str);
+            
+            $Str = str_replace('  ', ' &nbsp;', $Str);
 		//Inline links
 		//$Str = preg_replace('/\[link=/i', '[lnk=', $Str); |\[lnk\=
 		$Str = preg_replace('/\[video\=/i', '[vid=', $Str);

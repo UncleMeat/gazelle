@@ -527,6 +527,9 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
         </div>
     </div>
 </form>
+                <script type="text/javascript">
+                    window.attachEvent('onload', Load_Cookie);
+                </script>
  <div class="filter_slidetoggle"><a href="#" id="search_button" onclick="Panel_Toggle();">Close Search Center</a> </div>
  <div class="linkbox"><?= $Pages ?></div>
 <?
