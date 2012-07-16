@@ -1,16 +1,6 @@
 <?
 /************************************************************************
-||------------|| Edit artist wiki page ||------------------------------||
-
-This page is the page that is displayed when someone feels like editing 
-an artist's wiki page.
-
-It is called when $_GET['action'] == 'edit'. $_GET['artistid'] is the 
-ID of the artist, and must be set.
-
-The page inserts a new revision into the wiki_artists table, and clears 
-the cache for the artist page. 
-
+||------------|| Edit torrent page ||------------------------------||
 ************************************************************************/
 
 $GroupID = $_GET['groupid'];
@@ -109,15 +99,15 @@ if(check_perms('torrents_edit')) {
 	</div>
 <?	//$DB->query("SELECT UserID FROM torrents WHERE GroupID = ".$GroupID);
       //Users can edit the group info if they've uploaded a torrent to the group or have torrents_edit
-	//if(in_array($LoggedUser['ID'], $DB->collect('UserID')) || check_perms('torrents_edit')) { ?> 
+	//if(in_array($LoggedUser['ID'], $DB->collect('UserID')) || check_perms('torrents_edit')) { ?>                 
+<? if(check_perms('torrents_freeleech')) { ?>
 	<h2>Other</h2>
 	<div class="box pad">
 		<form action="torrents.php" method="post">
 			<input type="hidden" name="action" value="nonwikiedit" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 			<input type="hidden" name="groupid" value="<?=$GroupID?>" />
-			<table cellpadding="3" cellspacing="1" border="0" class="border" width="100%">                              
-<? if(check_perms('torrents_freeleech')) { ?>
+			<table cellpadding="3" cellspacing="1" border="0" class="border" width="100%">              
 				<tr>
 					<td class="label">Freeleech</td>
 					<td>
@@ -127,11 +117,11 @@ if(check_perms('torrents_edit')) {
                               
 					</td>
 				</tr>	
-<? } ?>
 			</table>
 			<input type="submit" value="Edit" />
 		</form>
 	</div>
+<? } ?>
 </div>
 <?
 show_footer();
