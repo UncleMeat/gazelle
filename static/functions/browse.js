@@ -11,19 +11,19 @@ function add_tag(tag) {
 function Load_Cookie()  {
 			
 	// the div that will be hidden/shown
-	var panel = jQuery('#search_box');
-	var button = jQuery('#search_button');
+	//var panel = jQuery('#search_box');
+	//var button = jQuery('#search_button');
     
 	if(jQuery.cookie('searchPanelState') == undefined) {
 		jQuery.cookie('searchPanelState', 'expanded');
 	}
-	var state = jQuery.cookie('searchPanelState');
+	//var state = jQuery.cookie('searchPanelState');
       
-	if(state == 'collapsed') {
-		panel.hide();
-		button.text('Open Search Center');
+	if(jQuery.cookie('searchPanelState') == 'collapsed') {
+		jQuery('#search_box').hide();
+		jQuery('#search_button').text('Open Search Center');
 	} else {
-		button.text('Close Search Center');
+		jQuery('#search_button').text('Close Search Center');
       }
       /*
 	button.click(function(){
@@ -38,6 +38,7 @@ function Load_Cookie()  {
                   return false;
 	}); */
 }
+		
  
 function Panel_Toggle() {
     if(jQuery.cookie('searchPanelState') == 'expanded') {
@@ -51,4 +52,7 @@ function Panel_Toggle() {
     return false;
 }
             
+
 addDOMLoadEvent(Load_Cookie);
+
+//addDOMLoadEvent(function(){ alert("boo")});
