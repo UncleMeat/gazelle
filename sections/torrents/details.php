@@ -102,12 +102,18 @@ if ($FreeTooltip)
 <div class="details">
 	<h2><?="$Icons$DisplayName"?></h2>
 <?
+      $AlertClass = ' hidden';
 	if(isset($_GET['did']) && is_number($_GET['did'])) {
-          if($_GET['did'] == 1) $ResultMessage ='Successfully edited description';
-          elseif($_GET['did'] == 2) $ResultMessage ='Successfully renamed title';
-          elseif($_GET['did'] == 3) {
+          if($_GET['did'] == 1) {
+              $ResultMessage ='Successfully edited description';
+              $AlertClass = '';
+          } elseif($_GET['did'] == 2) {
+              $ResultMessage ='Successfully renamed title';
+              $AlertClass = '';
+          } elseif($_GET['did'] == 3) {
               $ResultMessage = 'Added '. display_str($_GET['addedtag']);
               if (isset($_GET['synomyn'])) $ResultMessage .= ' as a synomyn of '. display_str($_GET['synomyn']);
+              $AlertClass = '';
           } elseif($_GET['did'] == 4) {
               $ResultMessage = display_str($_GET['addedtag']). ' is already added.';
               $AlertClass = ' alert';
@@ -117,7 +123,6 @@ if ($FreeTooltip)
           }
           if($ResultMessage){
           ?>
-			<div id="messagebar" class="messagebar<?=$AlertClass?>"><?=$ResultMessage?></div>
                   <script type="text/javascript">
                         function Kill_Message(){ setTimeout("jQuery('#messagebar').fadeOut(400)", 3000); }
                         addDOMLoadEvent(Kill_Message);
@@ -125,6 +130,9 @@ if ($FreeTooltip)
 <?
           }
       }
+?>
+			<div id="messagebar" class="messagebar<?=$AlertClass?>"><?=$ResultMessage?></div>
+<?
       
       if ($Status == 'Warned' || $Status == 'Pending') {
 ?>
@@ -361,11 +369,19 @@ if(count($Tags) > 0) {
                                 <li>
                                       <a href="torrents.php?taglist=<?=$Tag['name']?>" style="float:left; display:block;"><?=display_str($Tag['name'])?></a>
                                       <div style="float:right; display:block; letter-spacing: -1px;">
-        <?		if(check_perms('site_vote_tag')){ ?>
+        <?		if(check_perms('site_vote_tag')){ 
+            /* ?>
                                       <a title="Vote down tag '<?=$Tag['name']?>'" href="torrents.php?action=vote_tag&amp;way=down&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;" >[-]</a>
                                       <?=$Tag['score']?>
                                       <a title="Vote up tag '<?=$Tag['name']?>'" href="torrents.php?action=vote_tag&amp;way=up&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;">[+]</a>
-        <?		} else {  // cannot vote on tags ?>
+        <?	*/
+        ?>
+                                      <a title="Vote down tag '<?=$Tag['name']?>'" href="#" onclick="Vote_Tag(<?="'{$Tag['name']}',{$Tag['id']},$GroupID,'down'"?>)" style="font-family: monospace;" >[-]</a>
+                                      <span id="tagscore<?=$Tag['id']?>"><?=$Tag['score']?></span>
+                                      <a title="Vote up tag '<?=$Tag['name']?>'" href="#" onclick="Vote_Tag(<?="'{$Tag['name']}',{$Tag['id']},$GroupID,'up'"?>)" style="font-family: monospace;">[+]</a>
+      
+        <?          
+                  } else {  // cannot vote on tags ?>
                                       <span  title="Your voting privilidges have been removed">&nbsp;<?=$Tag['score']?>&nbsp;&nbsp;</span>
                                       
         <?		} ?>

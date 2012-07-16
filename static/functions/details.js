@@ -1,4 +1,28 @@
 
+function Vote_Tag(tagname, tagid, groupid, way){
+ 
+	  var ToPost = [];
+	  ToPost['tagid'] = tagid; 
+	  ToPost['groupid'] = groupid; 
+	  ToPost['way'] = way; 
+	  ToPost['auth'] = authkey; 
+        ajax.post('torrents.php?action=vote_tag', ToPost, function (response) { 
+            if (response==0) { // already voted so no vote
+                $('#messagebar').add_class('alert');
+                $('#messagebar').html("you have already " + way + " voted for tag '" + tagname +"'");
+            } else if (Math.abs(response)==1) { // vote was counted
+                $('#messagebar').remove_class('alert');
+                $('#messagebar').html("your " + way + " vote was counted for tag '" + tagname +"'");
+                $('#tagscore' + tagid).html(parseInt( $('#tagscore' + tagid).raw().innerHTML) + parseInt(response));
+            } else { // a non number == an error  if ( !isnumeric(response)) 
+                $('#messagebar').add_class('alert');
+                $('#messagebar').html(response);
+            }
+            $('#messagebar').show(); 
+            //setTimeout("$('#messagebar').hide()", 3000);
+        });
+}
+
 function Send_Okay_Message(group_id, conv_id){
     if(conv_id==0) conv_id = null;
     if (confirm("Make sure you have really fixed the problem before sending this message!\n\nAre you sure it is fixed?")){
@@ -12,7 +36,6 @@ function Send_Okay_Message(group_id, conv_id){
             conv_id = response;
             $('#user_message').raw().innerHTML = '<div class="messagebar"><a href="staffpm.php?action=viewconv&id=' + conv_id + '">Message sent to staff</a></div>';
             $('#convid').raw().value = conv_id;
-            //$('#review_message').show(); 
         });
     }
     return false;
@@ -56,16 +79,6 @@ function Select_Reason(overwrite_warn){
 }
 
 function Tools_Toggle() {
-        /*  to slide or not to slide?
-         *jQuery('#staff_tools').slideToggle('500', function(){
-            if ($('#slide_tools_button').raw().innerHTML=='Hide Tools'){
-                            jQuery.cookie('torrentDetailsToolState', 'collapsed');
-                            $('#slide_tools_button').raw().innerHTML=('Show Tools');
-            }  else{
-                            jQuery.cookie('torrentDetailsToolState', 'expanded');
-                            $('#slide_tools_button').raw().innerHTML=('Hide Tools');
-            }
-        }); */
             if ($('#slide_tools_button').raw().innerHTML=='Hide Tools'){
                             jQuery.cookie('torrentDetailsToolState', 'collapsed');
                             $('#slide_tools_button').raw().innerHTML=('Show Tools');
