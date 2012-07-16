@@ -124,7 +124,7 @@ if ($FreeTooltip)
           if($ResultMessage){
           ?>
                   <script type="text/javascript">
-                        function Kill_Message(){ setTimeout("jQuery('#messagebar').fadeOut(400)", 3000); }
+                        function Kill_Message(){ setTimeout("$('#messagebar').hide()", 3000); }
                         addDOMLoadEvent(Kill_Message);
                   </script>
 <?
