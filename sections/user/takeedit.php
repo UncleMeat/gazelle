@@ -208,6 +208,8 @@ $UnseededAlerts = (isset($_POST['unseededalerts']))? 1:0;
 if($DownloadAlt != $LoggedUser['DownloadAlt']) {
 	$Cache->delete_value('user_'.$LoggedUser['torrent_pass']);
 }
+$BlockPMs = (!empty($_POST['blockPMs']) ? (int)$_POST['blockPMs'] : 0);
+if (!in_array($BlockPMs,array(0,1,2))) $BlockPMs =0;
 
 $Cache->begin_transaction('user_info_'.$UserID);
 $Cache->update_row(false, array(
@@ -222,7 +224,8 @@ $Cache->begin_transaction('user_info_heavy_'.$UserID);
 $Cache->update_row(false, array(
 		'StyleID'=>$_POST['stylesheet'],
 		'StyleURL'=>$_POST['styleurl'],
-		'DownloadAlt'=>$DownloadAlt
+		'DownloadAlt'=>$DownloadAlt,
+		'BlockPMs'=>$BlockPMs
 		));
 $Cache->update_row(false, $Options);
 $Cache->commit_transaction(0);
@@ -235,6 +238,7 @@ $SQL="UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET
 	i.Avatar='".db_string($_POST['avatar'])."',
 	i.SiteOptions='".db_string(serialize($Options))."',
 	i.Info='".db_string($_POST['info'])."',
+	i.BlockPMs='".$BlockPMs."',
 	i.DownloadAlt='$DownloadAlt',
 	i.UnseededAlerts='$UnseededAlerts',
 	m.Email='".db_string($_POST['email'])."',

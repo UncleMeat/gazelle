@@ -364,7 +364,8 @@ function user_heavy_info($UserID) {
 			i.PermittedForums,
 			m.FLTokens,
                   m.Credits,
-                    i.SupportFor
+                    i.SupportFor,
+                    i.BlockPMs
 			FROM users_main AS m
 			INNER JOIN users_info AS i ON i.UserID=m.ID
 			WHERE m.ID='$UserID'");

@@ -2,7 +2,7 @@
 enforce_login();
 show_header('Medals and Awards');
   
-$DB->query("SELECT b.Name, b.Type, b.Description, b.Cost, b.Image, 
+$DB->query("SELECT b.Title, b.Type, b.Description, b.Cost, b.Image, 
                 (CASE WHEN Type='Shop' THEN 0 
                       WHEN ba.ID IS NOT NULL THEN 1
                       ELSE 2 

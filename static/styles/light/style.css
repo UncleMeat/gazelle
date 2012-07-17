@@ -310,10 +310,11 @@ span.infinity {
 }
  
 
-#userinfo_username li ul a, #userinfo_tools li ul a {
+#userinfo_username li ul a {
     display: block; 
 }
 #userinfo_tools li ul a {
+    display: block; 
     width: 160px;
 }
 

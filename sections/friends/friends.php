@@ -8,7 +8,7 @@ much.
 ************************************************************************/
 
 // Number of users per page 
-define('FRIENDS_PER_PAGE', '20');
+define('FRIENDS_PER_PAGE', '50');
 
 
 
@@ -17,6 +17,8 @@ show_header('Friends','jquery');
 
 $UserID = $LoggedUser['ID'];
 
+$FType = isset($_REQUEST['type'])?$_REQUEST['type']:'friends';
+if(!in_array($FType, array('friends','blocked'))) error(0);
 
 list($Page,$Limit) = page_limit(FRIENDS_PER_PAGE);
 
@@ -40,6 +42,7 @@ $DB->query("SELECT
 	JOIN users_main AS m ON f.FriendID=m.ID
 	JOIN users_info AS i ON f.FriendID=i.UserID
 	WHERE f.UserID='$UserID'
+        AND f.Type='$FType'
 	ORDER BY Username LIMIT $Limit");
 $Friends = $DB->to_array(false, MYSQLI_BOTH, array(7));
 
@@ -62,13 +65,15 @@ if($Results > 0) {
         <span style="float:right;">&nbsp;&nbsp;[<a href="#" onclick="Toggle_All(true);">show all</a>]</span>&nbsp;
 <?
 }
+        $OtherType=( $FType=='friends'?'blocked':'friends' );
 ?>
+        <span style="float:left;">&nbsp;[<a href="friends.php?type=<?=$OtherType?>" ><?=$OtherType?> list</a>]</span>&nbsp;
 	</div>
-	<div class="head">Friends list</div>
+	<div class="head"><?=ucfirst($FType)?> list</div>
 	<div class="box pad">
 <?
 if($Results == 0) {
-	echo '<p>You have no friends! :(</p>';
+	echo '<p>You have no '.( $FType=='friends'?'friends! :(':'blocked users' ).'</p>';
 } else {
     // Start printing out friends
     foreach($Friends as $Friend) {
@@ -120,7 +125,7 @@ if($Results == 0) {
                       </td>
                       <td class="left" valign="top" width="100px" >
                                   <input type="submit" name="action" value="Update" /><br />
-                                  <input type="submit" name="action" value="Defriend" /><br />
+                                  <input type="submit" name="action" value="<?=($FType=='friends'?'Defriend':'Unblock')?>" /><br />
                                   <input type="submit" name="action" value="Contact" /><br />
 
                       </td>

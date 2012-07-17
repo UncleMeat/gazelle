@@ -5,36 +5,7 @@ if(!is_number($UserID)){
 	error(404);
 }
 
-
-/*
-$DB->query("SELECT 
-			m.Username,
-			m.Email,
-			m.IRCKey,
-			m.Paranoia,
-                  m.Signature,
-                  m.PermissionID,
-			i.Info,
-			i.Avatar,
-			i.Country,
-			i.StyleID,
-			i.StyleURL,
-			i.SiteOptions,
-			i.UnseededAlerts,
-			p.Level AS Class,
-                  p.MaxSigLength,
-                  p.MaxAvatarWidth,
-                  p.MaxAvatarHeight,
-                    m.CustomPermissions
-			FROM users_main AS m
-			JOIN users_info AS i ON i.UserID = m.ID
-			LEFT JOIN permissions AS p ON p.ID=m.PermissionID
-			WHERE m.ID = '".db_string($UserID)."'");
-list($Username,$Email,$IRCKey,$Paranoia,$Signature,$PermissionID,$Info,$Avatar,$Country,$StyleID,$StyleURL,$SiteOptions,$UnseededAlerts,$Class,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight,$CustomPermissions,$Permissions)=$DB->next_record(MYSQLI_NUM, array(3,11,17,18));
-*/
-
-
-
+ 
 $DB->query("SELECT 
 			m.Username,
 			m.Email,
@@ -185,6 +156,18 @@ echo $Val->GenerateJS('userform');
 				<td>
 					<input type="checkbox" name="hidetagsinlists" id="hidetagsinlists" <? if (!empty($SiteOptions['HideTagsInLists'])) { ?>checked="checked"<? } ?> />
 					<label for="hidetagsinlists">Hide tags in lists</label>
+				</td>
+			</tr>
+			<tr>
+				<td class="label"><strong>Accept PM's</strong></td>
+				<td>
+					<input type="radio" name="blockPMs" id="blockPMs" value="0" <? if (empty($LoggedUser['BlockPMs'])||$LoggedUser['BlockPMs']==0) { ?>checked="checked"<? } ?> />
+					<label>All (except blocks)</label><br/>
+					<input type="radio" name="blockPMs" id="blockPMs" value="1" <? if ( $LoggedUser['BlockPMs']==1) { ?>checked="checked"<? } ?> />
+					<label>Friends only</label><br/>
+					<input type="radio" name="blockPMs" id="blockPMs" value="2"  <? if ($LoggedUser['BlockPMs']==2 ) { ?>checked="checked"<? } ?> />
+					<label>Staff only</label>
+					
 				</td>
 			</tr>
 			<tr>

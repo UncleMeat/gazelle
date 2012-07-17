@@ -428,42 +428,42 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                     <li id="nav_tools"><a href="tools.php">tools</a>
                         <ul>
 <?                      if (check_perms('admin_manage_categories')) { ?>
-                            <li id=""><a href="tools.php?action=categories">Categories</a></li>                    
+                            <li><a href="tools.php?action=categories">Categories</a></li>                    
 <?                      } if (check_perms('admin_manage_permissions')) { ?>
-                            <li id=""><a href="tools.php?action=permissions">User Classes</a></li>
+                            <li><a href="tools.php?action=permissions">User Classes</a></li>
 <?                      } if (check_perms('admin_whitelist')) { ?>
-                            <li id=""><a href="tools.php?action=whitelist">Client Whitelist</a></li>
+                            <li><a href="tools.php?action=whitelist">Client Whitelist</a></li>
 <?                      } if (check_perms('admin_manage_ipbans')) { ?>
-                            <li id=""><a href="tools.php?action=ip_ban">IP Bans</a></li>
+                            <li><a href="tools.php?action=ip_ban">IP Bans</a></li>
 
 <?                      } if (check_perms('users_view_ips')) { ?>
-                            <li id=""><a href="tools.php?action=login_watch">Login Watch</a></li>
+                            <li><a href="tools.php?action=login_watch">Login Watch</a></li>
 <?                      } if (check_perms('admin_manage_forums')) { ?>
-                            <li id=""><a href="tools.php?action=forum">Forums</a></li>
+                            <li><a href="tools.php?action=forum">Forums</a></li>
 <?                      } if (check_perms('admin_manage_news')) { ?>
-                            <li id=""><a href="tools.php?action=news">News</a></li>
+                            <li><a href="tools.php?action=news">News</a></li>
 <?                      } if (check_perms('admin_manage_articles')) { ?>
-                            <li id=""><a href="tools.php?action=articles">Articles</a></li>                        
+                            <li><a href="tools.php?action=articles">Articles</a></li>                        
 <?                      } if (check_perms('admin_dnu')) { ?> 
-                            <li id=""><a href="tools.php?action=dnu">Do not upload list</a></li>
+                            <li><a href="tools.php?action=dnu">Do not upload list</a></li>
 <?                      } if (check_perms('admin_imagehosts')) { ?>
-                                <li id=""><a href="tools.php?action=imghost_whitelist">Imagehost Whitelist</a></li>
+                                <li><a href="tools.php?action=imghost_whitelist">Imagehost Whitelist</a></li>
 <?                      } if (check_perms('users_mod')) { ?>
-                            <li id=""><a href="tools.php?action=email_blacklist">Email Blacklist</a></li>
-                            <li id=""><a href="tools.php?action=tokens">Manage freeleech tokens</a></li>
+                            <li><a href="tools.php?action=email_blacklist">Email Blacklist</a></li>
+                            <li><a href="tools.php?action=tokens">Manage freeleech tokens</a></li>
 <?                      } if (check_perms('site_manage_tags')) { ?>
-                            <li id=""><a href="tools.php?action=official_tags">Official Tags Manager</a></li> 
+                            <li><a href="tools.php?action=official_tags">Official Tags Manager</a></li> 
 <?                      } if (check_perms('torrents_review')) { ?>
-                            <li id=""><a href="tools.php?action=marked_for_deletion">Marked for Deletion</a></li>
+                            <li><a href="tools.php?action=marked_for_deletion">Marked for Deletion</a></li>
 
 <?                      } if (check_perms('site_manage_shop')) { ?>
-                            <li id=""><a href="tools.php?action=shop_list">Bonus Shop</a></li>
+                            <li><a href="tools.php?action=shop_list">Bonus Shop</a></li>
                   
 <?                      } if (check_perms('site_manage_badges')) { ?>
-                            <li id=""><a href="tools.php?action=badges_list">Badges</a></li>
+                            <li><a href="tools.php?action=badges_list">Badges</a></li>
                   
 <?                      } if (check_perms('site_manage_awards')) { ?>
-                            <li id=""><a href="tools.php?action=awards_auto">Automatic Awards</a></li>
+                            <li><a href="tools.php?action=awards_auto">Automatic Awards</a></li>
 <?                      } ?> 
                           </ul>
                       </li>

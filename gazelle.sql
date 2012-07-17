@@ -639,6 +639,7 @@ CREATE TABLE IF NOT EXISTS `friends` (
   `UserID` int(10) unsigned NOT NULL,
   `FriendID` int(10) unsigned NOT NULL,
   `Comment` text NOT NULL,
+  `Type` enum('friends','blocked') NOT NULL,
   PRIMARY KEY (`UserID`,`FriendID`),
   KEY `UserID` (`UserID`),
   KEY `FriendID` (`FriendID`)

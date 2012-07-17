@@ -170,11 +170,16 @@ show_header($Username,'user,bbcode,requests');
 	<div class="linkbox">
 <? if (!$OwnProfile) { ?>
 		[<a href="inbox.php?action=compose&amp;to=<?=$UserID?>">Send Message</a>]
-<? 	$DB->query("SELECT FriendID FROM friends WHERE UserID='$LoggedUser[ID]' AND FriendID='$UserID'");
-	if($DB->record_count() == 0) { ?>
+<? 	$DB->query("SELECT Type FROM friends WHERE UserID='$LoggedUser[ID]' AND FriendID='$UserID'");
+      if($DB->record_count() > 0) list($FType)=$DB->next_record();
+	if(!$FType || $FType != 'friends' ) { ?>
 		[<a href="friends.php?action=add&amp;friendid=<?=$UserID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">Add to friends</a>]
-<?	}?>
-		[<a href="reports.php?action=report&amp;type=user&amp;id=<?=$UserID?>">Report User</a>]
+<?	} 
+      if(!$FType || $FType != 'blocked' ) { ?>
+		[<a href="friends.php?action=add&amp;friendid=<?=$UserID?>&amp;type=blocked&amp;auth=<?=$LoggedUser['AuthKey']?>">Block User</a>]
+<?	}?> 
+            
+		[<a href="reports.php?action=report&amp;type=user&amp;id=<?=$UserID?>">Report User</a>] 
 <?
 
 }

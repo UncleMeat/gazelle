@@ -81,7 +81,7 @@ function check_paranoia_here($Setting) {
 }
 
 $Friend = false;
-$DB->query("SELECT FriendID FROM friends WHERE UserID='$LoggedUser[ID]' AND FriendID='$UserID'");
+$DB->query("SELECT FriendID FROM friends WHERE UserID='$LoggedUser[ID]' AND FriendID='$UserID' AND Type='friends'");
 if($DB->record_count() != 0) {
 	$Friend = true;
 }
