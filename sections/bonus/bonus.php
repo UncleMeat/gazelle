@@ -1,9 +1,9 @@
 <?
 enforce_login();
-show_header('Bonus Shop');
+show_header('Bonus Shop','bonus');
   
             
-$ShopItems = get_shop_items();
+$ShopItems = get_shop_items($LoggedUser['ID']);
 ?>
 <div class="thin">
             <div class="box pad">
@@ -37,7 +37,8 @@ $ShopItems = get_shop_items();
 	$Row = 'a';
       $UserBadgeIDs = get_user_shop_badges_ids($LoggedUser['ID']);
 	foreach($ShopItems as $BonusItem) {
-		list($ItemID, $Title, $Description, $Action, $Value, $Cost, $Image) = $BonusItem;
+		list($ItemID, $Title, $Description, $Action, $Value, $Cost, $Image, $Badge, $Rank, $MaxRank) = $BonusItem;
+            if ($Badge && $LastBadge==$Badge) continue;
             $IsBadge = $Action=='badge'; 
             $IsBuyGB = $Action=='gb'; 
             $DescExtra='';
@@ -54,6 +55,8 @@ $ShopItems = get_shop_items();
                 if ($IsBuyGB && $LoggedUser['BytesDownloaded'] < get_bytes($Value.'gb') ) {
                     $DescExtra = "<br/>(WARNING: will only remove ".get_size($LoggedUser['BytesDownloaded']) .")"; // get_size(get_bytes($Value.'gb') - 
                 }
+                if ($MaxRank && $Rank < $MaxRank) $CanBuy = false;
+                if ($CanBuy) $LastBadge=$Badge;
             }
 		$Row = ($Row == 'a') ? 'b' : 'a';
 ?> 
@@ -79,24 +82,10 @@ $ShopItems = get_shop_items();
                                 <input <?=(strpos($Action, 'give') !==false ? 'onclick="SetUsername(\'othername'.$ItemID.'\'); "':'')?><?=($Action == 'title' ? 'onclick="SetTitle(\'title'.$ItemID.'\'); "':'')?>class="shopbutton<?=($CanBuy ? ' itembuy' : ' itemnotbuy')?>" name="submit" value="<?=($CanBuy?'Buy':'x')?>" type="submit"<?=($CanBuy ? '' : ' disabled="disabled"')?> />
                                 <?=($Action == 'title' ? '<input type="hidden" id="title'.$ItemID.'" name="title" value="" />':'')?>
                             </form>
-    <script type="text/javascript">
-        function SetUsername(itemID){
-            var name= prompt("Enter the username of the person you wish to give a gift to")
-            if (name!=null && name!="") {
-                $('#' + itemID).raw().value = name;
-            }
-        }
-        function SetTitle(itemID){
-            var name= prompt("Enter the custom title you want to have")
-            if (name!=null && name!="") {
-                $('#' + itemID).raw().value = name;
-            }
-        }
-    </script>
 				</td>
 			</tr>
 <?	} ?>
-		</table>
+		</table> 
 </div>
 <?
 show_footer();

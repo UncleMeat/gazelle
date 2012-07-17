@@ -1,23 +1,39 @@
 <?
-function get_shop_items(){ 
+function get_shop_items($UserID){ 
 	global $Cache, $DB;
-	static $ShopItems;
-	if(is_array($ShopItems)) return $ShopItems;
 	if(($ShopItems = $Cache->get_value('shop_items')) === false) {
 		$DB->query("SELECT
+                         ID, 
+                         Title, 
+                         Description, 
+                         Action, 
+                         Value,
+                         Cost
+			FROM bonus_shop_actions
+                  WHERE Action != 'badge'
+			ORDER BY Sort");
+		$ShopItems = $DB->to_array(false, MYSQLI_BOTH);
+		$Cache->cache_value('shop_items', $ShopItems);
+	}
+	$DB->query("SELECT
                         s.ID, 
                         s.Title, 
                         s.Description, 
                         s.Action, 
                         s.Value,
-                        IF(Action='badge',b.Cost,s.Cost) AS Cost,
-                        IF(Action='badge',b.Image,NULL) AS Image
-			FROM bonus_shop_actions AS s
-                    LEFT JOIN badges AS b ON b.ID=s.Value
-			ORDER BY s.Sort");
-		$ShopItems = $DB->to_array(false, MYSQLI_BOTH);
-		$Cache->cache_value('shop_items', $ShopItems);
-	}
+                        b.Cost,
+                        b.Image,
+                        b.Badge,
+                        b.Rank,
+                        (SELECT Max(b2.Rank) 
+                                        FROM users_badges AS ub2
+                                   LEFT JOIN badges AS b2 ON b2.ID=ub2.BadgeID
+                                         AND ub2.UserID = $UserID
+                                       WHERE b2.Badge = b.Badge) As MaxRank
+			 FROM bonus_shop_actions AS s
+                   JOIN badges AS b ON b.ID=s.Value AND Action = 'badge'
+                  ORDER BY s.Sort");
+      if ($DB->record_count()>0) $ShopItems = array_merge($ShopItems, $DB->to_array(false, MYSQLI_BOTH));
 	return $ShopItems;
 }
 function get_shop_item($ItemID){
