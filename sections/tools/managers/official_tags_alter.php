@@ -13,17 +13,37 @@ if (isset($_POST['doit'])) {
 
     if (isset($_POST['oldtags'])) {
         $OldTagIDs = $_POST['oldtags'];
+        $ChangeNames = array();
+        $NotChangeNames = array();
+        $ChangeIDs = array();
+        
         foreach ($OldTagIDs AS $OldTagID) {
             if (!is_number($OldTagID)) {
                 error(403);
             }
+            $DB->query("SELECT Name, Count(ts.ID)
+                          FROM tags AS t 
+                     LEFT JOIN tag_synomyns AS ts ON ts.TagID=t.ID
+                         WHERE t.ID = $OldTagID
+                      GROUP BY t.ID
+                          ");
+            list($SynName, $NumSynomyns) = $DB->next_record();
+            if ($NumSynomyns==0){
+                $ChangeIDs[] = (int)$OldTagID;
+                $ChangeNames[] = $SynName;
+            } else
+                $NotChangeNames[] = $SynName;
         }
-        $OldTagIDs = implode(', ', $OldTagIDs);
-
-        $DB->query("UPDATE tags SET TagType = 'other' WHERE ID IN ($OldTagIDs)");
-
-        $Message .= "Removed tags from official list.";
-        $Result = 1;
+        if(count($NotChangeNames)>0){
+            $Message .= "Cannot remove tags from official list that have synomyns: ". implode(', ', $NotChangeNames).". ";
+            $Result = 0;
+        }
+        if(count($ChangeIDs)>0){
+            $ChangeIDs = implode(', ', $ChangeIDs); 
+            $DB->query("UPDATE tags SET TagType = 'other' WHERE ID IN ($ChangeIDs)"); 
+            $Message .= "Removed tags from official list: ". implode(', ', $ChangeNames);
+            $Result = 1;
+        }
     }
 
     if ($_POST['newtag']) {
@@ -70,9 +90,6 @@ if (isset($_POST['delsynomyns'])) {
         $OldSynomyns = implode(', ', $OldSynomyns);
         $DB->query("DELETE FROM tag_synomyns WHERE ID IN ($OldSynomyns)");
         $Cache->delete_value('all_synomyns');
-        foreach ($DeleteCache AS $Del) {
-            $Cache->delete_value('synomyn_for_' . $Del);
-        }
         $Message .= "Deleted synomyns: " . implode(', ', $DeleteCache);
         $Result = 1;
     }
@@ -85,97 +102,133 @@ if (isset($_POST['delsynomyns'])) {
 
 if (isset($_POST['tagtosynomyn'])) {
 
-    $TagID = (int) $_POST['movetagid'];
-    $ParentTagID = (int) $_POST['parenttagid'];
-    if ($TagID) {
-        $DB->query("SELECT Name FROM tags WHERE ID=$TagID");
-        list($TagName) = $DB->next_record();
-    }
+    $ParentTagID = (int)$_POST['parenttagid'];
     if ($ParentTagID) {
         $DB->query("SELECT Name FROM tags WHERE ID=$ParentTagID");
         list($ParentTagName) = $DB->next_record();
     }
+    
+    if (isset($_POST['multi'])) {
+        $anchor = "#convertbox";
+        $TagsID = explode(",", $_POST['multiID']) ;
+        foreach ($TagsID AS $TagID) {
+            if (!is_number($TagID)) error("WTF! {$_POST['multiID']}"); 
+        }
+    } else {
+        $TagsID = array( (int)$_POST['movetagid'] );
+    }
+    
+    foreach( $TagsID as $TagID) {
+        //$TagID = (int) $_POST['movetagid'];
+        //$ParentTagID = (int) $_POST['parenttagid'];
+        $TagID = (int)$TagID;
+        if ($TagID) {
+            //$DB->query("SELECT Name FROM tags WHERE ID=$TagID");
+            //list($TagName) = $DB->next_record();
+            $DB->query("SELECT Name, Count(ts.ID)
+                          FROM tags AS t 
+                     LEFT JOIN tag_synomyns AS ts ON ts.TagID=t.ID
+                         WHERE t.ID = $TagID
+                      GROUP BY t.ID ");
+            list($TagName, $NumSynomyns) = $DB->next_record();
+            if ($NumSynomyns>0) {
+                $Message .= "Cannot remove tags from official list that have synomyns: $TagName\n";
+                $TagName = '';
+            }
+        }
 
-    if ($TagName && $ParentTagName) {
+        if ($TagName && $ParentTagName) {
 
-        // check this synomyn is not already in syn table 
-        $DB->query("SELECT ID FROM tag_synomyns WHERE Synomyn LIKE '" . $TagName . "'");
-        list($SynID) = $DB->next_record();
+            // check this synomyn is not already in syn table 
+            $DB->query("SELECT ID FROM tag_synomyns WHERE Synomyn LIKE '" . $TagName . "'");
+            list($SynID) = $DB->next_record();
 
-        if ($SynID) {
-            $Message .= "$TagName already exists as a synomyn for " . get_tag_synomyn($TagName);
-            $Result = 0;
-        } else {
-
-            $DB->query("INSERT INTO tag_synomyns (Synomyn, TagID, UserID) 
-                                                 VALUES ('" . $TagName . "', " . $ParentTagID . ", " . $LoggedUser['ID'] . " )");
-            $Cache->delete_value('synomyn_for_' . $TagName); // in case there is a 'not_found' value cached 
-            $Cache->delete_value('all_synomyns');
-            $Result = 1;
-            // if we are just adding a tag as a synomyn and not converting there is nothing more to do
-
-            if (isset($_POST['converttag'])) {
-                // convert a synomyn to a tag properly
-                if (!check_perms('site_convert_tags')) {
-                    $Message .= "(You do not have permission to convert an exisiting tag) Added tag $TagName as synomyn for $ParentTagName";
-                } else {
-                    // 'convert refrences to the original tag to parenttag and cleanup db 
-
-                    $DB->query("SELECT ts.GroupID, ts.PositiveVotes, ts.NegativeVotes
-                                                  FROM torrents_tags AS ts
-                                                 WHERE ts.TagID=$TagID  
-                                                   AND (SELECT COUNT(*) 
-                                                               FROM torrents_tags 
-                                                              WHERE torrents_tags.TagID=$ParentTagID
-                                                                AND torrents_tags.GroupID=ts.GroupID)=0");
-                    $GroupInfos = $DB->to_array(false, MYSQLI_BOTH);
-                    //$Message .= " count groupinfos=".count($GroupInfos) . "  ";
-                    $NumAffectedTorrents = count($GroupInfos);
-                    if ($NumAffectedTorrents > 0) {
-                        $SQL = 'INSERT IGNORE INTO torrents_tags 
-                                              (TagID, GroupID, PositiveVotes, NegativeVotes, UserID) VALUES';
-                        $Div = '';
-                        $MsgGroups = "torrents ";
-                        foreach ($GroupInfos as $Group) {
-                            list($GroupID, $PVotes, $NVotes) = $Group;
-                            $SQL .= "$Div ('$ParentTagID', '$GroupID', '$PVotes', '$NVotes', '{$LoggedUser['ID']}')";
-                            $MsgGroups .= "$Div$GroupID";
-                            $Div = ',';
-                            // fix taglist in each torrent as we go
-                            $DB->query("SELECT TagList FROM torrents_group WHERE ID=$GroupID");
-                            list($TagList) = $DB->next_record();
-                            $TagList = trim(str_replace('_', '.', $TagList));
-                            $Tags = explode(' ', $TagList);
-                            foreach ($Tags as &$Tag) {
-                                if ($Tag == $TagName) {
-                                    //$Message .= "   [ changed $Tag to $ParentTagName in id=$GroupID ] \n";
-                                    $Tag = $ParentTagName;
-                                    break;
-                                }
-                            }
-                            unset($Tag);
-                            $NewTagList = implode(' ', $Tags);
-                            $NewTagList = db_string(trim(str_replace('.', '_', $NewTagList)));
-                            $DB->query("UPDATE torrents_group 
-                                                           SET TagList='$NewTagList' WHERE ID=$GroupID");
-                        }
-                        //$MsgGroups .= ") ";
-                        //$Message .= "   SQL= [ $SQL ] \n";
-                        // update torrents_tags with entries for parentTagID
-                        $DB->query($SQL);
-                        // update the Uses where parenttag has been added as a replacement for tag
-                        $DB->query("UPDATE tags SET Uses=Uses+$NumAffectedTorrents WHERE ID='$ParentTagID'");
-                        // remove old entries for tagID
-                        $DB->query("DELETE FROM torrents_tags WHERE TagID = '$TagID'");
-                        $DB->query("DELETE FROM tags WHERE ID = '$TagID'");
-                    }
-
-                    $Message .= "Converted tag $TagName to synomyn for $ParentTagName";
-                    // probably we should log this action in some way
-                    write_log("Tag $TagName converted to synomyn for tag $ParentTagName, $NumAffectedTorrents tag-torrent links updated $MsgGroups by " . $LoggedUser['Username']);
-                }
+            if ($SynID) {
+                $Message .= "$TagName already exists as a synomyn for " . get_tag_synomyn($TagName);
+                $Result = 0;
             } else {
-                $Message .= "Added tag $TagName as synomyn for $ParentTagName";
+
+                $DB->query("INSERT INTO tag_synomyns (Synomyn, TagID, UserID) 
+                                                     VALUES ('" . $TagName . "', " . $ParentTagID . ", " . $LoggedUser['ID'] . " )");
+                $Cache->delete_value('all_synomyns');
+                $Result = 1;
+                // if we are just adding a tag as a synomyn and not converting there is nothing more to do
+
+                if (isset($_POST['converttag'])) {
+                    // convert a synomyn to a tag properly
+                    if (!check_perms('site_convert_tags')) {
+                        $Message .= "(You do not have permission to convert an exisiting tag) Added tag $TagName as synomyn for $ParentTagName";
+                    } else {
+                        // 'convert refrences to the original tag to parenttag and cleanup db 
+             
+                        $DB->query("SELECT ts.GroupID, ts.PositiveVotes, ts.NegativeVotes, Count(tt2.TagID) AS Count
+                                                      FROM torrents_tags AS ts
+                                                 LEFT JOIN torrents_tags AS tt2 ON tt2.GroupID=ts.GroupID
+                                                            AND tt2.TagID=$ParentTagID
+                                                     WHERE ts.TagID=$TagID  
+                                                  GROUP BY ts.GroupID");
+                        
+                        $GroupInfos = $DB->to_array(false, MYSQLI_BOTH);
+                        //$Message .= " count groupinfos=".count($GroupInfos) . "  ";
+                        $NumAffectedTorrents = count($GroupInfos);
+                        if ($NumAffectedTorrents > 0) {
+                            //$SQL = 'INSERT IGNORE INTO torrents_tags 
+                            //                      (TagID, GroupID, PositiveVotes, NegativeVotes, UserID) VALUES';
+                            $SQL='';
+                            $Div = ''; $Div2 = '';
+                            $MsgGroups = "torrents ";
+                            foreach ($GroupInfos as $Group) {
+                                list($GroupID, $PVotes, $NVotes, $Count) = $Group;
+                                if ($Count==0){ // only insert parenttag into groups where not already present
+                                    $SQL .= "$Div ('$ParentTagID', '$GroupID', '$PVotes', '$NVotes', '{$LoggedUser['ID']}')";
+                                    $Div = ',';
+                                }
+                                $MsgGroups .= "$Div2$GroupID";
+                                $Div2 = ',';
+                                // fix taglist in each torrent as we go
+                                $DB->query("SELECT TagList FROM torrents_group WHERE ID=$GroupID");
+                                list($TagList) = $DB->next_record();
+                                $TagList = trim(str_replace('_', '.', $TagList));
+                                $Tags = explode(' ', $TagList);
+                                foreach ($Tags as $Key => &$Tag) {
+                                    if ($Tag == $TagName) {
+                                        // if there is not already a copy of the tag for this groupID in torrents_tags
+                                        if ($Count==0){
+                                            // change tag we are converting to parent tag in list
+                                            $Tag = $ParentTagName;
+                                        } else // or skip (remove from array) if a copy already exists in this taglist
+                                            unset($Tags[$Key]);
+                                        break;
+                                    }
+                                }
+                                unset($Tag);
+                                $NewTagList = implode(' ', $Tags);
+                                $NewTagList = db_string(trim(str_replace('.', '_', $NewTagList)));
+                                $DB->query("UPDATE torrents_group 
+                                                               SET TagList='$NewTagList' WHERE ID=$GroupID");
+                            }
+                        
+                            // update torrents_tags with entries for parentTagID
+                            if($SQL !=''){
+                                $SQL = "INSERT IGNORE INTO torrents_tags 
+                                                  (TagID, GroupID, PositiveVotes, NegativeVotes, UserID) VALUES $SQL";
+                                $DB->query($SQL);
+                            }
+                            // update the Uses where parenttag has been added as a replacement for tag
+                            $DB->query("UPDATE tags SET Uses=Uses+$NumAffectedTorrents WHERE ID='$ParentTagID'");
+                            
+                            $DB->query("DELETE FROM torrents_tags WHERE TagID = '$TagID'");
+                        }
+                        //// remove old entries for tagID
+                        $DB->query("DELETE FROM tags WHERE ID = '$TagID'");
+
+                        $Message .= "Converted tag $TagName to synomyn for $ParentTagName. ";
+                        // probably we should log this action in some way
+                        write_log("Tag $TagName converted to synomyn for tag $ParentTagName, $NumAffectedTorrents tag-torrent links updated $MsgGroups by " . $LoggedUser['Username']);
+                    }
+                } else {
+                    $Message .= "Added tag $TagName as synomyn for $ParentTagName";
+                }
             }
         }
     }
@@ -207,7 +260,6 @@ if (isset($_POST['addsynomyn'])) {
                 } else { // Synomyn doesn't exist yet - create
                     $DB->query("INSERT INTO tag_synomyns (Synomyn, TagID, UserID) 
                                                         VALUES ('" . $TagName . "', " . $ParentTagID . ", " . $LoggedUser['ID'] . " )");
-                    $Cache->delete_value('synomyn_for_' . $TagName); // in case there is a 'not_found' value cached 
                     $Cache->delete_value('all_synomyns');
                     $Result = 1;
                     $Message .= "$TagName created as a synomyn for " . get_tag_synomyn($TagName);
@@ -219,8 +271,8 @@ if (isset($_POST['addsynomyn'])) {
 
 
 if ($Message != '') {
-    header("Location: tools.php?action=official_tags&rst=$Result&msg=" . htmlentities($Message));
+    header("Location: tools.php?action=official_tags&rst=$Result&msg=" . htmlentities($Message) .$anchor);
 } else {
-    header('Location: tools.php?action=official_tags');
+    header('Location: tools.php?action=official_tags'.$anchor);
 }
 ?>

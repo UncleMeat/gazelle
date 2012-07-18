@@ -108,14 +108,14 @@ while(list($Message, $LogTime) = $DB->next_record()) {
 				}
 				break;
 			case "Torrents":
-			case "torrents":
+			case "torrents": // actually groups but call it torrents to not overely confuse user
                         $TorrentIDs = explode(',', $MessageParts[$i + 1]);
 				//$TorrentID = $MessageParts[$i + 1];
                         $Links='';
                         $Div='';
                         foreach($TorrentIDs as $TorrentID){
                             if (is_numeric($TorrentID)) {
-                                    $Links .= $Div .'<a href="torrents.php?torrentid='.$TorrentID.'">'.$TorrentID.'</a>';
+                                    $Links .= $Div .'<a href="torrents.php?id='.$TorrentID.'">'.$TorrentID.'</a>';
                                     $Div=', ';
                             }
                         }

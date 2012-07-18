@@ -2,8 +2,8 @@
 if (!check_perms('site_manage_tags')) {
     error(403);
 }
-
-show_header('Official Tags Manager');
+$UseMultiInterface= isset($_REQUEST['multi']);
+show_header('Official Tags Manager','tagmanager');
 ?>
 <div class="thin">
     <h2>Official Tags</h2>
@@ -185,44 +185,73 @@ show_header('Official Tags Manager');
 <? } ?>
 
         <br /><br />
-        <div class="box pad center">
-            <div class="pad" style="text-align:left">This section allows you to add a tag as a synomyn for another tag.
-                <br />If the checkbox is unchecked then it will simply add the tag as a synomyn for the parent tag and leave the tag and its current associations with torrents as is in the database. This will prevent it being added as a new tag and searches on it will search on the synomyn as expected, but the original tags already present will show up with the torrents.
-                <br /><br />If you check the 'convert' option it will remove the old tag from the database, inserting the tag this is now a synomyn for instead (where it is not already present for that torrent). This might be a preferable state for the database to be in but it is an irreversible operation and you should be certain you want the old tag removed from the torrents it is associated with before proceeding.</div>
-            <form  class="tagtable" action="tools.php" method="post">
-
+        <form  class="tagtable" action="tools.php" method="post">
+            <div class="box pad center" id="convertbox">
+                <div class="pad" style="text-align:left">
+                    <h3>Convert Tag to Synomyn</h3>
+                    This section allows you to add a tag as a synomyn for another tag.
+                    <br />If the checkbox is unchecked then it will simply add the tag as a synomyn for the parent tag and leave the tag and its current associations with torrents as is in the database. This will prevent it being added as a new tag and searches on it will search on the synomyn as expected, but the original tags already present will show up with the torrents.
+                    <br /><br />If you check the 'convert' option it will remove the old tag from the database, inserting the tag this is now a synomyn for instead (where it is not already present for that torrent). This might be a preferable state for the database to be in but it is an irreversible operation and you should be certain you want the old tag removed from the torrents it is associated with before proceeding.
+                </div>
+            
                 <input type="hidden" name="action" value="official_tags_alter" />
                 <input type="hidden" name="auth" value="<?= $LoggedUser['AuthKey'] ?>" />
-                <input type="checkbox" name="converttag" value="0" <? if (!check_perms('site_convert_tags')) {
+                <input type="checkbox" name="converttag" value="1" <? if (check_perms('site_convert_tags')) {
+                        echo ' checked="checked"';
+                } else {
                         echo 'disabled=disabled title="You do not have permission to convert tags to synomyns (you can add a tag as a synomyn though)"';
-} ?> />  
+                } ?> />  
 
                 <label for="movetag" title="if this is checked then you can select an existing tag to convert into a synomyn for another tag">convert tag to synomyn</label>&nbsp;&nbsp;&nbsp;
 
-                <select name="movetagid">
-                    <option value="0" selected="selected">none&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                <select id="movetagid" name="movetagid" <? if($UseMultiInterface) { 
+                      ?>    onchange="Select_Tag( this.value, this.options[this.selectedIndex].text );" <?  } ?>>
+                    <option value="0" selected="selected">none&nbsp;</option>
                     <?
-                    $DB->query("SELECT ID, Name, Uses FROM tags WHERE TagType='other' ORDER BY Name ASC");
+                    //$DB->query("SELECT ID, Name, Uses FROM tags WHERE TagType='other' ORDER BY Name ASC"); 
+            $DB->query("SELECT t.ID, t.Name, t.Uses, Count(ts.ID)
+                          FROM tags AS t 
+                     LEFT JOIN tag_synomyns AS ts ON ts.TagID=t.ID
+                         WHERE t.TagType='other'
+                      GROUP BY t.ID 
+                      HAVING Count(ts.ID)=0
+                      ORDER BY Name ASC");   
+            
                     $AllTags = $DB->to_array();
                     foreach ($AllTags as $Tag) {
-                        list($TagID, $TagName, $TagUses) = $Tag;
-                        ?>
-                        <option value="<?= $TagID ?>"><?= "$TagName ($TagUses)" ?>&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                        list($TagID, $TagName, $TagUses) = $Tag;  ?>
+                        <option value="<?= $TagID ?>"><?= "$TagName ($TagUses)" ?>&nbsp;</option>
                     <? } ?>
                 </select>
 
+<?              if ($UseMultiInterface) { // Experts only! ?>
+                    <div class="pad" style="text-align:left">
+                        <h3>Multi-convert interface</h3>
+                        <p>When you click the "Add as a Synomyn for" button it will convert all the tags listed here to synomyns for the selected tag.</p>
+                        <input type="hidden" name="multi" value="multi" />
+                        <input type="button" value="clear" onclick="Clear_Multi();" />
+                        <input type="hidden" id="multiID" name="multiID" value="" />
+                        <input type="text" id="showmultiID" value="" class="medium" disabled="disabled" />
+                        <br/>
+                        <div id="multiNames"></div>
+                    </div>
+<?              } ?>
                 <input type="submit" name="tagtosynomyn" value="Add as synomyn for " title="add new synomyn" />&nbsp;&nbsp;
 
                 <select name="parenttagid" >
 <?                  foreach ($Tags as $Tag) {
                         list($TagID, $TagName, $TagUses) = $Tag; ?>
-                        <option value="<?= $TagID ?>"><?= "$TagName ($TagUses)" ?>&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                        <option value="<?= $TagID ?>"><?= "$TagName ($TagUses)" ?>&nbsp;&nbsp;</option>
 <?                  } ?>
                 </select>
-
-            </form>
-        </div>
-
+                <br/>
+<?              if ($UseMultiInterface) {  ?> 
+                <a href="tools.php?action=official_tags#convertbox" >Single Entry Interface</a>
+<?              } else { ?>
+                <a href="tools.php?action=official_tags&multi=1#convertbox" >Multi Entry Interface</a>
+<?              } ?>
+            </div>
+        </form>
     </div>
 </div>
 <?

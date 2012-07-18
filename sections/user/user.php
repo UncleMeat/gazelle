@@ -169,7 +169,7 @@ show_header($Username,'user,bbcode,requests');
 	<h2><?=format_username($UserID, $Username, false, $Warned, $Enabled == 2 ? false : true, $ClassID, $CustomTitle, true)?></h2>
 	<div class="linkbox">
 <? if (!$OwnProfile) { ?>
-		[<a href="inbox.php?action=compose&amp;to=<?=$UserID?>">Send Message</a>]
+		[<a href="inbox.php?action=compose&amp;to=<?=$UserID?>" title="Send a Private Message to <?=$Username?>">Send PM</a>]
 <? 	$DB->query("SELECT Type FROM friends WHERE UserID='$LoggedUser[ID]' AND FriendID='$UserID'");
       if($DB->record_count() > 0) list($FType)=$DB->next_record();
 	if(!$FType || $FType != 'friends' ) { ?>
