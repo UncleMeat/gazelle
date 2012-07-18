@@ -9,7 +9,7 @@ if(empty($_POST['reportid']) && !is_number($_POST['reportid'])) {
 	error(403);
 }
 
-$ReportID = $_POST['reportid'];
+$ReportID = (int)$_POST['reportid'];
 
 $DB->query("SELECT Type FROM reports WHERE ID = ".$ReportID);
 list($Type) = $DB->next_record();
@@ -25,10 +25,15 @@ if(!check_perms('admin_reports')) {
 	}
 }
 
+$Comment = sqltime()." - Resolved by {$LoggedUser['Username']}";
+if (isset($_POST['comment'])) $Comment .= " - {$_POST['comment']}";
+$Comment=db_string($Comment);
+
 $DB->query("UPDATE reports 
 			SET Status='Resolved',
 				ResolvedTime='".sqltime()."',
-				ResolverID='".$LoggedUser['ID']."'
+				ResolverID='{$LoggedUser['ID']}',
+				Comment=CONCAT_WS( '\n', Comment, '$Comment')
 			WHERE ID='".db_string($ReportID)."'");
 
 
@@ -53,6 +58,8 @@ foreach($Channels as $Channel) {
 }
 
 $Cache->delete_value('num_other_reports');
+
+
 
 header('Location: reports.php');
 ?>

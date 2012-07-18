@@ -60,8 +60,8 @@ if ($ConvID = (int)$_GET['id']) {
 	<div id="inbox">
 <?
 	// Get messages
-	$StaffPMs = $DB->query("SELECT UserID, SentDate, Message FROM staff_pm_messages WHERE ConvID=$ConvID");
-
+	$StaffPMs = $DB->query("SELECT UserID, SentDate, Message FROM staff_pm_messages WHERE ConvID=$ConvID ORDER BY SentDate");
+      
 	while(list($UserID, $SentDate, $Message) = $DB->next_record()) {
 		// Set user string
 		if ($UserID == $OwnerID) {
@@ -73,12 +73,13 @@ if ($ConvID = (int)$_GET['id']) {
 			$UserString = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID'], $UserInfo['Title'], true);
 
 		}
+            // determine if conversation was started by user or not (checks first record for userID)
+            if (!isset($UserInitiated)) $UserInitiated = $UserID == $OwnerID;
 ?>
-                <div class="head">
-                                <?=$UserString?>
-                        <span class="small"><?=time_diff($SentDate, 2, true)?></span>
-
-                </div>
+            <div class="head">
+                <?=$UserString?>
+                <span class="small"><?=time_diff($SentDate, 2, true)?></span>
+            </div>
 		<div class="box vertical_space">
 			<div class="body"><?=$Text->full_format($Message, get_permissions_advtags($UserID))?></div>
 		</div>
@@ -199,17 +200,20 @@ if ($ConvID = (int)$_GET['id']) {
 					<input type="button" value="Assign to admins" onClick="location.href='staffpm.php?action=assign&to=admin&convid=<?=$ConvID?>';" />
 <?	}
 
-	if ($Status != 'Resolved') { ?>
+	if ($Status != 'Resolved') {
+                  if ($UserInitiated || $IsFLS) { // as staff can now start a staff - user conversation check to see if user should be able to resolve  ?>
 					<input type="button" value="Resolve" onClick="location.href='staffpm.php?action=resolve&id=<?=$ConvID?>';" />
-<?			if ($IsFLS) {  //Moved by request ?>
+<?			} 
+                  if ($IsFLS) {  //Moved by request ?>
 					<input type="button" value="Common answers" onClick="$('#common_answers').toggle();" />
 <?			} ?>
 					<input type="submit" value="Send message" />
-<?	} else { ?>
+<?	} else { 
+                  if ($UserInitiated || $IsFLS) {  ?> 
 					<input type="button" value="Unresolve" onClick="location.href='staffpm.php?action=unresolve&id=<?=$ConvID?>';" />
-<?	} 
+<?			}  
+ 	}
 	if (check_perms('users_give_donor')) { ?>
-					<!--<br />	 -->
 					<input type="button" value="Make Donor" onClick="location.href='staffpm.php?action=make_donor&id=<?=$ConvID?>';" />
 <?	} ?>
 				</form>

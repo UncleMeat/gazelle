@@ -2,7 +2,8 @@ function SetMessage() {
 	var id = document.getElementById('common_answers_select').value;
 
 	ajax.get("?action=get_response&plain=1&id=" + id, function (data) {
-		$('#quickpost').raw().value = data;
+		if ( $('#quickpost').raw().value != '') data = "\n"+data+"\n";
+            insert(data, 'quickpost')
 		$('#common_answers').hide();
 	});
 }

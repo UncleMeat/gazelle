@@ -15,19 +15,41 @@ function Quick_Edit() {
 	$('#quickpost').show();
 }
 
+function Set_Message(appendid) {
+      if (appendid == undefined ) appendid = '';
+	var id = document.getElementById('common_answers_select'+appendid).value;
 
-function Inbox_Preview() {
-	if ($('#preview').has_class('hidden')) {
-		ajax.post('ajax.php?action=preview_newpm', "messageform", function (response) {
-                  $('#preview').raw().innerHTML = response;
-                  $('#preview').show();
-			$('#quickpost').hide();
-			$('#previewbtn').raw().value = "Edit Message";
+	ajax.get("staffpm.php?action=get_response&plain=1&id=" + id, function (data) {
+		if ( $('#message'+appendid).raw().value != '') data = "\n"+data+"\n";
+            insert(data, 'message'+appendid)
+		$('#common_answers'+appendid).hide();
+	});
+}
+
+function Update_Message(appendid) {
+      if (appendid == undefined ) appendid = '';
+	var id = document.getElementById('common_answers_select'+appendid).value;
+
+	ajax.get("staffpm.php?action=get_response&plain=0&id=" + id, function (data) {
+		$('#common_answers_body'+appendid).raw().innerHTML = data;
+		$('#first_common_response'+appendid).remove()
+	});
+}
+
+function Inbox_Preview(appendid) {
+      if (appendid == undefined )
+          appendid = '';
+	if ($('#preview'+appendid).has_class('hidden')) {
+		ajax.post('ajax.php?action=preview_newpm', "messageform"+appendid, function (response) {
+                  $('#preview'+appendid).raw().innerHTML = response;
+                  $('#preview'+appendid).show();
+			$('#quickpost'+appendid).hide();
+			$('#previewbtn'+appendid).raw().value = "Edit Message";
 		});
 	} else {
-		$('#preview').hide();
-		$('#quickpost').toggle();
-		$('#previewbtn').raw().value = "Preview";
+		$('#preview'+appendid).hide();
+		$('#quickpost'+appendid).toggle();
+		$('#previewbtn'+appendid).raw().value = "Preview";
 	}
 }
 

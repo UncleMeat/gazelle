@@ -121,7 +121,7 @@ if($Results == 0) {
                       <td valign="top">
                                   <input type="hidden" name="friendid" value="<?=$FriendID?>" />
 
-                                  <textarea name="comment" rows="4" class="long"><?=$Comment?></textarea>
+                                  <textarea name="comment" rows="4" class="long"><?=display_str($Comment)?></textarea>
                       </td>
                       <td class="left" valign="top" width="100px" >
                                   <input type="submit" name="action" value="Update" /><br />

@@ -61,7 +61,7 @@ function print_compose_staff_pm($Hidden = true, $Assign = 0, $Subject ='', $Msg 
 				<br />
 				
                     </div>
-				<input type="button" value="Hide" onClick="$('#compose').toggle();return false;" />
+				<input type="button" value="Hide" onClick="jQuery('#compose').toggle();return false;" />
                         
 				<strong>Send to: </strong>
 				<select name="level">
