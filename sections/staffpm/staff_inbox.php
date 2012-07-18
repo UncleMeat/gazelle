@@ -110,7 +110,7 @@ if ($DB->record_count() == 0) {
 					<td width="10"><input type="checkbox" onclick="toggleChecks('messageform',this)" /></td>
 <? 				} ?>
 					<td>Subject</td>
-					<td width="20%">Sender</td>
+					<td width="20%">User</td>
 					<td width="18%">Date</td>
 					<td width="18%">Assigned to</td>
 <?				if ($ViewString == 'Resolved') { ?>

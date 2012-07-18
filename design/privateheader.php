@@ -364,7 +364,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 						spellcheck="false"
 						onfocus="if (this.value == 'Search Torrents') this.value='';"
 						onblur="if (this.value == '') this.value='Search Torrents';"
-						value="Search Torrents" type="text" name="searchtext" size="17" title="Search Torrents"
+						value="Search Torrents" type="text" name="searchtext" size="17" title="Search Torrents - enter text and press return to search"
  
 					/>
 				</form>
@@ -376,7 +376,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 						spellcheck="false"
 						onfocus="if (this.value == 'Search Requests') this.value='';"
 						onblur="if (this.value == '') this.value='Search Requests';"
-						value="Search Requests" type="text" name="search" size="17" title="Search Requests"
+						value="Search Requests" type="text" name="search" size="17" title="Search Requests - enter text and press return to search"
 					/>
 				</form>
 			</li>
@@ -387,7 +387,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					<input
 						onfocus="if (this.value == 'Search Forums') this.value='';"
 						onblur="if (this.value == '') this.value='Search Forums';"
-						value="Search Forums" type="text" name="search" size="17" title="Search Forums"
+						value="Search Forums" type="text" name="search" size="17" title="Search Forums - enter text and press return to search"
 					/>
 				</form>
 			</li>
@@ -397,7 +397,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					<input
 						onfocus="if (this.value == 'Search Log') this.value='';"
 						onblur="if (this.value == '') this.value='Search Log';"
-						value="Search Log" type="text" name="search" size="17" title="Search Logs"
+						value="Search Log" type="text" name="search" size="17" title="Search Logs - enter text and press return to search"
 					/>
 				</form>
 			</li>
@@ -408,7 +408,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					<input
 						onfocus="if (this.value == 'Search Users') this.value='';"
 						onblur="if (this.value == '') this.value='Search Users';"
-						value="Search Users" type="text" name="search" size="20" title="Search Users"
+						value="Search Users" type="text" name="search" size="20" title="Search Users - enter text and press return to search"
 					/>
 				</form>
 			</li>
@@ -479,10 +479,8 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
     <? if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {  ?>
                       <li id="nav_staffinbox" class="<?=$NumStaffPMs ? 'highlight' : 'normal'?>"><a onmousedown="Stats('staffinbox');" href="staffpm.php?action=staff_inbox&amp;view=open">Staff Inbox<?=$NumStaffPMs ? "($NumStaffPMs)" : ''?></a></li>
     <? } ?>                  
-    <? //if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) { //both staff and users should see this link? ?>
                                 <li id="nav_staffmessages" class="<?=$NewStaffPMs ? 'highlight' : 'normal'?>"><a onmousedown="Stats('staffpm');" href="staffpm.php?action=user_inbox">Message Staff<?=$NewStaffPMs ? "($NewStaffPMs)" : ''?></a></li>                      
-     <? //}  ?>
-
+    
                                 <li id="nav_uploaded" class="normal"><a onmousedown="Stats('uploads');" href="torrents.php?type=uploaded&amp;userid=<?=$LoggedUser['ID']?>">Uploads</a></li>
                                 <li id="nav_bookmarks" class="normal"><a onmousedown="Stats('bookmarks');" href="bookmarks.php?type=torrents">Bookmarks</a></li>
 <? if (check_perms('site_torrents_notify')) { ?>
@@ -495,7 +493,7 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                                 <li id="nav_logs" class="normal"><a onmousedown="Stats('logs');" href="log.php">Logs</a></li>
                                 <li id="nav_bonus" class="normal"><a onmousedown="Stats('bonus');" href="bonus.php">Bonus</a></li>
                                 <li id="nav_sandbox" class="normal"><a onmousedown="Stats('sandbox');" href="sandbox.php">Sandbox</a></li>
-    <?
+    <? /* 
     if(check_perms('site_send_unlimited_invites')) {
           $Invites = ' (∞)';
     } elseif ($LoggedUser['Invites']>0) {
@@ -504,7 +502,7 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
           $Invites = '';
     }
     ?>
-                                <li id="nav_invite" class="normal brackets"><a href="user.php?action=invite">Invite<?=$Invites?></a></li>
+                        <?      <li id="nav_invite" class="normal brackets"><a href="user.php?action=invite">Invite<?=$Invites?></a></li> */ ?>
                                 <li id="nav_conncheck" class="normal"><a onmousedown="Stats('conncheck');" href="user.php?action=connchecker">Conn-Checker</a></li>                                    
                           </ul>
                       </li>

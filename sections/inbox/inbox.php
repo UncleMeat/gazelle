@@ -33,8 +33,9 @@ $Sort = empty($_GET['sort']) || $_GET['sort'] != "unread" ? "Date DESC" : "cu.Un
 $sql = "SELECT
 	SQL_CALC_FOUND_ROWS
 	c.ID,
-	c.Subject,
-	cu.Unread,
+	c.Subject,";
+$sql .= ($Section == 'sentbox')? ' cu2.Unread ' : ' cu.Unread ';
+$sql .= ",
 	cu.Sticky,
 	cu.ForwardedTo,
 	um2.Username AS ForwardedName,
@@ -157,8 +158,10 @@ echo $Pages;
 				</tr>
 <?	} ?>
 			</table>
+<?          if ($Section == 'inbox') {  ?>
 			<input type="submit" name="read" value="Mark as read" />&nbsp;
 			<input type="submit" name="unread" value="Mark as unread" />&nbsp;
+<?		} ?>
 			<input type="submit" name="delete" value="Delete message(s)" />
 		</form>
 <? } ?>

@@ -9,6 +9,8 @@ if ($ID = (int)($_GET['id'])) {
 		$DB->query("UPDATE staff_pm_conversations SET Status='Resolved', ResolverID=".$LoggedUser['ID']." WHERE ID=$ID");
 		$Cache->delete_value('staff_pm_new_'.$LoggedUser['ID']);
 		$Cache->delete_value('num_staff_pms_'.$LoggedUser['ID']);
+		$Cache->delete_value('num_staff_pms_open_'.$LoggedUser['ID']);
+		$Cache->delete_value('num_staff_pms_my_'.$LoggedUser['ID']);
 
 		header('Location: staffpm.php');
 	} else {
