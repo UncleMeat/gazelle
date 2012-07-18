@@ -253,10 +253,9 @@ if(check_perms('admin_reports')) {
 		list($NumOtherReports) = $DB->next_record();
 		$Cache->cache_value('num_other_reports', $NumOtherReports, 0);
 	}
-	
-	if ($NumOtherReports > 0) {
-		$ModBar[] = '<a href="reports.php">'.$NumOtherReports.(($NumTorrentReports == 1) ? ' Other Report' : ' Other Reports').'</a>';
-	}
+	 
+	$ModBar[] = '<a href="reports.php">'.$NumOtherReports.(($NumTorrentReports == 1) ? ' Other Report' : ' Other Reports').'</a>';
+	 
 } else if(check_perms('project_team')) {
 	$NumUpdateReports = $Cache->get_value('num_update_reports');
 	if ($NumUpdateReports === false) {
@@ -490,6 +489,7 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                                 <li id="nav_notifications" class="<?=$NewNotifications ? 'highlight' : 'normal'?>"><a onmousedown="Stats('notifications');" href="user.php?action=notify">Notifications<?=$NewNotifications ? "($NewNotifications)" : ''?></a></li>
 <? } ?>
                                 <li id="nav_subscriptions" class="<?=$NewSubscriptions ? 'highlight' : 'normal'?>"><a onmousedown="Stats('subscriptions');" href="userhistory.php?action=subscriptions"<?=($NewSubscriptions ? ' class="new-subscriptions"' : '')?>>Subscriptions<?=$NewSubscriptions ? "($NewSubscriptions)" : ''?></a></li>
+                                <li id="nav_posthistory" class="normal"><a href="userhistory.php?action=posts&amp;group=0&amp;showunread=0">Post History</a></li>
                                 <li id="nav_comments" class="normal"><a onmousedown="Stats('comments');" href="comments.php">Comments</a></li>
                                 <li id="nav_friends" class="normal"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>
                                 <li id="nav_logs" class="normal"><a onmousedown="Stats('logs');" href="log.php">Logs</a></li>
@@ -505,7 +505,7 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
     }
     ?>
                                 <li id="nav_invite" class="normal brackets"><a href="user.php?action=invite">Invite<?=$Invites?></a></li>
-                                <li id="nav_bonus" class="normal"><a onmousedown="Stats('conncheck');" href="user.php?action=connchecker">Conn-Checker</a></li>                                    
+                                <li id="nav_conncheck" class="normal"><a onmousedown="Stats('conncheck');" href="user.php?action=connchecker">Conn-Checker</a></li>                                    
                           </ul>
                       </li>
                       <li id="nav_useredit" class="brackets"><a href="user.php?action=edit&amp;userid=<?=$LoggedUser['ID']?>" title="Edit User Settings">Settings</a></li>
