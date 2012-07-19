@@ -147,11 +147,12 @@ if (isset($_POST['merge'])) {
     $MergeTitle = "$MergeTitle (merged with $OldTitle)";
     if($OldLastPostID>$NFLastPostID) $NFLastPostID = $OldLastPostID;
     
-    $DB->query("UPDATE forums_topics SET Title='$MergeTitle',LastPostID='$NFLastPostID',NumPosts=(NumPosts+$Posts) WHERE ID='$MergeTopicID'");
-    $DB->query("UPDATE forums_polls SET TopicID='$MergeTopicID' WHERE TopicID='$MergeTopicID'");
-    $DB->query("UPDATE forums_polls_votes SET TopicID='$MergeTopicID' WHERE TopicID='$MergeTopicID'");
+    $DB->query("UPDATE forums_polls SET TopicID='$MergeTopicID' WHERE TopicID='$TopicID'");
+    $DB->query("UPDATE forums_polls_votes SET TopicID='$MergeTopicID' WHERE TopicID='$TopicID'");
     
     $DB->query("UPDATE forums_posts SET TopicID='$MergeTopicID', Body=CONCAT_WS( '\n\n', Body, '[align=right][size=0][i]merged from thread[/i][br]\'$OldTitle\'[/size][/align]') WHERE TopicID='$TopicID'");
+    $DB->query("UPDATE forums_topics SET Title='$MergeTitle',LastPostID='$NFLastPostID',NumPosts=(NumPosts+$Posts) WHERE ID='$MergeTopicID'");
+    
     $DB->query("DELETE FROM forums_topics WHERE ID='$TopicID'");
     
     $Cache->begin_transaction('forums_list');
