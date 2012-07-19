@@ -29,7 +29,7 @@ if ($ConvID = (int)$_GET['id']) {
 
 	$UserInfo = user_info($UserID);
 	$UserStr = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID'], $UserInfo['Title'], true);
-
+      $StarterStr = format_username($UserID, $UserInfo['Username'], false, $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID']);
 	$OwnerID = $UserID;
 
 ?>
@@ -80,7 +80,7 @@ if ($ConvID = (int)$_GET['id']) {
  <?                 // determine if conversation was started by user or not (checks first record for userID)
                     if (!isset($UserInitiated)) {
                         $UserInitiated = $UserID == $OwnerID;
-                        echo "started by ".($UserInitiated?'user':'staff')."&nbsp;&nbsp;";
+                        echo ($UserInitiated?'started by user':"sent by staff to $StarterStr")."&nbsp;&nbsp;";
                     }
                     echo time_diff($SentDate, 2, true);?>
                 </span>
