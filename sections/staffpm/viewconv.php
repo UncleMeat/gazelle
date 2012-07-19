@@ -73,12 +73,17 @@ if ($ConvID = (int)$_GET['id']) {
 			$UserString = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID'], $UserInfo['Title'], true);
 
 		}
-            // determine if conversation was started by user or not (checks first record for userID)
-            if (!isset($UserInitiated)) $UserInitiated = $UserID == $OwnerID;
 ?>
             <div class="head">
-                <?=$UserString?>
-                <span class="small"><?=time_diff($SentDate, 2, true)?></span>
+                <?=$UserString;?>
+                <span class="small" style="float:right">
+ <?                 // determine if conversation was started by user or not (checks first record for userID)
+                    if (!isset($UserInitiated)) {
+                        $UserInitiated = $UserID == $OwnerID;
+                        echo "started by ".($UserInitiated?'user':'staff')."&nbsp;&nbsp;";
+                    }
+                    echo time_diff($SentDate, 2, true);?>
+                </span>
             </div>
 		<div class="box vertical_space">
 			<div class="body"><?=$Text->full_format($Message, get_permissions_advtags($UserID))?></div>

@@ -16,7 +16,7 @@ list($Page, $Limit) = page_limit(REPORTS_PER_PAGE);
 include(SERVER_ROOT . '/sections/reports/array.php');
 
 // Header
-show_header('Reports', 'bbcode,inbox,jquery');
+show_header('Reports', 'bbcode,inbox,reports,jquery');
 
 if ($_GET['id'] && is_number($_GET['id'])) {
     $View = "Single report";
@@ -302,8 +302,9 @@ $DB->set_query_id($Reports);
                             ?>
                                 <span style="float:right;">
                                     Start staff conversation with <a href="user.php?id=<?= $UserID ?>"><?= $Username ?></a> about this report: &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a href="#report<?= $ReportID ?>" onClick="jQuery('#compose<?= $ReportID ?>').slideToggle('slow');">[Compose Message]</a>
-                                </span>    <br class="clear" />
+                                    <a href="#report<?= $ReportID ?>" onClick="Open_Compose_Message(<?="'$ReportID'"?>)">[Compose Message]</a>
+                                </span>    
+                                <br class="clear" />
                                 <div id="compose<?= $ReportID ?>" class="hide">
                                     <div id="preview<?= $ReportID ?>" class="hidden"></div>
                                     <div id="common_answers<?= $ReportID ?>" class="hidden">
