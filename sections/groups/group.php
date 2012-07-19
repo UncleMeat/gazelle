@@ -76,7 +76,7 @@ list($Results) = $DB->next_record();
                 </tr>
                 <tr id="gcomment" class="pad">
                       <td valign="top">
-                          <div id="showcomment" ><?=$Text->full_format($Comment)?></div>
+                          <div id="showcomment" ><?=$Text->full_format($Comment,true)?></div>
                           <textarea id="comment"  class="hidden long" name="comment" rows="4"><?=$Comment?></textarea>
                       </td>
                       <td class="left" valign="top" width="110px" >
@@ -92,7 +92,7 @@ list($Results) = $DB->next_record();
                 <tr id="grouplog" class="hidden pad">
                       <td valign="top" colspan="2" >
                           <div id="bonuslog" class="box pad">
-                                <?=(!$Log ? 'no group history' :$Text->full_format($Log))?>
+                                <?=(!$Log ? 'no group history' :$Text->full_format($Log,true))?>
                           </div>
                       </td>
                 </tr>
