@@ -834,7 +834,7 @@ CREATE TABLE IF NOT EXISTS `library_contest` (
 
 CREATE TABLE IF NOT EXISTS `log` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `Message` varchar(400) NOT NULL,
+  `Message` TEXT NOT NULL,
   `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`ID`),
   KEY `Message` (`Message`(255)),
