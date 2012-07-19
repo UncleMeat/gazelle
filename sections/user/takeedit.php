@@ -210,6 +210,7 @@ if($DownloadAlt != $LoggedUser['DownloadAlt']) {
 }
 $BlockPMs = (!empty($_POST['blockPMs']) ? (int)$_POST['blockPMs'] : 0);
 if (!in_array($BlockPMs,array(0,1,2))) $BlockPMs =0;
+$CommentsNotify = (isset($_POST['commentsnotify']))? 1:0;
 
 $Cache->begin_transaction('user_info_'.$UserID);
 $Cache->update_row(false, array(
@@ -225,7 +226,8 @@ $Cache->update_row(false, array(
 		'StyleID'=>$_POST['stylesheet'],
 		'StyleURL'=>$_POST['styleurl'],
 		'DownloadAlt'=>$DownloadAlt,
-		'BlockPMs'=>$BlockPMs
+		'BlockPMs'=>$BlockPMs,
+		'CommentsNotify'=>$CommentsNotify
 		));
 $Cache->update_row(false, $Options);
 $Cache->commit_transaction(0);
@@ -239,6 +241,7 @@ $SQL="UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET
 	i.SiteOptions='".db_string(serialize($Options))."',
 	i.Info='".db_string($_POST['info'])."',
 	i.BlockPMs='".$BlockPMs."',
+	i.CommentsNotify='".$CommentsNotify."',
 	i.DownloadAlt='$DownloadAlt',
 	i.UnseededAlerts='$UnseededAlerts',
 	m.Email='".db_string($_POST['email'])."',

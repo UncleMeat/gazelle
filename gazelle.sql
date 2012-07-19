@@ -1960,6 +1960,8 @@ CREATE TABLE IF NOT EXISTS `users_info` (
   `MessagesPerPage` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `DeletePMs` enum('0','1') NOT NULL DEFAULT '1',
   `SaveSentPMs` enum('0','1') NOT NULL DEFAULT '0',
+  `BlockPMs` enum('0','1','2') NOT NULL DEFAULT '0', 
+  `CommentsNotify` enum('0','1') NOT NULL DEFAULT '1', 
   `SupportFor` varchar(255) NOT NULL,
   `TorrentGrouping` enum('0','1','2') NOT NULL COMMENT '0=Open,1=Closed,2=Off',
   `ShowTags` enum('0','1') NOT NULL DEFAULT '1',

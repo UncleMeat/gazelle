@@ -198,7 +198,7 @@ if(!empty($_REQUEST['action'])) {
 				error('Your posting rights have been removed.');
 			}
 			
-			$GroupID = $_POST['groupid'];
+			$GroupID = (int)$_POST['groupid'];
 			if(!$GroupID) { error(404); }
 		
 			$DB->query("SELECT CEIL((SELECT COUNT(ID)+1 FROM torrents_comments AS tc WHERE tc.GroupID='".db_string($GroupID)."')/".TORRENT_COMMENTS_PER_PAGE.") AS Pages");
@@ -223,6 +223,17 @@ if(!empty($_REQUEST['action'])) {
 			$Cache->commit_transaction(0);
 			$Cache->increment('torrent_comments_'.$GroupID);
 			
+                  $DB->query("SELECT tg.Name, t.UserID, CommentsNotify 
+                                FROM users_info AS u 
+                           LEFT JOIN torrents AS t ON t.UserID=u.UserID
+                           LEFT JOIN torrents_group AS tg ON tg.ID=t.GroupID 
+                               WHERE t.GroupID='$GroupID'");
+                  list($TName, $UploaderID, $Notify)=$DB->next_record();
+                  // check whether system should pm uploader there is a new comment
+                  if( $Notify == 1 && $UploaderID!=$LoggedUser['ID'] )
+                      send_pm($UploaderID, 0, "Comment recieved on your upload", 
+                              "[br]You have recieved a comment from [url=/user.php?id={$LoggedUser['ID']}]{$LoggedUser['Username']}[/url] on your upload [url=/torrents.php?id=$GroupID&page=$Pages#post$PostID]{$TName}[/url]");
+                    
 			header('Location: torrents.php?id='.$GroupID.'&page='.$Pages."#post$PostID");
 			break;
 		

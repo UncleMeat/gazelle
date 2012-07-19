@@ -171,6 +171,13 @@ echo $Val->GenerateJS('userform');
 				</td>
 			</tr>
 			<tr>
+				<td class="label"><strong>Comments PM</strong></td>
+				<td>
+					<input type="checkbox" name="commentsnotify" id="commentsnotify" <? if (!empty($LoggedUser['CommentsNotify'])) { ?>checked="checked"<? } ?> />
+					<label for="commentsnotify">Notify me by PM when I receive a comment on one of my torrents</label>
+				</td>
+			</tr>
+			<tr>
 				<td class="label"><strong>Subscription</strong></td>
 				<td>
 					<input type="checkbox" name="autosubscribe" id="autosubscribe" <? if (!empty($SiteOptions['AutoSubscribe'])) { ?>checked="checked"<? } ?> />
