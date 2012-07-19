@@ -365,7 +365,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
             (<a href="torrents.php?action=advanced&amp;<?= get_url(array('action')) ?>">Advanced Search</a>)
         <? } ?>
     </div>
-
+<input style="display:none" type="submit" value="Filter Torrents" />
         <div class="box pad">
             <table class="cat_list">
                 <?
