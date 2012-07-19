@@ -88,6 +88,7 @@
 	'users_logout' => 'Can log users out (old?).',
 	'users_make_invisible' => 'Can make users invisible.',
 	'users_mod' => 'Basic moderator tools.',
+	'users_groups' => 'Can use Group tools.',
 
 	'torrents_edit' => 'Can edit any torrent.',
               'torrents_review' => 'Can mark torrents for deletion.',
@@ -226,7 +227,8 @@ function permissions_form(){ ?>
 					<? display_perm('users_make_invisible', 'Can make users invisible'); ?>
 					<? display_perm('users_logout', 'Can log users out'); ?>
 					<? display_perm('users_mod', 'Can access basic moderator tools (Admin comment)'); ?>
-					*Everything is only applicable to users with the same or lower class level
+					<? display_perm('users_groups', 'Can use Group tools'); ?>
+					<br/>*Everything is only applicable to users with the same or lower class level
 				</td>
 			</tr>
 		</table>

@@ -1,5 +1,6 @@
 <?
 
+
 if(empty($_REQUEST['groupid']) || !is_number($_REQUEST['groupid']) ){
      error(0);
 }
@@ -23,9 +24,7 @@ if(!$Users) { error("Cannot send a mass PM as there are no users in this group")
 
 show_header('Send Mass PM', 'upload,bbcode,inbox');
 
-if(!check_perms('site_moderate_requests')) {
-	error(403);
-}
+ 
 
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;

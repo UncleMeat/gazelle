@@ -426,7 +426,9 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                 <ul id="userinfo_tools">
                     <li id="nav_tools"><a href="tools.php">tools</a>
                         <ul>
-<?                      if (check_perms('admin_manage_categories')) { ?>
+<?                      if (check_perms('users_groups')) { ?>
+                            <li><a href="groups.php">User Groups</a></li>                  
+<?                      } if (check_perms('admin_manage_categories')) { ?>
                             <li><a href="tools.php?action=categories">Categories</a></li>                    
 <?                      } if (check_perms('admin_manage_permissions')) { ?>
                             <li><a href="tools.php?action=permissions">User Classes</a></li>
@@ -463,7 +465,7 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                   
 <?                      } if (check_perms('site_manage_awards')) { ?>
                             <li><a href="tools.php?action=awards_auto">Automatic Awards</a></li>
-<?                      } ?> 
+<?                      }  ?> 
                           </ul>
                       </li>
                 </ul>       

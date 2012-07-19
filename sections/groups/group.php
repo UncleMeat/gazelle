@@ -76,10 +76,12 @@ list($Results) = $DB->next_record();
                 </tr>
                 <tr id="gcomment" class="pad">
                       <td valign="top">
-                            <textarea name="comment" rows="4" class="long"><?=$Comment?></textarea>
+                          <div id="showcomment" ><?=$Text->full_format($Comment)?></div>
+                          <textarea id="comment"  class="hidden long" name="comment" rows="4"><?=$Comment?></textarea>
                       </td>
                       <td class="left" valign="top" width="110px" >
-                            <input type="submit" name="action" value="update" title="Update comment field" /><br />
+                            <input type="button" id="editcombtn" value="edit" onclick="Edit_Comment()" title="Edit comment field" />
+                            <input type="submit" id="updatecombtn" name="action" value="update" class="hidden" title="Update comment field" /><br />
                       </td>
                 </tr>
           </table>

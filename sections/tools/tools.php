@@ -10,7 +10,10 @@ show_header('Staff Tools');
 	<div class="permission_container">
 		<table>
 			<tr><td class="colhead">Managers</td></tr>
-<?   if (check_perms('admin_manage_categories')) { ?>
+<?   if (check_perms('users_groups')) { ?>
+			<tr><td><a href="groups.php">User Groups</a></td></tr>
+                  
+<? } if (check_perms('admin_manage_categories')) { ?>
 			<tr><td><a href="tools.php?action=categories">Categories</a></td></tr>                    
 <? } if (check_perms('admin_manage_permissions')) { ?>
 			<tr><td><a href="tools.php?action=permissions">User Classes<!--Permissions--></a></td></tr>
@@ -41,10 +44,8 @@ show_header('Staff Tools');
 
 <? } if (check_perms('site_manage_shop')) { ?>
 			<tr><td><a href="tools.php?action=shop_list">Bonus Shop</a></td></tr>
-                  
 <? } if (check_perms('site_manage_badges')) { ?>
 			<tr><td><a href="tools.php?action=badges_list">Badges</a></td></tr>
-                  
 <? } if (check_perms('site_manage_awards')) { ?>
 			<tr><td><a href="tools.php?action=awards_auto">Automatic Awards</a></td></tr>
                   

@@ -1,6 +1,7 @@
 <?
-
 enforce_login();
+
+if(!check_perms('users_groups')) error(403);
 
 if (!empty($_REQUEST['groupid'])) {
     $GroupID = (int) $_REQUEST['groupid'];

@@ -189,15 +189,15 @@ while(list($Message, $LogTime) = $DB->next_record()) {
 				break;
 			case "deleted":
 			case "auto-deleted":
-				if ($Color === false || $Color === 'green') {
+				//if ($Color === false || $Color === 'green') {
 					$Color = 'red';
-				}
+				//}
 				$Message = $Message." ".$MessageParts[$i];
 				break;
                   case "Warned":
-				if ($Color === false || $Color === 'green') {
+				//if ($Color === false || $Color === 'green') {
 					$Color = '#a07100';
-				}
+				//}
 				$Message = $Message." ".$MessageParts[$i];
 				break;
 			case "edited":

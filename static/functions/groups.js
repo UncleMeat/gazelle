@@ -10,6 +10,14 @@ function Toggle_All(open){
     }
     return false;
 }
+
+function Edit_Comment() {
+    $('#showcomment').hide();
+    $('#updatecombtn').show();
+    $('#comment').show();
+    $('#editcombtn').hide();
+}
+
         
 function Check_Users() {
 	
