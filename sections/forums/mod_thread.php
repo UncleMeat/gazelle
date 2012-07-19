@@ -113,6 +113,8 @@ function update_forum_info($ForumID, $AdjustNumTopics = 0, $BeginEndTransaction 
 		
     $Cache->update_row($ForumID, $UpdateArray);
     if ($BeginEndTransaction) $Cache->commit_transaction(0);
+    
+    return $NumPosts;
 }
 
 
@@ -156,12 +158,12 @@ if (isset($_POST['merge'])) {
 
     if($NewForumID==$OldForumID) { 
         
-        update_forum_info($OldForumID,0,false);
+        $NumPosts = update_forum_info($OldForumID,0,false);
  
     } else { // $NewForumID!=$ForumID  // If we're moving posts into a new forum, change the forum stats
 	
         update_forum_info($OldForumID, -1,false);
-        update_forum_info($NewForumID, 0,false);
+        $NumPosts = update_forum_info($NewForumID, 0,false);
  
         $Cache->delete_value('forums_'.$NewForumID);
     }
@@ -170,6 +172,11 @@ if (isset($_POST['merge'])) {
     $Cache->delete_value('thread_'.$TopicID.'_info');
     $Cache->delete_value('thread_'.$MergeTopicID.'_info');
     
+    $CatalogueID = floor($NumPosts/THREAD_CATALOGUE);
+    for($i=0;$i<=$CatalogueID;$i++) {
+        $Cache->delete_value('thread_'.$TopicID.'_catalogue_'.$i);
+    }
+            
     update_latest_topics();
     header('Location: forums.php?action=viewthread&threadid='.$MergeTopicID.'&page='.$Page);
       
