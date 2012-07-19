@@ -176,6 +176,7 @@ if (isset($_POST['merge'])) {
     $CatalogueID = floor($NumPosts/THREAD_CATALOGUE);
     for($i=0;$i<=$CatalogueID;$i++) {
         $Cache->delete_value('thread_'.$TopicID.'_catalogue_'.$i);
+        $Cache->delete_value('thread_'.$MergeTopicID.'_catalogue_'.$i);
     }
             
     update_latest_topics();
