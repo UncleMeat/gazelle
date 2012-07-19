@@ -12,6 +12,7 @@ if(!is_number($GroupID) || !$GroupID) {
 
 $Tags = explode(',', $_POST['tagname']);
 foreach($Tags as $Tag) {
+	$Tag = trim($Tag,'.'); // trim dots from the beginning and end
 	$Tag = sanitize_tag($Tag);
       $TagName = get_tag_synomyn($Tag);
 	if(!empty($TagName)) {
@@ -34,21 +35,15 @@ foreach($Tags as $Tag) {
                         die();
                     }
                 } else {
-                    // if it gets to here then its a new tag  
+                    // if it gets to here then its a new tag for this torrent, try adding/inc uses for tags
                     $DB->query("INSERT INTO tags (Name, UserID) VALUES ('".$TagName."', ".$UserID.") ON DUPLICATE KEY UPDATE Uses=Uses+1");
                     $TagID = $DB->inserted_id();
-                }
-                /*
-                $DB->query("SELECT TagID FROM torrents_tags_votes WHERE GroupID='$GroupID' AND TagID='$TagID' AND UserID='$UserID'");
-                if($DB->record_count()!=0) { // User has already voted on this tag, and is trying hax to make the rating go up
-                        header('Location: '.$_SERVER['HTTP_REFERER']);
-                        die();
-                }*/
+                } 
 	
-		$DB->query("INSERT INTO torrents_tags 
-			(TagID, GroupID, PositiveVotes, UserID) VALUES 
-			('$TagID', '$GroupID', '3', '$UserID') 
-			ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+2");
+                $DB->query("INSERT INTO torrents_tags 
+                      (TagID, GroupID, PositiveVotes, UserID) VALUES 
+                      ('$TagID', '$GroupID', '3', '$UserID') 
+                      ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+1");
 	
 		$DB->query("INSERT INTO torrents_tags_votes (GroupID, TagID, UserID, Way) VALUES ('$GroupID', '$TagID', '$UserID', 'up')");
 		

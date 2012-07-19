@@ -151,7 +151,7 @@ function get_tag_synomyn($Tag, $Sanitise = true){
         $DB->query("SELECT t.Name 
                     FROM tag_synomyns AS ts JOIN tags as t ON t.ID = ts.TagID 
                     WHERE Synomyn LIKE '".db_string($Tag)."'");
-        if ($DB->record_count() == 1) {
+        if ($DB->record_count() > 0) { // should only ever be one but...
             list($TagName) = $DB->next_record();       
             return $TagName;
         } else {

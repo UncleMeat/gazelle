@@ -47,6 +47,7 @@ if (isset($_POST['doit'])) {
     }
 
     if ($_POST['newtag']) {
+        $Tag = trim($Tag,'.'); // trim dots from the beginning and end
         $Tag = sanitize_tag($_POST['newtag']);
         $TagName = get_tag_synomyn($Tag);
 
@@ -112,7 +113,7 @@ if (isset($_POST['tagtosynomyn'])) {
         $anchor = "#convertbox";
         $TagsID = explode(",", $_POST['multiID']) ;
         foreach ($TagsID AS $TagID) {
-            if (!is_number($TagID)) error("WTF! {$_POST['multiID']}"); 
+            if (!is_number($TagID)) error(0); 
         }
     } else {
         $TagsID = array( (int)$_POST['movetagid'] );
@@ -242,8 +243,8 @@ if (isset($_POST['addsynomyn'])) {
     $ParentTagID = (int) $_POST['parenttagid'];
 
     if (isset($_POST['newsynname']) && $ParentTagID) {
-
-        $TagName = sanitize_tag(trim($_POST['newsynname']));
+ 
+        $TagName = sanitize_tag(trim($_POST['newsynname'],'.'));
         if ($TagName != '') {
             // check this synomyn is not already in syn table or tag table
             $DB->query("SELECT ID FROM tag_synomyns WHERE Synomyn LIKE '" . $TagName . "'");
