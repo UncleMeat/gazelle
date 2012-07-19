@@ -34,28 +34,36 @@ if ($Locked == 1) {
 
 $DB->query("SELECT
 	t.ForumID,
+          t.Title,
 	f.MinClassWrite,
-	COUNT(p.ID) AS Posts
+	COUNT(p.ID) AS Posts,
+          Max(p.ID) AS LastPostID
 	FROM forums_topics AS t
 	LEFT JOIN forums_posts AS p ON p.TopicID=t.ID
 	LEFT JOIN forums AS f ON f.ID=.t.ForumID
 	WHERE t.ID='$TopicID'
 	GROUP BY p.TopicID");
-list($OldForumID, $MinClassWrite, $Posts) = $DB->next_record();
+if ($DB->record_count()==0) error("Error: Could not find thread with id=$TopicID");
+list($OldForumID, $OldTitle, $MinClassWrite, $Posts, $OldLastPostID) = $DB->next_record();
 
 if($MinClassWrite > $LoggedUser['Class']) { error(403); }
+
 
 // If we're moving
 $Cache->delete_value('forums_'.$ForumID);
 $Cache->delete_value('forums_'.$OldForumID);
 
-// If we're deleting a thread
-if(isset($_POST['delete'])) {
-	if(check_perms('site_admin_forums')) {
-		$DB->query("DELETE FROM forums_posts WHERE TopicID='$TopicID'");
-		$DB->query("DELETE FROM forums_topics WHERE ID='$TopicID'");
-		
-		$DB->query("SELECT 
+
+
+
+
+
+function update_forum_info($ForumID, $AdjustNumTopics = 0, $BeginEndTransaction = true) {
+    global $DB, $Cache;
+    
+    if ($BeginEndTransaction) $Cache->begin_transaction('forums_list');
+        
+    $DB->query("SELECT 
 			t.ID,
 			t.LastPostID,
 			t.Title,
@@ -71,24 +79,10 @@ if(isset($_POST['delete'])) {
 			WHERE t.ForumID='$ForumID'
 			GROUP BY t.ID
 			ORDER BY t.LastPostID DESC LIMIT 1");
-		list($NewLastTopic, $NewLastPostID, $NewLastTitle, $NewLastAuthorID, $NewLastAuthorName, $NewLastAddedTime, $NumPosts, $NewLocked, $NewSticky) = $DB->next_record(MYSQLI_BOTH, false);
+    list($NewLastTopic, $NewLastPostID, $NewLastTitle, $NewLastAuthorID, $NewLastAuthorName, $NewLastAddedTime, $NumPosts, $NewLocked, $NewSticky) = $DB->next_record(MYSQLI_BOTH, false);
 		
-		$DB->query("UPDATE forums SET 
-			NumTopics=NumTopics-1, 
-			NumPosts=NumPosts-'$Posts',
-			LastPostTopicID='$NewLastTopic',
-			LastPostID='$NewLastPostID',
-			LastPostAuthorID='$NewLastAuthorID',
-			LastPostTime='$NewLastAddedTime'
-			WHERE ID='$ForumID'");
-		
-		$Cache->delete('thread_'.$TopicID);
-		
-		
-		$Cache->begin_transaction('forums_list');
-		$UpdateArray = array(
+    $UpdateArray = array(
 			'NumPosts'=>$NumPosts,
-			'NumTopics'=>'-1',
 			'LastPostID'=>$NewLastPostID,
 			'LastPostAuthorID'=>$NewLastAuthorID,
 			'Username'=>$NewLastAuthorName,
@@ -98,12 +92,101 @@ if(isset($_POST['delete'])) {
 			'IsLocked'=>$NewLocked,
 			'IsSticky'=>$NewSticky
 			);
+            
+    $AdjustNumTopics=(int)$AdjustNumTopics;
+    if ($AdjustNumTopics !=0) {
+                $AdjustNumTopics = $AdjustNumTopics>0?"+$AdjustNumTopics":$AdjustNumTopics;
+                $AdjustNumTopics = "NumTopics=NumTopics$AdjustNumTopics,";
+                $UpdateArray['NumTopics']='-1';
+    }
+    else $AdjustNumTopics ='';
+            
+    $SQL = "UPDATE forums SET $AdjustNumTopics
+                    NumPosts='$NumPosts',
+                    LastPostTopicID='$NewLastTopic',
+                    LastPostID='$NewLastPostID',
+                    LastPostAuthorID='$NewLastAuthorID',
+                    LastPostTime='$NewLastAddedTime'
+                    WHERE ID='$ForumID'";
+            
+    $DB->query($SQL);
 		
-		$Cache->update_row($ForumID, $UpdateArray);
-		$Cache->commit_transaction(0);
+    $Cache->update_row($ForumID, $UpdateArray);
+    if ($BeginEndTransaction) $Cache->commit_transaction(0);
+}
+
+
+
+
+
+// If we're merging a thread
+if (isset($_POST['merge'])) {
+    if(!check_perms('site_admin_forums')) error(403);
+       
+    if(!is_number($_POST['mergethreadid'])) error("merge thread id is not a number!");
+    $MergeTopicID = (int)$_POST['mergethreadid'];
+    if($MergeTopicID == $TopicID) error("Merge failed: merge thread id cannot be the same as source thread!"); 
+            
+    $DB->query("SELECT
+          t.ForumID,
+          t.Title,
+          f.MinClassWrite,
+          Max(p.ID) AS LastPostID
+          FROM forums_topics AS t
+          LEFT JOIN forums_posts AS p ON p.TopicID=t.ID
+          LEFT JOIN forums AS f ON f.ID=.t.ForumID
+          WHERE t.ID='$MergeTopicID'
+          GROUP BY p.TopicID");
+    if ($DB->record_count()==0) error("Merge failed: Could not find thread with id=$MergeTopicID");
+    list($NewForumID, $MergeTitle, $NFMinClassWrite, $NFLastPostID) = $DB->next_record();
+    
+    if($NFMinClassWrite > $LoggedUser['Class']) error(403); 
+   
+    $MergeTitle = "$MergeTitle (merged with $OldTitle)";
+    if($OldLastPostID>$NFLastPostID) $NFLastPostID = $OldLastPostID;
+    
+    $DB->query("UPDATE forums_topics SET Title='$MergeTitle',LastPostID='$NFLastPostID',NumPosts=(NumPosts+$Posts) WHERE ID='$MergeTopicID'");
+    $DB->query("UPDATE forums_polls SET TopicID='$MergeTopicID' WHERE TopicID='$MergeTopicID'");
+    $DB->query("UPDATE forums_polls_votes SET TopicID='$MergeTopicID' WHERE TopicID='$MergeTopicID'");
+    
+    $DB->query("UPDATE forums_posts SET TopicID='$MergeTopicID', Body=CONCAT_WS( '\n\n', Body, '[align=right][size=0][i]merged from thread[/i][br]\'$OldTitle\'[/size][/align]') WHERE TopicID='$TopicID'");
+    $DB->query("DELETE FROM forums_topics WHERE ID='$TopicID'");
+    
+    $Cache->begin_transaction('forums_list');
+
+    if($NewForumID==$OldForumID) { 
+        
+        update_forum_info($OldForumID,0,false);
+ 
+    } else { // $NewForumID!=$ForumID  // If we're moving posts into a new forum, change the forum stats
+	
+        update_forum_info($OldForumID, -1,false);
+        update_forum_info($NewForumID, 0,false);
+ 
+        $Cache->delete_value('forums_'.$NewForumID);
+    }
+      
+    $Cache->commit_transaction(0);
+    $Cache->delete_value('thread_'.$TopicID.'_info');
+    $Cache->delete_value('thread_'.$MergeTopicID.'_info');
+    
+    update_latest_topics();
+    header('Location: forums.php?action=viewthread&threadid='.$MergeTopicID.'&page='.$Page);
+      
+}
+// If we're deleting a thread
+elseif(isset($_POST['delete'])) {
+	if(check_perms('site_admin_forums')) {
+		$DB->query("DELETE FROM forums_posts WHERE TopicID='$TopicID'");
+		$DB->query("DELETE FROM forums_topics WHERE ID='$TopicID'");
+            $DB->query("DELETE FROM forums_polls WHERE TopicID='$TopicID'");
+            $DB->query("DELETE FROM forums_polls_votes WHERE TopicID='$TopicID'");
+    
+		update_forum_info($ForumID, -1);
+       
 		$Cache->delete_value('thread_'.$TopicID.'_info');
                 
-                update_latest_topics();
+            update_latest_topics();
 		header('Location: forums.php?action=viewforum&forumid='.$ForumID);
 	} else {
 		error(403);
@@ -142,94 +225,12 @@ if(isset($_POST['delete'])) {
 		$Cache->commit_transaction(3600*24*5);
 		
 		$Cache->begin_transaction('forums_list');
-		
-		
 		// Forum we're moving from
-		$DB->query("SELECT 
-			t.ID,
-			t.LastPostID,
-			t.Title,
-			p.AuthorID,
-			um.Username,
-			p.AddedTime, 
-			(SELECT COUNT(pp.ID) FROM forums_posts AS pp JOIN forums_topics AS tt ON pp.TopicID=tt.ID WHERE tt.ForumID='$OldForumID'),
-			t.IsLocked,
-			t.IsSticky
-			FROM forums_topics AS t 
-			JOIN forums_posts AS p ON p.ID=t.LastPostID 
-			LEFT JOIN users_main AS um ON um.ID=p.AuthorID
-			WHERE t.ForumID='$OldForumID'
-			ORDER BY t.LastPostID DESC LIMIT 1");
-		list($NewLastTopic, $NewLastPostID, $NewLastTitle, $NewLastAuthorID, $NewLastAuthorName, $NewLastAddedTime, $NumPosts, $NewLocked, $NewSticky) = $DB->next_record(MYSQLI_NUM, false);
-		
-		$DB->query("UPDATE forums SET 
-			NumTopics=NumTopics-1, 
-			NumPosts=NumPosts-'$Posts',
-			LastPostTopicID='$NewLastTopic',
-			LastPostID='$NewLastPostID',
-			LastPostAuthorID='$NewLastAuthorID',
-			LastPostTime='$NewLastAddedTime'
-			WHERE ID='$OldForumID'");
-		
-		
-		$UpdateArray = array(
-			'NumPosts'=>$NumPosts,
-			'NumTopics'=>'-1',
-			'LastPostID'=>$NewLastPostID,
-			'LastPostAuthorID'=>$NewLastAuthorID,
-			'Username'=>$NewLastAuthorName,
-			'LastPostTopicID'=>$NewLastTopic,
-			'LastPostTime'=>$NewLastAddedTime,
-			'Title'=>$NewLastTitle,
-			'IsLocked'=>$NewLocked,
-			'IsSticky'=>$NewSticky
-			);
-		
-	
-		$Cache->update_row($OldForumID, $UpdateArray);
-
+		update_forum_info($OldForumID, -1, false);
 		// Forum we're moving to
-		
-		$DB->query("SELECT 
-			t.ID,
-			t.LastPostID,
-			t.Title,
-			p.AuthorID,
-			um.Username,
-			p.AddedTime, 
-			(SELECT COUNT(pp.ID) FROM forums_posts AS pp JOIN forums_topics AS tt ON pp.TopicID=tt.ID WHERE tt.ForumID='$ForumID')
-			FROM forums_topics AS t 
-			JOIN forums_posts AS p ON p.ID=t.LastPostID 
-			LEFT JOIN users_main AS um ON um.ID=p.AuthorID
-			WHERE t.ForumID='$ForumID'
-			ORDER BY t.LastPostID DESC LIMIT 1");
-		list($NewLastTopic, $NewLastPostID, $NewLastTitle, $NewLastAuthorID, $NewLastAuthorName, $NewLastAddedTime, $NumPosts) = $DB->next_record();
-		
-		$DB->query("UPDATE forums SET 
-			NumTopics=NumTopics+1, 
-			NumPosts=NumPosts+'$Posts',
-			LastPostTopicID='$NewLastTopic',
-			LastPostID='$NewLastPostID',
-			LastPostAuthorID='$NewLastAuthorID',
-			LastPostTime='$NewLastAddedTime'
-			WHERE ID='$ForumID'");
-		
-		
-		$UpdateArray = array(
-			'NumPosts'=>($NumPosts+$Posts),
-			'NumTopics'=>'+1',
-			'LastPostID'=>$NewLastPostID,
-			'LastPostAuthorID'=>$NewLastAuthorID,
-			'Username'=>$NewLastAuthorName,
-			'LastPostTopicID'=>$NewLastTopic,
-			'LastPostTime'=>$NewLastAddedTime,
-			'Title'=>$NewLastTitle
-			);
-		
-	
-		$Cache->update_row($ForumID, $UpdateArray);
-		
+		update_forum_info($ForumID, 1, false);
 		$Cache->commit_transaction(0);
+            
 	} else { // Editing 
 		$DB->query("SELECT LastPostTopicID FROM forums WHERE ID='$ForumID'");
 		list($LastTopicID) = $DB->next_record();
@@ -254,6 +255,9 @@ if(isset($_POST['delete'])) {
 		$DB->query('UPDATE forums_polls SET Closed=\'0\' WHERE TopicID=\''.$TopicID.'\'');
 		$Cache->delete_value('polls_'.$TopicID);
 	}
-        update_latest_topics();
+      update_latest_topics();
 	header('Location: forums.php?action=viewthread&threadid='.$TopicID.'&page='.$Page);
 }
+
+
+

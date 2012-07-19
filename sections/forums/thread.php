@@ -540,13 +540,12 @@ if(check_perms('site_moderate_forums')) {
 	<br />
 	<div class="head">Edit thread</div>
 	<form action="forums.php" method="post">
-		<div>
+		 
 		<input type="hidden" name="action" value="mod_thread" />
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 		<input type="hidden" name="threadid" value="<?=$ThreadID?>" />
 		<input type="hidden" name="page" value="<?=$Page?>" />
-		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-		</div>
+		 
 		<table cellpadding="6" cellspacing="1" border="0" width="100%" class="border">
 			<tr>
 				<td class="label">Sticky</td>
@@ -596,15 +595,27 @@ foreach ($Forums as $Forum) {
 			</tr>
 <? if(check_perms('site_admin_forums')) { ?>
 			<tr>
+				<td class="label">Merge thread</td>
+				<td>
+                            <input type="checkbox" name="merge" />&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label for="mergethreadid">id of thread to merge <em>into</em></label>
+                            <input type="text" name="mergethreadid" value="" />&nbsp;&nbsp;&nbsp;&nbsp;
+                            <!--<input type="radio" name="mergetitle" value="0" checked="checked" />
+                            <label>merge into this thread</label>
+                            <input type="radio" name="mergetitle" value="1" />
+                            <label>merge into other thread</label>-->
+				</td>
+			</tr>
+			<tr>
 				<td class="label">Delete thread</td>
 				<td>
-					<input type="checkbox" name="delete" tabindex="2" />
+					<input type="checkbox" name="delete" />
 				</td>
 			</tr>
 <? } ?>
 			<tr>
 				<td colspan="2" class="center">
-					<input type="submit" value="Edit thread" tabindex="2" />
+					<input type="submit" value="Edit thread" />
 				</td>
 			</tr>
 
