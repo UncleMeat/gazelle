@@ -12,28 +12,28 @@ class VALIDATE {
 		$this->Fields[$FieldName]['Type']=strtolower($FieldType);
 		$this->Fields[$FieldName]['Required']=$Required;
 		$this->Fields[$FieldName]['ErrorMessage']=$ErrorMessage;
-		if(!empty($Options['maxlength'])) {
+		if(isset($Options['maxlength'])) {
 			$this->Fields[$FieldName]['MaxLength']=$Options['maxlength'];
 		}
-		if(!empty($Options['minlength'])) {
+		if(isset($Options['minlength'])) {
 			$this->Fields[$FieldName]['MinLength']=$Options['minlength'];
 		}
-		if(!empty($Options['comparefield'])) {
+		if(isset($Options['comparefield'])) {
 			$this->Fields[$FieldName]['CompareField']=$Options['comparefield'];
 		}
-		if(!empty($Options['allowperiod'])) {
+		if(isset($Options['allowperiod'])) {
 			$this->Fields[$FieldName]['AllowPeriod']=$Options['allowperiod'];
 		}
-		if(!empty($Options['allowcomma'])) {
+		if(isset($Options['allowcomma'])) {
 			$this->Fields[$FieldName]['AllowComma']=$Options['allowcomma'];
 		}
-		if(!empty($Options['inarray'])) {
+		if(isset($Options['inarray'])) {
 			$this->Fields[$FieldName]['InArray']=$Options['inarray'];
 		}
-		if(!empty($Options['regex'])) {
+		if(isset($Options['regex'])) {
 			$this->Fields[$FieldName]['Regex']=$Options['regex'];
 		}
-		if(!empty($Options['minimages'])) {
+		if(isset($Options['minimages'])) {
 			$this->Fields[$FieldName]['MinImages']=$Options['minimages'];
 		}
 	}
