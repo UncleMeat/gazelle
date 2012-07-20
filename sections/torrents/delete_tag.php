@@ -26,7 +26,7 @@ $DB->query("SELECT COUNT(GroupID) FROM torrents_tags WHERE TagID=".$TagID);
 list($Count) = $DB->next_record();
 if ($TagType == 'genre' || $Count > 0) {
     $Count = $Count > 0 ? $Count : 0;
-    $DB->query("UPDATE tags SET Uses=$Count");
+    $DB->query("UPDATE tags SET Uses=$Count WHERE ID=$TagID");
 } else {
     $DB->query("DELETE FROM tags WHERE ID=".$TagID." AND TagType='other'");
 }

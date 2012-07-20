@@ -60,7 +60,8 @@ if (isset($_POST['doit'])) {
         if ($TagID) {
             $DB->query("UPDATE tags SET TagType = 'genre' WHERE ID = $TagID");
         } else { // Tag doesn't exist yet - create tag
-            $DB->query("INSERT INTO tags (Name, UserID, TagType, Uses) VALUES ('" . $TagName . "', " . $LoggedUser['ID'] . ", 'genre', 0)");
+            $DB->query("INSERT INTO tags (Name, UserID, TagType, Uses) 
+                VALUES ('" . $TagName . "', " . $LoggedUser['ID'] . ", 'genre', 0)");
             $TagID = $DB->inserted_id();
             $Message .= "Created $TagName. ";
         }
@@ -171,8 +172,8 @@ if (isset($_POST['tagtosynomyn'])) {
                         
                         $GroupInfos = $DB->to_array(false, MYSQLI_BOTH);
                         //$Message .= " count groupinfos=".count($GroupInfos) . "  ";
-                        $NumAffectedTorrents = count($GroupInfos);
-                        if ($NumAffectedTorrents > 0) {
+                        $NumAffectedTorrents = 0;
+                        if (count($GroupInfos) > 0) {
                             //$SQL = 'INSERT IGNORE INTO torrents_tags 
                             //                      (TagID, GroupID, PositiveVotes, NegativeVotes, UserID) VALUES';
                             $SQL='';
@@ -183,6 +184,7 @@ if (isset($_POST['tagtosynomyn'])) {
                                 if ($Count==0){ // only insert parenttag into groups where not already present
                                     $SQL .= "$Div ('$ParentTagID', '$GroupID', '$PVotes', '$NVotes', '{$LoggedUser['ID']}')";
                                     $Div = ',';
+                                    $NumAffectedTorrents++;
                                 }
                                 $MsgGroups .= "$Div2$GroupID";
                                 $Div2 = ',';
@@ -216,7 +218,8 @@ if (isset($_POST['tagtosynomyn'])) {
                                 $DB->query($SQL);
                             }
                             // update the Uses where parenttag has been added as a replacement for tag
-                            $DB->query("UPDATE tags SET Uses=Uses+$NumAffectedTorrents WHERE ID='$ParentTagID'");
+                            if($NumAffectedTorrents>0)
+                                $DB->query("UPDATE tags SET Uses=(Uses+$NumAffectedTorrents) WHERE ID='$ParentTagID'");
                             
                             $DB->query("DELETE FROM torrents_tags WHERE TagID = '$TagID'");
                         }
