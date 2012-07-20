@@ -96,38 +96,16 @@ if(empty($IRCKey)) {
 	<div class="box pad">
 		 
 		<center>
- 
-                <iframe src="http://chat.efnet.org:9090/?nick=<?=$nick?>&channels=empornium" width="80%" height="600"></iframe>
-
+ <iframe src="http://irc.emprn.tk/?nick=<?=$nick?>&channels=empornium" width="80%" height="600"></iframe>
+               
 <? /*
-                $nick = ($CURUSER ? $CURUSER['username'] : ('Guest' . rand(1000, 9999)));
-
-$irc_url = 'irc.efnet.net';
-
-$irc_channel = '#empornium';
-
-
-
-			<applet codebase="static/irc/" code="IRCApplet.class" archive="irc.jar,sbox.jar" width=800 height=600>
-				<param name="nick" value="<?=$nick?>">
-				<param name="alternatenick" value="WhatGuest????">
-				<param name="name" value="Java IRC User">
-				<param name="host" value="<?=BOT_SERVER?>">
-				<param name="multiserver" value="true">
-				<param name="autorejoin" value="false">
-
-				<param name="gui" value="sbox">
-				<param name="pixx:highlight" value="true">
-				<param name="pixx:highlightnick" value="true">
-				<param name="pixx:prefixops" value="true">
-				<param name="sbox:scrollspeed" value="5">
-			</applet> */ ?>
+                <iframe src="http://chat.efnet.org:9090/?nick=<?=$nick?>&channels=empornium" width="80%" height="600"></iframe>
+  */ ?>
 		</center>
 	</div>
 </div>
 <?
 	}
  
-
 show_footer();
 ?>
