@@ -113,8 +113,6 @@ function update_forum_info($ForumID, $AdjustNumTopics = 0, $BeginEndTransaction 
 		
     $Cache->update_row($ForumID, $UpdateArray);
     if ($BeginEndTransaction) $Cache->commit_transaction(0);
-    
-    return $NumPosts;
 }
 
 
@@ -133,6 +131,7 @@ if (isset($_POST['merge'])) {
           t.ForumID,
           t.Title,
           f.MinClassWrite,
+          COUNT(p.ID) AS Posts,
           Max(p.ID) AS LastPostID
           FROM forums_topics AS t
           LEFT JOIN forums_posts AS p ON p.TopicID=t.ID
@@ -140,18 +139,19 @@ if (isset($_POST['merge'])) {
           WHERE t.ID='$MergeTopicID'
           GROUP BY p.TopicID");
     if ($DB->record_count()==0) error("Merge failed: Could not find thread with id=$MergeTopicID");
-    list($NewForumID, $MergeTitle, $NFMinClassWrite, $NFLastPostID) = $DB->next_record();
+    list($NewForumID, $MergeTitle, $NFMinClassWrite, $NFPosts, $NFLastPostID) = $DB->next_record();
     
     if($NFMinClassWrite > $LoggedUser['Class']) error(403); 
    
     $MergeTitle = "$MergeTitle (merged with $OldTitle)";
     if($OldLastPostID>$NFLastPostID) $NFLastPostID = $OldLastPostID;
+    $Posts += $NFPosts;
     
     $DB->query("UPDATE forums_polls SET TopicID='$MergeTopicID' WHERE TopicID='$TopicID'");
     $DB->query("UPDATE forums_polls_votes SET TopicID='$MergeTopicID' WHERE TopicID='$TopicID'");
     
     $DB->query("UPDATE forums_posts SET TopicID='$MergeTopicID', Body=CONCAT_WS( '\n\n', Body, '[align=right][size=0][i]merged from thread[/i][br]\'$OldTitle\'[/size][/align]') WHERE TopicID='$TopicID'");
-    $DB->query("UPDATE forums_topics SET Title='$MergeTitle',LastPostID='$NFLastPostID',NumPosts=(NumPosts+$Posts) WHERE ID='$MergeTopicID'");
+    $DB->query("UPDATE forums_topics SET Title='$MergeTitle',LastPostID='$NFLastPostID',NumPosts='$Posts' WHERE ID='$MergeTopicID'");
     
     $DB->query("DELETE FROM forums_topics WHERE ID='$TopicID'");
     
@@ -159,12 +159,12 @@ if (isset($_POST['merge'])) {
 
     if($NewForumID==$OldForumID) { 
         
-        $NumPosts = update_forum_info($OldForumID,0,false);
+        update_forum_info($OldForumID,0,false);
  
     } else { // $NewForumID!=$ForumID  // If we're moving posts into a new forum, change the forum stats
 	
         update_forum_info($OldForumID, -1,false);
-        $NumPosts = update_forum_info($NewForumID, 0,false);
+        update_forum_info($NewForumID, 0,false);
  
         $Cache->delete_value('forums_'.$NewForumID);
     }
@@ -173,7 +173,7 @@ if (isset($_POST['merge'])) {
     $Cache->delete_value('thread_'.$TopicID.'_info');
     $Cache->delete_value('thread_'.$MergeTopicID.'_info');
     
-    $CatalogueID = floor($NumPosts/THREAD_CATALOGUE);
+    $CatalogueID = floor($Posts/THREAD_CATALOGUE);
     for($i=0;$i<=$CatalogueID;$i++) {
         $Cache->delete_value('thread_'.$TopicID.'_catalogue_'.$i);
         $Cache->delete_value('thread_'.$MergeTopicID.'_catalogue_'.$i);

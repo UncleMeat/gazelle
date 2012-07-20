@@ -65,7 +65,11 @@ class TEXT {
            ':arrow2:'           => 'arrow2.gif',
            ':hmm:'           => 'hmm.gif',
            ':hmmm:'           => 'hmmm.gif',
+          
+           ':tiphat:'           => 'tiphat.gif',
+          
            ':huh:'           => 'huh.gif',
+           ':dunno:'           => 'dunno.gif',
            ':geek:'           => 'geek.gif',
            ':look:'           => 'look.gif',
            ':rolleyes:'           => 'rolleyes.gif',
@@ -131,7 +135,6 @@ class TEXT {
            ':smallprint:'         =>  'deal.gif',
           //----------------------------
           
-          
            ':sigh:'           => 'facepalm.gif',
            ':happydancing:'           => 'happydancing.gif',
            ':argh:'           => 'frustrated.gif',
@@ -142,13 +145,12 @@ class TEXT {
            ':fishing:'           => 'fishing.gif',
            ':clover:'           => 'clover.gif',
            ':shit:'           => 'shit.gif',
-           ':cheer:'           => 'cheerlead.gif',
            ':whip:'           => 'whip.gif',
            ':judge:'           => 'judge.gif',
            ':chair:'           => 'chair.gif',
           
            ':pythfoot:'           => 'pythfoot.gif',
-           ':rain:'           => 'rain.gif',
+          
           
            ':boxing:'           => 'boxing.gif',
            ':shoot:'           => 'shoot.gif',
@@ -186,7 +188,7 @@ class TEXT {
            ':gunslinger:'           => 'cowboygun.gif',
            ':pirate:'           => 'pirate.gif',
            ':pirate2:'           => 'pirate2.gif',
-          ':piratehook:'           => 'piratehook.gif',
+           ':piratehook:'           => 'piratehook.gif',
            ':piratewhistle:'           => 'pirate_whistle.gif',
           
            ':punk:'           => 'punk.gif',
@@ -214,14 +216,24 @@ class TEXT {
            ':bann:'           => 'bann.gif',
            ':banstamp:'           => 'banned.gif',
            ':blahblah:'           => 'blahblah.gif',
-           ':bulbar-smiley:'           => 'bulbar-smiley.gif',
+           ':coffee:'           => 'coffee1.gif',
+           ':coffee1:'           => 'coffee3.gif',
+           ':coffee2:'           => 'coffee4.gif',
+           ':coffee3:'           => 'coffee5.gif',
+           ':coffee4:'           => 'bulbar-smiley.gif',
            ':bum:'           => 'bum.gif',
-           ':burgerking:'           => 'burgerking.gif',
+           ':bk:'           => 'burgerking.gif',
            ':carryon:'           => 'carryon.gif',
-           ':chatsmileys:'           => 'chatsmileys.gif',
+           ':chat:'           => 'chatsmileys.gif',
            ':delete:'           => 'delete1-smiley.gif',
            ':drooling:'           => 'drooling_smiley.gif',
            ':drunk:'           => 'drunk2.gif',
+          
+           ':rain:'           => 'rain.gif',
+           ':cheer:'           => 'cheerlead.gif',
+           ':broccolidance:'    =>  'broccolidance.gif',
+           ':bonerdance:'        => 'bonerdance.gif',
+          
            ':dupe:'           => 'dupe.gif',
            ':fly:'           => 'fly.gif',
            ':goldstars:'           => 'goldstars.gif',
@@ -238,7 +250,7 @@ class TEXT {
            ':kickme:'           => 'kickme.gif',
            ':kissass:'           => 'kissass.gif',
            ':lgh:'           => 'lgh.gif',
-           ':Lurking:'           => 'Lurking.gif',
+           ':lurking:'           => 'Lurking.gif',
            ':paranoia:'           => 'paranoia.gif',
            ':paranoid:'           => 'paranoid.gif',
            ':pillowfight:'           => 'pillowfight.gif',
@@ -259,8 +271,7 @@ class TEXT {
            ':topicclosed:'           => 'topicclosed.gif',
            ':viking:'           => 'viking.gif',
            ':whatdidimiss:'           => 'whatdidimiss.gif',
-           ':winnersmiley:'           => 'winnersmiley.gif',
-           ':wtfsign:'           => 'wtfsign.gif',
+           ':ding:'           => 'winnersmiley.gif',
            ':ridicule:'           => 'ridicule.gif',
           
           
@@ -292,8 +303,6 @@ class TEXT {
            ':bombie:'           => 'bomb_ie.gif',
           
           
-          
-          
            ':alcapone:'           => 'alcapone.gif',
            ':aliendance:'           => 'Aliendance.gif',
            ':badboy:'           => 'badboy.gif',
@@ -303,7 +312,7 @@ class TEXT {
            ':bolt:'           => 'Bolt.gif',
           
           
-           ':boxerknockedout:'           => 'boxerknockedout.gif',
+           ':boxerko:'           => 'boxerknockedout.gif',
            ':bunnysmiley:'           => 'bunny-smiley.gif',
            ':buttshake:'           => 'buttshake.gif',
            ':buttlicker:'           => 'sfun_butt-biting.gif',
@@ -314,11 +323,6 @@ class TEXT {
            ':climbing:'           => 'climbing-smiley.gif',
            ':clownhat:'           => 'clown-smiley.gif',
           
-           ':coffee:'           => 'coffee1.gif',
-          
-           ':coffee2:'           => 'coffee3.gif',
-           ':coffee3:'           => 'coffee4.gif',
-           ':coffee4:'           => 'coffee5.gif',
            ':computerpunch:'           => 'computer_punch_smiley.gif',
         
            ':dancelessons:'           => 'Dance_lessons.gif',
@@ -343,7 +347,7 @@ class TEXT {
            ':ghostie:'           => 'ghostie.gif',
            ':giraffe:'           => 'giraffe-smiley.gif',
            ':giveup:'           => 'giveup.gif',
-           ':goldmedalist:'           => 'gold-medalist-smiley.gif',
+           ':goldmedal:'           => 'gold-medalist-smiley.gif',
            ':star:'           => 'goldstar.gif',
            ':goldstar:'           => 'gold-star-smiley.gif',
            ':greenchilli:'           => 'greenchilli.gif',
@@ -360,7 +364,7 @@ class TEXT {
            ':sofanap:'           => 'napsmileyff.gif',
           
            ':saw:'           => 'newsaw.gif',
-           ':officechair:'           => 'officechair.gif',
+           ':chairspin:'           => 'officechair.gif',
            ':offtobed:'           => 'off-to-bed-smiley.gif',
            ':otpatrol:'           => 'offtopic8mg.gif',
            ':pickme:'           => 'pickme.gif',
@@ -439,6 +443,7 @@ class TEXT {
              ':megarant:'           => 'megarant.gif',
            ':adminpower:'           => 'hitler_admin.gif',
           
+           ':wtfsign:'           => 'wtfsign.gif',
            ':stupid:'           => 'stupid.gif',
            ':dots:'           => 'dots.gif',
            ':offtopic:'           => 'offtopic.gif',
@@ -518,6 +523,9 @@ class TEXT {
            ':banaskiing:'           => 'banaSkiing.gif',
            ':banawhip:'           => 'banaWhip.gif',
           
+          
+           ':)'           => 'smile1.gif',
+           ';)'           => 'wink.gif',
           
 	);
 	
