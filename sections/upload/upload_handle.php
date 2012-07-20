@@ -34,7 +34,8 @@ $_POST['desc'] = trim($_POST['desc']);
 $_POST['title'] = trim($_POST['title']);
 
 $Properties = array();
-$NewCategory = $_POST['category'];
+//$NewCategory = db_string($_POST['category']);
+$Properties['Category'] = $_POST['category'];
 $Properties['Title'] = $_POST['title'];
 $Properties['TagList'] = $_POST['tags'];
 $Properties['Image'] = $_POST['image'];
@@ -47,41 +48,31 @@ if ($_POST['album_desc']) {
 }
 $Properties['GroupID'] = $_POST['groupid'];
 $RequestID = $_POST['requestid'];
+
 //******************************************************************************//
 //--------------- Validate data in upload form ---------------------------------//
 //** note: if the same field is set to be validated more than once then each time it is set it overwrites the previous test
 //** ie.. one test per field max, last one set for a specific field is what is used
 $Validate->SetFields('title', '1', 'string', 'Title must be between 2 and 200 characters.', array('maxlength' => 200, 'minlength' => 2));
-
 $Validate->SetFields('tags', '1', 'string', 'You must enter at least one tag. Maximum length is 200 characters.', array('maxlength' => 200, 'minlength' => 2));
-
-//$Validate->SetFields('release_desc', '0', 'string', 'The release description has a minimum length of 10 characters.', array('maxlength' => 1000000, 'minlength' => 10));
-
 $whitelist_regex = $Validate->GetWhitelistRegex();
-
 $Validate->SetFields('image', '0', 'image', 'The image URL you entered was not valid.', array('regex' => $whitelist_regex, 'maxlength' => 255, 'minlength' => 12));
-
-//$Validate->SetFields('desc',
-//	'1','string','The description has a minimum length of 100 characters.',array('maxlength'=>1000000, 'minlength'=>100));
-
 $Validate->SetFields('desc', '1', 'desc', 'Description', array('regex' => $whitelist_regex, 'minimages'=>1, 'maxlength' => 1000000, 'minlength' => 20));
-
-
 $Validate->SetFields('category', '1', 'inarray', 'Please select a category.', array('inarray' => array_keys($NewCategories)));
-
 $Validate->SetFields('rules', '1', 'require', 'Your torrent must abide by the rules.');
 
 $Err = $Validate->ValidateForm($_POST, $Text); // Validate the form
 
 
-
 $File = $_FILES['file_input']; // This is our torrent file
 $TorrentName = $File['tmp_name'];
 
-if (!is_uploaded_file($TorrentName) || !filesize($TorrentName)) {
-    $Err = 'No torrent file uploaded, or file is empty.';
-} else if (substr(strtolower($File['name']), strlen($File['name']) - strlen(".torrent")) !== ".torrent") {
-    $Err = "You seem to have put something other than a torrent file into the upload field. (" . $File['name'] . ").";
+if(!$Err ){ // if we already have an error lets report what we have (much friendlier for fixing your presentation in the upload page as the fileinfo does not carry back)
+    if (!is_uploaded_file($TorrentName) || !filesize($TorrentName)) {
+        $Err = 'No torrent file uploaded, or file is empty.';
+    } else if (substr(strtolower($File['name']), strlen($File['name']) - strlen(".torrent")) !== ".torrent") {
+        $Err = "You seem to have put something other than a torrent file into the upload field. (" . $File['name'] . ").";
+    }
 }
 
 $LogScoreAverage = 0;
@@ -203,7 +194,7 @@ if (!$GroupID) {
     $DB->query("
 		INSERT INTO torrents_group
 		(NewCategoryID, Name, Time, Body, Image, SearchText) VALUES
-		(" . $NewCategory . ", " . $T['Title'] . ", '" . sqltime() . "', '" . db_string($Body) . "', $T[Image], '$SearchText')");
+		(" . $T['Category'] . ", " . $T['Title'] . ", '" . sqltime() . "', '" . db_string($Body) . "', $T[Image], '$SearchText')");
     $GroupID = $DB->inserted_id();
     $Cache->increment('stats_group_count');
 } else {
@@ -216,7 +207,7 @@ if (!$GroupID) {
 }
 
 // lanz: insert the category tag here.
-$Tags = explode(' ', strtolower($NewCategories[$NewCategory]['tag']." ".$Properties['TagList']));
+$Tags = explode(' ', strtolower($NewCategories[$T['Category']]['tag']." ".$Properties['TagList']));
 $Tags = array_unique($Tags);
 if (!$Properties['GroupID']) {
     $TagsAdded=array();
@@ -347,7 +338,7 @@ $TagSQL[] = "Tags=''";
 $SQL.=implode(' OR ', $TagSQL);
 
 $SQL.= ") AND !(" . implode(' OR ', $NotTagSQL) . ")";
-$SQL.=" AND (Categories LIKE '%|" . db_string($NewCategories[$NewCategory]['name']) . "|%' OR Categories='') ";
+$SQL.=" AND (Categories LIKE '%|" . db_string($NewCategories[$T['Category']]['name']) . "|%' OR Categories='') ";
 $SQL .= ") AND UserID != '" . $LoggedUser['ID'] . "' ";
 
 $DB->query($SQL);

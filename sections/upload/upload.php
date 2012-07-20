@@ -103,12 +103,15 @@ foreach ($NewCategories as $cat) {
    echo 'tags['.$cat['id'].']="'.$cat['tag'].'"'.";\n";
 }
 ?>
-if ($('#category').raw().value == 0) {
-    $('#tagtext').html("<strong>No category selected.</strong>");
-} else {
-    $('#tagtext').html("<strong>The tag "+tags[$('#category').raw().value]+" will be added automatically.</strong>");
+    if ($('#category').raw().value == 0) {
+        $('#tagtext').html("<strong>No category selected.</strong>");
+    } else {
+        $('#tagtext').html("<strong>The tag "+tags[$('#category').raw().value]+" will be added automatically.</strong>");
+    }
 }
-}
+<?
+if(!empty($Properties)) echo "addDOMLoadEvent(change_tagtext);";
+?>
 //]]></script>
 
 <div class="thin">

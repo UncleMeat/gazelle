@@ -132,13 +132,16 @@ class VALIDATE {
                                     $Text = new TEXT();
                                 }
                                 $TextLength =  strlen($Text->db_clean_search($ValidateVar));
+                                $RealLength =  strlen($ValidateVar);
                                 
                                 if($TextLength>$MaxLength) { 
                                     $Field['ErrorMessage'] =  "Your ".$Field['ErrorMessage']." must be less than $MaxLength characters long.";  
+                                    $Field['ErrorMessage'] .= " (counted:$TextLength all:$RealLength)";
                                     return $Field['ErrorMessage'];
                                 }
                                 elseif($TextLength<$MinLength) { 
                                     $Field['ErrorMessage'] =  "Your ".$Field['ErrorMessage']." must be more than $MinLength characters long.";  
+                                    $Field['ErrorMessage'] .= " (counted:$TextLength all:$RealLength)";
                                     return $Field['ErrorMessage'];
                                 }
                               

@@ -524,9 +524,6 @@ class TEXT {
            ':banawhip:'           => 'banaWhip.gif',
           
           
-           ':)'           => 'smile1.gif',
-           ';)'           => 'wink.gif',
-          
 	);
 	
       //  font name (display) => fallback fonts (css)

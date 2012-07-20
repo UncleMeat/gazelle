@@ -88,7 +88,10 @@ class TORRENT_FORM {
                                     <select id="category" name="category" onchange="change_tagtext();">
                                         <option value="0">---</option>
                                     <? foreach($this->NewCategories as $category) { ?>
-                                    <option value="<?=$category['id']?>"><?=$category['name']?></option>
+                                        <option value="<?=$category['id']?>"<? 
+                                            if (isset($this->Torrent['Category']) && $this->Torrent['Category']==$category['id']) {
+                                                echo ' selected="selected"';
+                                            }   ?>><?=$category['name']?></option>
                                     <? } ?>
                                     </select>
                                 </td>
