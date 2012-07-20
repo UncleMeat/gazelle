@@ -358,14 +358,11 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
 <form name="filter" method="get" action=''>  
     <div id="search_box" class="filter_torrents">
     <div class="head">
-        Filter		
-        <? if ($AdvancedSearch) { ?>
-            (<a href="torrents.php?action=basic&amp;<?=get_url(array('action')); ?>">Basic Search</a>)
-        <? } else { ?>
-            (<a href="torrents.php?action=advanced&amp;<?= get_url(array('action')) ?>">Advanced Search</a>)
-        <? } ?>
+        <?=($AdvancedSearch?'Advanced':'Basic')?> Search &nbsp;&nbsp;		
+            
+        <a style="font-size:0.7em;" href="torrents.php?action=<?=($AdvancedSearch?'basic':'advanced')?>&amp;<?= get_url(array('action')) ?>">switch to <?=($AdvancedSearch?'basic':'advanced')?> search</a>
+       
     </div>
-<input style="display:none" type="submit" value="Filter Torrents" />
         <div class="box pad">
             <table class="cat_list">
                 <?
@@ -393,6 +390,10 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                 </tr>
                 <tr>
                     <td colspan="7" style="text-align:right"> 
+                        
+                    <input style="float:right;position:relative;left:-12px;bottom:-130px;" 
+                           type="submit" value="Filter Torrents" />
+    
                         <input type="button" value="Reset" onclick="location.href='torrents.php<? if (isset($_GET['action']) && $_GET['action'] == "advanced") { ?>?action=advanced<? } ?>'" />
                 &nbsp;&nbsp;
                 <? if (count($Queries) > 0 || count($SS->Filters) > 0) { ?>
@@ -503,7 +504,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                     <td colspan="3">
                         <input type="text" size="40" id="tags" name="taglist" class="inputtext" title="Supports full boolean search" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />&nbsp;					
                     
-                        <input style="float:right" type="submit" value="Filter Torrents" />
+                       <!-- <input style="float:right" type="submit" value="Filter Torrents" /> -->
                     </td>
                 </tr>
                 <? } else { // BASIC SEARCH ?>
@@ -514,8 +515,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                         <input type="radio" name="tags_type" id="tags_type0" value="0" <? selected('tags_type', 0, 'checked') ?> /><label for="tags_type0"> Any</label>&nbsp;&nbsp;
                         <input type="radio" name="tags_type" id="tags_type1" value="1"  <? selected('tags_type', 1, 'checked') ?> /><label for="tags_type1"> All</label>
                     
-                        <input style="float:right" type="submit" value="Filter Torrents" />
-               
+                       <!-- <input style="float:right" type="submit" value="Filter Torrents" /> -->
                     </td>
                 </tr>
                 <? } ?>
