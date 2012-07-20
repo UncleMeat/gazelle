@@ -42,6 +42,7 @@ class TORRENT_FORM {
 	function head() {
 		global $LoggedUser;
 ?>
+<a id="uploadform"></a>
 <div class="thin">
 <?		if($this->NewTorrent) { ?>
 	<p style="text-align: center;">
@@ -50,7 +51,7 @@ class TORRENT_FORM {
 	</p>
 <?		}
 		if($this->Error) {
-			echo '<div id="messagebar" class="messagebar alert">'.$this->Error.'</div><br />';
+			echo '<div id="messagebar" class="messagebar alert">'.display_str($this->Error).'</div><br />';
 		}
             //for testing form vars set action="http://www.tipjar.com/cgi-bin/test"
 ?>
