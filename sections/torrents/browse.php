@@ -391,7 +391,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                 <tr>
                     <td colspan="7" style="text-align:right"> 
                         
-                    <input style="float:right;position:relative;left:-12px;bottom:-130px;" 
+                    <input style="float:right;position:relative;left:-12px;bottom:-120px;" 
                            type="submit" value="Filter Torrents" />
     
                         <input type="button" value="Reset" onclick="location.href='torrents.php<? if (isset($_GET['action']) && $_GET['action'] == "advanced") { ?>?action=advanced<? } ?>'" />
@@ -407,43 +407,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                 <? } ?>
                     </td>
                 </tr>
-            </table>
-            <table class="noborder" width="100%">
-                <tr>
-                    <td class="label">
-                        <a href="#" onclick="$('#taglist').toggle(); if(this.innerHTML=='(View Tags)'){this.innerHTML='(Hide Tags)';} else {this.innerHTML='(View Tags)';}; return false;"><?= (empty($LoggedUser['ShowTags'])) ? '(View Tags)' : '(Hide Tags)' ?></a>
-                    </td>
-                </tr>
-            </table>
-            <table class="taglist <? if (empty($LoggedUser['ShowTags'])) { ?>hidden<? } ?>" id="taglist">
-                <tr>
-                    <?
-                    $GenreTags = $Cache->get_value('genre_tags');
-                    if (!$GenreTags) {
-                        $DB->query('SELECT Name FROM tags WHERE TagType=\'genre\' ORDER BY Name');
-                        $GenreTags = $DB->collect('Name');
-                        $Cache->cache_value('genre_tags', $GenreTags, 3600 * 6);
-                    }
-
-                    $x = 0;
-                    foreach ($GenreTags as $Tag) {
-                        ?>
-                        <td width="12.5%"><a href="#" onclick="add_tag('<?= $Tag ?>');return false;"><?= $Tag ?></a></td>
-                        <?
-                        $x++;
-                        if ($x % 7 == 0) {
-                            ?>
-                        </tr>
-                        <tr>
-                            <?
-                        }
-                    }
-                    if ($x % 7 != 0) { // Padding
-                        ?>
-                        <td colspan="<?= 7 - ($x % 7) ?>"> </td>
-                    <? } ?>
-                </tr>
-            </table>
+            </table><br/>
             <table class="noborder">
                 <tr>
                     <td class="label">Order by:</td>
@@ -522,8 +486,39 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
             </table>
             <div>
                 <span ><?= number_format($TorrentCount) . ($TorrentCount < SPHINX_MAX_MATCHES && $TorrentCount == $MaxMatches ? '+' : '') ?> Results</span>
-                
+                <br/>
+                <span style="float:right"><a href="#" onclick="$('#taglist').toggle(); if(this.innerHTML=='(View Tags)'){this.innerHTML='(Hide Tags)';} else {this.innerHTML='(View Tags)';}; return false;"><?= (empty($LoggedUser['ShowTags'])) ? '(View Tags)' : '(Hide Tags)' ?></a></span>
+                    
             </div>
+            <table class="noborder" width="100%">
+                <tr class="taglist <? if (empty($LoggedUser['ShowTags'])) { ?>hidden<? } ?>" id="taglist">
+                    <?
+                    $GenreTags = $Cache->get_value('genre_tags');
+                    if (!$GenreTags) {
+                        $DB->query('SELECT Name FROM tags WHERE TagType=\'genre\' ORDER BY Name');
+                        $GenreTags = $DB->collect('Name');
+                        $Cache->cache_value('genre_tags', $GenreTags, 3600 * 6);
+                    }
+
+                    $x = 0;
+                    foreach ($GenreTags as $Tag) {
+                        ?>
+                        <td width="12.5%"><a href="#" onclick="add_tag('<?= $Tag ?>');return false;"><?= $Tag ?></a></td>
+                        <?
+                        $x++;
+                        if ($x % 7 == 0) {
+                            ?>
+                        </tr>
+                        <tr>
+                            <?
+                        }
+                    }
+                    if ($x % 7 != 0) { // Padding
+                        ?>
+                        <td colspan="<?= 7 - ($x % 7) ?>"> </td>
+                    <? } ?>
+                </tr>
+            </table>
         </div>
     </div>
 </form>
