@@ -49,7 +49,7 @@ if ($CountUsers > 0) {
     $Description = db_string(display_str($_POST['addbadge' . $BadgeID]));
     //error($CountUsers);
     $SQL_IN = implode(',',$UserIDs);
-    $DB->query("UPDATE users_info SET AdminComment = CONCAT('".sqltime()." - Recieved Award ". db_string($Name)." ". db_string($Description).db_string(" Given to all members of [url=/groups.php?groupid=$GroupID]$GName group[/url]") ."\n', AdminComment) WHERE UserID IN ($SQL_IN)");
+    $DB->query("UPDATE users_info SET AdminComment = CONCAT('".sqltime()." - Received Award ". db_string($Name)." ". db_string($Description).db_string(" Given to all members of [url=/groups.php?groupid=$GroupID]$GName group[/url]") ."\n', AdminComment) WHERE UserID IN ($SQL_IN)");
 
     $Values = "('".implode("', '".$BadgeID."', '".db_string($Description)."'), ('", $UserIDs)."', '".$BadgeID."', '".db_string($Description)."')";
     $DB->query("INSERT INTO users_badges (UserID, BadgeID, Description) VALUES $Values");

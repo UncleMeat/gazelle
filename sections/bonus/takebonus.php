@@ -85,10 +85,10 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 $Summary = sqltime().' - '.ucfirst("user gave a gift of ".number_format ($Value)." credits to {$P['othername']} Cost: $Cost credits");
                 $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
                 
-                $Summary = sqltime().' - '.ucfirst("user recieved a gift of ".number_format ($Value)." credits from {$LoggedUser['Username']}");	
+                $Summary = sqltime().' - '.ucfirst("user received a gift of ".number_format ($Value)." credits from {$LoggedUser['Username']}");	
                 $UpdateSetOther[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
                 
-                $Summary = sqltime()." | +".number_format ($Value)." credits | ".ucfirst("you recieved a gift of ".number_format ($Value)." credits from {$LoggedUser['Username']}");
+                $Summary = sqltime()." | +".number_format ($Value)." credits | ".ucfirst("you received a gift of ".number_format ($Value)." credits from {$LoggedUser['Username']}");
                 $UpdateSetOther[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                 $UpdateSetOther[]="m.Credits=(m.Credits+'$Value')";
                 $Summary = sqltime()." | -".number_format ($Cost)." credits | ".ucfirst("you gave a gift of ".number_format ($Value)." credits to {$P['othername']}");	
@@ -96,8 +96,8 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
                 $ResultMessage=$Summary;
                     
-                send_pm($OtherID, 0, "Bonus Shop - You recieved a gift of credits", 
-                            "[br]You recieved a gift of ".number_format ($Value)." credits from [user={$LoggedUser['Username']}]{$LoggedUser['Username']}[/user]");
+                send_pm($OtherID, 0, "Bonus Shop - You received a gift of credits", 
+                            "[br]You received a gift of ".number_format ($Value)." credits from [user={$LoggedUser['Username']}]{$LoggedUser['Username']}[/user]");
                 
                 break;
             
@@ -127,17 +127,17 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 $Summary = sqltime().' - '.ucfirst("user gave a gift of -$Value gb to {$P['othername']} Cost: $Cost credits");	
                 $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
                 
-                $Summary = sqltime().' - '.ucfirst("user recieved a gift of -$Value gb from {$LoggedUser['Username']}.");	
+                $Summary = sqltime().' - '.ucfirst("user received a gift of -$Value gb from {$LoggedUser['Username']}.");	
                 $UpdateSetOther[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
                 
-                $Summary = sqltime()." | ".ucfirst("you recieved a gift of -$Value gb from {$LoggedUser['Username']}.");
+                $Summary = sqltime()." | ".ucfirst("you received a gift of -$Value gb from {$LoggedUser['Username']}.");
                 $UpdateSetOther[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                 $Summary = sqltime()." | -$Cost credits | ".ucfirst("you gave a gift of -$Value gb to {$P['othername']}.");	
                 $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
                 
-                send_pm($OtherID, 0, "Bonus Shop - You recieved a gift of -gb", 
-                            "[br]You recieved a gift of -$Value gb from [user={$LoggedUser['Username']}]{$LoggedUser['Username']}[/user]");
+                send_pm($OtherID, 0, "Bonus Shop - You received a gift of -gb", 
+                            "[br]You received a gift of -$Value gb from [user={$LoggedUser['Username']}]{$LoggedUser['Username']}[/user]");
                 
                             
                 $Value = get_bytes($Value.'gb');
