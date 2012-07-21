@@ -450,7 +450,6 @@ li.searchbars {
     margin: 16px 0px 12px 25px;
 }
 
-
 #alerts {
     margin: 0 auto;
     text-align: center;
@@ -1283,6 +1282,10 @@ ul.poll li.graph {
 
 .cat_list tr td {
     border:none;    
+}
+
+.cat_label {
+    font-size: 0.8em;
 }
 
 .taglist {

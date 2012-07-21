@@ -1192,6 +1192,11 @@ ul.poll li.graph {
     border:none;
     background-color: #eff3f6;  /* #e0e8eb; /* #D7E2EF; */
 }
+
+.cat_label {
+    font-size: 0.8em;
+}
+
 .taglist {
     margin-bottom: 15px;
 }
