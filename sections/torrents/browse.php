@@ -490,8 +490,8 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                 <span style="float:right"><a href="#" onclick="$('#taglist').toggle(); if(this.innerHTML=='(View Tags)'){this.innerHTML='(Hide Tags)';} else {this.innerHTML='(View Tags)';}; return false;"><?= (empty($LoggedUser['ShowTags'])) ? '(View Tags)' : '(Hide Tags)' ?></a></span>
                     
             </div>
-            <table class="noborder" width="100%">
-                <tr class="taglist <? if (empty($LoggedUser['ShowTags'])) { ?>hidden<? } ?>" id="taglist">
+            <table width="100%"  class="noborder taglist <? if (empty($LoggedUser['ShowTags'])) { ?>hidden<? } ?>" id="taglist">
+                <tr>
                     <?
                     $GenreTags = $Cache->get_value('genre_tags');
                     if (!$GenreTags) {
@@ -518,7 +518,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                         <td colspan="<?= 7 - ($x % 7) ?>"> </td>
                     <? } ?>
                 </tr>
-            </table>
+            </table><br/>
         </div>
     </div>
 </form>
