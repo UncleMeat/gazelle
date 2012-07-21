@@ -91,12 +91,12 @@ if(empty($IRCKey)) {
 			}
 		}
 ?>
-<div class="thin">
+<div class="">
 	<div class="head">IRC</div>
 	<div class="box pad">
 		 
 		<center>
- <iframe src="http://irc.emprn.tk/?nick=<?=$nick?>&channels=empornium" width="80%" height="600"></iframe>
+ <iframe src="http://irc.emprn.tk/?nick=<?=$nick?>&channels=empornium" width="98%" height="600"></iframe>
                
 <? /*
                 <iframe src="http://chat.efnet.org:9090/?nick=<?=$nick?>&channels=empornium" width="80%" height="600"></iframe>
