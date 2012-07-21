@@ -287,7 +287,6 @@ if(check_perms('admin_reports')) {
 		<ul>
 			<li id="nav_index"><a href="index.php">Home</a></li>
 			<li id="nav_torrents"><a href="torrents.php">Torrents</a></li>
-			<li id="nav_collages"><a href="collages.php">Collages</a></li>
 			<li id="nav_requests"><a href="requests.php">Requests</a></li>
 			<li id="nav_forums"><a href="forums.php">Forums</a></li>
 			<li id="nav_irc"><a href="chat.php">IRC</a></li>
@@ -492,6 +491,8 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                                 <li id="nav_posthistory" class="normal"><a href="userhistory.php?action=posts&amp;group=0&amp;showunread=0">Post History</a></li>
                                 <li id="nav_comments" class="normal"><a onmousedown="Stats('comments');" href="comments.php">Comments</a></li>
                                 <li id="nav_friends" class="normal"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>
+                                
+                                <li id="nav_collages"><a href="collages.php">Collages</a></li>
                                 <li id="nav_logs" class="normal"><a onmousedown="Stats('logs');" href="log.php">Logs</a></li>
                                 <li id="nav_bonus" class="normal"><a onmousedown="Stats('bonus');" href="bonus.php">Bonus</a></li>
                                 <li id="nav_sandbox" class="normal"><a onmousedown="Stats('sandbox');" href="sandbox.php">Sandbox</a></li>
