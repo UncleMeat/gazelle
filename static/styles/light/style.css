@@ -1212,14 +1212,12 @@ ul.poll li.graph {
 }
 
 .filter_torrents {
-    width:850px;
     margin-left:auto;
     margin-right:auto;
     margin-bottom:0px;
 }
 
 .filter_slidetoggle {
-    width:836px;
     margin: 2px auto 15px;
     height:20px;
     text-align: center;

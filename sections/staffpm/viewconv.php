@@ -9,11 +9,9 @@ $Text = new TEXT;
 
 if ($ConvID = (int)$_GET['id']) {
 	// Get conversation info
-	$DB->query("SELECT Subject, UserID, Level, AssignedToUser, Unread, Status FROM staff_pm_conversations WHERE ID=$ConvID");
-	list($Subject, $UserID, $Level, $AssignedToUser, $Unread, $Status) = $DB->next_record();
-	//$DB->query("SELECT Subject, UserID, Level, AssignedToUser, Unread, Status FROM staff_pm_conversations WHERE ID=$ConvID");
-	//??? list($Subject, $UserID, $Level, $AssignedToUser, $Unread, $Status) = $DB->next_record();
-
+	$DB->query("SELECT Subject, UserID, Level, AssignedToUser, Unread, Status, ResolverID FROM staff_pm_conversations WHERE ID=$ConvID");
+	list($Subject, $UserID, $Level, $AssignedToUser, $Unread, $Status, $ResolverID) = $DB->next_record();
+ 
 	if (!(($UserID == $LoggedUser['ID']) || ($AssignedToUser == $LoggedUser['ID']) || (($Level > 0 && $Level <= $LoggedUser['Class']) || ($Level == 0 && $IsFLS)))) {
 	// User is trying to view someone else's conversation
 		error(403);
@@ -29,9 +27,20 @@ if ($ConvID = (int)$_GET['id']) {
 
 	$UserInfo = user_info($UserID);
 	$UserStr = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID'], $UserInfo['Title'], true);
-      $StarterStr = format_username($UserID, $UserInfo['Username'], false, $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID']);
-	$OwnerID = $UserID;
-
+      $OwnerID = $UserID;
+      if($ResolverID) {
+          	$ResolverInfo = user_info($ResolverID);
+            $ResolverStr = format_username($ResolverID, $ResolverInfo['Username'], $ResolverInfo['Donor'], $ResolverInfo['Warned'], $ResolverInfo['Enabled'], $ResolverInfo['PermissionID']);
+	}
+	// Get assigned
+	if ($AssignedToUser == '') { // Assigned to class
+            $Assigned = ($Level == 0) ? "First Line Support" : $ClassLevels[$Level]['Name'];
+            // No + on Sysops
+		if ($Assigned != 'Sysop') { $Assigned .= "+"; }
+      } else {  // Assigned to user
+            $AssignInfo = user_info($AssignedToUser);
+		$Assigned = format_username($AssignedToUser, $AssignInfo['Username'], $AssignInfo['Donor'], $AssignInfo['Warned'], $AssignInfo['Enabled'], $AssignInfo['PermissionID']);
+      }
 ?>
 <div class="thin">
 	<h2>Staff PM - <?=display_str($Subject)?></h2>
@@ -71,18 +80,32 @@ if ($ConvID = (int)$_GET['id']) {
 			// Staff/FLS
 			$UserInfo = user_info($UserID);
 			$UserString = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID'], $UserInfo['Title'], true);
-
-		}
+            }
+            // determine if conversation was started by user or not (checks first record for userID)
+            if (!isset($UserInitiated)) {
+                $UserInitiated = $UserID == $OwnerID;  
+?> 
+                <div class="head">
+                    Status: <?=$Status; if($ResolverStr) echo " by $ResolverStr";echo "&nbsp;&nbsp;";
+                    if($UserInitiated){ ?>
+                    <span style="float:right"><em>Assigned to: <?=$Assigned?></em></span>    
+<?                  }  ?> 
+                </div>
+                <div class="box pad">
+                    <span style="float:right"> 
+<?                      $SenderString = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID']);
+                        echo "sent by $SenderString&nbsp;&nbsp;"; ?>
+                    </span>
+                    Sent to  <?=$UserInitiated?'<strong>Staff</strong>':$UserStr;?> 
+                </div>
+                <br/>
+<?             
+            } 
 ?>
             <div class="head">
                 <?=$UserString;?>
                 <span class="small" style="float:right">
- <?                 // determine if conversation was started by user or not (checks first record for userID)
-                    if (!isset($UserInitiated)) {
-                        $UserInitiated = $UserID == $OwnerID;
-                        echo ($UserInitiated?'started by user':"sent by staff to $StarterStr")."&nbsp;&nbsp;";
-                    }
-                    echo time_diff($SentDate, 2, true);?>
+                <?=time_diff($SentDate, 2, true);?>
                 </span>
             </div>
 		<div class="box vertical_space">
