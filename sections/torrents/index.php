@@ -231,8 +231,8 @@ if(!empty($_REQUEST['action'])) {
                   list($TName, $UploaderID, $Notify)=$DB->next_record();
                   // check whether system should pm uploader there is a new comment
                   if( $Notify == 1 && $UploaderID!=$LoggedUser['ID'] )
-                      send_pm($UploaderID, 0, "Comment recieved on your upload", 
-                              "[br]You have recieved a comment from [url=/user.php?id={$LoggedUser['ID']}]{$LoggedUser['Username']}[/url] on your upload [url=/torrents.php?id=$GroupID&page=$Pages#post$PostID]{$TName}[/url]");
+                      send_pm($UploaderID, 0, "Comment received on your upload", 
+                              "[br]You have received a comment from [url=/user.php?id={$LoggedUser['ID']}]{$LoggedUser['Username']}[/url] on your upload [url=/torrents.php?id=$GroupID&page=$Pages#post$PostID]{$TName}[/url]");
                     
 			header('Location: torrents.php?id='.$GroupID.'&page='.$Pages."#post$PostID");
 			break;
