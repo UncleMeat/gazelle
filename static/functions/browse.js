@@ -4,16 +4,22 @@ function add_tag(tag) {
 	if ($('#tags').raw().value == "") {
 		$('#tags').raw().value = tag;
 	} else {
-		$('#tags').raw().value = $('#tags').raw().value + ", " + tag;
+		$('#tags').raw().value = $('#tags').raw().value + " " + tag;
 	}
+      CursorToEnd($('#tags').raw());
+}
+function CursorToEnd(textarea){ 
+     // set the cursor to the end of the text already present
+    if (textarea.setSelectionRange) { // ff/chrome/opera
+        var len = textarea.value.length * 2; //(*2 for opera stupidness)
+        textarea.setSelectionRange(len, len);
+    } else { // ie8-, fails in chrome
+        textarea.value = textarea.value;
+    }
 }
 
 function Load_Cookie()  {
-			
-	// the div that will be hidden/shown
-	//var panel = jQuery('#search_box');
-	//var button = jQuery('#search_button');
-    
+			 
 	if(jQuery.cookie('searchPanelState') == undefined) {
 		jQuery.cookie('searchPanelState', 'expanded');
 	}

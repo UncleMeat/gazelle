@@ -161,6 +161,18 @@ function Close_Smilies(textID) {
       $('#open_overflow_more'+ textID).hide();
 }
 
+
+function CursorToEnd(textarea){ 
+     // set the cursor to the end of the text already present
+    if (textarea.setSelectionRange) { // ff/chrome/opera
+        var len = textarea.value.length * 2; //(*2 for opera stupidness)
+        textarea.setSelectionRange(len, len);
+    } else { // ie8-, fails in chrome
+        textarea.value = textarea.value;
+    }
+}
+
+
 //made by putyn@tbdev.net lastupdate 28/12/2009
 function wrap(tag, replacetext, attribute, textID) {
   var r = replacetext ? replacetext : "";

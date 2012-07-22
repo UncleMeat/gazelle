@@ -24,13 +24,7 @@ function Update_Message(appendid) {
 function Open_Compose_Message(reportid){
     
     jQuery('#compose'+reportid).slideToggle('slow');
-    var textarea = document.getElementById('message'+reportid);
-     // set the cursor to the end of the text already present
-    if (textarea.setSelectionRange) { // ff/chrome/opera
-        var len = textarea.value.length * 2; //(*2 for opera stupidness)
-        textarea.setSelectionRange(len, len);
-    } else { // ie8-, fails in chrome
-        textarea.value = textarea.value;
-    }
- 
+    
+    CursorToEnd($('#message'+reportid).raw());
+  
 }
