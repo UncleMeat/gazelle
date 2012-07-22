@@ -2025,7 +2025,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `IP` varchar(15) NOT NULL DEFAULT '0.0.0.0',
   `Uploaded` bigint(20) unsigned NOT NULL DEFAULT '0',
   `Downloaded` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `Title` text NOT NULL,
+  `Title` varchar(32) NOT NULL,
   `Enabled` enum('0','1','2') NOT NULL DEFAULT '0',
   `Paranoia` text,
   `Visible` enum('1','0') NOT NULL DEFAULT '1',

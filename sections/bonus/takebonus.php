@@ -158,11 +158,13 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 break;
             
             case 'title':
-                
-                $NewTitle = empty($P['title']) ? '' : display_str($P['title']);
+                //get the unescaped title for len test
+                $NewTitle = empty($_POST['title']) ? '' : $_POST['title'];
                 if(!$NewTitle){
                     $ResultMessage = "Title was not set";
                 } else {
+                    if (strlen($NewTitle) > 32) $NewTitle = substr($NewTitle, 0, 32); 
+                    $NewTitle = db_string( display_str($NewTitle) );
                     $Summary = sqltime().' - '.ucfirst("user bought a new custom title ''$NewTitle''. Cost: $Cost credits");	
                     $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
                     $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought a new custom title ''$NewTitle''.");

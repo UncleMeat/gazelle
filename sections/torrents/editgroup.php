@@ -82,7 +82,10 @@ if(check_perms('torrents_edit')) {
                         <div id="preview" class="hidden"  style="text-align:left;">
                         </div>
                         <div id="editor"> 
-                                <h3>Cover Image</h3>
+                                <h3 style="display:inline">Cover Image</h3>     
+                                 &nbsp;&nbsp; (Enter the full url for your image).</strong><br/>
+                                    Note: Do not add a thumbnail image as cover, rather leave this field blank if you don't have a good cover image or an image of the actor(s).
+                             
                                 <input type="text" name="image" class="long" value="<?=$Image?>" /><br /><br />
                                 <h3>Description</h3>
                                     <? $Text->display_bbcode_assistant("body", get_permissions_advtags($AuthorID)); ?>
@@ -101,7 +104,7 @@ if(check_perms('torrents_edit')) {
       //Users can edit the group info if they've uploaded a torrent to the group or have torrents_edit
 	//if(in_array($LoggedUser['ID'], $DB->collect('UserID')) || check_perms('torrents_edit')) { ?>                 
 <? if(check_perms('torrents_freeleech')) { ?>
-	<h2>Other</h2>
+	<h2>Freeleech</h2>
 	<div class="box pad">
 		<form action="torrents.php" method="post">
 			<input type="hidden" name="action" value="nonwikiedit" />

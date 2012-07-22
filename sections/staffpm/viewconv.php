@@ -86,7 +86,7 @@ if ($ConvID = (int)$_GET['id']) {
                 $UserInitiated = $UserID == $OwnerID;  
 ?> 
                 <div class="head">
-                    Status: <?=$Status; if($ResolverStr && $Status=='Resolved' ) echo " by $ResolverStr";echo "&nbsp;&nbsp;";
+                    Status: <?=$Status; if($ResolverStr && $Status=='Resolved' ) echo " by $ResolverStr";
                     if($UserInitiated){ ?>
                         <span style="float:right"><em>Assigned to: <?=$Assigned?></em></span>    
 <?                  }  ?> 

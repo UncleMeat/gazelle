@@ -195,8 +195,8 @@ class TORRENT_FORM {
                  
 			<tr>
 				<td class="label">Cover Image</td>
-				<td>
-                                    Do not add a thumbnail image as cover, rather leave this field blank if you don't have a good cover image or an image of the actor(s).
+                        <td>    <strong>Enter the full url for your image.</strong><br/>
+                                    Note: Do not add a thumbnail image as cover, rather leave this field blank if you don't have a good cover image or an image of the actor(s).
                              <input type="text" id="image" class="long" name="image" value="<?=display_str($Torrent['Image']) ?>" <?=$this->Disabled?>/>
                         </td>
 			</tr> 

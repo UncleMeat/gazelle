@@ -485,12 +485,10 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                 <? } ?>
             </table>
             <div>
-                <span ><?= number_format($TorrentCount) . ($TorrentCount < SPHINX_MAX_MATCHES && $TorrentCount == $MaxMatches ? '+' : '') ?> Results</span>
-                <br/>
                 <span style="float:right"><a href="#" onclick="$('#taglist').toggle(); if(this.innerHTML=='(View Tags)'){this.innerHTML='(Hide Tags)';} else {this.innerHTML='(View Tags)';}; return false;"><?= (empty($LoggedUser['ShowTags'])) ? '(View Tags)' : '(Hide Tags)' ?></a></span>
                     
             </div>
-            <table width="100%"  class="noborder taglist <? if (empty($LoggedUser['ShowTags'])) { ?>hidden<? } ?>" id="taglist">
+            <table width="100%" class="noborder taglist <? if (empty($LoggedUser['ShowTags'])) { ?>hidden<? } ?>" id="taglist">
                 <tr>
                     <?
                     $GenreTags = $Cache->get_value('genre_tags');
@@ -518,7 +516,11 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                         <td colspan="<?= 7 - ($x % 7) ?>"> </td>
                     <? } ?>
                 </tr>
-            </table><br/>
+            </table>
+            <div>
+                <span><?= number_format($TorrentCount) . ($TorrentCount < SPHINX_MAX_MATCHES && $TorrentCount == $MaxMatches ? '+' : '') ?> Results</span>
+                <br/>
+            </div>
         </div>
     </div>
 </form>
