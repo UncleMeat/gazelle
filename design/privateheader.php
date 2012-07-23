@@ -90,7 +90,7 @@ if ($Mobile) { ?>
                 <span class="inside_stat"> 
     <?
         if($LoggedUser['FLTokens'] > 0) { ?>
-                      <li id="fl_tokens"><a href="bonus.php">Slots</a>: <span class="stat"><?=$LoggedUser['FLTokens']?></span></li>
+                      <li id="fl_tokens"><a href="userhistory.php?action=token_history">Slots</a>: <span class="stat"><?=$LoggedUser['FLTokens']?></span></li>
     <?	} ?>  
                       <li id="credits"><a href="bonus.php">Credits</a>: <span class="stat"><?=number_format((int)$LoggedUser['TotalCredits'])?></span></li>
 
@@ -485,7 +485,7 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                                 <li id="nav_uploaded" class="normal"><a onmousedown="Stats('uploads');" href="torrents.php?type=uploaded&amp;userid=<?=$LoggedUser['ID']?>">Uploads</a></li>
                                 <li id="nav_bookmarks" class="normal"><a onmousedown="Stats('bookmarks');" href="bookmarks.php?type=torrents">Bookmarks</a></li>
 <? if (check_perms('site_torrents_notify')) { ?>
-                                <li id="nav_notifications" class="<?=$NewNotifications ? 'highlight' : 'normal'?>"><a onmousedown="Stats('notifications');" href="user.php?action=notify">Notifications<?=$NewNotifications ? "($NewNotifications)" : ''?></a></li>
+                                <li id="nav_notifications" class="<?=$NewNotifications ? 'highlight' : 'normal'?>"><a onmousedown="Stats('notifications');" href="torrents.php?action=notify">Notifications<?=$NewNotifications ? "($NewNotifications)" : ''?></a></li>
 <? } ?>
                                 <li id="nav_subscriptions" class="<?=$NewSubscriptions ? 'highlight' : 'normal'?>"><a onmousedown="Stats('subscriptions');" href="userhistory.php?action=subscriptions"<?=($NewSubscriptions ? ' class="new-subscriptions"' : '')?>>Subscriptions<?=$NewSubscriptions ? "($NewSubscriptions)" : ''?></a></li>
                                 <li id="nav_posthistory" class="normal"><a href="userhistory.php?action=posts&amp;group=0&amp;showunread=0">Post History</a></li>

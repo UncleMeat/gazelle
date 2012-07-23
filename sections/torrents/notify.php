@@ -60,7 +60,7 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 <table class="border">
 	<tr class="rowb">
 		<td colspan="8" class="center">
-			No new notifications found! <a href="user.php?action=notify">Edit notification filters</a>
+			No new notifications! &nbsp;&nbsp; <a href="user.php?action=notify">Add/Edit notification filters</a>
 		</td>
 	</tr>
 </table>

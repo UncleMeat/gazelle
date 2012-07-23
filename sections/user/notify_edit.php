@@ -34,7 +34,7 @@ foreach($Notifications as $N) { //$N stands for Notifications
 			<tr>
 				<td class="label"><strong>Label</strong></td>
 				<td>
-					<input type="text" name="label" style="width: 100%" />
+					<input type="text" name="label" class="long" />
 					<p class="min_padding">A label for the filter set, to tell different filters apart.</p>
 				</td>
 			</tr>
@@ -50,25 +50,50 @@ foreach($Notifications as $N) { //$N stands for Notifications
 			<tr>
 				<td class="label"><strong>At least one of these tags</strong></td>
 				<td>
-					<textarea name="tags" style="width:100%" rows="2"><?=display_str($N['Tags'])?></textarea>
+					<textarea name="tags" class="long" rows="2"><?=display_str($N['Tags'])?></textarea>
 					<p class="min_padding">Space-separated list - eg. <em>hardcore big.tits anal</em></p>
 				</td>
 			</tr>
 			<tr>
 				<td class="label"><strong>None of these tags</strong></td>
 				<td>
-					<textarea name="nottags" style="width:100%" rows="2"><?=display_str($N['NotTags'])?></textarea>
+					<textarea name="nottags" class="long" rows="2"><?=display_str($N['NotTags'])?></textarea>
 					<p class="min_padding">Space-separated list - eg. <em>hardcore big.tits anal</em></p>
 				</td>
 			</tr>
 			<tr>
-				<td class="label"><strong>Only these categories</strong></td>
-				<td>
-<?	foreach($NewCategories as $Category){ ?>
+				<td colspan="2">
+            <table class="cat_list noborder" style="text-align:left;padding:0px">
+                <tr>
+                    <td colspan="7"> 
+                        <strong>select categories to match</strong>
+                    </td>
+                </tr>
+                <?
+                $row = 'a';
+                $x = 0;
+                reset($NewCategories);
+                foreach ($NewCategories as $Category) {
+                    if ($x % 7 == 0) {
+                        if ($x > 0) {
+                            ?>
+                            </tr>
+                        <? } ?>
+                        <tr class="row<?=$row?>">
+                            <?
+                            $row = $row == 'a' ? 'b' : 'a';
+                        }
+                        $x++;
+                        ?>
+                        <td>
 					<input type="checkbox" name="categories[]" id="<?=$Category['name']?>_<?=$N['ID']?>" value="<?=$Category['name']?>"<? if(in_array($Category['name'], $N['Categories'])) { echo ' checked="checked"';} ?> />
 					<label for="<?=$Category['name']?>_<?=$N['ID']?>"><?=$Category['name']?></label>
-<?	} ?>
-				</td>
+                        </td>
+<?              } ?>                           
+                    <td colspan="<?= 7 - ($x % 7) ?>"></td>
+                </tr>
+            </table>
+                        </td>
 			</tr>
 			<tr>
 				<td colspan="2" class="center">
