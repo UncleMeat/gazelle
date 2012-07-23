@@ -98,13 +98,6 @@ function AlterParanoia() {
 	UncheckIfDisabled($('input[name=p_seeding_l]').raw());
 	UncheckIfDisabled($('input[name=p_leeching_l]').raw());
 	UncheckIfDisabled($('input[name=p_snatched_l]').raw());
-	
-	if ($('input[name=p_uploads_l]').raw().checked) {
-		$('input[type=checkbox][name=p_artistsadded]').raw().checked = true;
-		$('input[type=checkbox][name=p_artistsadded]').raw().disabled = true;
-	} else {
-		$('input[type=checkbox][name=p_artistsadded]').raw().disabled = false;
-	}
 	if ($('input[name=p_collagecontribs_l]').raw().checked) {
 		$('input[name=p_collages_c]').raw().disabled = true;
 		$('input[name=p_collages_l]').raw().disabled = true;
@@ -134,12 +127,11 @@ function ParanoiaReset(checkbox, drops) {
 	var checkboxes = $(':checkbox');
 	for (var i = 0; i < checkboxes.results(); i++) {
 		if (checkboxes.raw(i).name.match(/^p_/) && (checkboxes.raw(i).name != 'p_lastseen')) {
-			if (checkbox == 3) {
-				checkboxes.raw(i).checked = !(checkboxes.raw(i).name.match(/_list$/) || checkboxes.raw(i).name.match(/_l$/));
-			} else {
-				checkboxes.raw(i).checked = checkbox;
-			}
-			AlterParanoia();			
+                if (checkbox == 3) 
+                    checkboxes.raw(i).checked = !(checkboxes.raw(i).name.match(/_list$/) || checkboxes.raw(i).name.match(/_l$/));
+                else 
+                    checkboxes.raw(i).checked = checkbox; 
+                AlterParanoia();			
 		}
 	}
 }
@@ -151,6 +143,17 @@ function ParanoiaResetOff() {
 function ParanoiaResetStats() {
 	ParanoiaReset(3, 0);
 	$('input[name=p_collages_l]').raw().checked = false;
+}
+
+
+function ParanoiaResetStats2() {
+	ParanoiaReset(3, 0);
+	$('input[name=p_torrentcomments_l]').raw().checked = true;
+      $('input[name=p_collagecontribs_l]').raw().checked = true;
+      $('input[name=p_requestsfilled_list]').raw().checked = true;
+      $('input[name=p_requestsvoted_list]').raw().checked = true;
+      $('input[name=p_uploads_l]').raw().checked = true;
+      AlterParanoia();			
 }
 
 function ParanoiaResetOn() {

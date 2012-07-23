@@ -429,6 +429,7 @@ if ($Warned == 1 && $Cur['Warned']=='0000-00-00 00:00:00' && check_perms('users_
 if ($SupportFor!=db_string($Cur['SupportFor']) && (check_perms('admin_manage_fls') || (check_perms('users_mod') && $UserID == $LoggedUser['ID']))) {
 	$UpdateSet[]="SupportFor='$SupportFor'";
 	$EditSummary[]="first-line support status changed to $SupportFor";
+	$Cache->delete_value('fls');
 }
 
 if ($RestrictedForums != db_string($Cur['RestrictedForums']) && check_perms('users_mod')) {
