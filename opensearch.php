@@ -4,7 +4,7 @@ require('classes/config.php');
 
 $SSL = ($_SERVER['SERVER_PORT'] === '443');
 
-$Type = ((!empty($_GET['type']) && in_array($_GET['type'],array('torrents','requests','forums','users','wiki','log')))?$_GET['type']:'torrents');
+$Type = ((!empty($_GET['type']) && in_array($_GET['type'],array('torrents','requests','forums','users','log')))?$_GET['type']:'torrents');
 
 /*
 $FH = fopen(SERVER_ROOT.'/favicon.ico','r');
@@ -43,12 +43,6 @@ switch ($Type) {
 ?>
 	<Url type="text/html" method="get" template="http<?=($SSL?'s':'')?>://<?=SITE_URL?>/user.php?action=search&amp;search={searchTerms}"></Url>
 	<moz:SearchForm>http<?=($SSL?'s':'')?>://<?=SITE_URL?>/user.php?action=search</moz:SearchForm>
-<? 
-		break;
-	case 'wiki':
-?>
-	<Url type="text/html" method="get" template="http<?=($SSL?'s':'')?>://<?=SITE_URL?>/wiki.php?action=search&amp;search={searchTerms}"></Url>
-	<moz:SearchForm>http<?=($SSL?'s':'')?>://<?=SITE_URL?>/wiki.php?action=search</moz:SearchForm>
 <? 
 		break;
 	case 'log':

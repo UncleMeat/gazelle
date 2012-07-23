@@ -300,7 +300,7 @@ echo $Val->GenerateJS('userform');
 				<td class="label">Preset</td>
 				<td>
 					<button type="button" onClick="ParanoiaResetOff()">Show everything</button>
-					<button type="button" onClick="ParanoiaResetStats2()">Show all but current</button>
+					<button type="button" onClick="ParanoiaResetStats2()">Show all but snatches</button>
 					<button type="button" onClick="ParanoiaResetStats()">Show stats only</button>
 					<!--<button type="button" onClick="ParanoiaResetOn()">Show nothing</button>-->
 				</td>

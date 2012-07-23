@@ -401,7 +401,7 @@ if ($Invites!=$Cur['Invites'] && check_perms('users_edit_invites')) {
 }
 
 if ($Warned == 1 && $Cur['Warned']=='0000-00-00 00:00:00' && check_perms('users_warn')) {
-	send_pm($UserID,0,db_string('You have received a warning'),db_string("You have been [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&id=218]warned for $WarnLength week(s)[/url] by [user]".$LoggedUser['Username']."[/user]. The reason given was: $WarnReason"));
+	send_pm($UserID,0,db_string('You have received a warning'),db_string("You have been [url=/articles.php?topic=rules]warned for $WarnLength week(s)[/url] by [url=/user.php?id={$LoggedUser['ID']}]{$LoggedUser['Username']}[/url]. The reason given was: $WarnReason"));
 	$UpdateSet[]="Warned='".sqltime()."' + INTERVAL $WarnLength WEEK";
 	$Msg = "warned for $WarnLength week(s)";
 	if ($WarnReason) { $Msg.=" for $WarnReason"; }
@@ -415,7 +415,7 @@ if ($Warned == 1 && $Cur['Warned']=='0000-00-00 00:00:00' && check_perms('users_
 
 } elseif ($Warned == 1 && $ExtendWarning!='---' && check_perms('users_warn')) {
 	
-	send_pm($UserID,0,db_string('Your warning has been extended'),db_string("Your warning has been extended by $ExtendWarning week(s) by [user]".$LoggedUser['Username']."[/user]. The reason given was: $WarnReason"));
+	send_pm($UserID,0,db_string('Your warning has been extended'),db_string("Your warning has been extended by $ExtendWarning week(s) by [url=/user.php?id={$LoggedUser['ID']}]{$LoggedUser['Username']}[/url]. The reason given was: $WarnReason"));
 	
 	$UpdateSet[]="Warned=Warned + INTERVAL $ExtendWarning WEEK";
 	$Msg = "warning extended by $ExtendWarning week(s)";
@@ -470,7 +470,7 @@ if ($DisableAvatar!=$Cur['DisableAvatar'] && check_perms('users_disable_any')) {
 	$EditSummary[]="avatar status changed";
 	$HeavyUpdates['DisableAvatar']=$DisableAvatar;
 	if (!empty($UserReason)) {
-		send_pm($UserID, 0, db_string('Your avatar privileges have been disabled'),db_string("Your avatar privileges have been disabled. The reason given was: $UserReason. If you would like to discuss this please join ".BOT_DISABLED_CHAN." on our IRC network. Instructions can be found [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&name=IRC+-+How+to+join]here[/url]."));
+		send_pm($UserID, 0, db_string('Your avatar privileges have been disabled'),db_string("Your avatar privileges have been disabled. The reason given was: $UserReason."));
 	}
 }
 
@@ -480,7 +480,7 @@ if ($DisableLeech!=$Cur['can_leech'] && check_perms('users_disable_any')) {
 	$HeavyUpdates['DisableLeech']=$DisableLeech;
 	$HeavyUpdates['CanLeech']=$DisableLeech;
 	if (!empty($UserReason)) {
-		send_pm($UserID, 0, db_string('Your leeching privileges have been disabled'),db_string("Your leeching privileges have been disabled. The reason given was: $UserReason. If you would like to discuss this please join ".BOT_DISABLED_CHAN." on our IRC network. Instructions can be found [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&name=IRC+-+How+to+join]here[/url]."));
+		send_pm($UserID, 0, db_string('Your leeching privileges have been disabled'),db_string("Your leeching privileges have been disabled. The reason given was: $UserReason."));
 	}
 	update_tracker('update_user', array('passkey' => $Cur['torrent_pass'], 'can_leech' => $DisableLeech));
 }
@@ -490,8 +490,8 @@ if ($DisableInvites!=$Cur['DisableInvites'] && check_perms('users_disable_any'))
 	if ($DisableInvites == 1) { 
 		//$UpdateSet[]="Invites='0'"; 
 		if (!empty($UserReason)) {
-			send_pm($UserID, 0, db_string('Your invite privileges have been disabled'),db_string("Your invite privileges have been disabled. The reason given was: $UserReason. If you would like to discuss this please join ".BOT_DISABLED_CHAN." on our IRC network. Instructions can be found [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&name=IRC+-+How+to+join]here[/url]."));
-		}
+			send_pm($UserID, 0, db_string('Your invite privileges have been disabled'),db_string("Your invite privileges have been disabled. The reason given was: $UserReason."));
+            }
 	}
 	$EditSummary[]="invites status changed";
 	$HeavyUpdates['DisableInvites']=$DisableInvites;
@@ -502,7 +502,7 @@ if ($DisablePosting!=$Cur['DisablePosting'] && check_perms('users_disable_posts'
 	$EditSummary[]="posting status changed";
 	$HeavyUpdates['DisablePosting']=$DisablePosting;
 	if (!empty($UserReason)) {
-		send_pm($UserID, 0, db_string('Your forum posting privileges have been disabled'),db_string("Your forum posting privileges have been disabled. The reason given was: $UserReason. If you would like to discuss this please join ".BOT_DISABLED_CHAN." on our IRC network. Instructions can be found [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&name=IRC+-+How+to+join]here[/url]."));
+		send_pm($UserID, 0, db_string('Your forum posting privileges have been disabled'),db_string("Your forum posting privileges have been disabled. The reason given was: $UserReason."));
 	}
 }
 
@@ -511,7 +511,7 @@ if ($DisableForums!=$Cur['DisableForums'] && check_perms('users_disable_posts'))
 	$EditSummary[]="forums status changed";
 	$HeavyUpdates['DisableForums']=$DisableForums;
 	if (!empty($UserReason)) {
-		send_pm($UserID, 0, db_string('Your forum privileges have been disabled'),db_string("Your forum privileges have been disabled. The reason given was: $UserReason. If you would like to discuss this please join ".BOT_DISABLED_CHAN." on our IRC network. Instructions can be found [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&name=IRC+-+How+to+join]here[/url]."));
+		send_pm($UserID, 0, db_string('Your forum privileges have been disabled'),db_string("Your forum privileges have been disabled. The reason given was: $UserReason."));
 	}
 }
 
@@ -520,7 +520,7 @@ if ($DisableTagging!=$Cur['DisableTagging'] && check_perms('users_disable_any'))
 	$EditSummary[]="tagging status changed";
 	$HeavyUpdates['DisableTagging']=$DisableTagging;
 	if (!empty($UserReason)) {
-		send_pm($UserID, 0, db_string('Your tagging privileges have been disabled'),db_string("Your tagging privileges have been disabled. The reason given was: $UserReason. If you would like to discuss this please join ".BOT_DISABLED_CHAN." on our IRC network. Instructions can be found [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&name=IRC+-+How+to+join]here[/url]."));
+		send_pm($UserID, 0, db_string('Your tagging privileges have been disabled'),db_string("Your tagging privileges have been disabled. The reason given was: $UserReason."));
 	}
 }
 
@@ -529,7 +529,7 @@ if ($DisableUpload!=$Cur['DisableUpload'] && check_perms('users_disable_any')) {
 	$EditSummary[]="upload status changed";
 	$HeavyUpdates['DisableUpload']=$DisableUpload;
 	if ($DisableUpload == 1) {
-		send_pm($UserID, 0, db_string('Your upload privileges have been disabled'),db_string("Your upload privileges have been disabled. The reason given was: $UserReason. If you would like to discuss this please join ".BOT_DISABLED_CHAN." on our IRC network. Instructions can be found [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&name=IRC+-+How+to+join]here[/url]."));
+		send_pm($UserID, 0, db_string('Your upload privileges have been disabled'),db_string("Your upload privileges have been disabled. The reason given was: $UserReason."));
 	}
 }
 
@@ -538,7 +538,7 @@ if ($DisablePM!=$Cur['DisablePM'] && check_perms('users_disable_any')) {
 	$EditSummary[]="PM status changed";
 	$HeavyUpdates['DisablePM']=$DisablePM;
 	if (!empty($UserReason)) {
-		send_pm($UserID, 0, db_string('Your PM privileges have been disabled'),db_string("Your PM privileges have been disabled. The reason given was: $UserReason. If you would like to discuss this please join ".BOT_DISABLED_CHAN." on our IRC network. Instructions can be found [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&name=IRC+-+How+to+join]here[/url]."));
+		send_pm($UserID, 0, db_string('Your PM privileges have been disabled'),db_string("Your PM privileges have been disabled. The reason given was: $UserReason."));
 	}
 }
 
@@ -547,7 +547,7 @@ if ($DisableIRC!=$Cur['DisableIRC'] && check_perms('users_disable_any')) {
 	$EditSummary[]="IRC status changed";
 	$HeavyUpdates['DisableIRC']=$DisableIRC;
 	if (!empty($UserReason)) {
-		send_pm($UserID, 0, db_string('Your IRC privileges have been disabled'),db_string("Your IRC privileges have been disabled. The reason given was: $UserReason. If you would like to discuss this please join ".BOT_DISABLED_CHAN." on our IRC network. Instructions can be found [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&name=IRC+-+How+to+join]here[/url]. This loss of privileges does not affect the ability to join and talk to staff in #what.cd-disabled."));
+		send_pm($UserID, 0, db_string('Your IRC privileges have been disabled'),db_string("Your IRC privileges have been disabled. The reason given was: $UserReason."));
 	}
 }
 
@@ -556,7 +556,7 @@ if ($DisableRequests!=$Cur['DisableRequests'] && check_perms('users_disable_any'
 	$EditSummary[]="request status changed";
 	$HeavyUpdates['DisableRequests']=$DisableRequests;
 	if (!empty($UserReason)) {
-		send_pm($UserID, 0, db_string('Your request privileges have been disabled'),db_string("Your request privileges have been disabled. The reason given was: $UserReason. If you would like to discuss this please join ".BOT_DISABLED_CHAN." on our IRC network. Instructions can be found [url=http://".NONSSL_SITE_URL."/wiki.php?action=article&name=IRC+-+How+to+join]here[/url]. This loss of privileges does not affect the ability to join and talk to staff in #what.cd-disabled."));
+		send_pm($UserID, 0, db_string('Your request privileges have been disabled'),db_string("Your request privileges have been disabled. The reason given was: $UserReason."));
 	}
 }
 

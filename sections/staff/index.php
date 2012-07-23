@@ -30,7 +30,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
       </div>
 	<div class="box pad" style="padding:10px;">
 		<h3>First-line Support</h3>
-		<p><strong>These users are not official staff members</strong> - they're users who have volunteered their time to help people in need. Please treat them with respect and read <a href="wiki.php?action=article&amp;id=260">this</a> before contacting them. </p>
+		<p><strong>These users are not official staff members</strong> - they're users who have volunteered their time to help people in need. Please treat them with respect and read <a href="articles.php?topic=ranks#fls">this</a> before contacting them. </p>
 		<table class="staff" width="100%">
 			<tr class="colhead">
 				<td width="300px">Username</td>
