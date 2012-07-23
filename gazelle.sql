@@ -1506,7 +1506,7 @@ CREATE TABLE IF NOT EXISTS `torrents` (
   `DupeReason` varchar(40) DEFAULT NULL,
   `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `Anonymous` enum('0','1') NOT NULL DEFAULT '0',
-  `Description` text,
+  `Thanks` text NOT NULL,
   `Snatched` int(10) unsigned NOT NULL DEFAULT '0',
   `completed` int(11) NOT NULL,
   `announced_http` int(11) NOT NULL,

@@ -16,6 +16,26 @@ function js_pages($Action, $TorrentID, $NumResults, $CurrentPage) {
 
 if(!empty($_REQUEST['action'])) {
 	switch($_REQUEST['action']){
+            case 'thank': // ajax
+			enforce_login();
+			authorize();
+                  
+			//if(!isset($_POST['groupid']) || !is_number($_POST['groupid'])) error(0);
+			
+                  $GroupID = (int)$_POST['groupid'];
+                  
+                  if ($GroupID) {
+                      //$DB->query("UPDATE torrents SET Thanks=CONCAT_WS(', ',Thanks,'$LoggedUser[Username]') WHERE GroupID='$GroupID'");
+
+                      $DB->query("UPDATE torrents SET  Thanks=(IF(Thanks='','$LoggedUser[Username]',CONCAT_WS(', ',Thanks,'$LoggedUser[Username]'))) WHERE GroupID='$GroupID'");
+
+                      $Cache->delete_value('torrent_thanks_'.$GroupID);
+                      echo $LoggedUser[Username];
+                  }
+                  else echo 'err';
+			//header("Location: torrents.php?id=$GroupID#thanks");
+			break;
+                    
             case 'grouplog':
 			enforce_login();
 			include(SERVER_ROOT.'/sections/torrents/grouplog.php');

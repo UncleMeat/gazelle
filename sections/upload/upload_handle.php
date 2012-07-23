@@ -249,12 +249,12 @@ if ($TotalSize < (20*1024*1024*1024)){
 $DB->query("
 	INSERT INTO torrents
 		(GroupID, UserID,
-		info_hash, FileCount, FileList, FilePath, Size, Time, 
-		Description, FreeTorrent) 
+		info_hash, FileCount, FileList, FilePath, Size, 
+		Time, FreeTorrent) 
 	VALUES
 		(" . $GroupID . ", " . $LoggedUser['ID'] . ",
-		'" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", '" . sqltime() . "',
-		'" . $T['TorrentDescription'] . "', '" . $Properties['FreeTorrent'] . "')");
+		'" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", 
+		'" . sqltime() . "', '" . $Properties['FreeTorrent'] . "')");
 
 $Cache->increment('stats_torrent_count');
 $TorrentID = $DB->inserted_id();

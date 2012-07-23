@@ -61,7 +61,7 @@ if(!preg_match("/^".URL_REGEX."$/i", $Image)) {
 $TorrentCache = get_group_info($GroupID, true);
 $GroupName = $TorrentCache[0][0][3];
 
-$Summary = db_string($_POST['summary']);
+//$Summary = db_string($_POST['summary']);
 $Image = db_string($Image);
 $SearchText = db_string($GroupName . ' ' . $Text->db_clean_search($Body));
 $Body =  db_string($Body);
@@ -170,8 +170,11 @@ if($Body != $OrigBody) {
 }
 if($Image != $OrigImage) $LogDetails .= "{$Concat}Image";
 
+if($_POST['summary'] != '') $Summary = db_string(" ({$_POST['summary']})");
+else $Summary='';
+
 write_log("Torrent $TorrentIDs ($OrigName) was edited by ".$LoggedUser['Username']." ($LogDetails)"); //in group $GroupID 
-write_group_log($GroupID, $TorrentIDs, $LoggedUser['ID'], "Torrent edited: $LogDetails", 0);
+write_group_log($GroupID, $TorrentIDs, $LoggedUser['ID'], "Torrent edited: $LogDetails$Summary", 0);
 
 
 header("Location: torrents.php?id=".$GroupID."&did=1");

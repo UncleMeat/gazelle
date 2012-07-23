@@ -109,42 +109,79 @@ function Load_Tools_Cookie()  {
 }
 
 function Details_Toggle() {
-        jQuery('#details_top').slideToggle('700', function(){
-            //if(jQuery.cookie('torrentDetailsState') == 'expanded') {
-            if ($('#slide_button').raw().innerHTML=='Hide Info'){
-                            jQuery.cookie('torrentDetailsState', 'collapsed');
-                            $('#slide_button').raw().innerHTML=('Show Info');
-                            //$('#top_info').show();
-            } else{
-                            jQuery.cookie('torrentDetailsState', 'expanded');
-                            $('#slide_button').raw().innerHTML=('Hide Info');
-                            //$('#top_info').hide();
-            }
-        });
-        return false;
+    var state = new Array();
+    state[1]=((jQuery('#coverimage').is(':hidden'))?'0':'1');
+    
+    jQuery('#details_top').slideToggle('700', function(){
+            
+        if (jQuery('#details_top').is(':hidden')) 
+            jQuery('#slide_button').html('Show Info'); 
+        else
+            jQuery('#slide_button').html('Hide Info');
+            
+        state[0]=((jQuery('#details_top').is(':hidden'))?'0':'1');
+        jQuery.cookie('torrentDetailsState', json.encode(state));
+   
+    });
+    return false;
+}
+
+function Cover_Toggle() {
+
+    jQuery('#coverimage').toggle();
+ 
+    if (jQuery('#coverimage').is(':hidden')) 
+        jQuery('#covertoggle').html('(Show)');
+    else  
+        jQuery('#covertoggle').html('(Hide)');
+            
+    jQuery.cookie('torrentDetailsState', Get_Cookie());
+    return false;
+}
+
+function Get_Cookie() {
+    return json.encode([((jQuery('#details_top').is(':hidden'))?'0':'1'), ((jQuery('#coverimage').is(':hidden'))?'0':'1')]);
 }
 
 
 function Load_Details_Cookie()  {
-			
+ 
 	// the div that will be hidden/shown
 	var panel = jQuery('#details_top');
 	var button = jQuery('#slide_button');
     
 	if(jQuery.cookie('torrentDetailsState') == undefined) {
-		jQuery.cookie('torrentDetailsState', 'expanded');
+		jQuery.cookie('torrentDetailsState', json.encode(['1', '1']));
 	}
-	var state = jQuery.cookie('torrentDetailsState');
+	var state = json.decode( jQuery.cookie('torrentDetailsState') );
       
-	if(state == 'collapsed') {
+	if(state[0] == '0') {
 		panel.hide();
-            //$('#top_info').show();
 		button.text('Show Info');
-	} else {
+	} else
 		button.text('Hide Info');
-      }
+      
+	if(state[1] == '0') {
+		jQuery('#coverimage').hide();
+		jQuery('#covertoggle').text('(Show)');
+      } else 
+		jQuery('#covertoggle').text('(Hide)');
+ 
 }
  
+ function Say_Thanks() {
+    
+    ajax.post("torrents.php?action=thank","thanksform", function (response) {
+        if(response=='err'){
+            alert('Error: GroupID not set!');
+        } else {
+            if($('#thankstext').raw().innerHTML!='') response = ', ' + response;
+            $('#thankstext').raw().innerHTML += response;
+            $('#thanksform').hide();
+            $('#thanksdiv').show();
+        }
+    });
+ }
 
 /* Torrent Details:  Show various tables etc dynamically */
 

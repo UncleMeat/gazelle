@@ -57,7 +57,7 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 
 
 	list($TorrentID,
-		$FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $DoubleSeed, $TorrentTime, $Description, 
+		$FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $DoubleSeed, $TorrentTime, 
 		$FileList, $FilePath, $UserID, $Username, $LastActive,
 		$BadTags, $BadFolders, $BadFiles, $LastReseedRequest, $LogInDB, $HasFile,
             $ReviewID, $Status, $ConvID, $StatusTime, $KillTime, $StatusDescription, $StatusUserID, $StatusUsername) = $TorrentList[0];
@@ -332,32 +332,35 @@ if(check_perms('torrents_review')){
 } // end draw staff tools 
 ?>
  <div id="details_top">
-	<div class="sidebar" style="float: left;">
-                <div class="head"><strong>Cover</strong></div>
-                <div class="box box_albumart">
-			
+    <div class="sidebar" style="float: right;">
 <?
-if ($Image!="") {
-	if(check_perms('site_proxy_images')) {
-		$Image = 'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?i='.urlencode($Image);
-	}
+        if ($Image!="") {
+?>
+            <div class="head">
+                <strong>Cover</strong>
+                <span style="float:right;"><a href="#" id="covertoggle" onclick="Cover_Toggle()">(Hide)</a></span>
+            </div>
+            <div id="coverimage" class="box box_albumart">
+<?
+            if ($Image!="") {
+                if(check_perms('site_proxy_images')) {
+                    $Image = 'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?i='.urlencode($Image);
+                }
 ?>
 			<p align="center"><img style="max-width: 100%;" src="<?=$Image?>" alt="<?=$AltName?>" onclick="lightbox.init(this,220);" /></p>
-<?
-} else {
-?>
+<?          } else { ?>
 			<p align="center"><img src="<?=STATIC_SERVER?>common/noartwork/noimage.png" alt="Click to see full size image" title="Click to see full size image  " width="220" border="0" /></p>
 <?
-}
+            }
 ?>
-		</div>
-      </div>
-          
-	<div class="sidebar" style="float: right;">
-
-                <div class="head"><strong>Tags</strong> <span style="float:right;"><a href="torrents.php?action=tag_synomyns">synomyns</a> | <a href="articles.php?topic=tag">Tagging rules</a></span></div>
-                <div class="box box_tags">			
-                        <div class="tag_inner">
+            </div>
+            <br/>
+<?
+        }
+?>
+        <div class="head"><strong>Tags</strong> <span style="float:right;"><a href="torrents.php?action=tag_synomyns">synonyms</a> | <a href="articles.php?topic=tag">Tagging rules</a></span></div>
+        <div class="box box_tags">			
+                <div class="tag_inner">
 <?
 if(count($Tags) > 0) {
 ?>
@@ -405,7 +408,7 @@ if(count($Tags) > 0) {
 <?
 }
 ?>
-                        </div>
+                </div>
 <?	if(check_perms('site_add_tag')){ ?>
 			<div class="tag_add">
 				<form action="torrents.php" method="post">
@@ -419,7 +422,7 @@ if(count($Tags) > 0) {
 <?
 }
 ?>
-		</div>
+            </div>
 	</div>
 	<div class="middle_column">
             <div class="head">Torrent Info</div>
@@ -647,9 +650,6 @@ if(count($PersonalCollages)>0) {
 <?
 }
 
-        $PermissionsInfo = get_permissions_for_user($UserID);
-        $Body = $Text->full_format($Body, isset($PermissionsInfo['site_advanced_tags']) &&  $PermissionsInfo['site_advanced_tags'] );
-
 ?>
            
         </div>
@@ -659,9 +659,43 @@ if(count($PersonalCollages)>0) {
 	<div class="main_column">
 		<div class="head"><strong>Description</strong></div>
 		<div class="box">
-			<div class="body"><? if ($Body!="") { echo $Body; } else { echo "There is no information on this torrent."; } ?></div>
+			<div class="body">
+<? 
+                        $PermissionsInfo = get_permissions_for_user($UserID);
+                        if($Body!='') {
+                            $Body = $Text->full_format($Body, isset($PermissionsInfo['site_advanced_tags']) &&  $PermissionsInfo['site_advanced_tags'] );
+                            echo $Body;
+                        } else 
+                            echo "There is no information on this torrent.";
+?>
+                  </div>
 		</div>
+            
+		<div class="head">
+            </div>
+		<div class="box pad center">
 <?
+
+    $Thanks = $Cache->get_value('torrent_thanks_'.$GroupID);
+    if($Thanks === false) {
+          $DB->query("SELECT Thanks FROM torrents WHERE GroupID = '$GroupID'");
+          list($Thanks) = $DB->next_record();
+          $Cache->cache_value('torrent_thanks_'.$GroupID, $Thanks);
+    }
+    if (!$Thanks || strpos($Thanks, $LoggedUser['Username'])===false ) {
+?>
+                <form action="torrents.php" method="post" id="thanksform">
+                    <input type="hidden" name="action" value="thank" />
+                    <input type="hidden" name="groupid" value="<?=$GroupID?>" />
+			  <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+                    <input type="button" onclick="Say_Thanks()" value="Thank the uploader!" class="long center" style="font-weight:bold;font-size:larger;" />
+               </form>
+<?  }   ?>
+                <div  id="thanksdiv" class="pad<?if(!$Thanks)echo' hidden';?>" style="text-align:left">
+                    <p><strong>The following people said thanks!</strong> &nbsp;<span id="thankstext"><?=$Thanks?></span></p>
+                </div>
+		</div>
+<? 
 
 $Results = $Cache->get_value('torrent_comments_'.$GroupID);
 if($Results === false) {

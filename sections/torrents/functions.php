@@ -9,12 +9,9 @@ function get_group_info($GroupID, $Return = true) {
 	if(!is_array($TorrentCache) || !isset($TorrentCache[1][0]['LogInDB'])) {
 		// Fetch the group details
 
-		$SQL = "SELECT ";
-
-
-                $SQL.="
-                        g.Body,
-                        g.Image,
+		$SQL = "SELECT
+                    g.Body,
+                    g.Image,
 			g.ID,
 			g.Name,
 			g.NewCategoryID,
@@ -46,7 +43,6 @@ function get_group_info($GroupID, $Return = true) {
 			t.FreeTorrent,
                         t.double_seed,
 			t.Time,
-			t.Description,
 			t.FileList,
 			t.FilePath,
 			t.UserID,

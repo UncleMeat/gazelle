@@ -8,7 +8,7 @@ include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
 $Text = new TEXT;
 
 $GroupAllowed = array('Body', 'Image', 'ID', 'Name', 'NewCategoryID', 'Time');
-$TorrentAllowed = array('ID', 'FileCount', 'Size', 'Seeders', 'Leechers', 'Snatched', 'FreeTorrent', 'Time', 'Description', 'FileList', 'FilePath', 'UserID', 'Username');
+$TorrentAllowed = array('ID', 'FileCount', 'Size', 'Seeders', 'Leechers', 'Snatched', 'FreeTorrent', 'Time', 'FileList', 'FilePath', 'UserID', 'Username');
 
 $GroupID = (int)$_GET['id'];
 
@@ -43,7 +43,6 @@ foreach ($TorrentList as $Torrent) {
 		'snatched' => (int) $Torrent['Snatched'],
 		'freeTorrent' => $Torrent['FreeTorrent'] == 1,
 		'time' => $Torrent['Time'],
-		'description' => $Torrent['Description'],
 		'fileList' => $Torrent['FileList'],
 		'filePath' => $Torrent['FilePath'],
 		'userId' => (int) $Torrent['UserID'],
