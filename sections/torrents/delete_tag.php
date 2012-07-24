@@ -5,15 +5,27 @@ $GroupID = db_string($_GET['groupid']);
 if(!is_number($TagID) || !is_number($GroupID)) {
 	error(404);
 }
-if(!check_perms('site_delete_tag')) {
-	error(403);
-}
 
 $DB->query("SELECT Name, TagType FROM tags WHERE ID='$TagID'");
-if (list($TagName, $TagType) = $DB->next_record()) {
-	$DB->query("INSERT INTO group_log (GroupID, UserID, Time, Info)
-				VALUES ('$GroupID',".$LoggedUser['ID'].",'".sqltime()."','".db_string('Tag "'.$TagName.'" removed from group')."')");
+list($TagName, $TagType) = $DB->next_record();
+if (!$TagName) error(403);
+        
+if(!check_perms('site_delete_tag')) {
+    //only need to check this if not already permitted
+    $DB->query("SELECT t.UserID, tt.UserID 
+                  FROM torrents AS t 
+             LEFT JOIN torrents_tags AS tt 
+                    ON t.GroupID=tt.GroupID 
+                   AND tt.TagID='$TagID'
+                 WHERE t.GroupID='$GroupID'");
+    list($AuthorID,$OwnerID) = $DB->next_record();
+    // must be both torrent owner and tag owner to delete
+    if ($AuthorID!=$OwnerID || $AuthorID!=$LoggedUser['ID']) error(403);
 }
+ 
+$DB->query("INSERT INTO group_log (GroupID, UserID, Time, Info)
+				VALUES ('$GroupID',".$LoggedUser['ID'].",'".sqltime()."','".db_string('Tag "'.$TagName.'" removed from group')."')");
+ 
 
 $DB->query("DELETE FROM torrents_tags_votes WHERE GroupID='$GroupID' AND TagID='$TagID'");
 $DB->query("DELETE FROM torrents_tags WHERE GroupID='$GroupID' AND TagID='$TagID'");

@@ -79,8 +79,9 @@ $LogScoreAverage = 0;
 $SendPM = 0;
 $LogMessage = "";
 $CheckStamp = "";
-    $HideDNU = true;
-    $HideWL = true;
+    
+$HideDNU = true;
+$HideWL = true;
 
 if ($Err) { // Show the upload form, with the data the user entered
     include(SERVER_ROOT . '/sections/upload/upload.php');
@@ -230,7 +231,7 @@ if (!$Properties['GroupID']) {
 
                 $DB->query("INSERT INTO torrents_tags
                             (TagID, GroupID, UserID, PositiveVotes) VALUES
-                            ($TagID, $GroupID, $LoggedUser[ID], 10)
+                            ($TagID, $GroupID, $LoggedUser[ID], 9)
                             ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+1;
                       ");
             }

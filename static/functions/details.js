@@ -9,7 +9,7 @@ function Vote_Tag(tagname, tagid, groupid, way){
         ajax.post('torrents.php?action=vote_tag', ToPost, function (response) { 
             if (response==0) { // already voted so no vote
                 $('#messagebar').add_class('alert');
-                $('#messagebar').html("you have already " + way + " voted for tag '" + tagname +"'");
+                $('#messagebar').html("you have already voted for tag '" + tagname +"'");
             } else if (Math.abs(response)==1) { // vote was counted
                 $('#messagebar').remove_class('alert');
                 $('#messagebar').html("your " + way + " vote was counted for tag '" + tagname +"'");

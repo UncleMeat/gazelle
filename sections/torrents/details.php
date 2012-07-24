@@ -56,18 +56,18 @@ if (empty($TokenTorrents)) {
 show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 
 
-	list($TorrentID,
-		$FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $DoubleSeed, $TorrentTime, 
+list($TorrentID, $FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $DoubleSeed, $TorrentTime, 
 		$FileList, $FilePath, $UserID, $Username, $LastActive,
 		$BadTags, $BadFolders, $BadFiles, $LastReseedRequest, $LogInDB, $HasFile,
             $ReviewID, $Status, $ConvID, $StatusTime, $KillTime, $StatusDescription, $StatusUserID, $StatusUsername) = $TorrentList[0];
 
-	$CanEdit = (check_perms('torrents_edit') ||  ($UserID == $LoggedUser['ID']  ) );
+$IsUploader =  $UserID == $LoggedUser['ID'];
+$CanEdit = (check_perms('torrents_edit') ||  $IsUploader );
 
-	$Reported = false;
-	unset($ReportedTimes);
-	$Reports = $Cache->get_value('reports_torrent_'.$TorrentID);
-	if($Reports === false) {
+$Reported = false;
+unset($ReportedTimes);
+$Reports = $Cache->get_value('reports_torrent_'.$TorrentID);
+if($Reports === false) {
 		$DB->query("SELECT r.ID,
 				r.ReporterID,
 				r.Type,
@@ -79,12 +79,12 @@ show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
 				AND Status != 'Resolved'");
 		$Reports = $DB->to_array();
 		$Cache->cache_value('reports_torrent_'.$TorrentID, $Reports, 0);
-	}	
+}	
         
-        if (count($Reports) > 0) {
+if (count($Reports) > 0) {
             $Title = "This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report');
             $DisplayName .= ' <span style="color: #FF3030; padding: 2px 4px 2px 4px;" title="'.$Title.'">Reported</span>';
-        }
+}
         
 $Icons = '';
 if ( $DoubleSeed == '1' ) $SeedTooltip = "Unlimited Doubleseed"; // a theoretical state?
@@ -366,50 +366,48 @@ if(count($Tags) > 0) {
 ?>
                           <ul class="stats nobullet">
         <?
-              foreach($Tags as $TagKey=>$Tag) {
+                
+            foreach($Tags as $TagKey=>$Tag) {
 
         ?>
                                 <li>
                                       <a href="torrents.php?taglist=<?=$Tag['name']?>" style="float:left; display:block;"><?=display_str($Tag['name'])?></a>
                                       <div style="float:right; display:block; letter-spacing: -1px;">
-        <?		if(check_perms('site_vote_tag')){ 
-            /* ?>
-                                      <a title="Vote down tag '<?=$Tag['name']?>'" href="torrents.php?action=vote_tag&amp;way=down&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;" >[-]</a>
-                                      <?=$Tag['score']?>
-                                      <a title="Vote up tag '<?=$Tag['name']?>'" href="torrents.php?action=vote_tag&amp;way=up&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;">[+]</a>
-        <?	*/
-        ?>
+        <?		if(check_perms('site_vote_tag')){  ?>
                                       <a title="Vote down tag '<?=$Tag['name']?>'" href="#" onclick="Vote_Tag(<?="'{$Tag['name']}',{$Tag['id']},$GroupID,'down'"?>)" style="font-family: monospace;" >[-]</a>
-                                      <span id="tagscore<?=$Tag['id']?>"><?=$Tag['score']?></span>
+                                      <span id="tagscore<?=$Tag['id']?>" style="width:10px;text-align:center;display:inline-block;"><?=$Tag['score']?></span>
                                       <a title="Vote up tag '<?=$Tag['name']?>'" href="#" onclick="Vote_Tag(<?="'{$Tag['name']}',{$Tag['id']},$GroupID,'up'"?>)" style="font-family: monospace;">[+]</a>
       
         <?          
                   } else {  // cannot vote on tags ?>
-                                      <span  title="Your voting privilidges have been removed">&nbsp;<?=$Tag['score']?>&nbsp;&nbsp;</span>
+                                      <span style="width:10px;text-align:center;display:inline-block;" title="You do not have permission to vote on tags"><?=$Tag['score']?></span>
+                                      <span style="font-family: monospace;" >&nbsp;&nbsp;&nbsp;</span>
                                       
         <?		} ?>
         <?		if(check_perms('users_warn')){ ?>
                                       <a title="User that added tag '<?=$Tag['name']?>'" href="user.php?id=<?=$Tag['userid']?>" >[U]</a>
         <?		} ?>
-        <?		if(check_perms('site_delete_tag')){ ?>
-                                      <a title="Delete tag '<?=$Tag['name']?>'" href="torrents.php?action=delete_tag&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" >[X]</a>
+        <?		if(check_perms('site_delete_tag') || ($IsUploader && $LoggedUser['ID']==$Tag['userid'])) { ?>
+                                      <a title="Delete tag '<?=$Tag['name']?>'" href="torrents.php?action=delete_tag&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;">[X]</a>
+        <?		} else { ?>
+                                      <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;</span>
         <?		} ?>
                                       </div>
                                       <br style="clear:both" />
                                 </li>
         <?
-              }
+            }
         ?>
                           </ul>
 <?
 } else {
 ?>
-			There are no tags to display.
+			Please add a tag for this torrent!
 <?
 }
 ?>
                 </div>
-<?	if(check_perms('site_add_tag')){ ?>
+<?	if(check_perms('site_add_tag') ){ ?>
 			<div class="tag_add">
 				<form action="torrents.php" method="post">
 					<input type="hidden" name="action" value="add_tag" />
