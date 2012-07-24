@@ -216,23 +216,15 @@ if (check_perms('users_mod')) {
 }
 //changed check so that FLS as well as staff can see PM's (always restricted by userclass anyway so its just a nicety for FLS)
 if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {
-	/* $NumStaffPMs = $Cache->get_value('num_staff_pms_'.$LoggedUser['ID']);
-	if ($NumStaffPMs === false) {
-            $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations 
-                               WHERE (Status='Unanswered' OR Status='Open')
-                                 AND (AssignedToUser=".$LoggedUser['ID']." OR Level <={$LoggedUser['Class']})");
-		list($NumStaffPMs) = $DB->next_record();
-		$Cache->cache_value('num_staff_pms_'.$LoggedUser['ID'], $NumStaffPMs , 1000);
-	}  */
-        $NumStaffPMs = $Cache->get_value('num_staff_pms_open_'.$LoggedUser['ID']);
-        if ($NumStaffPMs === false) {
+    //$NumStaffPMs = $Cache->get_value('num_staff_pms_open_'.$LoggedUser['ID']);
+    //if ($NumStaffPMs === false) {
             $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations 
                                  WHERE (AssignedToUser={$LoggedUser['ID']} OR Level <={$LoggedUser['Class']}) 
                                    AND Status IN ('Open', 'Unanswered')");
             list($NumStaffPMs) = $DB->next_record();
-            $Cache->cache_value('num_staff_pms_open_'.$UserID, $NumStaffPMs , 1000);
-        }
-	if ($NumStaffPMs > 0) $ModBar[] = '<a href="staffpm.php?view=open">'.$NumStaffPMs.' Staff PMs</a>';
+            //$Cache->cache_value('num_staff_pms_open_'.$UserID, $NumStaffPMs , 1000);
+    //}
+    if ($NumStaffPMs > 0) $ModBar[] = '<a href="staffpm.php?view=open">'.$NumStaffPMs.' Staff PMs</a>';
 }
 
 if(check_perms('admin_reports')) {

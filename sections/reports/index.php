@@ -50,8 +50,8 @@ switch($_REQUEST['action']){
             $Comment=db_string(sqltime()." - {$LoggedUser['Username']} - [url=/staffpm.php?action=viewconv&id=$ConvID]Sent Message to {$_POST['username']}[/url]");
             $DB->query("UPDATE reports SET ConvID=$ConvID, Comment=CONCAT_WS( '\n', Comment, '$Comment') WHERE ID='$ReportID'");
 		
+            $Cache->delete_value('staff_pm_new_'.$ToID);
             header("Location: reports.php#report$ReportID");
-		//header('Location: staffpm.php?action=user_inbox');
             
 		break;
 	case 'stats':

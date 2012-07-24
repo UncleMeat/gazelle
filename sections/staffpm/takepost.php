@@ -39,9 +39,9 @@ if ($Message = db_string($_POST['message'])) {
 			if ($IsFLS) {
 				// FLS/Staff
 				$DB->query("UPDATE staff_pm_conversations SET Date='".sqltime()."', Unread=true, Status='Open' WHERE ID=$ConvID");
-				$Cache->delete_value('num_staff_pms_'.$LoggedUser['ID']);
-				$Cache->delete_value('num_staff_pms_open_'.$LoggedUser['ID']);
-				$Cache->delete_value('num_staff_pms_my_'.$LoggedUser['ID']);
+				//$Cache->delete_value('num_staff_pms_'.$LoggedUser['ID']);
+				//$Cache->delete_value('num_staff_pms_open_'.$LoggedUser['ID']);
+				//$Cache->delete_value('num_staff_pms_my_'.$LoggedUser['ID']);
 			} else {
 				// User
 				$DB->query("UPDATE staff_pm_conversations SET Date='".sqltime()."', Unread=true, Status='Unanswered' WHERE ID=$ConvID");
