@@ -30,7 +30,7 @@ body {
     width: 100%;
     background: #ebebeb;
     font: normal 11pt "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
-    color: #555;
+    color: #333;
 }
 
 /* Common elements */
@@ -245,9 +245,12 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 
 #menu a:hover {
-   background-color: white;
-   color: #005689;
-   text-decoration: none;
+    background-color: white;
+    color: #005689;
+    text-decoration: none;
+    border-radius:5px;
+    -moz-border-radius: 5px; /* for FF5 */
+    -webkit-border-radius: 5px; /* for opera */     
 }
 
 span.infinity {
@@ -322,8 +325,17 @@ span.infinity {
     display: block; 
 }
 
-#userinfo_username li a, #userinfo_tools li a {
-    padding: 2px 0 2px 0;
+#userinfo_username li a, #userinfo_tools li a, #userinfo_major li a, #modbar a {
+    padding: 2px 2px 2px 2px;
+}
+
+#userinfo_username li a:hover, #userinfo_tools li a:hover, #userinfo_major li a:hover, #modbar a:hover {
+    background-color: white;
+    color: #00436b;
+    border-radius: 2px;       /* FF9+ IE9+ */
+    -moz-border-radius: 2px; /* for FF5 */
+    -webkit-border-radius: 2px; /* for opera */
+
 }
 
 #userinfo_username li ul, #userinfo_tools li ul {
@@ -1940,8 +1952,8 @@ a.button:visited {
 }
 
 .overlay, .leftOverlay, .rightOverlay {
-    background-color:  #0173b5;
-    border: 1px solid #00436b;
+    background-color:  #222; /* #0173b5; */
+    border: 1px solid #555; /* #00436b; */
     color: #f2f2f2;
    
 }

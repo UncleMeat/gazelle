@@ -60,13 +60,12 @@ switch($_GET['action']) {
 $DB->query("SELECT n.ID,n.Title,n.Body,n.Time FROM news AS n ORDER BY n.Time DESC");// LIMIT 20
 while(list($NewsID,$Title,$Body,$NewsTime)=$DB->next_record()) {
 ?>
+        <div class="head">
+                <strong><?=display_str($Title) ?></strong> - posted <?=time_diff($NewsTime) ?>
+                - <a href="tools.php?action=editnews&amp;id=<?=$NewsID?>">[Edit]</a> 
+                <a href="tools.php?action=deletenews&amp;id=<?=$NewsID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">[Delete]</a>
+        </div>        
 	<div class="box vertical_space">
-		<div class="head">
-			<strong><?=display_str($Title) ?></strong> - posted <?=time_diff($NewsTime) ?>
-			- <a href="tools.php?action=editnews&amp;id=<?=$NewsID?>">[Edit]</a> 
-			<a href="tools.php?action=deletenews&amp;id=<?=$NewsID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">[Delete]</a>
-		</div>
-		
 		<div class="pad"><?=$Text->full_format($Body, true) ?></div>
 	</div>
 <? } ?>

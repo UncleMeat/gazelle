@@ -256,8 +256,8 @@ if (check_perms('site_collages_manage') && !$Locked) { ?>
 <? } ?>
 	</div>
 	<div class="sidebar">
+		<div class="head colhead_dark"><strong>Category</strong></div>
 		<div class="box">
-			<div class="head"><strong>Category</strong></div>
 			<div class="pad"><a href="collages.php?action=search&amp;cats[<?=(int)$CollageCategoryID?>]=1"><?=$CollageCats[(int)$CollageCategoryID]?></a></div>
 		</div>
 	<!--	<div class="box">
@@ -267,8 +267,8 @@ if (check_perms('site_collages_manage') && !$Locked) { ?>
 <?
 if(check_perms('zip_downloader')){
 ?>
+		<div class="head colhead_dark"><strong>Collector</strong></div>
 		<div class="box">
-			<div class="head colhead_dark"><strong>Collector</strong></div>
 			<div class="pad">
 				<form action="collages.php" method="post">
 				<input type="hidden" name="action" value="download" />
@@ -284,15 +284,15 @@ if(check_perms('zip_downloader')){
 			</div>
 		</div>
 <? } ?>
+		<div class="head colhead_dark"><strong>Stats</strong></div>
 		<div class="box">
-			<div class="head"><strong>Stats</strong></div>
 			<ul class="stats nobullet">
 				<li>Torrents: <?=$NumGroups?></li>
 				<li>Built by <?=count($Users)?> user<?=(count($Users)>1) ? 's' : ''?></li>
 			</ul>
 		</div>
+		<div class="head colhead_dark"><strong>Top tags</strong></div>
 		<div class="box">
-			<div class="head"><strong>Top tags</strong></div>
 			<div class="pad">
 				<ol style="padding-left:5px;">
 <?
@@ -309,8 +309,8 @@ foreach ($Tags as $TagName => $Tag) {
 				</ol>
 			</div>
 		</div>
+		<div class="head colhead_dark"><strong>Top contributors</strong></div>
 		<div class="box">
-			<div class="head"><strong>Top contributors</strong></div>
 			<div class="pad">
 				<ol style="padding-left:5px;">
 <?
@@ -329,8 +329,8 @@ foreach ($Users as $ID => $User) {
 			</div>
 		</div>
 <? if(check_perms('site_collages_manage') && !$Locked) { ?>
+		<div class="head colhead_dark"><strong>Add torrent</strong><span style="float: right"><a href="#" onClick="$('#addtorrent').toggle(); $('#batchadd').toggle(); this.innerHTML = (this.innerHTML == '[Batch Add]'?'[Individual Add]':'[Batch Add]'); return false;">[Batch Add]</a></span></div>
 		<div class="box">
-			<div class="head"><strong>Add torrent</strong><span style="float: right"><a href="#" onClick="$('#addtorrent').toggle(); $('#batchadd').toggle(); this.innerHTML = (this.innerHTML == '[Batch Add]'?'[Individual Add]':'[Batch Add]'); return false;">[Batch Add]</a></span></div>
 			<div class="pad" id="addtorrent">
 				<form action="collages.php" method="post">
 					<input type="hidden" name="action" value="add_torrent" />
@@ -359,8 +359,8 @@ foreach ($Users as $ID => $User) {
 	<div class="main_column">	
 <?	
 if($CollageCovers != 0) { ?>
+		<div class="head" id="coverhead"><strong>Cover Art</strong></div>
 		<div id="coverart" class="box">
-			<div class="head" id="coverhead"><strong>Cover Art</strong></div>
 			<ul class="collage_images" id="collage_page0">
 <?
 	$Page1 = array_slice($Collage, 0, $CollageCovers);
@@ -385,8 +385,8 @@ if($CollageCovers != 0) { ?>
 		</script>
 <?		} 
 } ?>
+                <div class="head"><strong>Description</strong></div>
 		<div class="box">
-			<div class="head"><strong>Description</strong></div>
                   <div class="pad"><?=$Text->full_format($Description, get_permissions_advtags($UserID))?></div>
 		</div>
 		<table class="torrent_table" id="discog_table">

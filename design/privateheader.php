@@ -423,7 +423,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {
 ?>
                 <ul id="userinfo_tools">
-                    <li id="nav_tools"><a href="tools.php">tools</a>
+                    <li id="nav_tools"><a href="tools.php">Tools</a>
                         <ul>
 <?                      if (check_perms('users_groups')) { ?>
                             <li><a href="groups.php">User Groups</a></li>                  
