@@ -28,7 +28,7 @@ darker shade (very top of header):
 
 body {
     width: 100%;
-    background: red; //#ebebeb;
+    background: green; //#ebebeb;
     font: normal 11pt "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
     color: #333;
 }
