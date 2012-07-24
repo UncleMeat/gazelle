@@ -42,7 +42,7 @@ show_header('Edit torrent','bbcode,edittorrent');
 // =====================================================
 //  Do we want users to be able to edit their own titles??
 //  If so then maybe the title edit should be integrated into the main form ?
-if(check_perms('torrents_edit')) {  
+if($CanEdit) {  
 ?> 
 	<h2>Rename Title</h2>
 	<div class="box pad">

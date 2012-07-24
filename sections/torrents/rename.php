@@ -13,7 +13,15 @@ if(empty($NewName)) {
 	error("Torrents cannot have a blank name");
 }
 
-if(!check_perms('torrents_edit')) { error(403); }
+$DB->query("SELECT UserID FROM torrents WHERE GroupID='$GroupID'");
+if($DB->record_count() > 0) {
+    list($AuthorID) = $DB->next_record();
+} else {
+    $AuthorID = null;
+}
+$CanEdit = check_perms('torrents_edit') || ($AuthorID == $LoggedUser['ID']);
+
+if(!$CanEdit) { error(403); }
 
 $Text = new TEXT;
 
