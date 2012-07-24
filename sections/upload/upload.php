@@ -92,7 +92,8 @@ reset($DNU);
 $DB->query("SELECT IF(MAX(t.Time) < '$Updated' OR MAX(t.Time) IS NULL,1,0) FROM torrents AS t
 			WHERE UserID = ".$LoggedUser['ID']);
 list($NewDNU) = $DB->next_record();
-$HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
+// test $HideDNU first as it may have been passed from upload_handle
+if (!$HideDNU) $HideDNU = check_perms('torrents_hide_dnu') && !$NewDNU;
 ?>
 
 <script type="text/javascript">//<![CDATA[
@@ -158,7 +159,8 @@ reset($Whitelist);
 $DB->query("SELECT IF(MAX(t.Time) < '$Updated' OR MAX(t.Time) IS NULL,1,0) FROM torrents AS t
 			WHERE UserID = ".$LoggedUser['ID']);
 list($NewWL) = $DB->next_record();  
-$HideWL = check_perms('torrents_hide_imagehosts') && !$NewWL;
+// test $HideWL first as it may have been passed from upload_handle
+if (!$HideWL) $HideWL = check_perms('torrents_hide_imagehosts') && !$NewWL;
 ?>
 <div class="box pad" style="margin:10px auto;">
 	<span style="float:right;clear:right"><p><?=$NewWL?'<strong class="important_text">':''?>Last Updated: <?=time_diff($Updated)?><?=$NewWL?'</strong>':''?></p></span>
@@ -188,7 +190,7 @@ $HideWL = check_perms('torrents_hide_imagehosts') && !$NewWL;
 <? } ?>
 	</table> 
 </div></div>
-
+<a id="startform"></a>
 <?
 /* -------  Draw upload torrent form  ------- */   
 $TorrentForm->head();

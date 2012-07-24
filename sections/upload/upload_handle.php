@@ -79,6 +79,8 @@ $LogScoreAverage = 0;
 $SendPM = 0;
 $LogMessage = "";
 $CheckStamp = "";
+    $HideDNU = true;
+    $HideWL = true;
 
 if ($Err) { // Show the upload form, with the data the user entered
     include(SERVER_ROOT . '/sections/upload/upload.php');
