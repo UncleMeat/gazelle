@@ -18,13 +18,14 @@ $Result = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 	xu.connectable,
 	xu.uploaded,
 	xu.remaining,
-	xu.useragent
+	xu.useragent,
+      IF(xu.remaining=0,1,0) AS IsSeeder
 	FROM xbt_files_users AS xu
 	LEFT JOIN users_main AS um ON um.ID=xu.uid
 	JOIN torrents AS t ON t.ID=xu.fid
 	WHERE xu.fid='$TorrentID'
 	AND um.Visible='1'
-	ORDER BY xu.uploaded DESC
+	ORDER BY IsSeeder DESC, xu.uploaded DESC
 	LIMIT $Limit");
 $DB->query("SELECT FOUND_ROWS()");
 list($NumResults) = $DB->next_record();
@@ -35,11 +36,11 @@ $DB->set_query_id($Result);
 <? if($NumResults>100) { ?>
 <div class="linkbox"><?=js_pages('show_peers', $_GET['torrentid'], $NumResults, $Page)?></div>
 <? } ?>
-
 <table>
-        <tr class="smallhead">
-            <td colspan="6">Peerlist</td>
-	<tr class="colhead">
+        <tr class="colhead">
+            <td colspan="6">Seeders</td>
+        </tr>
+	<tr class="rowa small">
 		<td>User</td>
 		<td>Active</td>
 
@@ -50,7 +51,27 @@ $DB->set_query_id($Result);
 		<td>Client</td>
 	</tr>
 <?
-while(list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Remaining, $UserAgent) = $DB->next_record()) {
+while(list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Remaining, $UserAgent, $IsSeeder) = $DB->next_record()) {
+    
+    if ($IsSeeder!=$LastIsSeeder){
+?>
+</table>
+<table>
+        <tr class="colhead">
+            <td colspan="6">Leechers</td>
+        </tr>
+	<tr class="rowa small">
+		<td>User</td>
+		<td>Active</td>
+
+		<td>Connectable</td>
+
+		<td>Up</td>
+		<td>%</td>
+		<td>Client</td>
+	</tr>
+<?
+    }
 ?>
 	<tr>
 		<td><?=format_username($PeerUserID, $Username)?></td>
@@ -63,6 +84,7 @@ while(list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Rem
 		<td><?=display_str($UserAgent)?></td>
 	</tr>
 <?
+    $LastIsSeeder = $IsSeeder;
 }
 ?>
 </table>
