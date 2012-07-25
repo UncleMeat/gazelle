@@ -1,7 +1,16 @@
 <?
 
-function compare($X, $Y){
+function compare($X, $Y){ // if this is used anywhere else... 
 	return($Y['score'] - $X['score']);
+}
+function score($X, $Y){
+	return($Y['score'] - $X['score']);
+}
+function added($X, $Y){
+	return($X['id'] - $Y['id']);
+}
+function az($X, $Y){
+	return( strcmp($X['name'], $Y['name']) );
 }
 
 define(MAX_PERS_COLLAGES, 3); // How many personal collages should be shown by default
@@ -28,6 +37,9 @@ $AltName=$GroupName; // Goes in the alt text of the image
 $Title=$GroupName; // goes in <title>
 //$Body = $Text->full_format($Body);
 
+$tagsort = isset($_GET['tsort'])?$_GET['tsort']:'score';
+if(!in_array($tagsort, array('score','az','added'))) $tagsort = 'score';
+
 $Tags = array();
 if ($TorrentTags != '') {
 	$TorrentTags=explode('|',$TorrentTags);
@@ -42,8 +54,12 @@ if ($TorrentTags != '') {
 		$Tags[$TagKey]['id']=$TorrentTagIDs[$TagKey];
 		$Tags[$TagKey]['userid']=$TorrentTagUserIDs[$TagKey];
 	}
-	uasort($Tags, 'compare');
+	uasort($Tags, $tagsort);
 }
+//advance tagsort for link
+if($tagsort=='score') $tagsort='az';
+else if($tagsort=='az') $tagsort='added';
+else $tagsort='score';
 
 $TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 if (empty($TokenTorrents)) {
@@ -358,7 +374,12 @@ if(check_perms('torrents_review')){
 <?
         }
 ?>
-        <div class="head"><strong>Tags</strong> <span style="float:right;"><a href="torrents.php?action=tag_synomyns">synonyms</a> | <a href="articles.php?topic=tag">Tagging rules</a></span></div>
+            <div class="head">
+                <strong><a href="torrents.php?id=<?=$GroupID?>&tsort=<?=$tagsort?>" title="change sort order of tags to <?=$tagsort?>">Tags</a></strong>
+                <span style="float:right;font-size:0.8em;">
+                    <a href="torrents.php?action=tag_synomyns">synonyms</a> | <a href="articles.php?topic=tag">Tagging rules</a>
+                </span>
+            </div>
         <div class="box box_tags">			
                 <div class="tag_inner">
 <?
