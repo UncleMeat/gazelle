@@ -447,6 +447,7 @@ if(count($Tags) > 0) {
             <div class="head">Torrent Info</div>
 		<table class="torrent_table">
 			<tr class="colhead">
+				<td></td>
                         <td width="80%">
                           Name
                         </td>
@@ -512,7 +513,11 @@ $EditionID = 0;
 ?>
 
 			<tr class="groupid_<?=$GroupID?> edition_<?=$EditionID?> group_torrent" style="font-weight: normal;" id="torrent<?=$TorrentID?>">
-                      <td>
+                      <td class="center cats_col" rowspan="2" style="border-bottom:none;border-right:none;">
+                         <? $CatImg = 'static/common/caticons/' . $NewCategories[$GroupCategoryID]['image']; ?>
+                         <div title="<?= $NewCategories[$GroupCategoryID]['tag'] ?>"><img src="<?= $CatImg ?>" /></div>
+                      </td>
+                      <td style="border-bottom:none;border-left:none;">
                           <strong><?=$ExtraInfo; ?></strong>
 						<!-- Uploaded by <?=format_username($UserID, $TorrentUploader)?> <?=time_diff($TorrentTime);?> -->
 
@@ -522,8 +527,14 @@ $EditionID = 0;
 				<td><?=number_format($Seeders)?></td>
 				<td><?=number_format($Leechers)?></td>
 			</tr>
+                  <tr>
+                      <td colspan="5" class="right" style="border-top:none;border-bottom:none;border-left:none;">
+                          <em>Uploaded by   <?=format_username($UserID, $TorrentUploader)?> <?=time_diff($TorrentTime);?> </em>
+                          
+                      </td>
+                  </tr>
 			<tr class="groupid_<?=$GroupID?> edition_<?=$EditionID?> torrentdetails pad" id="torrent_<?=$TorrentID; ?>">
-				<td colspan="5"> 
+				<td colspan="6" style="border-top:none;"> 
                             
 <? if($Seeders == 0){ ?>            
                             <blockquote  style="text-align: center;">
