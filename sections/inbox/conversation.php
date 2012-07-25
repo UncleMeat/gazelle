@@ -74,7 +74,10 @@ $DB->query("SELECT SentDate, SenderID, Body, ID FROM pm_messages AS m WHERE Conv
 
 while(list($SentDate, $SenderID, $Body, $MessageID) = $DB->next_record()) { ?>
         <div class="head">
-                <?=$Users[(int)$SenderID]['UserStr']?> <?=time_diff($SentDate)?> - <a href="#quickpost" onclick="Quote('<?=$MessageID?>','<?=$Users[(int)$SenderID]['Username']?>');">[Quote]</a>	
+                <?=$Users[(int)$SenderID]['UserStr'].' '.time_diff($SentDate);
+                    if($SenderID!=0){ 
+              ?>  - <a href="#quickpost" onclick="Quote('<?=$MessageID?>','<?=$Users[(int)$SenderID]['Username']?>');">[Quote]</a>	
+            <?      }  ?>
         </div>
 	<div class="box vertical_space">
 		<div class="body" id="message<?=$MessageID?>">

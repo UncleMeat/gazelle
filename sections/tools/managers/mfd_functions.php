@@ -20,16 +20,16 @@ function get_warning_message($FirstPart = true, $LastPart = false, $GroupID=0, $
     $Message = '';
     if ($FirstPart){
         if ($Rejected) $Message .= "[br]Unfortunately the fix you made for your upload is not good enough.[br]The following message still applies:[br]";
-        $Message .= "[br]Your upload [url=http://". SITE_URL ."/torrents.php?id=$GroupID]{$TorrentName}[/url] does not meet our standards for uploading and has been marked for deletion.";
+        $Message .= "[br]Your upload [url=/torrents.php?id=$GroupID]{$TorrentName}[/url] does not meet our standards for uploading and has been marked for deletion.";
         $Message .= "[br][br][size=3][b]It will be automatically deleted if you do not fix your upload in the next ". time_diff($KillTime, 1, false)." &nbsp;(".date('M d Y, H:i', ($KillTime)).").[/b][/size]";
         $Message .= '[br][br][b]Reason: [/b]&nbsp;';
     }
     if ($Reason) $Message.= "[color=red][b]{$Reason}[/b][/color]";
     if ($LastPart){
         //$Message .= "[br][b]Time left: [/b]&nbsp; ". time_diff($KillTime, 2, false)." &nbsp;(".date('M d Y, H:i', strtotime($KillTime)).")";
-        $Message .= '[br][br]Please make sure you read the [url=http://'. SITE_URL .'/articles.php?topic=upload]Upload Rules[/url]';
-        $Message .= '[br]You will find useful guides in the [url=http://'. SITE_URL .'/articles.php?topic=tutorials]Tutorials section[/url]';
-        $Message .= '[br]If you need further help please post in the [url=http://'. SITE_URL .'/forums.php?action=viewforum&amp;forumid=17]Help & Support Forum[/url]';
+        $Message .= '[br][br]Please make sure you read the [url=/articles.php?topic=upload]Upload Rules[/url]';
+        $Message .= '[br]You will find useful guides in the [url=/articles.php?topic=tutorials]Tutorials section[/url]';
+        $Message .= '[br]If you need further help please post in the [url=/forums.php?action=viewforum&amp;forumid=6]Help & Support Forum[/url]';
     }
     return $Message;
 }
