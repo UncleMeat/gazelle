@@ -51,6 +51,7 @@ $DB->set_query_id($Result);
 		<td>Client</td>
 	</tr>
 <?
+    $LastIsSeeder = 1;
 while(list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Remaining, $UserAgent, $IsSeeder) = $DB->next_record()) {
     
     if ($IsSeeder!=$LastIsSeeder){
