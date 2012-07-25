@@ -35,7 +35,7 @@ if (isset($_POST['doit'])) {
                 $NotChangeNames[] = $SynName;
         }
         if(count($NotChangeNames)>0){
-            $Message .= "Cannot remove tags from official list that have synomyns: ". implode(', ', $NotChangeNames).". ";
+            $Message .= "Cannot remove tags from official list that have synonyms: ". implode(', ', $NotChangeNames).". ";
             $Result = 0;
         }
         if(count($ChangeIDs)>0){
@@ -49,9 +49,9 @@ if (isset($_POST['doit'])) {
     if ($_POST['newtag']) {
         $Tag = trim($Tag,'.'); // trim dots from the beginning and end
         $Tag = sanitize_tag($_POST['newtag']);
-        $TagName = get_tag_synomyn($Tag);
+        $TagName = get_tag_synonym($Tag);
 
-        if ($Tag != $TagName) // this was a synomyn replacement
+        if ($Tag != $TagName) // this was a synonym replacement
             $Message .= "$Tag = $TagName. ";
 
         $DB->query("SELECT t.ID FROM tags AS t WHERE t.Name LIKE '" . $TagName . "'");
@@ -92,7 +92,7 @@ if (isset($_POST['delsynomyns'])) {
         $OldSynomyns = implode(', ', $OldSynomyns);
         $DB->query("DELETE FROM tag_synomyns WHERE ID IN ($OldSynomyns)");
         $Cache->delete_value('all_synomyns');
-        $Message .= "Deleted synomyns: " . implode(', ', $DeleteCache);
+        $Message .= "Deleted synonyms: " . implode(', ', $DeleteCache);
         $Result = 1;
     }
 }
@@ -134,19 +134,19 @@ if (isset($_POST['tagtosynomyn'])) {
                       GROUP BY t.ID ");
             list($TagName, $NumSynomyns) = $DB->next_record();
             if ($NumSynomyns>0) {
-                $Message .= "Cannot remove tags from official list that have synomyns: $TagName\n";
+                $Message .= "Cannot remove tags from official list that have synonyms: $TagName\n";
                 $TagName = '';
             }
         }
 
         if ($TagName && $ParentTagName) {
 
-            // check this synomyn is not already in syn table 
+            // check this synonym is not already in syn table 
             $DB->query("SELECT ID FROM tag_synomyns WHERE Synomyn LIKE '" . $TagName . "'");
             list($SynID) = $DB->next_record();
 
             if ($SynID) {
-                $Message .= "$TagName already exists as a synomyn for " . get_tag_synomyn($TagName);
+                $Message .= "$TagName already exists as a synonym for " . get_tag_synonym($TagName);
                 $Result = 0;
             } else {
 
@@ -159,7 +159,7 @@ if (isset($_POST['tagtosynomyn'])) {
                 if (isset($_POST['converttag'])) {
                     // convert a synomyn to a tag properly
                     if (!check_perms('site_convert_tags')) {
-                        $Message .= "(You do not have permission to convert an exisiting tag) Added tag $TagName as synomyn for $ParentTagName";
+                        $Message .= "(You do not have permission to convert an exisiting tag) Added tag $TagName as synonym for $ParentTagName";
                     } else {
                         // 'convert refrences to the original tag to parenttag and cleanup db 
              
@@ -172,8 +172,9 @@ if (isset($_POST['tagtosynomyn'])) {
                         
                         $GroupInfos = $DB->to_array(false, MYSQLI_BOTH);
                         //$Message .= " count groupinfos=".count($GroupInfos) . "  ";
-                        $NumAffectedTorrents = 0;
-                        if (count($GroupInfos) > 0) {
+                        $NumAffectedTorrents = count($GroupInfos);
+                        $NumChangedFilelists = 0;
+                        if ($NumAffectedTorrents > 0) {
                             //$SQL = 'INSERT IGNORE INTO torrents_tags 
                             //                      (TagID, GroupID, PositiveVotes, NegativeVotes, UserID) VALUES';
                             $SQL='';
@@ -184,7 +185,7 @@ if (isset($_POST['tagtosynomyn'])) {
                                 if ($Count==0){ // only insert parenttag into groups where not already present
                                     $SQL .= "$Div ('$ParentTagID', '$GroupID', '$PVotes', '$NVotes', '{$LoggedUser['ID']}')";
                                     $Div = ',';
-                                    $NumAffectedTorrents++;
+                                    $NumChangedFilelists++;
                                 }
                                 $MsgGroups .= "$Div2$GroupID";
                                 $Div2 = ',';
@@ -218,20 +219,20 @@ if (isset($_POST['tagtosynomyn'])) {
                                 $DB->query($SQL);
                             }
                             // update the Uses where parenttag has been added as a replacement for tag
-                            if($NumAffectedTorrents>0)
-                                $DB->query("UPDATE tags SET Uses=(Uses+$NumAffectedTorrents) WHERE ID='$ParentTagID'");
+                            if($NumChangedFilelists>0)
+                                $DB->query("UPDATE tags SET Uses=(Uses+$NumChangedFilelists) WHERE ID='$ParentTagID'");
                             
                             $DB->query("DELETE FROM torrents_tags WHERE TagID = '$TagID'");
                         }
                         //// remove old entries for tagID
                         $DB->query("DELETE FROM tags WHERE ID = '$TagID'");
 
-                        $Message .= "Converted tag $TagName to synomyn for $ParentTagName. ";
+                        $Message .= "Converted tag $TagName to synonym for $ParentTagName. ";
                         // probably we should log this action in some way
-                        write_log("Tag $TagName converted to synomyn for tag $ParentTagName, $NumAffectedTorrents tag-torrent links updated $MsgGroups by " . $LoggedUser['Username']);
+                        write_log("Tag $TagName converted to synonym for tag $ParentTagName, $NumAffectedTorrents tag-torrent links updated $MsgGroups by " . $LoggedUser['Username']);
                     }
                 } else {
-                    $Message .= "Added tag $TagName as synomyn for $ParentTagName";
+                    $Message .= "Added tag $TagName as synonym for $ParentTagName";
                 }
             }
         }
@@ -249,24 +250,24 @@ if (isset($_POST['addsynomyn'])) {
  
         $TagName = sanitize_tag(trim($_POST['newsynname'],'.'));
         if ($TagName != '') {
-            // check this synomyn is not already in syn table or tag table
+            // check this synonym is not already in syn table or tag table
             $DB->query("SELECT ID FROM tag_synomyns WHERE Synomyn LIKE '" . $TagName . "'");
             list($SynID) = $DB->next_record();
             if ($SynID) {
-                $Message .= "$TagName already exists as a synomyn for " . get_tag_synomyn($TagName);
+                $Message .= "$TagName already exists as a synonym for " . get_tag_synonym($TagName);
                 $Result = 0;
             } else {
                 $DB->query("SELECT ID FROM tags WHERE Name LIKE '" . $TagName . "'");
                 list($SynID) = $DB->next_record();
                 if ($SynID) {
-                    $Message .= "Cannot add $TagName as a synomyn - already exists as a tag.";
+                    $Message .= "Cannot add $TagName as a synonym - already exists as a tag.";
                     $Result = 0;
-                } else { // Synomyn doesn't exist yet - create
+                } else { // synonym doesn't exist yet - create
                     $DB->query("INSERT INTO tag_synomyns (Synomyn, TagID, UserID) 
                                                         VALUES ('" . $TagName . "', " . $ParentTagID . ", " . $LoggedUser['ID'] . " )");
                     $Cache->delete_value('all_synomyns');
                     $Result = 1;
-                    $Message .= "$TagName created as a synomyn for " . get_tag_synomyn($TagName);
+                    $Message .= "$TagName created as a synonym for " . get_tag_synonym($TagName);
                 }
             }
         }

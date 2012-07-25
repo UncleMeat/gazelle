@@ -156,12 +156,12 @@ if (!$AdvancedSearch) {
             
             if ( ($Tag[0] != '-' && strlen($Tag)>= 2) || strlen($Tag)>= 3 ) {
                 if ($Tag[0] == '-') {
-                    $Tag = '-'. get_tag_synomyn( substr($Tag, 1), false);
+                    $Tag = '-'. get_tag_synonyn( substr($Tag, 1), false);
                     $Tag = str_replace('.', '_', $Tag);
                     $TagListEx[] = '!' . $SS->EscapeString(substr($Tag, 1));
                     unset($TagList[$Key]);
                 } else {
-                    $Tag = get_tag_synomyn($Tag, false);
+                    $Tag = get_tag_synonym($Tag, false);
                     $Tag = str_replace('.', '_', $Tag);
                     $Tag = $SS->EscapeString($Tag);
                 }
@@ -205,11 +205,11 @@ if (!$AdvancedSearch) {
            
             if ( ($Tag[0] != '-' && strlen($Tag)>= 2) || strlen($Tag)>= 3 ) {
                 if ($Tag[0] == '-') {
-                    $Tag = '-'. get_tag_synomyn( substr($Tag, 1), false);
+                    $Tag = '-'. get_tag_synonym( substr($Tag, 1), false);
                     //$TagListEx[] = '!' . $SS->EscapeString(substr($Tag, 1));
                     //unset($TagList[$Key]);
                 } else {
-                    $Tag = get_tag_synomyn($Tag, false);
+                    $Tag = get_tag_synonym($Tag, false);
                     //$Tag = $SS->EscapeString($Tag);
                 }
             } else {

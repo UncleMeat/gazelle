@@ -152,7 +152,7 @@ if(!empty($_REQUEST['action'])) {
 			include(SERVER_ROOT.'/sections/torrents/delete_tag.php');
 			break;
 		
-		case 'tag_synomyns':
+		case 'tag_synonyms':
 			enforce_login();
 			include(SERVER_ROOT.'/sections/torrents/tag_synomyns.php');
 			break;

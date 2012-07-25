@@ -138,7 +138,7 @@ function get_group_requests($GroupID) {
 }
 
 
-function get_tag_synomyn($Tag, $Sanitise = true){
+function get_tag_synonym($Tag, $Sanitise = true){
         global $Cache, $DB;
 
         if ($Sanitise) $Tag = sanitize_tag($Tag);

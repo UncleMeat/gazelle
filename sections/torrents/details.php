@@ -128,13 +128,13 @@ if ($FreeTooltip)
               $AlertClass = '';
           } elseif($_GET['did'] == 3) {
               $ResultMessage = 'Added '. display_str($_GET['addedtag']);
-              if (isset($_GET['synomyn'])) $ResultMessage .= ' as a synomyn of '. display_str($_GET['synomyn']);
+              if (isset($_GET['synonym'])) $ResultMessage .= ' as a synonym of '. display_str($_GET['synonym']);
               $AlertClass = '';
           } elseif($_GET['did'] == 4) {
               $ResultMessage = display_str($_GET['addedtag']). ' is already added.';
               $AlertClass = ' alert';
           } elseif($_GET['did'] == 5) {
-              $ResultMessage = display_str($_GET['synomyn']). ' is a synomyn for '. display_str($_GET['addedtag']). ' which is already added.';
+              $ResultMessage = display_str($_GET['synonym']). ' is a synonym for '. display_str($_GET['addedtag']). ' which is already added.';
               $AlertClass = ' alert';
           }
           if($ResultMessage){
@@ -377,7 +377,7 @@ if(check_perms('torrents_review')){
             <div class="head">
                 <strong><a href="torrents.php?id=<?=$GroupID?>&tsort=<?=$tagsort?>" title="change sort order of tags to <?=$tagsort?>">Tags</a></strong>
                 <span style="float:right;font-size:0.8em;">
-                    <a href="torrents.php?action=tag_synomyns">synonyms</a> | <a href="articles.php?topic=tag">Tagging rules</a>
+                    <a href="torrents.php?action=tag_synonyms">synonyms</a> | <a href="articles.php?topic=tag">Tagging rules</a>
                 </span>
             </div>
         <div class="box box_tags">			
@@ -676,9 +676,12 @@ if(count($PersonalCollages)>0) {
     </div>
       <div style="clear:both"></div>
 	<div class="main_column">
-		<div class="head"><strong>Description</strong></div>
+		<div class="head">
+                <strong>Description</strong>
+                <span style="float:right;"><a href="#" onclick="$('#descbox').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>
+            </div>
 		<div class="box">
-			<div class="body">
+			<div id="descbox" class="body">
 <? 
                         $PermissionsInfo = get_permissions_for_user($UserID);
                         if($Body!='') {

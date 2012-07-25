@@ -37,8 +37,8 @@
             'site_vote_tag' => 'Can vote on tags.',
             'site_add_tag' => 'Can add tags.',
 	'site_delete_tag' => 'Can delete tags.',
-            'site_manage_tags' => 'Can manage official tag list and synomyns.',
-            'site_convert_tags' => 'Can convert tags to synomyns.',
+            'site_manage_tags' => 'Can manage official tag list and synonyms.',
+            'site_convert_tags' => 'Can convert tags to synonyms.',
      
             'site_manage_shop' => 'Can manage shop.',
             'site_manage_badges' => 'Can manage badges.',
@@ -274,8 +274,8 @@ function permissions_form(){ ?>
 					<? display_perm('admin_manage_forums', 'Can manage forums (add/edit/delete)'); ?>
 					<? display_perm('admin_manage_fls', 'Can manage FLS'); ?>
                             
-                                        <? display_perm('site_manage_tags', 'Can manage official tag list and synomyns.'); ?>
-                                        <? display_perm('site_convert_tags', 'Can convert tags to synomyns.'); ?>
+                                        <? display_perm('site_manage_tags', 'Can manage official tag list and synonyms.'); ?>
+                                        <? display_perm('site_convert_tags', 'Can convert tags to synonyms.'); ?>
                                         <? display_perm('site_manage_badges', 'Can manage badges.'); ?>
                                         <? display_perm('site_manage_awards', 'Can manage awards schedule.'); ?>
                                         <? display_perm('site_manage_shop', 'Can manage bonus shop items.'); ?>

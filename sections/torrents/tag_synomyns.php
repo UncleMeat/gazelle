@@ -49,7 +49,7 @@ for ($i = 0; $i < $TagCount / 3; $i++) {
         </div>
     </div>
     <br />
-    <h2>Tag Synomyns</h2>
+    <h2>Tag Synonyms</h2>
     
     <div class="tagtable">
 
