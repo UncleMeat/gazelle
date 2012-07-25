@@ -607,6 +607,16 @@ function print_latest_forum_topics() {
         echo "</div>";
     }
 }
+
+// for getting an article to display on some other page 
+function get_article($TopicID){
+    global $DB;
+    $TopicID = db_string($TopicID);
+    $DB->query("SELECT Body FROM articles WHERE TopicID='$TopicID'");
+    list($Body) = $DB->next_record();
+    return $Body;
+}
+
 // This function is slow. Don't call it unless somebody's logging in.
 function site_ban_ip($IP) {
     global $DB, $Cache;

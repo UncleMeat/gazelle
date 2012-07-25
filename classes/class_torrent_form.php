@@ -168,14 +168,18 @@ class TORRENT_FORM {
 						<option>---</option>
 <?				foreach(display_array($OfficialTags) as $Tag) { ?>
 						<option value="<?=$Tag ?>"><?=$Tag ?></option>
-<?				} ?>
+<?				}   ?>
 					</select>
-<?			} ?> 
+<?			}         ?> 
 					<input type="text" id="tags" name="tags" class="medium" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>/>
 					<br />
-					Tags should be separated with spaces, and you should use a period ('.') to separate words inside a tag.
+                              <? 
+                              $taginfo = get_article('tag');
+                              if($taginfo) echo $Text->full_format($taginfo, true); 
+                              ?>
+					<!--Tags should be separated with spaces, and you should use a period ('.') to separate words inside a tag.
 					<br /><br />
-					There is a list of official tags to the left of the text box. Please use these tags instead of 'unofficial' tags.  <strong>Please note that the '2000s' tag refers to produced between 2000 and 2009.</strong>
+					There is a list of official tags to the left of the text box. Please use these tags instead of 'unofficial' tags.
 					<br /><br />
 					Avoid abbreviations if at all possible. So instead of tagging as '<strong style="color:red;">hc</strong>', tag it as '<strong style="color:green;">hardcore</strong>'. Make sure that you use correct spelling. 
 					<br /><br />
@@ -183,7 +187,7 @@ class TORRENT_FORM {
 					<br /><br />
 					Don't use 'useless' tags, such as '<strong style="color:red;">awesome</strong>', etc.
 					<br /><br />
-					<strong>Try to use offical tags first before adding non offical tags, besides porn star names.</strong>
+					<strong>Try to use offical tags first before adding non offical tags, besides porn star names.</strong> -->
 				</td>
 			</tr>
 		</table> 
