@@ -100,16 +100,17 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests,bbc
 				<tr>
 					<td class="label">Title</td>
 					<td>
-						<input type="text" name="title" size="45" value="<?=(!empty($Title) ? display_str($Title) : '')?>" />
+						<input type="text" name="title" class="long" value="<?=(!empty($Title) ? display_str($Title) : '')?>" />
 					</td>
 				</tr>
 <?	} ?>
 <?	if($NewRequest || $CanEdit) { ?>
 				<tr id="image_tr">
-					<td class="label">Image</td>
-					<td>
-						<input type="text" name="image" size="45" value="<?=(!empty($Image) ? $Image : '')?>" />
-					</td>
+                            <td class="label">Cover Image</td>
+                            <td>    <strong>Enter the full url for your image.</strong><br/>
+                                        Note: Do not add a thumbnail image as cover, rather leave this field blank if you don't have a good cover image or an image of the actor(s).
+                                 <input type="text" id="image" class="long" name="image" value="<?=(!empty($Image) ? $Image : '')?>" />
+                            </td>
 				</tr>
 <?	} ?>
 				<tr>
@@ -129,11 +130,12 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests,bbc
 							<option value="<?=$Genre ?>"><?=$Genre ?></option>
 <?	} ?>
 						</select>
-						<input type="text" id="tags" name="tags" size="45" value="<?=(!empty($Tags) ? display_str($Tags) : '')?>" />
+						<input type="text" id="tags" name="tags" class="medium"  value="<?=(!empty($Tags) ? display_str($Tags) : '')?>" />
 						<br />
-						Tags should be separated by a space, and you should use a period ('.') to bind words inside a tag - eg. '<strong style="color:green;">big.breast</strong>'. 
-						<br /><br />
-						There is a list of official tags to the left of the text box. Please use these tags instead of 'unofficial' tags (eg. use the official '<strong style="color:green;">drum.and.bass</strong>' tag, instead of an unofficial '<strong style="color:red;">dnb</strong>' tag.)
+					<? 
+                                      $taginfo = get_article('tag');
+                                      if($taginfo) echo $Text->full_format($taginfo, true); 
+                              ?>
 					</td>
 				</tr>
 				<tr>

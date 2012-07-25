@@ -111,7 +111,7 @@ class VALIDATE {
                                 if(isset($Field['Regex'])) { $WLRegex=$Field['Regex']; } else { $WLRegex='/nohost.com/'; }
                               
                                 // get validation result
-                                $result = $this->ValidateImageUrl($ValidateVar, $MinLength, $MaxLength, $WLRegex); 
+                                $result = ValidateImageUrl($ValidateVar, $MinLength, $MaxLength, $WLRegex); 
                                 if ($result !== TRUE){ return $result; } 
                                
 				} elseif($Field['Type']=="desc") {
@@ -159,7 +159,7 @@ class VALIDATE {
                                          // validate each image url  
                                          // (for the moment use hardcoded image lengths but ideally they should
                                          // probably be taken from some new option fields).
-                                        $result = $this->ValidateImageUrl($imageurls[1][$j], 12, 255, $WLRegex); 
+                                        $result = ValidateImageUrl($imageurls[1][$j], 12, 255, $WLRegex); 
                                         if ($result !== TRUE){ return $Field['ErrorMessage'].' field: ' .$result; } 
                                      }
                                 } elseif($MinImages> 0 && $num < $MinImages) {  // if there are no img tags then it validates unless required flag is set
@@ -180,74 +180,11 @@ class VALIDATE {
 			}  // if (dovalidation)
 		} // foreach
 	} // function
-
-     
-     
-     
-     /* --------------------------------
-      * Validates the passed imageurl with the passed parameters
-        Returns TRUE if it validates and a user readable error message if it fails 
-      ----------------------------------- */
-     private function ValidateImageUrl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
-          
-        $ErrorMessage = "'$Imageurl' is not a valid url.";
-        
-        if(strlen($Imageurl)>$MaxLength) { 
-            return "$ErrorMessage (must be < $MaxLength characters)";  
-        }
-        elseif(strlen($Imageurl)<$MinLength) { 
-            return "$ErrorMessage (must be > $MinLength characters)";  
-        } 
-        elseif(!preg_match('/^(https?):\/\/([a-z0-9\-\_]+\.)+([a-z]{1,5}[^\.])(\/[^<>]+)*$/i', $Imageurl)) {  
-            return $ErrorMessage;  
-        } 
-        elseif(!preg_match($WhitelistRegex, $Imageurl)) { 
-            return "$Imageurl is not on an approved pichost."; 
-        }
-        else { // hooray it validated
-            return TRUE;
-        }
-     }
-   
-     
-     
-     
-     
-     /* --------------------------------
-      * Returns a regex string in the form '/imagehost.com|otherhost.com|imgbox.com/i'
-       for fast whitelist checking
-      ----------------------------------- */
-     function GetWhitelistRegex() {
-           /*  wont work because we need to preg escape the host names
-        $DB->query("SELECT 
-                   GROUP_CONCAT(w.Imagehost SEPARATOR '|') AS Whitelist 
-                   FROM imagehost_whitelist as w");
-		*/
-        global $DB; 
-        $DB->query("SELECT w.Imagehost
-                      FROM imagehost_whitelist as w");  
-        if($DB->record_count()>0) {
-            $pattern = '@'; 
-            $div = '';
-            while(list($host)=$DB->next_record()){
-                $pattern .= $div . preg_quote($host, '@');
-                $div = '|';
-            } 
-            $pattern .= '@i'; 
-         }  else  {
-             $pattern = '/nohost.com/i';
-         }
-         
-         return $pattern; 
-     }
-     
-     
-     
-     
-     
-     
-     
-     
+ 
+      
+      
+      
+      
 	function GenerateJS($FormID) {
 		$ReturnJS="<script type=\"text/javascript\" language=\"javascript\">\r\n";
 		$ReturnJS.="//<![CDATA[\r\n";

@@ -607,6 +607,56 @@ function print_latest_forum_topics() {
         echo "</div>";
     }
 }
+/* --------------------------------
+* Returns a regex string in the form '/imagehost.com|otherhost.com|imgbox.com/i'
+  for fast whitelist checking
+  ----------------------------------- */
+function GetWhitelistRegex() {
+       global $DB;
+       $DB->query("SELECT w.Imagehost
+                     FROM imagehost_whitelist as w");  
+       if($DB->record_count()>0) {
+           $pattern = '@';
+           $div = '';
+           while(list($host)=$DB->next_record()){
+               $pattern .= $div . preg_quote($host, '@');
+               $div = '|';
+           }
+           $pattern .= '@i';
+        }  else  {
+            $pattern = '/nohost.com/i';
+        }
+       
+        return $pattern;
+}
+   
+   
+   
+/* --------------------------------
+* Validates the passed imageurl with the passed parameters
+  Returns TRUE if it validates and a user readable error message if it fails
+  ----------------------------------- */
+function ValidateImageUrl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
+         
+       $ErrorMessage = "'$Imageurl' is not a valid url.";
+       
+       if(strlen($Imageurl)>$MaxLength) {
+           return "$ErrorMessage (must be < $MaxLength characters)";  
+       }
+       elseif(strlen($Imageurl)<$MinLength) {
+           return "$ErrorMessage (must be > $MinLength characters)";  
+       }
+       elseif(!preg_match('/^(https?):\/\/([a-z0-9\-\_]+\.)+([a-z]{1,5}[^\.])(\/[^<>]+)*$/i', $Imageurl)) {  
+           return $ErrorMessage;  
+       }
+       elseif(!preg_match($WhitelistRegex, $Imageurl)) {
+           return "$Imageurl is not on an approved pichost.";
+       }
+       else { // hooray it validated
+           return TRUE;
+       }
+}
+
 
 // for getting an article to display on some other page 
 function get_article($TopicID){
