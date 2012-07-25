@@ -56,8 +56,7 @@ while(list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Rem
     
     if ($IsSeeder!=$LastIsSeeder){
 ?>
-</table>
-<table>
+ 
         <tr class="colhead">
             <td colspan="6">Leechers</td>
         </tr>
