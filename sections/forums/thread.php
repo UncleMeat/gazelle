@@ -568,6 +568,8 @@ if(check_perms('site_moderate_forums')) {
 			<tr>
 				<td class="label">Move thread</td>
 				<td>
+                            <?
+                            /*
 					<select name="forumid" tabindex="2">
 <? 
 $OpenGroup = false;
@@ -591,6 +593,9 @@ foreach ($Forums as $Forum) {
 <? } ?>
 					</optgroup>
 					</select>
+                             * */   ?>
+                             
+                            <?= print_forums_select($Forums, $ForumCats, $ThreadInfo['ForumID']) ?>
 				</td>
 			</tr>
 <? if(check_perms('site_admin_forums')) { ?>
