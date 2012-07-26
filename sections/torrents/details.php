@@ -715,7 +715,7 @@ if(count($PersonalCollages)>0) {
           list($Thanks) = $DB->next_record();
           $Cache->cache_value('torrent_thanks_'.$GroupID, $Thanks);
     }
-    if (!$Thanks || strpos($Thanks, $LoggedUser['Username'])===false ) {
+    if (!$IsUploader && (!$Thanks || strpos($Thanks, $LoggedUser['Username'])===false )) {
 ?>
                 <form action="torrents.php" method="post" id="thanksform">
                     <input type="hidden" name="action" value="thank" />
