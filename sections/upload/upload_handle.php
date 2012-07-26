@@ -210,7 +210,7 @@ if (!$GroupID) {
 }
 
 // lanz: insert the category tag here.
-$Tags = explode(' ', strtolower($NewCategories[$T['Category']]['tag']." ".$Properties['TagList']));
+$Tags = explode(' ', strtolower($NewCategories[(int)$_POST['category']]['tag']." ".$Properties['TagList']));
 $Tags = array_unique($Tags);
 if (!$Properties['GroupID']) {
     $TagsAdded=array();
