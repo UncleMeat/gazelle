@@ -1,7 +1,7 @@
 <?
 class TEXT {
 	// tag=>max number of attributes 'link'=>1, 
-	private $ValidTags = array('video'=>1, 'flash'=>1, 'banner'=>0, 'thumb'=>0, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
+	private $ValidTags = array('you'=>0, 'video'=>1, 'flash'=>1, 'banner'=>0, 'thumb'=>0, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
 	);
 	private $Smileys = array(
            ':smile1:'           => 'smile1.gif',
@@ -735,6 +735,8 @@ class TEXT {
                 $remove[] = '/\[vid.*?\]/i';
                 $remove[] = '/\[video.*?\]/i';
 
+                $remove[] = '/\[you\]/i';
+                
                 $Str = preg_replace($remove, '', $Str);
                 $Str = preg_replace('/[\r\n]+/', ' ', $Str);
                 
@@ -920,7 +922,7 @@ EXPLANATION OF PARSER LOGIC
 				// strcspn returns the number of characters after the offset $i, not after the beginning of the string
 				// Therefore, we use += instead of the = everywhere else
 				$i += $CloseTag; // 5d) Move the pointer past the end of the [/close] tag. 
-			} elseif($WikiLink == true || $TagName == 'n' || $TagName == 'br' || $TagName == 'hr' || $TagName == 'cast' || $TagName == 'details' || $TagName == 'info' || $TagName == 'plot' || $TagName == 'screens') { 
+			} elseif($WikiLink == true || $TagName == 'n' || $TagName == 'br' || $TagName == 'hr' || $TagName == 'cast' || $TagName == 'details' || $TagName == 'info' || $TagName == 'plot' || $TagName == 'screens' || $TagName == 'you') { 
 				// Don't need to do anything - empty tag with no closing 
 			} elseif($TagName === '*') {   //  || $TagName === '#' - no longer list tag
 				// We're in a list. Find where it ends
@@ -1010,6 +1012,7 @@ EXPLANATION OF PARSER LOGIC
 				case 'info':
 				case 'plot':
 				case 'screens':
+				case 'you':
 					$Array[$ArrayPos] = array('Type'=>$TagName, 'Val'=>'');
 					break;
 				case 'font':
@@ -1182,6 +1185,7 @@ EXPLANATION OF PARSER LOGIC
       }
       
 	function to_html($Array) {
+          global $LoggedUser;
 		$this->Levels++;
 		if($this->Levels>10) { return $Block['Val']; } // Hax prevention
 		$Str = '';
@@ -1199,6 +1203,10 @@ EXPLANATION OF PARSER LOGIC
 				continue;
 			}
 			switch($Block['Type']) {
+                        case 'you':
+					//actually a youtube only tag inherited from emp
+					$Str.='<a href="user.php?id='.$LoggedUser['ID'].'">'.$LoggedUser['Username'].'</a>';
+                              break;
                         case 'video':
 					//actually a youtube only tag inherited from emp
 					if ( !preg_match('/^http:\/\/www\.youtube\.com\/.*v=(.*)$/i', $Block['Attr'], $matches ) ) {
@@ -1459,30 +1467,7 @@ EXPLANATION OF PARSER LOGIC
 						$Str.='<audio controls="controls" src="'.$Block['Val'].'"><a rel="noreferrer" target="_blank" href="'.$Block['Val'].'">'.$Block['Val'].'</a></audio>';
 					}
 					break;
-					/*
-				case 'url':
-					// Make sure the URL has a label
-					if(empty($Block['Val'])) {
-						$Block['Val'] = $Block['Attr'];
-						$NoName = true; // If there isn't a Val for this
-					} else {
-						$Block['Val'] = $this->to_html($Block['Val']);
-						$NoName = false;
-					}
-					
-					if(!$this->valid_url($Block['Attr'])) {
-						$Str.='[url='.$Block['Attr'].']'.$Block['Val'].'[/url]';
-					} else {
-						$LocalURL = $this->local_url($Block['Attr']);
-						if($LocalURL) {
-							if($NoName) { $Block['Val'] = substr($LocalURL,1); }
-							$Str.='<a href="'.$LocalURL.'">'.$Block['Val'].'</a>';
-						} else {
-							$Str.='<a rel="noreferrer" target="_blank" href="'.$Block['Attr'].'">'.$Block['Val'].'</a>';
-						}
-					}
-					break;
-					*/
+			 
 				case 'inlineurl':
 					if(!$this->valid_url($Block['Attr'], '', true)) {
 						$Array = $this->parse($Block['Attr']);
