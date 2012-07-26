@@ -658,7 +658,7 @@ if ($Snatched > 4 && check_paranoia_here('snatched')) {
 }
 
 if(!isset($Uploads)) { $Uploads = 0; }
-if ($Uploads > 4 && check_paranoia_here('uploads')) {
+if ($Uploads > 0 && check_paranoia_here('uploads')) {
 	$RecentUploads = $Cache->get_value('recent_uploads_'.$UserID);
 	if(!is_array($RecentUploads)){
 		$DB->query("SELECT 
@@ -668,13 +668,13 @@ if ($Uploads > 4 && check_paranoia_here('uploads')) {
 		FROM torrents_group AS g
 		INNER JOIN torrents AS t ON t.GroupID=g.ID
 		WHERE t.UserID='$UserID'
-		AND g.Image <> ''
 		GROUP BY g.ID
 		ORDER BY t.Time DESC
 		LIMIT 5");
 		$RecentUploads = $DB->to_array();
 		$Cache->cache_value('recent_uploads_'.$UserID, $RecentUploads, 0); //inf cache
 	}
+      if(count($RecentUploads)>0){
 ?>
 	<table class="recent" cellpadding="0" cellspacing="0" border="0">
 		<tr class="colhead">
@@ -692,6 +692,7 @@ if ($Uploads > 4 && check_paranoia_here('uploads')) {
 		</tr>
 	</table>
 <?
+      }
 }
 
 $DB->query("SELECT ID, Name FROM collages WHERE UserID='$UserID' AND CategoryID='0' AND Deleted='0' ORDER BY Featured DESC, Name ASC");

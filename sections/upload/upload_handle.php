@@ -274,7 +274,7 @@ update_hash($GroupID);
 //******************************************************************************//
 //--------------- Stupid Recent Uploads ----------------------------------------//
 
-if (trim($Properties['Image']) != "") {
+//if (trim($Properties['Image']) != "") {
     $RecentUploads = $Cache->get_value('recent_uploads_' . $UserID);
     if (is_array($RecentUploads)) {
         do {
@@ -292,7 +292,7 @@ if (trim($Properties['Image']) != "") {
             $Cache->cache_value('recent_uploads_' . $UserID, $RecentUploads, 0);
         } while (0);
     }
-}
+//}
 
 //******************************************************************************//
 //--------------- IRC announce and feeds ---------------------------------------//
