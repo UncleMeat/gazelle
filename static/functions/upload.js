@@ -32,7 +32,7 @@ function SelectTemplate(can_delete_any){ // a proper check is done in the backen
 }
 
 function AddTemplate(is_public){
-    if(is_public==1) if(!confirm("Public templates are available for any user to use and display their authorname\nWarning: You cannot delete a public template once it is created\nAre you sure you want to proceed?"))return false;
+    if(is_public==1) if(!confirm("Public templates are available for any user to use and display the authorname\nWarning: You cannot delete a public template once it is created\nAre you sure you want to proceed?"))return false;
     var name = prompt("Please enter the name for this template", "");
     if (!name || name =='') return false;
     var ToPost = [];
