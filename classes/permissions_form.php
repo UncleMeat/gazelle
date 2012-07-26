@@ -10,6 +10,12 @@
  $PermissionsArray = array(
 	'site_leech' => 'Can leech (Does this work?).',
 	'site_upload' => 'Upload torrent access.',
+     
+	'use_templates' => 'Can use templates.',
+	'make_private_templates' => 'Can make/delete private upload templates.',
+	'make_public_templates' => 'Can make public upload templates.',
+	'delete_any_template' => 'Can delete any upload templates.',
+     
 	'site_vote' => 'Request vote access.',
 	'site_submit_requests' => 'Request create access.',
 	'site_see_old_requests' => 'View old requests.',
@@ -140,6 +146,12 @@ function permissions_form(){ ?>
 				<td>
 					<? display_perm('site_leech','Can leech.'); ?>
 					<? display_perm('site_upload','Can upload.'); ?>
+                            
+					<? display_perm('use_templates','Can use templates.'); ?>
+					<? display_perm('make_private_templates','Can make/delete private upload templates.'); ?>
+					<? display_perm('make_public_templates','Can make public upload templates.'); ?>
+					<? display_perm('delete_any_template','Can delete any upload templates.'); ?>
+
 					<? display_perm('site_vote','Can vote on requests.'); ?>
 					<? display_perm('site_submit_requests','Can submit requests.'); ?>
 					<? display_perm('site_see_old_requests','Can see old requests.'); ?>

@@ -11,12 +11,62 @@ function add_tag() {
 	} else {
 		$('#tags').raw().value = $('#tags').raw().value + ' ' + $('#genre_tags').raw().options[$('#genre_tags').raw().selectedIndex].value;
 	}
+      CursorToEnd($('#tags').raw());
+      resize('tags');
 }
+
+
+function SynchInterface(){
+    change_tagtext();
+    resize('tags');
+}
+
+function SelectTemplate(can_delete_any){ // a proper check is done in the backend.. the param is just for the interface
+    $('#fill').disable($('#template').raw().value==0);
+    //var svalue=$('#template').raw().options[$('#template').raw().selectedIndex].text;
+    //alert(svalue);
+    $('#delete').disable($('#template').raw().value==0 || 
+            (can_delete_any!='1' && EndsWith($('#template').raw().options[$('#template').raw().selectedIndex].text, ')*')));
+    
+    return false;
+}
+
+function AddTemplate(is_public){
+    if(is_public==1) if(!confirm("Public templates are available for any user to use and display their authorname\nWarning: You cannot delete a public template once it is created\nAre you sure you want to proceed?"))return false;
+    var name = prompt("Please enter the name for this template", "");
+    if (!name || name =='') return false;
+    var ToPost = [];
+    ToPost['name'] = name;
+    ToPost['ispublic'] = is_public;
+    ToPost['title'] = $('#title').raw().value;
+    ToPost['category'] = $('#category').raw().value;
+    ToPost['image'] = $('#image').raw().value;
+    ToPost['tags'] = $('#tags').raw().value;
+    ToPost['body'] = $('#desc').raw().value;
+    ajax.post("upload.php?action=add_template", ToPost, function(response){
+            if (response==0) { //  
+                $('#messagebar').add_class('alert');
+                $('#messagebar').html("unexpected error!");
+            } else if ( parseInt(response)>0 ) { // vote was counted
+                $('#messagebar').remove_class('alert');
+                $('#messagebar').html("added template '"+name+"' id#" + response  );
+            } else { // a non number == an error  if ( !isnumeric(response)) 
+                $('#messagebar').add_class('alert');
+                $('#messagebar').html(response);
+            }
+            $('#messagebar').show(); 
+    });
+    return false;
+}
+
+
+
+
 
 var LogCount = 1;
 
 function AddLogField() {
-		if(LogCount >= 200) { return; }
+		if(LogCount >= 200) {return;}
 		var LogField = document.createElement("input");
 		LogField.type = "file";
 		LogField.id = "file";
@@ -29,9 +79,9 @@ function AddLogField() {
 }
 
 function RemoveLogField() {
-		if(LogCount == 1) { return; }
+		if(LogCount == 1) {return;}
 		var x = $('#logfields').raw();
-		for (i=0; i<2; i++) { x.removeChild(x.lastChild); }
+		for (i=0; i<2; i++) {x.removeChild(x.lastChild);}
 		LogCount--;
 }
 
@@ -52,202 +102,4 @@ function Upload_Quick_Edit() {
 	$('#uploadpreviewbody').hide();
 	$('#uploadbody').show(); 
 }
-
-
-/*
-var FormatCount = 0;
-
-function AddFormat() {
-	if(FormatCount >= 10) { return; }
-	FormatCount++;
-	$('#extras').raw().value = FormatCount;
-	
-	var NewRow = document.createElement("tr");
-	NewRow.id = "new_torrent_row"+FormatCount;
-	NewRow.setAttribute("style","border-top-width: 5px; border-left-width: 5px; border-right-width: 5px;");
-	
-	var NewCell1 = document.createElement("td");
-	NewCell1.setAttribute("class","label");
-	NewCell1.innerHTML = "Extra Torrent File";
-	
-	var NewCell2 = document.createElement("td");
-	var TorrentField = document.createElement("input");
-	TorrentField.type = "file";
-	TorrentField.id = "extra_torrent_file"+FormatCount;
-	TorrentField.name = "extra_torrent_files[]";
-	TorrentField.size = 50;
-	NewCell2.appendChild(TorrentField);
-	
-	NewRow.appendChild(NewCell1);
-	NewRow.appendChild(NewCell2);	
-
-	var x = $('#tags_row').raw();
-	x.parentNode.insertBefore(NewRow, x);
-	
-	NewRow = document.createElement("tr");
-	NewRow.id = "new_format_row"+FormatCount;
-	NewRow.setAttribute("style","border-left-width: 5px; border-right-width: 5px;");
-	NewCell1 = document.createElement("td");
-	NewCell1.setAttribute("class","label");
-	NewCell1.innerHTML = "Extra Format / Bitrate";
-	
-	NewCell2 = document.createElement("td");
-	tmp = '<select id="releasetype" name="extra_formats[]"><option value="">---</option>';
-	
-	for(var i in formats) {
-		tmp += "<option value='"+formats[i]+"'>"+formats[i]+"</option>\n";
-	}
-	tmp += "</select>";
-	
-	tmp += '<select id="releasetype" name="extra_bitrates[]"><option value="">---</option>';
-	for(var i in bitrates) {
-		tmp += "<option value='"+bitrates[i]+"'>"+bitrates[i]+"</option>\n";
-	}
-	tmp += "</select>";
-	
-	NewCell2.innerHTML = tmp;
-	NewRow.appendChild(NewCell1);
-	NewRow.appendChild(NewCell2);	
-
-	x = $('#tags_row').raw();
-	x.parentNode.insertBefore(NewRow, x);
-	
-	NewRow = document.createElement("tr");
-	NewRow.id = "new_description_row"+FormatCount;
-	NewRow.setAttribute("style","border-bottom-width: 5px; border-left-width: 5px; border-right-width: 5px;");
-	NewCell1 = document.createElement("td");
-	NewCell1.setAttribute("class","label");
-	NewCell1.innerHTML = "Extra Release Description";
-	
-	NewCell2 = document.createElement("td");
-	NewCell2.innerHTML = '<textarea name="extra_release_desc[]" id="release_desc" cols="60" rows="4"></textarea>';
-	
-	NewRow.appendChild(NewCell1);
-	NewRow.appendChild(NewCell2);	
-
-	x = $('#tags_row').raw();
-	x.parentNode.insertBefore(NewRow, x);
-}
-
-function RemoveFormat() {
-	if(FormatCount == 0) { return; }
-	$('#extras').raw().value = FormatCount;
-	
-	var x = $('#new_torrent_row'+FormatCount).raw();
-	x.parentNode.removeChild(x);
-	
-	x = $('#new_format_row'+FormatCount).raw();
-	x.parentNode.removeChild(x);
-	
-	x = $('#new_description_row'+FormatCount).raw();
-	x.parentNode.removeChild(x);
-	
-	FormatCount--;
-	
-}
-
-
-var ArtistCount = 1;
-
-function AddArtistField() {
-	if(ArtistCount >= 100) { return; }
-	var ArtistField = document.createElement("input");
-	ArtistField.type = "text";
-	ArtistField.id = "artist";
-	ArtistField.name = "artists[]";
-	ArtistField.size = 45;
-	
-	var ImportanceField = document.createElement("select");
-	ImportanceField.id = "importance";
-	ImportanceField.name = "importance[]";
-	ImportanceField.options[0] = new Option("Main", "1");
-	ImportanceField.options[1] = new Option("Guest", "2");
-	ImportanceField.options[2] = new Option("Composer", "4");
-	ImportanceField.options[3] = new Option("Conductor", "5");
-	ImportanceField.options[4] = new Option("DJ / Compiler", "6");
-	ImportanceField.options[5] = new Option("Remixer", "3");
-	ImportanceField.options[6] = new Option("Producer", "7");
-	
-	var x = $('#artistfields').raw();
-	x.appendChild(document.createElement("br"));
-	x.appendChild(ArtistField);
-	x.appendChild(document.createTextNode('\n'));
-	x.appendChild(ImportanceField);
-	ArtistCount++;
-}
-
-function RemoveArtistField() {
-	if(ArtistCount == 1) { return; }
-	var x = $('#artistfields').raw();
-	for (i=0; i<3; i++) { x.removeChild(x.lastChild); }
-	ArtistCount--;
-}
-
-function CheckVA() {
-	var x = $('#artist').raw();
-	if(x.value.toLowerCase() == 'various artists' || x.value.toLowerCase() == 'va' || x.value.toLowerCase() == 'various') {
-		$('#vawarning').show();
-	} else {
-		$('#vawarning').hide();
-	}
-}
-
-function CheckYear() {
-	var media = $('#media').raw().options[$('#media').raw().selectedIndex].text;
-	if(media == "---" || media == "Vinyl" || media == "Soundboard" || media == "Cassette") {
-		media = "old";
-	}
-	var x = $('#year').raw();
-	if(x.value < 1982 && x.value != '' && media != "old" && !$('#unknown').raw().checked) {
-		$('#yearwarning').show();
-		$('#remaster').raw().checked = true;
-		$('#remaster_true').show();
-	} else if($('#unknown').raw().checked) {
-		$('#remaster').raw().checked = true;
-		$('#yearwarning').hide();
-		$('#remaster_true').show();
-	} else {
-		$('#yearwarning').hide();
-	}
-}
-
-function ToggleUnknown() {
-	if($('#unknown').raw().checked) {
-		$('#remaster_year').raw().value = "";
-		$('#remaster_title').raw().value = "";
-		$('#remaster_record_label').raw().value = "";
-		$('#remaster_catalogue_number').raw().value = "";
-		
-		if($('#groupremasters').raw()) {
-			$('#groupremasters').raw().selectedIndex = 0;
-			$('#groupremasters').raw().disabled = true;
-		}
-		
-		$('#remaster_year').raw().disabled = true;
-		$('#remaster_title').raw().disabled = true;
-		$('#remaster_record_label').raw().disabled = true;
-		$('#remaster_catalogue_number').raw().disabled = true;
-	} else {
-		$('#remaster_year').raw().disabled = false;
-		$('#remaster_title').raw().disabled = false;
-		$('#remaster_record_label').raw().disabled = false;
-		$('#remaster_catalogue_number').raw().disabled = false;
-		
-		if($('#groupremasters').raw()) {
-			$('#groupremasters').raw().disabled = false;
-		}
-	}
-}
-
-function GroupRemaster() {
-	var remasters = json.decode($('#json_remasters').raw().value);
-	
-	var index = $('#groupremasters').raw().options[$('#groupremasters').raw().selectedIndex].value;
-	if(index != "") {
-		$('#remaster_year').raw().value = remasters[index][1];
-		$('#remaster_title').raw().value = remasters[index][2];
-		$('#remaster_record_label').raw().value = remasters[index][3];
-		$('#remaster_catalogue_number').raw().value = remasters[index][4];
-	}
-}
-*/
+ 

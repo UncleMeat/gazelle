@@ -34,19 +34,14 @@ $_POST['desc'] = trim($_POST['desc']);
 $_POST['title'] = trim($_POST['title']);
 
 $Properties = array();
-//$NewCategory = db_string($_POST['category']);
+
 $Properties['Category'] = $_POST['category'];
 $Properties['Title'] = $_POST['title'];
 $Properties['TagList'] = $_POST['tags'];
 $Properties['Image'] = $_POST['image'];
-$Properties['GroupDescription'] = $_POST['album_desc'];
-$Properties['TorrentDescription'] = $_POST['release_desc'];
-if ($_POST['album_desc']) {
-    $Properties['GroupDescription'] = $_POST['album_desc'];
-} elseif ($_POST['desc']) {
-    $Properties['GroupDescription'] = $_POST['desc'];
-}
-$Properties['GroupID'] = $_POST['groupid'];
+$Properties['GroupDescription'] = $_POST['desc'];
+      
+//$Properties['GroupID'] = $_POST['groupid'];
 $RequestID = $_POST['requestid'];
 
 //******************************************************************************//
@@ -189,10 +184,10 @@ if (!preg_match("/^" . URL_REGEX . "$/i", $Properties['Image'])) {
 $LogName .= $Properties['Title'];
 
 //For notifications--take note now whether it's a new group
-$IsNewGroup = !$GroupID;
+//$IsNewGroup = !$GroupID;
 
 //----- Start inserts
-if (!$GroupID) {
+//if (!$GroupID) {
     // Create torrent group
     $DB->query("
 		INSERT INTO torrents_group
@@ -200,19 +195,19 @@ if (!$GroupID) {
 		(" . $T['Category'] . ", " . $T['Title'] . ", '" . sqltime() . "', '" . db_string($Body) . "', $T[Image], '$SearchText')");
     $GroupID = $DB->inserted_id();
     $Cache->increment('stats_group_count');
-} else {
+/* } else {
     $DB->query("UPDATE torrents_group SET
 		Time='" . sqltime() . "'
 		WHERE ID=$GroupID");
     $Cache->delete_value('torrent_group_' . $GroupID);
     $Cache->delete_value('torrents_details_' . $GroupID);
     $Cache->delete_value('detail_files_' . $GroupID);
-}
+} */
 
-// lanz: insert the category tag here.
+// lanz: insert the category tag here. 
 $Tags = explode(' ', strtolower($NewCategories[(int)$_POST['category']]['tag']." ".$Properties['TagList']));
-$Tags = array_unique($Tags);
-if (!$Properties['GroupID']) {
+//$Tags = array_unique($Tags);
+//if (!$Properties['GroupID']) {
     $TagsAdded=array();
     foreach ($Tags as $Tag) {
         //$Tag = sanitize_tag($Tag);
@@ -239,7 +234,7 @@ if (!$Properties['GroupID']) {
     }
     // replace the original tag array with corrected tags
     $Tags = $TagsAdded;
-}
+//}
 
 // Use this section to control freeleeches
 if ($TotalSize < (20*1024*1024*1024)){

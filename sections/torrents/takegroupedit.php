@@ -39,7 +39,7 @@ $whitelist_regex = GetWhitelistRegex();
 
 $Validate->SetFields('image', '0', 'image', 'The image URL you entered was not valid.', array('regex' => $whitelist_regex, 'maxlength' => 255, 'minlength' => 12));
 
-$Validate->SetFields('body', '1', 'desc', 'Description', array('regex' => $whitelist_regex, 'maxlength' => 1000000, 'minlength' => 20));
+$Validate->SetFields('body', '1', 'desc', 'Description', array('minimages'=>1, 'regex' => $whitelist_regex, 'maxlength' => 1000000, 'minlength' => 20));
 
 $Err = $Validate->ValidateForm($_POST, $Text); // Validate the form
 

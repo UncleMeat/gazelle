@@ -33,9 +33,10 @@ class TORRENT_FORM {
 		$this->Media = $Media;
 		$this->TorrentID = $TorrentID;
 		
+            /* // no reason to disable certain elements if filling from groupinfo is allowed
 		if($this->Torrent && $this->Torrent['GroupID']) {
 			$this->Disabled = ' disabled="disabled"';
-		}
+		} */
 	}
 
 
@@ -50,11 +51,11 @@ class TORRENT_FORM {
 		<input type="text" value="<?= ANNOUNCE_URL.'/'.$LoggedUser['torrent_pass'].'/announce'?>" size="71" onfocus="this.select()" />
 	</p>
 <?		}
-		if($this->Error) {
-			echo '<div id="messagebar" class="messagebar alert">'.display_str($this->Error).'</div><br />';
-		}
+		 
             //for testing form vars set action="http://www.tipjar.com/cgi-bin/test"
 ?>
+      <div id="messagebar" class="messagebar alert<? if(!$this->Error) echo ' hidden'?>"><? if($this->Error) echo display_str($this->Error) ; ?></div><br />
+      
 	<form action="" enctype="multipart/form-data" method="post" id="upload_table" onsubmit="$('#post').raw().disabled = 'disabled'">
 		<div>
 			<input type="hidden" name="submit" value="true" />
@@ -135,7 +136,7 @@ class TORRENT_FORM {
  
                               <input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Upload_Quick_Edit();}else{Upload_Quick_Preview();}" />
     <?		} ?>	
-					<input id="post" type="submit" <? if($this->NewTorrent) { echo "value=\"Upload torrent\""; } else { echo "value=\"Edit torrent\"";} ?> />
+					<input id="post" name="submit" type="submit" <? if($this->NewTorrent) { echo "value=\"Upload torrent\""; } else { echo "value=\"Edit torrent\"";} ?> />
 				</td>
 			</tr>
 		</table>
@@ -164,15 +165,16 @@ class TORRENT_FORM {
 				<td>
                                     <div id="tagtext"><strong>No category selected.</strong></div>
 <?			if($OfficialTags) { ?>
-					<select id="genre_tags" name="genre_tags" onchange="add_tag();return false;" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>>
+					<select id="genre_tags" name="genre_tags" onchange="add_tag();return false;" <?=$this->Disabled?>>
 						<option>---</option>
 <?				foreach(display_array($OfficialTags) as $Tag) { ?>
 						<option value="<?=$Tag ?>"><?=$Tag ?></option>
 <?				}   ?>
 					</select>
 <?			}         ?> 
-					<input type="text" id="tags" name="tags" class="medium" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>/>
-					<br />
+					<!--<input type="text" id="tags" name="tags" class="medium" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>/>-->
+					<textarea id="tags" name="tags" class="medium" style="height:1.4em;" <?=$this->Disabled?>><?=display_str($Torrent['TagList']) ?></textarea>
+                              <br />
                               <? 
                               $taginfo = get_article('tag');
                               if($taginfo) echo $Text->full_format($taginfo, true); 
