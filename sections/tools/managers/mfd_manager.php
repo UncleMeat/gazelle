@@ -47,18 +47,18 @@ show_header('Manage torrents marked for deletion');
 <? if($CanManage){ ?> 
                             <input name="hours" type="text" style="width:30px;" value="<?=$Hours?>" title="This is the hours given to fix the torrent when warned (has no effect on current list)" />
 <? } else { ?> 
-                            <input type="text" style="width:30px;color:black;" disabled="disabled" value="<?=$Hours?>" title="hours user has to fix the torrent when first warned" />
+                            <input name="hours" type="text" style="width:30px;color:black;" disabled="disabled" value="<?=$Hours?>" title="This is the hours given to fix the torrent when warned (has no effect on current list)" />
 <? }  ?> 
                         </td>
                         <td  class="center">    
                             <label for="autodelete" title="AutoDelete">Auto Delete</label>
 <? if($CanManage){ ?> 
-                            <select id="autodelete" name="autodelete">
+                            <select id="autodelete" name="autodelete" title="If On then marked torrents are automatically deleted when they time out (if not pending). If Off then overdue marked torrents can still be deleted manually in this page.">
                                 <option value="1"<?=$Delete?' selected="selected"':'';?>>On&nbsp;&nbsp;</option> 
                                 <option value="0"<?=$Delete?'':' selected="selected"';?>>Off&nbsp;&nbsp;</option> 
                             </select>
 <? } else { ?> 
-                            <input type="text" style="width:30px;color:black;" disabled="disabled" value="<?=$Delete?'On':'Off';?>" title="hours user has to fix the torrent when first warned" />
+                            <input type="text" name="autodelete" style="width:30px;color:black;" disabled="disabled" value="<?=$Delete?'On':'Off';?>" title="If On then marked torrents are automatically deleted when they time out (if not pending). If Off then overdue marked torrents can still be deleted manually in this page." />
 <? }  ?> 
                         </td>
 <? if($CanManage){ ?>   <td  class="center">  <!-- width="30%" -->
