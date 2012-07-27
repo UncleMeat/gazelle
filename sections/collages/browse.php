@@ -109,7 +109,7 @@ if(!empty($_GET['userid'])) {
 
 	$UserLink = '<a href="user.php?id='.$UserID.'">'.$User['Username'].'</a>';
 	if(!empty($_GET['contrib'])) {
-		if (!check_paranoia('collagecontribs', $User['Paranoia'], $UserClass, $UserID)) { error(403); }
+		if (!check_paranoia('collagecontribs', $User['Paranoia'], $UserClass, $UserID)) { error(PARANOIA_MSG); }
 		$DB->query("SELECT DISTINCT CollageID FROM collages_torrents WHERE UserID = $UserID");
 		$CollageIDs = $DB->collect('CollageID');
 		if(empty($CollageIDs)) {
@@ -118,7 +118,7 @@ if(!empty($_GET['userid'])) {
 			$SQL .= " AND c.ID IN(".db_string(implode(',', $CollageIDs)).")";
 		}
 	} else {
-		if (!check_paranoia('collages', $User['Paranoia'], $UserClass, $UserID)) { error(403); }
+		if (!check_paranoia('collages', $User['Paranoia'], $UserClass, $UserID)) { error(PARANOIA_MSG); }
 		$SQL .= " AND UserID='".$_GET['userid']."'";
 	}
 	$Categories[] = 0;

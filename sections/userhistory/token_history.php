@@ -20,7 +20,7 @@ $Perms = get_permissions($UserInfo['PermissionID']);
 $UserClass = $Perms['Class'];
 
 if($LoggedUser['ID'] != $UserID && !check_paranoia(false, $User['Paranoia'], $UserClass, $UserID)) {
-	error(403);
+	error(PARANOIA_MSG);
 }
 
 if (isset($_GET['expire'])) {

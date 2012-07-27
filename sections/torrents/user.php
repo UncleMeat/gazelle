@@ -75,35 +75,35 @@ $UserClass = $Perms['Class'];
 
 switch($_GET['type']) {
 	case 'snatched':
-		if(!check_paranoia('snatched', $User['Paranoia'], $UserClass, $UserID)) { error(403); }
+		if(!check_paranoia('snatched', $User['Paranoia'], $UserClass, $UserID)) { error(PARANOIA_MSG); }
 		$Time = 'xs.tstamp';
 		$UserField = 'xs.uid';
 		$ExtraWhere = '';
 		$From = "xbt_snatched AS xs JOIN torrents AS t ON t.ID=xs.fid";
 		break;
 	case 'seeding':
-		if(!check_paranoia('seeding', $User['Paranoia'], $UserClass, $UserID)) { error(403); }
+		if(!check_paranoia('seeding', $User['Paranoia'], $UserClass, $UserID)) { error(PARANOIA_MSG); }
 		$Time = '(unix_timestamp(now()) - xfu.timespent)';
 		$UserField = 'xfu.uid';
 		$ExtraWhere = 'AND xfu.active=1 AND xfu.Remaining=0';
 		$From = "xbt_files_users AS xfu JOIN torrents AS t ON t.ID=xfu.fid";
 		break;
 	case 'leeching':
-		if(!check_paranoia('leeching', $User['Paranoia'], $UserClass, $UserID)) { error(403); }
+		if(!check_paranoia('leeching', $User['Paranoia'], $UserClass, $UserID)) { error(PARANOIA_MSG); }
 		$Time = '(unix_timestamp(now()) - xfu.timespent)';
 		$UserField = 'xfu.uid';
 		$ExtraWhere = 'AND xfu.active=1 AND xfu.Remaining>0';
 		$From = "xbt_files_users AS xfu JOIN torrents AS t ON t.ID=xfu.fid";
 		break;
 	case 'uploaded':
-		if ((empty($_GET['filter']) || $_GET['filter'] != 'perfectflac') && !check_paranoia('uploads', $User['Paranoia'], $UserClass, $UserID)) { error(403); }
+		if ((empty($_GET['filter']) || $_GET['filter'] != 'perfectflac') && !check_paranoia('uploads', $User['Paranoia'], $UserClass, $UserID)) { error(PARANOIA_MSG); }
 		$Time = 'unix_timestamp(t.Time)';
 		$UserField = 't.UserID';
 		$ExtraWhere = 'AND flags!=1';
 		$From = "torrents AS t";
 		break;
 	case 'downloaded':
-		if(!check_perms('site_view_torrent_snatchlist')) { error(403); }
+		if(!check_perms('site_view_torrent_snatchlist')) { error("You do not have permission to view the snatchlist."); }
 		$Time = 'unix_timestamp(ud.Time)';
 		$UserField = 'ud.UserID';
 		$ExtraWhere = '';
