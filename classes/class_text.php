@@ -1,7 +1,7 @@
 <?
 class TEXT {
 	// tag=>max number of attributes 'link'=>1, 
-	private $ValidTags = array('you'=>0, 'video'=>1, 'flash'=>1, 'banner'=>0, 'thumb'=>0, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
+	private $ValidTags = array('codeblock'=>1, 'you'=>0, 'video'=>1, 'flash'=>1, 'banner'=>0, 'thumb'=>0, '#'=>1, 'anchor'=>1, 'mcom'=>0, 'table'=>1, 'th'=>1, 'tr'=>1, 'td'=>1,  'bg'=>1, 'cast'=>0, 'details'=>0, 'info'=>0, 'plot'=>0, 'screens'=>0, 'br'=>0, 'hr'=>0, 'font'=>1, 'center'=>0, 'spoiler'=>1, 'b'=>0, 'u'=>0, 'i'=>0, 's'=>0, '*'=>0, 'artist'=>0, 'user'=>0, 'n'=>0, 'inlineurl'=>0, 'inlinesize'=>1, 'align'=>1, 'color'=>1, 'colour'=>1, 'size'=>1, 'url'=>1, 'img'=>1, 'quote'=>1, 'pre'=>1, 'code'=>1, 'tex'=>0, 'hide'=>1, 'plain'=>0, 'important'=>0, 'torrent'=>0
 	);
 	private $Smileys = array(
            ':smile1:'           => 'smile1.gif',
@@ -649,6 +649,9 @@ class TEXT {
 
                 $remove[] = '/\[cast\]/i';
 
+                $remove[] = '/\[codeblock.*?\]/i';
+                $remove[] = '/\[\/codeblock\]/i';
+
                 $remove[] = '/\[code.*?\]/i';
                 $remove[] = '/\[\/code\]/i';
 
@@ -1071,6 +1074,7 @@ EXPLANATION OF PARSER LOGIC
 					break;
 				case 'pre':
 				case 'code':
+				case 'codeblock':
 				case 'plain':
 					$Block = strtr($Block, array('[inlineurl]'=>''));
 					$Block = preg_replace('/\[inlinesize\=3\](.*?)\[\/inlinesize\]/i', '====$1====', $Block);
@@ -1397,6 +1401,10 @@ EXPLANATION OF PARSER LOGIC
 				case 'code':
 					$Str.='<code class="bbcode">'.$Block['Val'].'</code>';
 					break;
+                        case 'codeblock':
+                            
+					$Str.='<code class="bbcodeblock">'.$Block['Val'].'</code>';
+                              break;
 				case 'list':
 					$Str .= '<'.$Block['ListType'].'>';
 					foreach($Block['Val'] as $Line) {
