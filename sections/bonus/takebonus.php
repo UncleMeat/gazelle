@@ -163,7 +163,8 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 if(!$NewTitle){
                     $ResultMessage = "Title was not set";
                 } else {
-                    if (strlen($NewTitle) > 32) $NewTitle = substr($NewTitle, 0, 32); 
+                    if (mb_strlen($NewTitle, "UTF-8")) $NewTitle = mb_substr($NewTitle, 0, 32,  "UTF-8"); 
+                    //if (strlen($NewTitle) > 32) $NewTitle = substr($NewTitle, 0, 32); 
                     $NewTitle = db_string( display_str($NewTitle) );
                     $Summary = sqltime().' - '.ucfirst("user bought a new custom title ''$NewTitle''. Cost: $Cost credits");	
                     $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
@@ -172,7 +173,7 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                     $UpdateSet[]="m.Title='$NewTitle'";
                     $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
                     $ResultMessage=$Summary;
-                } 
+                }
                 break;
         }
 
