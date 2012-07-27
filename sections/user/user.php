@@ -585,7 +585,7 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 <?      } else { 
                         echo $Text->full_format($Info, get_permissions_advtags($UserID)); 
         }   ?>
-                </div><div><? print_r($Paranoia)?></div>
+                </div>
 <?     
           if ($UserBadges) {  ?>
                     <div class="badgesrow badges">
