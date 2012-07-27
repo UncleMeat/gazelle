@@ -144,6 +144,10 @@ if ($CurrentNews === false) {
 	$Cache->cache_value('news_latest_id', $CurrentNews, 0);
 }
 
+if($LoggedUser['personal_freeleech'] >= sqltime()) {
+    $Alerts[] = 'Freeleech for '.  time_diff($LoggedUser['personal_freeleech']);
+}
+
 if ($MyNews < $CurrentNews) {
 	$Alerts[] = '<a href="index.php">New Announcement!</a>';
 }

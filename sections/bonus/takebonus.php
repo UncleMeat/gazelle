@@ -157,6 +157,29 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 $ResultMessage=$Summary;
                 break;
             
+            case 'pfl':
+                $Summary = sqltime().' - '.ucfirst("user bought $Value hour".($Value>1?'s':'')." personal freeleech. Cost: $Cost credits");
+                $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
+                $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought $Value hour".($Value>1?'s':'')." of personal freeleech.");
+                $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
+                $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
+
+                $personal_freeleech = $LoggedUser['personal_freeleech'];
+                
+                // The user already have personal freeleech time, add to it.
+                if ($personal_freeleech >= sqltime()) {
+                    $personal_freeleech = date('Y-m-d H:i:s', strtotime($personal_freeleech) + 60 * 60 * $Value);
+                // No current freeleech time.
+                } else {
+                    $personal_freeleech = time_plus(60 * 60 * $Value);
+                }
+                
+                $UpdateSet[]="personal_freeleech='$personal_freeleech'";
+                update_tracker('set_personal_freeleech', array('passkey' => $LoggedUser['torrent_pass'], 'until_time' => $personal_freeleech));
+                
+                $ResultMessage=$Summary;
+                break;
+            
             case 'title':
                 //get the unescaped title for len test
                 $NewTitle = empty($_POST['title']) ? '' : $_POST['title'];
