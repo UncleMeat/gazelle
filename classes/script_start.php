@@ -363,6 +363,7 @@ function user_heavy_info($UserID) {
 			i.RestrictedForums,
 			i.PermittedForums,
 			m.FLTokens,
+                        m.personal_freeleech,
                   m.Credits,
                     i.SupportFor,
                     i.BlockPMs,

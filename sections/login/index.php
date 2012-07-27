@@ -43,7 +43,7 @@ if (isset($_REQUEST['act']) && $_REQUEST['act']=="recover") {
 
 		if ($UserID && strtotime($Expires)>time()) {
 			// If the user has requested a password change, and his key has not expired
-			$Validate->SetFields('password','1','string','You entered an invalid password.',array('maxlength'=>'40','minlength'=>'6'));
+			$Validate->SetFields('password','1','string','You entered an invalid password.',array('maxlength'=>'40','minlength'=>'5'));
 			$Validate->SetFields('verifypassword','1','compare','Your passwords did not match.',array('comparefield'=>'password'));
 
 			if (!empty($_REQUEST['password'])) {
