@@ -871,10 +871,11 @@ function show_footer($Options=array()) {
 }
 
 function cut_string($Str, $Length, $Hard=0, $ShowDots=1) {
-    if (strlen($Str) > $Length) {
+    //if (strlen($Str) > $Length) { // converted all to mb_str functions 
+    if (mb_strlen($Str, "UTF-8") > $Length) {
         if ($Hard == 0) {
             // Not hard, cut at closest word
-            $CutDesc = substr($Str, 0, $Length);
+            $CutDesc = mb_substr($Str, 0, $Length, "UTF-8");
             $DescArr = explode(' ', $CutDesc);
             $DescArr = array_slice($DescArr, 0, count($DescArr) - 1);
             $CutDesc = implode($DescArr, ' ');
@@ -882,7 +883,7 @@ function cut_string($Str, $Length, $Hard=0, $ShowDots=1) {
                 $CutDesc.='...';
             }
         } else {
-            $CutDesc = substr($Str, 0, $Length);
+            $CutDesc = mb_substr($Str, 0, $Length, "UTF-8");
             if ($ShowDots == 1) {
                 $CutDesc.='...';
             }
