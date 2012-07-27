@@ -38,6 +38,8 @@ if(!empty($_POST['submit'])) {
         $Cache->delete_value('template_' . $TemplateID);
         $Cache->delete_value('template_ids_' . $Template['UserID']);
     }
+    $HideDNU = true;
+    $HideWL = true;
     include(SERVER_ROOT.'/sections/upload/upload.php');  
       
 } else {

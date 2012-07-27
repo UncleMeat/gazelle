@@ -30,7 +30,6 @@ if ($Name=='') {
 
     $TemplateID = $DB->inserted_id();
 
-    $Cache->delete_value('templates_' . $LoggedUser['ID']);
     $Cache->delete_value('templates_ids_' . $LoggedUser['ID']);
     echo $TemplateID;
 }
