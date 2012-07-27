@@ -86,7 +86,7 @@ function get_deleted_message($GroupID, $TorrentName, $Reason){
     $Message .= "[br][br]Reason: &nbsp;[color=red]{$Reason}[/color][/b]";
     $Message .= '[br][br]Before you upload something again please make sure you read the [url=/articles.php?topic=upload]Upload Rules[/url]';
     $Message .= '[br]You will find useful guides in the [url=/articles.php?topic=tutorials]Tutorials section[/url]';
-    $Message .= '[br]If you need further help please post in the [url=/forums.php?action=viewforum&amp;forumid=17]Help & Support Forum[/url]';
+    $Message .= '[br]If you need further help please post in the [url=/forums.php?action=viewforum&amp;forumid=6]Help & Support Forum[/url]';
     
     return $Message;
 }
