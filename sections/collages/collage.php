@@ -189,7 +189,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
 			$Image = 'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?i='.urlencode($Image);
 		}
 ?>
-				<img src="<?=$Image?>" alt="<?=$DisplayName?>" title="<?=$DisplayName?>" width="118" />
+				<img src="<?=$Image?>" alt="<?=$DisplayName?>" title="<?=$DisplayName?>"  />
 <?	} else { ?>
 				<div style="width:107px;padding:5px"><?=$DisplayName?></div>
 <?	} ?>

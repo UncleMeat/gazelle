@@ -28,6 +28,9 @@
 //   +
 // invitedcount: the number of users this user has directly invited
 
+
+define('PARANOIA_MSG','This users privacy (paranoia) settings mean you cannot view this page.');
+
 /**
  * Return whether currently logged in user can see $Property on a user with $Paranoia, $UserClass and (optionally) $UserID
  * If $Property is an array of properties, returns whether currently logged in user can see *all* $Property ...
@@ -38,7 +41,6 @@
  * @param $UserID Optional. The user ID of the person being viewed
  * @return Boolean representing whether the current user can see through the paranoia setting
  */
-
 function check_paranoia($Property, $Paranoia, $UserClass, $UserID = false) {
 	global $LoggedUser, $Classes;
 	if(check_perms('users_override_paranoia', $UserClass)) {

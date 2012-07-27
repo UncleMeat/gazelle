@@ -156,12 +156,12 @@ if (!$AdvancedSearch) {
             
             if ( ($Tag[0] != '-' && strlen($Tag)>= 2) || strlen($Tag)>= 3 ) {
                 if ($Tag[0] == '-') {
-                    $Tag = '-'. get_tag_synomyn( substr($Tag, 1), false);
+                    $Tag = '-'. get_tag_synonyn( substr($Tag, 1), false);
                     $Tag = str_replace('.', '_', $Tag);
                     $TagListEx[] = '!' . $SS->EscapeString(substr($Tag, 1));
                     unset($TagList[$Key]);
                 } else {
-                    $Tag = get_tag_synomyn($Tag, false);
+                    $Tag = get_tag_synonym($Tag, false);
                     $Tag = str_replace('.', '_', $Tag);
                     $Tag = $SS->EscapeString($Tag);
                 }
@@ -205,11 +205,11 @@ if (!$AdvancedSearch) {
            
             if ( ($Tag[0] != '-' && strlen($Tag)>= 2) || strlen($Tag)>= 3 ) {
                 if ($Tag[0] == '-') {
-                    $Tag = '-'. get_tag_synomyn( substr($Tag, 1), false);
+                    $Tag = '-'. get_tag_synonym( substr($Tag, 1), false);
                     //$TagListEx[] = '!' . $SS->EscapeString(substr($Tag, 1));
                     //unset($TagList[$Key]);
                 } else {
-                    $Tag = get_tag_synomyn($Tag, false);
+                    $Tag = get_tag_synonym($Tag, false);
                     //$Tag = $SS->EscapeString($Tag);
                 }
             } else {
@@ -593,7 +593,7 @@ $row='a';
 
         list($TorrentID, $Data) = each($Torrents);
         $OverImage = $Image != '' ? $Image : '/static/common/noartwork/noimage.png';
-        $OverName = strlen($GroupName) <= 60 ? $GroupName : substr($GroupName, 0, 56) . '...';
+        $OverName = mb_strlen($GroupName) <= 60 ? $GroupName : mb_substr($GroupName, 0, 56) . '...';
         $SL = ($TotalSeeders == 0 ? "<span class=r00>" . number_format($TotalSeeders) . "</span>" : number_format($TotalSeeders)) . "/" . number_format($TotalLeechers);
         $Overlay = "<table class=overlay><tr><td class=overlay colspan=2><strong>" . $OverName . "</strong></td><tr><td class=leftOverlay><img style='max-width: 150px;' src=" . $OverImage . "></td><td class=rightOverlay><strong>Uploader:</strong><br />{$Data['Username']}<br /><br /><strong>Size:</strong><br />" . get_size($Data['Size']) . "<br /><br /><strong>Snatched:</strong><br />" . number_format($TotalSnatched) . "<br /><br /><strong>Seeders/Leechers:</strong><br />" . $SL . "</td></tr></table>";
         $AddExtra = '';

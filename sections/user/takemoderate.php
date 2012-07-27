@@ -21,7 +21,7 @@ $UserID = $_POST['userid'];
 // Variables for database input
 $Class = (int)$_POST['Class'];
 $Username = db_string(display_str( $_POST['Username']));
-$Title = db_string(display_str($_POST['Title']));
+$Title = db_string($_POST['Title']);
 $AdminComment = db_string(display_str($_POST['AdminComment']));
 $Donor = (isset($_POST['Donor']))? 1 : 0;
 $Visible = (isset($_POST['Visible']))? 1 : 0;
@@ -261,8 +261,9 @@ if ($Username!=$Cur['Username'] && check_perms('users_edit_usernames', $Cur['Cla
 
 if ($Title!=db_string($Cur['Title']) && check_perms('users_edit_titles')) {
 	// Using the unescaped value for the test to avoid confusion
-	if (strlen($_POST['Title']) > 32) {
-		error("Custom titles can be at most 32 characters.");
+      $len = mb_strlen($_POST['Title'], "UTF-8");
+	if ( $len > 32) {
+		error("Title length: $len. Custom titles can be at most 32 characters. (max 128 bytes for multibyte strings)");
 		header("Location: user.php?id=".$UserID);
 		die();
 	} else {

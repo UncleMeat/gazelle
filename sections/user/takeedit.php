@@ -18,15 +18,16 @@ if ($UserID != $LoggedUser['ID'] && !check_perms('users_edit_profiles', $Permiss
 	send_irc("PRIVMSG ".ADMIN_CHAN." :User ".$LoggedUser['Username']." (http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID'].") just tried to edit the profile of http://".NONSSL_SITE_URL."/user.php?id=".$_REQUEST['userid']);
 	error(403);
 }
-
+$whitelistregex = GetWhitelistRegex();
 $Val->SetFields('stylesheet',1,"number","You forgot to select a stylesheet.");
 $Val->SetFields('styleurl',0,"regex","You did not enter a valid stylesheet url.",array('regex'=>'/^https?:\/\/(localhost(:[0-9]{2,5})?|[0-9]{1,3}(\.[0-9]{1,3}){3}|([a-zA-Z0-9\-\_]+\.)+([a-zA-Z]{1,5}[^\.]))(:[0-9]{2,5})?(\/[^<>]+)+\.css$/i'));
 $Val->SetFields('postsperpage',1,"number","You forgot to select your posts per page option.",array('inarray'=>array(25,50,100)));
 //$Val->SetFields('hidecollage',1,"number","You forgot to select your collage option.",array('minlength'=>0,'maxlength'=>1));
 $Val->SetFields('collagecovers',1,"number","You forgot to select your collage option.");
 $Val->SetFields('showtags',1,"number","You forgot to select your show tags option.",array('minlength'=>0,'maxlength'=>1));
-$Val->SetFields('avatar',0,"regex","You did not enter a valid avatar url.",array('regex'=>"/^".IMAGE_REGEX."$/i"));
-$Val->SetFields('signature',0,'desc','Signature',array('regex'=>($Val->GetWhitelistRegex()),'minlength'=>0,'maxlength'=>$Permissions['MaxSigLength']));	
+//$Val->SetFields('avatar',0,"regex","You did not enter a valid avatar url.",array('regex'=>"/^".IMAGE_REGEX."$/i"));
+$Val->SetFields('avatar',0,'image', 'The image URL you entered was not valid.', array('regex' => $whitelistregex, 'maxlength' => 255, 'minlength' => 12));
+$Val->SetFields('signature',0,'desc','Signature',array('regex'=>$whitelistregex,'minlength'=>0,'maxlength'=>$Permissions['MaxSigLength']));	
 $Val->SetFields('email',1,"email","You did not enter a valid email address.");
 $Val->SetFields('irckey',0,"string","You did not enter a valid IRCKey, must be between 6 and 32 characters long.",array('minlength'=>6,'maxlength'=>32));
 $Val->SetFields('cur_pass',0,"string","You did not enter a valid password, must be between 6 and 40 characters long.",array('minlength'=>6,'maxlength'=>40));

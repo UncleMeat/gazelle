@@ -30,7 +30,7 @@ body {
     width: 100%;
     background: #0261a3;
     font-family: Verdana,Arial,Helvetica,sans-serif;
-    font-size: 8pt;
+    font-size: 9pt;
     color: #000000;
 }
 
@@ -129,7 +129,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
     padding: 0;
     background: #000 url('images/header.png') repeat-x;  
     font-weight: normal;
-
+    font-size: 8pt;
 }
 
 #adbar {
@@ -186,7 +186,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
     height: 20px;
     width: 65%;
     text-align: center;
-    font-size: 9pt;
+    font-size: 10pt;
     margin: 0px auto;
     padding-top: 12px;
 }
@@ -231,6 +231,7 @@ span.infinity {
     right: 20px ;
     margin-top:-27px;
     top:50%; 
+    font-size: 8.5pt;
 }
 
 #stats_block ul li, #header_bottom ul li {
@@ -247,11 +248,16 @@ span.infinity {
     text-decoration: none;
     color: #fff;
 }
-#stats_block a:hover, #header_bottom a:hover {
+#stats_block a:hover {
     text-decoration: none;
-    color: #FF6600;
+    background-color: #FF6600;
+    color: #fff;
 }
-
+#header_bottom a:hover {
+    text-decoration: none;
+    background-color: #fff;
+    color: #0261a3;
+}
 #header_bottom {
   /*  background-color: #036;        #024;      #024a7c;  #0261a3 */
     background: #0261a3 url('images/pagetop.jpg') repeat-x;  

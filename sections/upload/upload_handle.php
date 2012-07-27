@@ -34,19 +34,14 @@ $_POST['desc'] = trim($_POST['desc']);
 $_POST['title'] = trim($_POST['title']);
 
 $Properties = array();
-//$NewCategory = db_string($_POST['category']);
+
 $Properties['Category'] = $_POST['category'];
 $Properties['Title'] = $_POST['title'];
 $Properties['TagList'] = $_POST['tags'];
 $Properties['Image'] = $_POST['image'];
-$Properties['GroupDescription'] = $_POST['album_desc'];
-$Properties['TorrentDescription'] = $_POST['release_desc'];
-if ($_POST['album_desc']) {
-    $Properties['GroupDescription'] = $_POST['album_desc'];
-} elseif ($_POST['desc']) {
-    $Properties['GroupDescription'] = $_POST['desc'];
-}
-$Properties['GroupID'] = $_POST['groupid'];
+$Properties['GroupDescription'] = $_POST['desc'];
+      
+//$Properties['GroupID'] = $_POST['groupid'];
 $RequestID = $_POST['requestid'];
 
 //******************************************************************************//
@@ -54,8 +49,8 @@ $RequestID = $_POST['requestid'];
 //** note: if the same field is set to be validated more than once then each time it is set it overwrites the previous test
 //** ie.. one test per field max, last one set for a specific field is what is used
 $Validate->SetFields('title', '1', 'string', 'Title must be between 2 and 200 characters.', array('maxlength' => 200, 'minlength' => 2));
-$Validate->SetFields('tags', '1', 'string', 'You must enter at least one tag. Maximum length is 200 characters.', array('maxlength' => 200, 'minlength' => 2));
-$whitelist_regex = $Validate->GetWhitelistRegex();
+$Validate->SetFields('tags', '1', 'string', 'You must enter at least one tag. Maximum length is 10000 characters.', array('maxlength' => 10000, 'minlength' => 2));
+$whitelist_regex = GetWhitelistRegex();
 $Validate->SetFields('image', '0', 'image', 'The image URL you entered was not valid.', array('regex' => $whitelist_regex, 'maxlength' => 255, 'minlength' => 12));
 $Validate->SetFields('desc', '1', 'desc', 'Description', array('regex' => $whitelist_regex, 'minimages'=>1, 'maxlength' => 1000000, 'minlength' => 20));
 $Validate->SetFields('category', '1', 'inarray', 'Please select a category.', array('inarray' => array_keys($NewCategories)));
@@ -189,10 +184,10 @@ if (!preg_match("/^" . URL_REGEX . "$/i", $Properties['Image'])) {
 $LogName .= $Properties['Title'];
 
 //For notifications--take note now whether it's a new group
-$IsNewGroup = !$GroupID;
+//$IsNewGroup = !$GroupID;
 
 //----- Start inserts
-if (!$GroupID) {
+//if (!$GroupID) {
     // Create torrent group
     $DB->query("
 		INSERT INTO torrents_group
@@ -200,24 +195,24 @@ if (!$GroupID) {
 		(" . $T['Category'] . ", " . $T['Title'] . ", '" . sqltime() . "', '" . db_string($Body) . "', $T[Image], '$SearchText')");
     $GroupID = $DB->inserted_id();
     $Cache->increment('stats_group_count');
-} else {
+/* } else {
     $DB->query("UPDATE torrents_group SET
 		Time='" . sqltime() . "'
 		WHERE ID=$GroupID");
     $Cache->delete_value('torrent_group_' . $GroupID);
     $Cache->delete_value('torrents_details_' . $GroupID);
     $Cache->delete_value('detail_files_' . $GroupID);
-}
+} */
 
-// lanz: insert the category tag here.
-$Tags = explode(' ', strtolower($NewCategories[$T['Category']]['tag']." ".$Properties['TagList']));
-$Tags = array_unique($Tags);
-if (!$Properties['GroupID']) {
+// lanz: insert the category tag here. 
+$Tags = explode(' ', strtolower($NewCategories[(int)$_POST['category']]['tag']." ".$Properties['TagList']));
+//$Tags = array_unique($Tags);
+//if (!$Properties['GroupID']) {
     $TagsAdded=array();
     foreach ($Tags as $Tag) {
         //$Tag = sanitize_tag($Tag);
         $Tag = trim($Tag,'.'); // trim dots from the beginning and end
-        $Tag = get_tag_synomyn($Tag);
+        $Tag = get_tag_synonym($Tag);
         if (!empty($Tag)) { // mifune: modified this to not add duplicates in the same input string
             if (!in_array($Tag, $TagsAdded)){ // and to create new tags as Uses=1 which seems more correct
                 $TagsAdded[] = $Tag;
@@ -239,7 +234,7 @@ if (!$Properties['GroupID']) {
     }
     // replace the original tag array with corrected tags
     $Tags = $TagsAdded;
-}
+//}
 
 // Use this section to control freeleeches
 if ($TotalSize < (20*1024*1024*1024)){
@@ -279,7 +274,7 @@ update_hash($GroupID);
 //******************************************************************************//
 //--------------- Stupid Recent Uploads ----------------------------------------//
 
-if (trim($Properties['Image']) != "") {
+//if (trim($Properties['Image']) != "") {
     $RecentUploads = $Cache->get_value('recent_uploads_' . $UserID);
     if (is_array($RecentUploads)) {
         do {
@@ -297,7 +292,7 @@ if (trim($Properties['Image']) != "") {
             $Cache->cache_value('recent_uploads_' . $UserID, $RecentUploads, 0);
         } while (0);
     }
-}
+//}
 
 //******************************************************************************//
 //--------------- IRC announce and feeds ---------------------------------------//

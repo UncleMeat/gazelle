@@ -87,7 +87,7 @@ show_header('Official Tags Manager','tagmanager');
         </div>
     </div>
     <br />
-    <h2>Tag Synomyns</h2>
+    <h2>Tag Synonyms</h2>
 
     <div class="tagtable">
         <div class="box pad center">
@@ -98,7 +98,7 @@ show_header('Official Tags Manager','tagmanager');
 
 
                 <input type="text" name="newsynname"style="width:200px" />&nbsp;&nbsp;
-                <input type="submit" name="addsynomyn" value="Add new synomyn for " title="add new synomyn" />&nbsp;&nbsp;
+                <input type="submit" name="addsynomyn" value="Add new synonym for " title="add new synonym" />&nbsp;&nbsp;
 
                 <select name="parenttagid" >
 <? foreach ($Tags as $Tag) {
@@ -130,14 +130,14 @@ show_header('Official Tags Manager','tagmanager');
                     ?>
                     <tr class="row<?= $Row ?>">
                         <td class="tag_add" style="text-align:left"  colspan="2">
-                            <input type="submit" name="delsynomyns" value="del selected" title="delete selected synomyns for <?= $LastParentTagName ?>" />
+                            <input type="submit" name="delsynomyns" value="del selected" title="delete selected synonyms for <?= $LastParentTagName ?>" />
                         </td>
                     </tr>
             <? $Row = $Row == 'b' ? 'a' : 'b'; ?>
                     <tr class="row<?= $Row ?>">  
                         <td class="tag_add" colspan="2"> 
                             <input type="text" name="newsynname" size="10" />
-                            <input type="submit" name="addsynomyn" value="+" title="add new synomyn for <?= $LastParentTagName ?>" />
+                            <input type="submit" name="addsynomyn" value="+" title="add new synonym for <?= $LastParentTagName ?>" />
                         </td>
                     </tr>
                     </table>
@@ -169,14 +169,14 @@ show_header('Official Tags Manager','tagmanager');
                     ?>
                     <tr class="row<?= $Row ?>">
                         <td class="tag_add" style="text-align:left" colspan="2" >
-                            <input type="submit" name="delsynomyns" value="del selected" title="delete selected synomyns for <?= $ParentTagName ?>" />
+                            <input type="submit" name="delsynomyns" value="del selected" title="delete selected synonyms for <?= $ParentTagName ?>" />
                         </td>
                     </tr>
     <? $Row = $Row == 'b' ? 'a' : 'b'; ?>
                     <tr class="row<?= $Row ?>">  
                         <td class="tag_add" colspan="2" > 
                             <input type="text" name="newsynname" size="10" />
-                            <input type="submit" name="addsynomyn" value="+" title="add new synomyn for <?= $ParentTagName ?>" />
+                            <input type="submit" name="addsynomyn" value="+" title="add new synonym for <?= $ParentTagName ?>" />
 
                         </td>
                     </tr>
@@ -188,9 +188,9 @@ show_header('Official Tags Manager','tagmanager');
         <form  class="tagtable" action="tools.php" method="post">
             <div class="box pad center" id="convertbox">
                 <div class="pad" style="text-align:left">
-                    <h3>Convert Tag to Synomyn</h3>
-                    This section allows you to add a tag as a synomyn for another tag.
-                    <br />If the checkbox is unchecked then it will simply add the tag as a synomyn for the parent tag and leave the tag and its current associations with torrents as is in the database. This will prevent it being added as a new tag and searches on it will search on the synomyn as expected, but the original tags already present will show up with the torrents.
+                    <h3>Convert Tag to Synonym</h3>
+                    This section allows you to add a tag as a synonym for another tag.
+                    <br />If the checkbox is unchecked then it will simply add the tag as a synonym for the parent tag and leave the tag and its current associations with torrents as is in the database. This will prevent it being added as a new tag and searches on it will search on the synomyn as expected, but the original tags already present will show up with the torrents.
                     <br /><br />If you check the 'convert' option it will remove the old tag from the database, inserting the tag this is now a synomyn for instead (where it is not already present for that torrent). This might be a preferable state for the database to be in but it is an irreversible operation and you should be certain you want the old tag removed from the torrents it is associated with before proceeding.
                 </div>
             
@@ -199,10 +199,10 @@ show_header('Official Tags Manager','tagmanager');
                 <input type="checkbox" name="converttag" value="1" <? if (check_perms('site_convert_tags')) {
                         echo ' checked="checked"';
                 } else {
-                        echo 'disabled=disabled title="You do not have permission to convert tags to synomyns (you can add a tag as a synomyn though)"';
+                        echo 'disabled=disabled title="You do not have permission to convert tags to synonyms (you can add a tag as a synonym though)"';
                 } ?> />  
 
-                <label for="movetag" title="if this is checked then you can select an existing tag to convert into a synomyn for another tag">convert tag to synomyn</label>&nbsp;&nbsp;&nbsp;
+                <label for="movetag" title="if this is checked then you can select an existing tag to convert into a synonym for another tag">convert tag to synomyn</label>&nbsp;&nbsp;&nbsp;
 
                 <select id="movetagid" name="movetagid" <? if($UseMultiInterface) { 
                       ?>    onchange="Select_Tag( this.value, this.options[this.selectedIndex].text );" <?  } ?>>
@@ -227,7 +227,7 @@ show_header('Official Tags Manager','tagmanager');
 <?              if ($UseMultiInterface) { // Experts only! ?>
                     <div class="pad" style="text-align:left">
                         <h3>Multi-convert interface</h3>
-                        <p>When you click the "Add as a Synomyn for" button it will convert all the tags listed here to synomyns for the selected tag.</p>
+                        <p>When you click the "Add as a synonym for" button it will convert all the tags listed here to synonyms for the selected tag.</p>
                         <input type="hidden" name="multi" value="multi" />
                         <input type="button" value="clear" onclick="Clear_Multi();" />
                         <input type="hidden" id="multiID" name="multiID" value="" />
@@ -236,7 +236,7 @@ show_header('Official Tags Manager','tagmanager');
                         <div id="multiNames"></div>
                     </div>
 <?              } ?>
-                <input type="submit" name="tagtosynomyn" value="Add as synomyn for " title="add new synomyn" />&nbsp;&nbsp;
+                <input type="submit" name="tagtosynomyn" value="Add as synonym for " title="add new synonym" />&nbsp;&nbsp;
 
                 <select name="parenttagid" >
 <?                  foreach ($Tags as $Tag) {

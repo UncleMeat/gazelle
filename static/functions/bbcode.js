@@ -171,6 +171,9 @@ function CursorToEnd(textarea){
         textarea.value = textarea.value;
     }
 }
+function EndsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
 
 
 //made by putyn@tbdev.net lastupdate 28/12/2009
@@ -242,7 +245,8 @@ function anchor(textID) {
     var linkName = prompt("Please enter the name for the anchored heading", "");
     if (linkName && linkName != "") {
         var linkTitle = prompt("Please enter the heading text", "");
-        if (linkName && linkTitle) wrap('anchor', linkTitle, linkName, textID);
+        //if (linkName && linkTitle) 
+        wrap('anchor', linkTitle, linkName, textID);
     }
 }
 

@@ -87,11 +87,17 @@ if($NewRequest) {
 if(empty($_POST['image'])) {
 	$Image = "";
 } else {
+    
+      $Result = ValidateImageUrl($_POST['image'], 12, 255, GetWhitelistRegex());
+      if($Result===false) $Err = $Result;
+      else $Image = trim($_POST['image']);
+      
+    /*
 	if(preg_match("/".IMAGE_REGEX."/", trim($_POST['image'])) > 0) {
 			$Image = trim($_POST['image']);
 	} else {
 		$Err = display_str($_POST['image'])." does not appear to be a valid link to an image.";
-	}
+	} */
 }
 
 if(empty($_POST['description'])) {

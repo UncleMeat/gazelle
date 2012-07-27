@@ -35,10 +35,8 @@ if(isset($_GET['ip']) && isset($_GET['port'])){
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
 
-
-$DB->query("SELECT Body FROM articles WHERE TopicID='connchecker'");
-list($Body) = $DB->next_record();
-
+ 
+$Body=get_article('connchecker');
 
 show_header('Connectability Checker');
 ?>

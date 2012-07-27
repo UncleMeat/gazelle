@@ -1,9 +1,10 @@
 <?
 enforce_login();
 
-define('ANNOUNCEMENT_FORUM_ID', 19);
+define('ANNOUNCEMENT_FORUM_ID', 5);
 show_header('Blog','bbcode');
 require(SERVER_ROOT.'/classes/class_text.php');
+ 
 $Text = new TEXT;
 
 if(check_perms('admin_manage_blog')) {
@@ -55,7 +56,12 @@ if(check_perms('admin_manage_blog')) {
 						header('Location: blog.php');
 					} 
 				} else {
-					$ThreadID = create_thread(ANNOUNCEMENT_FORUM_ID, $LoggedUser[ID], $Title, $Body);
+                              $ForumID = (int)$_POST['forumid'];
+					$DB->query("SELECT ID FROM forums WHERE ID=$ForumID");
+					if($DB->record_count() < 1) {
+						error("No forum with id=$ForumID exists!");
+					} 
+					$ThreadID = create_thread($ForumID, $LoggedUser[ID], $Title, $Body);
 					if($ThreadID < 1) {
 						error(0);
 					}
@@ -73,6 +79,12 @@ if(check_perms('admin_manage_blog')) {
 		}
 	}
 		
+include(SERVER_ROOT.'/sections/forums/functions.php');
+ 
+$ForumCats = get_forum_cats();
+//This variable contains all our lovely forum data
+$Forums = get_forums_info();
+
 	?>
 		<div class="thin">
                 <div id="quickreplypreview">
@@ -92,14 +104,21 @@ if(check_perms('admin_manage_blog')) {
             <? if(!empty($_GET['action']) && $_GET['action'] == 'editblog'){?> 
                                             <input type="hidden" name="blogid" value="<?=$BlogID; ?>" />
             <? }?> 
-                                            <h3>Title</h3>
+                                            <br/><h3>Title</h3>
                                             <input type="text" name="title" class="long"  <? if(!empty($Title)) { echo 'value="'.display_str($Title).'"'; } ?> /><br />
-                                            <h3>Body</h3>
+                                            <br/><h3>Body</h3>
                             <? $Text->display_bbcode_assistant('textbody', true)  ?>
                                             <textarea id="textbody" name="body" class="long" rows="15"><? if(!empty($Body)) { echo display_str($Body); } ?></textarea> <br />
-                                            <h3>Thread ID</h3>
+                                            <br/><h3>Discussion Thread</h3>
+                                            <input type="radio" name="autothread" value="0" title="if selected a forum must be supplied" checked="checked" />
+                                            Automatically create thread in forum:
+                                           
+                            <?= print_forums_select($Forums, $ForumCats, ANNOUNCEMENT_FORUM_ID) ?>
+                                            <br/>
+                                             <input type="radio" name="autothread" value="1" title="if selected a valid threadid must be supplied" />
+                                            Thread already discussing this topic:
                                             <input type="text" name="thread" size="8"<? if(!empty($ThreadID)) { echo 'value="'.display_str($ThreadID).'"'; } ?> />
-                                            (Leave blank to create thread automatically)
+                                            &nbsp;(must be a valid thread id)
                                             <br /><br />
                                             <input id="subscribebox" type="checkbox" name="subscribe"<?=!empty($HeavyInfo['AutoSubscribe'])?' checked="checked"':''?> tabindex="2" />
                                             <label for="subscribebox">Subscribe</label>
@@ -150,7 +169,7 @@ foreach ($Blog as $BlogItem) {
 					<br /><br />
 					<em><a href="forums.php?action=viewthread&threadid=<?=$ThreadID?>">Discuss this post here</a></em>
 		<? 		if(check_perms('admin_manage_blog')) { ?> 
-					<a href="blog.php?action=deadthread&amp;id=<?=$BlogID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">[Dead]</a>
+					&nbsp;<a href="blog.php?action=deadthread&amp;id=<?=$BlogID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">[Remove link]</a>
 		<? 		}
 			} ?>
 				</div>

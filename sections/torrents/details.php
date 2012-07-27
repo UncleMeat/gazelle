@@ -1,7 +1,16 @@
 <?
 
-function compare($X, $Y){
+function compare($X, $Y){ // if this is used anywhere else... 
 	return($Y['score'] - $X['score']);
+}
+function score($X, $Y){
+	return($Y['score'] - $X['score']);
+}
+function added($X, $Y){
+	return($X['id'] - $Y['id']);
+}
+function az($X, $Y){
+	return( strcmp($X['name'], $Y['name']) );
 }
 
 define(MAX_PERS_COLLAGES, 3); // How many personal collages should be shown by default
@@ -28,6 +37,9 @@ $AltName=$GroupName; // Goes in the alt text of the image
 $Title=$GroupName; // goes in <title>
 //$Body = $Text->full_format($Body);
 
+$tagsort = isset($_GET['tsort'])?$_GET['tsort']:'score';
+if(!in_array($tagsort, array('score','az','added'))) $tagsort = 'score';
+
 $Tags = array();
 if ($TorrentTags != '') {
 	$TorrentTags=explode('|',$TorrentTags);
@@ -42,8 +54,12 @@ if ($TorrentTags != '') {
 		$Tags[$TagKey]['id']=$TorrentTagIDs[$TagKey];
 		$Tags[$TagKey]['userid']=$TorrentTagUserIDs[$TagKey];
 	}
-	uasort($Tags, 'compare');
+	uasort($Tags, $tagsort);
 }
+//advance tagsort for link
+if($tagsort=='score') $tagsort='az';
+else if($tagsort=='az') $tagsort='added';
+else $tagsort='score';
 
 $TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 if (empty($TokenTorrents)) {
@@ -112,13 +128,13 @@ if ($FreeTooltip)
               $AlertClass = '';
           } elseif($_GET['did'] == 3) {
               $ResultMessage = 'Added '. display_str($_GET['addedtag']);
-              if (isset($_GET['synomyn'])) $ResultMessage .= ' as a synomyn of '. display_str($_GET['synomyn']);
+              if (isset($_GET['synonym'])) $ResultMessage .= ' as a synonym of '. display_str($_GET['synonym']);
               $AlertClass = '';
           } elseif($_GET['did'] == 4) {
               $ResultMessage = display_str($_GET['addedtag']). ' is already added.';
               $AlertClass = ' alert';
           } elseif($_GET['did'] == 5) {
-              $ResultMessage = display_str($_GET['synomyn']). ' is a synomyn for '. display_str($_GET['addedtag']). ' which is already added.';
+              $ResultMessage = display_str($_GET['synonym']). ' is a synonym for '. display_str($_GET['addedtag']). ' which is already added.';
               $AlertClass = ' alert';
           }
           if($ResultMessage){
@@ -358,7 +374,12 @@ if(check_perms('torrents_review')){
 <?
         }
 ?>
-        <div class="head"><strong>Tags</strong> <span style="float:right;"><a href="torrents.php?action=tag_synomyns">synonyms</a> | <a href="articles.php?topic=tag">Tagging rules</a></span></div>
+            <div class="head">
+                <strong><a href="torrents.php?id=<?=$GroupID?>&tsort=<?=$tagsort?>" title="change sort order of tags to <?=$tagsort?>">Tags</a></strong>
+                <span style="float:right;font-size:0.8em;">
+                    <a href="torrents.php?action=tag_synonyms">synonyms</a> | <a href="articles.php?topic=tag">Tagging rules</a>
+                </span>
+            </div>
         <div class="box box_tags">			
                 <div class="tag_inner">
 <?
@@ -426,6 +447,7 @@ if(count($Tags) > 0) {
             <div class="head">Torrent Info</div>
 		<table class="torrent_table">
 			<tr class="colhead">
+				<td></td>
                         <td width="80%">
                           Name
                         </td>
@@ -491,7 +513,11 @@ $EditionID = 0;
 ?>
 
 			<tr class="groupid_<?=$GroupID?> edition_<?=$EditionID?> group_torrent" style="font-weight: normal;" id="torrent<?=$TorrentID?>">
-                      <td>
+                      <td class="center cats_col" rowspan="2" style="border-bottom:none;border-right:none;">
+                         <? $CatImg = 'static/common/caticons/' . $NewCategories[$GroupCategoryID]['image']; ?>
+                         <div title="<?= $NewCategories[$GroupCategoryID]['tag'] ?>"><img src="<?= $CatImg ?>" /></div>
+                      </td>
+                      <td style="border-bottom:none;border-left:none;">
                           <strong><?=$ExtraInfo; ?></strong>
 						<!-- Uploaded by <?=format_username($UserID, $TorrentUploader)?> <?=time_diff($TorrentTime);?> -->
 
@@ -501,8 +527,14 @@ $EditionID = 0;
 				<td><?=number_format($Seeders)?></td>
 				<td><?=number_format($Leechers)?></td>
 			</tr>
+                  <tr>
+                      <td colspan="5" class="right" style="border-top:none;border-bottom:none;border-left:none;">
+                          <em>Uploaded by   <?=format_username($UserID, $TorrentUploader)?> <?=time_diff($TorrentTime);?> </em>
+                          
+                      </td>
+                  </tr>
 			<tr class="groupid_<?=$GroupID?> edition_<?=$EditionID?> torrentdetails pad" id="torrent_<?=$TorrentID; ?>">
-				<td colspan="5"> 
+				<td colspan="6" style="border-top:none;"> 
                             
 <? if($Seeders == 0){ ?>            
                             <blockquote  style="text-align: center;">
@@ -655,9 +687,12 @@ if(count($PersonalCollages)>0) {
     </div>
       <div style="clear:both"></div>
 	<div class="main_column">
-		<div class="head"><strong>Description</strong></div>
+		<div class="head">
+                <strong>Description</strong>
+                <span style="float:right;"><a href="#" onclick="$('#descbox').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>
+            </div>
 		<div class="box">
-			<div class="body">
+			<div id="descbox" class="body">
 <? 
                         $PermissionsInfo = get_permissions_for_user($UserID);
                         if($Body!='') {
@@ -680,7 +715,7 @@ if(count($PersonalCollages)>0) {
           list($Thanks) = $DB->next_record();
           $Cache->cache_value('torrent_thanks_'.$GroupID, $Thanks);
     }
-    if (!$Thanks || strpos($Thanks, $LoggedUser['Username'])===false ) {
+    if (!$IsUploader && (!$Thanks || strpos($Thanks, $LoggedUser['Username'])===false )) {
 ?>
                 <form action="torrents.php" method="post" id="thanksform">
                     <input type="hidden" name="action" value="thank" />

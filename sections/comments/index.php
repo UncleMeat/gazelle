@@ -26,7 +26,7 @@ if(isset($_GET['id'])) {
 	}
 	$Perms = get_permissions($UserInfo['PermissionID']);
 	$UserClass = $Perms['Class'];
-	if (!check_paranoia('torrentcomments', $UserInfo['Paranoia'], $UserClass, $UserID)) { error(403); }
+	if (!check_paranoia('torrentcomments', $UserInfo['Paranoia'], $UserClass, $UserID)) { error(PARANOIA_MSG); }
 } else {
 	$UserID = $LoggedUser['ID'];
 	$Username = $LoggedUser['Username'];

@@ -282,7 +282,7 @@ INSERT INTO `categories` (`id`, `name`, `image`, `tag`) VALUES
 (11, 'DVD-R', 'cat_dvd_r.png', 'dvdr'),
 (12, 'Fetish', 'cat_fetish.png', 'fetish'),
 (13, 'XXX Games / Apps', 'cat_xxxgames.png', 'games.apps'),
-(14, 'Gang Bang / Orgy', 'cat_gangbang.png', 'gang.bang'),
+(14, 'Gang Bang / Orgy', 'cat_gangbang.png', 'gangbang'),
 (15, 'Shemale / TS', 'cat_shemale.png', 'shemale'),
 (16, 'Latina', 'cat_latina.png', 'latina'),
 (17, 'Oral', 'cat_oral.png', 'oral'),
@@ -1795,6 +1795,29 @@ CREATE TABLE IF NOT EXISTS `torrents_tags_votes` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `upload_templates`
+--
+
+CREATE TABLE IF NOT EXISTS `upload_templates` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `UserID` int(10) unsigned NOT NULL,
+  `TimeAdded` date NOT NULL DEFAULT '0000-00-00',
+  `Name` varchar(64) NOT NULL,
+  `Public` enum('0','1') NOT NULL DEFAULT '0',
+  `Title` varchar(255) NOT NULL,
+  `Image` varchar(255) NOT NULL,
+  `Body` mediumtext NOT NULL,
+  `CategoryID` int(10) NOT NULL,
+  `Taglist` text NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `UserID` (`UserID`),
+  KEY `TimeAdded` (`TimeAdded`),
+  KEY `Public` (`Public`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users_badges`
 --
 
@@ -2025,7 +2048,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `IP` varchar(15) NOT NULL DEFAULT '0.0.0.0',
   `Uploaded` bigint(20) unsigned NOT NULL DEFAULT '0',
   `Downloaded` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `Title` varchar(32) NOT NULL,
+  `Title` varchar(128) NOT NULL,
   `Enabled` enum('0','1','2') NOT NULL DEFAULT '0',
   `Paranoia` text,
   `Visible` enum('1','0') NOT NULL DEFAULT '1',

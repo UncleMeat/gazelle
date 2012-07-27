@@ -19,7 +19,7 @@ $Tags = explode(',', $_POST['tagname']);
 foreach ($Tags as $Tag) {
     $Tag = trim($Tag, '.'); // trim dots from the beginning and end
     $Tag = sanitize_tag($Tag);
-    $TagName = get_tag_synomyn($Tag);
+    $TagName = get_tag_synonym($Tag);
     if (!empty($TagName)) {
         /*
           $DB->query("INSERT INTO tags (Name, UserID) VALUES ('".$TagName."', ".$UserID.") ON DUPLICATE KEY UPDATE Uses=Uses+1");
@@ -31,8 +31,8 @@ foreach ($Tags as $Tag) {
             $DB->query("SELECT TagID FROM torrents_tags_votes 
                                 WHERE GroupID='$GroupID' AND TagID='$TagID' AND UserID='$UserID'");
             if ($DB->record_count() != 0) { // User has already added/voted on this tag+torrent so dont count again 
-                if ($Tag != $TagName) // this was a synomyn replacement
-                    $Get = "&did=5&synomyn=" . $Tag;
+                if ($Tag != $TagName) // this was a synonym replacement
+                    $Get = "&did=5&synonym=" . $Tag;
                 else
                     $Get = "&did=4";
                 $Get .= "&addedtag=" . $TagName;
@@ -59,8 +59,8 @@ foreach ($Tags as $Tag) {
 }
 
 update_hash($GroupID); // Delete torrent group cache
-if ($Tag != $TagName) // this was a synomyn replacement
-    $Get = "&did=3&synomyn=" . $Tag;
+if ($Tag != $TagName) // this was a synonym replacement
+    $Get = "&did=3&synonym=" . $Tag;
 else
     $Get = "&did=3";
 $Get .= "&addedtag=" . $TagName;
