@@ -44,13 +44,14 @@ class TEXT {
           //=============================================
           
            ':ohmy:'           => 'ohmy.gif',
-           ':cool1:'           => 'cool1.gif',
            ':sleeping:'           => 'sleeping.gif',
            ':innocent:'           => 'innocent.gif',
            ':whistle:'           => 'whistle.gif',
            ':unsure:'           => 'unsure.gif',
            ':closedeyes:'           => 'closedeyes.gif',
-           ':cool2:'           => 'cool2.gif',
+           ':cool:'           => 'cool.gif',
+           ':cool1:'           => 'cool2.gif',
+           ':cool2:'           => 'cool1.gif',
            ':fun:'           => 'fun.gif',
            ':thumbsup:'           => 'thumbsup.gif',
            ':thumbsdown:'           => 'thumbsdown.gif',
@@ -93,6 +94,7 @@ class TEXT {
            ':icecream:'           => 'icecream.gif',
            ':hooray:'           => 'hooray.gif',
            ':slap:'           => 'slap.gif',
+           ':sigh:'           => 'facepalm.gif',
            ':wall:'           => 'wall.gif',
            ':yucky:'           => 'yucky.gif',
            ':nugget:'           => 'nugget.gif',
@@ -135,7 +137,6 @@ class TEXT {
            ':smallprint:'         =>  'deal.gif',
           //----------------------------
           
-           ':sigh:'           => 'facepalm.gif',
            ':happydancing:'           => 'happydancing.gif',
            ':argh:'           => 'frustrated.gif',
            ':tumble:'           => 'tumbleweed.gif',
@@ -204,7 +205,11 @@ class TEXT {
           
           //----------------------------
           //----------------------------
-          
+           ':sing:'           => 'singing.gif',
+           ':sing1:'           => 'smiley_singing.gif',
+           ':sing2:'           => 'blobsing.gif',
+           ':singrain:'           => 'singrain.gif',
+           ':choir:'           => 'choir.gif',
           
            ':alarmed:'           => 'alarmed-smiley.gif',
            ':amen:'           => 'amen.gif',

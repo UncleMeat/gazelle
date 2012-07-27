@@ -150,9 +150,10 @@ class VALIDATE {
                                 //  the whitelist is set inside the $Field['Regex'] var (in options arrary in ->SetFields)
                             
                                 if(isset($Field['Regex'])) { $WLRegex=$Field['Regex']; } else { $WLRegex='/nohost.com/'; }
-                              
-                                // get all the image urls in the field ; inside [img][/img] 
-                                $num = preg_match_all('#\[img\](.*?)\[/img\]#ism', $ValidateVar, $imageurls);
+                               
+                    
+                                // get all the image urls in the field ; inside [img]url[/img] && [img=url] tags
+                                $num = preg_match_all('#(?|\[img\](.*?)\[/img\]|\[img\=(.*?)\])#ism', $ValidateVar, $imageurls);
                             
                                 if($num && $num >= $MinImages) { // if there are no img tags then it validates 
                                     for ($j=0;$j<$num;$j++) {  
