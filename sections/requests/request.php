@@ -71,8 +71,8 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 	
 	<div class="sidebar">
 <? if($CategoryID != 0) { ?>
+                <div class="head"><strong>Cover</strong></div>
 		<div class="box box_albumart">
-			<div class="head"><strong>Cover</strong></div>
 <?	if (!empty($Image)) { ?>
 			<p align="center"><img style="max-width: 220px;" src="<?=$Image?>" alt="<?=$FullName?>" onclick="lightbox.init(this,220);" /></p>
 <?	} else { ?>
@@ -81,8 +81,8 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 		</div>
 <? } ?>
 
+                <div class="head"><strong>Tags</strong></div>
 		<div class="box box_tags">
-			<div class="head"><strong>Tags</strong></div>
 			<ul class="stats nobullet">
 <?	foreach($Request['Tags'] as $TagID => $TagName) { ?>
 				<li>
@@ -92,8 +92,8 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 <?	} ?>
 			</ul>
 		</div>
+                <div class="head"><strong>Top Contributors</strong></div>
 		<div class="box box_votes">
-			<div class="head"><strong>Top Contributors</strong></div>
 			<table>
 <?	$VoteMax = ($VoteCount < 5 ? $VoteCount : 5);
 	$ViewerVote = false;
@@ -161,12 +161,13 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 			</tr>
 <?	if($CanVote) { ?>
 			<tr id="voting">
-				<td class="label">Custom Vote (MB)</td>
+				<td class="label">Custom Vote</td>
 				<td>
 					<input type="text" id="amount_box" size="8" onchange="Calculate();" />
 					<select id="unit" name="unit" onchange="Calculate();">
 						<option value='mb'>MB</option>
 						<option value='gb'>GB</option>
+                                                <option value='tb'>TB</option>
 					</select>
 					<input type="button" value="Preview" onclick="Calculate();"/>
 					<strong><?=($RequestTax * 100)?>% of this is deducted as tax by the system.</strong>
