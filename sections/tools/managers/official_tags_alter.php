@@ -189,6 +189,7 @@ if (isset($_POST['tagtosynomyn'])) {
                                 }
                                 $MsgGroups .= "$Div2$GroupID";
                                 $Div2 = ',';
+                                /*
                                 // fix taglist in each torrent as we go
                                 $DB->query("SELECT TagList FROM torrents_group WHERE ID=$GroupID");
                                 list($TagList) = $DB->next_record();
@@ -209,7 +210,8 @@ if (isset($_POST['tagtosynomyn'])) {
                                 $NewTagList = implode(' ', $Tags);
                                 $NewTagList = db_string(trim(str_replace('.', '_', $NewTagList)));
                                 $DB->query("UPDATE torrents_group 
-                                                               SET TagList='$NewTagList' WHERE ID=$GroupID");
+                                                               SET TagList='$NewTagList' WHERE ID=$GroupID"); 
+                                 */
                             }
                         
                             // update torrents_tags with entries for parentTagID
@@ -227,6 +229,9 @@ if (isset($_POST['tagtosynomyn'])) {
                         //// remove old entries for tagID
                         $DB->query("DELETE FROM tags WHERE ID = '$TagID'");
 
+                        foreach ($GroupInfos as $Group) {
+                            update_hash($Group[0]);
+                        }
                         $Message .= "Converted tag $TagName to synonym for $ParentTagName. ";
                         // probably we should log this action in some way
                         write_log("Tag $TagName converted to synonym for tag $ParentTagName, $NumAffectedTorrents tag-torrent links updated $MsgGroups by " . $LoggedUser['Username']);
