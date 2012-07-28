@@ -1643,7 +1643,7 @@ CREATE TABLE IF NOT EXISTS `torrents_group` (
   `ReleaseType` tinyint(2) DEFAULT '21',
   `TagList` varchar(500) NOT NULL,
   `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `Body` text NOT NULL,
+  `Body` mediumtext NOT NULL,
   `Image` varchar(255) NOT NULL,
   `SearchText` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`ID`),
