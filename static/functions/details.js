@@ -7,6 +7,22 @@ function Vote_Tag(tagname, tagid, groupid, way){
 	  ToPost['way'] = way; 
 	  ToPost['auth'] = authkey; 
         ajax.post('torrents.php?action=vote_tag', ToPost, function (response) { 
+            var x = json.decode(response); 
+            if ( is_array(x)){
+                if(x[0]==0){    // already voted so no vote
+                    $('#messagebar').add_class('alert');
+                    $('#messagebar').html(x[1] +tagname+"'");
+                } else {        // vote was counted
+                    $('#messagebar').remove_class('alert');
+                    $('#messagebar').html(x[1] +tagname+"'");
+                    $('#tagscore' + tagid).html(parseInt( $('#tagscore' + tagid).raw().innerHTML) + x[0]);
+                }
+            } else { // a non array == an error 
+                $('#messagebar').add_class('alert');
+                $('#messagebar').html(response);
+            }
+            $('#messagebar').show(); 
+            /*
             if (response==0) { // already voted so no vote
                 $('#messagebar').add_class('alert');
                 $('#messagebar').html("you have already voted for tag '" + tagname +"'");
@@ -18,7 +34,7 @@ function Vote_Tag(tagname, tagid, groupid, way){
                 $('#messagebar').add_class('alert');
                 $('#messagebar').html(response);
             }
-            $('#messagebar').show(); 
+            $('#messagebar').show(); */
             //setTimeout("$('#messagebar').hide()", 3000);
         });
 }

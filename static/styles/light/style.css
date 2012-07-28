@@ -1749,6 +1749,17 @@ code.bbcode {
     padding:0px 2px;
 }
 
+code.bbcodeblock {
+    display:block;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    background-color: #f4f4f4;
+    color: black;
+    text-align: left;
+    margin: 10px;
+    padding: 10px;
+    border: 1px dashed #98AAB1;
+}
+
 a.anchor, a.anchor:visited, a.anchor:hover {
     font-weight: bold;
     font-size: larger;
