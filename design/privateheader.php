@@ -128,7 +128,8 @@ if($NewSubscriptions === FALSE) {
 // Moved alert bar handling to before we draw minor stats to allow showing alert status in links too
 
 //Start handling alert bars
-$Alerts = array();
+$Infos = array(); // an info alert bar (nicer color)
+$Alerts = array(); // warning bar (red!)
 $ModBar = array();
 
 // News
@@ -145,7 +146,7 @@ if ($CurrentNews === false) {
 }
 
 if($LoggedUser['personal_freeleech'] >= sqltime()) {
-    $Alerts[] = 'Freeleech for '.  time_diff($LoggedUser['personal_freeleech']);
+    $Infos[] = 'Freeleech for '.  time_diff($LoggedUser['personal_freeleech']);
 }
 
 if ($MyNews < $CurrentNews) {
@@ -298,7 +299,10 @@ if(check_perms('admin_reports')) {
 if (!empty($Alerts) || !empty($ModBar)) {
 ?>
 	<div id="alerts">
-	<? foreach ($Alerts as $Alert) { ?>
+	<? foreach ($Infos as $Info) { ?>
+		<div class="alertbar nicebar"><?=$Info?></div>
+	<? } 
+         foreach ($Alerts as $Alert) { ?>
 		<div class="alertbar"><?=$Alert?></div>
 	<? }
 	if (!empty($ModBar)) { ?>

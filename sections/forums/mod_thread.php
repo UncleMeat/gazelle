@@ -93,11 +93,11 @@ function update_forum_info($ForumID, $AdjustNumTopics = 0, $BeginEndTransaction 
 			'IsSticky'=>$NewSticky
 			);
             
-    $AdjustNumTopics=(int)$AdjustNumTopics;
-    if ($AdjustNumTopics !=0) {
-                $AdjustNumTopics = $AdjustNumTopics>0?"+$AdjustNumTopics":$AdjustNumTopics;
+    //$AdjustNumTopics=(int)$AdjustNumTopics;
+    if ($AdjustNumTopics !=0) { // '-1' or '+1' etc
+                //$AdjustNumTopics = $AdjustNumTopics>0?"+$AdjustNumTopics":$AdjustNumTopics;
                 $AdjustNumTopics = "NumTopics=NumTopics$AdjustNumTopics,";
-                $UpdateArray['NumTopics']='-1';
+                $UpdateArray['NumTopics']=$AdjustNumTopics;
     }
     else $AdjustNumTopics ='';
             
@@ -157,15 +157,10 @@ if (isset($_POST['merge'])) {
     
     $Cache->begin_transaction('forums_list');
 
-    if($NewForumID==$OldForumID) { 
-        
-        update_forum_info($OldForumID,0,false);
- 
-    } else { // $NewForumID!=$ForumID  // If we're moving posts into a new forum, change the forum stats
-	
-        update_forum_info($OldForumID, -1,false);
-        update_forum_info($NewForumID, 0,false);
- 
+    update_forum_info($OldForumID, '-1',false);
+    if($NewForumID!=$OldForumID) {    // If we're moving posts into a new forum, change the new forum stats
+	 
+        update_forum_info($NewForumID, 0,false); 
         $Cache->delete_value('forums_'.$NewForumID);
     }
       
@@ -191,7 +186,7 @@ elseif(isset($_POST['delete'])) {
             $DB->query("DELETE FROM forums_polls WHERE TopicID='$TopicID'");
             $DB->query("DELETE FROM forums_polls_votes WHERE TopicID='$TopicID'");
     
-		update_forum_info($ForumID, -1);
+		update_forum_info($ForumID, '-1');
        
 		$Cache->delete_value('thread_'.$TopicID.'_info');
                 
@@ -201,7 +196,7 @@ elseif(isset($_POST['delete'])) {
 		error(403);
 	}
 
-} else { // If we're just editing it
+} else { // If we're just editing it/moving it
 	$Cache->begin_transaction('thread_'.$TopicID.'_info');
 	$UpdateArray = array(
 		'IsSticky'=>$Sticky,
@@ -235,9 +230,9 @@ elseif(isset($_POST['delete'])) {
 		
 		$Cache->begin_transaction('forums_list');
 		// Forum we're moving from
-		update_forum_info($OldForumID, -1, false);
+		update_forum_info($OldForumID, '-1', false);
 		// Forum we're moving to
-		update_forum_info($ForumID, 1, false);
+		update_forum_info($ForumID, '+1', false);
 		$Cache->commit_transaction(0);
             
 	} else { // Editing 

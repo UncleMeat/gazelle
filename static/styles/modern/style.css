@@ -426,6 +426,9 @@ li.searchbars {
    color: #fff;
    text-decoration: none;
 }
+.nicebar {
+    background-color: #1a1;
+}
 
 .torusername
 {

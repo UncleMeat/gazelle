@@ -447,7 +447,9 @@ li.searchbars {
 .alertbar a:hover {
     text-decoration: none;
 }
-
+.nicebar {
+    background-color: #1a1;
+}
 .blend {
     padding: 2px 40px 2px;
     background-color: black;
