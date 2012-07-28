@@ -45,7 +45,7 @@ a, .linkbox a, .permission_container a,
 a:visited, .linkbox a:visited, .permission_container a:visited,
     .forum_index a:visited, .forum_list a:visited, #search_button:visited,
     #request_table a:visited, .cat_list a:visited, .tags a:visited {
-    color: #995689;
+    color: #554578;
 }
 
 a:hover, .linkbox a:hover, .permission_container a:hover,
