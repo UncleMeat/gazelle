@@ -39,7 +39,7 @@ echo "var reelPix = ". json_encode($Reel) . ";\n"; ?>
 <?  }   ?>
     </div>
     
-    <table id="fmtop" class="box pad fm" style="width:660px;height:70px;margin:0px 330px 0px auto;"><tr>
+    <table id="fmtop" class="box pad fm" style="position:relative;width:660px;height:70px;margin:0px 330px 0px auto;"><tr>
         <td class="noborder center"><input type="button" value="Bet" onclick="Change_Bet()" /><br/><input id="betamount" type="text" size="1" value="<?=$BetAmount?>" disabled="disabled" /></td>
         <td class="noborder center"><input type="button" value="Plays" onclick="Change_NumBets()" /><br/><input id="numbets" type="text" size="1" value="1" disabled="disabled"/></td>
         <td class="noborder center" style="width:50%;"><h3 id="result" style="color:blue;font-size:2.4em"></h3></td>
@@ -86,7 +86,7 @@ echo "var reelPix = ". json_encode($Reel) . ";\n"; ?>
             $DB->query("SELECT Count(ID), SUM(Spins), SUM(Won),SUM(Bet*Spins),(SUM(Won)/SUM(Bet*Spins)) 
                       FROM sm_results");
 		$TotalResults = $DB->next_record();
-		$Cache->cache_value('sm_sum_history', $TotalResults, 300);
+		$Cache->cache_value('sm_sum_history', $TotalResults, 180);
 	  }
         list($Num, $NumSpins, $TotalWon, $TotalBet, $TotalReturn) = $TotalResults;
         
