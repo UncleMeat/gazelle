@@ -35,24 +35,22 @@ body {
 
 /* Common elements */
 
-a {
-    
+a, .linkbox a, .permission_container a,
+    .forum_index a, .forum_list a, #search_button, 
+    #request_table a, .cat_list a, .tags a {
     color: #005689;
     text-decoration: none;
 }
 
-a:hover {
-    color:#333;
+a:visited, .linkbox a:visited, .permission_container a:visited,
+    .forum_index a:visited, .forum_list a:visited, #search_button:visited,
+    #request_table a:visited, .cat_list a:visited, .tags a:visited {
+    color: #995689;
 }
 
-a:visited {
-    color: #005689;
-    /*color: #333;    */
-}
-
-.linkbox a, .linkbox a:visited, .permission_container a, .permission_container a:visited,
-    .forum_index a, .forum_index a:visited, .forum_list a, .forum_list a:visited, #search_button, #search_button:visited,
-    #request_table a, #request_table a:visited, .cat_list a, .cat_list a:visited, .tags a, .tags a:visited {
+a:hover, .linkbox a:hover, .permission_container a:hover,
+    .forum_index a:hover, .forum_list a:hover, #search_button:hover,
+    #request_table a:hover, .cat_list a:hover, .tags a:hover {
     color: #333;
 }
 
