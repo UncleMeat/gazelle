@@ -20,6 +20,7 @@ foreach ($Tags as $Tag) {
     $Tag = trim($Tag, '.'); // trim dots from the beginning and end
     $Tag = sanitize_tag($Tag);
     $TagName = get_tag_synonym($Tag);
+    if (!is_valid_tag($TagName)) continue;
     if (!empty($TagName)) {
         
         $DB->query("INSERT INTO tags (Name, UserID) VALUES ('".$TagName."', ".$UserID.") ON DUPLICATE KEY UPDATE Uses=Uses+1");
