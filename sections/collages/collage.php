@@ -422,8 +422,8 @@ if(empty($CommentList)) {
 foreach ($CommentList as $Comment) {
 	list($CommentID, $Body, $UserID, $Username, $CommentTime) = $Comment;
 ?>
-		<div id="post<?=$CommentID?>" class="box">
-			<div class="head"><a href='#post<?=$CommentID?>'>#<?=$CommentID?></a> By <?=format_username($UserID, $Username) ?> <?=time_diff($CommentTime) ?> <a href="reports.php?action=report&amp;type=collages_comment&amp;id=<?=$CommentID?>">[Report Comment]</a></div>
+                <div class="head"><a href='#post<?=$CommentID?>'>#<?=$CommentID?></a> By <?=format_username($UserID, $Username) ?> <?=time_diff($CommentTime) ?> <a href="reports.php?action=report&amp;type=collages_comment&amp;id=<?=$CommentID?>">[Report Comment]</a></div>
+		<div id="post<?=$CommentID?>" class="box">			
                   <div class="pad"><?=$Text->full_format($Body, get_permissions_advtags($UserID))?></div>
 		</div>
 <?

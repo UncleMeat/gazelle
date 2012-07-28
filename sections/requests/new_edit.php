@@ -151,12 +151,13 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests,bbc
 
 <?	if($NewRequest) { ?>
 				<tr id="voting">
-					<td class="label">Bounty (MB)</td>
+					<td class="label" id="bounty">Bounty</td>
 					<td>
 						<input type="text" id="amount_box" size="8" value="<?=(!empty($Bounty) ? $Bounty : '100')?>" onchange="Calculate();" />
 						<select id="unit" name="unit" onchange="Calculate();">
 							<option value='mb'<?=(!empty($_POST['unit']) && $_POST['unit'] == 'mb' ? ' selected="selected"' : '') ?>>MB</option>
 							<option value='gb'<?=(!empty($_POST['unit']) && $_POST['unit'] == 'gb' ? ' selected="selected"' : '') ?>>GB</option>
+                                                        <option value='tb'<?=(!empty($_POST['unit']) && $_POST['unit'] == 'tb' ? ' selected="selected"' : '') ?>>TB</option>
 						</select>
 						<input type="button" value="Preview" onclick="Calculate();"/>
 						<strong><?=($RequestTax * 100)?>% of this is deducted as tax by the system.</strong>

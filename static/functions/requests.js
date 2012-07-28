@@ -62,8 +62,19 @@ function Vote(amount, requestid) {
 }
 
 function Calculate() {
-	var mul = (($('#unit').raw().options[$('#unit').raw().selectedIndex].value == 'mb') ? (1024*1024) : (1024*1024*1024));
-	var amt = Math.floor($('#amount_box').raw().value * mul);
+        var unit = $('#unit').raw().options[$('#unit').raw().selectedIndex].value;
+        var mul;
+        
+        if(unit == 'mb') {
+            mul = (1024*1024);
+        } else if(unit == 'gb') {
+            mul = (1024*1024*1024);
+        } else { // tb
+            mul = (1024*1024*1024*1024);
+        }
+	
+        var amt = Math.floor($('#amount_box').raw().value * mul);
+        
         if(amt > $('#current_uploaded').raw().value) {
 		$('#new_uploaded').raw().innerHTML = "You can't afford that request!";
 		$('#new_bounty').raw().innerHTML = "0.00 MB";
