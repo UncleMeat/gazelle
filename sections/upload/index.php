@@ -36,7 +36,7 @@ if(!empty($_POST['submit'])) {
             $Err = "Deleted '$Template[Name]' template";
         $DB->query("DELETE FROM upload_templates WHERE ID='$TemplateID'");
         $Cache->delete_value('template_' . $TemplateID);
-        $Cache->delete_value('template_ids_' . $Template['UserID']);
+        $Cache->delete_value('templates_ids_' . $Template['UserID']);
     }
     $HideDNU = true;
     $HideWL = true;
