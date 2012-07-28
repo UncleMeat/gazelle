@@ -38,7 +38,7 @@ if (empty($Properties) && !empty($_POST['fill']) && is_number($_POST['template']
             $Properties['GroupDescription'] .= "\n\n\n[br][bg=#0074b7][bg=#0074b7,90%][color=white][align=right][b][i][font=Courier New]$Properties[Name] template by $Properties[Authorname][/font][/i][/b][/align][/color][/bg][/bg]";
             $Cache->cache_value('template_' .$TemplateID, $Properties, 96400 * 7);
         } else { // catch the case where a public template has been unexpectedly removed but left in a random users cache
-            $Cache->delete_value('template_ids_' .$LoggedUser['ID']); // remove from their template list
+            $Cache->delete_value('templates_ids_' .$LoggedUser['ID']); // remove from their template list
             $Err = "That template has been deleted - sorry!";
         }
     }
