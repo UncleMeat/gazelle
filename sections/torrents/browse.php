@@ -409,10 +409,10 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
                             <option value="desc"<? selected('order_way', 'desc') ?>>Descending</option>
                             <option value="asc" <? selected('order_way', 'asc') ?>>Ascending</option>
                         </select>
-                        <label style="margin-left: 20px;" for="filter_freeleech"><strong>Filter freeleech torrents</strong></label>
+                        <label style="margin-left: 20px;" for="filter_freeleech"><strong>Include only freeleech torrents.</strong></label>
                         <input type="checkbox" name="filter_freeleech" value="1" <? selected('filter_freeleech', 1, 'checked') ?>/>
                     <? if (check_perms('site_search_many')) { ?>
-                            <label style="margin-left:40px;" for="limit_matches"><strong>Limited search results:</strong></label>
+                            <label style="margin-left:20px;" for="limit_matches"><strong>Limited search results:</strong></label>
                             <input type="checkbox" value="1" name="limit_matches" <? selected('limit_matches', 1, 'checked') ?> />
                     <? } ?>
                     </td>
