@@ -174,10 +174,11 @@ if (!empty($Err)) { // Show the upload form, with the data the user entered
 
 $Body = $Properties['GroupDescription'];
 // Trickery
+/* image is already validated by better regex in validator so skip this 
 if (!preg_match("/^" . URL_REGEX . "$/i", $Properties['Image'])) {
     $Properties['Image'] = '';
     $T['Image'] = "''";
-}
+} */
 
 
 //Needs to be here as it isn't set for add format until now

@@ -141,10 +141,10 @@ show_header('Official Tags Manager','tagmanager');
                         </td>
                     </tr>
                     </table>
-                    </form>
+                </form>
             <? } ?>
-                <form  class="tagtable" action="tools.php" method="post">
-                    <table  class="tagtable" style="width:200px">
+                <form class="tagtable" action="tools.php" method="post">
+                    <table class="tagtable" style="width:200px;">
                         <input type="hidden" name="action" value="official_tags_alter" />
                         <input type="hidden" name="auth" value="<?= $LoggedUser['AuthKey'] ?>" />
                         <input type="hidden" name="parenttagid" value="<?= $ParentTagID ?>" />
@@ -203,25 +203,29 @@ show_header('Official Tags Manager','tagmanager');
                 } ?> />  
 
                 <label for="movetag" title="if this is checked then you can select an existing tag to convert into a synonym for another tag">convert tag to synomyn</label>&nbsp;&nbsp;&nbsp;
-
+ 
                 <select id="movetagid" name="movetagid" <? if($UseMultiInterface) { 
                       ?>    onchange="Select_Tag( this.value, this.options[this.selectedIndex].text );" <?  } ?>>
                     <option value="0" selected="selected">none&nbsp;</option>
                     <?
                     //$DB->query("SELECT ID, Name, Uses FROM tags WHERE TagType='other' ORDER BY Name ASC"); 
-            $DB->query("SELECT t.ID, t.Name, t.Uses, Count(ts.ID)
-                          FROM tags AS t 
-                     LEFT JOIN tag_synomyns AS ts ON ts.TagID=t.ID
-                         WHERE t.TagType='other'
-                      GROUP BY t.ID 
-                      HAVING Count(ts.ID)=0
-                      ORDER BY Name ASC");   
+                    $DB->query("SELECT t.ID, t.Name, t.Uses, Count(ts.ID)
+                                  FROM tags AS t 
+                             LEFT JOIN tag_synomyns AS ts ON ts.TagID=t.ID
+                                 WHERE t.TagType='other'
+                              GROUP BY t.ID 
+                              HAVING Count(ts.ID)=0
+                              ORDER BY Name ASC");   
             
+                    ob_start();
                     $AllTags = $DB->to_array();
                     foreach ($AllTags as $Tag) {
                         list($TagID, $TagName, $TagUses) = $Tag;  ?>
                         <option value="<?= $TagID ?>"><?= "$TagName ($TagUses)" ?>&nbsp;</option>
-                    <? } ?>
+                    <? } 
+                    $taglistHTML = ob_get_contents();
+                    echo $taglistHTML;
+                    ?>
                 </select>
 
 <?              if ($UseMultiInterface) { // Experts only! ?>
@@ -253,6 +257,32 @@ show_header('Official Tags Manager','tagmanager');
             </div>
         </form>
     </div>
+   
+<? if (check_perms('site_convert_tags')) { ?>
+    <br/>
+    <h2>Tags Admin</h2>
+
+    <div class="tagtable">
+        <form  class="tagtable" action="tools.php" method="post">
+                <input type="hidden" name="action" value="official_tags_alter" />
+                <input type="hidden" name="auth" value="<?= $LoggedUser['AuthKey'] ?>" />
+            <div class="box pad center">
+                <div class="pad" style="text-align:left">
+                    <h3>Permanently Remove Tag</h3>
+                    This section allows you to remove a tag completely from the database. <br/>
+                    <strong>Note: Use With Caution!</strong> This should only be used to remove things like banned tags, 
+                    <span style="text-decoration: underline">it irreversibly removes the tag and all instances of it in all torrents.</span> 
+                </div>
+            
+                    <select id="permdeletetagid" name="permdeletetagid" >
+                        <option value="0" selected="selected">none&nbsp;</option>
+                        <?=$taglistHTML;?>
+                    </select>
+                    <input type="submit" name="deletetagperm" value="Permanently remove tag " title="permanently remove tag" />&nbsp;&nbsp;
+            </div>
+        </form>
+    </div>
+<? } ?>
 </div>
 <?
 show_footer();
