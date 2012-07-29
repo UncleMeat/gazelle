@@ -36,6 +36,10 @@ if($LastVote!=$Way){
     }
     $DB->query("UPDATE torrents_tags SET $Change WHERE TagID='$TagID' AND GroupID='$GroupID'");
 
+    $DB->query("DELETE FROM torrents_tags WHERE TagID='$TagID' AND GroupID='$GroupID' AND NegativeVotes>PositiveVotes");
+    if ($DB->affected_rows()>0){
+        update_hash($GroupID);
+    }
     $Cache->delete_value('torrents_details_'.$GroupID); // Delete torrent group cache
 } else 
     echo json_encode (array(0,"You have already $Way voted for tag '"));

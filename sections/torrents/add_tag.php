@@ -20,13 +20,12 @@ foreach ($Tags as $Tag) {
     $Tag = trim($Tag, '.'); // trim dots from the beginning and end
     $Tag = sanitize_tag($Tag);
     $TagName = get_tag_synonym($Tag);
+    if (!is_valid_tag($TagName)) continue;
     if (!empty($TagName)) {
-        /*
-          $DB->query("INSERT INTO tags (Name, UserID) VALUES ('".$TagName."', ".$UserID.") ON DUPLICATE KEY UPDATE Uses=Uses+1");
-          $TagID = $DB->inserted_id(); */
-
-        $DB->query("SELECT ID FROM tags WHERE Name LIKE '" . $TagName . "'");
-        list($TagID) = $DB->next_record();
+        
+        $DB->query("INSERT INTO tags (Name, UserID) VALUES ('".$TagName."', ".$UserID.") ON DUPLICATE KEY UPDATE Uses=Uses+1");
+        $TagID = $DB->inserted_id();
+        
         if ($TagID) {
             $DB->query("SELECT TagID FROM torrents_tags_votes 
                                 WHERE GroupID='$GroupID' AND TagID='$TagID' AND UserID='$UserID'");
@@ -40,21 +39,17 @@ foreach ($Tags as $Tag) {
                 header("Location: torrents.php?id=" . $GroupID . $Get);
                 die();
             }
-        } else {
-            // if it gets to here then its a new tag for this torrent, try adding/inc uses for tags
-            $DB->query("INSERT INTO tags (Name, UserID) VALUES ('" . $TagName . "', " . $UserID . ") ON DUPLICATE KEY UPDATE Uses=Uses+1");
-            $TagID = $DB->inserted_id();
-        }
 
-        $DB->query("INSERT INTO torrents_tags 
-                      (TagID, GroupID, PositiveVotes, UserID) VALUES 
-                      ('$TagID', '$GroupID', '$VoteValue', '$UserID') 
-                      ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+1");
+            $DB->query("INSERT INTO torrents_tags 
+                          (TagID, GroupID, PositiveVotes, UserID) VALUES 
+                          ('$TagID', '$GroupID', '$VoteValue', '$UserID') 
+                          ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+1");
 
-        $DB->query("INSERT IGNORE INTO torrents_tags_votes (GroupID, TagID, UserID, Way) VALUES ('$GroupID', '$TagID', '$UserID', 'up')");
+            $DB->query("INSERT IGNORE INTO torrents_tags_votes (GroupID, TagID, UserID, Way) VALUES ('$GroupID', '$TagID', '$UserID', 'up')");
 
-        $DB->query("INSERT INTO group_log (GroupID, UserID, Time, Info)
+            $DB->query("INSERT INTO group_log (GroupID, UserID, Time, Info)
 					VALUES ('$GroupID'," . $LoggedUser['ID'] . ",'" . sqltime() . "','" . db_string('Tag "' . $TagName . '" added to group') . "')");
+       }
     }
 }
 

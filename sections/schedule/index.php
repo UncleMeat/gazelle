@@ -75,8 +75,8 @@ while(list($GroupID) = $DB->next_record()) {
 $DB->query("UPDATE torrents SET FreeTorrent='0',FreeLeechType='0',flags='2' WHERE FreeTorrent='1' AND FreeLeechType='3' AND Time<'$TimeMinus'");
 */
 sleep(5);
-//------------- Delete unpopular tags -----------------------------------//
-$DB->query("DELETE FROM torrents_tags WHERE NegativeVotes>PositiveVotes");
+//------------- Delete unpopular tags -------// moved to vote_tag so torrents_group.taglist can be adjusted if tag is deleted
+//$DB->query("DELETE FROM torrents_tags WHERE NegativeVotes>PositiveVotes");
 
 //------------- Expire old FL Tokens and clear cache where needed ------//
 $sqltime = sqltime();

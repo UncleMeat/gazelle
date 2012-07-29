@@ -155,3 +155,21 @@ function get_tag_synonym($Tag, $Sanitise = true){
         }
 }
 
+
+/**
+ * Return whether $Tag is a valid tag - more than 2** char long and not a stupid word
+ * (** unless is 'hd','dp','bj','ts','sd','69','mf','3d','hj','bi')
+ * 
+ * @param $Tag. The prospective tag to be evaluated
+ * @return Boolean representing whether the tag is valid format (not banned)
+ */
+function is_valid_tag($Tag){
+    static $Good2charTags;
+    $len = strlen($Tag);
+    if ( $len < 2 ) return false;
+    if ( $len == 2 ) {  
+        if(!$Good2charTags) $Good2charTags = array('hd','dp','bj','ts','sd','69','mf','3d','hj','bi','tv','dv','da');
+        if ( !in_array($Tag, $Good2charTags) ) return false;
+    }
+    return true;
+}

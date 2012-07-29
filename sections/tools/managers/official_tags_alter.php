@@ -73,6 +73,53 @@ if (isset($_POST['doit'])) {
 
 
 
+// ==============================  super delete ========================
+
+if (isset($_POST['deletetagperm'])) {
+    
+    if (!check_perms('site_convert_tags')) error(403);
+    
+    $Result = 0;
+    $TagID = (int)$_POST['permdeletetagid'];
+ 
+    $DB->query("SELECT Name, Count(ts.ID)
+                          FROM tags AS t 
+                     LEFT JOIN tag_synomyns AS ts ON ts.TagID=t.ID
+                         WHERE t.ID = $TagID
+                      GROUP BY t.ID ");
+    list($TagName, $NumSynomyns) = $DB->next_record();
+    if ($NumSynomyns>0) {
+        $Message .= "Cannot delete a tag that has synonyms: $TagName\n";
+        $TagName = '';
+    }
+    
+    if ($TagName) {
+         // get all the torrents that have this tag
+        $DB->query("SELECT GroupID FROM torrents_tags WHERE TagID='$TagID'"); 
+        $GroupIDs = $DB->collect('GroupID');
+ 
+        // remove old entries for tagID
+        $DB->query("DELETE FROM torrents_tags_votes WHERE TagID = '$TagID'"); 
+        $DB->query("DELETE FROM torrents_tags WHERE TagID = '$TagID'"); 
+        $DB->query("DELETE FROM tags WHERE ID = '$TagID'");
+
+        foreach ($GroupIDs as $GID) {
+            update_hash($GID); // update tags + tracker for groupID
+        } 
+        
+        $Message .= "Permanently deleted tag $TagName.";
+        $count=count($GroupIDs);
+        if ($count > 0) $Message .= " $count torrent taglists updated. ";
+        
+        //  log action  
+        $AllGroupIDs = implode(',', $GroupIDs);
+        write_log("Tag $TagName deleted permanently, $count tag-torrent links updated torrents $AllGroupIDs by " . $LoggedUser['Username']);
+        $Result = 1;
+    }
+}
+
+
+
 // ======================================  del synomyn
 
 if (isset($_POST['delsynomyns'])) {
@@ -163,12 +210,12 @@ if (isset($_POST['tagtosynomyn'])) {
                     } else {
                         // 'convert refrences to the original tag to parenttag and cleanup db 
              
-                        $DB->query("SELECT ts.GroupID, ts.PositiveVotes, ts.NegativeVotes, Count(tt2.TagID) AS Count
-                                                      FROM torrents_tags AS ts
-                                                 LEFT JOIN torrents_tags AS tt2 ON tt2.GroupID=ts.GroupID
+                        $DB->query("SELECT tt.GroupID, tt.PositiveVotes, tt.NegativeVotes, Count(tt2.TagID) AS Count
+                                                      FROM torrents_tags AS tt
+                                                 LEFT JOIN torrents_tags AS tt2 ON tt2.GroupID=tt.GroupID
                                                             AND tt2.TagID=$ParentTagID
-                                                     WHERE ts.TagID=$TagID  
-                                                  GROUP BY ts.GroupID");
+                                                     WHERE tt.TagID=$TagID  
+                                                  GROUP BY tt.GroupID");
                         
                         $GroupInfos = $DB->to_array(false, MYSQLI_BOTH);
                         //$Message .= " count groupinfos=".count($GroupInfos) . "  ";
@@ -189,27 +236,7 @@ if (isset($_POST['tagtosynomyn'])) {
                                 }
                                 $MsgGroups .= "$Div2$GroupID";
                                 $Div2 = ',';
-                                // fix taglist in each torrent as we go
-                                $DB->query("SELECT TagList FROM torrents_group WHERE ID=$GroupID");
-                                list($TagList) = $DB->next_record();
-                                $TagList = trim(str_replace('_', '.', $TagList));
-                                $Tags = explode(' ', $TagList);
-                                foreach ($Tags as $Key => &$Tag) {
-                                    if ($Tag == $TagName) {
-                                        // if there is not already a copy of the tag for this groupID in torrents_tags
-                                        if ($Count==0){
-                                            // change tag we are converting to parent tag in list
-                                            $Tag = $ParentTagName;
-                                        } else // or skip (remove from array) if a copy already exists in this taglist
-                                            unset($Tags[$Key]);
-                                        break;
-                                    }
-                                }
-                                unset($Tag);
-                                $NewTagList = implode(' ', $Tags);
-                                $NewTagList = db_string(trim(str_replace('.', '_', $NewTagList)));
-                                $DB->query("UPDATE torrents_group 
-                                                               SET TagList='$NewTagList' WHERE ID=$GroupID");
+                  
                             }
                         
                             // update torrents_tags with entries for parentTagID
@@ -227,9 +254,13 @@ if (isset($_POST['tagtosynomyn'])) {
                         //// remove old entries for tagID
                         $DB->query("DELETE FROM tags WHERE ID = '$TagID'");
 
+                        foreach ($GroupInfos as $Group) {
+                            update_hash($Group[0]);
+                        }
                         $Message .= "Converted tag $TagName to synonym for $ParentTagName. ";
                         // probably we should log this action in some way
                         write_log("Tag $TagName converted to synonym for tag $ParentTagName, $NumAffectedTorrents tag-torrent links updated $MsgGroups by " . $LoggedUser['Username']);
+                    
                     }
                 } else {
                     $Message .= "Added tag $TagName as synonym for $ParentTagName";
@@ -272,6 +303,35 @@ if (isset($_POST['addsynomyn'])) {
             }
         }
     }
+}
+
+
+if(isset($_POST['recountall'])) {
+ 
+    if (!check_perms('site_convert_tags'))  error(403);
+    
+    // this may take a while...
+    
+    // delete any orphaned torrent-tag links where the torrent no longer exists
+    $DB->query("DELETE t 
+                  FROM torrents_tags AS t 
+             LEFT JOIN torrents_group AS tg ON t.GroupID=tg.ID
+                 WHERE tg.ID is NULL");
+            
+    // update tag uses per tag
+    $DB->query("UPDATE tags AS t LEFT JOIN 
+                (
+                    SELECT TagID, COUNT(GroupID) AS TagCount
+                      FROM torrents_tags 
+                     GROUP BY TagID
+                ) AS c 
+                ON t.ID = c.TagID
+                SET t.Uses=c.TagCount ");
+                         
+    $num =$DB->affected_rows();
+    //$Result = $num > 0? 1 :0;
+    $Message .= "Recounted total uses for $num tags" ;
+    $Result = 1; // a 0 result is not an error (means nothing needed correcting!)
 }
 
 

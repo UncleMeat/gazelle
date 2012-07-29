@@ -119,7 +119,7 @@ while(list($Message, $LogTime) = $DB->next_record()) {
                                     $Div=', ';
                             }
                         }
-				$Message = $Message.' '.$MessageParts[$i] .' '. $Links;
+				$Message = "$Message $MessageParts[$i] $Links";
                         if ($Links != '') $i++;
 				break;
 			case "Request":

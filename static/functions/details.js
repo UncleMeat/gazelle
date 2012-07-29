@@ -22,19 +22,6 @@ function Vote_Tag(tagname, tagid, groupid, way){
                 $('#messagebar').html(response);
             }
             $('#messagebar').show(); 
-            /*
-            if (response==0) { // already voted so no vote
-                $('#messagebar').add_class('alert');
-                $('#messagebar').html("you have already voted for tag '" + tagname +"'");
-            } else if (Math.abs(response)==1) { // vote was counted
-                $('#messagebar').remove_class('alert');
-                $('#messagebar').html("your " + way + " vote was counted for tag '" + tagname +"'");
-                $('#tagscore' + tagid).html(parseInt( $('#tagscore' + tagid).raw().innerHTML) + parseInt(response));
-            } else { // a non number == an error  if ( !isnumeric(response)) 
-                $('#messagebar').add_class('alert');
-                $('#messagebar').html(response);
-            }
-            $('#messagebar').show(); */
             //setTimeout("$('#messagebar').hide()", 3000);
         });
 }

@@ -174,10 +174,11 @@ if (!empty($Err)) { // Show the upload form, with the data the user entered
 
 $Body = $Properties['GroupDescription'];
 // Trickery
+/* image is already validated by better regex in validator so skip this 
 if (!preg_match("/^" . URL_REGEX . "$/i", $Properties['Image'])) {
     $Properties['Image'] = '';
     $T['Image'] = "''";
-}
+} */
 
 
 //Needs to be here as it isn't set for add format until now
@@ -213,6 +214,7 @@ $Tags = explode(' ', strtolower($NewCategories[(int)$_POST['category']]['tag']."
         //$Tag = sanitize_tag($Tag);
         $Tag = trim($Tag,'.'); // trim dots from the beginning and end
         $Tag = get_tag_synonym($Tag);
+        if (!is_valid_tag($Tag)) continue;
         if (!empty($Tag)) { // mifune: modified this to not add duplicates in the same input string
             if (!in_array($Tag, $TagsAdded)){ // and to create new tags as Uses=1 which seems more correct
                 $TagsAdded[] = $Tag;
