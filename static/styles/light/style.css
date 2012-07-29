@@ -37,21 +37,24 @@ body {
 
 a, .linkbox a, .permission_container a,
     .forum_index a, .forum_list a, #search_button, 
-    #request_table a, .cat_list a, .tags a {
+    #request_table a, .cat_list a, .tags a, .head a, .colhead_dark a {
     color: #005689;
     text-decoration: none;
 }
 
 a:visited, .linkbox a:visited, .permission_container a:visited,
     .forum_index a:visited, .forum_list a:visited, #search_button:visited,
-    #request_table a:visited, .cat_list a:visited, .tags a:visited {
-    color: #554578;
+    #request_table a:visited, .cat_list a:visited, .tags a:visited,
+    .head a:visited, .colhead_dark a:visited {
+    color: #333;
 }
 
 a:hover, .linkbox a:hover, .permission_container a:hover,
     .forum_index a:hover, .forum_list a:hover, #search_button:hover,
-    #request_table a:hover, .cat_list a:hover, .tags a:hover {
-    color: #333;
+    #request_table a:hover, .cat_list a:hover, .tags a:hover, .head a:hover,
+    .colhead_dark a:hover {
+    color: red;
+    text-decoration: underline;
 }
 
 h1,h2,h3,h4 {
@@ -671,6 +674,7 @@ a.contact_link:hover {
 div.linkbox {
     text-align:center;
     padding: 5px;
+    color: grey;
 }
 
 .center {
@@ -954,14 +958,6 @@ table.boxstat td:first-child {
         line-height: 30px;
 }
 
-.head a {
-    color: #005689;
-}
-
-.head a:visited {
-    color: #333;
-}
-
 .body {
      padding: 3px 10px 10px 10px; 
 }/*
@@ -1115,15 +1111,15 @@ input.shopbutton.itembuy:hover {
     font-size: 0.8em;
 }
 
-.colhead a, .colhead_dark a {
+.colhead a {
     color: #005689;
 }
 
-.colhead a:hover, .colhead_dark a:hover {
+.colhead a:hover {
     color: #333;
 }
 
-.colhead a:visited, .colhead_dark a:visited {
+.colhead a:visited {
     color: #333;
 }
 
