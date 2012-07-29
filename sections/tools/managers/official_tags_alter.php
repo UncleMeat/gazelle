@@ -306,6 +306,35 @@ if (isset($_POST['addsynomyn'])) {
 }
 
 
+if(isset($_POST['recountall'])) {
+ 
+    if (!check_perms('site_convert_tags'))  error(403);
+    
+    // this may take a while...
+    
+    // delete any orphaned torrent-tag links where the torrent no longer exists
+    $DB->query("DELETE t 
+                  FROM torrents_tags AS t 
+             LEFT JOIN torrents_group AS tg ON t.GroupID=tg.ID
+                 WHERE tg.ID is NULL");
+            
+    // update tag uses per tag
+    $DB->query("UPDATE tags AS t LEFT JOIN 
+                (
+                    SELECT TagID, COUNT(GroupID) AS TagCount
+                      FROM torrents_tags 
+                     GROUP BY TagID
+                ) AS c 
+                ON t.ID = c.TagID
+                SET t.Uses=c.TagCount ");
+                         
+    $num =$DB->affected_rows();
+    //$Result = $num > 0? 1 :0;
+    $Message .= "Recounted total uses for $num tags" ;
+    $Result = 1; // a 0 result is not an error (means nothing needed correcting!)
+}
+
+
 if ($Message != '') {
     header("Location: tools.php?action=official_tags&rst=$Result&msg=" . htmlentities($Message) .$anchor);
 } else {

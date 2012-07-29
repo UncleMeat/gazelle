@@ -262,8 +262,8 @@ show_header('Official Tags Manager','tagmanager');
     <br/>
     <h2>Tags Admin</h2>
 
-    <div class="tagtable">
-        <form  class="tagtable" action="tools.php" method="post">
+    <form  class="tagtable" action="tools.php" method="post">
+        <div class="tagtable">
                 <input type="hidden" name="action" value="official_tags_alter" />
                 <input type="hidden" name="auth" value="<?= $LoggedUser['AuthKey'] ?>" />
             <div class="box pad center">
@@ -280,8 +280,23 @@ show_header('Official Tags Manager','tagmanager');
                     </select>
                     <input type="submit" name="deletetagperm" value="Permanently remove tag " title="permanently remove tag" />&nbsp;&nbsp;
             </div>
-        </form>
-    </div>
+        </div>
+            
+            
+        <div class="tagtable">
+        
+            <div class="box pad center">
+                <div class="pad" style="text-align:left">
+                    <h3>Recount tag uses</h3>
+                    This should never be needed once we go live!<br/>
+                    <strong>Note: </strong>  You cannot do any direct harm with this but it may take a while to complete...
+                </div>
+             
+                <input type="submit" name="recountall" value="Recount all tags " title="recounts the uses for every tag in the database" />&nbsp;&nbsp;
+            </div>
+        </div>
+        
+    </form> 
 <? } ?>
 </div>
 <?
