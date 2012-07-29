@@ -253,8 +253,6 @@ foreach (array('filelist') as $Search) {
 
 if (!empty($_GET['filter_freeleech']) && $_GET['filter_freeleech'] == 1) {
     $SS->set_filter('FreeTorrent', array(1));
-} else {
-    $SS->set_filter('FreeTorrent', array(0));
 }
 
 if (!empty($_GET['filter_cat'])) {
