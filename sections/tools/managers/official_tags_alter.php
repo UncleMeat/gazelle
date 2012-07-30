@@ -317,6 +317,13 @@ if(isset($_POST['recountall'])) {
                   FROM torrents_tags AS t 
              LEFT JOIN torrents_group AS tg ON t.GroupID=tg.ID
                  WHERE tg.ID is NULL");
+    $numtt =$DB->affected_rows();
+    // delete any orphaned torrent-tag-vote links where the torrent no longer exists
+    $DB->query("DELETE tv 
+                  FROM torrents_tags_votes AS tv 
+             LEFT JOIN torrents_group AS tg ON tv.GroupID=tg.ID
+                 WHERE tg.ID is NULL");
+    $numtv =$DB->affected_rows();
             
     // update tag uses per tag
     $DB->query("UPDATE tags AS t LEFT JOIN 
@@ -328,10 +335,10 @@ if(isset($_POST['recountall'])) {
                 ON t.ID = c.TagID
                 SET t.Uses=c.TagCount ");
                          
-    $num =$DB->affected_rows();
-    //$Result = $num > 0? 1 :0;
-    $Message .= "Recounted total uses for $num tags" ;
-    $Result = 1; // a 0 result is not an error (means nothing needed correcting!)
+    $numt =$DB->affected_rows();
+    $Result = $numtt >= 0 && $numtv >= 0 && $numt >= 0? 1 :0; // just check no sql errors returned - 0 results are not errors
+    $Message .= "Recounted total uses for $numt tags. Removed orphans: $numtt tor-tag links, $numtv tag-votes" ;
+    
 }
 
 
