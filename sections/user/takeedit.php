@@ -41,8 +41,8 @@ $Err = $Val->ValidateForm($_POST);
 
 if($Err) {
 	error($Err);
-	header('Location: user.php?action=edit&userid='.$UserID);
-	die();
+	//header('Location: user.php?action=edit&userid='.$UserID);
+	//die();
 }
 
 // Begin building $Paranoia
@@ -134,8 +134,8 @@ if ($CurEmail != $_POST['email']) {
 		
 	} else {
 		error($Err);
-		header('Location: user.php?action=edit&userid='.$UserID);
-		die();
+		//header('Location: user.php?action=edit&userid='.$UserID);
+		//die();
 	}
 	
 	
@@ -161,8 +161,8 @@ if($LoggedUser['DisableAvatar'] && $_POST['avatar'] != $U['Avatar']) {
 
 if ($Err) {
 	error($Err);
-	header('Location: user.php?action=edit&userid='.$UserID);
-	die();
+	//header('Location: user.php?action=edit&userid='.$UserID);
+	//die();
 }
 
 if(!empty($LoggedUser['DefaultSearch'])) {

@@ -167,9 +167,10 @@ function get_thread_views($ThreadID){
     global $Cache, $DB;
     
     $NumViews = $Cache->get_value('thread_views_'.$ThreadID);
-    if ($NumViews === false) {
+    if ( !is_number($NumViews) ) {
           $DB->query("SELECT NumViews FROM forums_topics WHERE ID='$ThreadID'");
           list($NumViews) = $DB->next_record();
+          if(!$NumViews)$NumViews=0;
           $Cache->cache_value('thread_views_'.$ThreadID, $NumViews, 0); //Inf cache.
     }
     return $NumViews;
