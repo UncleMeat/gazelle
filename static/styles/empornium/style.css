@@ -1,5 +1,6 @@
 /* Layout (Torrents page) */
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700,700italic);
+@import url(http://fonts.googleapis.com/css?family=PT+Mono);
 
 .cats_col { padding: 0; }
 .category { width: 28px; height: 28px; margin: 0; padding: 0; }
@@ -118,7 +119,8 @@ span.size9 { font-size:3em; }
 span.size10 { font-size:3.25em; }
 
 code {
-    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    /* font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; */
+    font-family: "PT Mono", monospace;
 }
 ul.thin { margin:0px 0px 0px 25px; padding:0px; }
 ul.thin li { margin:0px 0px; padding:0px; }
@@ -1645,12 +1647,12 @@ blockquote.bbcode {
 code.bbcode {
     display:inline-block;
     background-color: #fffff3;
-    color: black;
+    color: #333;
     padding:0px 2px;
 }
 code.bbcodeblock {
     display:block;
-    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+    font-family: "PT Mono", monospace;
     background-color: #f4f4f4;
     color: black;
     text-align: left;
