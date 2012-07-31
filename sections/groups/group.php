@@ -123,7 +123,9 @@ list($Results) = $DB->next_record();
                             <input type="submit" name="action" value="mass pm" title="Mass PM this group" /><br />
                       </td>
                       <td width="200px" valign="top" class="noborder center">
-                            <input type="submit" name="action" value="group award" title="Give Award to all members of this group" /><br />
+                            <input type="submit" name="action" value="group award" <?
+                                if (!check_perms('users_edit_badges'))echo 'disabled="disabled" '; 
+                                ?>title="Give Award to all members of this group" /><br />
                       </td>
                       <td width="200px" valign="top" class="noborder center">
                             <input type="submit" name="action" value="remove all" disabled="disabled" title="Remove all members from this group" /><br />

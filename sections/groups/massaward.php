@@ -5,6 +5,10 @@ if(empty($_REQUEST['groupid']) || !is_number($_REQUEST['groupid']) ){
 }
 $GroupID = (int)$_REQUEST['groupid'];
 
+if (!check_perms('users_edit_badges')) {
+    error(403);
+}
+
 $DB->query("SELECT Name, Comment from groups WHERE ID=$GroupID");
 if ($DB->record_count()==0) error(0);
 list($Name, $Description) = $DB->next_record();
@@ -23,9 +27,6 @@ if(!$Users) { error("Cannot make an award to this group as there are no users in
 
 show_header('Mass Award', 'upload,bbcode,inbox');
 
-if(!check_perms('site_moderate_requests')) {
-	error(403);
-}
 
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
