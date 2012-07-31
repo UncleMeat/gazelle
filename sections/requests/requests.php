@@ -216,7 +216,9 @@ show_header($Title, 'requests');
 <?		if(check_perms('site_submit_requests')){ ?> 
 		<a href="requests.php?action=new">[New request]</a>
 		<a href="requests.php?type=created">[My requests]</a>
-<?		} 
+<?		} else { ?>
+            <em> <a href="articles.php?topic=requests">You must be a Good Perv with a ratio of at least 1.05 to be able to make a Request.</a></em>
+<?          }
 		if(check_perms('site_vote')){?> 
 		<a href="requests.php?type=voted">[Requests I've voted on]</a>
 <?		} ?>
