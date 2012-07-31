@@ -39,8 +39,7 @@ $Update = array();
 if ( $Name != $_POST['name']) {
     if ( check_perms('site_collages_manage') ) {
 
-        $Update[] = "Name='".db_string($_POST['name'])."'";
-
+        $Update[] = "Name='".db_string($_POST['name'])."'"; 
     } elseif ( $CategoryID == 0 && $UserID == $LoggedUser['ID'] && check_perms('site_collages_renamepersonal' ) ) {
 
         if(!stristr($_POST['name'], $LoggedUser['Username'])) {
@@ -76,6 +75,8 @@ $SET = implode(', ', $Update);
 
 $DB->query("UPDATE collages SET $SET WHERE ID='$CollageID'");
 
+      
+write_log("Collage ".$CollageID." (".db_string($_POST['name']).") was edited by ".$LoggedUser['Username']." - edited details");
 
 /*
 $DB->query("UPDATE collages SET Description='".db_string($_POST['description'])."', TagList='$TagList' WHERE ID='$CollageID'");

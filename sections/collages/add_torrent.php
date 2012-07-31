@@ -29,13 +29,14 @@ function AddTorrent($CollageID, $GroupID) {
 		while (list($CacheUserID) = $DB->next_record()) {
 			$Cache->delete_value('collage_subs_user_new_'.$CacheUserID);
 		}
-	}
+            
+      }
 }
 
 $CollageID = $_POST['collageid'];
 if(!is_number($CollageID)) { error(404); }
-$DB->query("SELECT UserID, CategoryID, Locked, NumTorrents, MaxGroups, MaxGroupsPerUser, Permissions FROM collages WHERE ID='$CollageID'");
-list($UserID, $CategoryID, $Locked, $NumTorrents, $MaxGroups, $MaxGroupsPerUser, $CPermissions) = $DB->next_record();
+$DB->query("SELECT UserID, Name, CategoryID, Locked, NumTorrents, MaxGroups, MaxGroupsPerUser, Permissions FROM collages WHERE ID='$CollageID'");
+list($UserID, $CategoryID, $Name, $Locked, $NumTorrents, $MaxGroups, $MaxGroupsPerUser, $CPermissions) = $DB->next_record();
 //if($CategoryID == 0 && $UserID!=$LoggedUser['ID'] && !check_perms('site_collages_delete')) { error(403); }
 if (!check_perms('site_collages_manage')){
     $CPermissions=(int)$CPermissions;
@@ -84,6 +85,7 @@ if ($_REQUEST['action'] == 'add_torrent') {
 	}
 	
 	AddTorrent($CollageID, $GroupID);
+      write_log("Collage ".$CollageID." (".db_string($Name).") was edited by ".$LoggedUser['Username']." - added torrents $GroupID");
 } else {
 	$URLRegex = '/^https?:\/\/(www\.|ssl\.)?'.NONSSL_SITE_URL.'\/torrents\.php\?(page=[0-9]+&)?id=([0-9]+)/i';
 	
@@ -120,6 +122,8 @@ if ($_REQUEST['action'] == 'add_torrent') {
 	foreach ($GroupIDs as $GroupID) {
 		AddTorrent($CollageID, $GroupID);
 	}	
+      
+      write_log("Collage ".$CollageID." (".db_string($Name).") was edited by ".$LoggedUser['Username']." - added torrents ".implode(',', $GroupIDs));
 }
 
 header('Location: collages.php?id='.$CollageID);
