@@ -59,7 +59,7 @@ $DB->query("UPDATE forums_topics SET NumViews = NumViews+1 WHERE ID=$ThreadID");
 if ($Cache->get_value('thread_views_'.$ThreadID)===false){
     $DB->query("SELECT NumViews FROM forums_topics WHERE ID='$ThreadID'");
     list($NumViews) = $DB->next_record();
-    $Cache->cache_value('thread_views_'.$ThreadID, $NumViews+1, 0);
+    $Cache->cache_value('thread_views_'.$ThreadID, $NumViews, 0);
 } else {
     $Cache->increment('thread_views_'.$ThreadID);
 }
