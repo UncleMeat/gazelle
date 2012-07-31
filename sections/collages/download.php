@@ -96,6 +96,8 @@ foreach($Downloads as $Download) {
 	$Contents = unserialize(base64_decode($Torrents[$TorrentID]['file']));
 	$Tor = new TORRENT($Contents, true);
 	$Tor->set_announce_url(ANNOUNCE_URL.'/'.$LoggedUser['torrent_pass'].'/announce');
+      $Tor->set_comment('http://'. SITE_URL."/torrents.php?id=$GroupID");
+
 	unset($Tor->Val['announce-list']);
 	
 	// We need this section for long file names :/

@@ -4,9 +4,20 @@ authorize();
 $CollageID = $_POST['collageid'];
 if(!is_number($CollageID)) { error(404); }
 
-$DB->query("SELECT UserID, CategoryID FROM collages WHERE ID='$CollageID'");
-list($UserID, $CategoryID) = $DB->next_record();
-if($CategoryID == 0 && $UserID!=$LoggedUser['ID'] && !check_perms('site_collages_delete')) { error(403); }
+$DB->query("SELECT UserID, CategoryID, Permissions FROM collages WHERE ID='$CollageID'");
+list($UserID, $CategoryID, $CPermissions) = $DB->next_record();
+//if($CategoryID == 0 && $UserID!=$LoggedUser['ID'] && !check_perms('site_collages_delete')) { error(403); }
+if (!check_perms('site_collages_manage')){
+    $CPermissions=(int)$CPermissions;
+    if ($UserID == $LoggedUser['ID']) {
+          $CanEdit = true;
+    } elseif ($CPermissions>0) {
+          $CanEdit = $LoggedUser['Class'] >= $CPermissions;
+    } else {
+          $CanEdit=false; // can be overridden by permissions
+    }
+    if(!$CanEdit) { error(403); }
+}
 
 $GroupID = $_POST['groupid'];
 if(!is_number($GroupID)) { error(404); }

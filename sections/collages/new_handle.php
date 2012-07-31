@@ -1,6 +1,7 @@
 <?
 authorize();
 
+include(SERVER_ROOT . '/sections/torrents/functions.php');
 include(SERVER_ROOT.'/classes/class_validate.php');
 $Val = new VALIDATE;
 
@@ -63,17 +64,25 @@ if($Err) {
 	header("Location: collages.php?action=new&err=$Err&name=$Name&cat=$Category&tags=$Tags&descr=$Description");
 	die();
 }
-
+ 
 $TagList = explode(' ',$_POST['tags']);
+$NewTags = array();
 foreach($TagList as $ID=>$Tag) {
-	$TagList[$ID] = sanitize_tag($Tag);
+        $Tag = trim($Tag, '.'); // trim dots from the beginning and end
+        $Tag = get_tag_synonym($Tag);
+        if (!in_array($Tag, $NewTags) && is_valid_tag($Tag)){
+            $NewTags[] = $Tag;
+        }
 }
-$TagList = implode(' ',$TagList);
+$TagList = implode(' ',$NewTags);
+
+if(!is_number($P[permission])) error(404); 
+if ($P[permission] !=0 && !array_key_exists($P[permission], $ClassLevels)) error(403);
 
 $DB->query("INSERT INTO collages 
-	(Name, Description, UserID, TagList, CategoryID) 
+	(Name, Description, UserID, TagList, CategoryID, Permissions) 
 	VALUES
-	('$P[name]', '$P[description]', $LoggedUser[ID], '$TagList', '$P[category]')");
+	('$P[name]', '$P[description]', $LoggedUser[ID], '$TagList', '$P[category]','$P[permission]')");
 
 $CollageID = $DB->inserted_id();
 $Cache->delete_value('collage_'.$CollageID);

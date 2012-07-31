@@ -16,13 +16,12 @@ list($AuthorID) = $DB->next_record();
 $VoteValue = $AuthorID == $UserID ? 9 : 4;
 
 $Tags = explode(',', $_POST['tagname']);
+$NewTags = array();
 foreach ($Tags as $Tag) {
-    $Tag = trim($Tag, '.'); // trim dots from the beginning and end
-    $Tag = sanitize_tag($Tag);
+    $Tag = trim(trim($Tag, '.')); // trim whitespace & dots from the beginning and end
     $TagName = get_tag_synonym($Tag);
-    if (!is_valid_tag($TagName)) continue;
-    if (!empty($TagName)) {
-        
+    if ( is_valid_tag($TagName) && !in_array($TagName, $NewTags)) {
+        $NewTags[]=$TagName;
         $DB->query("INSERT INTO tags (Name, UserID) VALUES ('".$TagName."', ".$UserID.") ON DUPLICATE KEY UPDATE Uses=Uses+1");
         $TagID = $DB->inserted_id();
         

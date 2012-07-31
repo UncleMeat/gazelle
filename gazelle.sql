@@ -328,6 +328,7 @@ CREATE TABLE IF NOT EXISTS `collages` (
   `Name` varchar(100) NOT NULL DEFAULT '',
   `Description` text NOT NULL,
   `UserID` int(10) NOT NULL DEFAULT '0',
+  `Permissions` INT(4) NOT NULL DEFAULT '0', 
   `NumTorrents` int(4) NOT NULL DEFAULT '0',
   `Deleted` enum('0','1') DEFAULT '0',
   `Locked` enum('0','1') NOT NULL DEFAULT '0',

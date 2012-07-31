@@ -9,8 +9,11 @@ $DB->query("SELECT Name, Description, TagList, UserID, CategoryID, Locked, MaxGr
 list($Name, $Description, $TagList, $UserID, $CategoryID, $Locked, $MaxGroups, $MaxGroupsPerUser, $Featured) = $DB->next_record();
 $TagList = implode(', ', explode(' ', $TagList));
 
-if($CategoryID == 0 && $UserID!=$LoggedUser['ID'] && !check_perms('site_collages_delete')) { error(403); }
-
+//if($CategoryID == 0 && $UserID!=$LoggedUser['ID'] && !check_perms('site_collages_delete')) { error(403); }
+if (!check_perms('site_collages_manage') && $UserID != $LoggedUser['ID']) {
+          error(403);  
+}
+ 
 show_header('Edit collage','bbcode,jquery');
 ?>
 <div class="thin">
@@ -21,7 +24,7 @@ show_header('Edit collage','bbcode,jquery');
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 		<input type="hidden" name="collageid" value="<?=$CollageID?>" />
 		<table id="edit_collage">
-<? if (check_perms('site_collages_delete') || ($CategoryID == 0 && $UserID == $LoggedUser['ID'] && check_perms('site_collages_renamepersonal'))) { ?>
+<? if (check_perms('site_collages_manage') || ($CategoryID == 0 && $UserID == $LoggedUser['ID'] && check_perms('site_collages_renamepersonal'))) { ?>
 			<tr>
 				<td class="label">Name</td>
 				<td><input type="text" name="name" class="long" value="<?=$Name?>" /></td>
@@ -61,7 +64,7 @@ show_header('Edit collage','bbcode,jquery');
 				<td><input type="checkbox" name="featured" <?=($Featured?'checked':'')?> /></td>
 			</tr>
 <? }
-   if(check_perms('site_collages_delete')) { ?>
+   if(check_perms('site_collages_manage')) { ?>
 			<tr>
 				<td class="label">Locked</td>
 				<td><input type="checkbox" name="locked" <?if($Locked) { ?>checked="checked" <? }?>/></td>

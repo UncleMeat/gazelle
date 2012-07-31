@@ -19,6 +19,10 @@ ul.collage_images li {
 	margin: 0;
 	list-style: none;
 	list-style-type: none;
+	max-height: 280px;
+	min-width: 160px;
+	max-width: 160px;
+      text-align: center;
 }
 
 ul.collage_images li a {
@@ -27,8 +31,9 @@ ul.collage_images li a {
 }
 
 ul.collage_images img {
-	max-height: 180px;
-	max-width: 120px;
+	max-height: 280px;
+	min-width: 160px;
+	max-width: 160px;
 }
 
 

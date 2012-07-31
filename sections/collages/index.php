@@ -14,15 +14,12 @@ switch($_REQUEST['action']) {
 		break;
 	case 'add_torrent':
 	case 'add_torrent_batch':
-		if(!check_perms('site_collages_manage')) { error(403); }
 		require(SERVER_ROOT.'/sections/collages/add_torrent.php');
 		break;
 	case 'manage':
-		if(!check_perms('site_collages_manage')) { error(403); }
 		require(SERVER_ROOT.'/sections/collages/manage.php');
 		break;
 	case 'manage_handle':
-		if(!check_perms('site_collages_manage')) { error(403); }
 		require(SERVER_ROOT.'/sections/collages/manage_handle.php');
 		break;
 	case 'edit':
@@ -30,6 +27,29 @@ switch($_REQUEST['action']) {
 		break;
 	case 'edit_handle':
 		require(SERVER_ROOT.'/sections/collages/edit_handle.php');
+		break;
+	case 'change_level':
+          
+            authorize();
+
+            $CollageID = $_POST['collageid'];
+            if(!is_number($CollageID))  error(0);
+
+            if (!check_perms('site_collages_manage')){
+                $DB->query("SELECT UserID FROM collages WHERE ID='$CollageID'");
+                list($UserID) = $DB->next_record();
+                if ($UserID != $LoggedUser['ID']) error(403); 
+            }
+            
+            $Permissions = $_POST['permission'];
+            if(!is_number($Permissions)) error(0);
+            $Permissions=(int)$Permissions; 
+            if ($Permissions !=0 && !array_key_exists($Permissions, $ClassLevels)) error(0);
+             
+            $DB->query("UPDATE collages SET Permissions=$Permissions WHERE ID='$CollageID'");
+            
+            $Cache->delete_value('collage_'.$CollageID);
+            header('Location: collages.php?id='.$CollageID);
 		break;
 	case 'delete':
 		authorize();
