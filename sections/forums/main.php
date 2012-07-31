@@ -61,8 +61,8 @@ foreach ($Forums as $Forum) {
 			<td style="width:2%;"></td>
 			<td style="width:25%;">Forum</td>
 			<td>Last Post</td>
-			<td style="width:7%;">Topics</td>
-			<td style="width:7%;">Posts</td>
+			<td style="text-align: center;width:7%;">Topics</td>
+			<td style="text-align: center;width:7%;">Posts</td>
 		</tr>
 <?
 		$OpenTable = true;
@@ -92,7 +92,7 @@ foreach ($Forums as $Forum) {
 <? } else { ?>
 		<td>
 			<span style="float:left;" class="last_topic">
-				<a href="forums.php?action=viewthread&amp;threadid=<?=$LastTopicID?>" title="<?=display_str($LastTopic)?>"><?=display_str(cut_string($LastTopic, 50, 1))?></a>
+				<a href="forums.php?action=viewthread&amp;threadid=<?=$LastTopicID?>" title="<?=display_str($LastTopic)?>"><?=display_str(cut_string($LastTopic, 50, 0))?></a>
 			</span>
 <? if (!empty($LastRead[$LastTopicID])) { ?>
 			<span style="float: left;" class="last_read" title="Jump to last read">
@@ -101,8 +101,8 @@ foreach ($Forums as $Forum) {
 <? } ?>
 			<span style="float:right;" class="last_poster">by <?=format_username($LastAuthorID, $LastPostAuthorName)?> <?=time_diff($LastTime,1)?></span>
 		</td>
-		<td><?=number_format($NumTopics)?></td>
-		<td><?=number_format($NumPosts)?></td>
+		<td style="text-align: center;"><?=number_format($NumTopics)?></td>
+		<td style="text-align: center;"><?=number_format($NumPosts)?></td>
 <? } ?>
 	</tr>
 <? } ?>

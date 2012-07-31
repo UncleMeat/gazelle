@@ -618,6 +618,7 @@ CREATE TABLE IF NOT EXISTS `forums_topics` (
   `IsSticky` enum('0','1') NOT NULL DEFAULT '0',
   `ForumID` int(3) NOT NULL,
   `NumPosts` int(10) NOT NULL DEFAULT '0',
+  `NumViews` INT( 7 ) NOT NULL DEFAULT '0',
   `LastPostID` int(10) NOT NULL,
   `LastPostTime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `LastPostAuthorID` int(10) NOT NULL,

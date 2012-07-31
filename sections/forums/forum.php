@@ -128,11 +128,18 @@ echo $Pages;
 	</div>
         <div class="head"><a href="forums.php">Forums</a> &gt; <?=$Forums[$ForumID]['Name']?></div>
 	<table class="forum_list" width="100%">
-		<tr class="colhead">
+		<!--<tr class="colhead">
 			<td style="width:2%;"></td>
 			<td>Latest</td>
 			<td style="width:7%;">Replies</td>
 			<td style="width:14%;">Author</td>
+		</tr>-->
+		<tr class="colhead">
+			<td style="width:2%;"></td>
+			<td>Topic</td>
+			<td style="width:5%;">Replies</td>
+			<td style="width:5%;">Views</td>
+			<td>Latest</td>
 		</tr>
 <?
 // Check that we have content to process
@@ -190,6 +197,8 @@ if (count($Forum) == 0) {
 			$PagesText.=')';
 		}
 
+            $NumViews = get_thread_views($TopicID);
+ 
 		// handle read/unread posts - the reason we can't cache the whole page
 		if((!$Locked || $Sticky) && ((empty($LastRead[$TopicID]) || $LastRead[$TopicID]['PostID']<$LastID) && strtotime($LastTime)>$LoggedUser['CatchupTime'])) {
 			$Read = 'unread';
@@ -217,12 +226,20 @@ if (count($Forum) == 0) {
 				<a href="forums.php?action=viewthread&amp;threadid=<?=$TopicID?>&amp;page=<?=$LastRead[$TopicID]['Page']?>#post<?=$LastRead[$TopicID]['PostID']?>"></a>
 			</span>
 <?		} ?>
-			<span style="float:right;" class="last_poster">
-				by <?=format_username($LastAuthorID, $LastAuthorName)?> <?=time_diff($LastTime,1)?>
+			<span style="float: right;" class="first_poster">
+				started by <?=format_username($AuthorID, $AuthorName)?>
 			</span>
 		</td>
-		<td><?=number_format($PostCount-1)?></td>
-		<td><?=format_username($AuthorID, $AuthorName)?></td>
+		<td style="text-align: center;"><?=number_format($PostCount-1)?></td>
+		<td style="text-align: center;"><?=number_format($NumViews)?></td>
+		<td>
+                <span style="float: left;" class="last_poster">
+                    by <?=format_username($LastAuthorID, $LastAuthorName)?> <?=time_diff($LastTime,1)?>
+                </span> 
+			<span style="float: left;" class="last_post" title="Jump to last post">
+				<a href="forums.php?action=viewthread&amp;threadid=<?=$TopicID?>&amp;postid=<?=$LastID?>#post<?=$LastID?>"></a>
+			</span>
+            </td>
 	</tr>
 <?	}
 } ?>
