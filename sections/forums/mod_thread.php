@@ -97,7 +97,7 @@ function update_forum_info($ForumID, $AdjustNumTopics = 0, $BeginEndTransaction 
     if ($AdjustNumTopics !=0) { // '-1' or '+1' etc
                 //$AdjustNumTopics = $AdjustNumTopics>0?"+$AdjustNumTopics":$AdjustNumTopics;
                 $SetNumTopics = "NumTopics=NumTopics$AdjustNumTopics,";
-                $UpdateArray['NumTopics']="NumTopics=NumTopics$AdjustNumTopics";
+                $UpdateArray['NumTopics']=$AdjustNumTopics;
     }
     else $SetNumTopics ='';
             
