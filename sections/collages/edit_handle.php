@@ -1,6 +1,8 @@
 <?
 authorize();
 
+include(SERVER_ROOT . '/sections/torrents/functions.php');
+
 $CollageID = $_POST['collageid'];
 if(!is_number($CollageID)) { error(0); }
 
@@ -71,12 +73,13 @@ if (isset($_POST['featured']) && $CategoryID == 0 && (($LoggedUser['ID'] == $Use
       $Update[] = $Update[] = "Featured=1";
 }
 
-$SET = implode(', ', $Update);
+if (count($Update)>0) {
+    $SET = implode(', ', $Update);
 
-$DB->query("UPDATE collages SET $SET WHERE ID='$CollageID'");
-
-      
-write_log("Collage ".$CollageID." (".db_string($_POST['name']).") was edited by ".$LoggedUser['Username']." - edited details");
+    $DB->query("UPDATE collages SET $SET WHERE ID='$CollageID'");
+ 
+    write_log("Collage ".$CollageID." (".db_string($_POST['name']).") was edited by ".$LoggedUser['Username']." - edited details");
+}
 
 /*
 $DB->query("UPDATE collages SET Description='".db_string($_POST['description'])."', TagList='$TagList' WHERE ID='$CollageID'");
