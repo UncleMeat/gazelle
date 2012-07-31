@@ -685,14 +685,16 @@ if ($Uploads > 0 && check_paranoia_here('uploads')) {
 		</tr>
 		<tr id="recentuploads">
 <?              foreach($RecentUploads as $RU) { ?>
-                    <td>
+                    <td width="20%">
+                        <div>
 				<a href="torrents.php?id=<?=$RU['ID']?>" title="<?=$RU['Name']?>">
 <?                  if($RU['Image']) { 
-?>                          <img src="<?=$RU['Image']?>" alt="<?=$RU['Name']?>" width="107" />
+?>                          <img src="<?=$RU['Image']?>" alt="<?=$RU['Name']?>" style="max-width: 120px"/>
 <?                  } else { ?>
                             <?=$RU['Name']?>
 <?                  } ?>
                         </a>
+                        </div>
                     </td>
 <?              } ?>
 		</tr>
