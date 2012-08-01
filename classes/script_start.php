@@ -639,7 +639,7 @@ function GetWhitelistRegex() {
   ----------------------------------- */
 function ValidateImageUrl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
          
-       $ErrorMessage = "'$Imageurl' is not a valid url.";
+       $ErrorMessage = "$Imageurl is not a valid url.";
        
        if(strlen($Imageurl)>$MaxLength) {
            return "$ErrorMessage (must be < $MaxLength characters)";  
@@ -651,7 +651,7 @@ function ValidateImageUrl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
            return $ErrorMessage;  
        }
        elseif(!preg_match($WhitelistRegex, $Imageurl)) {
-           return "$Imageurl is not on an approved pichost.";
+           return "$Imageurl is not on an approved pichost.<br/><br/>Please read this help topic: <a href='/articles.php?topic=approvedimg' title='Approved Imagehosts' target='_blank'>Approved Imagehosts</a>";
        }
        else { // hooray it validated
            return TRUE;
