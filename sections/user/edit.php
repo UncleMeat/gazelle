@@ -226,6 +226,11 @@ echo $Val->GenerateJS('userform');
 					<label for="unseededalerts">Receive a PM alert before your uploads are deleted for being unseeded</label>
 				</td>
 			</tr>
+			<tr>
+				<td colspan="2" class="right">
+					<input type="submit" value="Save Profile" title="Save all changes" />
+				</td>
+			</tr>
 			<tr class="colhead_dark">
 				<td colspan="2">
 					<strong>User info</strong>
@@ -275,6 +280,11 @@ echo $Val->GenerateJS('userform');
 					<p class="min_padding">This field, if set will be used in place of the password in the IRC login.</p>
 					<p class="min_padding">Note: This value is stored in plaintext and should not be your password.</p>
 					<p class="min_padding">Note: In order to be accepted as correct, your IRCKey must be between 6 and 32 characters.</p>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="right">
+					<input type="submit" value="Save Profile" title="Save all changes" />
 				</td>
 			</tr>
 			<tr class="colhead_dark">
@@ -395,6 +405,11 @@ list($Invited) = $DB->next_record();
 					<br /><label><input type="checkbox" name="p_invitedcount" <?=checked(!in_array('invitedcount', $Paranoia))?>> Number of users invited</label>
 				</td>
 			</tr>
+			<tr>
+				<td colspan="2" class="right">
+					<input type="submit" value="Save Profile" title="Save all changes" />
+				</td>
+			</tr>
 			<tr class="colhead_dark">
 				<td colspan="2">
 					<strong>Change password</strong>
@@ -421,7 +436,7 @@ list($Invited) = $DB->next_record();
 			</tr>
 			<tr>
 				<td colspan="2" class="right">
-					<input type="submit" value="Save Profile" />
+					<input type="submit" value="Save Profile" title="Save all changes"/>
 				</td>
 			</tr>
 		</table>

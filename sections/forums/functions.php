@@ -167,7 +167,7 @@ function get_thread_views($ThreadID){
     global $Cache, $DB;
     
     $NumViews = $Cache->get_value('thread_views_'.$ThreadID);
-    if ( !is_number($NumViews) ) {
+    if ( $NumViews===false ) {
           $DB->query("SELECT NumViews FROM forums_topics WHERE ID='$ThreadID'");
           list($NumViews) = $DB->next_record();
           if(!$NumViews)$NumViews=0;
