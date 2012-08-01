@@ -652,7 +652,7 @@ p.min_padding {
 }
 
 .box {
-    font-size: 8pt;
+    /*font-size: 8pt;*/
     background-color: white;
     border: 1px solid #98AAB1;
 }
@@ -674,7 +674,9 @@ p.min_padding {
     overflow: auto;
 }
 
-
+.AdminComment {
+    font-size: 8pt;
+}
 
 #details_top {
     margin-bottom: 10px;
@@ -1229,6 +1231,15 @@ ul.poll li.graph {
     border-right: none;
 }
 
+.topic_list .colhead {
+    background: none;
+    background-color: #eff3f6;
+    color: #333;
+}
+
+td.topic_link a {
+    font-weight: bold;
+}
 
 .group {
     font-weight:bold;

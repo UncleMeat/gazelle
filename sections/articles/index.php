@@ -184,7 +184,7 @@ show_header($Page['Topic'], 'browse,overlib,bbcode');
     </div>
 
     <div class="head">Other <?=strtolower($ArticleCats[$Category])?></div>
-    <table width="100%">
+    <table width="100%" class="topic_list">
             <tr class="colhead">
                     <td style="width:150px;">Title</td>
                     <td style="width:400px;">Additional Info</td>
@@ -197,7 +197,7 @@ while(list($TopicID, $Title, $Description) = $DB->next_record()) {
 ?>
             <tr class="row<?=$Row?>">
 
-                    <td class="nobr">
+                    <td class="nobr topic_link">
                             <a href="articles.php?topic=<?=$TopicID?>"><?=$Title?></a>
                     </td>
                     <td class="nobr">
