@@ -44,7 +44,7 @@ if(count($UserIDs)>0) {
         <tr class="smallhead">
                 <td colspan="4">Downloadlist</td>
         </tr>
-	<tr class="colhead_dark" style="font-weight: bold;">
+	<tr class="rowa" style="font-weight: bold;">
 		<td>User</td>
 		<td>Time</td>
 

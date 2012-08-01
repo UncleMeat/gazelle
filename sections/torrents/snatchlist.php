@@ -32,7 +32,7 @@ list($NumResults) = $DB->next_record();
         <tr class="smallhead">
                 <td colspan="4">Snatches</td>
         </tr>    
-	<tr class="colhead_dark" style="font-weight: bold;">
+	<tr class="rowa" style="font-weight: bold;">
 		<td>User</td>
 		<td>Time</td>
 		

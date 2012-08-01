@@ -110,13 +110,14 @@ show_header('Forums > '. $Forums[$ForumID]['Name']);
 	</div>
 <? } ?>
 <? if(!empty($Forums[$ForumID]['SpecificRules'])) { ?>
-	<div class="linkbox">
-			<strong>Forum Specific Rules</strong>
+	<div class="head">
+		Forum Specific Rules
+	</div>
+	<div class="box pad center"> 
 <? foreach($Forums[$ForumID]['SpecificRules'] as $ThreadIDs) {
 	$Thread = get_thread_info($ThreadIDs);
 ?>
-		<br />
-		[<a href="forums.php?action=viewthread&amp;threadid=<?=$ThreadIDs?>"><?=$Thread['Title']?></a>]
+            &nbsp;&nbsp;[<a href="forums.php?action=viewthread&amp;threadid=<?=$ThreadIDs?>"><?=$Thread['Title']?></a>]&nbsp;&nbsp;
 <? } ?>
 	</div>
 <? } ?>

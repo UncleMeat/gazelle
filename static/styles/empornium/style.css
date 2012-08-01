@@ -1225,7 +1225,10 @@ ul.poll li.graph {
 
 .torrent_table td {
     padding: 5px;
+    border-left:none;
+    border-right: none;
 }
+
 
 .group {
     font-weight:bold;
@@ -1355,6 +1358,7 @@ table.forum_post td {
 }
 table.forum_list, table.forum_index {
     border:none;
+    margin-bottom: 10px;
 } 
 table.forum_list td, table.forum_index td {
     border:none;

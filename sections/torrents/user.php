@@ -265,7 +265,7 @@ foreach($NewCategories as $Cat) {
 	</div>
 <?	} else { ?>
 	<div class="linkbox"><?=$Pages?></div>
-	<table width="100%">
+	<table width="100%" class="torrent_table">
 		<tr class="colhead">
 			<td></td>
 			<td><a href="<?=header_link('Name', 'ASC')?>">Torrent</a></td>
@@ -283,6 +283,7 @@ foreach($NewCategories as $Cat) {
 		</tr>
 <?
 	$Results = $Results['matches'];
+      $row = 'a';
 	foreach($TorrentsInfo as $TorrentID=>$Info) {
 		list($GroupID,, $Time, $NewCategoryID) = array_values($Info);
 		
@@ -304,10 +305,10 @@ foreach($NewCategories as $Cat) {
 		if($ExtraInfo) {
 			$DisplayName.=' - '.$ExtraInfo;
 		}
-	
-	
+            
+            $row = $row==='b'?'a':'b';
 ?>
-		<tr>
+		<tr class="row<?=$row?>">
 			<td class="center cats_col">
                     <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
 			<div title="<?=$NewCategories[$NewCategoryID]['tag']?>"><img src="<?=$CatImg?>" />
