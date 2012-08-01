@@ -26,8 +26,11 @@ if($_POST['submit'] == 'Delete') {
     
 } else {
     
-	$Val->SetFields('badge', '1','string','The badge field must be set, and has a max length of 12 characters', array('maxlength'=>12, 'minlength'=>1));
-	$Val->SetFields('title', '1','string','The name must be set, and has a max length of 64 characters', array('maxlength'=>64, 'minlength'=>1));
+	//$Val->SetFields('badge', '1','string','The badge field must be set, and has a max length of 12 characters', array('maxlength'=>12, 'minlength'=>1));
+	
+      $Val->SetFields('badge', '1','regex','The badge field must be set and has a min length of 2 and a max length of 12 characters. Valid chars are A-Z,a-z,0-9 only. Awards with the same badge field are part of a set and must have different ranks', array('regex'=>'/^[A-Za-z0-9]{2,12}$/'));
+	
+      $Val->SetFields('title', '1','string','The name must be set, and has a max length of 64 characters', array('maxlength'=>64, 'minlength'=>1));
 	$Val->SetFields('desc', '1','string','The description must be set, and has a max length of 255 characters', array('maxlength'=>255, 'minlength'=>1));
       $Val->SetFields('image', '1','string','The image must be set.', array('minlength'=>1));
 	$Val->SetFields('type', '1','inarray','Invalid badge type was set.',array('inarray'=>$BadgeTypes));
@@ -71,7 +74,7 @@ if($_POST['submit'] == 'Delete') {
                               Image='$Image'
                               WHERE ID='$BadgeID'");
 	} else { //Create
-		$DB->query("INSERT INTO badges
+		$DB->query("INSERT IGNORE INTO badges
 			(Badge, Rank, Type, Sort, Cost, Title, Description, Image) VALUES
 			('$Badge','$Rank','{$_POST['type']}','$Sort','$Cost','$Title','$Desc','$Image')");
            // $BadgeID = $DB->inserted_id();

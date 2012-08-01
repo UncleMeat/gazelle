@@ -1219,7 +1219,6 @@ if (check_perms('users_mod', $Class)) { ?>
                                 <input  type="checkbox" name="addbadge[]" value="<?=$BadgeID?>"<?=$Disabled?> />
                                         <label for="addbadge[]"> <?=$Name; 
                                                 if($Type=='Unique') echo " *(unique)";
-                                                elseif ($Auto) echo " (automatically awarded)";
                                                 else echo " ($Type)";?></label>
                                 <br />
                                 <input class="long" type="text" id="addbadge<?=$BadgeID?>" name="addbadge<?=$BadgeID?>"<?=$Disabled?> value="<?=$Tooltip?>" />

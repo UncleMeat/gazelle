@@ -546,7 +546,7 @@ function get_latest_forum_topics($PermissionID) {
     return $LatestTopics;
 }
 
-function get_user_badges($UserID){
+function get_user_badges($UserID, $Limit = 0){
     global $DB, $Cache;
     $UserID = (int)$UserID;
     $UserBadges = $Cache->get_value('user_badges_'.$UserID);
@@ -567,6 +567,7 @@ function get_user_badges($UserID){
         $UserBadges = $DB->to_array();
         $Cache->cache_value('user_badges_'.$UserID, $UserBadges);
     }
+    if ($Limit>0) $UserBadges = array_slice($UserBadges, 0, $Limit, true);
     return $UserBadges;
 }
 

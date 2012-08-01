@@ -818,7 +818,7 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 			<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 	<?
          }
-        $UserBadges = get_user_badges($AuthorID); 
+        $UserBadges = get_user_badges($AuthorID,12); 
         if( !empty($UserBadges) ) {  ?>
                <div class="badges">
 <?                  print_badges_array($UserBadges); ?>
