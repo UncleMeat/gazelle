@@ -191,7 +191,7 @@ show_header($Page['Topic'], 'browse,overlib,bbcode');
             </tr>
 <?
 $Row = 'a';
-$DB->query("SELECT TopicID, Title, Description FROM articles WHERE Category='$Category' AND TopicID<>'$TopicID'");
+$DB->query("SELECT TopicID, Title, Description FROM articles WHERE Category='$Category' AND TopicID<>'$TopicID' ORDER BY Title");
 while(list($TopicID, $Title, $Description) = $DB->next_record()) {
     $Row = ($Row == 'a') ? 'b' : 'a';
 ?>

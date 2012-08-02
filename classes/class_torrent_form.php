@@ -176,7 +176,7 @@ class TORRENT_FORM {
 					<textarea id="tags" name="tags" class="medium" style="height:1.4em;" <?=$this->Disabled?>><?=display_str($Torrent['TagList']) ?></textarea>
                               <br />
                               <? 
-                              $taginfo = get_article('tag');
+                              $taginfo = get_article('tagrulesinline');
                               if($taginfo) echo $Text->full_format($taginfo, true); 
                               ?>
 					<!--Tags should be separated with spaces, and you should use a period ('.') to separate words inside a tag.

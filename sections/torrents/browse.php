@@ -345,7 +345,7 @@ $Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
     <div class="head">
         <?=($AdvancedSearch?'Advanced':'Basic')?> Search &nbsp;&nbsp;		
             
-        <a style="font-size:0.7em;" href="torrents.php?action=<?=($AdvancedSearch?'basic':'advanced')?>&amp;<?= get_url(array('action')) ?>">switch to <?=($AdvancedSearch?'basic':'advanced')?> search</a>
+        [<a style="font-size:0.9em;" href="torrents.php?action=<?=($AdvancedSearch?'basic':'advanced')?>&amp;<?= get_url(array('action')) ?>">switch to <?=($AdvancedSearch?'basic':'advanced')?> search</a>]
        
     </div>
         <div class="box pad">

@@ -86,7 +86,7 @@ show_header('Manage articles','bbcode');
         
 <?
 $OldCategory = -1;
-$DB->query("SELECT ID, Category, TopicID, Title, Body, Time, Description FROM articles ORDER BY Category ASC, TopicID ASC");// LIMIT 20
+$DB->query("SELECT ID, Category, TopicID, Title, Body, Time, Description FROM articles ORDER BY Category, Title");// LIMIT 20
 while(list($ArticleID,$Category,$TopicID, $Title,$Body,$ArticleTime,$Description)=$DB->next_record()) {
 ?>
 <? if($OldCategory != $Category) { ?>
