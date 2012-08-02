@@ -65,6 +65,22 @@ if(($CollageCount < $LoggedUser['Permissions']['MaxCollages']) && check_perms('s
 				</td>
 			</tr>
 			<tr>
+				<td class="label">Editing Permissions</td>
+				<td> 
+                            who can add/delete torrents <br/> 
+                            <select name="permission">
+<?
+                                foreach ($ClassLevels as $CurClass) { 
+                                    if ($CurClass['Level']>=500) break;
+?>
+                                    <option value="<?=$CurClass['Level']?>"><?=$CurClass['Name'];?></option>
+<?                              } ?>
+
+                                <option value="0" selected="selected">Only Creator</option>
+                            </select>
+				</td>
+			</tr>
+			<tr>
 				<td class="label">Description</td>
 				<td>
                             <div id="preview" class="box pad hidden"></div>

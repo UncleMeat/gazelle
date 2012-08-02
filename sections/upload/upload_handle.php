@@ -211,7 +211,6 @@ $Tags = explode(' ', strtolower($NewCategories[(int)$_POST['category']]['tag']."
 //if (!$Properties['GroupID']) {
     $TagsAdded=array();
     foreach ($Tags as $Tag) {
-        //$Tag = sanitize_tag($Tag);
         $Tag = trim($Tag,'.'); // trim dots from the beginning and end
         $Tag = get_tag_synonym($Tag);
         if (!is_valid_tag($Tag)) continue;
@@ -259,7 +258,7 @@ $DB->query("
 $Cache->increment('stats_torrent_count');
 $TorrentID = $DB->inserted_id();
 
-update_tracker('add_torrent', array('id' => $TorrentID, 'info_hash' => rawurlencode($InfoHash), 'freetorrent' => (int) $Properties['FreeLeech']));
+update_tracker('add_torrent', array('id' => $TorrentID, 'info_hash' => rawurlencode($InfoHash), 'freetorrent' => (int) $Properties['FreeTorrent']));
 
 
 

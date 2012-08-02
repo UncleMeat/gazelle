@@ -296,7 +296,7 @@ if(check_perms('admin_reports')) {
 <?
 
 // draw the alert bars (arrays set already^^)
-if (!empty($Alerts) || !empty($ModBar)) {
+if (!empty($Alerts) || !empty($ModBar) || !empty($Infos)) {
 ?>
 	<div id="alerts">
 	<? foreach ($Infos as $Info) { ?>

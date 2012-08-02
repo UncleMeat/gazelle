@@ -202,7 +202,9 @@ show_header(($BookmarkView)?'Your bookmarked collages':'Browse collages');
 <? if (!$BookmarkView) {
 if (check_perms('site_collages_create')) { ?>
 		<a href="collages.php?action=new">[New collage]</a>
-<? } 
+<?		} else { ?>
+            <em> <a href="articles.php?topic=collagehelp">You must be a Good Perv with a ratio of at least 1.05 to be able to create a collage.</a></em><br/>
+<?          }
 if (check_perms('site_collages_personal')) {
 	
  	$DB->query("SELECT ID FROM collages WHERE UserID='$LoggedUser[ID]' AND CategoryID='0' AND Deleted='0'");

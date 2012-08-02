@@ -37,10 +37,10 @@ $DB->set_query_id($Result);
 <div class="linkbox"><?=js_pages('show_peers', $_GET['torrentid'], $NumResults, $Page)?></div>
 <? } ?>
 <table>
-        <tr class="colhead">
+        <tr class="smallhead">
             <td colspan="6">Seeders</td>
         </tr>
-	<tr class="rowa small">
+	<tr class="rowa" style="font-weight: bold;">
 		<td>User</td>
 		<td>Active</td>
 
@@ -57,10 +57,10 @@ while(list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Rem
     if ($IsSeeder!=$LastIsSeeder){
 ?>
  
-        <tr class="colhead">
+        <tr class="smallhead">
             <td colspan="6">Leechers</td>
         </tr>
-	<tr class="rowa small">
+	<tr class="rowa" style="font-weight: bold;">
 		<td>User</td>
 		<td>Active</td>
 

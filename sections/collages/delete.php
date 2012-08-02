@@ -8,7 +8,7 @@ if(!is_number($CollageID) || !$CollageID) {
 $DB->query("SELECT Name, UserID FROM collages WHERE ID='$CollageID'");
 list($Name, $UserID) = $DB->next_record();
 
-if(!check_perms('site_collages_delete') && $UserID != $LoggedUser['ID']) {
+if(!check_perms('site_collages_delete') || $UserID != $LoggedUser['ID']) {
 	error(403);
 }
 

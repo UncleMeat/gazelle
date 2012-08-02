@@ -7,9 +7,8 @@
 authorize();
 
 enforce_login();
-
-// FIXME: Still need a better perm name
-if (!check_perms('site_moderate_requests')) {
+ 
+if (!check_perms('users_edit_badges')) {
     error(403);
 }
 

@@ -47,14 +47,24 @@ show_header('Manage articles','bbcode');
 <? if($_GET['action'] == 'editarticle'){?> 
 			<input type="hidden" name="articleid" value="<?=$ArticleID; ?>" />
 <? }?> 
+                  <div style="display:inline-block;margin-right:40px;vertical-align: top;">
+                        <h3>Topic ID</h3>
+                        <input type="text" name="topicid" <? if(!empty($TopicID)) { echo 'value="'.display_str($TopicID).'"'; } ?> />
+                  </div>
+                  <div style="display:inline-block;margin-right:40px;vertical-align: top;">
                         <h3>Category</h3>
                         <select name="category">
 <? foreach($ArticleCats as $Key => $Value) { ?> 
                             <option value="<?=display_str($Key)?>"<?=($Category == $Key) ? 'selected="selected"' : '';?>><?=$Value?></option>
 <? } ?>
-                        </select>                     
-                        <h3>Topic ID</h3>
-			<input type="text" name="topicid" <? if(!empty($TopicID)) { echo 'value="'.display_str($TopicID).'"'; } ?> />
+                        </select>
+                  </div>
+                  <div style="display:inline-block;">
+                      <ul>
+                          <li><strong>Rules/Tutorials</strong> appears in the rules/help section</li>
+                          <li><strong>Hidden</strong> used for content on other site pages<br/>(don't delete hidden content without being sure the topic is not needed)</li>
+                      </ul>
+                  </div>
 			<h3>Title</h3>
 			<input type="text" name="title" size="95" <? if(!empty($Title)) { echo 'value="'.display_str($Title).'"'; } ?> />
                         <h3>Description</h3>
@@ -76,8 +86,8 @@ show_header('Manage articles','bbcode');
         
 <?
 $OldCategory = -1;
-$DB->query("SELECT ID, Category, TopicID, Title, Body, Time FROM articles ORDER BY Category ASC, TopicID ASC");// LIMIT 20
-while(list($ArticleID,$Category,$TopicID, $Title,$Body,$ArticleTime)=$DB->next_record()) {
+$DB->query("SELECT ID, Category, TopicID, Title, Body, Time, Description FROM articles ORDER BY Category, Title");// LIMIT 20
+while(list($ArticleID,$Category,$TopicID, $Title,$Body,$ArticleTime,$Description)=$DB->next_record()) {
 ?>
 <? if($OldCategory != $Category) { ?>
             <h3 id="general"><?= $ArticleCats[$Category] ?></h3>
@@ -90,6 +100,10 @@ while(list($ArticleID,$Category,$TopicID, $Title,$Body,$ArticleTime)=$DB->next_r
                 - <a href="tools.php?action=editarticle&amp;id=<?=$ArticleID?>">[Edit]</a> 
                 <a href="tools.php?action=deletearticle&amp;id=<?=$ArticleID?>&amp;auth=<?=$LoggedUser['AuthKey']?>" onClick="return confirm('Are you sure you want to delete this article?');">[Delete]</a>
         </div>
+	<div class="pad rowa">
+		
+		 <?=$Text->full_format($Description, true) ?> 
+	</div>
 	<div class="box vertical_space">
 		
 		<div id="article_<?=$ArticleID?>"class="pad hidden"><?=$Text->full_format($Body, true) ?></div>

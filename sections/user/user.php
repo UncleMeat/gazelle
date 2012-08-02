@@ -684,11 +684,19 @@ if ($Uploads > 0 && check_paranoia_here('uploads')) {
 			</td>
 		</tr>
 		<tr id="recentuploads">
-<?		foreach($RecentUploads as $RU) { ?>
-			<td>
-				<a href="torrents.php?id=<?=$RU['ID']?>" title="<?=$RU['Name']?>"><img src="<?=$RU['Image']?>" alt="<?=$RU['Name']?>" width="107" /></a>
-			</td>
-<?		} ?>
+<?              foreach($RecentUploads as $RU) { ?>
+                    <td width="20%">
+                        <div>
+				<a href="torrents.php?id=<?=$RU['ID']?>" title="<?=$RU['Name']?>">
+<?                  if($RU['Image']) { 
+?>                          <img src="<?=$RU['Image']?>" alt="<?=$RU['Name']?>" style="max-width: 120px"/>
+<?                  } else { ?>
+                            <?=$RU['Name']?>
+<?                  } ?>
+                        </a>
+                        </div>
+                    </td>
+<?              } ?>
 		</tr>
 	</table>
 <?
@@ -1211,7 +1219,6 @@ if (check_perms('users_mod', $Class)) { ?>
                                 <input  type="checkbox" name="addbadge[]" value="<?=$BadgeID?>"<?=$Disabled?> />
                                         <label for="addbadge[]"> <?=$Name; 
                                                 if($Type=='Unique') echo " *(unique)";
-                                                elseif ($Auto) echo " (automatically awarded)";
                                                 else echo " ($Type)";?></label>
                                 <br />
                                 <input class="long" type="text" id="addbadge<?=$BadgeID?>" name="addbadge<?=$BadgeID?>"<?=$Disabled?> value="<?=$Tooltip?>" />

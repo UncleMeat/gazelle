@@ -54,6 +54,16 @@ if(!check_forumperm($ForumID)) {
 	error(403);
 }
 
+//update thread views
+$DB->query("UPDATE forums_topics SET NumViews = NumViews+1 WHERE ID=$ThreadID");
+if ($Cache->get_value('thread_views_'.$ThreadID)===false){
+    $DB->query("SELECT NumViews FROM forums_topics WHERE ID='$ThreadID'");
+    list($NumViews) = $DB->next_record();
+    $Cache->cache_value('thread_views_'.$ThreadID, $NumViews, 0);
+} else {
+    $Cache->increment('thread_views_'.$ThreadID);
+}
+
 //Post links utilize the catalogue & key params to prevent issues with custom posts per page
 if($ThreadInfo['Posts'] > $PerPage) {
 	if(isset($_GET['post']) && is_number($_GET['post'])) {
@@ -423,7 +433,7 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
 			<img src="<?=STATIC_SERVER?>common/avatars/default.png"  class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 	<? }  
                   
-        $UserBadges = get_user_badges($AuthorID);
+        $UserBadges = get_user_badges($AuthorID,18);
         if( !empty($UserBadges) ) {  ?>
                <div class="badges">
 <?                  print_badges_array($UserBadges);  ?>

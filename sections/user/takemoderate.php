@@ -293,36 +293,42 @@ if (is_array($AddBadges) && check_perms('users_edit_badges')) {
             $AddBadgeID = (int)$AddBadgeID;
       }
       $SQL_IN = implode(',',$AddBadges);
-      $DB->query("SELECT ID, Title, Badge, Rank, Image FROM badges WHERE ID IN ( $SQL_IN )");
+      $DB->query("SELECT ID, Title, Badge, Rank, Image FROM badges WHERE ID IN ( $SQL_IN ) ORDER BY Badge, Rank DESC");
       $BadgeInfos = $DB->to_array();
       
       $SQL = ''; $Div = ''; $BadgesAdded = ''; 
-      
+      $Badges = array();
       foreach($BadgeInfos as $BadgeInfo) {
           list($BadgeID, $Name, $Badge, $Rank, $Image) = $BadgeInfo;
           
-          $Tooltip = db_string( display_str($_POST['addbadge'.$BadgeID]) );
-          $SQL .= "$Div ('$UserID', '$BadgeID', '$Tooltip')";
-          $BadgesAdded .= "$Div $Name";
-          $Div = ',';
-            
-          // remove lower ranked badges of same badge set
-          $DB->query("DELETE ub 
-                          FROM users_badges AS ub
-                     LEFT JOIN badges AS b ON b.ID=ub.BadgeID 
-                         WHERE ub.UserID = '$UserID'
-                           AND b.Badge='$Badge' AND b.Rank<$Rank");
-          
-          
-          send_pm($UserID, 0, "Congratulations you have been awarded the $Name", 
-                            "[center][br][br][img]http://".SITE_URL.'/'.STATIC_SERVER."common/badges/{$Image}[/img][br][br][size=5][color=white][bg=#0261a3][br]{$Tooltip}[br][br][/bg][/color][/size][/center]");
-                
+          if (!array_key_exists($Badge, $Badges)){
+              // only the highest rank in any set will be added
+              $Badges[$Badge] = $Rank; 
+              $Tooltip = db_string( display_str($_POST['addbadge'.$BadgeID]) );
+              $SQL .= "$Div ('$UserID', '$BadgeID', '$Tooltip')";
+              $BadgesAdded .= "$Div $Name";
+              $Div = ',';
+
+              send_pm($UserID, 0, "Congratulations you have been awarded the $Name", 
+                                "[center][br][br][img]http://".SITE_URL.'/'.STATIC_SERVER."common/badges/{$Image}[/img][br][br][size=5][color=white][bg=#0261a3][br]{$Tooltip}[br][br][/bg][/color][/size][/center]");
+
+          }
       }
       $DB->query("INSERT INTO users_badges (UserID, BadgeID, Description) VALUES $SQL");
-          
+      
+      foreach($Badges as $Badge=>$Rank) {
+            // remove lower ranked badges of same badge set
+            $Badge = db_string($Badge);
+            $DB->query("DELETE ub 
+                              FROM users_badges AS ub
+                           JOIN badges AS b ON ub.BadgeID=b.ID
+                               AND b.Badge='$Badge' AND b.Rank<$Rank
+                             WHERE ub.UserID='$UserID'");
+      }
+ 
       $Cache->delete_value('user_badges_ids_'.$UserID);
       $Cache->delete_value('user_badges_'.$UserID);
-      $EditSummary[] = 'Badge'.(count($AddBadges)>1?'s':'')." added: $BadgesAdded";
+      $EditSummary[] = 'Badge'.(count($Badges)>1?'s':'')." added: $BadgesAdded";
 }
 
 

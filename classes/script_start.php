@@ -11,6 +11,10 @@
 /* ------------------------------------------------------ */
 /* * ***************************************************** */
 require 'config.php'; //The config contains all site wide configuration information
+// these are in config... just here until config is updated!
+$ArticleCats = array(0=>'Rules', 1=>'Tutorials', 2=>'Hidden');
+$ShopActions = array('gb','givegb','givecredits','slot','title','badge','pfl');
+
 //Deal with dumbasses
 if (isset($_REQUEST['info_hash']) && isset($_REQUEST['peer_id'])) {
     die('d14:failure reason40:Invalid .torrent, try downloading again.e');
@@ -546,7 +550,7 @@ function get_latest_forum_topics($PermissionID) {
     return $LatestTopics;
 }
 
-function get_user_badges($UserID){
+function get_user_badges($UserID, $Limit = 0){
     global $DB, $Cache;
     $UserID = (int)$UserID;
     $UserBadges = $Cache->get_value('user_badges_'.$UserID);
@@ -567,6 +571,7 @@ function get_user_badges($UserID){
         $UserBadges = $DB->to_array();
         $Cache->cache_value('user_badges_'.$UserID, $UserBadges);
     }
+    if ($Limit>0) $UserBadges = array_slice($UserBadges, 0, $Limit, true);
     return $UserBadges;
 }
 
@@ -639,7 +644,7 @@ function GetWhitelistRegex() {
   ----------------------------------- */
 function ValidateImageUrl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
          
-       $ErrorMessage = "'$Imageurl' is not a valid url.";
+       $ErrorMessage = "$Imageurl is not a valid url.";
        
        if(strlen($Imageurl)>$MaxLength) {
            return "$ErrorMessage (must be < $MaxLength characters)";  
@@ -651,7 +656,7 @@ function ValidateImageUrl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
            return $ErrorMessage;  
        }
        elseif(!preg_match($WhitelistRegex, $Imageurl)) {
-           return "$Imageurl is not on an approved pichost.";
+           return "$Imageurl is not on an approved pichost.<br/><br/>Please read this help topic: <a href='/articles.php?topic=approvedimg' title='Approved Imagehosts' target='_blank'>Approved Imagehosts</a>";
        }
        else { // hooray it validated
            return TRUE;

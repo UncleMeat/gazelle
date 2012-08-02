@@ -498,7 +498,7 @@ $EditionID = 0;
 	$FileList = str_replace(array('_','-'), ' ', $FileList);
 	$FileList = str_replace('|||','<tr><td>',display_str($FileList));
 	$FileList = preg_replace_callback('/\{\{\{([^\{]*)\}\}\}/i','filelist',$FileList);
-	$FileList = '<table style="overflow-x:auto;"><tr class="smallhead"><td colspan="2">'.(empty($FilePath) ? '/' : '/'.$FilePath.'/' ).'</td></tr><tr class="colhead"><td><strong><div style="float: left; display: block;">File Name'.(check_perms('users_mod') ? ' [<a href="torrents.php?action=regen_filelist&amp;torrentid='.$TorrentID.'">Regenerate</a>]' : '').'</div></strong></td><td><strong>Size</strong></td></tr><tr><td>'.$FileList."</table>";
+	$FileList = '<table style="overflow-x:auto;"><tr class="smallhead"><td colspan="2">'.(empty($FilePath) ? '/' : '/'.$FilePath.'/' ).'</td></tr><tr class="rowa"><td><strong><div style="float: left; display: block;">File Name'.(check_perms('users_mod') ? ' [<a href="torrents.php?action=regen_filelist&amp;torrentid='.$TorrentID.'">Regenerate</a>]' : '').'</div></strong></td><td><strong>Size</strong></td></tr><tr><td>'.$FileList."</td></tr></table>";
 
 	$TorrentUploader = $Username; // Save this for "Uploaded by:" below
 
@@ -825,7 +825,7 @@ if (check_perms('site_moderate_forums')){ ?>				- <a href="#post<?=$PostID?>" on
 			<img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 	<?
          }
-        $UserBadges = get_user_badges($AuthorID); 
+        $UserBadges = get_user_badges($AuthorID,12); 
         if( !empty($UserBadges) ) {  ?>
                <div class="badges">
 <?                  print_badges_array($UserBadges); ?>

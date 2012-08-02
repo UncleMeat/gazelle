@@ -96,12 +96,12 @@ function update_forum_info($ForumID, $AdjustNumTopics = 0, $BeginEndTransaction 
     //$AdjustNumTopics=(int)$AdjustNumTopics;
     if ($AdjustNumTopics !=0) { // '-1' or '+1' etc
                 //$AdjustNumTopics = $AdjustNumTopics>0?"+$AdjustNumTopics":$AdjustNumTopics;
-                $AdjustNumTopics = "NumTopics=NumTopics$AdjustNumTopics,";
+                $SetNumTopics = "NumTopics=NumTopics$AdjustNumTopics,";
                 $UpdateArray['NumTopics']=$AdjustNumTopics;
     }
-    else $AdjustNumTopics ='';
+    else $SetNumTopics ='';
             
-    $SQL = "UPDATE forums SET $AdjustNumTopics
+    $SQL = "UPDATE forums SET $SetNumTopics
                     NumPosts='$NumPosts',
                     LastPostTopicID='$NewLastTopic',
                     LastPostID='$NewLastPostID',

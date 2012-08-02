@@ -23,12 +23,13 @@
 	'site_top10' => 'Top 10 access.',
 	'site_advanced_top10' => 'Advanced Top 10 access.',
 	'site_torrents_notify' => 'Notifications access.',
-	'site_collages_create' => 'Collage create access.',
-	'site_collages_manage' => 'Collage manage access.',
-	'site_collages_delete' => 'Collage delete access.',
+     
+	'site_collages_create' => 'Can create collages.',
+	'site_collages_delete' => 'Can delete collages.',
 	'site_collages_subscribe' => 'Collage subscription access.',
 	'site_collages_personal' => 'Can have a personal collage.',
 	'site_collages_renamepersonal' => 'Can rename own personal collages.',
+     
 	'site_make_bookmarks' => 'Bookmarks access.',
 	'site_can_invite_always' => 'Can invite past user limit.',
 	'site_send_unlimited_invites' => 'Unlimited invites.',
@@ -40,6 +41,7 @@
 	'site_view_flow' => 'Can view stats and data pools.',
 	'site_view_full_log' => 'Can view old log entries.',
 	'site_view_torrent_snatchlist' => 'Can view torrent snatchlists.',
+     
             'site_vote_tag' => 'Can vote on tags.',
             'site_add_tag' => 'Can add tags.',
 	'site_delete_tag' => 'Can delete tags.',
@@ -127,6 +129,7 @@
 	'admin_login_watch' => 'Can manage login watch.',
 	'admin_manage_wiki' => 'Can manage wiki access.',
 	'admin_update_geoip' => 'Can update geoip data.',
+	'site_collages_manage' => 'Can manage any collage.',
  	'site_collages_recover' => 'Can recover \'deleted\' collages.',
  	'edit_unknowns' => 'Can edit unknown release information.',
  	'forums_polls_create' => 'Can create polls in the forums.',
@@ -159,7 +162,6 @@ function permissions_form(){ ?>
 					<? display_perm('site_top10','Can access top 10.'); ?>
 					<? display_perm('site_torrents_notify','Can access torrents notifications system.'); ?>
 					<? display_perm('site_collages_create','Can create collages.'); ?>
-					<? display_perm('site_collages_manage','Can manage collages (add torrents, sorting).'); ?>
 					<? display_perm('site_collages_delete','Can delete collages.'); ?>
 					<? display_perm('site_collages_subscribe','Can access collage subscriptions.'); ?>
 					<? display_perm('site_collages_personal','Can have a personal collage.'); ?>
@@ -186,6 +188,7 @@ function permissions_form(){ ?>
 					<? display_perm('site_debug', 'View site debug tables.'); ?>
 					<? display_perm('site_proxy_images', 'Proxy images through the server.'); ?>
 					<? display_perm('site_search_many', 'Can go past low limit of search results.'); ?>
+					<? display_perm('site_collages_manage','Can manage/edit any collage.'); ?>
 					<? display_perm('site_collages_recover', 'Can recover \'deleted\' collages.'); ?>
 					<? display_perm('site_forums_double_post', 'Can double post in the forums.'); ?>
 					<? display_perm('project_team', 'Part of the project team.'); ?>

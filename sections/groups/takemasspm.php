@@ -20,11 +20,7 @@ $Message = db_string($_POST['message']);
 
 //******************************************************************************//
 //--------------- Validate data in edit form -----------------------------------//
-
-// FIXME: Still need a better perm name
-if(!check_perms('site_moderate_requests')) {
-	error(403);
-}
+ 
 
 $Validate->SetFields('groupid','1','number','Invalid group ID.',array('maxlength'=>1000000000, 'minlength'=>1)); // we shouldn't have group IDs higher than a billion either
 $Validate->SetFields('subject','1','string','Invalid subject.',array('maxlength'=>1000, 'minlength'=>1));

@@ -112,13 +112,13 @@ $ForumsRevealVoters = array();
 $ForumsDoublePost = array();
 
 $CollageCats = array(0=>'Pesonal', 1=>'Theme', 2=>'Porn Star', 3=>'Studio', 4=>'Staff picks');
-$ArticleCats = array(0=>'Rules', 1=>'Tutorials');
+$ArticleCats = array(0=>'Rules', 1=>'Tutorials', 2=>'Hidden');
 // badge types
 $BadgeTypes = array ('Single', 'Multiple', 'Shop', 'Unique');
 $AutoAwardTypes  = array ('NumPosts', 'NumComments', 'NumUploaded', 'NumNewTags', 'NumTags', 'NumTagVotes',
                   'RequestsFilled', 'UploadedTB', 'DownloadedTB', 'MaxSnatches');
 
-$ShopActions = array('gb','givegb','givecredits','slot','title','badge');
+$ShopActions = array('gb','givegb','givecredits','slot','title','badge','pfl');
 
 // Ratio requirements, in descending order
 // Columns: Download amount, required ratio, grace period
