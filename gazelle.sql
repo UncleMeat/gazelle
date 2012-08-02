@@ -1876,18 +1876,15 @@ CREATE TABLE IF NOT EXISTS `users_dupes` (
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `users_freeleeches`
+-- Tabellstruktur `users_slots`
 --
 
-CREATE TABLE IF NOT EXISTS `users_freeleeches` (
-  `UserID` int(10) NOT NULL,
-  `TorrentID` int(10) NOT NULL,
-  `Type` enum('leech','seed') NOT NULL DEFAULT 'leech',
-  `Time` datetime NOT NULL,
-  `Expired` tinyint(1) NOT NULL DEFAULT '0',
-  `Downloaded` bigint(20) NOT NULL DEFAULT '0',
-  `Uploaded` bigint(20) NOT NULL DEFAULT '0',
-  `Uses` int(10) NOT NULL DEFAULT '1',
+
+CREATE TABLE IF NOT EXISTS `users_slots` (
+  `UserID` int(11) NOT NULL,
+  `TorrentID` int(11) NOT NULL,
+  `FreeLeech` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `DoubleSeed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`UserID`,`TorrentID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

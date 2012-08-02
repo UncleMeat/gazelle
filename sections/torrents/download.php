@@ -53,7 +53,7 @@ list($GroupID,$Name, $Size, $FreeTorrent, $DoubleSeed, $InfoHash) = array_shift(
 
 $TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 if (empty($TokenTorrents)) {
-        $DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+        $DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
         $TokenTorrents = $DB->to_array('TorrentID');
 }
 
@@ -76,7 +76,7 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 
 	// First make sure this isn't already FL, and if it is, do nothing
         // if it's currently using a double seed slot, switch to FL.
-	if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'leech') {
+	if (empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] < sqltime()) {
 		if ($FLTokens <= 0) {
 			error("You do not have any tokens left. Please use the regular DL link.");
 		}
@@ -90,13 +90,14 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 		// double-clicking the FL link while waiting for a tracker response.
 		$TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 		if (empty($TokenTorrents)) {
-			$DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+			$DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
 			$TokenTorrents = $DB->to_array('TorrentID');
 		}
 		
-		if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'leech') {
-			$DB->query("INSERT INTO users_freeleeches (UserID, TorrentID, Type, Time) VALUES ($UserID, $TorrentID, 'leech', NOW())
-							ON DUPLICATE KEY UPDATE Time=VALUES(Time), Type=VALUES(Type), Expired=FALSE, Uses=Uses+1");
+		if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['FreeLeech'] < sqltime()) {
+                        $time = time_plus(60*60*24*14); // 14 days
+			$DB->query("INSERT INTO users_slots (UserID, TorrentID, FreeLeech) VALUES ('$UserID', '$TorrentID', '$time')
+							ON DUPLICATE KEY UPDATE FreeLeech=VALUES(FreeLeech)");
 			$DB->query("UPDATE users_main SET FLTokens = FLTokens - 1 WHERE ID=$UserID");
 			
 			// Fix for downloadthemall messing with the cached token count
@@ -107,14 +108,14 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 			$Cache->update_row(false, array('FLTokens'=>($FLTokens - 1)));
 			$Cache->commit_transaction(0);
 			
-			$TokenTorrents[] = $TorrentID;
+			$TokenTorrents[$TorrentID]['FreeLeech'] = $time;
 			$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
 		}
 	}
 } elseif ($_REQUEST['usetoken'] == 2 && $DoubleSeed == 0) {
 
 	// First make sure this isn't already DS, and if it is, do nothing
-	if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'seed') {
+	if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['DoubleSeed'] < sqltime()) {
                 if (isset($LoggedUser)) {
                         $FLTokens = $LoggedUser['FLTokens'];
                 } else {
@@ -135,13 +136,14 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 		// double-clicking the DS link while waiting for a tracker response.
 		$TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 		if (empty($TokenTorrents)) {
-			$DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+			$$DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
 			$TokenTorrents = $DB->to_array('TorrentID');
 		}
 
-		if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'seed') {
-			$DB->query("INSERT INTO users_freeleeches (UserID, TorrentID, Type, Time) VALUES ($UserID, $TorrentID, 'seed', NOW())
-							ON DUPLICATE KEY UPDATE Time=VALUES(Time), Type=VALUES(Type), Expired=FALSE, Uses=Uses+1");
+		if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['DoubleSeed'] < sqltime()) {
+                        $time = time_plus(60*60*24*14); // 14 days
+			$DB->query("INSERT INTO users_slots (UserID, TorrentID, DoubleSeed) VALUES ('$UserID', '$TorrentID', '$time')
+							ON DUPLICATE KEY UPDATE DoubleSeed=VALUES(DoubleSeed)");
 			$DB->query("UPDATE users_main SET FLTokens = FLTokens - 1 WHERE ID=$UserID");
 			
 			// Fix for downloadthemall messing with the cached token count
@@ -152,32 +154,12 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 			$Cache->update_row(false, array('FLTokens'=>($FLTokens - 1)));
 			$Cache->commit_transaction(0);
 			
-			$TokenTorrents[] = $TorrentID;
+			$TokenTorrents[$TorrentID]['DoubleSeed'] = $time;
 			$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
 		}
         }
                 
 }
-
-// TODO: Lanz, unsure about this one, need more investigation, disabled for now.
-/*
-//Stupid Recent Snatches On User Page
-if($CategoryID == '1' && $Image != "") {
-	$RecentSnatches = $Cache->get_value('recent_snatches_'.$UserID);
-	if(!empty($RecentSnatches)) {
-		$Snatch = array('ID'=>$GroupID,'Name'=>$Name,'Artist'=>$Artists,'WikiImage'=>$Image);
-		if(!in_array($Snatch, $RecentSnatches)) {
-			if(count($RecentSnatches) == 5) {
-				array_pop($RecentSnatches);
-			}
-			array_unshift($RecentSnatches, $Snatch);
-		} elseif(!is_array($RecentSnatches)) {
-			$RecentSnatches = array($Snatch);
-		}
-		$Cache->cache_value('recent_snatches_'.$UserID, $RecentSnatches, 0);
-	}
-}
-*/
 
 $DB->query("INSERT INTO users_downloads (UserID, TorrentID, Time) VALUES ('$UserID', '$TorrentID', '".sqltime()."') ON DUPLICATE KEY UPDATE Time=VALUES(Time)");
 
