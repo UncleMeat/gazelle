@@ -81,11 +81,6 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 			error("You do not have any tokens left. Please use the regular DL link.");
 		}
 
-		// Let the tracker know about this
-		if (!update_tracker('add_token_leech', array('info_hash' => rawurlencode($InfoHash), 'userid' => $UserID))) {
-			error("Sorry! An error occurred while trying to register your token. Most often, this is due to the tracker being down or under heavy load. Please try again later.");
-		}
-
 		// We need to fetch and check this again here because of people
 		// double-clicking the FL link while waiting for a tracker response.
 		$TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
@@ -96,6 +91,13 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 
 		if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['FreeLeech'] < sqltime()) {
                         $time = time_plus(60*60*24*14); // 14 days
+
+                        // Let the tracker know about this
+                        if (!update_tracker('add_token_fl', array('info_hash' => rawurlencode($InfoHash), 'userid' => $UserID, 'time' => strtotime($time)))) {
+                                error("Sorry! An error occurred while trying to register your token. Most often, this is due to the tracker being down or under heavy load. Please try again later.");
+                        }
+
+                        // Update the db.
 			$DB->query("INSERT INTO users_slots (UserID, TorrentID, FreeLeech) VALUES ('$UserID', '$TorrentID', '$time')
 							ON DUPLICATE KEY UPDATE FreeLeech=VALUES(FreeLeech)");
 			$DB->query("UPDATE users_main SET FLTokens = FLTokens - 1 WHERE ID=$UserID");
@@ -127,11 +129,6 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 			error("You do not have any tokens left. Please use the regular DL link.");
 		}
 
-		// Let the tracker know about this
-		if (!update_tracker('add_token_seed', array('info_hash' => rawurlencode($InfoHash), 'userid' => $UserID))) {
-			error("Sorry! An error occurred while trying to register your token. Most often, this is due to the tracker being down or under heavy load. Please try again later.");
-		}
-
 		// We need to fetch and check this again here because of people
 		// double-clicking the DS link while waiting for a tracker response.
 		$TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
@@ -142,7 +139,14 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 
 		if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['DoubleSeed'] < sqltime()) {
                         $time = time_plus(60*60*24*14); // 14 days
-			$DB->query("INSERT INTO users_slots (UserID, TorrentID, DoubleSeed) VALUES ('$UserID', '$TorrentID', '$time')
+
+                        // Let the tracker know about this
+                        if (!update_tracker('add_token_ds', array('info_hash' => rawurlencode($InfoHash), 'userid' => $UserID, 'time' => strtotime($time)))) {
+                                error("Sorry! An error occurred while trying to register your token. Most often, this is due to the tracker being down or under heavy load. Please try again later.");
+                        }
+
+                        // Update the db
+                        $DB->query("INSERT INTO users_slots (UserID, TorrentID, DoubleSeed) VALUES ('$UserID', '$TorrentID', '$time')
 							ON DUPLICATE KEY UPDATE DoubleSeed=VALUES(DoubleSeed)");
 			$DB->query("UPDATE users_main SET FLTokens = FLTokens - 1 WHERE ID=$UserID");
 
