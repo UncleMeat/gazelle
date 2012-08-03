@@ -100,13 +100,13 @@ while(list($ArticleID,$Category,$TopicID, $Title,$Body,$ArticleTime,$Description
                 - <a href="tools.php?action=editarticle&amp;id=<?=$ArticleID?>">[Edit]</a> 
                 <a href="tools.php?action=deletearticle&amp;id=<?=$ArticleID?>&amp;auth=<?=$LoggedUser['AuthKey']?>" onClick="return confirm('Are you sure you want to delete this article?');">[Delete]</a>
         </div>
-	<div class="pad rowa">
+	<div class="box pad rowa">
 		
 		 <?=$Text->full_format($Description, true) ?> 
 	</div>
-	<div class="box vertical_space">
+	<div class="box vertical_space hidden" id="article_<?=$ArticleID?>">
 		
-		<div id="article_<?=$ArticleID?>"class="pad hidden"><?=$Text->full_format($Body, true) ?></div>
+		<div class="pad"><?=$Text->full_format($Body, true) ?></div>
 	</div>
 <? } ?>
 </div>

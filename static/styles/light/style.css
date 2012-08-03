@@ -1920,6 +1920,11 @@ a.button {
 	font-family: Verdana, Geneva, sans-serif;
 	padding: 7px 15px;
 }
+
+a.button:hover {
+        color: white;
+        text-decoration: none;
+}
 a.button:visited {
 	text-decoration: none;
 	color: #fff;	

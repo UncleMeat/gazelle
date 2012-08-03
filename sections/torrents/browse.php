@@ -41,7 +41,7 @@ function header_link($SortKey, $DefaultWay = "desc") {
 
 $TokenTorrents = $Cache->get_value('users_tokens_' . $UserID);
 if (empty($TokenTorrents)) {
-    $DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+    $DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
     $TokenTorrents = $DB->to_array('TorrentID');
     $Cache->cache_value('users_tokens_' . $UserID, $TokenTorrents);
 }
@@ -587,23 +587,21 @@ $row='a';
         $SeedTooltip='';
         $FreeTooltip='';
         if ($Data['FreeTorrent'] == '1') {
-            $AddExtra .= ' <strong>/ Freeleech!</strong>';
             $FreeTooltip = "Unlimited Freeleech";
         } elseif ($Data['FreeTorrent'] == '2') {
-            $AddExtra .= ' <strong>/ Neutral Leech!</strong>';
             $FreeTooltip = "Neutral Freeleech";
         }
+
         if ($Data[double_seed] == '1') {
-            $AddExtra .= ' <strong>/ Doubleseed!</strong>';
             $SeedTooltip = "Unlimited Doubleseed";
         }
         
-        if (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'leech') {
-            $AddExtra .= ' <strong>/ Personal Freeleech!</strong>';
-            $FreeTooltip = "Freeleech Slot";
-        } elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'seed') {
-            $AddExtra .= ' <strong>/ Personal Doubleseed!</strong>';
-            $SeedTooltip = "Doubleseed Slot";
+        if (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > sqltime()) {
+            $FreeTooltip = "Personal Freeleech for ".time_diff($TokenTorrents[$TorrentID]['FreeLeech'], 2, false);;
+        } 
+        
+        if (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['DoubleSeed'] > sqltime()) {
+            $SeedTooltip = "Personal Doubleseed for ".time_diff($TokenTorrents[$TorrentID]['DoubleSeed'], 2, false);
         }
         
         $Icons = '';

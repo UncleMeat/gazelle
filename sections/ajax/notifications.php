@@ -17,7 +17,7 @@ list($Page,$Limit) = page_limit(NOTIFICATIONS_PER_PAGE);
 
 $TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 if (empty($TokenTorrents)) {
-	$DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+	$DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
 	$TokenTorrents = $DB->to_array('TorrentID');
 	$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
 }

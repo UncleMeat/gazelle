@@ -14,7 +14,7 @@ if(!is_number($CollageID)) { error(0); }
 
 $TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 if (empty($TokenTorrents)) {
-	$DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+	$DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
 	$TokenTorrents = $DB->to_array('TorrentID');
 	$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
 }
@@ -148,12 +148,14 @@ foreach ($TorrentList as $GroupID=>$Group) {
         list($TorrentID, $Torrent) = each($Torrents);
 
         $DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
-
+        
         if(!empty($Torrent['FreeTorrent'])) {
                 $DisplayName .=' <strong>/ Freeleech!</strong>'; 
-        } elseif(!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'leech') { 
+        } elseif(!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > sqltime()) { 
                 $DisplayName .= ' <strong>/ Personal Freeleech!</strong>';
-        } elseif(!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'seed') { 
+        } 
+        
+        if(!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['DoubleSeed'] > sqltime()) { 
                 $DisplayName .= ' <strong>/ Personal Doubleseed!</strong>';
         }
         

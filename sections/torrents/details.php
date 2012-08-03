@@ -63,7 +63,7 @@ else $tagsort='score';
 
 $TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 if (empty($TokenTorrents)) {
-	$DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+	$DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
 	$TokenTorrents = $DB->to_array('TorrentID');
 	$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
 }
@@ -101,15 +101,22 @@ if (count($Reports) > 0) {
             $Title = "This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report');
             $DisplayName .= ' <span style="color: #FF3030; padding: 2px 4px 2px 4px;" title="'.$Title.'">Reported</span>';
 }
-        
+
 $Icons = '';
-if ( $DoubleSeed == '1' ) $SeedTooltip = "Unlimited Doubleseed"; // a theoretical state?
-elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'seed') $SeedTooltip = "Personal DoubleSeed";
+if ( $DoubleSeed == '1' ) {
+    $SeedTooltip = "Unlimited Doubleseed"; // a theoretical state?
+} elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['DoubleSeed'] > sqltime()) {
+    $SeedTooltip = "Personal Doubleseed for ".time_diff($TokenTorrents[$TorrentID]['DoubleSeed'], 2, false);
+}
 if ($SeedTooltip) 
     $Icons = '<img src="static/common/symbols/doubleseed.gif" alt="DoubleSeed" title="'.$SeedTooltip.'" />&nbsp;&nbsp;';          
  
-if ( $FreeTorrent == '1' ) $FreeTooltip = "Unlimited Freeleech";
-elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'leech') $FreeTooltip = "Personal Freeleech";
+if ( $FreeTorrent == '1' ) { 
+    $FreeTooltip = "Unlimited Freeleech";
+}
+elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > sqltime()) {
+    $FreeTooltip = "Personal Freeleech for ".time_diff($TokenTorrents[$TorrentID]['FreeLeech'], 2, false);
+}
 if ($FreeTooltip) 
     $Icons .= '<img src="static/common/symbols/freedownload.gif" alt="Freeleech" title="'.$FreeTooltip.'" />&nbsp;&nbsp;';          
 
@@ -212,10 +219,10 @@ if ($FreeTooltip)
                      <span id="torrent_buttons"  style="float: left;">
                                             <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
  
-<?	if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'leech') && ($FreeTorrent == '0') && ($LoggedUser['CanLeech'] == '1')) { ?>
+<?	if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['FreeLeech'] < sqltime()) && ($FreeTorrent == '0') && ($LoggedUser['CanLeech'] == '1')) { ?>
                                             <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" class="button greenButton" title="This will use 1 slot" onClick="return confirm('Are you sure you want to use a freeleech slot here?');">FREELEECH TORRENT</a>
 <?	} ?>					
-<?	if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'seed') && ($DoubleSeed == '0')) { ?>
+<?	if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['DoubleSeed'] < sqltime()) && ($DoubleSeed == '0')) { ?>
                                             <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=2" class="button orangeButton" title="This will use 1 slot" onClick="return confirm('Are you sure you want to use a doubleseed slot here?');">DOUBLESEED TORRENT</a>
 <?	} ?>					
                     

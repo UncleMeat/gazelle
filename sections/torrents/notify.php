@@ -6,7 +6,7 @@ list($Page,$Limit) = page_limit(NOTIFICATIONS_PER_PAGE);
 
 $TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 if (empty($TokenTorrents)) {
-	$DB->query("SELECT TorrentID, Type FROM users_freeleeches WHERE UserID=$UserID AND Expired=FALSE");
+	$DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
 	$TokenTorrents = $DB->to_array('TorrentID');
 	$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
 }
@@ -102,7 +102,7 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 			// generate torrent's title
 			$DisplayName='';
 					
-			if ((!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['Type'] == 'leech') && empty($Torrent['FreeTorrent'])) {
+			if ((!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > sqltime()) && empty($Torrent['FreeTorrent'])) {
 				$Data['PersonalFL'] = 1;
 			}
 			
@@ -131,7 +131,7 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 			<span>
 				[<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a> 
 <?			if (($LoggedUser['FLTokens'] > 0) && ($Size < 1073741824) 
-				&& (empty($TokenTorrents) || $TokenTorrents[$TorrentID] != 'leech') && empty($FreeTorrent) && ($LoggedUser['CanLeech'] == '1')) { ?>
+				&& (empty($TokenTorrents) || $TokenTorrents[$TorrentID]['FreeLeech'] < sqltime()) && empty($FreeTorrent) && ($LoggedUser['CanLeech'] == '1')) { ?>
 				| <a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FL</a>
 <?			} ?>
 				| <a href="#" onclick="Clear(<?=$TorrentID?>);return false;" title="Remove from notifications list">CL</a>]

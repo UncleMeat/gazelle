@@ -28,7 +28,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		m.RequiredRatio,
 		m.Title,
 		m.torrent_pass,
-            m.PermissionID AS ClassID,
+                m.PermissionID AS ClassID,
 		m.Enabled,
 		m.Paranoia,
 		m.Invites,
@@ -60,6 +60,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		i.DisableRequests,
 		i.HideCountryChanges,
 		m.FLTokens,
+                m.personal_freeleech,
 		SHA1(i.AdminComment),
                 m.Credits,
                 i.BonusLog,
@@ -76,7 +77,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $CommentHash,$BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight) = $DB->next_record(MYSQLI_NUM, array(12));
+	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $PersonalFreeLeech, $CommentHash,$BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight) = $DB->next_record(MYSQLI_NUM, array(12));
 
 } else { // Person viewing is a normal user
 	$DB->query("SELECT
@@ -1090,10 +1091,28 @@ if (check_perms('users_mod', $Class)) { ?>
 				<td class="label">Invites:</td>
 				<td><input type="text" size="5" name="Invites" value="<?=$Invites?>" /></td>
 			</tr>
+<?      }
+
+        if ((check_perms('users_edit_pfl',$Class) && $UserID != $LoggedUser['ID'])
+        || (check_perms('users_edit_own_pfl') && $UserID == $LoggedUser['ID'])) {
+?>
+                        <tr>
+                                <td class="label">Personal Freeleech</td>
+                                <td>
+                                    <select name="PersonalFreeLeech">
+                                        <option value="0" selected="<?=$PersonalFreeLeech < sqltime()?'seleced':''?>">None</option>
+                                        <option value="24">24 hours</option>
+                                        <option value="48">48 hours</option>
+                                        <option value="168">1 week</option>
+                                    <? if ($PersonalFreeLeech > sqltime()) { ?>
+                                        <option value="1" selected="selected"><?=time_diff($PersonalFreeLeech, 2, false)?> (current)</option>
+                                    <? } ?>
+                                    </select>
+                                </td>
 <?
 	}
-
-	if (check_perms('admin_manage_fls') || (check_perms('users_mod') && $OwnProfile)) {
+        
+        if (check_perms('admin_manage_fls') || (check_perms('users_mod') && $OwnProfile)) {
 ?>
 			<tr>
 				<td class="label">First Line Support:</td>

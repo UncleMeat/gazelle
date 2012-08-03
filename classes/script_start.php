@@ -11,9 +11,6 @@
 /* ------------------------------------------------------ */
 /* * ***************************************************** */
 require 'config.php'; //The config contains all site wide configuration information
-// these are in config... just here until config is updated!
-$ArticleCats = array(0=>'Rules', 1=>'Tutorials', 2=>'Hidden');
-$ShopActions = array('gb','givegb','givecredits','slot','title','badge','pfl');
 
 //Deal with dumbasses
 if (isset($_REQUEST['info_hash']) && isset($_REQUEST['peer_id'])) {

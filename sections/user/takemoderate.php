@@ -59,6 +59,7 @@ if(!is_numeric($AdjustUpValue) || !is_numeric($AdjustDownValue)) {
  
 $FLTokens = (int)$_POST['FLTokens'];
 $BonusCredits = (float)$_POST['BonusCredits'];
+$PersonalFreeLeech = (int)$_POST['PersonalFreeLeech'];
 
 $WarnLength = (int)$_POST['WarnLength'];
 $ExtendWarning = (int)$_POST['ExtendWarning'];
@@ -127,6 +128,7 @@ $DB->query("SELECT
 	DisableIRC,
 	m.RequiredRatio,
 	m.FLTokens,
+        m.personal_freeleech,
 	i.RatioWatchEnds,
 	SHA1(i.AdminComment) AS CommentHash,
 	m.Credits
@@ -383,6 +385,27 @@ if ($FLTokens!=$Cur['FLTokens'] && ((check_perms('users_edit_tokens')  && $UserI
 	$UpdateSet[]="FLTokens=".$FLTokens;
 	$EditSummary[]="Freeleech Tokens changed from ".$Cur['FLTokens']." to ".$FLTokens;
 	$HeavyUpdates['FLTokens'] = $FLTokens;
+}
+
+// $PersonalFreeLeech 1 is current time.
+if ($PersonalFreeLeech != 1 && ($PersonalFreeLeech > 1 || ($PersonalFreeLeech == 0 && $Cur['personal_freeleech'] > sqltime())) &&
+   ((check_perms('users_edit_pfl') && $UserID != $LoggedUser['ID']) || (check_perms('users_edit_own_pfl') && $UserID == $LoggedUser['ID']))) {
+    if ($PersonalFreeLeech == 0) {
+        $time = '0000-00-00 00:00:00';
+        $after = 'none';
+    } else {
+        $time = time_plus(60*60*$PersonalFreeLeech);
+        $after = time_diff($time, 2, false);
+    }
+    if ($Cur['personal_freeleech'] < sqltime()) {
+        $before = 'none';
+    } else {
+        $before = time_diff($Cur['personal_freeleech'], 2, false);
+    }
+
+    $UpdateSet[]="personal_freeleech='$time'";
+    $EditSummary[]="Personal Freeleech changed from ".$before." to ".$after;
+    $HeavyUpdates['personal_freeleech'] = $time;
 }
 
 if ($BonusCredits!=$Cur['Credits'] && ((check_perms('users_edit_credits') && $UserID != $LoggedUser['ID']) 
