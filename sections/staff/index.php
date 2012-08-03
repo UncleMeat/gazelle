@@ -48,7 +48,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 					<?=format_username($ID, $Username, false, false, true, false, $Title, false)?>
 				</td>
 				<td class="nobr">
-					<? if (check_paranoia('lastseen', $Paranoia, $Class)) { echo time_diff($LastAccess); } else { echo 'Hidden by user'; }?>
+					<? if (check_paranoia('lastseen', $Paranoia, $Class)) { echo time_diff($LastAccess,2,true,false,0); } else { echo 'Hidden by user'; }?>
 				</td>
 				<td class="nobr">
 					<?=$SupportFor?>
@@ -57,40 +57,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 <?	} ?>
 		</table>
 	</div> 
-      <?	/* ?>
-	<div class="box pad" style="padding:0px 10px 10px 10px;">
-		<br /><h3><!--Forum -->Mod Pervs</h3>
-	<!--<p>Forum Mods are users who have been promoted to help moderate the forums. They can only help with forum oriented questions</p>-->
-		<p>Mods are staff members and have wide ranging powers.</p>
-		<table class="staff" width="100%">
-			<tr class="colhead">
-				<td width="150px">Username</td>
-				<td width="150px">Last seen</td>
-				<td><strong>Remark</strong></td>
-			</tr>
-<?
-	$Row = 'a';
-	foreach($ForumStaff as $Support) {
-		list($ID, $Class, $ClassName, $Username, $Paranoia, $LastAccess, $SupportFor) = $Support;
-		$Row = ($Row == 'a') ? 'b' : 'a';
-?>
-			<tr class="row<?=$Row?>">
-				<td class="nobr">
-					<?=format_username($ID, $Username)?>
-				</td>
-				<td class="nobr">
-					<? if (check_paranoia('lastseen', $Paranoia, $Class)) { echo time_diff($LastAccess); } else { echo 'Hidden by user'; }?>
-				</td>
-				<td class="nobr">
-					<?=$SupportFor?>
-				</td>
-			</tr>
-<?	} ?>
-		</table>
-	</div>
-      
-      <?	*/ ?>
-     
+
 	<div class="box pad" style="padding:10px;">
             <h3>Staff Members</h3>
             <p>Staff members do something something blah blah should we even bother having a line here?</p>
@@ -127,7 +94,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 					<?=format_username($ID, $Username, false, false, true, false, $Title, false)?>
 				</td>
 				<td class="nobr">
-					<? if (check_paranoia('lastseen', $Paranoia, $Class)) { echo time_diff($LastAccess); } else { echo 'Hidden by staff member'; }?>
+					<? if (check_paranoia('lastseen', $Paranoia, $Class)) { echo time_diff($LastAccess,2,true,false,0); } else { echo 'Hidden by staff member'; }?>
 				</td>
 				<td class="nobr">
 					<?=$Remark?>
@@ -173,7 +140,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 					<?=format_username($ID, $Username, false, false, true, false, $Title, false)?>
 				</td>
 				<td class="nobr">
-					<? if (check_paranoia('lastseen', $Paranoia, $Class)) { echo time_diff($LastAccess); } else { echo 'Hidden by staff member'; }?>
+					<? if (check_paranoia('lastseen', $Paranoia, $Class)) { echo time_diff($LastAccess,2,true,false,0); } else { echo 'Hidden by staff member'; }?>
 				</td>
 				<td class="nobr">
 					<?=$Remark?>

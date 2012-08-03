@@ -99,6 +99,15 @@ echo $Val->GenerateJS('userform');
 					External CSS: <input type="text" size="40" name="styleurl" id="styleurl" value="<?=display_str($StyleURL)?>" />
 				</td>
 			</tr>
+			<tr>
+				<td class="label"><strong>Time style</strong></td>
+				<td>
+					<input type="radio" name="timestyle" value="0" <? if (empty($LoggedUser['TimeStyle'])||$LoggedUser['TimeStyle']==0) { ?>checked="checked"<? } ?> />
+					<label>Display times as time since (date and time is displayed as tooltip)</label><br/>
+					<input type="radio" name="timestyle" value="1" <? if ( $LoggedUser['TimeStyle']==1) { ?>checked="checked"<? } ?> />
+					<label>Display times as date and time (time since is displayed as tooltip)</label>
+				</td>
+			</tr>
 <? if (check_perms('site_advanced_search')) { ?>
 			<tr>
 				<td class="label"><strong>Default Search Type</strong></td>

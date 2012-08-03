@@ -160,7 +160,7 @@ function get_tag_synonym($Tag, $Sanitise = true){
  * Return whether $Tag is a valid tag - more than 2** char long and not a stupid word
  * (** unless is 'hd','dp','bj','ts','sd','69','mf','3d','hj','bi')
  * 
- * @param $Tag. The prospective tag to be evaluated
+ * @param string $Tag The prospective tag to be evaluated
  * @return Boolean representing whether the tag is valid format (not banned)
  */
 function is_valid_tag($Tag){
