@@ -76,38 +76,38 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 
 	// First make sure this isn't already FL, and if it is, do nothing
         // if it's currently using a double seed slot, switch to FL.
-	if (empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] < sqltime()) {
+	if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['FreeLeech'] < sqltime()) {
 		if ($FLTokens <= 0) {
 			error("You do not have any tokens left. Please use the regular DL link.");
 		}
-		
+
 		// Let the tracker know about this
 		if (!update_tracker('add_token_leech', array('info_hash' => rawurlencode($InfoHash), 'userid' => $UserID))) {
 			error("Sorry! An error occurred while trying to register your token. Most often, this is due to the tracker being down or under heavy load. Please try again later.");
 		}
-		
-		// We need to fetch and check this again here because of people 
+
+		// We need to fetch and check this again here because of people
 		// double-clicking the FL link while waiting for a tracker response.
 		$TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 		if (empty($TokenTorrents)) {
 			$DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
 			$TokenTorrents = $DB->to_array('TorrentID');
 		}
-		
+
 		if (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['FreeLeech'] < sqltime()) {
                         $time = time_plus(60*60*24*14); // 14 days
 			$DB->query("INSERT INTO users_slots (UserID, TorrentID, FreeLeech) VALUES ('$UserID', '$TorrentID', '$time')
 							ON DUPLICATE KEY UPDATE FreeLeech=VALUES(FreeLeech)");
 			$DB->query("UPDATE users_main SET FLTokens = FLTokens - 1 WHERE ID=$UserID");
-			
+
 			// Fix for downloadthemall messing with the cached token count
 			$UInfo = user_heavy_info($UserID);
 			$FLTokens = $UInfo['FLTokens'];
-			
+
 			$Cache->begin_transaction('user_info_heavy_'.$UserID);
 			$Cache->update_row(false, array('FLTokens'=>($FLTokens - 1)));
 			$Cache->commit_transaction(0);
-			
+
 			$TokenTorrents[$TorrentID]['FreeLeech'] = $time;
 			$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
 		}
@@ -131,12 +131,12 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 		if (!update_tracker('add_token_seed', array('info_hash' => rawurlencode($InfoHash), 'userid' => $UserID))) {
 			error("Sorry! An error occurred while trying to register your token. Most often, this is due to the tracker being down or under heavy load. Please try again later.");
 		}
-		
-		// We need to fetch and check this again here because of people 
+
+		// We need to fetch and check this again here because of people
 		// double-clicking the DS link while waiting for a tracker response.
 		$TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
 		if (empty($TokenTorrents)) {
-			$$DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
+			$DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
 			$TokenTorrents = $DB->to_array('TorrentID');
 		}
 
@@ -145,20 +145,20 @@ if ($_REQUEST['usetoken'] == 1 && $FreeTorrent == 0) {
 			$DB->query("INSERT INTO users_slots (UserID, TorrentID, DoubleSeed) VALUES ('$UserID', '$TorrentID', '$time')
 							ON DUPLICATE KEY UPDATE DoubleSeed=VALUES(DoubleSeed)");
 			$DB->query("UPDATE users_main SET FLTokens = FLTokens - 1 WHERE ID=$UserID");
-			
+
 			// Fix for downloadthemall messing with the cached token count
 			$UInfo = user_heavy_info($UserID);
 			$FLTokens = $UInfo['FLTokens'];
-			
+
 			$Cache->begin_transaction('user_info_heavy_'.$UserID);
 			$Cache->update_row(false, array('FLTokens'=>($FLTokens - 1)));
 			$Cache->commit_transaction(0);
-			
+
 			$TokenTorrents[$TorrentID]['DoubleSeed'] = $time;
 			$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
 		}
         }
-                
+
 }
 
 $DB->query("INSERT INTO users_downloads (UserID, TorrentID, Time) VALUES ('$UserID', '$TorrentID', '".sqltime()."') ON DUPLICATE KEY UPDATE Time=VALUES(Time)");
