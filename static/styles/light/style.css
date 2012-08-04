@@ -1990,7 +1990,9 @@ span.reported {
     color: red;
     float: none;
 }
-
+#inform {
+    color: red;
+}
 .reels, .reelsi {
     background-color: #eee;
 }

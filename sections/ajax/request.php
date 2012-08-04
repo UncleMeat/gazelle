@@ -2,8 +2,6 @@
 
 authorize(true);
 
-$RequestTax = 0.1;
-
 // Minimum and default amount of upload to remove from the user when they vote.
 // Also change in static/functions/requests.js
 $MinimumVote = 20*1024*1024;
@@ -156,7 +154,6 @@ print
 				'requestId' => (int) $RequestID,
 				'requestorId' => (int) $RequestorID,
 				'requestorName' => $RequestorName,
-				'requestTax' => $RequestTax,
 				'timeAdded' => $TimeAdded,
 				'canEdit' => $CanEdit,
 				'canVote' => $CanVote,

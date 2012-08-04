@@ -160,7 +160,7 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests,bbc
                                                         <option value='tb'<?=(!empty($_POST['unit']) && $_POST['unit'] == 'tb' ? ' selected="selected"' : '') ?>>TB</option>
 						</select>
 						<input type="button" value="Preview" onclick="Calculate();"/>
-						<strong><?=($RequestTax * 100)?>% of this is deducted as tax by the system.</strong>
+						<strong id="inform">100MB will immediately be removed from your upload total.</strong>
 					</td>
 				</tr>
 				<tr>

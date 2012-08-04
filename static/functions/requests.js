@@ -16,6 +16,16 @@ function Preview_Request() {
 	}
 }
 
+function ReadableAmount(size) {
+    var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    var i = 0;
+    while(size >= 1024) {
+        size /= 1024;
+        ++i;
+    }
+    return size.toFixed(1) + ' ' + units[i];
+}
+
 function Vote(amount, requestid) {
 	if(typeof amount == 'undefined') {
 		amount = parseInt($('#amount').raw().value);
@@ -23,7 +33,9 @@ function Vote(amount, requestid) {
 	if(amount == 0) {
 		 amount = 20 * 1024 * 1024;
 	}
-	
+        
+        if (!confirm(ReadableAmount(amount) + ' will immediately be removed from your upload total, are you sure?')) return;
+        
 	var index;
 	var votecount;
 	if(!requestid) {
@@ -73,7 +85,8 @@ function Calculate() {
             mul = (1024*1024*1024*1024);
         }
 	
-        var amt = Math.floor($('#amount_box').raw().value * mul);
+        var value = $('#amount_box').raw().value;
+        var amt = Math.floor(value * mul);
         
         if(amt > $('#current_uploaded').raw().value) {
 		$('#new_uploaded').raw().innerHTML = "You can't afford that request!";
@@ -91,6 +104,7 @@ function Calculate() {
 		$('#new_uploaded').raw().innerHTML = get_size(($('#current_uploaded').raw().value) - amt);
 		$('#new_ratio').raw().innerHTML = ratio($('#current_uploaded').raw().value - amt, $('#current_downloaded').raw().value);
 		$('#new_bounty').raw().innerHTML = get_size(mul * $('#amount_box').raw().value);
+                $('#inform').raw().innerHTML = value + unit.toUpperCase() + ' will immediately be removed from your upload total.'
 	}
 }
 
