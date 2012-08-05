@@ -161,7 +161,7 @@ if($NewRequest) {
 	$DB->query("INSERT INTO requests_votes 
 					(RequestID, UserID, Bounty)
 				VALUES
-					(".$RequestID.", ".$LoggedUser['ID'].", ".($Bytes * (1 - $RequestTax)).")");
+					(".$RequestID.", ".$LoggedUser['ID'].", ".$Bytes.")");
 	
 	$DB->query("UPDATE users_main SET Uploaded = (Uploaded - ".$Bytes.") WHERE ID = ".$LoggedUser['ID']);
 	$Cache->delete_value('user_stats_'.$LoggedUser['ID']);

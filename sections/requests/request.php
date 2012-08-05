@@ -170,7 +170,6 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
                                                 <option value='tb'>TB</option>
 					</select>
 					<input type="button" value="Preview" onclick="Calculate();"/>
-					<strong><?=($RequestTax * 100)?>% of this is deducted as tax by the system.</strong>
 				</td>
 			</tr>
 			<tr>
@@ -179,10 +178,10 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 					<form action="requests.php" method="get" id="request_form">
 						<input type="hidden" name="action" value="vote" />
 						<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-						<input type="hidden" id="request_tax" value="<?=$RequestTax?>" />
 						<input type="hidden" id="requestid" name="id" value="<?=$RequestID?>" />
 						<input type="hidden" id="auth" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-						<input type="hidden" id="amount" name="amount" value="0">
+						<input type="hidden" id="amount" name="amount" value="0" />
+                                                <input type="hidden" id="readable" name="readable" value="" />
 						<input type="hidden" id="current_uploaded" value="<?=$LoggedUser['BytesUploaded']?>" />
 						<input type="hidden" id="current_downloaded" value="<?=$LoggedUser['BytesDownloaded']?>" />
 						<input id="total_bounty" type="hidden" value="<?=$RequestVotes['TotalBounty']?>" />

@@ -21,7 +21,7 @@ if(empty($_GET['amount']) || !is_number($_GET['amount']) || $_GET['amount'] < $M
 	$Amount = $_GET['amount'];
 }
 
-$Bounty = ($Amount * (1 - $RequestTax));
+$Bounty = $Amount;
 
 $DB->query('SELECT TorrentID FROM requests WHERE ID='.$RequestID);
 list($Filled) = $DB->next_record();

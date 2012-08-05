@@ -48,12 +48,16 @@ if (isset($_POST['convid']) && is_number($_POST['convid'])) {
             }
 	}
 } else {
-	$ConvID='';
-      if (notBlockedPM($_POST['toid'], $LoggedUser[ID], $Err)) {
-          $Subject = trim($_POST['subject']);
-          if (!$Err && empty($Subject)) {
-                $Err = "You can't send a message without a subject.";
-          }
+        $ConvID='';
+	$ToID = explode(',', $_POST['toid']);
+	foreach($ToID as $TID) {
+            if (!notBlockedPM($_POST['toid'], $LoggedUser[ID], $Err)) {
+                break;
+            }
+	}
+        $Subject = trim($_POST['subject']);
+        if (!$Err && empty($Subject)) {
+            $Err = "You can't send a message without a subject.";
       }
 }
 $Body = trim($_POST['body']);

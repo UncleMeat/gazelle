@@ -1579,18 +1579,22 @@ function send_pm($ToID, $FromID, $Subject, $Body, $ConvID='') {
         // Don't allow users to send messages to the system
         return;
     }
+    if (!is_array($ToID)) {
+        $ToID = array($ToID);
+    }
     if ($ConvID == '') {
         $DB->query("INSERT INTO pm_conversations(Subject) VALUES ('" . $Subject . "')");
         $ConvID = $DB->inserted_id();
-        $DB->query("INSERT INTO pm_conversations_users
-				(UserID, ConvID, InInbox, InSentbox, SentDate, ReceivedDate, UnRead) VALUES
-				('$ToID', '$ConvID', '1','0','" . sqltime() . "', '" . sqltime() . "', '1')");
+        foreach($ToID as $TID) {
+                $DB->query("INSERT INTO pm_conversations_users
+                                        (UserID, ConvID, InInbox, InSentbox, SentDate, ReceivedDate, UnRead) VALUES
+                                        ('$TID', '$ConvID', '1','0','" . sqltime() . "', '" . sqltime() . "', '1')");
+        }
         if ($FromID != 0) {
             $DB->query("INSERT INTO pm_conversations_users
-				(UserID, ConvID, InInbox, InSentbox, SentDate, ReceivedDate, UnRead) VALUES
-				('$FromID', '$ConvID', '0','1','" . sqltime() . "', '" . sqltime() . "', '0')");
+                                (UserID, ConvID, InInbox, InSentbox, SentDate, ReceivedDate, UnRead) VALUES
+                                ('$FromID', '$ConvID', '0','1','" . sqltime() . "', '" . sqltime() . "', '0')");
         }
-        $ToID = array($ToID);
     } else {
         $DB->query("UPDATE pm_conversations_users SET
 				InInbox='1',
