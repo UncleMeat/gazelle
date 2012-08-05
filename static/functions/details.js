@@ -1,4 +1,55 @@
 
+
+function Add_Tag(){
+        // now as an ajax call... better user feedback
+        if ( $('#tagname').raw().value =='') return false;
+        ajax.post('torrents.php?action=add_tag', 'form_addtag', function (response) { 
+            display_tag_response(response);
+        });
+        return false;
+}
+
+function Del_Tag(tagid, groupid, tagsort){
+    
+	  var ToPost = [];
+	  ToPost['tagid'] = tagid; 
+	  ToPost['groupid'] = groupid;  
+	  ToPost['tagsort'] = tagsort;  
+	  ToPost['auth'] = authkey; 
+        ajax.post('torrents.php?action=delete_tag', ToPost, function (response) { 
+            display_tag_response(response); 
+        });
+        return false;
+}
+
+function display_tag_response(response){
+    
+            var x = json.decode(response);  
+            if ( is_array(x)){
+                if ( !is_array(x[0])){
+                    alert('unforseen error :(');
+                } else { 
+                    jQuery(".rmv").remove();
+                    var len = x[0].length;
+                    //var displayID = numMsgs;
+                    for(var i = 0; i < len; i++) {
+                        var xtrclass = x[0][i][0]==0?' alert' : ''; // +x[0][i][0]; (numMsgs++)
+                        jQuery("#messagebar").before('<div id="messagebar'+i+'" class="rmv messagebar'+xtrclass+'" title="'+ x[0][i][1]+'">'+ x[0][i][1]+'</div>');
+                    }
+                    //$('#messagebar'+displayID).raw().scrollIntoView(false);
+                    $('#tags').raw().scrollIntoView();
+                }
+                if (x[1] != 0) $('#torrent_tags').html(x[1]);
+                
+            } else { // a non array == an error 
+                $('#messagebar').add_class('alert');
+                $('#messagebar').html(response);
+                $('#messagebar').show(); 
+                //$('#messagebar').raw().scrollIntoView(false);
+                    $('#tags').raw().scrollIntoView();
+            }
+}
+
 function Vote_Tag(tagname, tagid, groupid, way){
  
 	  var ToPost = [];
@@ -11,19 +62,23 @@ function Vote_Tag(tagname, tagid, groupid, way){
             if ( is_array(x)){
                 if(x[0]==0){    // already voted so no vote
                     $('#messagebar').add_class('alert');
-                    $('#messagebar').html(x[1] +tagname+"'");
+                    $('#messagebar').html(x[1] +tagname);
                 } else {        // vote was counted
                     $('#messagebar').remove_class('alert');
-                    $('#messagebar').html(x[1] +tagname+"'");
+                    $('#messagebar').html(x[1] +tagname);
                     $('#tagscore' + tagid).html(parseInt( $('#tagscore' + tagid).raw().innerHTML) + x[0]);
+                    $('#tagscore').raw().title=$('#tagscore').raw().innerHTML;
                 }
             } else { // a non array == an error 
                 $('#messagebar').add_class('alert');
                 $('#messagebar').html(response);
+                $('#messagebar').raw().title=response;
             }
             $('#messagebar').show(); 
+            //$('#messagebar').raw().scrollIntoView();
             //setTimeout("$('#messagebar').hide()", 3000);
         });
+        return false;
 }
 
 function Send_Okay_Message(group_id, conv_id){
@@ -82,17 +137,17 @@ function Select_Reason(overwrite_warn){
 }
 
 function Tools_Toggle() {
-            if ($('#slide_tools_button').raw().innerHTML=='Hide Tools'){
-                            jQuery.cookie('torrentDetailsToolState', 'collapsed');
-                            $('#slide_tools_button').raw().innerHTML=('Show Tools');
-                            jQuery('#staff_tools').hide();
+    if ($('#slide_tools_button').raw().innerHTML=='Hide Tools'){
+        jQuery.cookie('torrentDetailsToolState', 'collapsed');
+        $('#slide_tools_button').raw().innerHTML=('Show Tools');
+        jQuery('#staff_tools').hide();
                             
-            } else{
-                            jQuery.cookie('torrentDetailsToolState', 'expanded');
-                            $('#slide_tools_button').raw().innerHTML=('Hide Tools');
-                            jQuery('#staff_tools').show();
-            }
-        return false;
+    } else{
+        jQuery.cookie('torrentDetailsToolState', 'expanded');
+        $('#slide_tools_button').raw().innerHTML=('Hide Tools');
+        jQuery('#staff_tools').show();
+    }
+    return false;
 }
 
 

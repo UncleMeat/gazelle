@@ -173,3 +173,94 @@ function is_valid_tag($Tag){
     }
     return true;
 }
+
+// tag sorting functions
+function sort_score($X, $Y){
+	return($Y['score'] - $X['score']);
+}
+function sort_added($X, $Y){
+	return($X['id'] - $Y['id']);
+}
+function sort_az($X, $Y){
+	return( strcmp($X['name'], $Y['name']) );
+}
+
+
+/**
+ * Returns the inner list elements of the tag table for a torrent
+ * (this function calls/rebuilds the group_info cache for the torrent - in theory just a call to memcache as all calls come through the torrent details page)
+ * @param int $GroupID The group id of the torrent
+ * @return the html for the taglist
+ */
+function get_taglist_html($GroupID, $tagsort) {
+    global $LoggedUser;
+    
+    $TorrentCache = get_group_info($GroupID, true);
+    $TorrentDetails = $TorrentCache[0];
+    $TorrentList = $TorrentCache[1];
+
+    // Group details - get tag details
+    list(, , , , , , $TorrentTags, $TorrentTagIDs, $TorrentTagUserIDs, $TagPositiveVotes, $TagNegativeVotes) = array_shift($TorrentDetails);
+ 
+    if(!$tagsort || !in_array($tagsort, array('score','az','added'))) $tagsort = 'score';
+
+    $Tags = array();
+    if ($TorrentTags != '') {
+          $TorrentTags=explode('|',$TorrentTags);
+          $TorrentTagIDs=explode('|',$TorrentTagIDs);
+          $TorrentTagUserIDs=explode('|',$TorrentTagUserIDs);
+          $TagPositiveVotes=explode('|',$TagPositiveVotes);
+          $TagNegativeVotes=explode('|',$TagNegativeVotes);
+
+          foreach ($TorrentTags as $TagKey => $TagName) {
+                $Tags[$TagKey]['name'] = $TagName;
+                $Tags[$TagKey]['score'] = ($TagPositiveVotes[$TagKey] - $TagNegativeVotes[$TagKey]);
+                $Tags[$TagKey]['id']=$TorrentTagIDs[$TagKey];
+                $Tags[$TagKey]['userid']=$TorrentTagUserIDs[$TagKey];
+          }
+          uasort($Tags, "sort_$tagsort");
+    }
+    // grab authorID from torrent details
+    list(, , , , , , , , , , , $UserID) = $TorrentList[0];
+    $IsUploader =  $UserID == $LoggedUser['ID']; 
+
+    ob_start();
+   
+            foreach($Tags as $TagKey=>$Tag) {
+
+        ?>
+                                <li>
+                                      <a href="torrents.php?taglist=<?=$Tag['name']?>" style="float:left; display:block;"><?=display_str($Tag['name'])?></a>
+                                      <div style="float:right; display:block; letter-spacing: -1px;">
+        <?		if(check_perms('site_vote_tag') || ($IsUploader && $LoggedUser['ID']==$Tag['userid'])){  ?>
+                                      <a title="Vote down tag '<?=$Tag['name']?>'" href="#tags" onclick="Vote_Tag(<?="'{$Tag['name']}',{$Tag['id']},$GroupID,'down'"?>)" style="font-family: monospace;" >[-]</a>
+                                      <span id="tagscore<?=$Tag['id']?>" style="width:10px;text-align:center;display:inline-block;"><?=$Tag['score']?></span>
+                                      <a title="Vote up tag '<?=$Tag['name']?>'" href="#tags" onclick="Vote_Tag(<?="'{$Tag['name']}',{$Tag['id']},$GroupID,'up'"?>)" style="font-family: monospace;">[+]</a>
+      
+        <?          
+                  } else {  // cannot vote on tags ?>
+                                      <span style="width:10px;text-align:center;display:inline-block;" title="You do not have permission to vote on tags"><?=$Tag['score']?></span>
+                                      <span style="font-family: monospace;" >&nbsp;&nbsp;&nbsp;</span>
+                                      
+        <?		} ?>
+        <?		if(check_perms('users_warn')){ ?>
+                                      <a title="User that added tag '<?=$Tag['name']?>'" href="user.php?id=<?=$Tag['userid']?>" >[U]</a>
+        <?		} ?>
+        <?		if(check_perms('site_delete_tag') ) { // || ($IsUploader && $LoggedUser['ID']==$Tag['userid']) 
+                                  /*    <a title="Delete tag '<?=$Tag['name']?>'" href="torrents.php?action=delete_tag&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;">[X]</a> */
+                                   ?>
+                                   <a title="Delete tag '<?=$Tag['name']?>'" href="#tags" onclick="Del_Tag(<?="'{$Tag['id']}',$GroupID,'$tagsort'"?>)"   style="font-family: monospace;">[X]</a>
+        <?		} else { ?>
+                                      <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;</span>
+        <?		} ?>
+                                      </div>
+                                      <br style="clear:both" />
+                                </li>
+        <?
+            }
+  
+    $html = ob_get_contents(); 
+    ob_end_clean();
+
+    return $html;
+}

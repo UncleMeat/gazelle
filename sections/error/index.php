@@ -54,6 +54,6 @@ if(!empty($_GET['e']) && in_array($_GET['e'],$Errors)) {
 <?
 		show_footer();
 	} else {
-		echo $Description;
+		echo json_encode($Description);
 	}
 }

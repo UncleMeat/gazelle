@@ -44,6 +44,7 @@
      
             'site_vote_tag' => 'Can vote on tags.',
             'site_add_tag' => 'Can add tags.',
+            'site_add_multiple_tags' => 'Can add multiple tags at once.',
 	'site_delete_tag' => 'Can delete tags.',
             'site_manage_tags' => 'Can manage official tag list and synonyms.',
             'site_convert_tags' => 'Can convert tags to synonyms.',
@@ -183,6 +184,7 @@ function permissions_form(){ ?>
 					<? display_perm('site_view_torrent_snatchlist', 'Can view torrent snatchlists.'); ?>
                                           <? display_perm('site_vote_tag', 'Can vote on tags.'); ?>
                                           <? display_perm('site_add_tag', 'Can add tags.'); ?>
+            <? display_perm('site_add_multiple_tags','Can add multiple tags at once.'); ?>
 					<? display_perm('site_delete_tag', 'Can delete tags.'); ?>
                                          
 					<? display_perm('site_disable_ip_history', 'Disable IP history.'); ?>

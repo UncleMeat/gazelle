@@ -456,9 +456,12 @@ li.searchbars {
     border-radius: 10px;       /* FF9+ IE9+ */
     -moz-border-radius: 10px; /* for FF5 */
     -webkit-border-radius: 10px; /* for opera */
+    border: 1px solid #151;
+    white-space:nowrap;
 }
 .messagebar.alert {
     background-color: #e11; 
+    border: 1px solid #511;
 }
 .messagebar.checking { 
     background-color: white; 
@@ -779,7 +782,6 @@ table.boxstat td:first-child {
 .details .tag_add {
     border-top: 1px solid #98AAB1;
     padding: 2px 10px 2px 10px;
-    height:30px;
 }
 
 .box_albumart{

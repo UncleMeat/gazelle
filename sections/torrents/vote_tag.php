@@ -21,10 +21,10 @@ if($DB->record_count() > 0) list($LastVote)=$DB->next_record();
 if($LastVote!=$Way){ 
     if($LastVote){
         $DB->query("DELETE FROM torrents_tags_votes WHERE TagID='$TagID' AND GroupID='$GroupID' AND UserID='$UserID'");
-        $msg = "Removed $LastVote vote for tag '";
+        $msg = "Removed $LastVote vote for tag ";
     } else {
         $DB->query("INSERT IGNORE INTO torrents_tags_votes (GroupID, TagID, UserID, Way) VALUES ('$GroupID', '$TagID', '$UserID', '$Way')");
-        $msg = "Voted $Way for tag '";
+        $msg = "Voted $Way for tag ";
     }
     
     if($Way == 'down') {
@@ -42,6 +42,6 @@ if($LastVote!=$Way){
     }
     $Cache->delete_value('torrents_details_'.$GroupID); // Delete torrent group cache
 } else 
-    echo json_encode (array(0,"You have already $Way voted for tag '"));
+    echo json_encode (array(0,"Already voted $Way for tag "));
 
 ?>
