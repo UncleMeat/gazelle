@@ -435,7 +435,7 @@ if(count($Tags) > 0) {
 					<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 					<input type="hidden" name="groupid" value="<?=$GroupID?>" />
 					<input type="hidden" name="tagsort" value="<?=$tagsort?>" />
-					<input type="text" id="tagname" name="tagname" size="15" />
+					<input type="text" id="tagname" name="tagname" size="15" onkeydown="if (event.keyCode == 13) { Add_Tag(); return false; }" />
 					<input type="button" value="+" onclick="Add_Tag();" />
 				</form>
 			</div>

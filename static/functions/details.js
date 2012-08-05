@@ -5,7 +5,9 @@ function Add_Tag(){
         if ( $('#tagname').raw().value =='') return false;
         ajax.post('torrents.php?action=add_tag', 'form_addtag', function (response) { 
             display_tag_response(response);
+            
         });
+        $('#tagname').raw().value ='';
         return false;
 }
 
