@@ -95,10 +95,11 @@ while(list($ArticleID,$Category,$TopicID, $Title,$Body,$ArticleTime,$Description
     $OldCategory = $Category;
 }?>
         <div class="head">
-                <strong><?=$TopicID?> - <?=display_str($Title) ?></strong> - posted <?=time_diff($ArticleTime) ?>
-                    <span style="float:right;"><a href="#" onClick="$('#article_<?=$ArticleID?>').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
-                - <a href="tools.php?action=editarticle&amp;id=<?=$ArticleID?>">[Edit]</a> 
+                <strong><?=display_str($Title) ?></strong> - posted <?=time_diff($ArticleTime) ?>
+                    <span style="float:right;"><?=$TopicID?> - 
+                <a href="tools.php?action=editarticle&amp;id=<?=$ArticleID?>">[Edit]</a> 
                 <a href="tools.php?action=deletearticle&amp;id=<?=$ArticleID?>&amp;auth=<?=$LoggedUser['AuthKey']?>" onClick="return confirm('Are you sure you want to delete this article?');">[Delete]</a>
+                 - <a href="#" onClick="$('#article_<?=$ArticleID?>').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
         </div>
 	<div class="box pad rowa">
 		
