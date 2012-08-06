@@ -465,6 +465,7 @@ if(!empty($_REQUEST['action'])) {
                                         tr.KillTime, 
                                         tr.ReasonID,
                                         tr.Reason, 
+                                        tr.ConvID,
                                         rr.Description
                                         FROM torrents_group AS tg
                                         LEFT JOIN torrents_reviews AS tr ON tr.GroupID = tg.ID
@@ -473,14 +474,14 @@ if(!empty($_REQUEST['action'])) {
                                         AND (tr.Time IS NULL OR tr.Time=(SELECT MAX(torrents_reviews.Time) 
                                                               FROM torrents_reviews 
                                                               WHERE torrents_reviews.GroupID=tg.ID))" );
-                        list($Name, $Status, $KillTime, $ReasonID, $Reason, $Description) = $DB->next_record();
+                        list($Name, $Status, $KillTime, $ReasonID, $Reason, $ConvID, $Description) = $DB->next_record();
                         
                         if ($Status == 'Warned'){ // if status != Warned then something fishy is going on (or its bugged)
                             // staff are going to see quite a few of these...
 
-                            if (!empty($_POST['convid']) && is_number($_POST['convid'])){
+                            if ($ConvID>0) {     // !empty($_POST['convid']) && is_number($_POST['convid'])){
                                 // if there is an existing conversation
-                                $ConvID = (int)$_POST['convid'];
+                                //$ConvID = (int)$_POST['convid'];
                                 $PMSetStatus = 'Unanswered';
                             } else {
                                 // New conversation
@@ -519,7 +520,7 @@ if(!empty($_REQUEST['action'])) {
                       
                         $GroupID = (int)$_POST['groupid'];
                         $ReasonID = (int)$_POST['reasonid'];
-                        $ConvID = (!empty($_POST['convid']) && is_number($_POST['convid']))?(int)$_POST['convid']:null;
+                        //$ConvID = (!empty($_POST['convid']) && is_number($_POST['convid']))?(int)$_POST['convid']:null;
                         $Time = sqltime();
                         
                         // get the status we are setting this to
@@ -528,12 +529,28 @@ if(!empty($_REQUEST['action'])) {
                         elseif ($_POST['submit'] == "Accept Fix") $Status = 'Fixed';     
                         else $Status = 'Okay'; // ($_POST['submit'] == "Mark as Okay")   
                         
-                        //  get torrent details
+                        /*
                         $DB->query("SELECT Name, UserID, t.ID 
                                         FROM torrents_group AS tg
                                         LEFT JOIN torrents AS t ON t.GroupID = tg.ID
                                         WHERE tg.ID=$GroupID");
-                        list($Name, $UserID, $TorrentID) = $DB->next_record();
+                        list($Name, $UserID, $TorrentID) = $DB->next_record();*/
+                        
+                        //  get torrent details
+                        $DB->query("SELECT Name, t.UserID, t.ID , tr.Status, tr.ConvID FROM (
+                                      SELECT GroupID, Max(Time) as LastTime
+                                      FROM torrents_reviews GROUP BY GroupID
+                                    ) AS x 
+                                    JOIN torrents_reviews AS tr ON tr.GroupID=x.GroupID AND tr.Time=x.LastTime
+                                    JOIN torrents_group AS tg ON tg.ID= tr.GroupID
+                                    JOIN torrents AS t ON t.GroupID=tg.ID
+                                    WHERE tg.ID=$GroupID");
+                        list($Name, $UserID, $TorrentID, $PreStatus, $ConvID) = $DB->next_record();
+                        
+                        if (($PreStatus == 'Warned' && !check_perms('torrents_review_override')) ||
+                            ($PreStatus == 'Pending' && ($Status == 'Okay' || $Status == 'Warned' ) && !check_perms('torrents_review_override'))) {
+                            error(403);
+                        }
                         
                         $Reason = null;
                         switch ($Status) {

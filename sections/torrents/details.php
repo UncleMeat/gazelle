@@ -309,12 +309,15 @@ if(check_perms('torrents_review')){
 <?              }          ?>
                     </td>
                     <td>
-<?              if ($Status == 'Warned'|| $Status == 'Pending'){   ?>
+<?              if ($Status == 'Pending'){  // || $Status == 'Warned' ?>
                         <input type="submit" name="submit" value="Accept Fix" title="Accept the fix this uploader has made" />
                         <input type="submit" name="submit" value="Reject Fix" title="Reject the fix this uploader has made" />
+<?              } else  {  ?>
                         
-<?              } else  {   //  id="mark_okay_button"    ?>
-                        <input type="submit" name="submit" value="Mark as Okay" <?=$Status=='Okay'?'disabled="disabled" ':''?>title="Mark this torrent as Okay" />
+                        <input type="submit" name="submit" value="Mark as Okay" <?=($Status=='Okay'||($Status == 'Warned' && !check_perms('torrents_review_override')))?'disabled="disabled" ':''?>title="Mark this torrent as Okay" />
+<?                  if ($Status == 'Warned' && check_perms('torrents_review_override') )  {  ?>
+                        <strong class="important_text" style="margin-left:10px;">override warned status?</strong>
+<?                  }       ?>
 <?              }       ?>
                     </td>
                 </tr>
