@@ -571,7 +571,7 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 ?>
                 <div class="head">Ratio watch</div>
 		<div class="box">			
-			<div class="pad">This user is currently on ratio watch, and must upload <?=get_size(($Downloaded*$RequiredRatio)-$Uploaded)?> in the next <?=time_diff($RatioWatchEnds)?>, or their leeching privileges will be revoked. Amount downloaded while on ratio watch: <?=get_size($Downloaded-$RatioWatchDownload)?></div>
+			<div class="pad">This user is currently on ratio watch, and must upload <?=get_size(($Downloaded*$RequiredRatio)-$Uploaded)?> in the next <?=time_diff($RatioWatchEnds,2,true,false,0)?>, or their leeching privileges will be revoked. Amount downloaded while on ratio watch: <?=get_size($Downloaded-$RatioWatchDownload)?></div>
 		</div>
 <? } ?>
                 <div class="head">
@@ -1105,7 +1105,7 @@ if (check_perms('users_mod', $Class)) { ?>
                                         <option value="48">48 hours</option>
                                         <option value="168">1 week</option>
                                     <? if ($PersonalFreeLeech > sqltime()) { ?>
-                                        <option value="1" selected="selected"><?=time_diff($PersonalFreeLeech, 2, false)?> (current)</option>
+                                        <option value="1" selected="selected"><?=time_diff($PersonalFreeLeech, 2, false,false,0)?> (current)</option>
                                     <? } ?>
                                     </select>
                                 </td>

@@ -15,16 +15,17 @@ function time_ago($TimeStamp) {
 function time_diff($TimeStamp,$Levels=2,$Span=true, $Lowercase=false, $ForceFormat=-1) {	
     global $LoggedUser;
     
-    if ( in_array($ForceFormat, array(0,1)) ) {
-        $TimeFormat = $ForceFormat;
-    } else {
-        $TimeFormat = $LoggedUser['TimeStyle'];
-    }
 	if(!is_number($TimeStamp)) { // Assume that $TimeStamp is SQL timestamp
 		if($TimeStamp == '0000-00-00 00:00:00') { return 'Never'; }
 		$TimeStamp = strtotime($TimeStamp);
 	}
 	if($TimeStamp == 0) { return 'Never'; }
+      
+      if ( in_array($ForceFormat, array(0,1)) ) {
+            $TimeFormat = $ForceFormat;
+      } else {
+            $TimeFormat = $LoggedUser['TimeStyle'];
+      }
       
       $TimeNow =  date('M d Y, H:i', $TimeStamp);
       
