@@ -534,7 +534,7 @@ if(!empty($_REQUEST['action'])) {
                                         FROM torrents_group AS tg
                                         LEFT JOIN torrents AS t ON t.GroupID = tg.ID
                                         WHERE tg.ID=$GroupID");
-                        list($Name, $UserID, $TorrentID) = $DB->next_record();*/
+                        list($Name, $UserID, $TorrentID) = $DB->next_record();
                         
                         //  get torrent details
                         $DB->query("SELECT Name, t.UserID, t.ID , tr.Status, tr.ConvID FROM (
@@ -544,7 +544,19 @@ if(!empty($_REQUEST['action'])) {
                                     JOIN torrents_reviews AS tr ON tr.GroupID=x.GroupID AND tr.Time=x.LastTime
                                     JOIN torrents_group AS tg ON tg.ID= tr.GroupID
                                     JOIN torrents AS t ON t.GroupID=tg.ID
+                                    WHERE tg.ID=$GroupID"); */
+                        
+                        $DB->query("SELECT Name, t.UserID, t.ID , tr.Status, tr.ConvID 
+                                    FROM torrents_group AS tg 
+                                    JOIN torrents AS t ON t.GroupID=tg.ID
+                                    LEFT JOIN (
+                                        SELECT GroupID, Max(Time) as LastTime
+                                        FROM torrents_reviews 
+                                        GROUP BY GroupID
+                                    ) AS x ON tg.ID= x.GroupID
+                                    LEFT JOIN torrents_reviews AS tr ON tr.GroupID=x.GroupID AND tr.Time=x.LastTime 
                                     WHERE tg.ID=$GroupID");
+                         
                         list($Name, $UserID, $TorrentID, $PreStatus, $ConvID) = $DB->next_record();
                         
                         if (($PreStatus == 'Warned' && !check_perms('torrents_review_override')) ||
