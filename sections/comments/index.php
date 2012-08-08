@@ -33,6 +33,7 @@ if(isset($_GET['id'])) {
 	$Self = true;
 }
 
+show_header($MyTorrents?"Comments left on $Username's torrents":"Comment history for $Username",'bbcode');
 
 if (isset($LoggedUser['PostsPerPage'])) {
 	$PerPage = $LoggedUser['PostsPerPage'];
@@ -107,8 +108,6 @@ $DB->set_query_id($Comments);
 $GroupIDs = $DB->collect('GroupID');
 
 $DB->set_query_id($Comments); 
-
-show_header($Title,'bbcode');
 
 ?><div class="thin">
     <h2><?=$Header?></h2>    
