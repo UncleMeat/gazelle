@@ -20,7 +20,10 @@ $IsAuthor = $AuthorID == $UserID;
 if (!check_perms('site_add_tag') && !$IsAuthor) error(403,true);
 
 $Tags = explode(' ', $_POST['tagname']);
-$VoteValue = $IsAuthor ? 9 : 4;
+
+$VoteValue = $IsAuthor ? 8: 4;
+if ( empty($LoggedUser['NotVoteUpTags']) ) $VoteValue += 1;
+
 $Results = array();
 $CheckedTags = array();
 $AddedTags = array();
@@ -94,8 +97,10 @@ if ($count>0){
     
     $Values = "('$GroupID', '".implode("', '$UserID', 'up'), ('$GroupID', '", $AddedIDs)."', '$UserID', 'up')";
 
-    $DB->query("INSERT IGNORE INTO torrents_tags_votes (GroupID, TagID, UserID, Way) VALUES $Values");
-
+    if ( empty($LoggedUser['NotVoteUpTags']) ) {
+        $DB->query("INSERT IGNORE INTO torrents_tags_votes (GroupID, TagID, UserID, Way) VALUES $Values");
+    }
+    
     $DB->query("INSERT INTO group_log (GroupID, UserID, Time, Info)
                   VALUES ('$GroupID'," . $LoggedUser['ID'] . ",'" . sqltime() . "','" . db_string('Tag'.($count>1?'s':''). " ".implode(', ',$AddedTags)." added to torrent") . "')");
       

@@ -358,7 +358,7 @@ while (($row = mysql_fetch_assoc($result))) {
             }          
 
             $tags_row[] = "('".$TagID."', '" . $Tag . "', '" . $row['owner'] . "')";          
-            $torrents_tags_row[] = "($TagID, " . $row['id'] . ", " . $row['owner'] . ", 10)";            
+            $torrents_tags_row[] = "($TagID, " . $row['id'] . ", " . $row['owner'] . ", 8)";            
         }
     }
 

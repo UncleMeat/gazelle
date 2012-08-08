@@ -159,12 +159,19 @@ echo $Val->GenerateJS('userform');
 						<option value="0"<? if ($SiteOptions['ShowTags'] == 0) { ?>selected="selected"<? } ?>>Closed by default.</option>
 					</select>
 				</td>
-			</tr>                       
+			</tr>
 			<tr>
 				<td class="label"><strong>Tags in lists</strong></td>
 				<td>
 					<input type="checkbox" name="hidetagsinlists" id="hidetagsinlists" <? if (!empty($SiteOptions['HideTagsInLists'])) { ?>checked="checked"<? } ?> />
 					<label for="hidetagsinlists">Hide tags in lists</label>
+				</td>
+			</tr>
+			<tr>
+				<td class="label"><strong>Add tag behaviour</strong></td>
+				<td>
+					<input type="checkbox" name="voteuptags" id="voteuptags" <? if (empty($SiteOptions['NotVoteUpTags'])) { ?>checked="checked"<? } ?> />
+					<label for="voteuptags">Automatically vote up my added tags</label>
 				</td>
 			</tr>
 			<tr>

@@ -220,16 +220,16 @@ $Tags = explode(' ', strtolower($NewCategories[(int)$_POST['category']]['tag']."
                 $DB->query("INSERT INTO tags
                             (Name, UserID, Uses) VALUES
                             ('" . $Tag . "', $LoggedUser[ID], 1)
-                            ON DUPLICATE KEY UPDATE Uses=Uses+1;
-                      ");
-
+                            ON DUPLICATE KEY UPDATE Uses=Uses+1;");
                 $TagID = $DB->inserted_id();
-
-                $DB->query("INSERT INTO torrents_tags
+                $Vote = empty($LoggedUser['NotVoteUpTags'])?9:8;
+                $DB->query("INSERT IGNORE INTO torrents_tags
                             (TagID, GroupID, UserID, PositiveVotes) VALUES
-                            ($TagID, $GroupID, $LoggedUser[ID], 9)
-                            ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+1;
-                      ");
+                            ($TagID, $GroupID, $LoggedUser[ID], $Vote);");
+                if (empty($LoggedUser['NotVoteUpTags'])){
+                    $DB->query("INSERT IGNORE INTO torrents_tags_votes (TagID, GroupID, UserID, Way) VALUES 
+                                ($TagID, $GroupID, $LoggedUser[ID], 'up');");
+                }
             }
         }
     }
