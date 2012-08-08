@@ -136,7 +136,8 @@ if(in_array($ThreadID, $UserSubscriptions)) {
 }
 
 // Start printing
-show_header('Forums'.' > '.$Forums[$ForumID]['Name'].' > '.$ThreadInfo['Title'],'comments,subscriptions,bbcode,jquery');
+//show_header('Forums'.' > '.$Forums[$ForumID]['Name'].' > '.$ThreadInfo['Title'],'comments,subscriptions,bbcode,jquery');
+show_header((empty($LoggedUser['ShortTitles'])?"Forums > {$Forums[$ForumID][Name]} > $ThreadInfo[Title]":$ThreadInfo['Title'] ),'comments,subscriptions,bbcode,jquery');
 ?>
 <div class="thin">
     <? print_latest_forum_topics(); ?>

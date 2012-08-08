@@ -201,6 +201,13 @@ echo $Val->GenerateJS('userform');
 				</td>
 			</tr>
 			<tr>
+				<td class="label"><strong>Page Titles</strong></td>
+				<td>
+					<input type="checkbox" name="shortpagetitles" id="shortpagetitles" <? if (!empty($SiteOptions['ShortTitles'])) { ?>checked="checked"<? } ?> />
+					<label for="shortpagetitles">Use short page titles (ie. instead of Forums > Forum-name > Thread-title use just Thread-Title </label>
+				</td>
+			</tr>
+			<tr>
 				<td class="label"><strong>Forum topics</strong></td>
 				<td>
 					<input type="checkbox" name="disablelatesttopics" id="disablelatesttopics" <? if (!empty($SiteOptions['DisableLatestTopics'])) { ?>checked="checked"<? } ?> />

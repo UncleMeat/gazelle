@@ -66,7 +66,9 @@ if (!check_perms('site_moderate_forums')) {
 if($LoggedUser['CustomForums'][$ForumID] != 1 && $Forums[$ForumID]['MinClassRead'] > $LoggedUser['Class']) { error(403); }
 
 // Start printing
-show_header('Forums > '. $Forums[$ForumID]['Name']);
+//show_header('Forums > '. $Forums[$ForumID]['Name']);
+show_header(empty($LoggedUser['ShortTitles'])?"Forums > {$Forums[$ForumID][Name]}":$Forums[$ForumID][Name]);
+//$p = (empty($LoggedUser['ShortTitles'])?"Forums > {$Forums[$ForumID][Name]}":$Forums[$ForumID][Name]);
 ?>
 <div class="thin">
 <? print_latest_forum_topics(); ?>

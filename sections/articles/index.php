@@ -173,8 +173,8 @@ if (preg_match("/\[ratiolist\]/i", $Body)) {
     $Body = preg_replace("/\[ratiolist\]/i", $list, $Body);
     
 }
-
-show_header($Page['Topic'], 'browse,overlib,bbcode');
+//$Page['Topic']
+show_header( (empty($LoggedUser['ShortTitles'])?"{$ArticleCats[$Category]} > $Title":$Title ), 'browse,overlib,bbcode');
 ?>
 
 <div class="thin">
@@ -183,7 +183,7 @@ show_header($Page['Topic'], 'browse,overlib,bbcode');
         <?=$Body?>
     </div>
 
-    <div class="head">Other <?=strtolower($ArticleCats[$Category])?></div>
+    <div class="head">Other <?=strtolower($ArticleCats[$Category])?> articles</div>
     <table width="100%" class="topic_list">
             <tr class="colhead">
                     <td style="width:150px;">Title</td>
