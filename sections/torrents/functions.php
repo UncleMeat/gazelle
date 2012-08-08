@@ -229,7 +229,7 @@ function get_taglist_html($GroupID, $tagsort) {
             foreach($Tags as $TagKey=>$Tag) {
 
         ?>
-                                <li>
+                                <li id="tlist<?=$Tag['id']?>">
                                       <a href="torrents.php?taglist=<?=$Tag['name']?>" style="float:left; display:block;"><?=display_str($Tag['name'])?></a>
                                       <div style="float:right; display:block; letter-spacing: -1px;">
         <?		if(check_perms('site_vote_tag') || ($IsUploader && $LoggedUser['ID']==$Tag['userid'])){  ?>

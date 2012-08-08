@@ -38,6 +38,18 @@ if($LastVote!=$Way){
 
     $DB->query("DELETE FROM torrents_tags WHERE TagID='$TagID' AND GroupID='$GroupID' AND NegativeVotes>PositiveVotes");
     if ($DB->affected_rows()>0){
+        $DB->query("DELETE FROM torrents_tags_votes WHERE TagID='$TagID' AND GroupID='$GroupID'");
+
+        // Decrease the tag count, if it's not in use any longer and not an official tag, delete it from the list.
+        $DB->query("SELECT COUNT(GroupID) FROM torrents_tags WHERE TagID=".$TagID);
+        list($Count) = $DB->next_record();
+        if ($TagType == 'genre' || $Count > 0) {
+            $Count = $Count > 0 ? $Count : 0;
+            $DB->query("UPDATE tags SET Uses=$Count WHERE ID=$TagID");
+        } else {
+            $DB->query("DELETE FROM tags WHERE ID=".$TagID." AND TagType='other'");
+        }
+
         update_hash($GroupID);
     }
     $Cache->delete_value('torrents_details_'.$GroupID); // Delete torrent group cache

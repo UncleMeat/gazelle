@@ -60,8 +60,7 @@ foreach ($Tags as $Tag) {
                                 WHERE GroupID='$GroupID' AND TagID='$TagID' AND UserID='$UserID'");
             if ($DB->record_count() != 0) { // User has already added/voted on this tag+torrent so dont count again 
                 if ($Tag != $TagName) { // this was a synonym replacement
-                    //$Results[] = array(0, "$Tag is a synonym for $TagName which is already added.");
-            $Results[] = array(0, "$Tag --> $TagName : already added.");
+                    $Results[] = array(0, "$Tag --> $TagName : already added.");
                 } else {
                     $Results[] = array(0, "$TagName is already added.");
                 }
@@ -70,18 +69,7 @@ foreach ($Tags as $Tag) {
 
             $AddedTags[] = $TagName;
             $AddedIDs[] = $TagID;
-            /*
-            $DB->query("INSERT INTO torrents_tags 
-                          (TagID, GroupID, PositiveVotes, UserID) VALUES 
-                          ('$TagID', '$GroupID', '$VoteValue', '$UserID') 
-                          ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+1");
- 
-            $DB->query("UPDATE tags SET Uses=Uses+1 WHERE ID='$TagID'");
-            $DB->query("INSERT IGNORE INTO torrents_tags_votes (GroupID, TagID, UserID, Way) VALUES ('$GroupID', '$TagID', '$UserID', 'up')");
-
-            $DB->query("INSERT INTO group_log (GroupID, UserID, Time, Info)
-					VALUES ('$GroupID'," . $LoggedUser['ID'] . ",'" . sqltime() . "','" . db_string('Tag "' . $TagName . '" added to group') . "')");
-       */
+   
             if ($Tag != $TagName) // this was a synonym replacement
                 //$Results[] = array(1, "Added tag $TagName as a synonym of $Tag");
                 $Results[] = array(1, "Added $Tag --> $TagName");

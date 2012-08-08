@@ -386,12 +386,13 @@ if(check_perms('torrents_review')){
 if(count($Tags) > 0) {
 ?>
                           <ul id="torrent_tags" class="stats nobullet">
+                  <!--      <li style="font-size:1.2em;">Only vote on whether tags are appropriate to the content.</li>  -->
         <?
                 
             foreach($Tags as $TagKey=>$Tag) {
 
         ?>
-                                <li>
+                                <li id="tlist<?=$Tag['id']?>">
                                       <a href="torrents.php?taglist=<?=$Tag['name']?>" style="float:left; display:block;"><?=display_str($Tag['name'])?></a>
                                       <div style="float:right; display:block; letter-spacing: -1px;">
         <?		if(check_perms('site_vote_tag') || ($IsUploader && $LoggedUser['ID']==$Tag['userid'])){  ?>

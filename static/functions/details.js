@@ -43,7 +43,7 @@ function display_tag_response(response){
                 
     } else { // a non array == an error 
         $('#messagebar').add_class('alert');
-        $('#messagebar').html(response);
+        $('#messagebar').html(x);
         $('#messagebar').show(); 
     }
     $('#tags').raw().scrollIntoView();
@@ -63,12 +63,16 @@ function Vote_Tag(tagname, tagid, groupid, way){
                     $('#messagebar').add_class('alert');
                 } else {        // vote was counted
                     $('#messagebar').remove_class('alert');
-                    $('#tagscore' + tagid).html(parseInt( $('#tagscore' + tagid).raw().innerHTML) + x[0]);
+                    var score = parseInt( $('#tagscore' + tagid).raw().innerHTML) + x[0];
+                    if (score<0) // remove negative scores (they are already removed from the db)
+                        jQuery('#tlist' + tagid).remove();
+                    else // update with new vote score
+                        $('#tagscore' + tagid).html(score);
                 }
                 $('#messagebar').html(x[1] +tagname);
             } else { // a non array == an error 
                 $('#messagebar').add_class('alert');
-                $('#messagebar').html(response);
+                $('#messagebar').html(x);
             }
             $('#messagebar').raw().title=$('#messagebar').raw().innerHTML;
             $('#messagebar').show(); 
