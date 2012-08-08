@@ -224,10 +224,24 @@ if ($ThreadInfo['NoPoll'] == 0) {
 
 ?>        
 	<div class="box clear">
-		<div class="colhead_dark"><strong>Poll<? if ($Closed) { echo ' [Closed]'; } ?><? if ($Featured && $Featured !== '0000-00-00 00:00:00') { echo ' [Featured]'; } ?></strong> <a href="#" onclick="$('#threadpoll').toggle();log_hit();return false;">(View)</a></div>
+		<div class="colhead_dark"><strong>Poll<? if ($Closed) { echo ' [Closed]'; } ?><? if ($Featured && $Featured !== '0000-00-00 00:00:00') { echo ' [Featured]'; } ?></strong> 
+                <a href="#" onclick="$('#threadpoll').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;"><?=( $ThreadInfo['IsLocked']?'(View)':'(Hide)')?></a>
+            </div>
 		<div class="pad<? if (/*$LastRead !== null || */$ThreadInfo['IsLocked']) { echo ' hidden'; } ?>" id="threadpoll">
 			<p><strong><?=display_str($Question)?></strong></p>
-<?	if ($UserResponse !== null || $Closed || $ThreadInfo['IsLocked'] || !check_forumperm($ForumID)) { ?>
+<?	//if ($UserResponse !== null || $Closed || $ThreadInfo['IsLocked'] || !check_forumperm($ForumID)) { 
+
+        $show = $UserResponse !== null || $Closed || $ThreadInfo['IsLocked'];
+        
+        if ($show || check_perms('forums_polls_moderate')) {
+?>
+            <div id="poll_votes_container">
+<?                  
+            if (!$show) {   ?>
+                  <a href="#" onclick="$('#poll_votes').toggle(); this.innerHTML=(this.innerHTML=='(Hide Results)'?'(View Results)':'(Hide Results)'); return false;">(View Results)</a><br/>
+<?          }        //<?if(!$show){echo" hidden";}    ?>
+                  
+                <div id="poll_votes" <?if(!$show){echo' class="hidden"';}?>>
 			<ul class="poll nobullet">
 <?		
 		if(!$RevealVoters) {
@@ -257,8 +271,9 @@ if ($ThreadInfo['NoPoll'] == 0) {
 				</li>
 <?			} ?>
 			</ul>
-			<br />
 			<strong>Votes:</strong> <?=number_format($TotalVotes)?><br /><br />
+                </div>
+            </div>
 <?
 		} else {
 			//Staff forum, output voters, not percentages
@@ -296,7 +311,7 @@ if ($ThreadInfo['NoPoll'] == 0) {
 					<a href="forums.php?action=change_vote&amp;threadid=<?=$ThreadID?>&amp;auth=<?=$LoggedUser['AuthKey']?>&amp;vote=<?=(int) $i?>"><?=display_str($Answer == '' ? "Blank" : $Answer)?></a>
 					 - <?=$StaffVotes[$i]?>&nbsp;(<?=number_format(((float) $Votes[$i]/$TotalVotes)*100, 2)?>%)
 					 <a href="forums.php?action=delete_poll_option&amp;threadid=<?=$ThreadID?>&amp;auth=<?=$LoggedUser['AuthKey']?>&amp;vote=<?=(int) $i?>">[X]</a>
-</li>
+                        </li>
 <?			} ?>
 				<li><a href="forums.php?action=change_vote&amp;threadid=<?=$ThreadID?>&amp;auth=<?=$LoggedUser['AuthKey']?>&amp;vote=0">Blank</a> - <?=$StaffVotes[0]?>&nbsp;(<?=number_format(((float) $Votes[0]/$TotalVotes)*100, 2)?>%)</li>
 			</ul>
@@ -315,8 +330,12 @@ if ($ThreadInfo['NoPoll'] == 0) {
 <?
 		}
 
-	} else { 
-	//User has not voted
+?>        
+            <br />
+<?                  
+        }
+        if ($UserResponse == null && !$Closed && !$ThreadInfo['IsLocked'] ) { 
+        //User has not voted
 ?>
 			<div id="poll_results">
 				<form id="polls">
@@ -325,28 +344,30 @@ if ($ThreadInfo['NoPoll'] == 0) {
 					<input type="hidden" name="large" value="1"/>
 					<input type="hidden" name="topicid" value="<?=$ThreadID?>" />
 					<ul style="list-style: none;" id="poll_options">
-<? foreach($Answers as $i => $Answer) { //for ($i = 1, $il = count($Answers); $i <= $il; $i++) { ?>
+<?          foreach($Answers as $i => $Answer) { //for ($i = 1, $il = count($Answers); $i <= $il; $i++) { ?>
 						<li>
 							<input type="radio" name="vote" id="answer_<?=$i?>" value="<?=$i?>" />
 							<label for="answer_<?=$i?>"><?=display_str($Answer)?></label>
 						</li>
-<? } ?>
+<?          } ?>
 						<li>
 							<br />
-							<input type="radio" name="vote" id="answer_0" value="0" /> <label for="answer_0">Blank - Show the results!</label><br />
+							<input type="radio" name="vote" id="answer_0" value="0" /> <label for="answer_0">Blank - Show the results - note: counts as a vote</label><br />
 						</li>
 					</ul>
-<? if($ForumID == STAFF_FORUM) { ?>
+<?          if($ForumID == STAFF_FORUM) { ?>
 					<a href="#" onclick="AddPollOption(<?=$ThreadID?>); return false;">[+]</a>
 					<br />
 					<br />
-<? } ?>
-					<input type="button" style="float: left;" onclick="ajax.post('index.php','polls',function(response){$('#poll_results').raw().innerHTML = response});" value="Vote">
+<?          } ?>
+					<input type="button" style="float: left;" onclick="ajax.post('index.php','polls',function(response){$('#poll_results').raw().innerHTML = response;$('#poll_votes_container').remove()});" value="Vote">
 				</form>
 			</div>
-<? } ?>
-<? if(check_perms('forums_polls_moderate') && !$RevealVoters) { ?>
-	<? if (!$Featured || $Featured == '0000-00-00 00:00:00') { ?>
+<? } 
+ 
+    if(check_perms('forums_polls_moderate') && !$RevealVoters) {  
+	  
+        if (!$Featured || $Featured == '0000-00-00 00:00:00') { ?>
 			<form action="forums.php" method="post">
 				<input type="hidden" name="action" value="poll_mod"/>
 				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />

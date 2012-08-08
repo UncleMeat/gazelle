@@ -1130,12 +1130,11 @@ ul.stats li {
 
 ul.poll li {
     padding: 0px 0px 0px 10px;
-    margin: 0px;
     clear: left;
 }
 
 ul.poll li.graph {
-    margin-bottom: 3px;
+    margin-bottom: 15px;
     padding-left: 20px;
 }
 
