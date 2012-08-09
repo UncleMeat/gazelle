@@ -22,7 +22,7 @@ show_header('Staff Tools');
 <? } if (check_perms('admin_manage_ipbans')) { ?>
 			<tr><td><a href="tools.php?action=ip_ban">IP Bans</a></td></tr>
 
-<? } if (check_perms('users_view_ips')) { ?>
+<? } if (check_perms('admin_login_watch') || check_perms('admin_manage_ipbans')) { ?>
 			<tr><td><a href="tools.php?action=login_watch">Login Watch</a></td></tr>
 <? } if (check_perms('admin_manage_forums')) { ?>
 			<tr><td><a href="tools.php?action=forum">Forums</a></td></tr>
@@ -96,6 +96,11 @@ if (check_perms('admin_update_geoip')) { ?>
 			<tr><td><a href="tools.php?action=dupe_ips">Duplicate IPs</a></td></tr>
 
 <? } if (check_perms('site_debug')) { ?>
+			<tr><td><a href="schedule.php?auth=<?=$LoggedUser['AuthKey']?>">Schedule</a></td></tr>
+			<tr><td><a href="tools.php?action=branches">Git branches</a></td></tr>
+<? } 	
+
+ /*      if (check_perms('site_debug')) { ?>  // screw these stupid sandbox links... if a debugger really needs to use one they can use the url manually
 			<tr><td><a href="tools.php?action=sandbox1">Sandbox (1)</a></td></tr>
 			<tr><td><a href="tools.php?action=sandbox2">Sandbox (2)</a></td></tr>
 			<tr><td><a href="tools.php?action=sandbox3">Sandbox (3)</a></td></tr>
@@ -111,7 +116,7 @@ if (check_perms('admin_update_geoip')) { ?>
 			<tr><td><strong><a href="tools.php?action=public_sandbox">Public Sandbox</a></strong></td></tr>
 <? if (check_perms('users_mod')) { ?>
 			<tr><td><strong><a href="tools.php?action=mod_sandbox">Mod level Sandbox</a></strong></td></tr>
-<? } ?>
+<? } */ ?>
 		</table>
 	</div>
 </div>
