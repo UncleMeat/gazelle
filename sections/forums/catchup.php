@@ -8,14 +8,20 @@ if ($_GET['forumid']=='all') {
 	header('Location: forums.php');
 
 } else {
-	// Insert a value for each topic
+	/* // Insert a value for each topic 
 	$DB->query("INSERT INTO forums_last_read_topics (UserID, TopicID, PostID)
 				SELECT '$LoggedUser[ID]', ID, LastPostID FROM
 				forums_topics
 				WHERE (LastPostTime>'".time_minus(3600*24*30)."' OR IsSticky='1')
 					AND ForumID = ".$_GET['forumid']."
-				ON DUPLICATE KEY UPDATE PostID=LastPostID");
+				ON DUPLICATE KEY UPDATE PostID=LastPostID"); */
 
+	$DB->query("INSERT INTO forums_last_read_topics (UserID, TopicID, PostID)
+				SELECT '$LoggedUser[ID]', ID, LastPostID FROM
+				forums_topics
+				WHERE ForumID = ".$_GET['forumid']."
+				ON DUPLICATE KEY UPDATE PostID=LastPostID");
+      
 	header('Location: forums.php?action=viewforum&forumid='.$_GET['forumid']);
 }
 ?>
