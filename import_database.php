@@ -247,7 +247,7 @@ $time_start = microtime(true);
 
 echo "connecting to database\n";
 mysql_connect('localhost', 'root', 'password');
-
+/*
 echo "Creating new authkeys for users\n";
 mysql_query("UPDATE gazelle.users_info
 	SET AuthKey =
@@ -261,6 +261,24 @@ mysql_query("UPDATE gazelle.users_info
 				)
 			)
 		);"
+	) or die(mysql_error());
+*/
+
+// Added setting CatchupTime for forums - UNTESTED in situ - unaltered code above
+echo "Update users: generate new authkeys, CatchupTime=UTC_TIMESTAMP()\n";
+$sqltime = sqltime();
+mysql_query("UPDATE gazelle.users_info
+	SET AuthKey =
+		MD5(
+			CONCAT(
+				AuthKey, RAND(), '".mysql_real_escape_string(make_secret2())."',
+				SHA1(
+					CONCAT(
+						RAND(), RAND(), '".mysql_real_escape_string(make_secret2())."'
+					)
+				)
+			)
+		), CatchupTime='$sqltime';"
 	) or die(mysql_error());
 
 echo "creating new invite_tree table for users\n";
