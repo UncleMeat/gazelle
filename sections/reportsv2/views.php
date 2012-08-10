@@ -169,13 +169,21 @@ $Results = $DB->to_array();
 	</td>
 	<td style="vertical-align: top;">
 <?
-	$DB->query("SELECT r.ResolverID,
+	/*$DB->query("SELECT r.ResolverID,
 						um.Username, 
 						COUNT(r.ID) AS Count,
 						COUNT(tasted.Tasted) AS Tasted
 				FROM reportsv2 AS r
 				LEFT JOIN users_main AS um ON r.ResolverID=um.ID
 				LEFT JOIN torrents AS tasted ON tasted.ID=r.TorrentID AND tasted.Tasted = '1'
+				WHERE r.Status = 'InProgress'
+				GROUP BY r.ResolverID"); */
+
+	$DB->query("SELECT r.ResolverID,
+						um.Username, 
+						COUNT(r.ID) AS Count
+				FROM reportsv2 AS r
+				LEFT JOIN users_main AS um ON r.ResolverID=um.ID
 				WHERE r.Status = 'InProgress'
 				GROUP BY r.ResolverID");
 	$Staff = $DB->to_array();
@@ -185,7 +193,6 @@ $Results = $DB->to_array();
 			<tr>
 				<td class="colhead">Staff member</td>
 				<td class="colhead">Current Count</td>
-				<td class="colhead">Tasted</td>
 			</tr>
 		
 	<?	
@@ -195,9 +202,6 @@ $Results = $DB->to_array();
 					<a href="reportsv2.php?view=staff&amp;id=<?=$Array['ResolverID']?>"><?=display_str($Array['Username'])?>'s reports</a>
 				</td>
 				<td><?=$Array['Count']?></td>
-				<td>
-					<a href="reportsv2.php?view=tasted&amp;id=<?=$Array['ResolverID']?>"><?=display_str($Array['Tasted'])?></a>
-				</td>
 			</tr>
 	<?	
 		}
