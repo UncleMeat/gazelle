@@ -211,6 +211,9 @@ $BlockPMs = (!empty($_POST['blockPMs']) ? (int)$_POST['blockPMs'] : 0);
 if (!in_array($BlockPMs,array(0,1,2))) $BlockPMs =0;
 $CommentsNotify = (isset($_POST['commentsnotify']))? 1:0;
 
+
+$TimeOffset=get_timezone_offset($_POST['timezone']);
+
 $Cache->begin_transaction('user_info_'.$UserID);
 $Cache->update_row(false, array(
 		'Avatar'=>$_POST['avatar'],
@@ -227,7 +230,8 @@ $Cache->update_row(false, array(
 		'DownloadAlt'=>$DownloadAlt,
 		'BlockPMs'=>$BlockPMs,
 		'CommentsNotify'=>$CommentsNotify,
-		'TimeZone'=>$_POST['timezone']
+		'TimeZone'=>$_POST['timezone'],
+		'TimeOffset'=>$TimeOffset
 		));
 $Cache->update_row(false, $Options);
 $Cache->commit_transaction(0);
@@ -251,8 +255,6 @@ $SQL="UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET
 
 $SQL .= "m.Paranoia='".db_string(serialize($Paranoia))."'";
 
-$LoggedUser['TimeZone']=$_POST['timezone'];
-$LoggedUser['TimeOffset']=get_timezone_offset($_POST['timezone']);
  
         
 if($ResetPassword) {
