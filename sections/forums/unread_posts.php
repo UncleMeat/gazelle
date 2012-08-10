@@ -1,11 +1,20 @@
 <?
  
+if (isset($LoggedUser['PostsPerPage'])) {
+	$PerPage = $LoggedUser['PostsPerPage'];
+} else {
+	$PerPage = POSTS_PER_PAGE;
+}
+
+list($Page,$Limit) = page_limit($PerPage);
  
- $UserID = (int)$LoggedUser['ID'];
+$UserID = (int)$LoggedUser['ID'];
+ 
  
  // I cannot find any useful way of caching this... problem is this is viewing user dependent, but clearing the cache is any user posting
  
-      $DB->query("SELECT f.ID, f.Description, t.ID, f.Name, t.Title, t.LastPostTime, 
+      $DB->query("SELECT SQL_CALC_FOUND_ROWS 
+                         f.ID, f.Description, t.ID, f.Name, t.Title, t.LastPostTime, 
                         (t.NumPosts-1), t.NumViews, t.LastPostID, l.PostID, 
                          author.ID, author.Username, f.MinClassRead, t.IsLocked, t.IsSticky
                     FROM forums_topics AS t
@@ -16,12 +25,23 @@
                LEFT JOIN forums_last_read_topics AS l ON l.UserID =i.UserID
                      AND l.TopicID = t.ID
                    WHERE l.PostID is null OR  l.PostID != t.LastPostID  
-                ORDER BY t.LastPostTime DESC");
+                ORDER BY t.LastPostTime DESC
+                   LIMIT $Limit");
       
 	$UnreadPosts = $DB->to_array();
        
+// Perform the query
+//$Records = $DB->query($sql);
+$DB->query('SELECT FOUND_ROWS()');
+list($Results) = $DB->next_record();
+//$DB->set_query_id($Records);
 
 show_header('Unread Posts');
+
+
+$Pages=get_pages($Page,$Results,$PerPage,9);
+echo $Pages;
+
 ?>
 <div class="thin">
     <? print_latest_forum_topics(); ?>
@@ -35,7 +55,7 @@ show_header('Unread Posts');
 			<td style="text-align: center;width:7%;">Replies</td>
 			<td style="text-align: center;width:7%;">Views</td>
 		</tr>
-<? if (count($UnreadPosts) == 0) { ?>
+<? if ($Results == 0) { ?>
             <tr>
                 <td colspan="5" class="center">
 			No unread posts 
