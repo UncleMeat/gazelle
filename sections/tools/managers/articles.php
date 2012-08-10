@@ -18,7 +18,14 @@ switch($_REQUEST['action']) {
                         }
                         
                         list($TopicID) = $DB->next_record();
-			$DB->query("UPDATE articles SET Category='".$_POST['category']."', TopicID='".db_string(strtolower($_POST['topicid']))."', Title='".db_string($_POST['title'])."', Description='".db_string($_POST['description'])."', Body='".db_string($_POST['body'])."', Time='".sqltime()."' WHERE ID='".db_string($_POST['articleid'])."'");
+			$DB->query("UPDATE articles SET Category='".(int)$_POST['category']."', 
+                                                    SubCat='".(int)$_POST['subcat']."', 
+                                                   TopicID='".db_string(strtolower($_POST['topicid']))."', 
+                                                     Title='".db_string($_POST['title'])."', 
+                                               Description='".db_string($_POST['description'])."', 
+                                                      Body='".db_string($_POST['body'])."', 
+                                                      Time='".sqltime()."' 
+                                            WHERE ID='".db_string($_POST['articleid'])."'");
 
 		}
 		header('Location: tools.php?action=articles');
@@ -26,8 +33,8 @@ switch($_REQUEST['action']) {
 	case 'editarticle':
             $ArticleID = db_string($_REQUEST['id']);
 
-                    $DB->query("SELECT ID, Category, TopicID, Title, Description, Body FROM articles WHERE ID='$ArticleID'");
-                    list($ArticleID, $Category, $TopicID, $Title, $Description, $Body) = $DB->next_record();
+                    $DB->query("SELECT ID, Category, SubCat, TopicID, Title, Description, Body FROM articles WHERE ID='$ArticleID'");
+                    list($ArticleID, $Category, $SubCat, $TopicID, $Title, $Description, $Body) = $DB->next_record();
                 break;
 }
 
@@ -59,6 +66,14 @@ show_header('Manage articles','bbcode');
 <? } ?>
                         </select>
                   </div>
+                  <div style="display:inline-block;margin-right:40px;vertical-align: top;">
+                        <h3>Sub-Category</h3>
+                        <select name="subcat">
+<? foreach($ArticleSubCats as $Key => $Value) { ?> 
+                            <option value="<?=display_str($Key)?>"<?=($SubCat == $Key) ? 'selected="selected"' : '';?>><?=$Value?></option>
+<? } ?>
+                        </select>
+                  </div>
                   <div style="display:inline-block;">
                       <ul>
                           <li><strong>Rules/Tutorials</strong> appears in the rules/help section</li>
@@ -81,19 +96,24 @@ show_header('Manage articles','bbcode');
             </div> 
         </div>
     </form>
-<br /><br />
-	<h2>Other articles</h2>
+    <br /><br />
+    <h2>Other articles</h2>
         
 <?
-$OldCategory = -1;
-$DB->query("SELECT ID, Category, TopicID, Title, Body, Time, Description FROM articles ORDER BY Category, Title");// LIMIT 20
-while(list($ArticleID,$Category,$TopicID, $Title,$Body,$ArticleTime,$Description)=$DB->next_record()) {
-?>
-<? if($OldCategory != $Category) { ?>
-            <h3 id="general"><?= $ArticleCats[$Category] ?></h3>
+    $OldCategory = -1;
+    $OldSubCat = -1;
+    $DB->query("SELECT ID, Category, SubCat, TopicID, Title, Body, Time, Description 
+                  FROM articles 
+              ORDER BY Category, SubCat, Title");// LIMIT 20
+    while(list($ArticleID,$Category,$SubCat,$TopicID, $Title,$Body,$ArticleTime,$Description)=$DB->next_record()) {
+  
+        if($OldCategory != $Category || $OldSubCat != $SubCat) { ?>
+            <h3 id="general"><?= "$ArticleCats[$Category] > ".($SubCat==1?"Other $ArticleCats[$Category] articles":$ArticleSubCats[$SubCat]) ?></h3>
 <?
-    $OldCategory = $Category;
-}?>
+            $OldCategory = $Category;
+            $OldSubCat = $SubCat;
+        }
+?>
         <div class="head">
                 <strong><?=display_str($Title) ?></strong> - posted <?=time_diff($ArticleTime) ?>
                     <span style="float:right;"><?=$TopicID?> - 

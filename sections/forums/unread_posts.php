@@ -31,11 +31,8 @@ $UserID = (int)$LoggedUser['ID'];
       
 	$UnreadPosts = $DB->to_array();
        
-// Perform the query
-//$Records = $DB->query($sql);
 $DB->query('SELECT FOUND_ROWS()');
 list($Results) = $DB->next_record();
-//$DB->set_query_id($Records);
 
 show_header('Unread Posts');
 

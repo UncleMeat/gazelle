@@ -183,17 +183,32 @@ show_header( (empty($LoggedUser['ShortTitles'])?"{$ArticleCats[$Category]} > $Ti
         <?=$Body?>
     </div>
 
-    <div class="head">Other <?=strtolower($ArticleCats[$Category])?> articles</div>
+<?
+    $Row = 'a';
+    $LastSubCat=-1;
+    $OpenTable=false;
+    $DB->query("SELECT TopicID, Title, Description, SubCat 
+                  FROM articles 
+                 WHERE Category='$Category' AND TopicID<>'$TopicID' 
+              ORDER BY SubCat, Title");
+    while(list($TopicID, $Title, $Description, $SubCat) = $DB->next_record()) {
+        $Row = ($Row == 'a') ? 'b' : 'a';
+
+        if($LastSubCat != $SubCat) {
+		$Row = 'b';
+            $LastSubCat = $SubCat;
+            if($OpenTable){  ?>
+        </table><br/>
+<?           }  ?>
+    <div class="head"><?=($SubCat==1?"Other $ArticleCats[$Category] articles":$ArticleSubCats[$SubCat])?></div>
     <table width="100%" class="topic_list">
             <tr class="colhead">
-                    <td style="width:150px;">Title</td>
-                    <td style="width:400px;">Additional Info</td>
+                    <td style="width:300px;">Title</td>
+                    <td>Additional Info</td>
             </tr>
-<?
-$Row = 'a';
-$DB->query("SELECT TopicID, Title, Description FROM articles WHERE Category='$Category' AND TopicID<>'$TopicID' ORDER BY Title");
-while(list($TopicID, $Title, $Description) = $DB->next_record()) {
-    $Row = ($Row == 'a') ? 'b' : 'a';
+<? 
+            $OpenTable=true;
+        }
 ?>
             <tr class="row<?=$Row?>">
 
@@ -205,7 +220,7 @@ while(list($TopicID, $Title, $Description) = $DB->next_record()) {
                     </td>
             </tr>
 <?  } ?>
-    </table>
+        </table>
 </div>
 
 

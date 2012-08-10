@@ -278,9 +278,6 @@ function spoiler(textID) {
 
 function image(textID) {
     var link;
-    //link = prompt("Please enter the full URL for your image", "http://");
-    //var re_text = /\.jpg|\.gif|\.png|\.jpeg/i;
-    // var img_regex = /(?:([^:/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
     var img_regex = /(?:([^:/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|gif|png|php|asp|html|htm|shtml|jsp|cgi))(?:\?([^#]*))?(?:#(.*))?/i;
     do {
         link = prompt("Please enter the full URL for your image", "http://");

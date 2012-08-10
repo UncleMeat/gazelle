@@ -113,6 +113,8 @@ $ForumsDoublePost = array();
 
 $CollageCats = array(0=>'Personal', 1=>'Theme', 2=>'Porn Star', 3=>'Studio', 4=>'Staff picks');
 $ArticleCats = array(0=>'Rules', 1=>'Help', 2=>'Hidden');
+$ArticleSubCats = array(0=>'Intro', 1=>'-None-', 2=>'Rules', 3=>'Torrents', 4=>'IRC', 5=>'Uploading', 6=>'Site', 7=>'Guides', 8=>'Other');
+
 // badge types
 $BadgeTypes = array ('Single', 'Multiple', 'Shop', 'Unique');
 $AutoAwardTypes  = array ('NumPosts', 'NumComments', 'NumUploaded', 'NumNewTags', 'NumTags', 'NumTagVotes',
