@@ -27,7 +27,7 @@ function time_diff($TimeStamp,$Levels=2,$Span=true, $Lowercase=false, $ForceForm
             $TimeFormat = $LoggedUser['TimeStyle'];
       }
       
-      $TimeNow =  date('M d Y, H:i', $TimeStamp);
+      $TimeNow =  date('M d Y, H:i', $TimeStamp - (int)$LoggedUser['TimeOffset']);
       
       if ( $TimeFormat==1 && !$Span) // shortcut if only need plain date time format returned 
           return $TimeNow;
@@ -151,6 +151,26 @@ function time_diff($TimeStamp,$Levels=2,$Span=true, $Lowercase=false, $ForceForm
           }
       }
 }
+
+/**    Returns the offset from the origin timezone to the remote timezone, in seconds.
+*    @param string $remote_tz the remote timezone ie. 'Europe/London'
+*    @param string $origin_tz origin timezone. If null the servers current timezone is used as the origin.
+*    @return int;
+*/
+function get_timezone_offset($remote_tz, $origin_tz = null) {
+    if($origin_tz === null) {
+        if(!is_string($origin_tz = date_default_timezone_get())) {
+            return false; // A UTC timestamp was returned -- bail out!
+        }
+    }
+    $origin_dtz = new DateTimeZone($origin_tz);
+    $remote_dtz = new DateTimeZone($remote_tz);
+    $origin_dt = new DateTime("now", $origin_dtz);
+    $remote_dt = new DateTime("now", $remote_dtz);
+    $offset = $origin_dtz->getOffset($origin_dt) - $remote_dtz->getOffset($remote_dt);
+    return $offset;
+}
+
 
 /* SQL utility functions */
 

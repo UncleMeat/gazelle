@@ -37,11 +37,7 @@ if($UserID != $LoggedUser['ID'] && !check_perms('users_edit_profiles', $Class)) 
 
 $Paranoia = unserialize($Paranoia);
 if(!is_array($Paranoia)) $Paranoia = array(); 
- 
-//$CustomPermissions = unserialize($CustomPermissions);
-//if(!is_array($CustomPermissions)) $CustomPermissions = array(); 
-
-
+  
 
 function paranoia_level($Setting) {
        global $Paranoia;
@@ -58,6 +54,33 @@ function display_paranoia($FieldName) {
 function checked($Checked) {
 	return $Checked ? 'checked="checked"' : '';
 }
+ 
+
+function get_timezones_list(){ 
+    $zones = timezone_identifiers_list();
+    $Continents = array('Africa', 'America', 'Antarctica', 'Arctic', 'Asia', 'Atlantic','Australia','Europe','Indian','Pacific');
+    $i = 0;
+    foreach($zones AS $szone) {
+        $z = explode('/',$szone);
+        if( in_array($z[0], $Continents )){      
+            $zone[$i][0] = $szone;
+            $zone[$i][1] = format_offset(get_timezone_offset($szone));
+            $i++;
+        }
+    } 
+    return $zone;
+}
+
+function format_offset($offset) {
+        $hours = $offset / 3600;
+        $sign = $hours > 0 ? '+' : '-';
+        $hour = (int) abs($hours);
+        $minutes = (int) abs(($offset % 3600) / 60); // for stupid half hour timezones
+        if ($hour == 0 && $minutes == 0) $sign = ' ';
+        return "GMT $sign" . str_pad($hour, 2, '0', STR_PAD_LEFT) .':'. str_pad($minutes,2, '0'); 
+}
+
+ 
 
 $DB->query("SELECT COUNT(x.uid) FROM xbt_snatched AS x INNER JOIN torrents AS t ON t.ID=x.fid WHERE x.uid='$UserID'");
 list($Snatched) = $DB->next_record();
@@ -97,6 +120,20 @@ echo $Val->GenerateJS('userform');
 					</select>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Or -&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					External CSS: <input type="text" size="40" name="styleurl" id="styleurl" value="<?=display_str($StyleURL)?>" />
+				</td>
+			</tr>
+			<tr>
+				<td class="label"><strong>Time Zone</strong></td>
+				<td> 
+                            <select name="timezone" id="timezone">
+<?                          
+                                    $zones = get_timezones_list();
+                                    foreach($zones as $tzone) { 
+                                        list($zone,$offset)=$tzone;
+?>
+                                <option value="<?=$zone?>"<? if ($zone == $LoggedUser['TimeZone']) { ?>selected="selected"<? } ?>><?="($offset) &nbsp;".str_replace(array('_','/'),array(' ',' / '),$zone)?></option>
+<?                                  } ?>
+                            </select>
 				</td>
 			</tr>
 			<tr>

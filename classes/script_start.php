@@ -368,7 +368,8 @@ function user_heavy_info($UserID) {
                   m.Credits,
                     i.SupportFor,
                     i.BlockPMs,
-                    i.CommentsNotify
+                    i.CommentsNotify,
+                    i.TimeZone
 			FROM users_main AS m
 			INNER JOIN users_info AS i ON i.UserID=m.ID
 			WHERE m.ID='$UserID'");
@@ -417,6 +418,12 @@ function user_heavy_info($UserID) {
             $HeavyInfo['Badges'] = array();
         }
         
+        if (empty($HeavyInfo['TimeZone']) || $HeavyInfo['TimeZone'] == '')
+            $HeavyInfo['TimeOffset'] = 0;
+        else {
+            $HeavyInfo['TimeOffset'] = get_timezone_offset($HeavyInfo['TimeZone']);
+        }
+            
         $Cache->cache_value('user_info_heavy_' . $UserID, $HeavyInfo, 0);
     }
     return $HeavyInfo;

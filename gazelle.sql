@@ -1973,6 +1973,7 @@ CREATE TABLE IF NOT EXISTS `users_info` (
   `Info` text NOT NULL,
   `Avatar` varchar(255) NOT NULL,
   `Country` int(10) unsigned NOT NULL,
+  `TimeZone` VARCHAR( 128 ) NOT NULL,
   `AdminComment` text NOT NULL,
   `SiteOptions` text NOT NULL,
   `ViewAvatars` enum('0','1') NOT NULL DEFAULT '1',

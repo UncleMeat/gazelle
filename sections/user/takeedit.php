@@ -20,12 +20,12 @@ if ($UserID != $LoggedUser['ID'] && !check_perms('users_edit_profiles', $Permiss
 }
 $whitelistregex = GetWhitelistRegex();
 $Val->SetFields('stylesheet',1,"number","You forgot to select a stylesheet.");
+$Val->SetFields('timezone',1,"inarray","Invalid TimeZone.",array('inarray'=>timezone_identifiers_list()));
 $Val->SetFields('styleurl',0,"regex","You did not enter a valid stylesheet url.",array('regex'=>'/^https?:\/\/(localhost(:[0-9]{2,5})?|[0-9]{1,3}(\.[0-9]{1,3}){3}|([a-zA-Z0-9\-\_]+\.)+([a-zA-Z]{1,5}[^\.]))(:[0-9]{2,5})?(\/[^<>]+)+\.css$/i'));
-$Val->SetFields('postsperpage',1,"number","You forgot to select your posts per page option.",array('inarray'=>array(25,50,100)));
+$Val->SetFields('postsperpage',1,"inarray","You forgot to select your posts per page option.",array('inarray'=>array(25,50,100)));
 //$Val->SetFields('hidecollage',1,"number","You forgot to select your collage option.",array('minlength'=>0,'maxlength'=>1));
 $Val->SetFields('collagecovers',1,"number","You forgot to select your collage option.");
 $Val->SetFields('showtags',1,"number","You forgot to select your show tags option.",array('minlength'=>0,'maxlength'=>1));
-//$Val->SetFields('avatar',0,"regex","You did not enter a valid avatar url.",array('regex'=>"/^".IMAGE_REGEX."$/i"));
 $Val->SetFields('avatar',0,'image', 'The image URL you entered was not valid.', array('regex' => $whitelistregex, 'maxlength' => 255, 'minlength' => 12));
 $Val->SetFields('info',0,'desc','Info',array('regex'=>$whitelistregex,'minlength'=>0,'maxlength'=>20000));	
 $Val->SetFields('signature',0,'desc','Signature',array('regex'=>$whitelistregex,'minlength'=>0,'maxlength'=>$Permissions['MaxSigLength']));	
@@ -42,8 +42,6 @@ $Err = $Val->ValidateForm($_POST);
 
 if($Err) {
 	error($Err);
-	//header('Location: user.php?action=edit&userid='.$UserID);
-	//die();
 }
 
 // Begin building $Paranoia
@@ -135,8 +133,6 @@ if ($CurEmail != $_POST['email']) {
 		
 	} else {
 		error($Err);
-		//header('Location: user.php?action=edit&userid='.$UserID);
-		//die();
 	}
 	
 	
@@ -162,8 +158,6 @@ if($LoggedUser['DisableAvatar'] && $_POST['avatar'] != $U['Avatar']) {
 
 if ($Err) {
 	error($Err);
-	//header('Location: user.php?action=edit&userid='.$UserID);
-	//die();
 }
 
 if(!empty($LoggedUser['DefaultSearch'])) {
@@ -232,7 +226,8 @@ $Cache->update_row(false, array(
 		'StyleURL'=>$_POST['styleurl'],
 		'DownloadAlt'=>$DownloadAlt,
 		'BlockPMs'=>$BlockPMs,
-		'CommentsNotify'=>$CommentsNotify
+		'CommentsNotify'=>$CommentsNotify,
+		'TimeZone'=>$_POST['timezone']
 		));
 $Cache->update_row(false, $Options);
 $Cache->commit_transaction(0);
@@ -245,6 +240,7 @@ $SQL="UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET
 	i.Avatar='".db_string($_POST['avatar'])."',
 	i.SiteOptions='".db_string(serialize($Options))."',
 	i.Info='".db_string($_POST['info'])."',
+	i.TimeZone='".db_string($_POST['timezone'])."',
 	i.BlockPMs='".$BlockPMs."',
 	i.CommentsNotify='".$CommentsNotify."',
 	i.DownloadAlt='$DownloadAlt',
