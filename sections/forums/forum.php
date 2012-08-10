@@ -74,9 +74,10 @@ show_header(empty($LoggedUser['ShortTitles'])?"Forums > {$Forums[$ForumID][Name]
 <? print_latest_forum_topics(); ?>
 	<div class="linkbox">
 <? if(check_forumperm($ForumID, 'Write') && check_forumperm($ForumID, 'Create')){ ?>
-		[<a href="forums.php?action=new&amp;forumid=<?=$ForumID?>">New Thread</a>]
+		[<a href="forums.php?action=new&amp;forumid=<?=$ForumID?>">New Thread</a>]&nbsp;
 <? } ?>
-		[<a href="#" onclick="$('#searchforum').toggle(); this.innerHTML = (this.innerHTML == 'Search this Forum'?'Hide Search':'Search this Forum'); return false;">Search this Forum</a>]
+		[<a href="#" onclick="$('#searchforum').toggle(); this.innerHTML = (this.innerHTML == 'Search this Forum'?'Hide Search':'Search this Forum'); return false;">Search this Forum</a>]&nbsp;
+		[<a href="forums.php?action=unread">Unread Posts</a>]
 		<div id="searchforum" class="hidden">
 			<div style="display: inline-block;">
                             <br />

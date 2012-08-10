@@ -32,6 +32,37 @@ show_header('Forums');
 <div class="thin">
 <? print_latest_forum_topics(); ?>
     
+	<div class="linkbox">
+		[<a href="#" onclick="$('#searchforum').toggle(); this.innerHTML = (this.innerHTML == 'Search all forums'?'Hide Search':'Search all forums'); return false;">Search all forums</a>]&nbsp;
+		[<a href="forums.php?action=unread">Unread Posts</a>]
+		<div id="searchforum" class="hidden">
+			<div style="display: inline-block;">
+                            <br />
+				<div class="head">Search all forums</div>
+				<form action="forums.php" method="get">
+					<table cellpadding="6" cellspacing="1" border="0" class="border">	
+						<input type="hidden" name="action" value="search" />
+						<tr>
+							<td><strong>Search for:</strong></td><td><input type="text" id="searchbox" name="search" size="70" /></td>
+						</tr>
+						<tr>
+							<td><strong>Search in:</strong></td>
+							<td>
+								<input type="radio" name="type" id="type_title" value="title" checked="checked" /> 
+								<label for="type_title">Titles</label>
+								<input type="radio" name="type" id="type_body" value="body" /> 
+								<label for="type_body">Post bodies</label>
+							</td>
+						<tr>
+							<td><strong>Username:</strong></td><td><input type="text" id="username" name="user" size="70" /></td>
+						</tr>
+						<tr><td colspan="2" style="text-align: center"><input type="submit" name="submit" value="Search" /></td></tr>
+					</table>
+				</form>
+				<br />
+			</div>
+		</div>
+	</div>
 <?
 $Row = 'a';
 $LastCategoryID=0;
@@ -107,6 +138,6 @@ foreach ($Forums as $Forum) {
 	</tr>
 <? } ?>
 	</table>
-	<div class="linkbox"><a href="forums.php?action=catchup&amp;forumid=all&amp;auth=<?=$LoggedUser['AuthKey']?>">Catch up</a></div>
+	<div class="linkbox">[<a href="forums.php?action=catchup&amp;forumid=all&amp;auth=<?=$LoggedUser['AuthKey']?>">Catch up all</a>]</div>
 </div>
 <? show_footer();

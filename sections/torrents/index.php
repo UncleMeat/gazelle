@@ -528,23 +528,7 @@ if(!empty($_REQUEST['action'])) {
                         elseif ($_POST['submit'] == "Reject Fix") $Status = 'Rejected';  
                         elseif ($_POST['submit'] == "Accept Fix") $Status = 'Fixed';     
                         else $Status = 'Okay'; // ($_POST['submit'] == "Mark as Okay")   
-                        
-                        /*
-                        $DB->query("SELECT Name, UserID, t.ID 
-                                        FROM torrents_group AS tg
-                                        LEFT JOIN torrents AS t ON t.GroupID = tg.ID
-                                        WHERE tg.ID=$GroupID");
-                        list($Name, $UserID, $TorrentID) = $DB->next_record();
-                        
-                        //  get torrent details
-                        $DB->query("SELECT Name, t.UserID, t.ID , tr.Status, tr.ConvID FROM (
-                                      SELECT GroupID, Max(Time) as LastTime
-                                      FROM torrents_reviews GROUP BY GroupID
-                                    ) AS x 
-                                    JOIN torrents_reviews AS tr ON tr.GroupID=x.GroupID AND tr.Time=x.LastTime
-                                    JOIN torrents_group AS tg ON tg.ID= tr.GroupID
-                                    JOIN torrents AS t ON t.GroupID=tg.ID
-                                    WHERE tg.ID=$GroupID"); */
+                       
                         
                         $DB->query("SELECT Name, t.UserID, t.ID , tr.Status, tr.ConvID 
                                     FROM torrents_group AS tg 

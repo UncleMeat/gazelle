@@ -10,18 +10,7 @@ include(SERVER_ROOT.'/sections/forums/functions.php');
 
 // Replace the old hard-coded forum categories
 unset($ForumCats);
-$ForumCats = get_forum_cats();
-/*
-$ForumCats = $Cache->get_value('forums_categories');
-if ($ForumCats === false) {
-	$DB->query("SELECT ID, Name FROM forums_categories");
-	$ForumCats = array();
-	while (list($ID, $Name) =  $DB->next_record()) {
-		$ForumCats[$ID] = $Name;
-	}
-	$Cache->cache_value('forums_categories', $ForumCats, 0); //Inf cache.
-}*/
-
+$ForumCats = get_forum_cats(); 
 //This variable contains all our lovely forum data
 $Forums = get_forums_info();
  
@@ -48,6 +37,9 @@ if(!empty($_POST['action'])){
 	}
 } elseif(!empty($_GET['action'])) {
 	switch ($_GET['action']) {
+		case 'unread': 
+			require(SERVER_ROOT.'/sections/forums/unread_posts.php');
+			break;
 		case 'viewforum':
 			// Page that lists all the topics in a forum
 			require(SERVER_ROOT.'/sections/forums/forum.php');
