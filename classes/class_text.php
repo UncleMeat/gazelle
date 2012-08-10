@@ -1213,8 +1213,10 @@ EXPLANATION OF PARSER LOGIC
 			}
 			switch($Block['Type']) {
                         case 'you':
-					//actually a youtube only tag inherited from emp
-					$Str.='<a href="user.php?id='.$LoggedUser['ID'].'">'.$LoggedUser['Username'].'</a>';
+                              if ($this->Advanced)
+                                  $Str.='<a href="user.php?id='.$LoggedUser['ID'].'">'.$LoggedUser['Username'].'</a>';
+                              else
+                                  $Str.='[you]';
                               break;
                         case 'video':
 					//actually a youtube only tag inherited from emp
