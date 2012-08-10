@@ -20,13 +20,14 @@ $DB->query("SELECT
 			i.StyleID,
 			i.StyleURL,
 			i.SiteOptions,
-			i.UnseededAlerts
+			i.UnseededAlerts,
+                  i.TimeZone
 			FROM users_main AS m
 			JOIN users_info AS i ON i.UserID = m.ID
 			LEFT JOIN permissions AS p ON p.ID=m.PermissionID
 			WHERE m.ID = '".db_string($UserID)."'");
 
-list($Username,$Email,$IRCKey,$Paranoia,$Signature,$PermissionID,$CustomPermissions,$Info,$Avatar,$Country,$StyleID,$StyleURL,$SiteOptions,$UnseededAlerts)=$DB->next_record(MYSQLI_NUM, array(3,6,12));
+list($Username,$Email,$IRCKey,$Paranoia,$Signature,$PermissionID,$CustomPermissions,$Info,$Avatar,$Country,$StyleID,$StyleURL,$SiteOptions,$UnseededAlerts,$TimeZone)=$DB->next_record(MYSQLI_NUM, array(3,6,12));
 
 $Permissions = get_permissions($PermissionID);
 list($Class,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($Permissions);
@@ -131,7 +132,7 @@ echo $Val->GenerateJS('userform');
                                     foreach($zones as $tzone) { 
                                         list($zone,$offset)=$tzone;
 ?>
-                                <option value="<?=$zone?>"<? if ($zone == $LoggedUser['TimeZone']) { ?>selected="selected"<? } ?>><?="($offset) &nbsp;".str_replace(array('_','/'),array(' ',' / '),$zone)?></option>
+                                <option value="<?=$zone?>"<? if ($zone == $TimeZone) { ?>selected="selected"<? } ?>><?="($offset) &nbsp;".str_replace(array('_','/'),array(' ',' / '),$zone)?></option>
 <?                                  } ?>
                             </select>
 				</td>

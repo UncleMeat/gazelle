@@ -1676,6 +1676,13 @@ blockquote.bbcode {
     color: #333;
     text-align: left;
 }
+code.error {
+    display:inline-block;
+    color: #c00;
+    font-size: larger;
+    font-weight: bolder;
+    padding:1px 0px;
+}
 code.bbcode {
     display:inline-block;
     background-color: #fffff3;

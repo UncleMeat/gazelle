@@ -563,6 +563,8 @@ class TEXT {
 	private $NoImg = 0; // If images should be turned into URLs
 	private $Levels = 0; // nesting level
 	private $Advanced = false; // allow advanced tags to be printed
+      private $Showerrors = false;
+      
       //public $Smilies = array(); // for testing only
 	function __construct() {
 		foreach($this->Smileys as $Key=>$Val) {
@@ -576,8 +578,9 @@ class TEXT {
 		}
 		reset($this->Icons);
       }
-	function full_format($Str, $AdvancedTags = false) {
+	function full_format($Str, $AdvancedTags = false, $ShowErrors = true) {
             $this->Advanced = $AdvancedTags;
+            $this->Showerrors = $ShowErrors;
 		$Str = display_str($Str);
             
             $Str = str_replace('  ', ' &nbsp;', $Str);
@@ -972,8 +975,16 @@ EXPLANATION OF PARSER LOGIC
                                         $CloseTag = $i; 
                                         $closetaglength =0;
                                     } else {
-                                        $CloseTag = $Len;
-                                    }
+                                        // lets try and deal with badly formed bbcode in a better way
+                                        if ($this->Showerrors) {
+                                            $Block = "[$TagName]";
+                                            $TagName = 'error';  
+                                        } else {
+                                            $TagName = 'ignore'; // tells the parser to skip this empty tag
+                                        }
+                                        $CloseTag = $i; 
+                                        $closetaglength =0;
+                                    }  
 						break;
 					} else {
 						$NumInCloses++; // Majority of cases
@@ -992,7 +1003,7 @@ EXPLANATION OF PARSER LOGIC
 				
 				
 				// Find the internal block inside the tag
-				$Block = substr($Str, $i, $CloseTag-$i); // 5c) Get the contents between [open] and [/close] and call it the block.
+				if(!$Block) $Block = substr($Str, $i, $CloseTag-$i); // 5c) Get the contents between [open] and [/close] and call it the block.
 				
 				$i = $CloseTag+$closetaglength; // 5d) Move the pointer past the end of the [/close] tag. 
 				
@@ -1100,8 +1111,12 @@ EXPLANATION OF PARSER LOGIC
 						}
 					break;
 				case 'n':
+				case 'ignore': // not a tag but can be used internally
 					$ArrayPos--;
 					break; // n serves only to disrupt bbcode (backwards compatibility - use [pre])
+				case 'error':  // not a tag but can be used internally
+					$Array[$ArrayPos] = array('Type'=>'error', 'Val'=>$Block);
+					break;
 				default:
 					if($WikiLink == true) {
 						$Array[$ArrayPos] = array('Type'=>'wiki','Val'=>$TagName);
@@ -1212,6 +1227,9 @@ EXPLANATION OF PARSER LOGIC
 				continue;
 			}
 			switch($Block['Type']) {
+                        case 'error': // used internally
+					$Str.="<blink><code class=\"error\" title=\"You have an unclosed $Block[Val] tag in your bbCode!\">$Block[Val]</code></blink>";
+                              break;
                         case 'you':
                               if ($this->Advanced)
                                   $Str.='<a href="user.php?id='.$LoggedUser['ID'].'">'.$LoggedUser['Username'].'</a>';

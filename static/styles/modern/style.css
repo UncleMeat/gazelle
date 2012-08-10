@@ -1560,7 +1560,30 @@ blockquote.bbcode {
     text-align: left;
    /* font-size: 0.9em; */
 }
+code.error {
+    display:inline-block;
+    color: #c00;
+    font-size: larger;
+    font-weight: bolder;
+    padding:1px 0px;
+}
+code.bbcode {
+    display:inline-block;
+    background-color: #fffff3;
+    color: #333;
+    padding:0px 2px;
+}
 
+code.bbcodeblock {
+    display:block;
+    font-family: "PT Mono", monospace;
+    background-color: #f4f4f4;
+    color: black;
+    text-align: left;
+    margin: 10px;
+    padding: 10px;
+    border: 1px dashed #98AAB1;
+}
 /*  Stuff for the bbcode assistant  */
 
 .bb_holder {
