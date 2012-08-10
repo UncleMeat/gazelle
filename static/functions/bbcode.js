@@ -277,14 +277,18 @@ function spoiler(textID) {
 }
 
 function image(textID) {
-  var link;
-  link = prompt("Please enter the full URL for your image\nOnly .png, .jpg, .gif images", "http://");
-  var re_text = /\.jpg|\.gif|\.png|\.jpeg/i;
-  if (re_text.test(link) == false && link != "http://" && link) {
-    alert("Image not allowed only .jpg .gif .png .jpeg");
-    link = prompt("Please enter the full URL for your image\nOnly .png, .jpg, .gif images", "http://");
-  }
-  if (link != "http://" && link) wrap('img', link, '', textID);
+    var link;
+    //link = prompt("Please enter the full URL for your image", "http://");
+    //var re_text = /\.jpg|\.gif|\.png|\.jpeg/i;
+    // var img_regex = /(?:([^:/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
+    var img_regex = /(?:([^:/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|gif|png|php|asp|html|htm|shtml|jsp|cgi))(?:\?([^#]*))?(?:#(.*))?/i;
+    do {
+        link = prompt("Please enter the full URL for your image", "http://");
+        if (img_regex.test(link) == false && link != "http://" && link){
+            alert("Not a valid image url");
+        } else break;
+    } while(true)
+    if (link != "http://" && link) wrap('img', link, '', textID);
 }
 
 function table(textID) {
