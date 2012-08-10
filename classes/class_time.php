@@ -159,9 +159,10 @@ function time_diff($TimeStamp,$Levels=2,$Span=true, $Lowercase=false, $ForceForm
 */
 function get_timezone_offset($remote_tz, $origin_tz = null) {
     if($origin_tz === null) {
-        if(!is_string($origin_tz = date_default_timezone_get())) {
+        /*if(!is_string($origin_tz = date_default_timezone_get())) {
             return false; // A UTC timestamp was returned -- bail out!
-        }
+        }*/
+        $origin_tz = "UTC";
     }
     $origin_dtz = new DateTimeZone($origin_tz);
     $remote_dtz = new DateTimeZone($remote_tz);
