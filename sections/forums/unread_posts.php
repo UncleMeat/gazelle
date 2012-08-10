@@ -40,12 +40,15 @@ show_header('Unread Posts');
 
 
 $Pages=get_pages($Page,$Results,$PerPage,9);
-echo $Pages;
+ 
 
 ?>
 <div class="thin">
     <? print_latest_forum_topics(); ?>
               
+	<div class="linkbox pager">
+		<?=$Pages?>
+	</div>
     <div class="head"><a href="forums.php">Forums</a> &gt; Unread Posts</div>
     <table class="forum_index">
 		<tr class="colhead">
@@ -109,6 +112,9 @@ echo $Pages;
       }         
 ?>
 	</table>
+	<div class="linkbox pager">
+		<?=$Pages?>
+	</div>
 	<div class="linkbox">[<a href="forums.php?action=catchup&amp;forumid=all&amp;auth=<?=$LoggedUser['AuthKey']?>">Catch up all</a>]</div>
 </div>
 
