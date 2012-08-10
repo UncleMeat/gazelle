@@ -24,7 +24,8 @@ $UserID = (int)$LoggedUser['ID'];
                     JOIN users_main AS author ON author.ID=t.LastPostAuthorID
                LEFT JOIN forums_last_read_topics AS l ON l.UserID =i.UserID
                      AND l.TopicID = t.ID
-                   WHERE l.PostID is null OR  l.PostID != t.LastPostID  
+                   WHERE t.LastPostAuthorID!=$UserID
+                     AND l.PostID is null OR  l.PostID != t.LastPostID  
                 ORDER BY t.LastPostTime DESC
                    LIMIT $Limit");
       
