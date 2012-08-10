@@ -64,7 +64,7 @@ function get_timezones_list(){
         $z = explode('/',$szone);
         if( in_array($z[0], $Continents )){      
             $zone[$i][0] = $szone;
-            $zone[$i][1] = format_offset(get_timezone_offset($szone));
+            $zone[$i][1] = format_offset(-get_timezone_offset($szone));
             $i++;
         }
     } 

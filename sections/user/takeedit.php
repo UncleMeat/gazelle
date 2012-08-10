@@ -251,6 +251,10 @@ $SQL="UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET
 
 $SQL .= "m.Paranoia='".db_string(serialize($Paranoia))."'";
 
+$LoggedUser['TimeZone']=$_POST['timezone'];
+$LoggedUser['TimeOffset']=get_timezone_offset($_POST['timezone']);
+ 
+        
 if($ResetPassword) {
 	$ChangerIP = db_string($LoggedUser['IP']);
 	$Secret=make_secret();
