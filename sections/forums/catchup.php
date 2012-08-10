@@ -20,7 +20,7 @@ if ($_GET['forumid']=='all') {
 				SELECT '$LoggedUser[ID]', t.ID, t.LastPostID 
 				FROM forums_topics AS t
                         JOIN users_info AS i ON i.UserID=$LoggedUser[ID]
-				WHERE (LastPostTime>i.CatchupTime OR IsSticky='1')
+				WHERE (LastPostTime>i.CatchupTime OR i.CatchupTime is null)
 					AND ForumID = ".$_GET['forumid']."
 				ON DUPLICATE KEY UPDATE PostID=LastPostID");
       
