@@ -337,7 +337,7 @@ $TagSQL[] = "Tags=''";
 $SQL.=implode(' OR ', $TagSQL);
 
 $SQL.= ") AND !(" . implode(' OR ', $NotTagSQL) . ")";
-$SQL.=" AND (Categories LIKE '%|" . db_string($NewCategories[$T['Category']]['name']) . "|%' OR Categories='') ";
+$SQL.=" AND (Categories LIKE '%|" . db_string($NewCategories[(int)$_POST['category']]['name']) . "|%' OR Categories='') ";
 $SQL .= ") AND UserID != '" . $LoggedUser['ID'] . "' ";
 
 $DB->query($SQL);
