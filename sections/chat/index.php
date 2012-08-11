@@ -19,7 +19,7 @@ if(empty($IRCKey)) {
 <?
 } else {
     */
-	if(!$_POST["connect"] || (!isset($_POST["emp"]) && !isset($_POST["help"]))) {
+	if(!$_POST["connect"] || (!isset($_POST["emp"]) && !isset($_POST["help"]) && !isset($_POST["staff"]))) {
 ?>
 <div class="thin">
 	<div class="head">IRC Rules - Please read these carefully!</div>
@@ -111,6 +111,7 @@ if(empty($IRCKey)) {
 				$nick = "_" . $nick;
 			}
 		}
+            $channels='';
             $div='';
             if(isset($_POST["emp"])) {
                 $channels='empornium';
