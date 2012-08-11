@@ -72,7 +72,7 @@ if(empty($IRCKey)) {
 			</li>
 		</ul>
 	</div>
-    <form method="post" action="chat.php" onsubmit="return ($('#channel1').raw().checked || $('#channel2').raw().checked);">
+    <form method="post" action="chat.php" onsubmit="return ($('#channel1').raw().checked || $('#channel2').raw().checked || $('#channel3').raw().checked);">
         <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
         <br/>
         <table>
@@ -82,6 +82,10 @@ if(empty($IRCKey)) {
                     <input type="checkbox" id="channel1" name="emp" value="1" checked="checked" /><br/>
                      connect to the <strong>#empornium-help</strong> channel*
                     <input type="checkbox" id="channel2" name="help" value="1" />
+<?                      if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) { ?>
+                    <br/> connect to the <strong>#empornium-staff</strong> channel*
+                    <input type="checkbox" id="channel3" name="staff" value="1" />
+ <?                     }       ?>
                 </td>
                 <td class="noborder">
                     <input type="submit" id="connect" name="connect" style="width:160px" value="I agree to the rules" />
@@ -112,22 +116,21 @@ if(empty($IRCKey)) {
                 $channels='empornium';
                 $div='%2c';
             }
-            if(isset($_POST["help"])) $channels .= "{$div}empornium-help";
-             
+            if(isset($_POST["help"])) {
+                $channels .= "{$div}empornium-help";
+                $div='%2c';
+            }
+            if(isset($_POST["staff"])) 
+                if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) 
+                    $channels .= "{$div}empornium-staff"; 
+            
             //$channels=$_POST["channel"]=='help'?'empornium-help':'empornium';
             
 ?>
 <div class="">
 	<div class="head">IRC</div>
-	<div class="box pad">
-		 
-		<center>
- <iframe src="http://irc.emprn.tk/?nick=<?=$nick?>&channels=<?=$channels?>" width="98%" height="600"></iframe>
-               
-<? /*
-                <iframe src="http://chat.efnet.org:9090/?nick=<?=$nick?>&channels=empornium" width="80%" height="600"></iframe>
-  */ ?>
-		</center>
+	<div class="box pad center"> 
+                <iframe src="http://irc.emprn.tk/?nick=<?=$nick?>&channels=<?=$channels?>" width="98%" height="600"></iframe> 
 	</div>
 </div>
 <?
