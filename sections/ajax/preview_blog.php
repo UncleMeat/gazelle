@@ -13,7 +13,7 @@ echo '<div class="head">
                 <a href="#quickreplypreview">[Delete]</a>
         </div>    
         <div class="box vertical_space">
-		<div class="pad">'.$Text->full_format($Body, get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])).'</div> 
+		<div class="pad">'.$Text->full_format($Body, get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions']), true).'</div> 
 	</div>
       <br />';
    

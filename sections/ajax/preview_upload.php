@@ -9,7 +9,7 @@ $Content = $_REQUEST['desc']; // Don't use URL decode.
 $Imageurl = $_REQUEST['image']; // Don't use URL decode.
 if (!empty($Imageurl)) {
     if ($Text->valid_url($Imageurl)){ 
-        $Imageurl = $Text->full_format('[align=center][img]'.$Imageurl.'[/img][/align]');
+        $Imageurl = $Text->full_format('[align=center][img]'.$Imageurl.'[/img][/align]',false,true);
     } else {
         $Imageurl = "<div style=\"text-align: center;\"><strong class=\"important_text\">Not a valid url</strong></div>";
     }
@@ -28,7 +28,7 @@ echo '<table cellpadding="3" cellspacing="1" border="0" class="border slice" wid
     <tr>
         <td class="label">Description</td>
         <td>
-            '.$Text->full_format($Content, get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])).'                              
+            '.$Text->full_format($Content, get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions']),true).'                              
         </td>
     </tr> 
 </table>';

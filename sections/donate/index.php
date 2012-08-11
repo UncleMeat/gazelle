@@ -1,7 +1,10 @@
 <?
 //Module mini-config
-include(SERVER_ROOT.'/sections/donate/config.php');
+//include(SERVER_ROOT.'/sections/donate/config.php');
 
+include(SERVER_ROOT.'/sections/donate/donate.php');
+      
+      /*   // we are using a manual method so dont need any of this
 if (!isset($_REQUEST['action'])) {
 	include(SERVER_ROOT.'/sections/donate/donate.php');
 } else {
@@ -17,5 +20,5 @@ if (!isset($_REQUEST['action'])) {
 			include(SERVER_ROOT.'/sections/donate/cancel.php');
 			break;
 	}
-}
+} */
 ?>

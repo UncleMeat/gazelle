@@ -578,7 +578,7 @@ class TEXT {
 		}
 		reset($this->Icons);
       }
-	function full_format($Str, $AdvancedTags = false, $ShowErrors = true) {
+	function full_format($Str, $AdvancedTags = false, $ShowErrors = false) {
             $this->Advanced = $AdvancedTags;
             $this->Showerrors = $ShowErrors;
 		$Str = display_str($Str);

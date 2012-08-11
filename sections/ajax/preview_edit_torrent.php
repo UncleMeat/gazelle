@@ -9,7 +9,7 @@ $Imageurl = $_REQUEST['image'];
 $AuthorID = (int)$_REQUEST['authorid'];
 if (!empty($Imageurl)) {
     if ($Text->valid_url($Imageurl)){ 
-        $Imageurl = "<div style=\"text-align: center;\" class=\"box pad\">". $Text->full_format('[img]'.$Imageurl.'[/img]')."</div>";
+        $Imageurl = "<div style=\"text-align: center;\" class=\"box pad\">". $Text->full_format('[img]'.$Imageurl.'[/img]',false,true)."</div>";
     } else {
         $Imageurl = "<div style=\"text-align: center;\"><strong class=\"important_text\">Not a valid url</strong></div>";
     }
@@ -24,7 +24,7 @@ echo '
                             <h3>Description</h3>
                             <br />
                             <div class="box pad">
-            '.$Text->full_format($Content, get_permissions_advtags($AuthorID)).'                              
+            '.$Text->full_format($Content, get_permissions_advtags($AuthorID), true).'                              
                             </div>';
    
 ?>

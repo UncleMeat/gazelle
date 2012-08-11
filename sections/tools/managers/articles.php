@@ -123,7 +123,7 @@ show_header('Manage articles','bbcode');
         </div>
 	<div class="box pad rowa">
 		
-		 <?=$Text->full_format($Description, true) ?> 
+		 <?=$Text->full_format($Description, true, true) ?> 
 	</div>
 	<div class="box vertical_space hidden" id="article_<?=$ArticleID?>">
 		

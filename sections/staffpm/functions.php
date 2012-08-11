@@ -36,6 +36,19 @@ function print_compose_staff_pm($Hidden = true, $Assign = 0, $Subject ='', $Msg 
         if ($Msg=='changeusername'){
             $Subject='Change Username';
             $Msg="\n\nI would like to change my username to\n\nBecause";
+            $Assign='admin';
+        }
+        else if ($Msg=='donategb' || $Msg=='donatelove'){
+            $Subject='I would like to donate for ';
+            if($Msg=='donategb') {
+                $Subject .= 'GB';
+                $Msg="\n\nPlease send me instructions on how to donate to remove gb from my download.";
+            } else {
+                $Subject .= 'love';
+                $Msg="\n\nPlease send me instructions on how to donate to help support the site.";
+            }
+            $Assign='sysop';
+            $AssignDirect = '1000';
         }
        
         ?>
@@ -62,13 +75,18 @@ function print_compose_staff_pm($Hidden = true, $Assign = 0, $Subject ='', $Msg 
 				
                     </div>
 				<input type="button" value="Hide" onClick="jQuery('#compose').toggle();return false;" />
-                        
 				<strong>Send to: </strong>
+<?                  if($AssignDirect){ ?>
+				<input type="hidden" name="level" value="<?=$AssignDirect?>" />
+				<input type="text" value="<?=$Assign?>" disabled="disabled" />
+<?                  } else { ?>
 				<select name="level">
 					<option value="0"<?if(!$Assign)echo ' selected="selected"';?>>First Line Support</option>
 					<option value="500"<?if($Assign=='mod')echo ' selected="selected"';?>>Mod Pervs</option>
 					<option value="600"<?if($Assign=='admin')echo ' selected="selected"';?>>Admins</option>
+					<!-- <option value="1000"<?if($Assign=='sysop')echo ' selected="selected"';?>>Sysop</option> -->
 				</select>
+<?                  } ?>
 				<input type="button" id="previewbtn" value="Preview" onclick="Inbox_Preview();" /> 
                         <input type="submit" value="Send message" />
                     
