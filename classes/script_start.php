@@ -512,6 +512,18 @@ function get_permissions_for_user($UserID, $CustomPermissions = false, $UserPerm
             $Permissions = $UserPermission;
       }
       
+	if(!empty($CustomPermissions)) {
+		$CustomPerms = $CustomPermissions;
+	} else {
+		$CustomPerms = array();
+	}
+
+	$MaxCollages = $Permissions['Permissions']['MaxCollages'] + $CustomPerms['MaxCollages'];
+	
+	//Combine the permissions
+	return array_merge($Permissions['Permissions'], $CustomPerms, array('MaxCollages' => $MaxCollages));
+      
+      /*
 	if($UserInfo['Donor']) {
 		$DonorPerms = get_permissions(DONOR);
 	} else {
@@ -528,6 +540,7 @@ function get_permissions_for_user($UserID, $CustomPermissions = false, $UserPerm
 	
 	//Combine the permissions
 	return array_merge($Permissions['Permissions'], $DonorPerms['Permissions'], $CustomPerms, array('MaxCollages' => $MaxCollages));
+       */
 }
 
 // Get whether this user can use adv tags (pass optional params to reduce lookups)
