@@ -56,6 +56,7 @@ if(!check_forumperm($ForumID)) {
 
 //update thread views
 $DB->query("UPDATE forums_topics SET NumViews = NumViews+1 WHERE ID=$ThreadID");
+//cache thread views
 if ($Cache->get_value('thread_views_'.$ThreadID)===false){
     $DB->query("SELECT NumViews FROM forums_topics WHERE ID='$ThreadID'");
     list($NumViews) = $DB->next_record();
@@ -107,8 +108,8 @@ if ($_GET['updatelastread'] != '0') {
 	$LastPost = $LastPost['ID'];
 	reset($Thread);
 
-	//Handle last read
-	if (!$ThreadInfo['IsLocked'] || $ThreadInfo['IsSticky']) {
+	//Handle last read // - if staff can post in locked threads we need to record last read in them or unread topics gets screwy
+	//if (!$ThreadInfo['IsLocked'] || $ThreadInfo['IsSticky']) {
 		$DB->query("SELECT PostID From forums_last_read_topics WHERE UserID='$LoggedUser[ID]' AND TopicID='$ThreadID'");
 		list($LastRead) = $DB->next_record();
 		if($LastRead < $LastPost) {
@@ -117,7 +118,7 @@ if ($_GET['updatelastread'] != '0') {
 				('$LoggedUser[ID]', '".$ThreadID ."', '".db_string($LastPost)."')
 				ON DUPLICATE KEY UPDATE PostID='$LastPost'");
 		}
-	}
+	//}
 }
 
 //Handle subscriptions
