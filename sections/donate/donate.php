@@ -99,7 +99,7 @@ show_header('Donate');
                 <? } ?>
                 <li>A warm fuzzy feeling.</li> 
             <? } ?>
-            <li>If you want to donate for GB please click here: <a href="staffpm.php?action=user_inbox&show=1&msg=donatelove">Send a message to sysop</a></li> 
+            <li>If you want to donate for <img src="<?= STATIC_SERVER ?>common/symbols/donor.png" alt="love" title="love" /> please click here: <a href="staffpm.php?action=user_inbox&show=1&msg=donatelove">Send a message to sysop</a></li> 
         </ul>
     </div>
     <h3>What you will <strong>not</strong> receive</h3>
