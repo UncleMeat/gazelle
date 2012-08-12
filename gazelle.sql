@@ -123,6 +123,7 @@ CREATE TABLE IF NOT EXISTS `badges` (
   `Badge` varchar( 12 ) NOT NULL,
   `Sort` int(10) NOT NULL,
   `Type` enum('Shop','Single','Multiple','Unique') NOT NULL,
+  `Display` INT( 3 ) NOT NULL DEFAULT '0',
   `Sort` int(10) NOT NULL,
   `Cost` int(20) NOT NULL DEFAULT '0',
   `Title` varchar(64) NOT NULL,
@@ -130,6 +131,7 @@ CREATE TABLE IF NOT EXISTS `badges` (
   `Image` varchar(255) NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `Type` (`Type`),
+  KEY `Display` (`Display`),
   KEY `Sort` (`Sort`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

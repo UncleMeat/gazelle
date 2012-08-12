@@ -162,7 +162,6 @@ $Badges.=($Warned!='0000-00-00 00:00:00') ? '<img src="'.STATIC_SERVER.'common/s
 $Badges.=($Enabled == '1' || $Enabled == '0' || !$Enabled) ? '': '<img src="'.STATIC_SERVER.'common/symbols/disabled.png" alt="Banned" />';
 
 
-$UserBadges = get_user_badges($UserID);
 
 show_header($Username,'user,bbcode,requests');
 ?>
@@ -574,37 +573,35 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 			<div class="pad">This user is currently on ratio watch, and must upload <?=get_size(($Downloaded*$RequiredRatio)-$Uploaded)?> in the next <?=time_diff($RatioWatchEnds,2,true,false,0)?>, or their leeching privileges will be revoked. Amount downloaded while on ratio watch: <?=get_size($Downloaded-$RatioWatchDownload)?></div>
 		</div>
 <? } ?>
-                <div class="head">
-                        <span style="float:left;">Profile<? if ($CustomTitle) { echo " - ".display_str(html_entity_decode($DisplayCustomTitle)); } ?></span>
-                        <span style="float:right;"><?=!empty($Badges)?"$Badges&nbsp;&nbsp;":''?><a href="#" onclick="$('#profilediv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
-                </div>
-                <div class="box">
-                    <div id="profilediv">
-                <div class="pad">
-<?      if (!$Info) { ?>
+            <div class="head">
+                <span style="float:left;">Profile<? if ($CustomTitle) { echo " - ".display_str(html_entity_decode($DisplayCustomTitle)); } ?></span>
+                <span style="float:right;"><?=!empty($Badges)?"$Badges&nbsp;&nbsp;":''?><a href="#" onclick="$('#profilediv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+            </div>
+            <div class="box">
+                <div id="profilediv">
+                    <div class="pad">
+<?              if (!$Info) { ?>
 				This profile is currently empty.
-<?      } else { 
+<?              } else { 
                         echo $Text->full_format($Info, get_permissions_advtags($UserID)); 
-        }   ?>
-                </div>
-<?     
-          if ($UserBadges) {  ?>
-                    <div class="badgesrow badges">
-    <?
-            print_badges_array($UserBadges);
-   ?>
+                }   ?>
                     </div>
-                           
-<?        }   ?>
-                  </div>
-		</div>
+<?     
+            $UserBadges = get_user_badges($UserID, false);
+            if ($UserBadges) {  ?>
+                    <div id="userbadges" class="badgesrow badges">
+<?                          print_badges_array($UserBadges, false);  ?>
+                    </div>
+<?          }   ?>
+                </div>
+            </div>
 <?
 
 if (check_perms('users_view_bonuslog',$Class) || $OwnProfile) { ?>
-                <div class="head">
-                        <span style="float:left;">Bonus Credits</span>
-                        <span style="float:right;"><a href="#" onclick="$('#bonusdiv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
-                </div>
+            <div class="head">
+                <span style="float:left;">Bonus Credits</span>
+                <span style="float:right;"><a href="#" onclick="$('#bonusdiv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+            </div>
 		<div class="box">
 			<div class="pad" id="bonusdiv">
                       <h4 class="center">Credits: <?=(!$BonusCredits ? '0.00' : number_format($BonusCredits,2))?></h4>
@@ -1153,13 +1150,15 @@ if (check_perms('users_mod', $Class)) { ?>
             
             
             
-<?	if (check_perms('users_edit_badges')) { ?>
+<? 
+	if ((check_perms('users_edit_badges', $Class) && $UserID != $LoggedUser['ID'])
+              || (check_perms('users_edit_own_badges') && $UserID == $LoggedUser['ID'])) {  ?>
 
                 <div class="head">
                         <span style="float:left;">Manage User Badges</span>
                         <span style="float:right;"><a href="#" onclick="$('#badgesadmin').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
                 </div>                
-		<div class="box">
+                <div class="box">
                   <div class="pad hidden" id="badgesadmin">
 <?
                       $UserBadgesIDs = array(); // used in a mo to determine what badges user has for admin 

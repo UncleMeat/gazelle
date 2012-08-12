@@ -567,28 +567,69 @@ function get_latest_forum_topics($PermissionID) {
     return $LatestTopics;
 }
 
-function get_user_badges($UserID, $Limit = 0){
+function get_user_badges($UserID, $LimitRows = true) {     //, $Limit = 0){
     global $DB, $Cache;
     $UserID = (int)$UserID;
-    $UserBadges = $Cache->get_value('user_badges_'.$UserID);
+    if ($LimitRows) {
+        $extra = "_limit";
+        $Limit = "LIMIT 6"; 
+    }
+    $UserBadges = $Cache->get_value('user_badges_'.$UserID.$extra);
     if (!is_array($UserBadges)) {
-        $DB->query("SELECT
+        $DB->query("
+                    (SELECT
                         ub.ID,
                         ub.BadgeID,
                         ub.Description,
                         b.Title,
                         b.Image,
                         IF(ba.ID IS NULL,FALSE,TRUE) AS Auto,
-                        b.Type
+                        b.Type,
+                        b.Display,
+                        b.Sort
                    FROM users_badges AS ub
                    JOIN badges AS b ON b.ID = ub.BadgeID
                    LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
-                   WHERE ub.UserID = $UserID
-                   ORDER BY b.Sort");
+                   WHERE ub.UserID = $UserID AND b.Display=0
+                   ORDER BY b.Sort $Limit)
+                UNION
+                    (SELECT
+                        ub.ID,
+                        ub.BadgeID,
+                        ub.Description,
+                        b.Title,
+                        b.Image,
+                        IF(ba.ID IS NULL,FALSE,TRUE) AS Auto,
+                        b.Type,
+                        b.Display,
+                        b.Sort
+                   FROM users_badges AS ub
+                   JOIN badges AS b ON b.ID = ub.BadgeID
+                   LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
+                   WHERE ub.UserID = $UserID AND b.Display=1
+                   ORDER BY b.Sort $Limit)
+                UNION
+                    (SELECT
+                        ub.ID,
+                        ub.BadgeID,
+                        ub.Description,
+                        b.Title,
+                        b.Image,
+                        IF(ba.ID IS NULL,FALSE,TRUE) AS Auto,
+                        b.Type,
+                        b.Display,
+                        b.Sort
+                   FROM users_badges AS ub
+                   JOIN badges AS b ON b.ID = ub.BadgeID
+                   LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
+                   WHERE ub.UserID = $UserID AND b.Display>1
+                   ORDER BY b.Sort $Limit)
+                ORDER BY Display, Sort
+                ");
         $UserBadges = $DB->to_array();
-        $Cache->cache_value('user_badges_'.$UserID, $UserBadges);
+        $Cache->cache_value('user_badges_'.$UserID.$extra, $UserBadges);
     }
-    if ($Limit>0) $UserBadges = array_slice($UserBadges, 0, $Limit, true);
+    //if ($Limit>0) $UserBadges = array_slice($UserBadges, 0, $Limit, true);
     return $UserBadges;
 }
 
@@ -608,11 +649,18 @@ function get_user_shop_badges_ids($UserID){
 }
 
 
-function print_badges_array($UserBadges){ 
-                            
+function print_badges_array($UserBadges, $UserLinkID = false){ 
+    $LastRow=0;
     foreach ($UserBadges as $Badge) {
-        list($ID,$BadgeID, $Tooltip, $Name, $Image ) = $Badge;
-        echo '<div class="badge"><img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="The '.$Name.'. '.$Tooltip.'" alt="'.$Name.'" /></div>';
+        list($ID,$BadgeID, $Tooltip, $Name, $Image, $Auto, $Type, $Row ) = $Badge;
+        if($LastRow!=$Row) {
+            echo "<br/>";
+            $LastRow=$Row;
+        }
+        if($UserLinkID && is_number($UserLinkID))
+            echo '<div class="badge"><a href="user.php?id='.$UserLinkID.'#userbadges"><img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="The '.$Name.'. '.$Tooltip.'" alt="'.$Name.'" /></a></div>';
+        else
+            echo '<div class="badge"><img src="'.STATIC_SERVER.'common/badges/'.$Image.'" title="The '.$Name.'. '.$Tooltip.'" alt="'.$Name.'" /></div>';
     }
   
 }

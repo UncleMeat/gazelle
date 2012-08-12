@@ -456,10 +456,10 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
 			<img src="<?=STATIC_SERVER?>common/avatars/default.png"  class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
 	<? }  
                   
-        $UserBadges = get_user_badges($AuthorID,18);
+        $UserBadges = get_user_badges($AuthorID);
         if( !empty($UserBadges) ) {  ?>
                <div class="badges">
-<?                  print_badges_array($UserBadges);  ?>
+<?                  print_badges_array($UserBadges, $AuthorID);  ?>
                </div>
 <?      }      ?>
            </td>

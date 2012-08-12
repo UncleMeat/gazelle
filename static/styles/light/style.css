@@ -1528,7 +1528,9 @@ td.badgesrow, .badgesrow {
 }
 
 .badges {
+    margin-left:6px;
     padding: 4px;
+    text-align: left;
 }
 
 .badges img {

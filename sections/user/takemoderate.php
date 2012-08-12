@@ -330,6 +330,7 @@ if (is_array($AddBadges) && check_perms('users_edit_badges')) {
  
       $Cache->delete_value('user_badges_ids_'.$UserID);
       $Cache->delete_value('user_badges_'.$UserID);
+      $Cache->delete_value('user_badges_'.$UserID.'_limit');
       $EditSummary[] = 'Badge'.(count($Badges)>1?'s':'')." added: $BadgesAdded";
 }
 
@@ -356,6 +357,7 @@ if (is_array($DelBadges) && check_perms('users_edit_badges')) {
       $DB->query("DELETE FROM users_badges WHERE ID IN ( $SQL_IN )");
       $Cache->delete_value('user_badges_ids_'.$UserID);
       $Cache->delete_value('user_badges_'.$UserID);
+      $Cache->delete_value('user_badges_'.$UserID.'_limit');
       $EditSummary[] = 'Badge'.(count($DelBadges)>1?'s':'')." removed: $BadgesRemoved";
 }
 

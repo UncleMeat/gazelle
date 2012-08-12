@@ -7,7 +7,7 @@ Finish the GenerateJS stuff
 
 class VALIDATE {
 	var $Fields=array();
-
+      public $OnlyValidateKeys =false;
 	function SetFields($FieldName,$Required,$FieldType,$ErrorMessage,$Options=array()) {
 		$this->Fields[$FieldName]['Type']=strtolower($FieldType);
 		$this->Fields[$FieldName]['Required']=$Required;
@@ -41,144 +41,155 @@ class VALIDATE {
 	function ValidateForm($ValidateArray, $Text = null) {
 		reset($this->Fields);
 		foreach ($this->Fields as $FieldKey => $Field) {
-			$ValidateVar=$ValidateArray[$FieldKey];
+                $ValidateRaw=$ValidateArray[$FieldKey];
+                if (is_array($ValidateRaw))
+                    $VarArray = $ValidateRaw;
+                else {
+                    $VarArray = array();
+                    $VarArray[] = $ValidateRaw;
+                }
+                foreach ($VarArray as $Key=>$ValidateVar) {
+                      if (is_array($this->OnlyValidateKeys) && !in_array($Key, $this->OnlyValidateKeys))
+                              continue;
+                      
+                      if($ValidateVar!="" || !empty($Field['Required']) || $Field['Type']=="date") {
+                            if($Field['Type']=="string") {
+                                  if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
+                                  if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
 
-			if($ValidateVar!="" || !empty($Field['Required']) || $Field['Type']=="date") {
-				if($Field['Type']=="string") {
-					if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
-					if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
+                                  if(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
+                                  elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
 
-					if(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
-					elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
+                            } elseif($Field['Type']=="number") {
+                                  if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=''; }
+                                  if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=0; }
 
-				} elseif($Field['Type']=="number") {
-					if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=''; }
-					if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=0; }
+                                  $Match='0-9';
+                                  if(isset($Field['AllowPeriod'])) { $Match.='.'; }
+                                  if(isset($Field['AllowComma'])) { $Match.=','; }
 
-					$Match='0-9';
-					if(isset($Field['AllowPeriod'])) { $Match.='.'; }
-					if(isset($Field['AllowComma'])) { $Match.=','; }
+                                  if(preg_match('/[^'.$Match.']/', $ValidateVar) || strlen($ValidateVar)<1) { return $Field['ErrorMessage']; }
+                                  elseif($MaxLength!="" && $ValidateVar>$MaxLength) { return $Field['ErrorMessage']."!!"; }
+                                  elseif($ValidateVar<$MinLength) { return $Field['ErrorMessage']."$MinLength"; }
 
-					if(preg_match('/[^'.$Match.']/', $ValidateVar) || strlen($ValidateVar)<1) { return $Field['ErrorMessage']; }
-					elseif($MaxLength!="" && $ValidateVar>$MaxLength) { return $Field['ErrorMessage']."!!"; }
-					elseif($ValidateVar<$MinLength) { return $Field['ErrorMessage']."$MinLength"; }
+                            } elseif($Field['Type']=="email") {
+                                  if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
+                                  if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=6; }
 
-				} elseif($Field['Type']=="email") {
-					if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
-					if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=6; }
+                                  if(!preg_match("/^".EMAIL_REGEX."$/i", $ValidateVar)) { return $Field['ErrorMessage']; }
+                                  elseif(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
+                                  elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
 
-					if(!preg_match("/^".EMAIL_REGEX."$/i", $ValidateVar)) { return $Field['ErrorMessage']; }
-					elseif(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
-					elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
+                            } elseif($Field['Type']=="link") {
+                                  if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
+                                  if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=10; }
 
-				} elseif($Field['Type']=="link") {
-					if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
-					if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=10; }
+                                  if(!preg_match('/^(https?):\/\/([a-z0-9\-\_]+\.)+([a-z]{1,5}[^\.])(\/[^<>]+)*$/i', $ValidateVar)) { return $Field['ErrorMessage']; }
+                                  elseif(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']." (must be < $MaxLength)"; }
+                                  elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']." (must be > $MinLength)"; }
 
-					if(!preg_match('/^(https?):\/\/([a-z0-9\-\_]+\.)+([a-z]{1,5}[^\.])(\/[^<>]+)*$/i', $ValidateVar)) { return $Field['ErrorMessage']; }
-					elseif(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']." (must be < $MaxLength)"; }
-					elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']." (must be > $MinLength)"; }
+                            } elseif($Field['Type']=="username") {
+                                    if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=20; }
+                                    if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
 
-				} elseif($Field['Type']=="username") {
-                                if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=20; }
-                                if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
+                                    if(preg_match('/[^a-z0-9_\-?]/i', $ValidateVar)) { return $Field['ErrorMessage']; }
+                                    elseif(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
+                                    elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
 
-                                if(preg_match('/[^a-z0-9_\-?]/i', $ValidateVar)) { return $Field['ErrorMessage']; }
-                                elseif(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
-                                elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
+                            } elseif($Field['Type']=="checkbox") {
+                                    if(!isset($ValidateArray[$FieldKey])) { return $Field['ErrorMessage']; }
 
-				} elseif($Field['Type']=="checkbox") {
-                                if(!isset($ValidateArray[$FieldKey])) { return $Field['ErrorMessage']; }
+                            } elseif($Field['Type']=="compare") {
+                                    if($ValidateArray[$Field['CompareField']]!=$ValidateVar) { return $Field['ErrorMessage']; }
 
-				} elseif($Field['Type']=="compare") {
-                                if($ValidateArray[$Field['CompareField']]!=$ValidateVar) { return $Field['ErrorMessage']; }
+                            } elseif($Field['Type']=="inarray") {
+                                    if(array_search($ValidateVar, $Field['InArray'])===false) { return $Field['ErrorMessage']; }
 
-				} elseif($Field['Type']=="inarray") {
-                                if(array_search($ValidateVar, $Field['InArray'])===false) { return $Field['ErrorMessage']; }
+                            } elseif($Field['Type']=="regex") {
+                                    if(!preg_match($Field['Regex'], $ValidateVar)) { return $Field['ErrorMessage']; }
 
-				} elseif($Field['Type']=="regex") {
-                                if(!preg_match($Field['Regex'], $ValidateVar)) { return $Field['ErrorMessage']; }
-                         
-                                
-                                
-				} elseif($Field['Type']=="image") {
-                            
-                            // Validate an imageurl : 1) valid url form 2)length 3)whilelist
-                                // Get parameters to validate against from fields set  
-                                if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
-                                if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=10; }
 
-                                if(isset($Field['Regex'])) { $WLRegex=$Field['Regex']; } else { $WLRegex='/nohost.com/'; }
-                              
-                                // get validation result
-                                $result = ValidateImageUrl($ValidateVar, $MinLength, $MaxLength, $WLRegex); 
-                                if ($result !== TRUE){ return $result; } 
-                               
-				} elseif($Field['Type']=="desc") {
-                        
-                                // desc Type gets 3 checks for the price of one 
-                                // 1)desc length 2)imglink as valid url 3)imglinks against whitelist
-                                // this kind of breaks the pattern of this class but screw it... 
-                                // we will hardcode changes to return messages as this class matches fields by 
-                                // name (so one check per field only) and I dont want to redesign it
-                            
-                                if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
-                                if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
-                                
-                                if(isset($Field['MinImages'])) { $MinImages=$Field['MinImages']; } else { $MinImages=0; }
 
-                                if (!$Text){
-                                    include(SERVER_ROOT . '/classes/class_text.php');
-                                    $Text = new TEXT();
-                                }
-                                $TextLength =  strlen($Text->db_clean_search($ValidateVar));
-                                $RealLength =  strlen($ValidateVar);
-                                
-                                if($TextLength>$MaxLength) { 
-                                    $Field['ErrorMessage'] =  "Error: ".$Field['ErrorMessage']." must be less than $MaxLength characters long.";  
-                                    $Field['ErrorMessage'] .= " (counted:$TextLength all:$RealLength)";
-                                    return $Field['ErrorMessage'];
-                                }
-                                elseif($TextLength<$MinLength) { 
-                                    $Field['ErrorMessage'] =  "Error: ".$Field['ErrorMessage']." must be more than $MinLength characters long.";  
-                                    $Field['ErrorMessage'] .= " (counted:$TextLength all:$RealLength)";
-                                    return $Field['ErrorMessage'];
-                                }
-                              
-                              
-                                //  Check image urls inside the desc text against the whitelist.
-                                //  the whitelist is set inside the $Field['Regex'] var (in options arrary in ->SetFields)
-                            
-                                if(isset($Field['Regex'])) { $WLRegex=$Field['Regex']; } else { $WLRegex='/nohost.com/'; }
-                               
-                    
-                                // get all the image urls in the field ; inside [img]url[/img] && [img=url] tags
-                                $num = preg_match_all('#(?|\[img\](.*?)\[/img\]|\[img\=(.*?)\])#ism', $ValidateVar, $imageurls);
-                            
-                                if($num && $num >= $MinImages) { // if there are no img tags then it validates 
-                                    for ($j=0;$j<$num;$j++) {  
-                                         // validate each image url  
-                                         // (for the moment use hardcoded image lengths but ideally they should
-                                         // probably be taken from some new option fields).
-                                        $result = ValidateImageUrl($imageurls[1][$j], 12, 255, $WLRegex); 
-                                        if ($result !== TRUE){ return $Field['ErrorMessage'].' field: ' .$result; } 
-                                     }
-                                } elseif($MinImages> 0 && $num < $MinImages) {  // if there are no img tags then it validates unless required flag is set
-                                    //if (!empty($Field['Required'])) {   
-                                        // this kind of breaks the pattern of this class but screw it... 
-                                        // we will hardcode a change to return message to avoid having to do the 
-                                        // preg_match_all(regex) again or adding another return msg variable
-                                        if ($MinImages == 1)
-                                            $Field['ErrorMessage'] = "There are no images in your description. You are required to have screenshots for every scene.";
-                                        else
-                                            $Field['ErrorMessage'] = "There are not enough images in your description. You are required to have screenshots for every scene.";
-                                        
+                            } elseif($Field['Type']=="image") {
+
+                                // Validate an imageurl : 1) valid url form 2)length 3)whilelist
+                                    // Get parameters to validate against from fields set  
+                                    if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
+                                    if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=10; }
+
+                                    if(isset($Field['Regex'])) { $WLRegex=$Field['Regex']; } else { $WLRegex='/nohost.com/'; }
+
+                                    // get validation result
+                                    $result = ValidateImageUrl($ValidateVar, $MinLength, $MaxLength, $WLRegex); 
+                                    if ($result !== TRUE){ return $result; } 
+
+                            } elseif($Field['Type']=="desc") {
+                                    
+                                    // desc Type gets 3 checks for the price of one 
+                                    // 1)desc length 2)imglink as valid url 3)imglinks against whitelist
+                                    // this kind of breaks the pattern of this class but screw it... 
+                                    // we will hardcode changes to return messages as this class matches fields by 
+                                    // name (so one check per field only) and I dont want to redesign it
+
+                                    if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
+                                    if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
+
+                                    if(isset($Field['MinImages'])) { $MinImages=$Field['MinImages']; } else { $MinImages=0; }
+
+                                    if (!$Text){
+                                        include(SERVER_ROOT . '/classes/class_text.php');
+                                        $Text = new TEXT();
+                                    }
+                                    $TextLength =  strlen($Text->db_clean_search($ValidateVar));
+                                    $RealLength =  strlen($ValidateVar);
+
+                                    if($TextLength>$MaxLength) { 
+                                        $Field['ErrorMessage'] =  "Error: ".$Field['ErrorMessage']." must be less than $MaxLength characters long.";  
+                                        $Field['ErrorMessage'] .= " (counted:$TextLength all:$RealLength)";
                                         return $Field['ErrorMessage'];
-                                    //} 
-                                }
-                        
-                        }
-			}  // if (dovalidation)
+                                    }
+                                    elseif($TextLength<$MinLength) { 
+                                        $Field['ErrorMessage'] =  "Error: ".$Field['ErrorMessage']." must be more than $MinLength characters long.";  
+                                        $Field['ErrorMessage'] .= " (counted:$TextLength all:$RealLength)";
+                                        return $Field['ErrorMessage'];
+                                    }
+
+
+                                    //  Check image urls inside the desc text against the whitelist.
+                                    //  the whitelist is set inside the $Field['Regex'] var (in options arrary in ->SetFields)
+
+                                    if(isset($Field['Regex'])) { $WLRegex=$Field['Regex']; } else { $WLRegex='/nohost.com/'; }
+
+
+                                    // get all the image urls in the field ; inside [img]url[/img] && [img=url] tags
+                                    $num = preg_match_all('#(?|\[img\](.*?)\[/img\]|\[img\=(.*?)\])#ism', $ValidateVar, $imageurls);
+
+                                    if($num && $num >= $MinImages) { // if there are no img tags then it validates 
+                                        for ($j=0;$j<$num;$j++) {  
+                                             // validate each image url  
+                                             // (for the moment use hardcoded image lengths but ideally they should
+                                             // probably be taken from some new option fields).
+                                            $result = ValidateImageUrl($imageurls[1][$j], 12, 255, $WLRegex); 
+                                            if ($result !== TRUE){ return $Field['ErrorMessage'].' field: ' .$result; } 
+                                         }
+                                    } elseif($MinImages> 0 && $num < $MinImages) {  // if there are no img tags then it validates unless required flag is set
+                                        //if (!empty($Field['Required'])) {   
+                                            // this kind of breaks the pattern of this class but screw it... 
+                                            // we will hardcode a change to return message to avoid having to do the 
+                                            // preg_match_all(regex) again or adding another return msg variable
+                                            if ($MinImages == 1)
+                                                $Field['ErrorMessage'] = "There are no images in your description. You are required to have screenshots for every scene.";
+                                            else
+                                                $Field['ErrorMessage'] = "There are not enough images in your description. You are required to have screenshots for every scene.";
+
+                                            return $Field['ErrorMessage'];
+                                        //} 
+                                    }
+
+                            }
+                        }  // if (dovalidation)
+                    
+                    }
 		} // foreach
 	} // function
  

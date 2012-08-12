@@ -104,10 +104,10 @@ foreach ($Forums as $Forum) {
 	} else {
 		$Read = 'read';
 	}
-//  Removed per request, as distracting .. put back in and lets see what it looks like..
+/*  Removed per request, as distracting  
 	if($Locked) { $Read .= "_locked"; }
 	if($Sticky) { $Read .= "_sticky"; }
- 
+ */
 ?>
 	<tr class="row<?=$Row?>">
 		<td class="<?=$Read?>" title="<?=ucfirst($Read)?>"></td>

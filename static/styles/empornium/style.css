@@ -1461,7 +1461,9 @@ td.badgesrow, .badgesrow {
     padding:0px;
 }
 .badges {
+    margin-left:6px;
     padding: 4px;
+    text-align: left;
 }
 .badges img {
     max-width: 80px;

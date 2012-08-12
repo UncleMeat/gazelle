@@ -75,6 +75,7 @@ if(!empty($ShopItem) && is_array($ShopItem)){
           
                 $Cache->delete_value('user_badges_ids_'.$UserID);
                 $Cache->delete_value('user_badges_'.$UserID);
+                $Cache->delete_value('user_badges_'.$UserID.'_limit');
                 $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
                 $ResultMessage=$Summary;
                 
