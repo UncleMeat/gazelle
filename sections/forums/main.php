@@ -98,16 +98,16 @@ foreach ($Forums as $Forum) {
 <?
 		$OpenTable = true;
 	}
-
-	if((!$Locked || $Sticky) && $LastPostID != 0 && ((empty($LastRead[$LastTopicID]) || $LastRead[$LastTopicID]['PostID'] < $LastPostID) && strtotime($LastTime)>$LoggedUser['CatchupTime'])) {
+      // (!$Locked || $Sticky) && //-  remove this and let locked unsticky topics show up too if a staff has posted in it
+	if( $LastPostID != 0 && ((empty($LastRead[$LastTopicID]) || $LastRead[$LastTopicID]['PostID'] < $LastPostID) && strtotime($LastTime)>$LoggedUser['CatchupTime'])) {
 		$Read = 'unread';
 	} else {
 		$Read = 'read';
 	}
-/* Removed per request, as distracting
+//  Removed per request, as distracting .. put back in and lets see what it looks like..
 	if($Locked) { $Read .= "_locked"; }
 	if($Sticky) { $Read .= "_sticky"; }
-*/
+ 
 ?>
 	<tr class="row<?=$Row?>">
 		<td class="<?=$Read?>" title="<?=ucfirst($Read)?>"></td>
