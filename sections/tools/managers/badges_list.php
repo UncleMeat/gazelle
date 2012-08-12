@@ -40,9 +40,9 @@ show_header('Badges','badges');
                     <td width="260px">Select Image</td>
                     <td width="18%">Badge Set</td>
                     <td width="12%">Rank</td>
-                    <td width="12%">Sort</td>
-                    <td width="80px">Type</td>
                     <td width="30px">Display</td>
+                    <td width="30px">Sort</td>
+                    <td width="80px">Type</td>
                     <td width="12%">Cost</td>
             </tr> 
             <?
@@ -78,7 +78,10 @@ show_header('Badges','badges');
                         <input class="medium" type="text" name="rank[<?=$ID?>]" id="rank<?=$ID?>" value="1" onchange="Set_Edit('<?=$ID?>')" title="Rank (Within a set badges with a higher rank will displace badges with a lower rank)"/>
                     </td>
                     <td>
-                        <input class="medium" type="text" name="sort[<?=$ID?>]" id="sort<?=$ID?>" value="0" onchange="Set_Edit('<?=$ID?>')" title="Sort"/>
+                        <input style="width:30px" type="text" name="row[<?=$ID?>]" id="row<?=$ID?>" value="0" onchange="Set_Edit('<?=$ID?>')" title="Row to display this badge in (0 is first)"/>
+                    </td>
+                    <td>
+                        <input style="width:30px" type="text" name="sort[<?=$ID?>]" id="sort<?=$ID?>" value="0" onchange="Set_Edit('<?=$ID?>')" title="Sort"/>
                     </td>
                     <td>
                         <select name="type[<?=$ID?>]" id="type<?=$ID?>" onchange="Set_Edit('<?=$ID?>')" title="Badge Type">
@@ -86,9 +89,6 @@ show_header('Badges','badges');
                                 <option value="<?=$valtype?>"><?=$valtype?>&nbsp;&nbsp;</option>
 <?                          } ?>
                         </select>
-                    </td>
-                    <td>
-                        <input style="width:30px" type="text" name="row[<?=$ID?>]" id="row<?=$ID?>" value="0" onchange="Set_Edit('<?=$ID?>')" title="Row to display this badge in (0 is first)"/>
                     </td>
                     <td>
                         <input class="medium" type="text" name="cost[<?=$ID?>]" id="cost<?=$ID?>" value="" onchange="Set_Edit('<?=$ID?>')" title="Cost (Only used if item is a shop item)"/>
@@ -157,14 +157,14 @@ show_header('Badges','badges');
                 <td width="80px">Select Image</td>
                 <td width="18%">Badge Set</td>
                 <td width="12%">Rank</td>
-                <td width="12%">Sort</td>
-                <td>Type</td>
                 <td width="30px">Display</td>
+                <td width="30px">Sort</td>
+                <td width="80px">Type</td>
                 <td width="12%">Cost</td>
             </tr> 
 <?  
             $DB->query("SELECT ID, Badge, Rank, Type, Display, Sort, Cost, Title, Description, Image
-                  FROM badges ORDER BY Sort, Rank");
+                  FROM badges ORDER BY Display, Sort, Rank");
 
             while(list($ID, $Badge, $Rank, $Type, $Display, $Sort, $Cost, $Title, $Description, $Image) = $DB->next_record()){
                 $Row = ($Row === 'a' ? 'b' : 'a');  
@@ -200,7 +200,10 @@ show_header('Badges','badges');
                         <input class="medium" type="text" name="rank[<?=$ID?>]" value="<?=display_str($Rank)?>" onchange="Set_Edit(<?=$ID?>)" title="Rank (Within a set badges with a higher rank will displace badges with a lower rank)"/>
                     </td>
                     <td>
-                        <input class="medium" type="text" name="sort[<?=$ID?>]" value="<?=display_str($Sort)?>" onchange="Set_Edit(<?=$ID?>)" title="Sort"/>
+                        <input style="width:30px" type="text" name="row[<?=$ID?>]" value="<?=display_str($Display)?>" onchange="Set_Edit('<?=$ID?>')" title="Row to display this badge in (0 is first)"/>
+                    </td>
+                    <td>
+                        <input style="width:30px" type="text" name="sort[<?=$ID?>]" value="<?=display_str($Sort)?>" onchange="Set_Edit(<?=$ID?>)" title="Sort"/>
                     </td>
                     <td>
                         <select name="type[<?=$ID?>]" title="Badge Type" onchange="Set_Edit(<?=$ID?>)">
@@ -208,9 +211,6 @@ show_header('Badges','badges');
                                 <option value="<?=$valtype?>"<?=($valtype==$Type?' selected="selected"':'')?>><?=$valtype?>&nbsp;&nbsp;</option>
 <?                          } ?>
                         </select>
-                    </td>
-                    <td>
-                          <input style="width:30px" type="text" name="row[<?=$ID?>]" value="<?=display_str($Display)?>" onchange="Set_Edit('<?=$ID?>')" title="Row to display this badge in (0 is first)"/>
                     </td>
                     <td>
                         <input class="medium" type="text" name="cost[<?=$ID?>]" value="<?=display_str($Cost)?>" onchange="Set_Edit(<?=$ID?>)" title="Cost (Only used if item is a shop item)"/>
@@ -221,10 +221,10 @@ show_header('Badges','badges');
                 </tr>
 <?          } // style="border-top: 1px solid;"  ?>
                 <tr class="rowb">
-                    <td colspan="7" style="text-align: right;"> 
+                    <td colspan="6" style="text-align: right;"> 
                         <input type="submit" name="saveall" value="Save changes" title="Save changes for all badges selected for editing" />
                     </td>
-                    <td colspan="3" style="text-align: right;"> 
+                    <td colspan="4" style="text-align: right;"> 
                         <input type="submit" name="delselected" value="Delete selected" title="Delete selected badges." /> 
                     </td>
                 </tr>
