@@ -126,7 +126,7 @@ $Cache->delete_value('available_badges');
 
  
 if (isset($_REQUEST['returntop'])) $ReturnID='';
-else $ReturnID .= "#$ReturnID";
+else $ReturnID = "#$ReturnID";
 // Go back
 header("Location: tools.php?action=badges_list$ReturnID");
 
