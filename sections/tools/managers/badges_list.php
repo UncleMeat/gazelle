@@ -32,8 +32,8 @@ show_header('Badges','badges');
             <tr class="colhead">
                     <td width="10px" rowspan="2">Add</td>
                     <td width="50px" rowspan="2">Image</td>
-                    <td>Title</td>
-                    <td colspan="6">Description</td> 
+                    <td colspan="2">Title</td>
+                    <td colspan="5">Description</td> 
                     <td width="40px" rowspan="2"></td>
             </tr>
             <tr class="colhead">
@@ -57,10 +57,10 @@ show_header('Badges','badges');
                     <td rowspan="2" class="center" id="image<?=$ID?>" style="vertical-align: top;width:40px"> <a id="<?=$ID?>"></a>
                         <img src="<?=STATIC_SERVER.'common/badges/'.$Image?>" title="<?=$Image?>" alt="<?=$Image?>" />
                     </td>
-                    <td>
-                        <input class="medium" type="text" name="title[<?=$ID?>]" id="title<?=$ID?>" value="new title" onchange="Set_Edit('<?=$ID?>')" title="Title"/>
+                    <td colspan="2">
+                        <input class="long" type="text" name="title[<?=$ID?>]" id="title<?=$ID?>" value="new title" onchange="Set_Edit('<?=$ID?>')" title="Title"/>
                     </td>
-                    <td colspan="6">
+                    <td colspan="5">
                         <input class="long" type="text" name="desc[<?=$ID?>]" id="desc<?=$ID?>" value="awarded for XXXXXX. This user has doneY/achievedZ" onchange="Set_Edit('<?=$ID?>')" title="Description"/>
                     </td> 
                     <td rowspan="2">
@@ -149,8 +149,8 @@ show_header('Badges','badges');
             <tr class="colhead">
                 <td width="10px" rowspan="2">ID<br/>-<br/>Edit</td>
                 <td width="40px" rowspan="2">Image</td>
-                <td width="80px">Title</td>
-                <td colspan="6">Description</td>
+                <td colspan="2" >Title</td>
+                <td colspan="5">Description</td>
                 <td width="10px" rowspan="2">Delete</td>
             </tr>
             <tr class="colhead">
@@ -178,10 +178,10 @@ show_header('Badges','badges');
                     <td  rowspan="2" class="center" id="image<?=$ID?>">
                         <img src="<?=STATIC_SERVER.'common/badges/'.$Image?>" title="<?=$Image?>" alt="<?=$Image?>" />
                     </td>
-                    <td>
-                        <input class="medium" type="text" name="title[<?=$ID?>]" value="<?=display_str($Title)?>" title="Title" onchange="Set_Edit(<?=$ID?>)"/>
+                    <td colspan="2">
+                        <input class="long" type="text" name="title[<?=$ID?>]" value="<?=display_str($Title)?>" title="Title" onchange="Set_Edit(<?=$ID?>)"/>
                     </td>
-                    <td colspan="6">
+                    <td colspan="5">
                         <input class="long" type="text" name="desc[<?=$ID?>]" value="<?=display_str($Description)?>" title="Description" onchange="Set_Edit(<?=$ID?>)"/>
                     </td>
                     <td rowspan="2"> 
