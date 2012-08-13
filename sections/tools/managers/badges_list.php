@@ -41,7 +41,7 @@ show_header('Badges','badges');
                     <td width="18%">Badge Set</td>
                     <td width="12%">Rank</td>
                     <td width="30px">Display</td>
-                    <td width="30px">Sort</td>
+                    <td width="60px">Sort</td>
                     <td width="80px">Type</td>
                     <td width="12%">Cost</td>
             </tr> 
@@ -84,7 +84,7 @@ show_header('Badges','badges');
                         <input style="width:30px" type="text" name="row[<?=$ID?>]" id="row<?=$ID?>" value="0" onchange="Set_Edit('<?=$ID?>')" title="Row to display this badge in (0 is first)"/>
                     </td>
                     <td>
-                        <input style="width:30px" type="text" name="sort[<?=$ID?>]" id="sort<?=$ID?>" value="0" onchange="Set_Edit('<?=$ID?>')" title="Sort"/>
+                        <input style="width:60px" type="text" name="sort[<?=$ID?>]" id="sort<?=$ID?>" value="0" onchange="Set_Edit('<?=$ID?>')" title="Sort"/>
                     </td>
                     <td>
                         <select name="type[<?=$ID?>]" id="type<?=$ID?>" onchange="Set_Edit('<?=$ID?>')" title="Badge Type">
@@ -167,7 +167,7 @@ show_header('Badges','badges');
                 <td width="18%">Badge Set</td>
                 <td width="12%">Rank</td>
                 <td width="30px">Display</td>
-                <td width="30px">Sort</td>
+                <td width="60px">Sort</td>
                 <td width="80px">Type</td>
                 <td width="12%">Cost</td>
             </tr> 
@@ -212,7 +212,7 @@ show_header('Badges','badges');
                         <input style="width:30px" type="text" name="row[<?=$ID?>]" value="<?=display_str($Display)?>" onchange="Set_Edit('<?=$ID?>')" title="Row to display this badge in (0 is first)"/>
                     </td>
                     <td>
-                        <input style="width:30px" type="text" name="sort[<?=$ID?>]" value="<?=display_str($Sort)?>" onchange="Set_Edit(<?=$ID?>)" title="Sort"/>
+                        <input style="width:60px" type="text" name="sort[<?=$ID?>]" value="<?=display_str($Sort)?>" onchange="Set_Edit(<?=$ID?>)" title="Sort"/>
                     </td>
                     <td>
                         <select name="type[<?=$ID?>]" title="Badge Type" onchange="Set_Edit(<?=$ID?>)">
