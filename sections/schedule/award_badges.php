@@ -158,7 +158,7 @@ foreach($AutoActions as $AutoAction) {
             foreach($UserIDs as $UserID) {
                 if ($SendPM){
                     send_pm($UserID, 0, "Congratulations you have been awarded the $Name", 
-                            "[center][br][br][img]http://".SITE_URL.'/'.STATIC_SERVER."common/badges/{$Image}[/img][br][br][size=5][color=white][bg=#0261a3][br]{$Description}[br][br][/bg][/color][/size][/center]");
+                            "[center][br][br][img]http://".NONSSL_SITE_URL.'/'.STATIC_SERVER."common/badges/{$Image}[/img][br][br][size=5][color=white][bg=#0261a3][br]{$Description}[br][br][/bg][/color][/size][/center]");
                 }
                 if (!in_array($UserID, $LuckyUsers)) $LuckyUsers[] = $UserID;
             }
