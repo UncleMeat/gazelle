@@ -103,7 +103,7 @@ function print_categories($ElementID, $SelectedCat=-1){
                 </tr>
                 <tr class="rowb">
                     <td colspan="6"> 
-                        <span id="desc<?=$ID?>"></span>
+                        <span id="descr<?=$ID?>"></span>
                     </td>
                 </tr>
                 <tr class="rowa">

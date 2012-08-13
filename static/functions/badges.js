@@ -53,7 +53,7 @@ function Fill_From(fillfrom, elementnames){
             if (fillid!=id){
                 for(var l=0;l<elementnames.length;l++){
                     var name = '#' + elementnames[l];
-                    if(name == '#desc' || name == '#image')
+                    if(name == '#descr' || name == '#image')
                         $(name+fillid).raw().innerHTML = $(name+id).raw().innerHTML;
                     else if(name == '#sendpm' || name == '#active')
                         $(name+fillid).raw().checked = $(name+id).raw().checked;
