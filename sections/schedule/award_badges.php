@@ -138,7 +138,7 @@ foreach($AutoActions as $AutoAction) {
         
         if ($CountUsers > 0) {
  
-            $SQL_IN = implode(',',$UserIDs);
+            $SQL_IN = implode(', ',$UserIDs);
 
             $DB->query("UPDATE users_info SET AdminComment = CONCAT('".sqltime()." - Badge ". db_string($Name)." ". db_string($Description)." by Scheduler\n', AdminComment) WHERE UserID IN ($SQL_IN)");
 
