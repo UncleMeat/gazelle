@@ -98,7 +98,7 @@ function print_categories($ElementID, $SelectedCat=-1){
                           <input class="medium"  type="checkbox" name="active[<?=$ID?>]" id="active<?=$ID?>" value="1" checked="checked" onchange="Set_Edit('<?=$ID?>')" title="If checked this award will be automatically distributed to users who meet the specified requirements" />
                     </td>
                     <td rowspan="2"> 
-                        <a href="#" onclick="Fill_From(<?=$i?>,['badgeid','catid','image','type','value','sendpm','active','desc'])" title="fill other add forms with this forms values">fill</a>
+                        <a href="#" onclick="Fill_From(<?=$i?>,['badgeid','catid','image','type','value','sendpm','active','descr'])" title="fill other add forms with this forms values">fill</a>
                     </td>
                 </tr>
                 <tr class="rowb">
