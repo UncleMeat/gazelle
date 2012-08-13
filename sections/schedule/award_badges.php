@@ -18,6 +18,7 @@ $DB->query("SELECT BadgeID, Badge, Rank, Title, Action, SendPM, Value, CategoryI
 $AutoActions = $DB->to_array();
 
 //echo count($AutoActions). " Automatic Awards in schedule.\n";
+$LuckyUsers = array();
 
 foreach($AutoActions as $AutoAction) {
     list($BadgeID, $Badge, $Rank, $Name, $Action, $SendPM, $Value, $CategoryID, $Description, $Image) = $AutoAction;
@@ -153,16 +154,23 @@ foreach($AutoActions as $AutoAction) {
             // IF we want to send users pm's when they get an award we should do it here, 
             // BUT it means looping through each user and sending the pm 
             // (no way to shortcut afaics because you need the inserted conv_id to link message and conversation) 
-            if ($SendPM){
-                foreach($UserIDs as $UserID) {
+            
+            foreach($UserIDs as $UserID) {
+                if ($SendPM){
                     send_pm($UserID, 0, "Congratulations you have been awarded the $Name", 
                             "[center][br][br][img]http://".SITE_URL.'/'.STATIC_SERVER."common/badges/{$Image}[/img][br][br][size=5][color=white][bg=#0261a3][br]{$Description}[br][br][/bg][/color][/size][/center]");
                 }
+                if (!in_array($UserID, $LuckyUsers)) $LuckyUsers[] = $UserID;
             }
         }
     }
                 
 }  // end foreach auto actions
 
+foreach($LuckyUsers as $UserID) {
+
+    $Cache->delete_value('user_badges_'.$UserID);
+    $Cache->delete_value('user_badges_'.$UserID.'_limit');
+}
 
 ?>
