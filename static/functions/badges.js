@@ -24,7 +24,7 @@ function Select_Badge(id){
             } catch (er) {}
             
             $('#image'+id).raw().innerHTML = '<img src="'+image+'" title="'+name+'. '+desc+'" alt="'+name+'" />';
-            $('#desc'+id).raw().innerHTML = desc;
+            $('#descr'+id).raw().innerHTML = desc;
             Set_Edit(id);
         }); 
 }
