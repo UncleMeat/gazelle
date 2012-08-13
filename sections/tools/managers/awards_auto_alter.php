@@ -7,10 +7,10 @@ authorize();
 if(isset($_POST['delselected'])) {
     
     $AwardIDs = $_POST['deleteids'];  
-    if (!is_array($AwardIDs)) error("not array");
+    if (!is_array($AwardIDs)) error("Nothing selected to delete");
         
     foreach ($AwardIDs as $bID) {
-        if (!is_number($bID))  error("0 not num");  
+        if (!is_number($bID))  error(0);  
     }
     $AwardIDs = implode(',', $AwardIDs);
         
@@ -20,7 +20,7 @@ if(isset($_POST['delselected'])) {
     
 } else {
 	
-    if (!is_array($_POST['id'])) error(0);
+    if (!is_array($_POST['id'])) error("Nothing selected to add");
     $AwardIDs = $_POST['id'];
     
     $DB->query("SELECT ID FROM badges");
@@ -77,40 +77,17 @@ if(isset($_POST['delselected'])) {
 			VALUES $SQL_values");  
             $ReturnID = $DB->inserted_id(); // return user to first saved item on return
     }
-    
-	
-    
-    /*
-      if ( !in_array($_POST['type'], $AutoAwardTypes) ) { error(0); }
      
-      $BadgeId = (int)$_POST['badgeid'];
-      $Action=db_string($_POST['type']);
-      $Active=$_POST['active']==1?1:0;
-      $SendPm=$_POST['sendpm']==1?1:0;
-      $Value=(int)$_POST['value'];
-      $CatId=(int)$_POST['catid'];
-      
-	if($_POST['submit'] == 'Edit'){ //Edit
-		if(!is_number($_POST['id']) || $_POST['id'] == ''){ error(0); }
-		$DB->query("UPDATE badges_auto SET
-                              BadgeID='$BadgeId',
-                              Action='$Action',
-                              Active='$Active',
-                              SendPM='$SendPm',
-                              Value='$Value',
-                              CategoryID='$CatId'
-                              WHERE ID='{$_POST['id']}'");
-	} else { //Create
-		$DB->query("INSERT INTO badges_auto 
-			(BadgeID, Action, Active, SendPM, Value, CategoryID) VALUES
-			('$BadgeId','$Action','$Active','$SendPm','$Value','$CatId')");
-	}
-        */
 }
 
 if ($_POST['returntop']==1) $ReturnID='';
 else $ReturnID = "#$ReturnID";
-// Go back
-header("Location: tools.php?action=awards_auto$ReturnID");
+
+if(isset($_REQUEST['numadd'])){ // set num add forms to be same as current
+    $numAdds = (int)$_REQUEST['numadd'];
+    if ($numAdds<1 || $numAdds > 20) $numAdds = 1;
+    $UrlExtra = "&numadd=$numAdds";
+} 
+header("Location: tools.php?action=awards_auto$UrlExtra$ReturnID");
 
 ?>

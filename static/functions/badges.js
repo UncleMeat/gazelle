@@ -39,20 +39,41 @@ function Set_Edit(id){
     $('#id_'+id).raw().checked = true;
 }
 
-function Fill_From(id){
-    for(var i=0;i<5;i++){
-        var newid = 'new'+i;
-        if (newid!=id){
-            $('#badge'+newid).raw().value = $('#badge'+id).raw().value;
-            $('#title'+newid).raw().value = $('#title'+id).raw().value;
-            $('#desc'+newid).raw().value = $('#desc'+id).raw().value;
-            //$('#image'+newid).raw().value = $('#image'+id).raw().value;
-            $('#type'+newid).raw().value = $('#type'+id).raw().value;
-            $('#row'+newid).raw().value = $('#row'+id).raw().value;
-            $('#rank'+newid).raw().value = $('#rank'+id).raw().value;
-            $('#sort'+newid).raw().value = $('#sort'+id).raw().value;
-            $('#cost'+newid).raw().value = $('#cost'+id).raw().value;
+function Fill_From(fillfrom, elementnames){
+    // copies all elements upto fillfrom index alternately into all elements following
+    var totalnum =  parseInt( $('#totalnum').raw().value);
+    var num = fillfrom+1; // the num of elements to copy in each loop
+    var iterations = Math.floor(totalnum/num); // num of loops to fill all elements after fillfrom index
+    var i=num; // start at one element past fillfrom index
+    for(var j=0;j<iterations;j++){ 
+        for(var k=0;k<num;k++){
+            if (i>=totalnum) break;
+            var id = 'new'+k; // copy from the first num elements 
+            var fillid = 'new'+i;
+            if (fillid!=id){
+                for(var l=0;l<elementnames.length;l++){
+                    var name = '#' + elementnames[l];
+                    if(name == '#desc' || name == '#image')
+                        $(name+fillid).raw().innerHTML = $(name+id).raw().innerHTML;
+                    else if(name == '#sendpm' || name == '#active')
+                        $(name+fillid).raw().checked = $(name+id).raw().checked;
+                    else
+                        $(name+fillid).raw().value = $(name+id).raw().value;
+                }
+                /*
+                $('#badge'+fillid).raw().value = $('#badge'+id).raw().value;
+                $('#title'+fillid).raw().value = $('#title'+id).raw().value;
+                $('#desc'+fillid).raw().value = $('#desc'+id).raw().value;
+                $('#type'+fillid).raw().value = $('#type'+id).raw().value;
+                $('#row'+fillid).raw().value = $('#row'+id).raw().value;
+                $('#rank'+fillid).raw().value = $('#rank'+id).raw().value;
+                $('#sort'+fillid).raw().value = $('#sort'+id).raw().value;
+                $('#cost'+fillid).raw().value = $('#cost'+id).raw().value; */
+            }
+            //var a = ["badge","title","desc","type","row","rank","sort","cost"];
+            i++;
         }
     }
 }
+
  

@@ -25,7 +25,7 @@ function print_badges_select($ElementID, $CurrentBadgeID=-1){
 function print_categories($ElementID, $SelectedCat=-1){
     global $CatsArray;
 ?>
-    <select name="catid[<?=$ElementID?>]" onchange="Set_Edit('<?=$ElementID?>')" title="Category ID: If specified for NumUploaded then only torrents in this cateogry are counted (has no effect on other actions)">
+    <select name="catid[<?=$ElementID?>]" id="catid<?=$ElementID?>" onchange="Set_Edit('<?=$ElementID?>')" title="Category ID: If specified for NumUploaded then only torrents in this cateogry are counted (has no effect on other actions)">
         <option value="0">-none-</option>
 <?      foreach ($CatsArray as $Cat) {   
             list($CatID,$CatName)=$Cat;  ?>
@@ -79,26 +79,26 @@ function print_categories($ElementID, $SelectedCat=-1){
 <?                      print_badges_select($ID); ?> 
                     </td>
                     <td>
-                        <select name="type[<?=$ID?>]" onchange="Set_Edit('<?=$ID?>')" >
+                        <select name="type[<?=$ID?>]" id="type<?=$ID?>" onchange="Set_Edit('<?=$ID?>')" >
 <?                          foreach ($AutoAwardTypes as $Act) {   ?>
                                 <option value="<?=$Act?>"><?=$Act?>&nbsp;&nbsp;&nbsp;&nbsp;</option>
 <?                          } ?>
                     </select>
                     </td>
                     <td>
-                          <input class="medium"  type="text" name="value[<?=$ID?>]" onchange="Set_Edit('<?=$ID?>')" />
+                          <input class="medium"  type="text" name="value[<?=$ID?>]" id="value<?=$ID?>" onchange="Set_Edit('<?=$ID?>')" />
                     </td>
                     <td>
                         <? print_categories($ID) ?>
                     </td>
                     <td class="center">
-                          <input class="medium"  type="checkbox" name="sendpm[<?=$ID?>]" value="1" onchange="Set_Edit('<?=$ID?>')" title="If checked then the user is sent a PM telling them when they recieve this award" />
+                          <input class="medium"  type="checkbox" name="sendpm[<?=$ID?>]" id="sendpm<?=$ID?>" value="1" checked="checked" onchange="Set_Edit('<?=$ID?>')" title="If checked then the user is sent a PM telling them when they recieve this award" />
                     </td>
                     <td class="center">
-                          <input class="medium"  type="checkbox" name="active[<?=$ID?>]" value="1" onchange="Set_Edit('<?=$ID?>')" title="If checked this award will be automatically distributed to users who meet the specified requirements" />
+                          <input class="medium"  type="checkbox" name="active[<?=$ID?>]" id="active<?=$ID?>" value="1" checked="checked" onchange="Set_Edit('<?=$ID?>')" title="If checked this award will be automatically distributed to users who meet the specified requirements" />
                     </td>
                     <td rowspan="2"> 
-                        <a href="#" onclick="Fill_From('<?=$ID?>')" title="fill other add forms with this forms values">fill</a>
+                        <a href="#" onclick="Fill_From(<?=$i?>,['badgeid','catid','image','type','value','sendpm','active','desc'])" title="fill other add forms with this forms values">fill</a>
                     </td>
                 </tr>
                 <tr class="rowb">
@@ -114,9 +114,10 @@ function print_categories($ElementID, $SelectedCat=-1){
         
             <tr class="rowb"> 
                 <td colspan="5" style="text-align: right;"> 
+        <input type="hidden" id="totalnum" value="<?=$numAdds?>" />
                         <span style="float:left">
                             <a href="#" onclick="reload_num_forms('awards_auto')">reload</a>
-                            with <input style="width:30px;" type="text" id="numAdds" value="<?=$numAdds?>" title="Number of add forms to show (1 - 20)"/>
+                            with <input style="width:30px;" type="text" name="numadd" id="numAdds" value="<?=$numAdds?>" title="Number of add forms to show (1 - 20)"/>
                             add forms
                         </span>
                     <input type="submit" name="create" value="Create" title="Create all badges selected" />

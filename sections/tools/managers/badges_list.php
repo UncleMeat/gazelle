@@ -67,7 +67,7 @@ show_header('Badges','badges');
                         <input class="long" type="text" name="desc[<?=$ID?>]" id="desc<?=$ID?>" value="awarded for XXXXXX. This user has doneY/achievedZ" onchange="Set_Edit('<?=$ID?>')" title="Description"/>
                     </td> 
                     <td rowspan="2">
-                        <a href="#" onclick="Fill_From('<?=$ID?>')" title="fill other add forms with this forms values">fill</a>
+                        <a href="#" onclick="Fill_From(<?=$i?>,['badge','title','image','imagesrc','desc','type','row','rank','sort','cost'])" title="fill other add forms with this forms values">fill</a>
                     </td>
                 </tr>
                 <tr class="rowb">
@@ -103,9 +103,10 @@ show_header('Badges','badges');
 <?          }       ?>
                 <tr class="rowb">
                     <td colspan="6" style="text-align: right;"> 
+        <input type="hidden" id="totalnum" value="<?=$numAdds?>" />
                         <span style="float:left">
                             <a href="#" onclick="reload_num_forms('badges_list')">reload</a>
-                            with <input style="width:30px;" type="text" id="numAdds" value="<?=$numAdds?>" title="Number of add forms to show (1 - 20)"/>
+                            with <input style="width:30px;" type="text" name="numadd" id="numAdds" value="<?=$numAdds?>" title="Number of add forms to show (1 - 20)"/>
                             add forms
                         </span>
                         <input type="submit" name="create" value="Create" title="Create all badges selected" />

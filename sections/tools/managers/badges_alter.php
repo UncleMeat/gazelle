@@ -10,7 +10,7 @@ if(isset($_POST['delselected'])) {
     if (isset($_POST['deleteids'])) {
         
         $BadgeIDs = $_POST['deleteids'];  
-        if (!is_array($BadgeIDs)) error(0);
+        if (!is_array($BadgeIDs)) error("Nothing selected to delete");
         
         foreach ($BadgeIDs as $bID) {
             if (!is_number($bID))  error(0); 
@@ -32,11 +32,12 @@ if(isset($_POST['delselected'])) {
 
         $DB->query("DELETE FROM badges WHERE ID IN ($BadgeIDs)"); 
         $ReturnID = 'editbadges'; // return user to edit items on return
+                   
     }
     
 } else {    //if(isset($_POST['saveall'])) { 
       
-    if (!is_array($_POST['id'])) error(0);
+    if (!is_array($_POST['id'])) error("Nothing selected to add");
     
     $Val->OnlyValidateKeys = $_POST['id'];
     
@@ -124,10 +125,15 @@ if(isset($_POST['delselected'])) {
 
 $Cache->delete_value('available_badges');
 
+if(isset($_REQUEST['numadd'])){ // set num add forms to be same as current
+    $numAdds = (int)$_REQUEST['numadd'];
+    if ($numAdds<1 || $numAdds > 20) $numAdds = 1;
+    $UrlExtra = "&numadd=$numAdds";
+} 
  
 if (isset($_REQUEST['returntop'])) $ReturnID='';
 else $ReturnID = "#$ReturnID";
 // Go back
-header("Location: tools.php?action=badges_list$ReturnID");
+header("Location: tools.php?action=badges_list$UrlExtra$ReturnID");
 
 ?>
