@@ -840,7 +840,7 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 <? if($EditedUserID){ ?>  
                         <div class="post_footer">
 <?	if(check_perms('site_admin_forums')) { ?>
-				<a href="#content<?=$PostID?>" onclick="LoadEdit('forums', <?=$PostID?>, 1); return false;">&laquo;</a> 
+				<a href="#content<?=$PostID?>" onclick="LoadEdit('torrents', <?=$PostID?>, 1); return false;">&laquo;</a> 
 <? 	} ?>
                         <span class="editedby">Last edited by
 				<?=format_username($EditedUserID, $EditedUsername) ?> <?=time_diff($EditedTime,2,true,true)?>

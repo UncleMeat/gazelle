@@ -320,7 +320,7 @@ if(empty($Results)) {
 					<br />
 					<br />
 <?				if(check_perms('site_moderate_forums')) { ?>
-					<a href="#content<?=$PostID?>" onclick="LoadEdit(<?=$PostID?>, 1)">&laquo;</a>
+					<a href="#content<?=$PostID?>" onclick="LoadEdit('forums', <?=$PostID?>, 1)">&laquo;</a>
 <? 				} ?>		   
 					Last edited by
 					<?=format_username($EditedUserID, $EditedUsername) ?> <?=time_diff($EditedTime,2,true,true)?>
