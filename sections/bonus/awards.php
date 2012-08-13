@@ -3,9 +3,9 @@ enforce_login();
 show_header('Medals and Awards');
   
 $DB->query("SELECT b.Title, b.Type, b.Description, b.Cost, b.Image, 
-                (CASE WHEN Type='Shop' THEN 0 
-                      WHEN ba.ID IS NOT NULL THEN 1
-                      ELSE 2 
+                (CASE WHEN Type='Shop' THEN 2 
+                      WHEN ba.ID IS NOT NULL THEN 0
+                      ELSE 1 
                  END) AS Sorter
               FROM badges AS b
               LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
@@ -35,13 +35,13 @@ $Awards = $DB->to_array(false, MYSQLI_BOTH);
             <div class="colhead pad">
                 <?  
                 switch($Sorter){
-                    case 0:
+                    case 2:
                         echo "Medals available for purchase in the bonus shop";
                         break;
-                    case 1:
+                    case 0:
                         echo "Medals automatically awarded by the system";
                         break;
-                    case 2:
+                    case 1:
                         echo "Medals awarded by the staff";
                         break;
                 }
