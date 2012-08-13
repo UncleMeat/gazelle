@@ -127,14 +127,15 @@ foreach($AutoActions as $AutoAction) {
     
     
     if ($SQL){
-        $SQL .= " LIMIT 500";
+        $SQL .= " LIMIT 100";
         $DB->query($SQL);
         
         $UserIDs = $DB->collect('ID');
         $CountUsers = count($UserIDs);
         
-        echo "Awarding $Name ($Badge/$Rank) to $CountUsers users...\n";
-    
+        $logmsg = "Awarding $Name ($Badge/$Rank) to $CountUsers users...\n";
+        echo $logmsg;   // for debug output
+        
         if ($CountUsers > 0) {
  
             $SQL_IN = implode(',',$UserIDs);
@@ -164,6 +165,8 @@ foreach($AutoActions as $AutoAction) {
                 $Cache->delete_value('user_badges_'.$UserID);
                 $Cache->delete_value('user_badges_'.$UserID.'_limit');
             }
+             
+            write_log($logmsg." ($SQL_IN)");
         }
     }
                 

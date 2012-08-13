@@ -175,6 +175,12 @@ while(list($Message, $LogTime) = $DB->next_record()) {
 				}
 				$Message = $Message." ".$MessageParts[$i];
 				break;
+			case "Awarded":
+				if ($Color === false) {
+					$Color = 'purple';
+				}
+				$Message = $Message." ".$MessageParts[$i];
+				break;
 			case "uploaded":
 			case "created":
 				if ($Color === false) {
