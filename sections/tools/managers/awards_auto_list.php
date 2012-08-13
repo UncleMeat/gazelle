@@ -135,6 +135,12 @@ function print_categories($ElementID, $SelectedCat=-1){
         When awarding these the system checks for users that do not have this badge, then checks those results against the Parameter and Value settings to determine who should get the award.
         Do not have the same badge being awarded by 2 different active items, or at least be aware the user will only get one and then be blocked from receiving the other.
         <p><strong>note:</strong> Badges are defined in the <a href="/tools.php?action=badges_list">Badges Manager</a></p>
+        
+        <form action="tools.php" method="post">
+            <input type="hidden" name="action" value="awards_alter" />
+            <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+            <input type="submit" name="createcats" value="Automatically Create Category award schedules - CAUTION - deletes all category awards first" title="Automatically create category award schedules" />
+        </form>
     </div><br/>
  
     <form id="editawards" action="tools.php" method="post">

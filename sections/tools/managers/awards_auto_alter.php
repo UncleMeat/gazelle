@@ -4,7 +4,69 @@ if(!check_perms('site_manage_awards')){ error(403); }
 
 authorize();
 
-if(isset($_POST['delselected'])) {
+
+if(isset($_REQUEST['numadd'])){ // set num add forms to be same as current
+    $numAdds = (int)$_REQUEST['numadd'];
+    if ($numAdds<1 || $numAdds > 20) $numAdds = 1;
+    $UrlExtra = "&numadd=$numAdds";
+} 
+
+if(isset($_POST['createcats'])) {
+    
+    $SQL_values = array();
+    $Results = array();
+    $Results[] = "reserve";
+    $Cats = array();
+    
+    $DB->query("SELECT id, name FROM categories"); 
+    while (list($catId,$name)=$DB->next_record()) {
+        $name = str_replace(' ', '', $name);
+        $nparts = explode('/', $name);
+        $nparts = explode('-', $nparts[0]);
+        $Cats[strtolower($nparts[0])] = $catId;
+        //$Cats[strtolower($name)] = $catId;
+    }
+      
+    $DB->query("SELECT ID, Badge, Rank 
+                  FROM badges 
+                 WHERE Display='1'
+              ORDER BY Sort");
+    $Badges = $DB->to_array();
+
+    foreach ($Badges as $BadgeInfo) {
+            list($BadgeId,$Badge,$Rank)=$BadgeInfo;
+            $Badge = strtolower($Badge);
+            if(isset( $Cats[$Badge])) {
+                $CatId = $Cats[$Badge];
+                if($Rank==1)$Value=50;
+                elseif($Rank==2)$Value=100;
+                else $Value=250;
+                $SQL_values[] = "('$BadgeId','NumUploaded','1','1','$Value','$CatId')" ;
+                $Results[] = "Created schedule item for ".ucfirst($Badge)." Rank $Rank";
+            } else {
+                $Results[] = "Could not find category match for ".ucfirst($Badge);
+            }
+    }
+
+    $numinsert = count($SQL_values);
+    if( $numinsert>0 ){   //Create
+            $DB->query("DELETE FROM badges_auto WHERE CategoryID!=0");
+        
+            $SQL_values = implode(',', $SQL_values);
+		$DB->query("INSERT INTO badges_auto 
+			(BadgeID, Action, Active, SendPM, Value, CategoryID)
+			VALUES $SQL_values");  
+            $ReturnID = $DB->inserted_id(); // return user to first saved item on return
+    }  
+             
+    if (count($Results)>1){
+        $Results[0] = "Wrote $numinsert schedule items.";
+        $Results[] = '<br/><br/><a href="tools.php?action=awards_auto'.$UrlExtra.'">back to awards schedule mamager</a>';
+        error(implode("<br/>", $Results));
+    } 
+            
+    
+} elseif(isset($_POST['delselected'])) {
     
     $AwardIDs = $_POST['deleteids'];  
     if (!is_array($AwardIDs)) error("Nothing selected to delete");
@@ -36,6 +98,7 @@ if(isset($_POST['delselected'])) {
     $Err=$Val->ValidateForm($_POST); // Validate the form
     if($Err){ error($Err); }
     
+    $SQL_values = array();
     foreach ($AwardIDs as $AwardID) {
         if (isset($_POST['saveall'])) {
             if(!is_number($AwardID))  error(0);
@@ -83,11 +146,6 @@ if(isset($_POST['delselected'])) {
 if ($_POST['returntop']==1) $ReturnID='';
 else $ReturnID = "#$ReturnID";
 
-if(isset($_REQUEST['numadd'])){ // set num add forms to be same as current
-    $numAdds = (int)$_REQUEST['numadd'];
-    if ($numAdds<1 || $numAdds > 20) $numAdds = 1;
-    $UrlExtra = "&numadd=$numAdds";
-} 
 header("Location: tools.php?action=awards_auto$UrlExtra$ReturnID");
 
 ?>
