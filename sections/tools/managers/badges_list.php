@@ -47,7 +47,10 @@ show_header('Badges','badges');
             </tr> 
             <?
 
-            for($i = 0; $i < 5; $i++) { 
+            $numAdds = isset($_REQUEST['numadd'])?(int)$_REQUEST['numadd']:5;
+            if ($numAdds<1 || $numAdds > 20) $numAdds = 1;
+    
+            for($i = 0; $i < $numAdds; $i++) { 
                 $ID = "new$i";
             ?>  
                 <tr class="rowb">
@@ -97,9 +100,14 @@ show_header('Badges','badges');
                 <tr class="rowa">
                     <td colspan="10" class="noborder"></td>
                 </tr>
-<?      }       ?>
+<?          }       ?>
                 <tr class="rowb">
                     <td colspan="6" style="text-align: right;"> 
+                        <span style="float:left">
+                            <a href="#" onclick="reload_num_forms('badges_list')">reload</a>
+                            with <input style="width:30px;" type="text" id="numAdds" value="<?=$numAdds?>" title="Number of add forms to show (1 - 20)"/>
+                            add forms
+                        </span>
                         <input type="submit" name="create" value="Create" title="Create all badges selected" />
                     </td> 
                     <td colspan="4" style="text-align: center;">

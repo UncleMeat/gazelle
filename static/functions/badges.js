@@ -1,4 +1,11 @@
 
+function reload_num_forms(action){
+    
+    var num = parseInt( $('#numAdds').raw().value);
+    window.location = location.protocol + '//' + location.hostname + "/tools.php?action="+action+"&numadd=" + num;
+		 
+}
+
 function Select_Badge(id){ 
         
         var badgeid = $('#badgeid'+id).raw().value;
