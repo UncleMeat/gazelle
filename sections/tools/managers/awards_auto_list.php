@@ -150,8 +150,8 @@ function print_categories($ElementID, $SelectedCat=-1){
             <tr class="colhead">
                 <td width="10px" rowspan="2">Edit</td>
                 <td width="40px" rowspan="2">Image</td>
-                <td width="30%">Badge</td>
-                <td width="20%">Parameter</td>
+                <td width="25%">Badge</td>
+                <td width="15%">Parameter</td>
                 <td width="60px">Value</td>
                 <td width="80px">Category<br />(NumUploaded only)</td>
                 <td width="40px">Send PM</td>
