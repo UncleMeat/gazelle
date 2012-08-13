@@ -127,7 +127,7 @@ foreach($AutoActions as $AutoAction) {
     
     
     if ($SQL){
-        $SQL .= " LIMIT 1000";
+        $SQL .= " LIMIT 500";
         $DB->query($SQL);
         
         $UserIDs = $DB->collect('ID');
