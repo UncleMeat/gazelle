@@ -169,12 +169,20 @@ foreach ($TorrentList as $GroupID=>$Group) {
         </td>
         <td>
                 <span>
-                        [ <a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>
-<?		if (($LoggedUser['FLTokens'] > 0) && ($Torrent['Size'] < 1073741824) 
-                && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] != 'leech') && ($LoggedUser['CanLeech'] == '1')) { ?>
-                        | <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FL</a>
-<?		} ?>						
-                        | <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">RP</a>]
+                    <? if (empty($TorrentUserStatus[$TorrentID])) { ?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">
+                            <span class="icon icon_disk_none"></span>
+                        </a>
+                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') { ?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Seeding Torrent">
+                            <span class="icon icon_disk_seed"></span>
+                        </a>                    
+                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') { ?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Leeching Torrent">
+                            <span class="icon icon_disk_leech"></span>
+                        </a>                    
+
+                    <? } ?>
                 </span>
                 <strong><?=$DisplayName?></strong>
                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
