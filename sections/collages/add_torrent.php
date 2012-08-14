@@ -11,8 +11,12 @@ function AddTorrent($CollageID, $GroupID) {
 	list($Sort) = $DB->next_record();
 	$Sort+=10;
 
-	$DB->query("SELECT GroupID FROM collages_torrents WHERE CollageID='$CollageID' AND GroupID='$GroupID'");
-	if($DB->record_count() == 0) {
+	//$DB->query("SELECT GroupID FROM collages_torrents WHERE CollageID='$CollageID' AND GroupID='$GroupID'");
+	//if($DB->record_count() == 0) {
+
+	$DB->query("SELECT GroupID FROM collages_torrents WHERE CollageID='$CollageID'");
+      $GroupIDs = $DB->collect('GroupID');
+	if(!in_array($GroupID, $GroupIDs)) {
 		$DB->query("INSERT IGNORE INTO collages_torrents
 			(CollageID, GroupID, UserID, Sort, AddedOn) 
 			VALUES
@@ -21,9 +25,11 @@ function AddTorrent($CollageID, $GroupID) {
 		$DB->query("UPDATE collages SET NumTorrents=NumTorrents+1 WHERE ID='$CollageID'");
 
 		$Cache->delete_value('collage_'.$CollageID);
-		$Cache->delete_value('torrents_details_'.$GroupID);
-		$Cache->delete_value('torrent_collages_'.$GroupID);
-		$Cache->delete_value('torrent_collages_personal_'.$GroupID);
+            foreach($GroupIDs as $GID){
+                $Cache->delete_value('torrents_details_'.$GID);
+                $Cache->delete_value('torrent_collages_'.$GID);
+                $Cache->delete_value('torrent_collages_personal_'.$GID);
+            }
 		 
 		$DB->query("SELECT UserID FROM users_collage_subs WHERE CollageID=$CollageID");
 		while (list($CacheUserID) = $DB->next_record()) {
