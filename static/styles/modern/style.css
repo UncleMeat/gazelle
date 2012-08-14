@@ -267,7 +267,7 @@ span.infinity {
     float:right;
     margin: 0 0 0 10px;
 }
-
+/*
 #userinfo_username { 
     display:inline;
     font-size: 0.8em;
@@ -313,6 +313,71 @@ span.inside_stat {
 #userinfo_minor {
     display:inline;
     font-size: 0.8em;
+} */
+
+
+#userinfo_username li ul a, #userinfo_tools li ul a {
+    display: block; 
+}
+#userinfo_tools li ul a {
+    width: 160px;
+}
+
+#userinfo_username li:hover ul, #userinfo_tools li:hover ul {
+    display: block; 
+}
+
+#userinfo_username li a, #userinfo_tools li a {
+    padding: 2px 0 2px 0;
+}
+#userinfo_username li ul {
+   top: 17px;
+}
+#userinfo_username li ul, #userinfo_tools li ul {
+    list-style: none;
+    display: none;
+    position: absolute;
+    left: 0px;
+    background-color: #00436b;
+    z-index: 10;
+}
+
+#userinfo_username li ul li a, #userinfo_tools li ul li a {
+    padding: 3px 6px 3px 6px;
+}
+
+#userinfo_username li ul li a:hover, #userinfo_tools li ul li a:hover {
+    background-color: white;
+    color: #00436b;
+}
+
+#userinfo_username, #userinfo_tools {
+    display:inline;
+    position: relative;
+} 
+
+#nav_userinfo, #nav_tools {
+    padding-right: 8px !important;
+    margin: 0px 7px !important;
+    background-image: url(images/dropdown_arrow.png);
+    background-repeat:no-repeat;
+    background-position: right center;
+}	
+#nav_upload,#nav_donate,#nav_useredit,#nav_logout {
+    margin: 0px 7px !important;
+}
+
+#userinfo_major {
+    display:inline;
+    margin-right: 20px;
+}
+ 
+span.inside_stat {
+    display: block;
+}
+ 
+#userinfo_minor {
+    display:inline;
 }
  
  

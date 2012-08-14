@@ -343,12 +343,13 @@ span.infinity {
     -webkit-border-radius: 2px; /* for opera */
 
 }
-
+#userinfo_username li ul {
+   top: 16px;
+}
 #userinfo_username li ul, #userinfo_tools li ul {
     list-style: none;
     display: none;
     position: absolute;
-    top: 16px;
     left: 0px;
     background-color: #00436b;
     z-index: 10;
@@ -371,10 +372,13 @@ span.infinity {
 
 #nav_userinfo, #nav_tools {
     padding-right: 8px !important;
-    margin-right: 6px !important;
+    margin: 0px 7px !important;
     background-image: url(images/dropdown_arrow.png);
     background-repeat:no-repeat;
     background-position: right center;
+}	
+#nav_upload,#nav_donate,#nav_useredit,#nav_logout {
+    margin: 0px 7px !important;
 }
 
 
