@@ -178,6 +178,7 @@ function permissions_form(){ ?>
 					<? display_perm('site_can_invite_always', 'Can invite users even when invites are closed.'); ?>
 					<? display_perm('site_send_unlimited_invites', 'Can send unlimited invites.'); ?>
                               <?            display_perm('site_advanced_tags', 'Can use advanced bbcode tags.'); ?>
+                              <?            display_perm('site_edit_own_posts', 'Can edit own posts in forum after edit lock time limit.'); ?>
 					<? display_perm('site_moderate_requests', 'Can moderate any request.'); ?>
 					<? display_perm('forums_polls_create','Can create polls in the forums.') ?>
 					<? display_perm('forums_polls_moderate','Can feature and close polls.') ?>
