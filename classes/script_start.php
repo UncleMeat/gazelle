@@ -284,6 +284,28 @@ if ($TorrentUserStatus === false) {
     $Cache->cache_value('torrent_user_status_'.$LoggedUser['ID'], $TorrentUserStatus, 600);
 }
 
+$NotConnectable = $Cache->get_value('notconnectable_'.$LoggedUser['ID']);
+if ($NotConnectable === false) {
+    $DB->query("
+        SELECT Count(fid) as Count, connectable, active, uid
+          FROM xbt_files_users AS xbt
+      GROUP BY connectable
+        HAVING active='1' AND uid =  '".$LoggedUser['ID']."'
+      ORDER BY connectable DESC"); 
+    if($DB->record_count() == 0) {
+        $NotConnectable = 0;
+    } else { 
+        while(list($count, $connected) = $DB->next_record()) {
+            if ($connected == 1) {
+                $NotConnectable = 0;
+                break;
+            } else 
+                $NotConnectable = 1; 
+        }
+    } 
+    $Cache->cache_value('notconnectable_'.$LoggedUser['ID'], $NotConnectable, 600);
+}
+
 $Debug->set_flag('start function definitions');
 
 // Get cached user info, is used for the user loading the page and usernames all over the site

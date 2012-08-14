@@ -85,7 +85,7 @@ define('REQUESTS_PER_PAGE', 25);
 define('MESSAGES_PER_PAGE', 25);
 define('LOG_ENTRIES_PER_PAGE', 50);
 
-define('USER_EDIT_POST_TIME', 300); // 300 secs = 5 mins for users to edit posts
+define('USER_EDIT_POST_TIME', 900); // 900 secs = 15 mins for users to edit posts
 
 //Cache catalogues
 define('THREAD_CATALOGUE', 500); // Limit to THREAD_CATALOGUE posts per cache key.

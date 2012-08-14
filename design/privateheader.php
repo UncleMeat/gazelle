@@ -132,6 +132,9 @@ $Infos = array(); // an info alert bar (nicer color)
 $Alerts = array(); // warning bar (red!)
 $ModBar = array();
 
+if ($NotConnectable==1){
+	$Alerts[] = '<a href="articles.php?topic=connectable">You are not connectable!</a>';
+}
 // News
 $MyNews = $LoggedUser['LastReadNews']+0;
 $CurrentNews = $Cache->get_value('news_latest_id');
