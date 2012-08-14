@@ -132,6 +132,32 @@ $Infos = array(); // an info alert bar (nicer color)
 $Alerts = array(); // warning bar (red!)
 $ModBar = array();
 
+// is user not connectable?
+$NotConnectable = $Cache->get_value('notconnectable_'.$LoggedUser['ID']);
+if ($NotConnectable === false) {
+    $DB->query("
+        SELECT Count(fid) as Count, connectable, active, uid
+          FROM xbt_files_users AS xbt
+      GROUP BY connectable
+        HAVING active='1' AND uid =  '".$LoggedUser['ID']."'
+      ORDER BY connectable DESC"); 
+    if($DB->record_count() == 0) {
+        $NotConnectable = '0';
+    } else {
+        while(list($count, $connected) = $DB->next_record()) {
+            if ($connected == '1') {
+                $NotConnectable = '0';
+                break;
+            } else
+                $NotConnectable = '1';
+        }
+    }
+    $Cache->cache_value('notconnectable_'.$LoggedUser['ID'], $NotConnectable, 600);
+}
+if ($NotConnectable=='1'){
+	$Alerts[] = '<a href="articles.php?topic=connectable">You are not connectable!</a>';
+}
+
 // News
 $MyNews = $LoggedUser['LastReadNews']+0;
 $CurrentNews = $Cache->get_value('news_latest_id');
