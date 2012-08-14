@@ -35,6 +35,7 @@ $DB->query("SELECT
 		p.Body,
 		p.AuthorID,
 		p.TopicID,
+            p.AddedTime,
 		t.IsLocked,
 		t.ForumID,
 		f.MinClassWrite,
@@ -47,16 +48,23 @@ $DB->query("SELECT
 		JOIN forums_topics as t on p.TopicID = t.ID
 		JOIN forums as f ON t.ForumID=f.ID 
 		WHERE p.ID='$PostID'");
-list($OldBody, $AuthorID, $TopicID, $IsLocked, $ForumID, $MinClassWrite, $Page) = $DB->next_record();
+list($OldBody, $AuthorID, $TopicID, $AddedTime, $IsLocked, $ForumID, $MinClassWrite, $Page) = $DB->next_record();
 
 // Make sure they aren't trying to edit posts they shouldn't
 // We use die() here instead of error() because whatever we spit out is displayed to the user in the box where his forum post is
 if(!check_forumperm($ForumID, 'Write') || ($IsLocked && !check_perms('site_moderate_forums'))) { 
 	error('Either the thread is locked, or you lack the permission to edit this post.',true);
 }
-if($UserID != $AuthorID && !check_perms('site_moderate_forums')) {
-	error(403,true);
+
+if (!check_perms('site_moderate_forums')){ 
+    if ($UserID != $AuthorID){
+        error(403,true);
+    } else if (time_ago($AddedTime)>(USER_EDIT_POST_TIME+900)) { // give them an extra 15 mins in the backend because we are nice
+        error("Sorry - you only have ".sqltime(USER_EDIT_POST_TIME). " to edit your post before it is automatically locked." ,true);
+    } 
 }
+ 
+
 if($LoggedUser['DisablePosting']) {
 	error('Your posting rights have been removed.',true);
 }

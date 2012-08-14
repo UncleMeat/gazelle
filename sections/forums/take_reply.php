@@ -60,11 +60,15 @@ if(isset($_POST['subscribe'])) {
 //Now lets handle the special case of merging posts, we can skip bumping the thread and all that fun
 if ($ThreadInfo['LastPostAuthorID'] == $LoggedUser['ID'] && ((!check_perms('site_forums_double_post') && !in_array($ForumID, $ForumsDoublePost)) || isset($_POST['merge']))) {
 	//Get the id for this post in the database to append
-	$DB->query("SELECT ID FROM forums_posts WHERE TopicID='$TopicID' AND AuthorID='".$LoggedUser['ID']."' ORDER BY ID DESC LIMIT 1");
-	list($PostID) = $DB->next_record();
+	$DB->query("SELECT ID, Body FROM forums_posts WHERE TopicID='$TopicID' AND AuthorID='".$LoggedUser['ID']."' ORDER BY ID DESC LIMIT 1");
+	list($PostID, $OldBody) = $DB->next_record();
 	
+      $time = sqltime();
 	//Edit the post
-	$DB->query("UPDATE forums_posts SET Body = CONCAT(Body,'"."\n\n".db_string($Body)."'), EditedUserID = '".$LoggedUser['ID']."', EditedTime = '".sqltime()."' WHERE ID='$PostID'");
+	$DB->query("UPDATE forums_posts SET Body = CONCAT(Body,'"."\n\n".db_string($Body)."'), 
+                                            EditedUserID = '".$LoggedUser['ID']."', 
+                                            EditedTime = '$time' 
+                                            WHERE ID='$PostID'");
 	
 	//Get the catalogue it is in
 	$CatalogueID = floor((POSTS_PER_PAGE*ceil($ThreadInfo['Posts']/POSTS_PER_PAGE)-POSTS_PER_PAGE)/THREAD_CATALOGUE);
@@ -79,13 +83,19 @@ if ($ThreadInfo['LastPostAuthorID'] == $LoggedUser['ID'] && ((!check_perms('site
 	//Edit the post in the cache
 	$Cache->begin_transaction('thread_'.$TopicID.'_catalogue_'.$CatalogueID);
 	$Cache->update_row($Key, array(
-			'Body'=>$Cache->MemcacheDBArray[$Key]['Body']."\n\n".$Body,
+			'Body'=>$OldBody."\n\n".$Body,
 			'EditedUserID'=>$LoggedUser['ID'],
-			'EditedTime'=>sqltime(),
+			'EditedTime'=>$time,
 			'Username'=>$LoggedUser['Username']
 			));
 	$Cache->commit_transaction(0);
 	
+      $DB->query("INSERT INTO comments_edits (Page, PostID, EditUser, EditTime, Body)
+                           VALUES ('forums', $PostID, ".$LoggedUser['ID'].", '$time', '".db_string($OldBody)."')");
+                    
+      $Cache->delete_value("forums_edits_$PostID");
+                     
+                 
 //Now we're dealing with a normal post
 } else {
 	//Insert the post into the posts database
