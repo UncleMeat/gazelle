@@ -131,7 +131,7 @@ if($NewSubscriptions === FALSE) {
 $Infos = array(); // an info alert bar (nicer color)
 $Alerts = array(); // warning bar (red!)
 $ModBar = array();
-
+ 
 // is user not connectable?
 $NotConnectable = $Cache->get_value('notconnectable_'.$LoggedUser['ID']);
 if ($NotConnectable === false) {
