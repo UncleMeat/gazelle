@@ -59,7 +59,7 @@ if(!check_forumperm($ForumID, 'Write') || ($IsLocked && !check_perms('site_moder
 if (!check_perms('site_moderate_forums')){ 
     if ($UserID != $AuthorID){
         error(403,true);
-    } else if (time_ago($AddedTime)>(USER_EDIT_POST_TIME+900)) { // give them an extra 15 mins in the backend because we are nice
+    } else if (!check_perms ('site_edit_own_posts') || time_ago($AddedTime)>(USER_EDIT_POST_TIME+900)) { // give them an extra 15 mins in the backend because we are nice
         error("Sorry - you only have ".sqltime(USER_EDIT_POST_TIME). " to edit your post before it is automatically locked." ,true);
     } 
 }

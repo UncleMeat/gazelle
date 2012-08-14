@@ -34,6 +34,8 @@
 	'site_can_invite_always' => 'Can invite past user limit.',
 	'site_send_unlimited_invites' => 'Unlimited invites.',
             'site_advanced_tags' => 'Advanced bbcode tags.',
+	'site_edit_own_posts' => 'Can edit own posts in forum after edit time limit.',
+     
 	'site_moderate_requests' => 'Request moderation access.',
 	'site_moderate_forums' => 'Forum moderation access.',
 	'site_admin_forums' => 'Forum administrator access.',
