@@ -174,7 +174,7 @@ function CursorToEnd(textarea){
 function EndsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
-
+ 
 
 //made by putyn@tbdev.net lastupdate 28/12/2009
 function wrap(tag, replacetext, attribute, textID) {
@@ -183,19 +183,27 @@ function wrap(tag, replacetext, attribute, textID) {
   var e = attribute ? attribute : "";
 
   var obj = document.getElementById(textID);
+  var opentag = "[" + v + (e ? "=" + e : "") + "]";
+  var closetag = "[/" + v + "]";
 
   if (document.selection) {
     var str = document.selection.createRange().text;
     obj.focus();
-    var sel = document.selection.createRange();
-    sel.text = "[" + v + (e ? "=" + e : "") + "]" + (r ? r : str) + "[/" + v + "]";
+    var range = document.selection.createRange();
+    
+    //range.text = "[" + v + (e ? "=" + e : "") + "]" + (r ? r : str) + "[/" + v + "]";
+    
+    range.text = opentag + (r ? r : str) + closetag;
+    range.moveStart('character', +opentag.length);
+    range.moveEnd('character', -closetag.length);
+    //range.select();
   } else {
     var len = obj.value.length;
     var start = obj.selectionStart;
     var end = obj.selectionEnd;
     var sel = obj.value.substring(start, end);
-    var opentag = "[" + v + (e ? "=" + e : "") + "]";
-    var closetag = "[/" + v + "]";
+    /* var opentag = "[" + v + (e ? "=" + e : "") + "]";
+    var closetag = "[/" + v + "]"; */
     obj.value = obj.value.substring(0, start) + opentag + (r ? r : sel) + closetag + obj.value.substring(end, len);
     obj.selectionStart = start + opentag.length;
     obj.selectionEnd = start + opentag.length + (r ? r : sel).length ;
@@ -212,8 +220,10 @@ function tagwrap(opentag, closetag, textID) {
   if (document.selection) {
     var str = document.selection.createRange().text;
     textarea.focus();
-    var sel = document.selection.createRange();
-    sel.text = opentag + str + closetag;
+    var range = document.selection.createRange();
+    range.text = opentag + str + closetag;
+    range.moveStart('character', +opentag.length);
+    range.moveEnd('character', -closetag.length);
   } else {
     var len = textarea.value.length;
     var start = textarea.selectionStart;
