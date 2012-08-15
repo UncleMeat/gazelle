@@ -133,12 +133,12 @@ $Alerts = array(); // warning bar (red!)
 $ModBar = array();
  
 // is user not connectable?
-$NotConnectable = $Cache->get_value('notconnectable_'.$LoggedUser['ID']);
-if ($NotConnectable === false) {
+//$NotConnectable = $Cache->get_value('notconnectable_'.$LoggedUser['ID']);
+//if ($NotConnectable === false) {  /// always generate while we are trying to nail bugs with this
     $DB->query("
         SELECT Count(fid) as Count, connectable
           FROM xbt_files_users AS xbt
-        WHERE active='1' AND uid =  '".$LoggedUser['ID']."'
+         WHERE active='1' AND uid =  '".$LoggedUser['ID']."'
       GROUP BY connectable
       ORDER BY connectable DESC"); 
     if($DB->record_count() == 0) {
@@ -152,8 +152,8 @@ if ($NotConnectable === false) {
                 $NotConnectable = '1';
         }
     }
-    $Cache->cache_value('notconnectable_'.$LoggedUser['ID'], $NotConnectable, 600);
-}
+    //$Cache->cache_value('notconnectable_'.$LoggedUser['ID'], $NotConnectable, 600);
+//}
 if ($NotConnectable=='1'){
 	$Alerts[] = '<a href="articles.php?topic=connectable">You are not connectable!</a>';
 }
