@@ -136,10 +136,10 @@ $ModBar = array();
 $NotConnectable = $Cache->get_value('notconnectable_'.$LoggedUser['ID']);
 if ($NotConnectable === false) {
     $DB->query("
-        SELECT Count(fid) as Count, connectable, active, uid
+        SELECT Count(fid) as Count, connectable
           FROM xbt_files_users AS xbt
+        WHERE active='1' AND uid =  '".$LoggedUser['ID']."'
       GROUP BY connectable
-        HAVING active='1' AND uid =  '".$LoggedUser['ID']."'
       ORDER BY connectable DESC"); 
     if($DB->record_count() == 0) {
         $NotConnectable = '0';
