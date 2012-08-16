@@ -2007,13 +2007,78 @@ function get_tags($TagNames) {
     return($TagIDs);
 }
 
-function torrent_info($Data) {
+function torrent_info($Data, $TorrentID, $UserID) {
+    global $DB, $Cache;
+        $AddExtra = '';
+        $SeedTooltip='';
+        $FreeTooltip='';
+        if ($Data['FreeTorrent'] == '1') {
+            $FreeTooltip = "Unlimited Freeleech";
+        } elseif ($Data['FreeTorrent'] == '2') {
+            $FreeTooltip = "Neutral Freeleech";
+        }
 
+        if ($Data['double_seed'] == '1') {
+            $SeedTooltip = "Unlimited Doubleseed";
+        }
+         
+        $TokenTorrents = $Cache->get_value('users_tokens_' . $UserID);
+        if (empty($TokenTorrents)) {
+            $DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
+            $TokenTorrents = $DB->to_array('TorrentID');
+            $Cache->cache_value('users_tokens_' . $UserID, $TokenTorrents);
+        }
+        
+        if (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > sqltime()) {
+            $FreeTooltip = "Personal Freeleech for ".time_diff($TokenTorrents[$TorrentID]['FreeLeech'], 2, false);;
+        } 
+        
+        if (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['DoubleSeed'] > sqltime()) {
+            $SeedTooltip = "Personal Doubleseed for ".time_diff($TokenTorrents[$TorrentID]['DoubleSeed'], 2, false);
+        }
+        
+        $Icons = '';
+        if ($SeedTooltip) 
+            $Icons = '&nbsp;&nbsp;<img src="static/common/symbols/doubleseed.gif" alt="DoubleSeed" title="'.$SeedTooltip.'" />';          
+        if ($FreeTooltip) 
+            $Icons .= '&nbsp;&nbsp;<img src="static/common/symbols/freedownload.gif" alt="Freeleech" title="'.$FreeTooltip.'" />';          
+        
+        if ($Data['ReportCount'] > 0) {
+            $Title = "This torrent has ".$Data['ReportCount']." active ".($Data['ReportCount'] > 1 ?'reports' : 'report');
+            $AddExtra .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
+        }
+        $AddExtra .= $Icons;
+        return $AddExtra;
+        /*
 	$Info = array();
 	if($Data['FreeTorrent'] == '1') { $Info[]='<strong>Freeleech!</strong>'; }
 	if($Data['FreeTorrent'] == '2') { $Info[]='<strong>Neutral Leech!</strong>'; }
 	if($Data['PersonalFL'] == 1) { $Info[]='<strong>Personal Freeleech!</strong>'; }
-	return implode(' / ', $Info);
+	return implode(' / ', $Info); */
+}
+
+
+function print_torrent_status($TorrentID) {
+    global $TorrentUserStatus, $LoggedUser;
+?>
+
+                <span>
+                    <? if (empty($TorrentUserStatus[$TorrentID])) { ?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">
+                            <span class="icon icon_disk_none"></span>
+                        </a>
+                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') { ?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Seeding Torrent">
+                            <span class="icon icon_disk_seed"></span>
+                        </a>                    
+                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') { ?>
+                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Leeching Torrent">
+                            <span class="icon icon_disk_leech"></span>
+                        </a>                    
+
+                    <? } ?>
+                </span>
+<?
 }
 
 // Echo data sent in a form, typically a text area

@@ -5,13 +5,13 @@ $Ways = array('ASC'=>'Ascending', 'DESC'=>'Descending');
 
 // The "order by x" links on columns headers
 function header_link($SortKey,$DefaultWay="DESC") {
-	global $Order,$Way;
+	global $Order,$Way,$Document;
 	if($SortKey==$Order) {
 		if($Way=="DESC") { $NewWay="ASC"; }
 		else { $NewWay="DESC"; }
 	} else { $NewWay=$DefaultWay; }
 	
-	return "torrents.php?way=".$NewWay."&amp;order=".$SortKey."&amp;".get_url(array('way','order'));
+	return "$Document.php?way=".$NewWay."&amp;order=".$SortKey."&amp;".get_url(array('way','order'))."#torrents";
 }
 
 $UserID = $_GET['userid'];
@@ -184,12 +184,15 @@ $Results = get_groups($GroupIDs);
 $Action = display_str($_GET['type']);
 $User = user_info($UserID);
 
-show_header($User['Username'].'\'s '.$Action.' torrents');
+
+
+if(!$INLINE) show_header($User['Username'].'\'s '.$Action.' torrents');
 
 $Pages=get_pages($Page,$TorrentCount,TORRENTS_PER_PAGE);
 
 
 ?>
+<? if (!$INLINE) {  ?>
 <div class="thin">
 	<div>
 		<form action="" method="get">
@@ -259,13 +262,16 @@ foreach($NewCategories as $Cat) {
 			</div>
 		</form>
 	</div>
-<?	if(count($GroupIDs) == 0) { ?>
+<? 
+} // end if !$INLINE
+
+    if(count($GroupIDs) == 0) { ?>
 	<div class="center">
 		Nothing found!
 	</div>
 <?	} else { ?>
 	<div class="linkbox"><?=$Pages?></div>
-	<table width="100%" class="torrent_table">
+	<table class="torrent_table">
 		<tr class="colhead">
 			<td></td>
 			<td><a href="<?=header_link('Name', 'ASC')?>">Torrent</a></td>
@@ -301,24 +307,46 @@ foreach($NewCategories as $Cat) {
 				
 		$DisplayName = '<a href="torrents.php?id='.$GroupID.'&amp;torrentid='.$TorrentID.'" title="View Torrent">'.$GroupName.'</a>';
 		
-		$ExtraInfo = torrent_info($Torrent);
+		$ExtraInfo = torrent_info($Torrent, $TorrentID, $UserID);
 		if($ExtraInfo) {
 			$DisplayName.=' - '.$ExtraInfo;
 		}
             
+            
             $row = $row==='b'?'a':'b';
 ?>
-		<tr class="row<?=$row?>">
+		<tr class="torrent row<?=$row?>">
 			<td class="center cats_col">
                     <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
 			<div title="<?=$NewCategories[$NewCategoryID]['tag']?>"><img src="<?=$CatImg?>" />
                         </div> 
 			</td>
 			<td>
-				<span style="float: right;">
+                      <? print_torrent_status($TorrentID);
+                      
+                      /* ?>
+                      
+                        <span>
+                            <? if (empty($TorrentUserStatus[$TorrentID])) { ?>
+                                <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">
+                                    <span class="icon icon_disk_none"></span>
+                                </a>
+                            <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') { ?>
+                                <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Seeding Torrent">
+                                    <span class="icon icon_disk_seed"></span>
+                                </a>                    
+                            <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') { ?>
+                                <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Leeching Torrent">
+                                    <span class="icon icon_disk_leech"></span>
+                                </a>                    
+
+                            <? } ?>
+                        </span> */ ?>
+                      
+			<? /*	<span style="float: right;">
 					[<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>
 					| <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">RP</a>]
-				</span>
+				</span>  */ ?>
 				<?=$DisplayName?>
 				<br />
                                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                                
@@ -340,7 +368,12 @@ foreach($NewCategories as $Cat) {
 ?>
 	</table>
 	<div class="linkbox"><?=$Pages?></div>
+<?
+if(!$INLINE) {
+?>
 </div>
 <?
-show_footer();
+    show_footer();
+}
+
 ?>

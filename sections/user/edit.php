@@ -252,7 +252,14 @@ echo $Val->GenerateJS('userform');
 					<label for="disablelatesttopics">Disable latest forum topics</label>
 				</td>
 			</tr>
-                        <tr>
+			<tr>
+				<td class="label"><strong>User Torrents</strong></td>
+				<td>
+					<input type="checkbox" name="showusertorrents" id="showusertorrents" <? if (empty($SiteOptions['HideUserTorrents']) || $SiteOptions['HideUserTorrents']==0) { ?>checked="checked"<? } ?> />
+					<label for="showusertorrents">Show users uploaded torrents on user page (if allowed by that users paranoia settings)</label>
+				</td>
+			</tr>
+                  <tr>
 				<td class="label"><strong>Smileys</strong></td>
 				<td>
 					<input type="checkbox" name="disablesmileys" id="disablesmileys" <? if (!empty($SiteOptions['DisableSmileys'])) { ?>checked="checked"<? } ?> />
@@ -263,7 +270,7 @@ echo $Val->GenerateJS('userform');
 				<td class="label"><strong>Avatars</strong></td>
 				<td>
 					<input type="checkbox" name="disableavatars" id="disableavatars" <? if (!empty($SiteOptions['DisableAvatars'])) { ?>checked="checked"<? } ?> />
-					<label for="disableavatars">Disable avatars</label>
+					<label for="disableavatars">Disable avatars (disabling avatars also hides user badges)</label>
 				</td>
 			</tr>
 			<tr>
@@ -464,7 +471,9 @@ $DB->query("SELECT COUNT(UserID) FROM users_info WHERE Inviter='$UserID'");
 list($Invited) = $DB->next_record();
 ?>
 					<br /><label><input type="checkbox" name="p_invitedcount" <?=checked(!in_array('invitedcount', $Paranoia))?>> Number of users invited</label>
-				</td>
+				 <!-- <br /><label><input type="checkbox" name="p_showbadges" <?=checked(!in_array('showbadges', $Paranoia))?>> Show my awards</label> -->
+				
+                        </td>
 			</tr>
 			<tr>
 				<td colspan="2" class="right">

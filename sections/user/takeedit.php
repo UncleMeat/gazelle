@@ -178,6 +178,7 @@ $Options['DisableSignatures'] = (!empty($_POST['disablesignatures']) ? 1 : 0);
 $Options['TimeStyle'] = (!empty($_POST['timestyle']) ? 1 : 0);
 $Options['NotVoteUpTags'] = (!empty($_POST['voteuptags']) ? 0 : 1);
 $Options['ShortTitles'] = (!empty($_POST['shortpagetitles']) ? 1 : 0);
+$Options['HideUserTorrents'] = (!empty($_POST['showusertorrents']) ? 0 : 1);
 
 if(isset($LoggedUser['DisableFreeTorrentTop10'])) {
 	$Options['DisableFreeTorrentTop10'] = $LoggedUser['DisableFreeTorrentTop10'];
