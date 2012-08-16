@@ -38,14 +38,24 @@ foreach ($Tags as $Tag) {
     if ($Tag && !in_array($Tag, $CheckedTags)) {
         $CheckedTags[]=$Tag;
         
-        if ( !is_valid_tag($Tag)){
-            $Results[] = array(0, "$Tag is not a valid tag.");
-            continue;
-        }
-        $TagName = get_tag_synonym($Tag);
+        $OrigTag = $Tag; 
+        $Tag = sanitize_tag($Tag);
         
-        if ($Tag != $TagName && in_array($TagName, $CheckedTags)) {
-            $Results[] = array(0, "$Tag --> $TagName : already added.");
+        if ( !is_valid_tag($Tag)){
+            $Results[] = array(0, "$OrigTag is not a valid tag.");
+            continue;
+        } elseif ( $OrigTag!=$Tag){
+            $Results[] = array(1, "$OrigTag --> $Tag");
+        }
+        
+        $TagName = get_tag_synonym($Tag, false);
+        
+        if (in_array($TagName, $AddedTags)) {
+                if ($Tag != $TagName) { // this was a   replacement
+                    $Results[] = array(0, "$Tag --> $TagName : already added.");
+                } else {
+                    $Results[] = array(0, "$TagName is already added.");
+                }
             continue;
         } 
         
