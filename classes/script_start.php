@@ -729,7 +729,7 @@ function ValidateImageUrl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
            return $ErrorMessage;  
        }
        elseif(!preg_match($WhitelistRegex, $Imageurl)) {
-           return "$Imageurl is not on an approved pichost.<br/><br/>Please read this help topic: <a href='/articles.php?topic=approvedimg' title='Approved Imagehosts' target='_blank'>Approved Imagehosts</a>";
+           return "$Imageurl is not on an approved imagehost.";
        }
        else { // hooray it validated
            return TRUE;
