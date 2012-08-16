@@ -115,7 +115,9 @@ $BaseQuery = "SELECT
 	((t.Size * t.Snatched) + (t.Size * 0.5 * t.Leechers)) AS Data,
       t.Size,
       t.UserID,
-      u.Username
+      u.Username, 
+      t.FreeTorrent, 
+      t.double_seed
 	FROM torrents AS t
 	LEFT JOIN torrents_group AS g ON g.ID = t.GroupID
       LEFT JOIN users_main AS u ON u.ID = t.UserID ";
@@ -130,7 +132,7 @@ if($Details=='all' || $Details=='day') {
 			ORDER BY (t.Seeders + t.Leechers) DESC
 			LIMIT $Limit;";
 		$DB->query($Query);
-		$TopTorrentsActiveLastDay = $DB->to_array(false, MYSQLI_NUM);
+		$TopTorrentsActiveLastDay = $DB->to_array(false, MYSQLI_BOTH);
 		$Cache->cache_value('top10tor_day_'.$Limit.$WhereSum,$TopTorrentsActiveLastDay,3600*2);
 	}
 	generate_torrent_table('Most Active Torrents Uploaded in the Past Day', 'day', $TopTorrentsActiveLastDay, $Limit);
@@ -145,7 +147,7 @@ if($Details=='all' || $Details=='week') {
 			ORDER BY (t.Seeders + t.Leechers) DESC
 			LIMIT $Limit;";
 		$DB->query($Query);
-		$TopTorrentsActiveLastWeek = $DB->to_array(false, MYSQLI_NUM);
+		$TopTorrentsActiveLastWeek = $DB->to_array(false, MYSQLI_BOTH);
 		$Cache->cache_value('top10tor_week_'.$Limit.$WhereSum,$TopTorrentsActiveLastWeek,3600*6);
 	}
 	generate_torrent_table('Most Active Torrents Uploaded in the Past Week', 'week', $TopTorrentsActiveLastWeek, $Limit);
@@ -164,7 +166,7 @@ if($Details=='all' || $Details=='overall') {
 			ORDER BY (t.Seeders + t.Leechers) DESC
 			LIMIT $Limit;";
 		$DB->query($Query);
-		$TopTorrentsActiveAllTime = $DB->to_array(false, MYSQLI_NUM);
+		$TopTorrentsActiveAllTime = $DB->to_array(false, MYSQLI_BOTH);
 		$Cache->cache_value('top10tor_overall_'.$Limit.$WhereSum,$TopTorrentsActiveAllTime,3600*6);
 	}
 	generate_torrent_table('Most Active Torrents of All Time', 'overall', $TopTorrentsActiveAllTime, $Limit);
@@ -178,7 +180,7 @@ if(($Details=='all' || $Details=='snatched') && !$Filtered) {
 			ORDER BY t.Snatched DESC
 			LIMIT $Limit;";
 		$DB->query($Query);
-		$TopTorrentsSnatched = $DB->to_array(false, MYSQLI_NUM);
+		$TopTorrentsSnatched = $DB->to_array(false, MYSQLI_BOTH);
 		$Cache->cache_value('top10tor_snatched_'.$Limit.$WhereSum,$TopTorrentsSnatched,3600*6);
 	}
 	generate_torrent_table('Most Snatched Torrents', 'snatched', $TopTorrentsSnatched, $Limit);
@@ -196,7 +198,7 @@ if(($Details=='all' || $Details=='data') && !$Filtered) {
 			ORDER BY Data DESC
 			LIMIT $Limit;";
 		$DB->query($Query);
-		$TopTorrentsTransferred = $DB->to_array(false, MYSQLI_NUM);
+		$TopTorrentsTransferred = $DB->to_array(false, MYSQLI_BOTH);
 		$Cache->cache_value('top10tor_data_'.$Limit.$WhereSum,$TopTorrentsTransferred,3600*6);
 	}
 	generate_torrent_table('Most Data Transferred Torrents', 'data', $TopTorrentsTransferred, $Limit);
@@ -211,7 +213,7 @@ if(($Details=='all' || $Details=='seeded') && !$Filtered) {
 			ORDER BY t.Seeders DESC
 			LIMIT $Limit;";
 		$DB->query($Query);
-		$TopTorrentsSeeded = $DB->to_array(false, MYSQLI_NUM);
+		$TopTorrentsSeeded = $DB->to_array(false, MYSQLI_BOTH);
 		$Cache->cache_value('top10tor_seeded_'.$Limit.$WhereSum,$TopTorrentsSeeded,3600*6);
 	}
 	generate_torrent_table('Best Seeded Torrents', 'seeded', $TopTorrentsSeeded, $Limit);
@@ -288,18 +290,23 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 			$TagList = implode(', ', $TagList);
 			$TorrentTags='<br /><div class="tags">'.$TagList.'</div>';
 		}
-
+ 
+	  $AddExtra = torrent_info($Detail, $TorrentID, $LoggedUser['ID']);
 		// print row
 ?>
-	<tr class="group_torrent row<?=$Highlight?>">
+	<tr class="torrent row<?=$Highlight?>">
 		<td style="padding:8px;text-align:center;"><strong><?=$Rank?></strong></td>
 		<td class="center cats_col">
                     <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
                     <div title="<?=$NewCategories[$NewCategoryID]['tag']?>"><img src="<?=$CatImg?>" /></div>
                 </td>
 		<td>
+            <? 
+                    print_torrent_status($TorrentID);  /* 
                   <span>[<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>]</span>
-			<strong><?=$DisplayName?></strong>
+			 */ ?>
+                  <strong><?=$DisplayName?></strong> <?=$AddExtra?>
+                    
                         <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
 			<?=$TorrentTags?>
                         <? } ?>

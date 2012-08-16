@@ -149,6 +149,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
 
         $DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
         
+        /*
         if(!empty($Torrent['FreeTorrent'])) {
                 $DisplayName .=' <strong>/ Freeleech!</strong>'; 
         } elseif(!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > sqltime()) { 
@@ -157,7 +158,8 @@ foreach ($TorrentList as $GroupID=>$Group) {
         
         if(!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['DoubleSeed'] > sqltime()) { 
                 $DisplayName .= ' <strong>/ Personal Doubleseed!</strong>';
-        }
+        } */
+	  $AddExtra = torrent_info($Torrent, $TorrentID, $UserID);
         
 ?>
 <tr class="torrent" id="group_<?=$GroupID?>">
@@ -168,6 +170,8 @@ foreach ($TorrentList as $GroupID=>$Group) {
                 </div>
         </td>
         <td>
+            <? 
+                    print_torrent_status($TorrentID);  /* 
                 <span>
                     <? if (empty($TorrentUserStatus[$TorrentID])) { ?>
                         <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">
@@ -183,11 +187,11 @@ foreach ($TorrentList as $GroupID=>$Group) {
                         </a>                    
 
                     <? } ?>
-                </span>
-                <strong><?=$DisplayName?></strong>
-                <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
-                <?=$TorrentTags?>
-                <? } ?>
+                </span> */ ?>
+                <strong><?=$DisplayName?></strong> <?=$AddExtra?>
+                <? if ($LoggedUser['HideTagsInLists'] !== 1) { 
+                    echo $TorrentTags;
+                 } ?>
         </td>
         <td class="nobr"><?=get_size($Torrent['Size'])?></td>
         <td><?=number_format($Torrent['Snatched'])?></td>
