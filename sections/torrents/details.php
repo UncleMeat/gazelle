@@ -377,7 +377,7 @@ if(check_perms('torrents_review')){
             <div class="head">
                 <strong><a href="torrents.php?id=<?=$GroupID?>&tsort=<?=$tagsort2?>" title="change sort order of tags to <?=$tagsort2?>">Tags</a></strong>
                 <span style="float:right;font-size:0.8em;">
-                    <a href="torrents.php?action=tag_synonyms">synonyms</a> | <a href="articles.php?topic=tag">Tagging rules</a>
+                    <a href="torrents.php?action=tag_synonyms" target="_blank">synonyms</a> | <a href="articles.php?topic=tag" target="_blank">Tagging rules</a>
                 </span>
             </div>
         <div class="box box_tags">			
@@ -386,7 +386,9 @@ if(check_perms('torrents_review')){
 if(count($Tags) > 0) {
 ?>
                           <ul id="torrent_tags" class="stats nobullet">
-                  <!--      <li style="font-size:1.2em;">Only vote on whether tags are appropriate to the content.</li>  -->
+                                <li style="font-size:1.1em;">
+                                    Please vote for tags <a href="articles.php?topic=tag" target="_blank"><strong class="important_text">only</strong></a> based on their appropriateness for this upload.
+                                </li>  
         <?
                 
             foreach($Tags as $TagKey=>$Tag) {
