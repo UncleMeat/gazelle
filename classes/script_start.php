@@ -89,7 +89,7 @@ $Debug->set_flag('start user handling');
 // Get permissions
 list($Classes, $ClassLevels) = $Cache->get_value('classes');
 if (!$Classes || !$ClassLevels) {
-    $DB->query('SELECT ID, Name, Level FROM permissions ORDER BY Level');
+    $DB->query("SELECT ID, Name, Level FROM permissions WHERE IsUserClass='1' ORDER BY Level");
     $Classes = $DB->to_array('ID');
     $ClassLevels = $DB->to_array('Level');
     $Cache->cache_value('classes', array($Classes, $ClassLevels), 0);
@@ -287,6 +287,7 @@ if ($TorrentUserStatus === false) {
 $Debug->set_flag('start function definitions');
 
 // Get cached user info, is used for the user loading the page and usernames all over the site
+// AND for looking up advanced tags permissions
 function user_info($UserID) {
     global $DB, $Cache;
     $UserInfo = $Cache->get_value('user_info_' . $UserID);
@@ -304,13 +305,14 @@ function user_info($UserID) {
 			m.Title,
 			i.CatchupTime,
 			m.Visible,
-                  m.Signature
+                  m.Signature,
+			m.GroupPermissionID
 			FROM users_main AS m
 			INNER JOIN users_info AS i ON i.UserID=m.ID
 			WHERE m.ID='$UserID'");
 
 		if($DB->record_count() == 0) { // Deleted user, maybe?
-			$UserInfo = array('ID'=>'','Username'=>'','PermissionID'=>0,'Donor'=>false,'Warned'=>'0000-00-00 00:00:00','Avatar'=>'','Enabled'=>0,'Title'=>'', 'CatchupTime'=>0, 'Visible'=>'1');
+			$UserInfo = array('ID'=>'','Username'=>'','PermissionID'=>0,'GroupPermissionID'=>0,'CustomPermissions'=>array(),'Donor'=>false,'Warned'=>'0000-00-00 00:00:00','Avatar'=>'','Enabled'=>0,'Title'=>'', 'CatchupTime'=>0, 'Visible'=>'1');
 
 		} else {
 			$UserInfo = $DB->next_record(MYSQLI_ASSOC, array('Paranoia', 'Title'));
@@ -484,22 +486,31 @@ function get_permissions($PermissionID) {
                                p.MaxAvatarHeight,
                                 p.DisplayStaff
                                FROM permissions AS p WHERE ID='$PermissionID'");
-        $Permission = $DB->next_record(MYSQLI_ASSOC, array('Permissions'));
-        $Permission['Permissions'] = unserialize($Permission['Permissions']);
-        $Cache->cache_value('perm_' . $PermissionID, $Permission, 2592000);
+        if ($DB->record_count()>0){
+            $Permission = $DB->next_record(MYSQLI_ASSOC, array('Permissions'));
+            $Permission['Permissions'] = unserialize($Permission['Permissions']);
+            $Cache->cache_value('perm_' . $PermissionID, $Permission, 2592000);
+        } else {
+            $Permission = array('Permissions' => array());
+        }
     }
     return $Permission;
 }
 
 function get_permissions_for_user($UserID, $CustomPermissions = false, $UserPermission = false) {
-	global $DB;
+	global $DB, $Cache;
 
 	$UserInfo = user_info($UserID);
 	
-	if ($CustomPermissions === false) {
-		$DB->query('SELECT um.CustomPermissions FROM users_main AS um WHERE um.ID = '.((int)$UserID));
-	
-		list($CustomPermissions) = $DB->next_record(MYSQLI_NUM, false);
+	if ($CustomPermissions === false) { 
+            // if this value is in the cache get it from there
+            $HeavyInfo = $Cache->get_value('user_info_heavy_' . $UserID); 
+            if($HeavyInfo!==false && isset($HeavyInfo['CustomPermissions']) ) {
+                $CustomPermissions = $HeavyInfo['CustomPermissions']; 
+            } else { // if not just grab it
+                $DB->query('SELECT um.CustomPermissions FROM users_main AS um WHERE um.ID = '.$UserID); 
+                list($CustomPermissions) = $DB->next_record(MYSQLI_NUM, false);
+            }
 	}
 	
 	if (!empty($CustomPermissions) && !is_array($CustomPermissions)) {
@@ -512,22 +523,19 @@ function get_permissions_for_user($UserID, $CustomPermissions = false, $UserPerm
             $Permissions = $UserPermission;
       }
       
-	if(!empty($CustomPermissions)) {
-		$CustomPerms = $CustomPermissions;
-	} else {
-		$CustomPerms = array();
-	}
+      /* 
+ 
 
 	$MaxCollages = $Permissions['Permissions']['MaxCollages'] + $CustomPerms['MaxCollages'];
 	
 	//Combine the permissions
 	return array_merge($Permissions['Permissions'], $CustomPerms, array('MaxCollages' => $MaxCollages));
+       */
       
-      /*
-	if($UserInfo['Donor']) {
-		$DonorPerms = get_permissions(DONOR);
+	if($UserInfo['GroupPermissionID'] > 0) {
+		$GroupPerms = get_permissions($UserInfo['GroupPermissionID']);
 	} else {
-		$DonorPerms = array('Permissions' => array());
+		$GroupPerms = array('Permissions' => array());
 	}
 
 	if(!empty($CustomPermissions)) {
@@ -536,11 +544,11 @@ function get_permissions_for_user($UserID, $CustomPermissions = false, $UserPerm
 		$CustomPerms = array();
 	}
 
-	$MaxCollages = $Permissions['Permissions']['MaxCollages'] + $DonorPerms['Permissions']['MaxCollages'] + $CustomPerms['MaxCollages'];
+	$MaxCollages = $Permissions['Permissions']['MaxCollages'] + $GroupPerms['Permissions']['MaxCollages'] + $CustomPerms['MaxCollages'];
 	
 	//Combine the permissions
-	return array_merge($Permissions['Permissions'], $DonorPerms['Permissions'], $CustomPerms, array('MaxCollages' => $MaxCollages));
-       */
+	return array_merge($Permissions['Permissions'], $GroupPerms['Permissions'], $CustomPerms, array('MaxCollages' => $MaxCollages));
+      
 }
 
 // Get whether this user can use adv tags (pass optional params to reduce lookups)

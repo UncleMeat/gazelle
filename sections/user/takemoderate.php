@@ -20,6 +20,7 @@ $UserID = $_POST['userid'];
 
 // Variables for database input
 $Class = (int)$_POST['Class'];
+$GroupPerm = (int)$_POST['GroupPermission'];
 $Username = db_string(display_str( $_POST['Username']));
 $Title = db_string($_POST['Title']);
 $AdminComment = db_string(display_str($_POST['AdminComment']));
@@ -131,7 +132,8 @@ $DB->query("SELECT
         m.personal_freeleech,
 	i.RatioWatchEnds,
 	SHA1(i.AdminComment) AS CommentHash,
-	m.Credits
+	m.Credits,
+        m.GroupPermissionID
 	FROM users_main AS m
 	JOIN users_info AS i ON i.UserID = m.ID
 	LEFT JOIN permissions AS p ON p.ID=m.PermissionID
@@ -235,7 +237,7 @@ if ($Classes[$Class]['Level']!=$Cur['Class'] && (
 	($Classes[$Class]['Level'] < $LoggedUser['Class'] && check_perms('users_promote_below', $Cur['Class']))
 	|| ($Classes[$Class]['Level'] <= $LoggedUser['Class'] && check_perms('users_promote_to', $Cur['Class']-1)))) {
 	$UpdateSet[]="PermissionID='$Class'";
-	$EditSummary[]="class changed to ".make_class_string($Class);
+	$EditSummary[]="class changed to [b]".make_class_string($Class).'[/b]';
 	$LightUpdates['PermissionID']=$Class;
 
 	$DB->query("SELECT DISTINCT DisplayStaff FROM permissions WHERE ID = $Class OR ID = ".$ClassLevels[$Cur['Class']]['ID']);
@@ -247,6 +249,23 @@ if ($Classes[$Class]['Level']!=$Cur['Class'] && (
 	}
 }
 
+if($GroupPerm!=$Cur['GroupPermissionID'] && 
+        (check_perms('admin_manage_permissions',  $Cur['Class']) || check_perms('user_group_permissions',  $Cur['Class']) )) {
+    
+      if($GroupPerm!=0) {
+          $DB->query("SELECT Name FROM permissions WHERE ID='$GroupPerm' AND IsUserClass='0'");
+          if($DB->record_count() > 0) {
+              list($PermName) = $DB->next_record(MYSQLI_NUM);
+          } else 
+              error("Input Error: Cound not find GroupPerm with ID='$GroupPerm'");
+      } else {
+          $PermName = 'none';
+      }
+      $UpdateSet[]="GroupPermissionID='$GroupPerm'";
+      $EditSummary[]="group permissions changed to [b]{$PermName}[/b]";
+      $LightUpdates['GroupPermissionID']=$GroupPerm;
+}
+
 if ($Username!=$Cur['Username'] && check_perms('users_edit_usernames', $Cur['Class']-1)) {
 	$DB->query("SELECT ID FROM users_main WHERE Username = '".$Username."' AND ID != $UserID");
 	if($DB->record_count() > 0) {
@@ -256,7 +275,7 @@ if ($Username!=$Cur['Username'] && check_perms('users_edit_usernames', $Cur['Cla
 		die();
 	} else {
 		$UpdateSet[]="Username='".$Username."'";
-		$EditSummary[]="username changed from ".$Cur['Username']." to ".$Username;
+		$EditSummary[]="username changed from ".$Cur['Username']." to [b]{$Username}[/b]";
 		$LightUpdates['Username']=$Username;
 	}
 }

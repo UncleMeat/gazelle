@@ -600,34 +600,7 @@ if(check_perms('site_moderate_forums')) {
 			</tr>
 			<tr>
 				<td class="label">Move thread</td>
-				<td>
-                            <?
-                            /*
-					<select name="forumid" tabindex="2">
-<? 
-$OpenGroup = false;
-$LastCategoryID=-1;
-
-foreach ($Forums as $Forum) {
-	if ($Forum['MinClassRead'] > $LoggedUser['Class']) {
-		continue;
-	}
-
-	if ($Forum['CategoryID'] != $LastCategoryID) {
-		$LastCategoryID = $Forum['CategoryID'];
-		if($OpenGroup) { ?>
-					</optgroup>
-<?		} ?>
-					<optgroup label="<?=$ForumCats[$Forum['CategoryID']]?>">
-<?		$OpenGroup = true;
-	}
-?>
-						<option value="<?=$Forum['ID']?>"<? if($ThreadInfo['ForumID'] == $Forum['ID']) { echo ' selected="selected"';} ?>><?=$Forum['Name']?></option>
-<? } ?>
-					</optgroup>
-					</select>
-                             * */   ?>
-                             
+				<td> 
                             <?= print_forums_select($Forums, $ForumCats, $ThreadInfo['ForumID']) ?>
 				</td>
 			</tr>

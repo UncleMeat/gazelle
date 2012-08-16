@@ -914,9 +914,11 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   `MaxAvatarHeight` smallint(4) unsigned NOT NULL DEFAULT '100',
   `Values` text CHARACTER SET latin1 NOT NULL,
   `DisplayStaff` enum('0','1') CHARACTER SET latin1 NOT NULL DEFAULT '0',
+  `IsUserClass` enum( '0', '1' ) NOT NULL DEFAULT '1',
   PRIMARY KEY (`ID`),
-  UNIQUE KEY `Level` (`Level`),
-  KEY `DisplayStaff` (`DisplayStaff`)
+  KEY `Level` (`Level`),
+  KEY `DisplayStaff` (`DisplayStaff`),
+  KEY `IsUserClass` (`IsUserClass`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
@@ -2059,6 +2061,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `Visible` enum('1','0') NOT NULL DEFAULT '1',
   `Invites` int(10) unsigned NOT NULL DEFAULT '0',
   `PermissionID` int(10) unsigned NOT NULL,
+  `GroupPermissionID` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0' ,
   `CustomPermissions` text,
   `LastSeed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `can_leech` tinyint(4) NOT NULL DEFAULT '1',

@@ -284,62 +284,76 @@ switch ($_REQUEST['action']){
 		if (!check_perms('admin_manage_permissions')) { error(403); }
 
 		if (!empty($_REQUEST['id'])) {
-			$Val->SetFields('name',true,'string','You did not enter a valid name for this permission set.');
-			$Val->SetFields('level',true,'number','You did not enter a valid level for this permission set.');
-			$Val->SetFields('maxcollages',true,'number','You did not enter a valid number of personal collages.');
-			//$Val->SetFields('test',true,'number','You did not enter a valid level for this permission set.');
 
 			$Values=array();
 			if (is_numeric($_REQUEST['id'])) {
-				$DB->query("SELECT p.ID,p.Name,p.Level,p.Values,p.DisplayStaff,
+                        $JoinOn = ( $_POST['IsClass']==1)?'PermissionID':'GroupPermissionID';
+				$DB->query("SELECT p.ID,p.Name,p.Level,p.Values,p.DisplayStaff,p.IsUserClass,
                                     p.MaxSigLength,p.MaxAvatarWidth,p.MaxAvatarHeight,COUNT(u.ID) 
-                                    FROM permissions AS p LEFT JOIN users_main AS u ON u.PermissionID=p.ID WHERE p.ID='".db_string($_REQUEST['id'])."' GROUP BY p.ID");
-				list($ID,$Name,$Level,$Values,$DisplayStaff,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight,$UserCount)=$DB->next_record(MYSQLI_NUM, array(3));
+                                    FROM permissions AS p LEFT JOIN users_main AS u ON u.$JoinOn=p.ID WHERE p.ID='".db_string($_REQUEST['id'])."' GROUP BY p.ID");
+				list($ID,$Name,$Level,$Values,$DisplayStaff,$IsUserClass,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight,$UserCount)=$DB->next_record(MYSQLI_NUM, array(3));
 
-				if($Level > $LoggedUser['Class']  || $_REQUEST['level'] > $LoggedUser['Class']) {
+				if ($IsUserClass =='1' && ($Level > $LoggedUser['Class']  || $_REQUEST['level'] > $LoggedUser['Class'])) {
 					error(403);
 				}
  
 				$Values=unserialize($Values);
-			}
-			
-		
+			} else {
+                        $IsUserClass = isset($_POST['isclass']) && $_POST['isclass']==1?'1':'0';
+                  }
+ 
 
 			if (!empty($_POST['submit'])) {
-				$Err = $Val->ValidateForm($_POST);
-
-				if (!is_numeric($_REQUEST['id'])) {
-					$DB->query("SELECT ID FROM permissions WHERE Level='".db_string($_REQUEST['level'])."'");
-					list($DupeCheck)=$DB->next_record();
-
-					if ($DupeCheck) {
-						$Err = "There is already a permission class with that level.";
-					}
-				}
-
 				$Values=array();
+                        $Val->SetFields('name',true,'string','You did not enter a valid name for this permission set.');
+                        if($IsUserClass){
+                            $Val->SetFields('level',true,'number','You did not enter a valid level for this permission set.');
+                            $Val->SetFields('maxsiglength',true,'number','You did not enter a valid number for MaxSigLength.');
+                            $Val->SetFields('maxavatarwidth',true,'number','You did not enter a valid number for MaxAvavtarWidth.');
+                            $Val->SetFields('maxavatarheight',true,'number','You did not enter a valid number for MaxAvavtarHeight.');
+                            $Val->SetFields('maxcollages',true,'number','You did not enter a valid number of personal collages.');
+                            
+                            //$Val->SetFields('test',true,'number','You did not enter a valid level for this permission set.');
+                            if (!is_numeric($_REQUEST['id'])) {
+                                  $DB->query("SELECT ID FROM permissions WHERE Level='".db_string($_REQUEST['level'])."'");
+                                  list($DupeCheck)=$DB->next_record();
+                                  if ($DupeCheck) $Err = "There is already a user class with that level."; 
+                            }
+                            $Level=$_REQUEST['level'];
+                            $DisplayStaff=$_REQUEST['displaystaff'];
+                            $MaxSigLength=$_REQUEST['maxsiglength'];
+                            $MaxAvatarWidth=$_REQUEST['maxavatarwidth'];
+                            $MaxAvatarHeight=$_REQUEST['maxavatarheight'];
+                            $Values['MaxCollages']=$_REQUEST['maxcollages'];
+                        } else {
+                            if (!is_numeric($_REQUEST['id'])) { // new record
+                                  $DB->query("SELECT ID FROM permissions WHERE Name='".db_string($_REQUEST['name'])."'");
+                                  list($DupeCheck)=$DB->next_record(); 
+                                  if ($DupeCheck) $Err = "There is already a permission class with that name."; 
+                            }
+                            $Level=202;
+                            $DisplayStaff='0';
+                        }
+				if(!$Err) $Err = $Val->ValidateForm($_POST);
+
+
 				foreach ($_REQUEST as $Key => $Perms) {
 					if (substr($Key,0,5)=="perm_") { $Values[substr($Key,5)]= (int)$Perms; }
 				}
 
 				$Name=$_REQUEST['name'];
-				$Level=$_REQUEST['level'];
-				$DisplayStaff=$_REQUEST['displaystaff'];
-                        $MaxSigLength=$_REQUEST['maxsiglength'];
-                        $MaxAvatarWidth=$_REQUEST['maxavatarwidth'];
-                        $MaxAvatarHeight=$_REQUEST['maxavatarheight'];
-				$Values['MaxCollages']=$_REQUEST['maxcollages'];
 
 				if (!$Err) {
 					if (!is_numeric($_REQUEST['id'])) {
 						$DB->query("INSERT INTO permissions 
-                                            (Level,Name,`Values`,DisplayStaff,MaxSigLength,MaxAvatarWidth,MaxAvatarHeight) 
-                                     VALUES ('".db_string($Level)."','".db_string($Name)."','".db_string(serialize($Values))."','".db_string($DisplayStaff)."','".db_string($MaxSigLength)."','".db_string($MaxAvatarWidth)."','".db_string($MaxAvatarHeight)."')");
+                                            (Level,Name,`Values`,DisplayStaff,IsUserClass,MaxSigLength,MaxAvatarWidth,MaxAvatarHeight) 
+                                     VALUES ('".db_string($Level)."','".db_string($Name)."','".db_string(serialize($Values))."','".db_string($DisplayStaff)."','".db_string($IsUserClass)."','".db_string($MaxSigLength)."','".db_string($MaxAvatarWidth)."','".db_string($MaxAvatarHeight)."')");
 					} else {
 						$DB->query("UPDATE permissions SET Level='".db_string($Level)."',Name='".db_string($Name)."',`Values`='".db_string(serialize($Values))."',DisplayStaff='".db_string($DisplayStaff)."',MaxSigLength='".db_string($MaxSigLength)."',MaxAvatarWidth='".db_string($MaxAvatarWidth)."',MaxAvatarHeight='".db_string($MaxAvatarHeight)."' WHERE ID='".db_string($_REQUEST['id'])."'");
 						$Cache->delete_value('perm_'.$_REQUEST['id']);
 					}
-					$Cache->delete_value('classes');
+					if($IsUserClass) $Cache->delete_value('classes');
+                              else $Cache->delete_value('group_permissions');
 				} else {
 					error($Err);
 				}
@@ -348,11 +362,18 @@ switch ($_REQUEST['action']){
 			include('managers/permissions_alter.php');
 
 		} else {
-			if (!empty($_REQUEST['removeid'])) {
-				$DB->query("DELETE FROM permissions WHERE ID='".db_string($_REQUEST['removeid'])."'");
-				$DB->query("UPDATE users_main SET PermissionID='".APPRENTICE."' WHERE PermissionID='".db_string($_REQUEST['removeid'])."'");
+			if (!empty($_REQUEST['removeid']) && is_numeric($_REQUEST['removeid'])) {
+                        
+                        $DB->query("SELECT ID, IsUserClass FROM permissions WHERE ID='".db_string($_REQUEST['removeid'])."'" );
+                        list($pID, $IsUserClass)=$DB->next_record(MYSQLI_NUM);
+                        if ($pID) { 
+                            $DB->query("DELETE FROM permissions WHERE ID='".db_string($_REQUEST['removeid'])."'");
+                            $DB->query("UPDATE users_main SET PermissionID='".APPRENTICE."' WHERE PermissionID='".db_string($_REQUEST['removeid'])."'");
+                            $DB->query("UPDATE users_main SET GroupPermissionID='0' WHERE GroupPermissionID='".db_string($_REQUEST['removeid'])."'");
 
-				$Cache->delete_value('classes');
+                            $Cache->delete_value('classes');
+                            $Cache->delete_value('group_permissions');
+                        }
 			}
 
 			include('managers/permissions_list.php');

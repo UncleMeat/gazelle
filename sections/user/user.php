@@ -29,6 +29,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		m.Title,
 		m.torrent_pass,
                 m.PermissionID AS ClassID,
+                m.GroupPermissionID,
 		m.Enabled,
 		m.Paranoia,
 		m.Invites,
@@ -77,7 +78,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $PersonalFreeLeech, $CommentHash,$BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight) = $DB->next_record(MYSQLI_NUM, array(12));
+	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $GroupPermID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $PersonalFreeLeech, $CommentHash,$BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight) = $DB->next_record(MYSQLI_NUM, array(12));
 
 } else { // Person viewing is a normal user
 	$DB->query("SELECT
@@ -90,6 +91,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		m.Downloaded,
 		m.RequiredRatio,
             m.PermissionID AS ClassID,
+              m.GroupPermissionID,
 		m.Enabled,
 		m.Paranoia,
 		m.Invites,
@@ -122,7 +124,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$BonusLog,$MaxAvatarWidth,$MaxAvatarHeight, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(10));
+	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $GroupPermID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$BonusLog,$MaxAvatarWidth,$MaxAvatarHeight, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(10));
 }
  
 
@@ -997,6 +999,32 @@ if (check_perms('users_mod', $Class)) { ?>
 			</tr>
 <?
 	}
+      
+      if (check_perms('admin_manage_permissions', $Class) || check_perms('user_group_permissions', $Class) ) {
+          
+            $GroupPerms = $Cache->get_value('group_permissions');
+            if (!$GroupPerms) {
+                $DB->query("SELECT ID, Name FROM permissions WHERE IsUserClass='0' ORDER BY ID");
+                $GroupPerms = $DB->to_array('ID');
+                $Cache->cache_value('group_permissions', $GroupPerms, 0);
+            }
+?>
+			<tr>
+				<td class="label">Group Permissions:</td>
+				<td>
+					<select name="GroupPermission">
+						<option value="0" <?if($GroupPermID===0)echo'selected="selected"';?>> -none- &nbsp;</option>
+<?
+		foreach ($GroupPerms as $GPerm) { 
+			if ($GroupPermID===$GPerm['ID']) { $Selected='selected="selected"'; } else { $Selected=""; }
+?>
+						<option value="<?=$GPerm['ID']?>" <?=$Selected?>><?=$GPerm['Name']?>&nbsp;</option>
+<?		} ?>
+					</select>
+				</td>
+			</tr>
+<?
+      }
 
 	if (check_perms('users_give_donor')) {
 ?>

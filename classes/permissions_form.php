@@ -86,6 +86,7 @@
 	'users_edit_password' => 'Can change passwords.',
 	'users_promote_below' => 'Can promote users to below current level.',
 	'users_promote_to' => 'Can promote users up to current level.',
+        'user_group_permissions'=> 'Can manage group permissions.',
 	'users_give_donor' => 'Can give donor access.',
 	'users_warn' => 'Can warn users.',
 	'users_disable_users' => 'Can disable users.',
@@ -182,8 +183,8 @@ function permissions_form(){ ?>
 					<? display_perm('site_moderate_requests', 'Can moderate any request.'); ?>
 					<? display_perm('forums_polls_create','Can create polls in the forums.') ?>
 					<? display_perm('forums_polls_moderate','Can feature and close polls.') ?>
-					<? display_perm('site_moderate_forums', 'Can moderate the forums.'); ?>
-					<? display_perm('site_admin_forums', 'Can administrate the forums.'); ?>
+					<? display_perm('site_moderate_forums', 'Can moderate the forums', 'Can moderate the forums (lock/sticky/rename/move threads).'); ?>
+					<? display_perm('site_admin_forums', 'Can administrate the forums.','Can administrate the forums (merge/delete threads).'); ?>
 					<? display_perm('site_view_flow', 'Can view site stats and data pools.'); ?>
 					<? display_perm('site_view_full_log', 'Can view the full site log.'); ?>
 					<? display_perm('site_view_torrent_snatchlist', 'Can view torrent snatchlists.'); ?>
@@ -225,7 +226,7 @@ function permissions_form(){ ?>
       					
                                         <? display_perm('users_edit_titles', 'Can edit titles.'); ?>
 					<? display_perm('users_edit_avatars', 'Can edit avatars.'); ?>
-                                        <? display_perm('users_edit_badges', 'Can edit other\s badges.'); ?>
+                                        <? display_perm('users_edit_badges', 'Can edit other\'s badges.'); ?>
                                         <? display_perm('users_edit_own_badges', 'Can edit own badges.'); ?>
                             
 					<? display_perm('users_edit_invites', 'Can edit invite numbers and cancel sent invites.'); ?>
@@ -237,6 +238,7 @@ function permissions_form(){ ?>
 					<? display_perm('users_edit_password', 'Can change password.'); ?>
 					<? display_perm('users_promote_below', 'Can promote users to below current level.'); ?>
 					<? display_perm('users_promote_to', 'Can promote users up to current level.'); ?>
+                                        <? display_perm('user_group_permissions', 'Can manage group permissions.', 'Can change a users group permission setting.'); ?> 
 					<? display_perm('users_give_donor', 'Can give donor access.'); ?>
 					<? display_perm('users_warn', 'Can warn users.'); ?>
 					<? display_perm('users_disable_users', 'Can disable users.'); ?>
@@ -253,7 +255,7 @@ function permissions_form(){ ?>
 					<? display_perm('users_override_paranoia', 'Can override paranoia'); ?>
 					<? display_perm('users_make_invisible', 'Can make users invisible'); ?>
 					<? display_perm('users_logout', 'Can log users out'); ?>
-					<? display_perm('users_mod', 'Can access basic moderator tools (Admin comment)'); ?>
+					<? display_perm('users_mod', 'Can access basic moderator tools (Admin comment)','Allows access to the user moderation panels'); ?>
 					<? display_perm('users_groups', 'Can use Group tools'); ?>
 					<br/>*Everything is only applicable to users with the same or lower class level
 				</td>
@@ -316,7 +318,7 @@ function permissions_form(){ ?>
 					    <? display_perm('admin_imagehosts', 'Can manage imagehosts whitelist'); ?> 
 					<? display_perm('admin_clear_cache', 'Can clear cached pages'); ?>
 					<? display_perm('admin_whitelist', 'Can manage the list of allowed clients.'); ?>
-					<? display_perm('admin_manage_permissions', 'Can edit permission classes/user permissions.'); ?>
+					<? display_perm('admin_manage_permissions', 'Can edit permission classes/user permissions.', 'Can edit all permissions and templates; user classes / group permissions / individual user permissions.'); ?>
 					<? display_perm('admin_schedule', 'Can run the site schedule.'); ?>
 					<? display_perm('admin_login_watch', 'Can manage login watch.'); ?>
 					<? display_perm('admin_manage_wiki', 'Can manage wiki access.'); ?>

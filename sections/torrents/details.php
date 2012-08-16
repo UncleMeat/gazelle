@@ -724,7 +724,7 @@ if(count($PersonalCollages)>0) {
                     <input type="hidden" name="action" value="thank" />
                     <input type="hidden" name="groupid" value="<?=$GroupID?>" />
 			  <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-                    <input type="button" onclick="Say_Thanks()" value="Thank the uploader!" class="long center" style="font-weight:bold;font-size:larger;" />
+                    <input type="button" onclick="Say_Thanks()" value="Thank the uploader!" class=" center" style="font-weight:bold;font-size:larger;" />
                </form>
 <?  }   ?>
                 <div  id="thanksdiv" class="pad<?if(!$Thanks)echo' hidden';?>" style="text-align:left">
