@@ -557,23 +557,7 @@ function get_permissions_advtags($UserID, $CustomPermissions = false, $UserPermi
       return isset($PermissionsValues['site_advanced_tags']) &&  $PermissionsValues['site_advanced_tags'];
 }
 
-function get_latest_forum_topics($PermissionID) {
-    global $Classes, $DB, $Cache;
-    $LatestTopics = $Cache->get_value('latest_topics_'.$PermissionID);
-    if ($LatestTopics === false) {
-        $Level = $Classes[$PermissionID]['Level'];
-        $DB->query("SELECT ft.ID AS ThreadID, fp.ID AS PostID, ft.Title, um.Username, fp.AddedTime FROM forums_posts AS fp
-                    INNER JOIN forums_topics AS ft ON ft.ID=fp.TopicID
-                    INNER JOIN forums AS f ON f.ID=ft.ForumID
-                    INNER JOIN users_main AS um ON um.ID=fp.AuthorID
-                    WHERE f.MinClassRead<='$Level'
-                    ORDER BY AddedTime DESC
-                    LIMIT 6");
-        $LatestTopics = $DB->to_array();
-        $Cache->cache_value('latest_topics_'.$PermissionID, $LatestTopics);
-    }
-    return $LatestTopics;
-}
+
 
 function get_user_badges($UserID, $LimitRows = true) {     //, $Limit = 0){
     global $DB, $Cache;
@@ -586,58 +570,36 @@ function get_user_badges($UserID, $LimitRows = true) {     //, $Limit = 0){
     if (!is_array($UserBadges)) {
         $DB->query("
                     (SELECT
-                        ub.ID,
-                        ub.BadgeID,
-                        ub.Description,
-                        b.Title,
-                        b.Image,
-                        IF(ba.ID IS NULL,FALSE,TRUE) AS Auto,
-                        b.Type,
-                        b.Display,
-                        b.Sort
-                   FROM users_badges AS ub
-                   JOIN badges AS b ON b.ID = ub.BadgeID
-                   LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
-                   WHERE ub.UserID = $UserID AND b.Display=0
-                   ORDER BY b.Sort $Limit)
+                        ub.ID, ub.BadgeID,  ub.Description,  b.Title, b.Image,
+                        IF(ba.ID IS NULL,FALSE,TRUE) AS Auto, b.Type, b.Display, b.Sort
+                    FROM users_badges AS ub
+                    JOIN badges AS b ON b.ID = ub.BadgeID
+                    LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
+                    WHERE ub.UserID = $UserID AND b.Display=0
+                    ORDER BY b.Sort $Limit)
                 UNION
                     (SELECT
-                        ub.ID,
-                        ub.BadgeID,
-                        ub.Description,
-                        b.Title,
-                        b.Image,
-                        IF(ba.ID IS NULL,FALSE,TRUE) AS Auto,
-                        b.Type,
-                        b.Display,
-                        b.Sort
-                   FROM users_badges AS ub
-                   JOIN badges AS b ON b.ID = ub.BadgeID
-                   LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
-                   WHERE ub.UserID = $UserID AND b.Display=1
-                   ORDER BY b.Sort $Limit)
+                        ub.ID, ub.BadgeID,  ub.Description,  b.Title, b.Image,
+                        IF(ba.ID IS NULL,FALSE,TRUE) AS Auto, b.Type, b.Display, b.Sort
+                    FROM users_badges AS ub
+                    JOIN badges AS b ON b.ID = ub.BadgeID
+                    LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
+                    WHERE ub.UserID = $UserID AND b.Display=1
+                    ORDER BY b.Sort $Limit)
                 UNION
                     (SELECT
-                        ub.ID,
-                        ub.BadgeID,
-                        ub.Description,
-                        b.Title,
-                        b.Image,
-                        IF(ba.ID IS NULL,FALSE,TRUE) AS Auto,
-                        b.Type,
-                        b.Display,
-                        b.Sort
-                   FROM users_badges AS ub
-                   JOIN badges AS b ON b.ID = ub.BadgeID
-                   LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
-                   WHERE ub.UserID = $UserID AND b.Display>1
-                   ORDER BY b.Sort $Limit)
+                        ub.ID, ub.BadgeID,  ub.Description,  b.Title, b.Image,
+                        IF(ba.ID IS NULL,FALSE,TRUE) AS Auto, b.Type, b.Display, b.Sort
+                    FROM users_badges AS ub
+                    JOIN badges AS b ON b.ID = ub.BadgeID
+                    LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
+                    WHERE ub.UserID = $UserID AND b.Display>1
+                    ORDER BY b.Sort $Limit)
                 ORDER BY Display, Sort
                 ");
         $UserBadges = $DB->to_array();
         $Cache->cache_value('user_badges_'.$UserID.$extra, $UserBadges);
     }
-    //if ($Limit>0) $UserBadges = array_slice($UserBadges, 0, $Limit, true);
     return $UserBadges;
 }
 
@@ -673,6 +635,26 @@ function print_badges_array($UserBadges, $UserLinkID = false){
   
 }
 
+//----------------------------
+
+function get_latest_forum_topics($PermissionID) {
+    global $Classes, $DB, $Cache;
+    $LatestTopics = $Cache->get_value('latest_topics_'.$PermissionID);
+    if ($LatestTopics === false) {
+        $Level = $Classes[$PermissionID]['Level'];
+        $DB->query("SELECT ft.ID AS ThreadID, fp.ID AS PostID, ft.Title, um.Username, fp.AddedTime FROM forums_posts AS fp
+                    INNER JOIN forums_topics AS ft ON ft.ID=fp.TopicID
+                    INNER JOIN forums AS f ON f.ID=ft.ForumID
+                    INNER JOIN users_main AS um ON um.ID=fp.AuthorID
+                    WHERE f.MinClassRead<='$Level'
+                    ORDER BY AddedTime DESC
+                    LIMIT 6");
+        $LatestTopics = $DB->to_array();
+        $Cache->cache_value('latest_topics_'.$PermissionID, $LatestTopics);
+    }
+    return $LatestTopics;
+}
+
 function print_latest_forum_topics() {
     global $LoggedUser;
     if (empty($LoggedUser['DisableLatestTopics'])) {    
@@ -686,35 +668,45 @@ function print_latest_forum_topics() {
         echo "</div>";
     }
 }
+
+
+
 /* --------------------------------
 * Returns a regex string in the form '/imagehost.com|otherhost.com|imgbox.com/i'
   for fast whitelist checking
   ----------------------------------- */
 function GetWhitelistRegex() {
-       global $DB;
-       $DB->query("SELECT w.Imagehost
-                     FROM imagehost_whitelist as w");  
-       if($DB->record_count()>0) {
-           $pattern = '@';
-           $div = '';
-           while(list($host)=$DB->next_record()){
-               $pattern .= $div . preg_quote($host, '@');
-               $div = '|';
-           }
-           $pattern .= '@i';
+    global $DB, $Cache; 
+    $pattern = $Cache->get_value('imagehost_regex');
+    if($pattern===false){
+        $DB->query("SELECT w.Imagehost FROM imagehost_whitelist as w");  
+        if($DB->record_count()>0) {
+            $pattern = '@';
+            $div = '';
+            while(list($host)=$DB->next_record()){
+                $pattern .= $div . preg_quote($host, '@');
+                $div = '|';
+            }
+            $pattern .= '@i';
+            $Cache->cache_value('imagehost_regex', $pattern);
         }  else  {
-            $pattern = '/nohost.com/i';
+            $pattern = '@nohost.com@i';
         }
-       
-        return $pattern;
+    }
+    return $pattern;
 }
-   
-   
-   
-/* --------------------------------
-* Validates the passed imageurl with the passed parameters
-  Returns TRUE if it validates and a user readable error message if it fails
-  ----------------------------------- */
+    
+
+/** 
+ * Validates the passed imageurl with the passed parameters, and against an image validating regex:
+ * '/^(https?):\/\/([a-z0-9\-\_]+\.)+([a-z]{1,5}[^\.])(\/[^<>]+)*$/i'
+ * 
+ * @param string $Imageurl The url to validate
+ * @param int $MinLength The min string length
+ * @param int $MaxLength The max string length
+ * @param string $WhitelistRegex a regex containing valid imagehosts 
+ * @return mixed Returns TRUE if it validates and a user readable error message if it fails
+ */
 function ValidateImageUrl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
          
        $ErrorMessage = "$Imageurl is not a valid url.";
@@ -728,10 +720,10 @@ function ValidateImageUrl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
        elseif(!preg_match('/^(https?):\/\/([a-z0-9\-\_]+\.)+([a-z]{1,5}[^\.])(\/[^<>]+)*$/i', $Imageurl)) {  
            return $ErrorMessage;  
        }
-       elseif(!preg_match($WhitelistRegex, $Imageurl)) {
-           return "$Imageurl is not on an approved imagehost.";
+       elseif(!preg_match($WhitelistRegex, $Imageurl)) { 
+           return "$Imageurl is not on an approved imagehost."; 
        }
-       else { // hooray it validated
+       else { // hooray it validated 
            return TRUE;
        }
 }
@@ -745,6 +737,33 @@ function get_article($TopicID){
     list($Body) = $DB->next_record();
     return $Body;
 }
+
+
+function flood_check($Table = 'forums_posts' ){
+    global $DB, $LoggedUser;
+    if (check_perms('site_ignore_floodcheck')) return true;
+    if ( !in_array($Table, array('forums_posts','requests_comments','torrents_comments','collages_comments'))) error(0);
+    if ($Table=='collages_comments'){
+        $DB->query( "SELECT ( (UNIX_TIMESTAMP( Time)+'".USER_FLOOD_POST_TIME."')-UNIX_TIMESTAMP(  UTC_TIMESTAMP()) )  FROM $Table 
+                  WHERE UserID = $LoggedUser[ID] 
+                    AND UNIX_TIMESTAMP( Time)>= ( UNIX_TIMESTAMP(  UTC_TIMESTAMP())-'".USER_FLOOD_POST_TIME."')");
+    } else {
+        $DB->query( "SELECT ( (UNIX_TIMESTAMP( AddedTime)+'".USER_FLOOD_POST_TIME."')-UNIX_TIMESTAMP(  UTC_TIMESTAMP()) )  FROM $Table 
+                  WHERE AuthorID = $LoggedUser[ID] 
+                    AND UNIX_TIMESTAMP( AddedTime)>= ( UNIX_TIMESTAMP(  UTC_TIMESTAMP())-'".USER_FLOOD_POST_TIME."')");
+    }
+    if ($DB->record_count()==0) return true;
+    else {
+        list($Secs) = $DB->next_record();
+        error("<h3>Flood Control</h3>You must wait <strong>$Secs</strong> seconds before posting again."); 
+    }
+}
+
+
+
+
+
+
 
 // This function is slow. Don't call it unless somebody's logging in.
 function site_ban_ip($IP) {

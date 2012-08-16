@@ -11,7 +11,9 @@ $CollageID = $_POST['collageid'];
 if($LoggedUser['DisablePosting']) {
 	error('Your posting rights have been removed'); // Should this be logged?
 }
-		
+
+flood_check('collages_comments');
+
 $DB->query("INSERT INTO collages_comments
 	(CollageID, Body, UserID, Time) 
 	VALUES

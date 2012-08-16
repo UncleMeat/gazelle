@@ -36,6 +36,7 @@
             'site_advanced_tags' => 'Advanced bbcode tags.',
 	'site_edit_own_posts' => 'Can edit own posts in forum after edit time limit.',
      
+     'site_ignore_floodcheck' => 'Can post more often than floodcheck allows',
 	'site_moderate_requests' => 'Request moderation access.',
 	'site_moderate_forums' => 'Forum moderation access.',
 	'site_admin_forums' => 'Forum administrator access.',
@@ -180,7 +181,8 @@ function permissions_form(){ ?>
 					<? display_perm('site_send_unlimited_invites', 'Can send unlimited invites.'); ?>
                               <?            display_perm('site_advanced_tags', 'Can use advanced bbcode tags.'); ?>
                               <?            display_perm('site_edit_own_posts', 'Can edit own posts in forum after edit lock time limit.'); ?>
-					<? display_perm('site_moderate_requests', 'Can moderate any request.'); ?>
+                                <? display_perm('site_ignore_floodcheck', 'Can post more often than floodcheck allows', 'Allows multiple posting immediately - no complaints if you double post!') ; ?> 
+                              <? display_perm('site_moderate_requests', 'Can moderate any request.'); ?>
 					<? display_perm('forums_polls_create','Can create polls in the forums.') ?>
 					<? display_perm('forums_polls_moderate','Can feature and close polls.') ?>
 					<? display_perm('site_moderate_forums', 'Can moderate the forums', 'Can moderate the forums (lock/sticky/rename/move threads).'); ?>

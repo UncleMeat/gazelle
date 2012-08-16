@@ -44,8 +44,8 @@ if(!isset($_REQUEST['action'])) {
 			break;
 		case 'reply':
 			authorize();
-
 			enforce_login();
+                  
 			if (!isset($_POST['requestid']) || !is_number($_POST['requestid'])) { 
 				error(0);
 			}
@@ -59,6 +59,8 @@ if(!isset($_REQUEST['action'])) {
 			$RequestID = $_POST['requestid'];
 			if(!$RequestID) { error(404); }
 		
+                  flood_check('requests_comments');
+                  
 			$DB->query("SELECT CEIL((SELECT COUNT(ID)+1 FROM requests_comments AS rc WHERE rc.RequestID='".$RequestID."')/".TORRENT_COMMENTS_PER_PAGE.") AS Pages");
 			list($Pages) = $DB->next_record();
 		

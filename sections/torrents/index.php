@@ -217,7 +217,9 @@ if(!empty($_REQUEST['action'])) {
 			if($LoggedUser['DisablePosting']) {
 				error('Your posting rights have been removed.');
 			}
-			
+                  
+                  flood_check('torrents_comments');
+
 			$GroupID = (int)$_POST['groupid'];
 			if(!$GroupID) { error(404); }
 		

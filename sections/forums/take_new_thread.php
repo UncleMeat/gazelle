@@ -57,18 +57,21 @@ if (!isset($Forums[$ForumID])) { error(404); }
 if(!check_forumperm($ForumID, 'Write') || !check_forumperm($ForumID, 'Create')) {
 	error(403); 
 }
+      
+flood_check();
 	
+$sqltime = sqltime();
 
 $DB->query("INSERT INTO forums_topics
 	(Title, AuthorID, ForumID, LastPostTime, LastPostAuthorID)
 	Values
-	('".db_string($Title)."', '".$LoggedUser['ID']."', '$ForumID', '".sqltime()."', '".$LoggedUser['ID']."')");
+	('".db_string($Title)."', '".$LoggedUser['ID']."', '$ForumID', '$sqltime', '".$LoggedUser['ID']."')");
 $TopicID = $DB->inserted_id();
 
 $DB->query("INSERT INTO forums_posts
 		(TopicID, AuthorID, AddedTime, Body)
 		VALUES
-		('$TopicID', '".$LoggedUser['ID']."', '".sqltime()."', '".db_string($Body)."')");
+		('$TopicID', '".$LoggedUser['ID']."', '$sqltime', '".db_string($Body)."')");
 
 $PostID = $DB->inserted_id();
 
@@ -78,14 +81,14 @@ $DB->query("UPDATE forums SET
 		LastPostID		= '$PostID',
 		LastPostAuthorID  = '".$LoggedUser['ID']."',
 		LastPostTopicID   = '$TopicID',
-		LastPostTime	  = '".sqltime()."'
+		LastPostTime	  = '$sqltime'
 		WHERE ID = '$ForumID'");
 			
 $DB->query("UPDATE forums_topics SET
 		NumPosts		  = NumPosts+1, 
 		LastPostID		= '$PostID',
 		LastPostAuthorID  = '".$LoggedUser['ID']."',
-		LastPostTime	  = '".sqltime()."'
+		LastPostTime	  = '$sqltime'
 		WHERE ID = '$TopicID'");
 
 if(isset($_POST['subscribe'])) {
@@ -147,7 +150,7 @@ if ($Forum = $Cache->get_value('forums_'.$ForumID)) {
 		'IsSticky' => 0,
 		'NumPosts' => 1,
 		'LastPostID' => $PostID,
-		'LastPostTime' => sqltime(),
+		'LastPostTime' => $sqltime,
 		'LastPostAuthorID' => $LoggedUser['ID'],
 		'LastPostUsername' => $LoggedUser['Username'],
 		'NoPoll' => $NoPoll
@@ -165,7 +168,7 @@ if ($Forum = $Cache->get_value('forums_'.$ForumID)) {
 		'LastPostAuthorID'=>$LoggedUser['ID'],
 		'Username'=>$LoggedUser['Username'],
 		'LastPostTopicID'=>$TopicID,
-		'LastPostTime'=>sqltime(),
+		'LastPostTime'=>$sqltime,
 		'Title'=>$Title,
 		'IsLocked'=>0,
 		'IsSticky'=>0
@@ -182,7 +185,7 @@ $Cache->begin_transaction('thread_'.$TopicID.'_catalogue_0');
 $Post = array(
 	'ID'=>$PostID,
 	'AuthorID'=>$LoggedUser['ID'],
-	'AddedTime'=>sqltime(),
+	'AddedTime'=>$sqltime,
 	'Body'=>$Body,
 	'EditedUserID'=>0,
 	'EditedTime'=>'0000-00-00 00:00:00',

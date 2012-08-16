@@ -87,6 +87,8 @@ define('LOG_ENTRIES_PER_PAGE', 50);
 
 define('USER_EDIT_POST_TIME', 900); // 900 secs = 15 mins for users to edit posts
 
+define('USER_FLOOD_POST_TIME', 10); // 10 secs between posts (flood control)
+
 //Cache catalogues
 define('THREAD_CATALOGUE', 500); // Limit to THREAD_CATALOGUE posts per cache key.
 

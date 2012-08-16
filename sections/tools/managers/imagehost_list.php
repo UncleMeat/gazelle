@@ -1,5 +1,5 @@
 <?
-if(!check_perms('admin_dnu')) { error(403); }
+if(!check_perms('admin_imagehosts')) { error(403); }
 
 show_header('Manage imagehost whitelist');
 $DB->query("SELECT 

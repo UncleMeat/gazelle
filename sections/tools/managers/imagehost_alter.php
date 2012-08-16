@@ -1,5 +1,5 @@
 <?
-if(!check_perms('admin_dnu')) { error(403); }
+if(!check_perms('admin_imagehosts')) { error(403); }
 
 authorize();
 
@@ -33,6 +33,7 @@ if($_POST['submit'] == 'Delete'){ //Delete
 			('$P[host]','$P[link]','$P[comment]','$LoggedUser[ID]','".sqltime()."')");
 	}
 }
+$Cache->delete_value('imagehost_regex');
 $Cache->delete_value('imagehost_whitelist');
 
 // Go back
