@@ -127,11 +127,13 @@ if(empty($IRCKey)) {
             
             //$channels=$_POST["channel"]=='help'?'empornium-help':'empornium';
             
+                    // webchat.digitalwizardry.org 
+                    // irc.emprn.tk
 ?>
 <div class="">
 	<div class="head">IRC</div>
 	<div class="box pad center"> 
-                <iframe src="http://irc.emprn.tk/?nick=<?=$nick?>&channels=<?=$channels?>" width="98%" height="600"></iframe> 
+                <iframe src="http://webchat.digitalwizardry.org/?nick=<?=$nick?>&channels=<?=$channels?>" width="98%" height="600"></iframe> 
 	</div>
 </div>
 <?
