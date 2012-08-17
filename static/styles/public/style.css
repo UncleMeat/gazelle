@@ -8,9 +8,10 @@ html, body {
 }
 
 body {
-    font-family: Bitstream Vera Sans, Tahoma, sans-serif;
+    font-family: "Bitstream Vera Sans", Tahoma, sans-serif;
     font-size: 11px;
-    color: #a5a5a5;
+    /*color: #a5a5a5;*/
+    color: #c5c5c5;
     background-color: #0261a3;
 }
 
@@ -70,8 +71,9 @@ input[type="text"]:invalid, input[type="password"]:invalid {
 }
 
 #maincontent {
-    width:100%;
+    width:80%;
     height:88%;
+    margin: 0px auto;
 }
 
 #logo {
@@ -114,6 +116,6 @@ input[type="text"]:invalid, input[type="password"]:invalid {
 }
 
 .warning {
-    color: red;
+    color: white;
     font-weight: bold;
 }
