@@ -171,6 +171,16 @@ if (($UserStats = $Cache->get_value('stats_users')) === false) {
 				<li>Users active this month: <?=number_format($UserStats['Month'])?> (<?=number_format($UserStats['Month']/$UserCount*100,2)?>%)</li>
 <?
 
+if(($TorrentCountLastDay = $Cache->get_value('stats_torrent_count_daily')) === false) {
+      $DB->query("SELECT COUNT(ID) FROM torrents WHERE Time > '".time_minus(3600*24,true)."'");
+      list($TorrentCountLastDay) = $DB->next_record();
+      $Cache->cache_value('stats_torrent_count_daily', $TorrentCountLastDay, 0); //inf cache 
+}
+
+?>
+				<li>New Torrents last day: <?=number_format($TorrentCountLastDay)?></li>
+<?
+
 if(($TorrentCount = $Cache->get_value('stats_torrent_count')) === false) {
 	$DB->query("SELECT COUNT(ID) FROM torrents");
 	list($TorrentCount) = $DB->next_record();

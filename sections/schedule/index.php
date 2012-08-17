@@ -378,6 +378,12 @@ if($Day != next_day() || $_GET['runday']){
 		$GenerateDriveDB = true;
 	}
 	
+    
+      $DB->query("SELECT COUNT(ID) FROM torrents WHERE Time > '".time_minus(3600*24)."'");
+      list($TorrentCountLastDay) = $DB->next_record();
+      $Cache->cache_value('stats_torrent_count_daily', $TorrentCountLastDay, 0); //inf cache
+    
+ 
 	//------------- Ratio requirements
 	
 	
