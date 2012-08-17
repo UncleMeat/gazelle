@@ -148,17 +148,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
         list($TorrentID, $Torrent) = each($Torrents);
 
         $DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
-        
-        /*
-        if(!empty($Torrent['FreeTorrent'])) {
-                $DisplayName .=' <strong>/ Freeleech!</strong>'; 
-        } elseif(!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > sqltime()) { 
-                $DisplayName .= ' <strong>/ Personal Freeleech!</strong>';
-        } 
-        
-        if(!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['DoubleSeed'] > sqltime()) { 
-                $DisplayName .= ' <strong>/ Personal Doubleseed!</strong>';
-        } */
+     
 	  $AddExtra = torrent_info($Torrent, $TorrentID, $UserID);
         
 ?>
@@ -170,24 +160,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
                 </div>
         </td>
         <td>
-            <? 
-                    print_torrent_status($TorrentID);  /* 
-                <span>
-                    <? if (empty($TorrentUserStatus[$TorrentID])) { ?>
-                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">
-                            <span class="icon icon_disk_none"></span>
-                        </a>
-                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') { ?>
-                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Seeding Torrent">
-                            <span class="icon icon_disk_seed"></span>
-                        </a>                    
-                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') { ?>
-                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Leeching Torrent">
-                            <span class="icon icon_disk_leech"></span>
-                        </a>                    
-
-                    <? } ?>
-                </span> */ ?>
+            <?  print_torrent_status($TorrentID); ?>
                 <strong><?=$DisplayName?></strong> <?=$AddExtra?>
                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { 
                     echo $TorrentTags;

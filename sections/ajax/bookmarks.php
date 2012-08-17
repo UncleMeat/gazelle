@@ -88,13 +88,12 @@ foreach ($TorrentList as $GroupID=>$Group) {
 	ob_start(); 
         // Viewing a type that does not require grouping
 
-        list($TorrentID, $Torrent) = each($Torrents);
+      list($TorrentID, $Torrent) = each($Torrents);
 
-        $DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
+      $DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
 
-        if(!empty($Torrent['FreeTorrent'])) {
-                $DisplayName .=' <strong>Freeleech!</strong>'; 
-        }
+	$AddExtra = torrent_info($Torrent, $TorrentID, $UserID);
+      if($AddExtra) $DisplayName .= $AddExtra;
 
 	$TorrentTable.=ob_get_clean();
 	

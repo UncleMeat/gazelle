@@ -158,6 +158,16 @@ echo $Val->GenerateJS('userform');
 			</tr>
 <? } ?>
 			<tr>
+				<td class="label"><strong>Torrents per page</strong></td>
+				<td>
+					<select name="torrentsperpage" id="torrentsperpage">
+						<option value="25"<? if ($SiteOptions['TorrentsPerPage'] == 25) { ?>selected="selected"<? } ?>>25</option>
+						<option value="50"<? if ($SiteOptions['TorrentsPerPage'] == 50) { ?>selected="selected"<? } ?>>50 (Default)</option>
+						<option value="100"<? if ($SiteOptions['TorrentsPerPage'] == 100) { ?>selected="selected"<? } ?>>100</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<td class="label"><strong>Posts per page (Forum)</strong></td>
 				<td>
 					<select name="postsperpage" id="postsperpage">

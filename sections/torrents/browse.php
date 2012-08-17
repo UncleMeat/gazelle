@@ -39,6 +39,12 @@ function header_link($SortKey, $DefaultWay = "desc") {
     return "torrents.php?order_way=" . $NewWay . "&amp;order_by=" . $SortKey . "&amp;" . get_url(array('order_way', 'order_by'));
 }
 
+if (isset($LoggedUser['TorrentsPerPage'])) {
+	$TorrentsPerPage = $LoggedUser['TorrentsPerPage'];
+} else {
+	$TorrentsPerPage = TORRENTS_PER_PAGE;
+}
+
 $TokenTorrents = $Cache->get_value('users_tokens_' . $UserID);
 if (empty($TokenTorrents)) {
     $DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
@@ -264,14 +270,14 @@ if (!empty($_GET['page']) && is_number($_GET['page'])) {
     if (check_perms('site_search_many')) {
         $Page = $_GET['page'];
     } else {
-        $Page = min(SPHINX_MAX_MATCHES / TORRENTS_PER_PAGE, $_GET['page']);
+        $Page = min(SPHINX_MAX_MATCHES / $TorrentsPerPage, $_GET['page']);
     }
-    $MaxMatches = min(SPHINX_MAX_MATCHES, SPHINX_MATCHES_START + SPHINX_MATCHES_STEP * floor(($Page - 1) * TORRENTS_PER_PAGE / SPHINX_MATCHES_STEP));
-    $SS->limit(($Page - 1) * TORRENTS_PER_PAGE, TORRENTS_PER_PAGE, $MaxMatches);
+    $MaxMatches = min(SPHINX_MAX_MATCHES, SPHINX_MATCHES_START + SPHINX_MATCHES_STEP * floor(($Page - 1) * $TorrentsPerPage / SPHINX_MATCHES_STEP));
+    $SS->limit(($Page - 1) * $TorrentsPerPage, $TorrentsPerPage, $MaxMatches);
 } else {
     $Page = 1;
     $MaxMatches = SPHINX_MATCHES_START;
-    $SS->limit(0, TORRENTS_PER_PAGE);
+    $SS->limit(0, $TorrentsPerPage);
 }
 
 if (!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
@@ -289,7 +295,7 @@ if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('time', 'size
 } elseif ($_GET['order_by'] == 'random') {
     $OrderBy = '@random';
     $Way = SPH_SORT_EXTENDED;
-    $SS->limit(0, TORRENTS_PER_PAGE, TORRENTS_PER_PAGE);
+    $SS->limit(0, $TorrentsPerPage, $TorrentsPerPage);
 } else {
     $OrderBy = $_GET['order_by'];
 }
@@ -334,7 +340,7 @@ $Results = $Results['matches'];
 show_header('Browse Torrents', 'browse,overlib,jquery,jquery.cookie');
 
 // List of pages  
-$Pages = get_pages($Page, $TorrentCount, TORRENTS_PER_PAGE);
+$Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
 ?>
 
 <div class="thin">
@@ -583,40 +589,7 @@ $row='a';
         $OverName = mb_strlen($GroupName) <= 60 ? $GroupName : mb_substr($GroupName, 0, 56) . '...';
         $SL = ($TotalSeeders == 0 ? "<span class=r00>" . number_format($TotalSeeders) . "</span>" : number_format($TotalSeeders)) . "/" . number_format($TotalLeechers);
         $Overlay = "<table class=overlay><tr><td class=overlay colspan=2><strong>" . $OverName . "</strong></td><tr><td class=leftOverlay><img style='max-width: 150px;' src=" . $OverImage . "></td><td class=rightOverlay><strong>Uploader:</strong><br />{$Data['Username']}<br /><br /><strong>Size:</strong><br />" . get_size($Data['Size']) . "<br /><br /><strong>Snatched:</strong><br />" . number_format($TotalSnatched) . "<br /><br /><strong>Seeders/Leechers:</strong><br />" . $SL . "</td></tr></table>";
-        /*
-        $AddExtra = '';
-        $SeedTooltip='';
-        $FreeTooltip='';
-        if ($Data['FreeTorrent'] == '1') {
-            $FreeTooltip = "Unlimited Freeleech";
-        } elseif ($Data['FreeTorrent'] == '2') {
-            $FreeTooltip = "Neutral Freeleech";
-        }
-
-        if ($Data['double_seed'] == '1') {
-            $SeedTooltip = "Unlimited Doubleseed";
-        }
-        
-        if (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > sqltime()) {
-            $FreeTooltip = "Personal Freeleech for ".time_diff($TokenTorrents[$TorrentID]['FreeLeech'], 2, false);;
-        } 
-        
-        if (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['DoubleSeed'] > sqltime()) {
-            $SeedTooltip = "Personal Doubleseed for ".time_diff($TokenTorrents[$TorrentID]['DoubleSeed'], 2, false);
-        }
-        
-        $Icons = '';
-        if ($SeedTooltip) 
-            $Icons = '&nbsp;&nbsp;<img src="static/common/symbols/doubleseed.gif" alt="DoubleSeed" title="'.$SeedTooltip.'" />';          
-        if ($FreeTooltip) 
-            $Icons .= '&nbsp;&nbsp;<img src="static/common/symbols/freedownload.gif" alt="Freeleech" title="'.$FreeTooltip.'" />';          
-        
-        if ($Data['ReportCount'] > 0) {
-            $Title = "This torrent has ".$Data['ReportCount']." active ".($Data['ReportCount'] > 1 ?'reports' : 'report');
-            $AddExtra .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
-        }
-        $AddExtra .= $Icons;
-        */
+ 
 	  $AddExtra = torrent_info($Data, $TorrentID, $UserID);
             
         $row = ($row == 'a'? 'b' : 'a');
@@ -628,32 +601,12 @@ $row='a';
                 <div title="<?= $NewCategories[$NewCategoryID]['tag'] ?>"><a href="torrents.php?filter_cat[<?=$NewCategoryID?>]=1"><img src="<?= $CatImg ?>" /></a></div>
             </td>
             <td>
-                    <? /*
-                <span>
-                    <? if (empty($TorrentUserStatus[$TorrentID])) { ?>
-                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">
-                            <span class="icon icon_disk_none"></span>
-                        </a>
-                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') { ?>
-                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Seeding Torrent">
-                            <span class="icon icon_disk_seed"></span>
-                        </a>                    
-                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') { ?>
-                        <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Leeching Torrent">
-                            <span class="icon icon_disk_leech"></span>
-                        </a>                    
-
-                    <? } ?>
-                </span>  */   
-                    print_torrent_status($TorrentID);
-                      
-                    ?>
+                    <? print_torrent_status($TorrentID); ?>
 
 <?                if (check_perms('torrents_review') && $Data['Status'] == 'Okay') { 
                         echo  '&nbsp;'.get_status_icon('Okay');
                   }        
-?>
-                
+?> 
                 <script>
                     var overlay<?=$GroupID?> = <?=json_encode($Overlay)?>
                 </script>

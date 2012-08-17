@@ -104,6 +104,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
                 $DisplayName .= ' <strong>/ Personal Doubleseed!</strong>';
         }
         
+	  $AddExtra = torrent_info($Torrent, $TorrentID, $UserID);
 ?>
 <tr class="torrent" id="group_<?=$GroupID?>">
         <td class="center">
@@ -111,15 +112,9 @@ foreach ($TorrentList as $GroupID=>$Group) {
                 <img src="<?= $CatImg ?>" alt="<?= $NewCategories[$NewCategoryID]['tag'] ?>" title="<?= $NewCategories[$NewCategoryID]['tag'] ?>"/>
         </td>
         <td>
-                <span>
-                        [ <a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>
-<?		if (($LoggedUser['FLTokens'] > 0) && ($Torrent['Size'] < 1073741824) 
-                && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['Type'] == 'leech') && empty($Torrent['FreeTorrent']) && ($LoggedUser['CanLeech'] == '1')) { ?>
-                        | <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FL</a>
-<?		} ?>		
-                        | <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">RP</a> ]
-                </span>
-                <strong><?=$DisplayName?></strong>
+                    <? print_torrent_status($TorrentID); ?>
+             
+                <strong><?=$DisplayName?></strong> <?=$AddExtra?>
                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                
                 <?=$TorrentTags?>
                 <? } ?>

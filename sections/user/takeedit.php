@@ -23,6 +23,7 @@ $Val->SetFields('stylesheet',1,"number","You forgot to select a stylesheet.");
 $Val->SetFields('timezone',1,"inarray","Invalid TimeZone.",array('inarray'=>timezone_identifiers_list()));
 $Val->SetFields('styleurl',0,"regex","You did not enter a valid stylesheet url.",array('regex'=>'/^https?:\/\/(localhost(:[0-9]{2,5})?|[0-9]{1,3}(\.[0-9]{1,3}){3}|([a-zA-Z0-9\-\_]+\.)+([a-zA-Z]{1,5}[^\.]))(:[0-9]{2,5})?(\/[^<>]+)+\.css$/i'));
 $Val->SetFields('postsperpage',1,"inarray","You forgot to select your posts per page option.",array('inarray'=>array(25,50,100)));
+$Val->SetFields('torrentsperpage',1,"inarray","You forgot to select your torrents per page option.",array('inarray'=>array(25,50,100)));
 //$Val->SetFields('hidecollage',1,"number","You forgot to select your collage option.",array('minlength'=>0,'maxlength'=>1));
 $Val->SetFields('collagecovers',1,"number","You forgot to select your collage option.");
 $Val->SetFields('showtags',1,"number","You forgot to select your show tags option.",array('minlength'=>0,'maxlength'=>1));
@@ -164,6 +165,7 @@ if(!empty($LoggedUser['DefaultSearch'])) {
 	$Options['DefaultSearch'] = $LoggedUser['DefaultSearch'];
 }
 
+$Options['TorrentsPerPage'] = (int)$_POST['torrentsperpage'];
 $Options['PostsPerPage'] = (int) $_POST['postsperpage'];
 //$Options['HideCollage'] = (!empty($_POST['hidecollage']) ? 1 : 0);
 $Options['CollageCovers'] = empty($_POST['collagecovers']) ? 0 : $_POST['collagecovers'];

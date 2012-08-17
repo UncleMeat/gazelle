@@ -17,13 +17,18 @@ function header_link($SortKey,$DefaultWay="DESC") {
 $UserID = $_GET['userid'];
 if(!is_number($UserID)) { error(0); }
 
+if (isset($LoggedUser['TorrentsPerPage'])) {
+	$TorrentsPerPage = $LoggedUser['TorrentsPerPage'];
+} else {
+	$TorrentsPerPage = TORRENTS_PER_PAGE;
+}
 
 if(!empty($_GET['page']) && is_number($_GET['page'])) {
 	$Page = $_GET['page'];
-	$Limit = ($Page-1)*TORRENTS_PER_PAGE.', '.TORRENTS_PER_PAGE;
+	$Limit = ($Page-1)*$TorrentsPerPage.', '.$TorrentsPerPage;
 } else {
 	$Page = 1;
-	$Limit = TORRENTS_PER_PAGE;
+	$Limit = $TorrentsPerPage;
 }
 
 if(!empty($_GET['order']) && in_array($_GET['order'], $Orders)) {
@@ -188,7 +193,7 @@ $User = user_info($UserID);
 
 if(!$INLINE) show_header($User['Username'].'\'s '.$Action.' torrents');
 
-$Pages=get_pages($Page,$TorrentCount,TORRENTS_PER_PAGE);
+$Pages=get_pages($Page,$TorrentCount,$TorrentsPerPage);
 
 
 ?>
