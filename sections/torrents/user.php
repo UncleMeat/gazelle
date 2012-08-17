@@ -303,7 +303,7 @@ foreach($NewCategories as $Cat) {
 		foreach($TagList as $Tag) {
 			$TorrentTags[]='<a href="torrents.php?type='.$Action.'&amp;userid='.$UserID.'&amp;tags='.$Tag.'">'.$Tag.'</a>';
 		}
-		$TorrentTags = implode(', ', $TorrentTags);
+		$TorrentTags = implode(' ', $TorrentTags);
 				
 		$DisplayName = '<a href="torrents.php?id='.$GroupID.'&amp;torrentid='.$TorrentID.'" title="View Torrent">'.$GroupName.'</a>';
 		

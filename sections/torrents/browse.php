@@ -573,7 +573,7 @@ $row='a';
         foreach ($TagList as $Tag) {
             $TorrentTags[] = '<a href="torrents.php?' . $Action . '&amp;taglist=' . $Tag . '">' . $Tag . '</a>';
         }
-        $TorrentTags = implode(', ', $TorrentTags);
+        $TorrentTags = implode(' ', $TorrentTags);
 
 
         // Viewing a type that does not require grouping

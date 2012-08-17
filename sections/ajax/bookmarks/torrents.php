@@ -79,7 +79,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
 		$TorrentTags[]='<a href="torrents.php?taglist='.$Tag.'">'.$Tag.'</a>';
 	}
 	$PrimaryTag = $TagList[0];
-	$TorrentTags = implode(', ', $TorrentTags);
+	$TorrentTags = implode(' ', $TorrentTags);
 	$TorrentTags='<br /><div class="tags">'.$TorrentTags.'</div>';
 
 	$DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';

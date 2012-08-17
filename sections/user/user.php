@@ -842,7 +842,7 @@ if (check_paranoia_here('requestsvoted_list')) {
 			foreach($Tags as $TagID => $TagName) {
 				$TagList[] = "<a href='requests.php?tags=".$TagName."'>".display_str($TagName)."</a>";
 			}
-			$TagList = implode(', ', $TagList);
+			$TagList = implode(' ', $TagList);
 ?>
 								<?=$TagList?>
 							</div>

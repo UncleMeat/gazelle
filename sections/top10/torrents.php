@@ -287,7 +287,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 				$TagList[]='<a href="torrents.php?taglist='.$TagName.'">'.$TagName.'</a>';
 			}
 			$PrimaryTag = $TorrentTags[0];
-			$TagList = implode(', ', $TagList);
+			$TagList = implode(' ', $TagList);
 			$TorrentTags='<br /><div class="tags">'.$TagList.'</div>';
 		}
  
