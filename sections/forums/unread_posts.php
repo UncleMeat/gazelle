@@ -11,6 +11,13 @@ list($Page,$Limit) = page_limit($PerPage);
 $UserID = (int)$LoggedUser['ID'];
  
  
+$DB->query("SELECT RestrictedForums, PermittedForums FROM users_info WHERE UserID = $UserID");
+list($RestrictedForums, $PermittedForums) = $DB->next_record();
+ 
+if($PermittedForums) $PermittedForums = "f.ID IN ($PermittedForums) OR ";
+if($RestrictedForums) $RestrictedForums = " AND f.ID NOT IN ($RestrictedForums) ";
+
+   
  // I cannot find any useful way of caching this... problem is this is viewing user dependent, but clearing the cache is any user posting
  
       $DB->query("SELECT SQL_CALC_FOUND_ROWS 
@@ -25,7 +32,8 @@ $UserID = (int)$LoggedUser['ID'];
                LEFT JOIN forums_last_read_topics AS l ON l.UserID =i.UserID
                      AND l.TopicID = t.ID
                    WHERE t.LastPostAuthorID!=$UserID
-                     AND l.PostID is null OR  l.PostID != t.LastPostID  
+                     AND (l.PostID is null OR  l.PostID != t.LastPostID)  
+                     AND ( $PermittedForums  (  f.MinClassRead<=$LoggedUser[Class] $RestrictedForums ) )
                 ORDER BY t.LastPostTime DESC
                    LIMIT $Limit");
       
@@ -33,6 +41,7 @@ $UserID = (int)$LoggedUser['ID'];
        
 $DB->query('SELECT FOUND_ROWS()');
 list($Results) = $DB->next_record();
+
 
 show_header('Unread Posts');
 
@@ -65,21 +74,20 @@ $Pages=get_pages($Page,$Results,$PerPage,9);
 <? } else { 
 
         $Row = 'a';
-        
+        /*
         $DB->query("SELECT RestrictedForums FROM users_info WHERE UserID = $UserID");
         list($RestrictedForums) = $DB->next_record();
-        $RestrictedForums = explode(',', $RestrictedForums);
+        $RestrictedForums = explode(',', $RestrictedForums);  */
 
         foreach ($UnreadPosts as $UnreadPost) {
                 list($ForumID, $ForumDescription, $ThreadID, $ForumName, $Title, $LastPostTime, $NumReplies, $NumViews, 
                       $LastPostID, $LastReadPostID, $LastAuthorID, $LastPostAuthorName, $MinRead, $Locked, $Sticky) = $UnreadPost;
-
+                /*
                 if ($LoggedUser['CustomForums'][$ForumID] != 1 && ($MinRead>$LoggedUser['Class'] || array_search($ForumID, $RestrictedForums) !== FALSE)) {
                     continue;
-                }
+                }   */
                 $Row = ($Row == 'a') ? 'b' : 'a'; 
-
-
+ 
                 $Read = 'unread';
 
                 // Removed per request, as distracting

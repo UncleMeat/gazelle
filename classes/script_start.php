@@ -389,12 +389,14 @@ function user_heavy_info($UserID) {
             $RestrictedForums = array();
         }
         unset($HeavyInfo['RestrictedForums']);
+        
         if (!empty($HeavyInfo['PermittedForums'])) {
             $PermittedForums = explode(',', $HeavyInfo['PermittedForums']);
         } else {
             $PermittedForums = array();
         }
         unset($HeavyInfo['PermittedForums']);
+        
         if (!empty($PermittedForums) || !empty($RestrictedForums)) {
             $HeavyInfo['CustomForums'] = array();
             foreach ($RestrictedForums as $ForumID) {
