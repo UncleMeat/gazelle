@@ -1669,6 +1669,18 @@ table.bbcode.noborder tr, table.bbcode.noborder th, table.bbcode.noborder td {
     border: none;
 }
 
+span.postlink { 
+    display:block;
+    width: 10px;
+    height: 10px;
+    background: url('images/viewpost.gif') no-repeat center center;
+    vertical-align: bottom;
+}
+a.postlink {
+    border: none; 
+    display:inline-block;
+}
+
 span.quote_label {
   /*  text-align:left; */
     float:left;

@@ -545,7 +545,7 @@ if (count($Results) == 0) {
         <h2>Your search did not match anything.</h2>
         <p>Make sure all names are spelled correctly, or try making your search less specific.</p>
         <p>You might like (Beta): <? while (list($Tag) = $DB->next_record()) { ?><a href="torrents.php?taglist=<?= $Tag ?>"><?= $Tag ?></a> <? } ?></p>
-    </div>
+    </div></div>
     <?
     show_footer();
     die();

@@ -420,7 +420,7 @@ foreach($Thread as $Key => $Post){
 				<?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, $UserTitle, true)?>
                         <?=time_diff($AddedTime,2)?> 
 <? if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')){ ?> 
-				- <a href="#quickpost" onclick="Quote('<?=$PostID?>','<?=$Username?>');">[Quote]</a> 
+				- <a href="#quickpost" onclick="Quote('<?=$PostID?>','f<?=$ThreadID?>','<?=$Username?>');">[Quote]</a> 
 <? }
 if (((!$ThreadInfo['IsLocked'] && check_forumperm($ForumID, 'Write')) && ($AuthorID == $LoggedUser['ID'] && (check_perms ('site_edit_own_posts') || time_ago($AddedTime)<USER_EDIT_POST_TIME)) || check_perms('site_moderate_forums'))) { ?>
 				- <a href="#post<?=$PostID?>" onclick="Edit_Form('<?=$PostID?>','<?=$Key?>');">[Edit]</a> 

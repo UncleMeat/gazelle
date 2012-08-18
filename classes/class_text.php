@@ -1052,7 +1052,7 @@ EXPLANATION OF PARSER LOGIC
 					}
 					break;
 				case 'quote':
-					$Array[$ArrayPos] = array('Type'=>'quote', 'Attr'=>$this->Parse($Attrib), 'Val'=>$this->parse($Block));
+					$Array[$ArrayPos] = array('Type'=>'quote', 'Attr'=>$Attrib, 'Val'=>$this->parse($Block));
 					break;
 				case 'img':
 				case 'image':
@@ -1215,19 +1215,41 @@ EXPLANATION OF PARSER LOGIC
 		$Str = '';
             
 		foreach($Array as $Block) {
-			if(is_string($Block)) {
-                      // FIX FOR BAD BBCODE!!
-                      // -- expermimental : lets see if this has unintended consequences, but if not its a viable 
-                      // bandaid for out of order tags (it removes orphaned closing tags from outputted text)
-                      // - by this stage all tags have been replaced by html, so this removes any closing tags still in text
-                      // (which are usually the end result of out of synch tags in input, if you want to write text 
-                      // in [/*] pattern it will need to be in a code or pre tag)
-                       // $Block = preg_replace('/\[\/.*\]/', '', $Block) ;  // DISABLE FOR NOW 
+			if(is_string($Block)) { 
 				$Str.=$this->smileys($Block);
 				continue;
 			}
 			switch($Block['Type']) {
-                        case 'error': // used internally
+				case 'quote':
+					$this->NoImg++; // No images inside quote tags
+					if(!empty($Block['Attr'])) { 
+                                    list($qname, $qID1, $qID2) = explode(",", $Block['Attr']); 
+                                    if($qID1){
+                                        $qType = substr($qID1, 0, 1);
+                                        $qID1 = substr($qID1, 1);
+                                        if (  in_array( $qType, array('f','t','c','r')  ) && is_number($qID1) && is_number($qID2) ) { 
+                                            switch($qType){
+                                                case 'f':
+                                                    $postlink = '<a class="postlink" href="forums.php?action=viewthread&threadid='.$qID1.'&postid='.$qID2.'#post'.$qID2.'"><span class="postlink"></span></a>';
+                                                    break;
+                                                case 't':
+                                                    $postlink = '<a class="postlink" href="torrents.php?id='.$qID1.'&postid='.$qID2.'#post'.$qID2.'"><span class="postlink"></span></a>';
+                                                    break;
+                                                case 'c':
+                                                    $postlink = '<a class="postlink" href="collages.php?action=comments&collageid='.$qID1.'#post'.$qID2.'"><span class="postlink"></span></a>';
+                                                    break;
+                                                case 'r':
+                                                    $postlink = '<a class="postlink" href="requests.php?action=view&id='.$qID1.'#post'.$qID2.'"><span class="postlink"></span></a>';
+                                                    break;
+                                            }
+                                        }
+                                    }
+						$Str.= '<span class="quote_label"><strong>'.display_str($qname).'</strong> wrote: '.$postlink.'</span>'; 
+                              }
+					$Str.='<blockquote class="bbcode">'.$this->to_html($Block['Val']).'</blockquote>';
+					$this->NoImg--;
+					break;
+                        case 'error': // used internally to display bbcode errors in preview
 					$Str.="<blink><code class=\"error\" title=\"You have an unclosed $Block[Val] tag in your bbCode!\">$Block[Val]</code></blink>";
                               break;
                         case 'you':
@@ -1459,14 +1481,6 @@ EXPLANATION OF PARSER LOGIC
 					} else {
 						$Str.='<span class="size'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</span>';
 					}
-					break;
-				case 'quote':
-					$this->NoImg++; // No images inside quote tags
-					if(!empty($Block['Attr'])) {
-						$Str.= '<span class="quote_label"><strong>'.$this->to_html($Block['Attr']).'</strong> wrote: </span>';
-					}
-					$Str.='<blockquote class="bbcode">'.$this->to_html($Block['Val']).'</blockquote>';
-					$this->NoImg--;
 					break;
 				case 'hide':
 					$Str.='<strong>'.(($Block['Attr']) ? $Block['Attr'] : 'Hidden text').'</strong>: <a href="javascript:void(0);" onclick="BBCode.spoiler(this);">Show</a>';

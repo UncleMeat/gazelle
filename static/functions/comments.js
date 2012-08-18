@@ -1,12 +1,12 @@
 var username;
 var postid;
 
-function Quote(post, user) {
+function Quote(post, place, user) {
 	username = user;
 	postid = post;
 	ajax.get("?action=get_post&body=1&post=" + postid, function(response){
-		/*  forums.php?action=viewthread&postid=23998#post23998  */
-            var s = "[quote="+username+"]" +  html_entity_decode(response) + "[/quote]";
+            var params = place != '' ? ","+place+","+postid : '';
+            var s = "[quote="+username+params+"]" +  html_entity_decode(response) + "[/quote]";
             if ( $('#quickpost').raw().value != '')   s = "\n" + s + "\n";
             insert( s, 'quickpost');
 		resize('quickpost');
