@@ -46,7 +46,7 @@ $DB->query("SELECT
 if ($DB->record_count()==0) error("Error: Could not find thread with id=$TopicID");
 list($OldForumID, $OldTitle, $MinClassWrite, $Posts, $OldLastPostID) = $DB->next_record();
 
-if($MinClassWrite > $LoggedUser['Class']) { error(403); }
+if( !check_forumperm($OldForumID, 'Write') ) { error(403); }
 
 
 // If we're moving
@@ -141,7 +141,7 @@ if (isset($_POST['merge'])) {
     if ($DB->record_count()==0) error("Merge failed: Could not find thread with id=$MergeTopicID");
     list($NewForumID, $MergeTitle, $NFMinClassWrite, $NFPosts, $NFLastPostID) = $DB->next_record();
     
-    if($NFMinClassWrite > $LoggedUser['Class']) error(403); 
+    if( !check_forumperm($NewForumID, 'Write') ) { error(403); }
    
     $MergeTitle = "$MergeTitle (merged with $OldTitle)";
     if($OldLastPostID>$NFLastPostID) $NFLastPostID = $OldLastPostID;

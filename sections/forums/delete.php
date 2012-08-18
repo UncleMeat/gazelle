@@ -30,6 +30,8 @@ $DB->query("SELECT
 	WHERE p.TopicID=(SELECT TopicID FROM forums_posts WHERE ID='$PostID')");
 list($TopicID, $ForumID, $Pages, $Page) = $DB->next_record();
 
+if( !check_forumperm($ForumID, 'Write') ) { error(403); }
+    
 // $Pages = number of pages in the thread
 // $Page = which page the post is on
 // These are set for cache clearing.
