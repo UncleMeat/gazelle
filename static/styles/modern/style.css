@@ -237,6 +237,9 @@ span.infinity {
     padding: 0px;
     display:inline;
 }
+#header_bottom ul li {
+    margin: 0px;
+}
 
 #stats_block a, #stats_block a:visited, #header_bottom a, #header_bottom a:visited {
     text-decoration: none;
@@ -337,7 +340,7 @@ span.inside_stat {
     list-style: none;
     display: none;
     position: absolute;
-    left: 0px;
+    left: 7px;
     background-color: #00436b;
     z-index: 10;
 }

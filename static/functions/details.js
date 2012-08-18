@@ -169,6 +169,7 @@ function Load_Tools_Cookie()  {
 function Details_Toggle() {
     var state = new Array();
     state[1]=((jQuery('#coverimage').is(':hidden'))?'0':'1');
+    state[2]=((jQuery('#tag_container').is(':hidden'))?'0':'1');
     
     jQuery('#details_top').slideToggle('700', function(){
             
@@ -197,8 +198,21 @@ function Cover_Toggle() {
     return false;
 }
 
+function TagBox_Toggle() {
+
+    jQuery('#tag_container').toggle();
+ 
+    if (jQuery('#tag_container').is(':hidden')) 
+        jQuery('#tagtoggle').html('(Show)');
+    else  
+        jQuery('#tagtoggle').html('(Hide)');
+            
+    jQuery.cookie('torrentDetailsState', Get_Cookie());
+    return false;
+}
+
 function Get_Cookie() {
-    return json.encode([((jQuery('#details_top').is(':hidden'))?'0':'1'), ((jQuery('#coverimage').is(':hidden'))?'0':'1')]);
+    return json.encode([((jQuery('#details_top').is(':hidden'))?'0':'1'), ((jQuery('#coverimage').is(':hidden'))?'0':'1'), ((jQuery('#tag_container').is(':hidden'))?'0':'1')]);
 }
 
 
@@ -225,6 +239,11 @@ function Load_Details_Cookie()  {
       } else 
 		jQuery('#covertoggle').text('(Hide)');
  
+	if(state[2] == '0') {
+		jQuery('#tag_container').hide();
+		jQuery('#tagtoggle').text('(Show)');
+      } else 
+		jQuery('#tagtoggle').text('(Hide)');
 }
  
  function Say_Thanks() {

@@ -376,18 +376,20 @@ if(check_perms('torrents_review')){
             <a id="tags"></a>
             <div class="head">
                 <strong><a href="torrents.php?id=<?=$GroupID?>&tsort=<?=$tagsort2?>" title="change sort order of tags to <?=$tagsort2?>">Tags</a></strong>
+                
+                <span style="float:right;margin-left:5px;"><a href="#" id="tagtoggle" onclick="TagBox_Toggle()">(Hide)</a></span>
                 <span style="float:right;font-size:0.8em;">
                     <a href="torrents.php?action=tag_synonyms" target="_blank">synonyms</a> | <a href="articles.php?topic=tag" target="_blank">Tagging rules</a>
                 </span>
             </div>
-        <div class="box box_tags">			
+        <div id="tag_container" class="box box_tags">			
                 <div class="tag_inner">
 <?
 if(count($Tags) > 0) {
 ?>
                           <ul id="torrent_tags" class="stats nobullet">
                                 <li style="font-size:1.1em;">
-                                    Please vote for tags <a href="articles.php?topic=tag" target="_blank"><strong class="important_text">only</strong></a> based on their appropriateness for this upload.
+                                    Please vote for tags based <a href="articles.php?topic=tag" target="_blank"><strong class="important_text">only</strong></a> on their appropriateness for this upload.
                                 </li>  
         <?
                 

@@ -225,7 +225,11 @@ function get_taglist_html($GroupID, $tagsort) {
     $IsUploader =  $UserID == $LoggedUser['ID']; 
 
     ob_start();
-   
+        ?>
+                                <li style="font-size:1.1em;">
+                                    Please vote for tags based <a href="articles.php?topic=tag" target="_blank"><strong class="important_text">only</strong></a> on their appropriateness for this upload.
+                                </li>
+        <?
             foreach($Tags as $TagKey=>$Tag) {
 
         ?>
