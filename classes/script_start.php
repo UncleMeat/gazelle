@@ -1370,11 +1370,15 @@ function cleanup_tags($s) {
 
 // Gets a tag ready for database input and display
 function sanitize_tag($str) {
-    $str = strtolower($str);
+    $str = strtolower(trim($str));
     $str = preg_replace('/[^a-z0-9.-]/', '', $str);
-    $str = htmlspecialchars($str);
-    $str = db_string(trim($str));
+    //$str = htmlspecialchars($str);
+    $str = db_string($str);
     return $str;
+}
+
+function check_tag_input($str){
+    return preg_match('/[^a-z0-9.-]/', '', $str)==0;
 }
 
 // Generate a random string

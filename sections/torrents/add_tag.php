@@ -30,13 +30,20 @@ $AddedTags = array();
 $AddedIDs = array();
 
 foreach ($Tags as $Tag) {
-    $Tag = trim($Tag, '.'); // trim whitespace & dots from the beginning and end
-    if (!check_perms('site_add_multiple_tags') && count($CheckedTags)>0 ){
+    $Tag = trim($Tag, '.'); // trim dots from the beginning and end
+    if ( count($CheckedTags)>0 && !check_perms('site_add_multiple_tags') ){
         $Results[] = array(0, "You cannot enter multiple tags.");
         break;
     }
     if ($Tag && !in_array($Tag, $CheckedTags)) {
         $CheckedTags[]=$Tag;
+        
+        $Tag = strtolower(trim($Tag));
+        
+        if ( !check_tag_input($Tag)) {
+            $Results[] = array(0, "$Tag contains invalid characters.");
+            continue;
+        }
         
         $OrigTag = $Tag; 
         $Tag = sanitize_tag($Tag);

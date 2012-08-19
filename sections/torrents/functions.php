@@ -166,7 +166,7 @@ function get_tag_synonym($Tag, $Sanitise = true){
 function is_valid_tag($Tag){
     static $Good2charTags;
     $len = strlen($Tag);
-    if ( $len < 2 ) return false;
+    if ( $len < 2 || $len > 32) return false;
     if ( $len == 2 ) {  
         if(!$Good2charTags) $Good2charTags = array('hd','dp','bj','ts','sd','69','mf','3d','hj','bi','tv','dv','da');
         if ( !in_array($Tag, $Good2charTags) ) return false;
