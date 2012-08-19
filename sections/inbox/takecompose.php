@@ -64,6 +64,9 @@ $Body = trim($_POST['body']);
 if(!$Err && empty($Body)) {
 	$Err = "You can't send a message without a body!";
 }
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+$Text->validate_bbcode($_POST['body'],  get_permissions_advtags($LoggedUser['ID']));
 
 if(!empty($Err)) {
 	error($Err);
@@ -74,7 +77,7 @@ if(!empty($Err)) {
 	die();
 }
 
-$ConvID = send_pm($ToID,$LoggedUser['ID'],db_string($Subject),db_string($Body),$ConvID);
+$ConvID = send_pm($ToID,$LoggedUser['ID'],db_string($Subject),db_string($_POST['body']),$ConvID);
 
 header('Location: inbox.php');
 ?>

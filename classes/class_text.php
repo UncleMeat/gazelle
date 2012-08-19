@@ -563,7 +563,8 @@ class TEXT {
 	private $NoImg = 0; // If images should be turned into URLs
 	private $Levels = 0; // nesting level
 	private $Advanced = false; // allow advanced tags to be printed
-      private $Showerrors = false;
+      private $ShowErrors = false;
+      private $Errors = array();
       
       //public $Smilies = array(); // for testing only
 	function __construct() {
@@ -578,9 +579,17 @@ class TEXT {
 		}
 		reset($this->Icons);
       }
+      function has_errors(){
+          return count($this->Errors)>0;
+      }
+      function get_errors(){
+          return $this->Errors;
+      }
 	function full_format($Str, $AdvancedTags = false, $ShowErrors = false) {
             $this->Advanced = $AdvancedTags;
-            $this->Showerrors = $ShowErrors;
+            $this->ShowErrors = $ShowErrors;
+            $this->Errors = array();
+            
 		$Str = display_str($Str);
             
             $Str = str_replace('  ', ' &nbsp;', $Str);
@@ -607,7 +616,18 @@ class TEXT {
 		$HTML = nl2br($HTML);
 		return $HTML;
 	}
-	
+      
+      function validate_bbcode($Str, $AdvancedTags = false, $ErrorOut = true){
+            $preview = $this->full_format($Str, $AdvancedTags,true);
+            if($this->has_errors()) {
+                if($ErrorOut){
+                    $bbErrors = implode('<br/>', $this->get_errors());
+                    error("There are errors in your bbcode (unclosed tags)<br/><br/>$bbErrors<br/><div class=\"box\"><div class=\"post_content\">$preview</div></div>");
+                }
+                return false;
+            }
+            return true;
+      }
 	function strip_bbcode($Str) {
 		$Str = display_str($Str);
 		
@@ -976,7 +996,8 @@ EXPLANATION OF PARSER LOGIC
                                         $closetaglength =0;
                                     } else {
                                         // lets try and deal with badly formed bbcode in a better way
-                                        if ($this->Showerrors) {
+                                        $this->Errors[] = "unclosed [$TagName] at character index= $i";
+                                        if ($this->ShowErrors) {
                                             $Block = "[$TagName]";
                                             $TagName = 'error';  
                                         } else {

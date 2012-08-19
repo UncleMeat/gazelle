@@ -12,6 +12,10 @@ if($LoggedUser['DisablePosting']) {
 	error('Your posting rights have been removed'); // Should this be logged?
 }
 
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+$Text->validate_bbcode($_POST['body'],  get_permissions_advtags($LoggedUser['ID']));
+             
 flood_check('collages_comments');
 
 $DB->query("INSERT INTO collages_comments

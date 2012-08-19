@@ -18,6 +18,10 @@ if($Short == "request_update") {
 } else {
 	$Reason = $_POST['reason'];
 }
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+$Text->validate_bbcode($Reason,  get_permissions_advtags($LoggedUser['ID']));
+
 
 switch($Short) {
 	case "request" :

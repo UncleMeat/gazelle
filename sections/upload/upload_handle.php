@@ -30,7 +30,7 @@ define('QUERY_EXCEPTION', true); // Shut up debugging
 
 // trim whitespace before setting/evaluating these fields
 $_POST['image'] = trim($_POST['image']);
-$_POST['desc'] = trim($_POST['desc']);
+$_POST['desc'] = $_POST['desc'];
 $_POST['title'] = trim($_POST['title']);
 
 $Properties = array();
@@ -43,7 +43,7 @@ $Properties['GroupDescription'] = $_POST['desc'];
       
 //$Properties['GroupID'] = $_POST['groupid'];
 $RequestID = $_POST['requestid'];
-
+ 
 //******************************************************************************//
 //--------------- Validate data in upload form ---------------------------------//
 //** note: if the same field is set to be validated more than once then each time it is set it overwrites the previous test
@@ -61,6 +61,10 @@ $Err = $Validate->ValidateForm($_POST, $Text); // Validate the form
 
 $File = $_FILES['file_input']; // This is our torrent file
 $TorrentName = $File['tmp_name'];
+
+if (!$Err && !$Text->validate_bbcode($_POST['desc'],  get_permissions_advtags($LoggedUser['ID']), false)){
+        $Err = "There are errors in your bbcode (unclosed tags)";
+}
 
 if(!$Err ){ // if we already have an error lets report what we have (much friendlier for fixing your presentation in the upload page as the fileinfo does not carry back)
     if (!is_uploaded_file($TorrentName) || !filesize($TorrentName)) {

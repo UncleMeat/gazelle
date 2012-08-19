@@ -8,6 +8,10 @@ $Val = new VALIDATE;
 $P = array();
 $P = db_array($_POST);
 
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+$Text->validate_bbcode($_POST['description'],  get_permissions_advtags($LoggedUser['ID']));
+            
 if ($P['category'] > 0 || check_perms('site_collages_renamepersonal')) {
 	$Val->SetFields('name', '1','string','The name must be between 3 and 100 characters',array('maxlength'=>100, 'minlength'=>3));
 } else {

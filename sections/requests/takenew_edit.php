@@ -106,6 +106,10 @@ if(empty($_POST['description'])) {
 	$Description = trim($_POST['description']);
 }
 
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+$Text->validate_bbcode($_POST['description'],  get_permissions_advtags($LoggedUser['ID']));
+      
 
 if(!empty($Err)) {
 	error($Err);

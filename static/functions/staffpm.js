@@ -74,7 +74,7 @@ function SaveMessage(id) {
 				$(ajax_message).raw().innerHTML = 'Not a valid ID!';
                         $(ajax_message).add_class('alert');
 			} else {
-				$(ajax_message).raw().innerHTML = 'Something unexpected went wrong!';
+				$(ajax_message).raw().innerHTML = data;
                         $(ajax_message).add_class('alert');
 			}
 			$(ajax_message).show();
@@ -83,40 +83,18 @@ function SaveMessage(id) {
 		}
 	);
 }
-/*
-function SaveMessage(id, conv_id) {
-	var ajax_message = 'ajax_message_' + id;
-	var ToPost = [];
-	
-	ToPost['id'] = id;
-	ToPost['name'] = document.getElementById('response_name_' + id).value;
-	ToPost['message'] = document.getElementById('response_message_' + id).value;
-
-	ajax.post("?action=edit_response", ToPost, function (data) {
-			if (data == '1') {
-				document.getElementById(ajax_message).textContent = 'Response successfully created.';
-			} else if (data == '2') {
-				document.getElementById(ajax_message).textContent = 'Response successfully edited.';
-			} else {
-				document.getElementById(ajax_message).textContent = 'Something went wrong.';
-			}
-			$('#' + ajax_message).show();
-                  jQuery('#' + ajax_message).fadeIn(0);
-                  setTimeout("jQuery('#" + ajax_message + "').fadeOut(400)", 2000);
-		}
-	);
-}*/
+ 
 
 function DeleteMessage(id) {
       var tt = $('#response_name_' + id).raw().value;
       if(!confirm("Are you sure you want to delete response #" + id + "\n'" + tt + "' ?")) return;
-	var div = '#response_' + id;
 	var ajax_message = '#ajax_message_' + id;
 
 	var ToPost = [];
 	ToPost['id'] = id;
 	ajax.post("?action=delete_response", ToPost, function (data) {
-		$(div).hide();
+		$('#response_head_' + id).hide();
+		$('#response_' + id).hide();
 		if (data == '1') {
 			$(ajax_message).raw().textContent = "Response #" + id + " successfully deleted.";
 		} else {

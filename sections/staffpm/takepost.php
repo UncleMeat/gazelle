@@ -1,5 +1,10 @@
 <?
 if ($Message = db_string($_POST['message'])) {
+    
+      include(SERVER_ROOT.'/classes/class_text.php');
+      $Text = new TEXT;
+      $Text->validate_bbcode($_POST['message'],  get_permissions_advtags($LoggedUser['ID']));
+      
 	if ($Subject = db_string($_POST['subject'])) {
 		// New staff pm conversation
 		$Level = db_string($_POST['level']);

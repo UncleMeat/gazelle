@@ -13,6 +13,9 @@ if(!$_POST['post'] || !is_number($_POST['post'])) {
 if(empty($_POST['body'])) {
 	error('You cannot post a comment with no content.');
 }
+
+$Text->validate_bbcode($_POST['body'],  get_permissions_advtags($LoggedUser['ID']));
+            
 // Variables for database input
 $UserID = $LoggedUser['ID'];
 $Body = db_string(urldecode($_POST['body']));

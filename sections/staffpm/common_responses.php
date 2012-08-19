@@ -66,7 +66,7 @@ while(list($ID, $Message, $Name) = $DB->next_record()) {
 	
 ?>
 		<div class="messagecontainer" id="container_<?=$ID?>"><div id="ajax_message_<?=$ID?>" class="hidden center messagebar"></div></div>
-                <div class="head">
+                <div  id="response_head_<?=$ID?>" class="head">
                         <strong>Name:</strong> 
                         <input type="hidden" name="id" value="<?=$ID?>" />
                         <input type="text" name="name" id="response_name_<?=$ID?>" size="87" value="<?=display_str($Name)?>" />
@@ -74,7 +74,7 @@ while(list($ID, $Message, $Name) = $DB->next_record()) {
 		<div id="response_<?=$ID?>" class="box">
 			<form id="response_form_<?=$ID?>" action="">
 				<div class="box pad" id="response_div_<?=$ID?>" style="text-align:left;">
-						<?=$Text->full_format($Message, true)?>
+						<?=$Text->full_format($Message, true, true)?>
 				</div>
 				<div class="pad hidden" id="response_editor_<?=$ID?>" >
                             <? $Text->display_bbcode_assistant("response_message_".$ID, true); ?>

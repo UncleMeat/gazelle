@@ -1,6 +1,9 @@
 <?
 enforce_login();
 // Get user level
+
+$IsAjax = isset($_POST['submit']) && $_POST['submit'] == 'Save'? FALSE : TRUE;
+
 $DB->query("
 	SELECT
 		i.SupportFor,
@@ -14,22 +17,34 @@ list($SupportFor, $DisplayStaff) = $DB->next_record();
 
 if (!($SupportFor != '' || $DisplayStaff == '1')) {
 	// Logged in user is not FLS or Staff
-	error(403);
+      if (!$IsAjax) error(403);
+      else {
+          echo "You do not have permission to view this page";
+          die();
+      }
 }
 
-$Message = isset($_POST['message'])? trim($_POST['message']):false;
+$Message = isset($_POST['message'])? $_POST['message']:false;
 $Name = isset($_POST['name'])? trim($_POST['name']):false;
 
-if ($Message && $Name && ($Message != "") && ($Name != "")) {
-      $Message = db_string(display_str($Message));
-      $Name = db_string(display_str($Name));
+if ($Message && $Name && (trim($Message) != "") && ($Name != "")) {
+    
+      include(SERVER_ROOT.'/classes/class_text.php');
+      $Text = new TEXT;
+      if (!$Text->validate_bbcode($Message,  get_permissions_advtags($LoggedUser['ID']), !$IsAjax)){
+        echo "There are errors in your bbcode (unclosed tags)";
+        die();
+      }
+      
+      $Message = db_string($Message);
+      $Name = db_string($Name);
 	$ID = (int)$_POST['id'];
 	if (is_numeric($ID)) {
 		if ($ID == 0) {
 			// Create new response
 			$DB->query("INSERT INTO staff_pm_responses (Message, Name) VALUES ('$Message', '$Name')");
                   // if submit is set then this is not an ajax response - reload page and pass vars for message & return convid
-                  if (isset($_POST['submit']) && $_POST['submit'] == 'Save'){
+                  if (!$IsAjax){
                       $InsertedID = $DB->inserted_id();
                       $ConvID = (int)$_POST['convid'];
                       header("Location: staffpm.php?action=responses&added=$InsertedID".($ConvID>0?"&convid=$ConvID":'')."#old_responses");
@@ -46,7 +61,7 @@ if ($Message && $Name && ($Message != "") && ($Name != "")) {
 				// Create new response
 				$DB->query("INSERT INTO staff_pm_responses (Message, Name) VALUES ('$Message', '$Name')");
 				// if submit is set then this is not an ajax response - reload page and pass vars for message & return convid
-                        if (isset($_POST['submit']) && $_POST['submit'] == 'Save'){
+                        if (!$IsAjax){
                               $InsertedID = $DB->inserted_id();
                               $ConvID = (int)$_POST['convid'];
                               header("Location: staffpm.php?action=responses&added=$InsertedID".($ConvID>0?"&convid=$ConvID":'')."#old_responses");
@@ -56,7 +71,7 @@ if ($Message && $Name && ($Message != "") && ($Name != "")) {
 		}
 	} else {
 		// No id
-		if (isset($_POST['submit']) && $_POST['submit'] == 'Save'){
+		if (!$IsAjax){
                   $ConvID = (int)$_POST['convid'];
                   header("Location: staffpm.php?action=responses&added=-2".($ConvID>0?"&convid=$ConvID":''));
             } else
@@ -65,7 +80,7 @@ if ($Message && $Name && ($Message != "") && ($Name != "")) {
 	
 } else {
 	// No message/name
-	if (isset($_POST['submit']) && $_POST['submit'] == 'Save'){
+	if (!$IsAjax){
             $ConvID = (int)$_POST['convid'];
             header("Location: staffpm.php?action=responses&added=-1".($ConvID>0?"&convid=$ConvID":''));
       } else

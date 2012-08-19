@@ -35,6 +35,8 @@ $CategoryID = (int)$_POST['categoryid'];
 $Body = $_POST['body'];
 $Image = $_POST['image'];
 
+$Text->validate_bbcode($_POST['body'],  get_permissions_advtags($LoggedUser['ID']));
+        
 $whitelist_regex = GetWhitelistRegex();
 
 $Validate->SetFields('image', '0', 'image', 'The image URL you entered was not valid.', array('regex' => $whitelist_regex, 'maxlength' => 255, 'minlength' => 12));
@@ -42,7 +44,7 @@ $Validate->SetFields('image', '0', 'image', 'The image URL you entered was not v
 $Validate->SetFields('body', '1', 'desc', 'Description', array('minimages'=>1, 'regex' => $whitelist_regex, 'maxlength' => 1000000, 'minlength' => 20));
 
 $Err = $Validate->ValidateForm($_POST, $Text); // Validate the form
-
+ 
 if ($Err) { // Show the upload form, with the data the user entered
     $HasDescriptionData = TRUE; /// tells editgroup to use $Body and $Image vars instead of requerying them
     $_GET['groupid'] = $GroupID;

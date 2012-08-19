@@ -19,6 +19,7 @@ $_POST['action'] is what the user is trying to do. It can be:
 
 \*********************************************************************/
 
+
 // Quick SQL injection checks
 
 if (isset($LoggedUser['PostsPerPage'])) {
@@ -39,11 +40,16 @@ if(empty($_POST['body'])) {
 	error('You cannot post a reply with no content.');
 }
 
-$Body = $_POST['body'];
-
 if($LoggedUser['DisablePosting']) {
 	error('Your posting rights have been removed');
 }
+
+$Body = $_POST['body'];
+
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+$Text->validate_bbcode($_POST['body'],  get_permissions_advtags($LoggedUser['ID']));
+             
 
 $TopicID = $_POST['thread'];
 $ThreadInfo = get_thread_info($TopicID);

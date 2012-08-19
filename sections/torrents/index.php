@@ -217,12 +217,16 @@ if(!empty($_REQUEST['action'])) {
 			if($LoggedUser['DisablePosting']) {
 				error('Your posting rights have been removed.');
 			}
-                  
+		
+                  include(SERVER_ROOT.'/classes/class_text.php');
+                  $Text = new TEXT;
+                  $Text->validate_bbcode($_POST['body'],  get_permissions_advtags($LoggedUser['ID']));
+             
                   flood_check('torrents_comments');
 
 			$GroupID = (int)$_POST['groupid'];
 			if(!$GroupID) { error(404); }
-		
+                
 			$DB->query("SELECT CEIL((SELECT COUNT(ID)+1 FROM torrents_comments AS tc WHERE tc.GroupID='".db_string($GroupID)."')/".TORRENT_COMMENTS_PER_PAGE.") AS Pages");
 			list($Pages) = $DB->next_record();
 		
