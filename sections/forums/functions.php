@@ -82,9 +82,9 @@ $OpenGroup = false;
 $LastCategoryID=-1;
 
 foreach ($Forums as $Forum) {
-	if ($Forum['MinClassRead'] > $LoggedUser['Class']) {
-		continue;
-	}
+	//if ($Forum['MinClassRead'] > $LoggedUser['Class']) continue;
+	 
+      if ( !check_forumperm($Forum['ID'], 'Write')) continue;
 
 	if ($Forum['CategoryID'] != $LastCategoryID) {
 		$LastCategoryID = $Forum['CategoryID'];
