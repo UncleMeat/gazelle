@@ -578,6 +578,7 @@ if($Day != next_day() || $_GET['runday']){
 	//------------- Disable inactive user accounts --------------------------//
 	sleep(5);
 	// Send email
+      /*  //  MIFUNE -- lets not keep sending emails to soon to be disabled users with the test sites url in it lol
 	$DB->query("SELECT um.Username, um.Email FROM  users_info AS ui JOIN users_main AS um ON um.ID=ui.UserID
 		WHERE um.PermissionID IN ('".APPRENTICE."', '".PERV	."')
 		AND um.LastAccess<'".time_minus(3600*24*110, true)."'
@@ -589,6 +590,8 @@ if($Day != next_day() || $_GET['runday']){
 		$Body = "Hi $Username, \n\nIt has been almost 4 months since you used your account at http://".NONSSL_SITE_URL.". This is an automated email to inform you that your account will be disabled in 10 days if you do not sign in. ";
 		send_email($Email, 'Your '.SITE_NAME.' account is about to be disabled', $Body);
 	}
+       * 
+       */
 	$DB->query("SELECT um.ID FROM  users_info AS ui JOIN users_main AS um ON um.ID=ui.UserID
 		WHERE um.PermissionID IN ('".APPRENTICE."', '".PERV."')
 		AND um.LastAccess<'".time_minus(3600*24*30*4)."' 

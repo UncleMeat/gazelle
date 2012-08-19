@@ -50,7 +50,9 @@ a:visited, .linkbox a:visited, .permission_container a:visited,
     .forum_index a:visited, .forum_list a:visited, #search_button:visited,
     #request_table a:visited, .cat_list a:visited, .tags a:visited,
     .head a:visited, .colhead_dark a:visited {
-    color: #333;
+    /* color: #333; -- if visited link is the same as normal link you cannot tell a link apart from normal text... */
+     /* color: #005689; /* same as a non visited link if all links should look the same visited or not */
+    color: #004161; /* a darker blue if you want to tell them apart */
 }
 
 a:hover, .linkbox a:hover, .permission_container a:hover,
