@@ -1378,7 +1378,7 @@ function sanitize_tag($str) {
 }
 
 function check_tag_input($str){
-    return preg_match('/[^a-z0-9.-]/', '', $str)==0;
+    return preg_match('/[^a-z0-9.-]/', $str)==0;
 }
 
 // Generate a random string
