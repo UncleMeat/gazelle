@@ -38,6 +38,8 @@ if( !check_forumperm($ForumID, 'Write') ) { error(403); }
 
 $DB->query("DELETE FROM forums_posts WHERE ID='$PostID'");
 
+$DB->query("DELETE FROM forums_last_read_topics WHERE PostID='$PostID'");
+            
 $DB->query("SELECT MAX(ID) FROM forums_posts WHERE TopicID='$TopicID'");
 list($LastID) = $DB->next_record();
 $DB->query("UPDATE forums AS f, forums_topics AS t SET f.NumPosts=f.NumPosts-1, t.NumPosts=t.NumPosts-1 WHERE f.ID='$ForumID' AND t.ID='$TopicID'");

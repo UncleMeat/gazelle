@@ -577,7 +577,7 @@ if($Day != next_day() || $_GET['runday']){
 	
 	//------------- Disable inactive user accounts --------------------------//
 	sleep(5);
-	// Send email
+	// Send email // TODO: reinstate when we go live
       /*  //  MIFUNE -- lets not keep sending emails to soon to be disabled users with the test sites url in it lol
 	$DB->query("SELECT um.Username, um.Email FROM  users_info AS ui JOIN users_main AS um ON um.ID=ui.UserID
 		WHERE um.PermissionID IN ('".APPRENTICE."', '".PERV	."')
@@ -590,7 +590,6 @@ if($Day != next_day() || $_GET['runday']){
 		$Body = "Hi $Username, \n\nIt has been almost 4 months since you used your account at http://".NONSSL_SITE_URL.". This is an automated email to inform you that your account will be disabled in 10 days if you do not sign in. ";
 		send_email($Email, 'Your '.SITE_NAME.' account is about to be disabled', $Body);
 	}
-       * 
        */
 	$DB->query("SELECT um.ID FROM  users_info AS ui JOIN users_main AS um ON um.ID=ui.UserID
 		WHERE um.PermissionID IN ('".APPRENTICE."', '".PERV."')
@@ -619,8 +618,9 @@ if($Day != next_day() || $_GET['runday']){
 	echo "disabled unconfirmed\n";
 	
 	//------------- Demote users --------------------------------------------//
+      //  Mifune -  removed upload amount check - this means we can manually promote pervs (who have ratio >0.95) and they wont get auto demoted. its more or less impossible to reduce your upload amount so there is no loss of function anyway
 	sleep(10);
-	$DB->query('SELECT um.ID FROM users_main AS um WHERE PermissionID IN('.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded/Downloaded < 0.95 OR PermissionID IN('.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded < 25*1024*1024*1024');
+	$DB->query('SELECT um.ID FROM users_main AS um WHERE PermissionID IN('.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded/Downloaded < 0.95 '); // OR PermissionID IN('.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded < 25*1024*1024*1024
 	
 	echo "demoted 1\n";
 	
@@ -629,7 +629,7 @@ if($Day != next_day() || $_GET['runday']){
 		$Cache->update_row(false, array('PermissionID'=>PERV));
 		$Cache->commit_transaction(2592000);
 	}
-	$DB->query('UPDATE users_main SET PermissionID='.PERV.' WHERE PermissionID IN('.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded/Downloaded < 0.95 OR PermissionID IN('.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded < 25*1024*1024*1024');
+	$DB->query('UPDATE users_main SET PermissionID='.PERV.' WHERE PermissionID IN('.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded/Downloaded < 0.95 '); // OR PermissionID IN('.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded < 25*1024*1024*1024
 	echo "demoted 2\n";
 	
 	$DB->query('SELECT um.ID FROM users_main AS um WHERE PermissionID IN('.PERV.', '.GOOD_PERV.', '.SEXTREME_PERV.', '.SMUT_PEDDLER.') AND Uploaded/Downloaded < 0.65');
