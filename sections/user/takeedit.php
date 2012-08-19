@@ -169,6 +169,7 @@ $Options['TorrentsPerPage'] = (int)$_POST['torrentsperpage'];
 $Options['PostsPerPage'] = (int) $_POST['postsperpage'];
 //$Options['HideCollage'] = (!empty($_POST['hidecollage']) ? 1 : 0);
 $Options['CollageCovers'] = empty($_POST['collagecovers']) ? 0 : $_POST['collagecovers'];
+$Options['HideCats'] = (!empty($_POST['hidecats']) ? 1 : 0);
 $Options['ShowTags'] = (!empty($_POST['showtags']) ? 1 : 0);
 $Options['HideTagsInLists'] = (!empty($_POST['hidetagsinlists']) ? 1 : 0);
 $Options['AutoSubscribe'] = (!empty($_POST['autosubscribe']) ? 1 : 0);

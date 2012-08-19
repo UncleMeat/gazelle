@@ -200,6 +200,15 @@ echo $Val->GenerateJS('userform');
 				</td>
 			</tr>
 			<tr>
+				<td class="label"><strong>Category list in torrent search</strong></td>
+				<td>
+					<select name="hidecats" id="hidecats">
+						<option value="0"<? if ($SiteOptions['HideCats'] == 0) { ?>selected="selected"<? } ?>>Open by default.</option>
+						<option value="1"<? if ($SiteOptions['HideCats'] == 1) { ?>selected="selected"<? } ?>>Closed by default.</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<td class="label"><strong>Tag list in torrent search</strong></td>
 				<td>
 					<select name="showtags" id="showtags">

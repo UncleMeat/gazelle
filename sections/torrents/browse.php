@@ -355,7 +355,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
        
     </div>
         <div class="box pad">
-            <table class="cat_list">
+            <table id="cat_list" class="cat_list on_cat_change <? if (!empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>">
                 <?
                 $row = 'a';
                 $x = 0;
@@ -382,7 +382,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                 <tr>
                     <td colspan="7" style="text-align:right"> 
                         
-                    <input style="float:right;position:relative;left:-12px;bottom:-120px;" 
+                    <input style="float:right;position:relative;left:-12px;bottom:-116px;" class="on_cat_change <? if (!empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>" 
                            type="submit" value="Filter Torrents" />
     
                         <input type="button" value="Reset" onclick="location.href='torrents.php<? if (isset($_GET['action']) && $_GET['action'] == "advanced") { ?>?action=advanced<? } ?>'" />
@@ -398,8 +398,9 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                 <? } ?>
                     </td>
                 </tr>
-            </table><br/>
+            </table>
             <table class="noborder">
+                <tr class="on_cat_change <? if (!empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>"><td colspan="3">&nbsp;</td></tr>
                 <tr>
                     <td class="label">Order by:</td>
                     <td colspan="<?= ($AdvancedSearch) ? '3' : '1' ?>">
@@ -421,6 +422,8 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                             <label style="margin-left:20px;" for="limit_matches"><strong>Limited search results:</strong></label>
                             <input type="checkbox" value="1" name="limit_matches" <? selected('limit_matches', 1, 'checked') ?> />
                     <? } ?>
+                <span style="float:right"><a href="#" onclick="$('.on_cat_change').toggle();$('.non_cat_change').toggle(); if(this.innerHTML=='(View Categories)'){this.innerHTML='(Hide Categories)';} else {this.innerHTML='(View Categories)';}; return false;"><?= (!empty($LoggedUser['HideCats'])) ? '(View Categories)' : '(Hide Categories)' ?></a></span>
+                    
                     </td>
                 </tr>
                 <? if ($AdvancedSearch) { ?>
@@ -478,7 +481,9 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                 <? } ?>
             </table>
             <div>
-                <span style="float:right"><a href="#" onclick="$('#taglist').toggle(); if(this.innerHTML=='(View Tags)'){this.innerHTML='(Hide Tags)';} else {this.innerHTML='(View Tags)';}; return false;"><?= (empty($LoggedUser['ShowTags'])) ? '(View Tags)' : '(Hide Tags)' ?></a></span>
+                    <input class="non_cat_change <? if (empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>" style="float:right;position:relative;right:14px;top:-110px;" 
+                           type="submit" value="Filter Torrents" />
+                <span style="float:left;margin-left:80%;"><a href="#" onclick="$('#taglist').toggle(); if(this.innerHTML=='(View Tags)'){this.innerHTML='(Hide Tags)';} else {this.innerHTML='(View Tags)';}; return false;"><?= (empty($LoggedUser['ShowTags'])) ? '(View Tags)' : '(Hide Tags)' ?></a></span>
                     
             </div>
             <table width="100%" class="noborder taglist <? if (empty($LoggedUser['ShowTags'])) { ?>hidden<? } ?>" id="taglist">
@@ -510,8 +515,8 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                     <? } ?>
                 </tr>
             </table>
-            <div>
-                <span><?= number_format($TorrentCount) . ($TorrentCount < SPHINX_MAX_MATCHES && $TorrentCount == $MaxMatches ? '+' : '') ?> Results</span>
+            <div><br/>
+                <span style="float:left;"><?= number_format($TorrentCount) . ($TorrentCount < SPHINX_MAX_MATCHES && $TorrentCount == $MaxMatches ? '+' : '') ?> Results</span>
                 <br/>
             </div>
         </div>
