@@ -62,7 +62,7 @@ $Awards = $DB->to_array(false, MYSQLI_BOTH);
                 </div>
                 <div class="pad" style="width:100%;">
                     <p><?=$Desc?></p>
-<?              if ($Sorter==2) echo "<p style=\"float:right;margin-right:20px;\">$Type</p>";  ?>
+<?              //if ($Sorter==2) echo "<p style=\"float:right;margin-right:20px;\">$Type</p>";  ?>
                 </div>
 		</div>
 <?	}  ?>

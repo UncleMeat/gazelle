@@ -348,12 +348,12 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
     
 <form name="filter" method="get" action=''>  
     <div id="search_box" class="filter_torrents">
-    <div class="head">
-        <?=($AdvancedSearch?'Advanced':'Basic')?> Search &nbsp;&nbsp;		
+        <div class="head">
+            <?=($AdvancedSearch?'Advanced':'Basic')?> Search &nbsp;&nbsp;		
             
-        [<a style="font-size:0.9em;" href="torrents.php?action=<?=($AdvancedSearch?'basic':'advanced')?>&amp;<?= get_url(array('action')) ?>">switch to <?=($AdvancedSearch?'basic':'advanced')?> search</a>]
+            [<a style="font-size:0.9em;" href="torrents.php?action=<?=($AdvancedSearch?'basic':'advanced')?>&amp;<?= get_url(array('action')) ?>">switch to <?=($AdvancedSearch?'basic':'advanced')?> search</a>]
        
-    </div>
+        </div>
         <div class="box pad">
             <table id="cat_list" class="cat_list on_cat_change <? if (!empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>">
                 <?
@@ -424,6 +424,8 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                     <? } ?>
                 <span style="float:right"><a href="#" onclick="$('.on_cat_change').toggle();$('.non_cat_change').toggle(); if(this.innerHTML=='(View Categories)'){this.innerHTML='(Hide Categories)';} else {this.innerHTML='(View Categories)';}; return false;"><?= (!empty($LoggedUser['HideCats'])) ? '(View Categories)' : '(Hide Categories)' ?></a></span>
                     
+                    <input class="non_cat_change <? if (empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>" style="float:right;position:relative;right:-88px;top:45px;" 
+                           type="submit" value="Filter Torrents" />
                     </td>
                 </tr>
                 <? if ($AdvancedSearch) { ?>
@@ -481,8 +483,6 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                 <? } ?>
             </table>
             <div>
-                    <input class="non_cat_change <? if (empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>" style="float:right;position:relative;right:14px;top:-110px;" 
-                           type="submit" value="Filter Torrents" />
                 <span style="float:left;margin-left:80%;"><a href="#" onclick="$('#taglist').toggle(); if(this.innerHTML=='(View Tags)'){this.innerHTML='(Hide Tags)';} else {this.innerHTML='(View Tags)';}; return false;"><?= (empty($LoggedUser['ShowTags'])) ? '(View Tags)' : '(Hide Tags)' ?></a></span>
                     
             </div>
@@ -491,7 +491,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                     <?
                     $GenreTags = $Cache->get_value('genre_tags');
                     if (!$GenreTags) {
-                        $DB->query('SELECT Name FROM tags WHERE TagType=\'genre\' ORDER BY Name');
+                        $DB->query('SELECT Name FROM tags WHERE TagType=\'genre\' ORDER BY Uses DESC, Name');
                         $GenreTags = $DB->collect('Name');
                         $Cache->cache_value('genre_tags', $GenreTags, 3600 * 6);
                     }
@@ -525,7 +525,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                 <script type="text/javascript">
                     window.attachEvent('onload', Load_Cookie);
                 </script>
- <div class="filter_slidetoggle"><a href="#" id="search_button" onclick="Panel_Toggle();">Close Search Center</a> </div>
+ <div class="filter_slidetoggle" style="margin-top:-6px;"><a href="#" id="search_button" onclick="Panel_Toggle();">Close Search Center</a> </div>
  <div class="linkbox"><?= $Pages ?></div>
 <?
 if (count($Results) == 0) {
