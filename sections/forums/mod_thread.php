@@ -37,14 +37,15 @@ $DB->query("SELECT
           t.Title,
 	f.MinClassWrite,
 	COUNT(p.ID) AS Posts,
-          Max(p.ID) AS LastPostID
+          Max(p.ID) AS LastPostID,
+            t.StickyPostID
 	FROM forums_topics AS t
 	LEFT JOIN forums_posts AS p ON p.TopicID=t.ID
 	LEFT JOIN forums AS f ON f.ID=.t.ForumID
 	WHERE t.ID='$TopicID'
 	GROUP BY p.TopicID");
 if ($DB->record_count()==0) error("Error: Could not find thread with id=$TopicID");
-list($OldForumID, $OldTitle, $MinClassWrite, $Posts, $OldLastPostID) = $DB->next_record();
+list($OldForumID, $OldTitle, $MinClassWrite, $Posts, $OldLastPostID, $OldStickyPostID) = $DB->next_record();
 
 if( !check_forumperm($OldForumID, 'Write') ) { error(403); }
 
@@ -125,6 +126,8 @@ if (isset($_POST['split'])) {
     sort($PostIDs);
     foreach($PostIDs as $pID){
         if( !is_number($pID)) error(0);
+        // while we are looping these may as well reset the current stickyID (prevents a nasty looking bug - null stickypost!)
+        if ($OldStickyPostID == $pID) $OldStickyPostID=0;
     }
     $firstpostID = $PostIDs[0];
     $lastpostID = end($PostIDs);
@@ -199,6 +202,7 @@ if (isset($_POST['split'])) {
     $DB->query("UPDATE forums_topics SET LastPostID='$PostPostID',
                                          LastPostAuthorID  = '$LoggedUser[ID]',
                                          LastPostTime	= '$sqltime', 
+                                         StickyPostID = '$OldStickyPostID',
                                          NumPosts=((NumPosts+1)-$NumSplitPosts) WHERE ID='$TopicID'");
     
     // move the selected posts

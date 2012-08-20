@@ -398,13 +398,17 @@ if(check_perms('site_admin_forums') && $ThreadInfo['Posts'] > 1) { ?>
 
 //Sqeeze in stickypost
 if($ThreadInfo['StickyPostID']) {
+    // if a sticky post is present then prepend it to the array, (it will not be in the array)
+	array_unshift($Thread, $ThreadInfo['StickyPost']);
+      /*  // mifune: I think this fixes sticky posts... if a stickypostID is present it will NOT be in the post list,
+       *  // so afaics it should ALWAYS be prepended to the post list - no point in testing, and why stick it on the end??
 	if($ThreadInfo['StickyPostID'] != $Thread[0]['ID']) {
 		array_unshift($Thread, $ThreadInfo['StickyPost']);
 	}
 	if($ThreadInfo['StickyPostID'] != $Thread[count($Thread)-1]['ID']) {
 		$Thread[] = $ThreadInfo['StickyPost'];
-	}
-} 
+	} */
+}
 foreach($Thread as $Key => $Post){
 	list($PostID, $AuthorID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername) = array_values($Post);
 	list($AuthorID, $Username, $PermissionID, $Paranoia, $Donor, $Warned, $Avatar, $Enabled, $UserTitle,,,$Signature) = array_values(user_info($AuthorID));
