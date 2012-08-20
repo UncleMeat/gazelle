@@ -153,20 +153,20 @@ if (isset($_POST['split'])) {
               WHERE t.ID='$SplitTopicID'
               GROUP BY p.TopicID");
         if ($DB->record_count()==0) error("Split failed: Could not find thread with id=$SplitTopicID");
-        list($NewForumID, $MergeTitle, $NFMinClassWrite, $NFPosts, $NFLastPostID) = $DB->next_record();
+        list($ForumID, $MergeTitle, $NFMinClassWrite, $NFPosts, $NFLastPostID) = $DB->next_record();
 
-        if( !check_forumperm($NewForumID, 'Write') ) { error(403); }
+        if( !check_forumperm($ForumID, 'Write') ) { error(403); }
         
         $Title = "$MergeTitle (merged with posts from $OldTitle)";
         if($lastpostID>$NFLastPostID) $NFLastPostID = $lastpostID; 
         $NFPosts += ($NumSplitPosts+1); // 1 extra for system post
         $DB->query("UPDATE forums_topics SET Title='".db_string($Title)."',
                                         LastPostID='$NFLastPostID',
-                                      LastAuthorID='$LastAuthorID',
+                                  LastPostAuthorID='$LastAuthorID',
                                       LastPostTime='$sqltime',
                                           NumPosts='$NFPosts' WHERE ID='$SplitTopicID'");
         $extra = "merged into";
-        
+        $numtopics = 0;
     } else {   
         // merge into a new thread
         if ($Title!= $OldTitle)
@@ -180,6 +180,7 @@ if (isset($_POST['split'])) {
               ('".db_string($Title)."', '$FirstAuthorID', '$ForumID', '$lastpostID', '$sqltime', '$LastAuthorID','".($NumSplitPosts+1)."')");
         $SplitTopicID = $DB->inserted_id();
         $extra = "moved to";
+        $numtopics = '+1';
     }
     
     $SystemPost = "[quote=the system]$NumSplitPosts posts $extra this thread from [url=/forums.php?action=viewthread&threadid=$TopicID]\"$OldTitle\"[/url][/quote]";
@@ -206,12 +207,12 @@ if (isset($_POST['split'])) {
     $DB->query("UPDATE forums_posts SET TopicID='$SplitTopicID', Body=CONCAT_WS( '\n\n', Body, '[align=right][size=0][i]split from thread[/i][br]\'$OldTitle\'[/size][/align]') WHERE TopicID='$TopicID' AND ID IN ($PostIDs)");
         
     $Cache->begin_transaction('forums_list');
-
-    update_forum_info($ForumID, 0,false);
-    if($NewForumID!=$ForumID) {    // If we're moving posts into a new forum, change the new forum stats
+ 
+    update_forum_info($ForumID, $numtopics,false);
+    if($OldForumID!=$ForumID) {    // If we're moving posts into a new forum, change the new forum stats
 	 
-        update_forum_info($NewForumID, 0,false); 
-        $Cache->delete_value('forums_'.$NewForumID);
+        update_forum_info($OldForumID, 0,false); 
+        $Cache->delete_value('forums_'.$OldForumID);
     }
       
     $Cache->commit_transaction(0);
