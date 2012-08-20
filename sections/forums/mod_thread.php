@@ -77,7 +77,8 @@ function update_forum_info($ForumID, $AdjustNumTopics = 0, $BeginEndTransaction 
 			LEFT JOIN users_main AS um ON um.ID=p.AuthorID
 			WHERE t.ForumID='$ForumID'
 			GROUP BY t.ID
-			ORDER BY t.LastPostID DESC LIMIT 1");
+			ORDER BY p.AddedTime DESC LIMIT 1");
+			//ORDER BY t.LastPostID DESC LIMIT 1");
     list($NewLastTopic, $NewLastPostID, $NewLastTitle, $NewLastAuthorID, $NewLastAuthorName, $NewLastAddedTime, $NumPosts, $NewLocked, $NewSticky) = $DB->next_record(MYSQLI_BOTH, false);
 		
     $UpdateArray = array(
@@ -161,15 +162,18 @@ if (isset($_POST['split'])) {
         if( !check_forumperm($ForumID, 'Write') ) { error(403); }
         
         $Title = "$MergeTitle (merged with posts from $OldTitle)";
-        if($lastpostID>$NFLastPostID) $NFLastPostID = $lastpostID; 
+        $NewLastPostID = ($lastpostID>$NFLastPostID)? $lastpostID : $NFLastPostID; 
         $NFPosts += ($NumSplitPosts+1); // 1 extra for system post
         $DB->query("UPDATE forums_topics SET Title='".db_string($Title)."',
-                                        LastPostID='$NFLastPostID',
+                                        LastPostID='$NewLastPostID',
                                   LastPostAuthorID='$LastAuthorID',
                                       LastPostTime='$sqltime',
                                           NumPosts='$NFPosts' WHERE ID='$SplitTopicID'");
         $extra = "merged into";
         $numtopics = 0;
+        
+        $DB->query("DELETE FROM forums_last_read_topics WHERE TopicID='$SplitTopicID'");
+        
     } else {   
         // merge into a new thread
         if ($Title!= $OldTitle)
@@ -205,9 +209,11 @@ if (isset($_POST['split'])) {
                                          StickyPostID = '$OldStickyPostID',
                                          NumPosts=((NumPosts+1)-$NumSplitPosts) WHERE ID='$TopicID'");
     
+    $DB->query("DELETE FROM forums_last_read_topics WHERE TopicID='$TopicID'");
+        
     // move the selected posts
     $PostIDs = implode(',', $PostIDs);
-    //$DB->query("UPDATE forums_posts SET TopicID='$SplitTopicID' WHERE TopicID='$TopicID' AND ID IN ($PostIDs)");
+     
     $DB->query("UPDATE forums_posts SET TopicID='$SplitTopicID', Body=CONCAT_WS( '\n\n', Body, '[align=right][size=0][i]split from thread[/i][br]\'$OldTitle\'[/size][/align]') WHERE TopicID='$TopicID' AND ID IN ($PostIDs)");
         
     $Cache->begin_transaction('forums_list');
