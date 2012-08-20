@@ -95,6 +95,7 @@ if(!$Catalogue = $Cache->get_value('thread_'.$ThreadID.'_catalogue_'.$CatalogueI
 		LEFT JOIN users_main AS ed ON ed.ID = p.EditedUserID
 		LEFT JOIN users_main AS a ON a.ID = p.AuthorID
 		WHERE p.TopicID = '$ThreadID' AND p.ID != '".$ThreadInfo['StickyPostID']."'
+              ORDER BY p.AddedTime
 		LIMIT $CatalogueLimit");
 	$Catalogue = $DB->to_array(false,MYSQLI_ASSOC);
 	if (!$ThreadInfo['IsLocked'] || $ThreadInfo['IsSticky']) {
@@ -389,6 +390,11 @@ if ($ThreadInfo['NoPoll'] == 0) {
 	</div>
 <? 
 } //End Polls
+  
+// form for splitting posts... only include as appropriate
+if(check_perms('site_admin_forums') && $ThreadInfo['Posts'] > 1) { ?>
+<form action="forums.php" method="post">
+<?  } 
 
 //Sqeeze in stickypost
 if($ThreadInfo['StickyPostID']) {
@@ -441,6 +447,11 @@ if($PostID == $ThreadInfo['StickyPostID']) { ?>
 ?>
 			</span>
 			<span id="bar<?=$PostID?>" style="float:right;">
+<?      if(check_perms('site_admin_forums') && $ThreadInfo['Posts'] > 1) { ?>
+                        <label class="split hidden">split</label>
+                        <input class="split hidden" type="checkbox" id="split_<?=$PostID?>" name="splitids[]" value="<?=$PostID?>" />
+				&nbsp;&nbsp;
+<?      }     ?>
 				<a href="reports.php?action=report&amp;type=post&amp;id=<?=$PostID?>">[Report]</a>
 				&nbsp;
 				<a href="#">&uarr;</a>
@@ -473,7 +484,7 @@ $AllowTags= isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues
                       
 <? if($EditedUserID){ ?>  
                         <div class="post_footer">
-<?	if(check_perms('site_admin_forums')) { ?>
+<?	if(check_perms('site_moderate_forums')) { ?>
 				<a href="#content<?=$PostID?>" onclick="LoadEdit('forums', <?=$PostID?>, 1); return false;">&laquo;</a> 
 <? 	} ?>
                             <span class="editedby">Last edited by
@@ -494,15 +505,62 @@ $AllowTags= isset($PermissionValues['site_advanced_tags']) &&  $PermissionValues
            }
 ?>
 </table>
+        
 <?	} ?>
+    
 <div class="breadcrumbs">
 	<a href="forums.php">Forums</a> &gt;
 	<a href="forums.php?action=viewforum&amp;forumid=<?=$ThreadInfo['ForumID']?>"><?=$Forums[$ForumID]['Name']?></a> &gt;
 	<?=display_str($ThreadInfo['Title'])?>
 </div>
-<div class="linkbox">
+    
+<div id="splittool" class="linkbox">
 	<?=$Pages?>
 </div>
+<? 
+    if(check_perms('site_admin_forums') && $ThreadInfo['Posts'] > 1) { ?> 
+          
+	<div class="head split hidden">Split thread (select posts to be split)</div>
+	<table cellpadding="6" cellspacing="1" border="0" width="100%" class="border split hidden">
+                
+		<input type="hidden" name="action" value="mod_thread" />
+		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+		<input type="hidden" name="threadid" value="<?=$ThreadID?>" />
+		<input type="hidden" name="page" value="<?=$Page?>" />
+			<tr>
+				<td class="label">Split type</td>
+				<td> 
+                            <input type="hidden" name="split" value="1"/> 
+                            <a href="#" onclick="$('.split').toggle();">Show/Hide split tool</a>
+                            &nbsp;&nbsp;&nbsp;
+                            <input type="radio" name="splitoption" value="newsplit" checked="checked" />Split into new thread &nbsp;&nbsp;&nbsp;
+                            <input type="radio" name="splitoption" value="mergesplit" />
+                            <label for="splitintothreadid">id of thread to split <em>into</em></label>
+                            <input type="text" name="splitintothreadid" value="" />&nbsp;&nbsp;&nbsp;&nbsp; 
+				</td>
+			</tr>
+			<tr>
+				<td class="label">New Title*</td>
+				<td>
+					<input type="text" name="title" class="long" value="<?=display_str($ThreadInfo['Title'])?>" tabindex="2" />
+				</td>
+			</tr>
+			<tr>
+				<td class="label">New forum*</td>
+				<td> 
+                            <?= print_forums_select($Forums, $ForumCats, $ThreadInfo['ForumID']) ?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="center">
+                            <span style="float:left">*only used if splitting into new</span>
+					<input type="submit" value="Split thread" />
+				</td>
+			</tr>
+      </table>            
+</form>         
+<?  } ?>
+    
 <?
 if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 	if(check_forumperm($ForumID, 'Write') && !$LoggedUser['DisablePosting']) {
@@ -595,7 +653,7 @@ if(check_perms('site_moderate_forums')) {
 			<tr>
 				<td class="label">Title</td>
 				<td>
-					<input type="text" name="title" style="width: 75%;" value="<?=display_str($ThreadInfo['Title'])?>" tabindex="2" />
+					<input type="text" name="title" class="long" value="<?=display_str($ThreadInfo['Title'])?>" tabindex="2" />
 				</td>
 			</tr>
 			<tr>
@@ -605,16 +663,19 @@ if(check_perms('site_moderate_forums')) {
 				</td>
 			</tr>
 <? if(check_perms('site_admin_forums')) { ?>
+                  
 			<tr>
 				<td class="label">Merge thread</td>
 				<td>
                             <input type="checkbox" name="merge" />&nbsp;&nbsp;&nbsp;&nbsp;
                             <label for="mergethreadid">id of thread to merge <em>into</em></label>
-                            <input type="text" name="mergethreadid" value="" />&nbsp;&nbsp;&nbsp;&nbsp;
-                            <!--<input type="radio" name="mergetitle" value="0" checked="checked" />
-                            <label>merge into this thread</label>
-                            <input type="radio" name="mergetitle" value="1" />
-                            <label>merge into other thread</label>-->
+                            <input type="text" name="mergethreadid" value="" />
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Split thread</td>
+				<td>
+                            <a href="#splittool" onclick="$('.split').toggle();">Show/Hide split tool</a>
 				</td>
 			</tr>
 			<tr>

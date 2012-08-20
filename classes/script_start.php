@@ -509,8 +509,8 @@ function get_permissions_for_user($UserID, $CustomPermissions = false, $UserPerm
             $HeavyInfo = $Cache->get_value('user_info_heavy_' . $UserID); 
             if($HeavyInfo!==false && isset($HeavyInfo['CustomPermissions']) ) {
                 $CustomPermissions = $HeavyInfo['CustomPermissions']; 
-            } else { // if not just grab it
-                $DB->query('SELECT um.CustomPermissions FROM users_main AS um WHERE um.ID = '.$UserID); 
+            } elseif ($UserID>0) { // if not just grab it
+                $DB->query("SELECT um.CustomPermissions FROM users_main AS um WHERE um.ID = '$UserID'"); 
                 list($CustomPermissions) = $DB->next_record(MYSQLI_NUM, false);
             }
 	}
