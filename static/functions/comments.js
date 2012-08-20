@@ -17,8 +17,8 @@ function Edit_Form(post,key) {
 	postid = post;
 	$('#bar' + postid).raw().cancel = $('#content' + postid).raw().innerHTML;
 	$('#bar' + postid).raw().oldbar = $('#bar' + postid).raw().innerHTML;
-	$('#content' + postid).raw().innerHTML = "<div id=\"preview" + postid + "\"></div><form id=\"form" + postid + "\" method=\"post\"><input type=\"hidden\" name=\"auth\" value=\"" + authkey + "\" /><input type=\"hidden\" name=\"key\" value=\"" + key + "\" /><input type=\"hidden\" name=\"post\" value=\"" + postid + "\" /><div id=\"editcont" + postid + "\"></div></form>";
-	$('#bar' + postid).raw().innerHTML = "<input type=\"button\" value=\"Preview\" onclick=\"Preview_Edit(" + postid + ");\" /><input type=\"button\" value=\"Post\" onclick=\"Save_Edit(" + postid + ")\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit(" + postid + ");\" />";
+	$('#content' + postid).raw().innerHTML = "<div id=\"preview" + postid + "\"></div><input type=\"hidden\" name=\"auth\" value=\"" + authkey + "\" /><input type=\"hidden\" id=\"key"+postid+"\" name=\"key\" value=\"" + key + "\" /><input type=\"hidden\" name=\"post\" value=\"" + postid + "\" /><div id=\"editcont" + postid + "\"></div>";
+	$('#bar' + postid).raw().innerHTML = "<input type=\"button\" value=\"Preview\" onclick=\"Preview_Edit('" + postid + "');\" /><input type=\"button\" value=\"Post\" onclick=\"Save_Edit('" + postid + "')\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" + postid + "');\" />";
 	ajax.get("?action=get_post&post=" + postid, function(response){
 		$('#editcont' + postid).raw().innerHTML = response;   
 		resize('editbox' + postid);
@@ -32,8 +32,13 @@ function Cancel_Edit(postid) {
 }
 
 function Preview_Edit(postid) {
-	$('#bar' + postid).raw().innerHTML = "<input type=\"button\" value=\"Editor\" onclick=\"Cancel_Preview(" + postid + ");\" /><input type=\"button\" value=\"Post\" onclick=\"Save_Edit(" + postid + ")\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit(" + postid + ");\" />";
-	ajax.post("ajax.php?action=preview","form" + postid, function(response){
+		var ToPost = [];
+		ToPost['auth'] = authkey;
+		ToPost['key'] = $('#key'+postid).raw().value;
+		ToPost['post'] = postid;
+		ToPost['body'] = $('#editbox'+postid).raw().value;
+	$('#bar' + postid).raw().innerHTML = "<input type=\"button\" value=\"Editor\" onclick=\"Cancel_Preview('" + postid + "');\" /><input type=\"button\" value=\"Post\" onclick=\"Save_Edit('" + postid + "')\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" + postid + "');\" />";
+	ajax.post("ajax.php?action=preview", ToPost, function(response){  // "form" + postid
 		$('#preview' + postid).raw().innerHTML = response;
 		//$('#editbox' + postid).hide();
 		$('#editcont' + postid).hide();	
@@ -41,36 +46,41 @@ function Preview_Edit(postid) {
 }
 
 function Cancel_Preview(postid) {
-	$('#bar' + postid).raw().innerHTML = "<input type=\"button\" value=\"Preview\" onclick=\"Preview_Edit(" + postid + ");\" /><input type=\"button\" value=\"Post\" onclick=\"Save_Edit(" + postid + ")\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit(" + postid + ");\" />";
+	$('#bar' + postid).raw().innerHTML = "<input type=\"button\" value=\"Preview\" onclick=\"Preview_Edit('" + postid + "');\" /><input type=\"button\" value=\"Post\" onclick=\"Save_Edit('" + postid + "')\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" + postid + "');\" />";
 	$('#preview' + postid).raw().innerHTML = "";
 	//$('#editbox' + postid).show();
 	$('#editcont' + postid).show();
 }
 
 function Save_Edit(postid) {
+		var ToPost = [];
+		ToPost['auth'] = authkey;
+		ToPost['key'] = $('#key'+postid).raw().value;
+		ToPost['post'] = postid;
+		ToPost['body'] = $('#editbox'+postid).raw().value;
 	if (location.href.match(/forums\.php/)) {
-		ajax.post("forums.php?action=takeedit","form" + postid, function (response) {
+		ajax.post("forums.php?action=takeedit",ToPost, function (response) {
 			$('#bar' + postid).raw().innerHTML = "";
 			$('#preview' + postid).raw().innerHTML = response;
                   $('#editcont' + postid).hide();
                   $('#editcont' + postid).raw().innerHTML = '';
 		});
 	} else if (location.href.match(/collages?\.php/)) {
-		ajax.post("collages.php?action=takeedit_comment","form" + postid, function (response) {
+		ajax.post("collages.php?action=takeedit_comment",ToPost, function (response) {
 			$('#bar' + postid).raw().innerHTML = "";
 			$('#preview' + postid).raw().innerHTML = response;
 			$('#editcont' + postid).hide();
                   $('#editcont' + postid).raw().innerHTML = '';
 		});
 	} else if (location.href.match(/requests\.php/)) {
-		ajax.post("requests.php?action=takeedit_comment","form" + postid, function (response) {
+		ajax.post("requests.php?action=takeedit_comment",ToPost, function (response) {
 			$('#bar' + postid).raw().innerHTML = "";
 			$('#preview' + postid).raw().innerHTML = response;
 			$('#editcont' + postid).hide();
                   $('#editcont' + postid).raw().innerHTML = '';
 		});
 	} else {
-		ajax.post("torrents.php?action=takeedit_post","form" + postid, function (response) {
+		ajax.post("torrents.php?action=takeedit_post",ToPost, function (response) {
 			$('#bar' + postid).raw().innerHTML = "";
 			$('#preview' + postid).raw().innerHTML = response;
                   $('#editcont' + postid).hide();
