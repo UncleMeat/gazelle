@@ -26,10 +26,11 @@ if(!$_POST['post'] || !is_number($_POST['post']) || !is_number($_POST['key'])) {
 
 // Variables for database input
 $UserID = $LoggedUser['ID'];
-$Body = db_string($_POST['body']); //Don't URL Decode
+$Body = $_POST['body']; //Don't URL Decode
 $PostID = $_POST['post'];
 $Key = $_POST['key'];
-
+   
+      
 // Mainly 
 $DB->query("SELECT
 		p.Body,
@@ -71,42 +72,51 @@ if($LoggedUser['DisablePosting']) {
 if($DB->record_count()==0) {
 	error(404,true);
 }
-
-// Perform the update
-$DB->query("UPDATE forums_posts SET
-	Body = '$Body',
-	EditedUserID = '$UserID',
-	EditedTime = '".sqltime()."'
-	WHERE ID='$PostID'");
-
-$CatalogueID = floor((POSTS_PER_PAGE*$Page-POSTS_PER_PAGE)/THREAD_CATALOGUE);
-$Cache->begin_transaction('thread_'.$TopicID.'_catalogue_'.$CatalogueID);
-if ($Cache->MemcacheDBArray[$Key]['ID'] != $PostID) {
-	$Cache->cancel_transaction();
-	$Cache->delete('thread_'.$TopicID.'_catalogue_'.$CatalogueID); //just clear the cache for would be cache-screwer-uppers
-} else {
-	$Cache->update_row($Key, array(
-			'ID'=>$Cache->MemcacheDBArray[$Key]['ID'],
-			'AuthorID'=>$Cache->MemcacheDBArray[$Key]['AuthorID'],
-			'AddedTime'=>$Cache->MemcacheDBArray[$Key]['AddedTime'],
-			'Body'=>$_POST['body'], //Don't url decode.
-			'EditedUserID'=>$LoggedUser['ID'],
-			'EditedTime'=>sqltime(),
-			'Username'=>$LoggedUser['Username']
-			));
-	$Cache->commit_transaction(3600*24*5);
+    
+$preview = $Text->full_format($_POST['body'],  get_permissions_advtags($AuthorID), true);
+if($Text->has_errors()) {
+    $bbErrors = implode('<br/>', $Text->get_errors());
+    $preview = ("<strong>NOTE: Changes were not saved.</strong><br/><br/>There are errors in your bbcode (unclosed tags)<br/><br/>$bbErrors<br/><div class=\"box\"><div class=\"post_content\">$preview</div></div>");
 }
-//$Cache->delete('thread_'.$TopicID.'_page_'.$Page); // Delete thread cache
 
-$DB->query("INSERT INTO comments_edits (Page, PostID, EditUser, EditTime, Body)
-								VALUES ('forums', ".$PostID.", ".$UserID.", '".sqltime()."', '".db_string($OldBody)."')");
-$Cache->delete_value("forums_edits_$PostID");
+if (!$bbErrors) {
+    // Perform the update
+    $DB->query("UPDATE forums_posts SET
+          Body = '".db_string($Body)."',
+          EditedUserID = '$UserID',
+          EditedTime = '".sqltime()."'
+          WHERE ID='$PostID'");
+
+    $CatalogueID = floor((POSTS_PER_PAGE*$Page-POSTS_PER_PAGE)/THREAD_CATALOGUE);
+    $Cache->begin_transaction('thread_'.$TopicID.'_catalogue_'.$CatalogueID);
+    if ($Cache->MemcacheDBArray[$Key]['ID'] != $PostID) {
+          $Cache->cancel_transaction();
+          $Cache->delete('thread_'.$TopicID.'_catalogue_'.$CatalogueID); //just clear the cache for would be cache-screwer-uppers
+    } else {
+          $Cache->update_row($Key, array(
+                      'ID'=>$Cache->MemcacheDBArray[$Key]['ID'],
+                      'AuthorID'=>$Cache->MemcacheDBArray[$Key]['AuthorID'],
+                      'AddedTime'=>$Cache->MemcacheDBArray[$Key]['AddedTime'],
+                      'Body'=>$_POST['body'], //Don't url decode.
+                      'EditedUserID'=>$LoggedUser['ID'],
+                      'EditedTime'=>sqltime(),
+                      'Username'=>$LoggedUser['Username']
+                      ));
+          $Cache->commit_transaction(3600*24*5);
+    }
+    //$Cache->delete('thread_'.$TopicID.'_page_'.$Page); // Delete thread cache
+
+    $DB->query("INSERT INTO comments_edits (Page, PostID, EditUser, EditTime, Body)
+                                                    VALUES ('forums', ".$PostID.", ".$UserID.", '".sqltime()."', '".db_string($OldBody)."')");
+    $Cache->delete_value("forums_edits_$PostID");
+}
+
 // This gets sent to the browser, which echoes it in place of the old body
-$PermissionsInfo = get_permissions_for_user($AuthorID);
+//$PermissionsInfo = get_permissions_for_user($AuthorID);
 ?>
 
 <div class="post_content">
-    <?=$Text->full_format($_POST['body'], isset($PermissionsInfo['site_advanced_tags']) &&  $PermissionsInfo['site_advanced_tags']);?>
+    <?=$preview; //$Text->full_format($_POST['body'], isset($PermissionsInfo['site_advanced_tags']) &&  $PermissionsInfo['site_advanced_tags']);?>
 </div>
 <div class="post_footer">
     <span class="editedby">Last edited by <a href="user.php?id=<?=$LoggedUser['ID']?>"><?=$LoggedUser['Username']?></a> just now</span>
