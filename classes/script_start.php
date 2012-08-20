@@ -312,7 +312,8 @@ function user_info($UserID) {
 			WHERE m.ID='$UserID'");
 
 		if($DB->record_count() == 0) { // Deleted user, maybe?
-			$UserInfo = array('ID'=>'','Username'=>'','PermissionID'=>0,'GroupPermissionID'=>0,'CustomPermissions'=>array(),'Donor'=>false,'Warned'=>'0000-00-00 00:00:00','Avatar'=>'','Enabled'=>0,'Title'=>'', 'CatchupTime'=>0, 'Visible'=>'1');
+			$UserInfo = array('ID'=>'','Username'=>'','PermissionID'=>0,'Paranoia'=>array(),'Donor'=>false,'Warned'=>'0000-00-00 00:00:00',
+                      'Avatar'=>'','Enabled'=>0,'Title'=>'', 'CatchupTime'=>0, 'Visible'=>'1','Signature'=>'', 'GroupPermissionID'=>0);
 
 		} else {
 			$UserInfo = $DB->next_record(MYSQLI_ASSOC, array('Paranoia', 'Title'));
