@@ -278,7 +278,7 @@ function update_staff_checking($location="cyberspace",$dontactivate=false) { // 
     if ($dontactivate){
         
         $DB->query("SELECT UserID FROM staff_checking 
-                     WHERE TimeOut >= UNIX_TIMESTAMP( UTC_TIMESTAMP() ) " );
+                     WHERE UserID='$LoggedUser[ID]' AND TimeOut >= UNIX_TIMESTAMP( UTC_TIMESTAMP() ) " );
         if($DB->record_count()==0) return;
     }
     
