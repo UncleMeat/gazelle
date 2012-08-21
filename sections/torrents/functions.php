@@ -282,7 +282,7 @@ function update_staff_checking($location="cyberspace",$dontactivate=false) { // 
         if($DB->record_count()==0) return;
     }
     
-    $sqltimeout = time() + 60;
+    $sqltimeout = time() + 480;
     $DB->query("INSERT INTO staff_checking (UserID, TimeOut, TimeStarted, Location)
                                     VALUES ('$LoggedUser[ID]','$sqltimeout','".sqltime()."','$location') 
                            ON DUPLICATE KEY UPDATE TimeOut='$sqltimeout', Location='$location'");
