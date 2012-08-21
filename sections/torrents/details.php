@@ -124,7 +124,7 @@ if(check_perms('torrents_review')){
     </div>
     <br class="clear"/> 
     <script type="text/javascript">
-        setTimeout("Update_status();", 2000);
+        setTimeout("Update_status();", 500);
     </script>
 <?
 }

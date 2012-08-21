@@ -282,7 +282,7 @@ function update_staff_checking($location="cyberspace",$dontactivate=false) { // 
         if($DB->record_count()==0) return;
     }
     
-    $sqltimeout = time() + 480;
+    $sqltimeout = time() + 60;
     $DB->query("INSERT INTO staff_checking (UserID, TimeOut, TimeStarted, Location)
                                     VALUES ('$LoggedUser[ID]','$sqltimeout','".sqltime()."','$location') 
                            ON DUPLICATE KEY UPDATE TimeOut='$sqltimeout', Location='$location'");
@@ -298,7 +298,7 @@ function print_staff_status() {
     $Checking = $Cache->get_value('staff_checking');
     if($Checking===false){
         // delete old ones every 4 minutes
-        $DB->query("DELETE FROM staff_checking  WHERE TimeOut < UNIX_TIMESTAMP( UTC_TIMESTAMP() )  " );
+        $DB->query("DELETE FROM staff_checking WHERE TimeOut <= '".time()."' " );
  
         $DB->query("SELECT s.UserID, u.Username, s.TimeStarted , s.TimeOut , s.Location
                       FROM staff_checking AS s
@@ -320,7 +320,7 @@ function print_staff_status() {
 ?>                           
             <span class="staffstatus status_checking<?if($Own)echo' statusown';?>" 
                title="<?=($Own?'Status: checking torrents ':"$Username is currently checking ");
-                        echo "&nbsp;(".time_diff($TimeOut-480, 2, false, false, 0).") ";
+                        echo "&nbsp;(".time_diff($TimeOut-480, 1, false, false, 0).") ";
                         echo "&nbsp;$Location";
                         if ($Own && $TimeLeft<240) echo "(".time_diff($TimeOut, 1, false, false, 0)." till time out)"; ?> ">
                 <? 

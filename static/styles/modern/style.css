@@ -2046,10 +2046,10 @@ img.win.flash {
 	padding: 3px 15px; 
 }
 .staffstatus a {
-	color: #fff;	
+	color: #222;	
 }
 .staffstatus a:visited {
-	color: #fff;	
+	color: #222;	
 }
 .status_checking {
     float:right;
@@ -2058,7 +2058,7 @@ img.win.flash {
 }
 .status_notchecking {
     float:left;
-    background: #ab3041;
+    background: #eaa;
     border: 1px solid #822;
 }
 .nostaff_checking {
