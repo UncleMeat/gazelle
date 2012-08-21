@@ -339,6 +339,17 @@ $Results = $Results['matches'];
 
 show_header('Browse Torrents', 'browse,overlib,jquery,jquery.cookie');
 
+if(check_perms('torrents_review')){ 
+?>
+    <div id="staff_status" class="status_box">
+        <span class="status_loading">loading staff checking status...</span>
+    </div>
+    <br class="clear"/> 
+    <script type="text/javascript">
+        setTimeout("Update_status();", 2000);
+    </script>
+<?
+}
 // List of pages  
 $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
 ?>
@@ -374,7 +385,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                         ?>
                         <td>
                             <input type="checkbox" name="filter_cat[<?= ($Cat['id']) ?>]" id="cat_<?= ($Cat['id']) ?>" value="1" <? if (isset($_GET['filter_cat'][$Cat['id']])) { ?>checked="checked"<? } ?>/>
-                            <label for="cat_<?= ($Cat['id']) ?>" class="cat_label"><span style="font-size: 12px;"><a href="torrents.php?filter_cat[<?=$Cat['id']?>]=1"><?= $Cat['name'] ?></a></span></label>
+                            <label for="cat_<?= ($Cat['id']) ?>" class="cat_label"><span><a href="torrents.php?filter_cat[<?=$Cat['id']?>]=1"><?= $Cat['name'] ?></a></span></label>
                         </td>
                     <? } ?>                           
                     <td colspan="<?= 7 - ($x % 7) ?>"></td>

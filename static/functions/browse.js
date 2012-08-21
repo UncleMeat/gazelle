@@ -1,12 +1,31 @@
 
+function change_status(onoff){
+    var ToPost = [];
+    ToPost['auth'] = authkey;
+    if (onoff=='0') ToPost['remove'] = 1;
+    ajax.post("torrents.php?action=change_status", ToPost, function(response){  
+		$('#staff_status').raw().innerHTML = response; 	
+    });
+}
+
+
+function Update_status(){
+    var ToPost = [];
+    ToPost['auth'] = authkey;
+    ajax.post("torrents.php?action=update_status", ToPost, function(response){  
+		$('#staff_status').raw().innerHTML = response; 	
+            setTimeout("Update_status();", 15000);
+    });
+}
+
 
 function add_tag(tag) {
-	if ($('#tags').raw().value == "") {
-		$('#tags').raw().value = tag;
-	} else {
-		$('#tags').raw().value = $('#tags').raw().value + " " + tag;
-	}
-      CursorToEnd($('#tags').raw());
+    if ($('#tags').raw().value == "") {
+        $('#tags').raw().value = tag;
+    } else {
+        $('#tags').raw().value = $('#tags').raw().value + " " + tag;
+    }
+    CursorToEnd($('#tags').raw());
 }
 function CursorToEnd(textarea){ 
      // set the cursor to the end of the text already present
@@ -31,18 +50,6 @@ function Load_Cookie()  {
 	} else {
 		jQuery('#search_button').text('Close Search Center');
       }
-      /*
-	button.click(function(){
-                  if(jQuery.cookie('searchPanelState') == 'expanded') {
-                                          jQuery.cookie('searchPanelState', 'collapsed');
-                                          button.text('Open Search Center');
-                  } else {
-                                          jQuery.cookie('searchPanelState', 'expanded');
-                                          button.text('Close Search Center');
-                  }
-                  panel.slideToggle('slow');
-                  return false;
-	}); */
 }
 		
  
@@ -60,5 +67,3 @@ function Panel_Toggle() {
             
 
 addDOMLoadEvent(Load_Cookie);
-
-//addDOMLoadEvent(function(){ alert("boo")});

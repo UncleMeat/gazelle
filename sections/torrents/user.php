@@ -277,7 +277,7 @@ foreach($NewCategories as $Cat) {
 <?	} else { ?>
 	<div class="linkbox"><?=$Pages?></div>
 	<table class="torrent_table">
-		<tr class="colhead">
+		<tr class="head">
 			<td></td>
 			<td><a href="<?=header_link('Name', 'ASC')?>">Torrent</a></td>
 			<td><a href="<?=header_link('Time')?>">Time</a></td>

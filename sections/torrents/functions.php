@@ -268,3 +268,80 @@ function get_taglist_html($GroupID, $tagsort) {
 
     return $html;
 }
+
+
+
+
+function update_staff_checking() { // logs the staff in as 'checking'
+    global $Cache, $DB, $LoggedUser;
+    
+    $sqltimeout = sqltime(time()+480 );
+    $DB->query("INSERT INTO staff_checking (UserID, TimeOut, TimeStarted)
+                                    VALUES ('$LoggedUser[ID]','$sqltimeout','".sqltime()."') 
+                           ON DUPLICATE KEY UPDATE TimeOut='$sqltimeout'");
+    
+    $Cache->delete_value('staff_checking');
+}
+
+
+
+function print_staff_status() {
+    global $Cache, $DB, $LoggedUser;
+    
+    $Checking = $Cache->get_value('staff_checking');
+    if($Checking===false){
+        $DB->query("DELETE FROM staff_checking  WHERE UNIX_TIMESTAMP(TimeOut)< UNIX_TIMESTAMP( UTC_TIMESTAMP() )  " );
+ 
+        $DB->query("SELECT s.UserID, u.Username, s.TimeStarted , s.TimeOut,
+                            ( UNIX_TIMESTAMP(s.TimeOut)- UNIX_TIMESTAMP( UTC_TIMESTAMP() ) )
+                      FROM staff_checking AS s
+                      JOIN users_main AS u ON u.ID=s.UserID
+                  ORDER BY s.TimeStarted ASC " );
+                   //  WHERE UNIX_TIMESTAMP(s.TimeOut)> UNIX_TIMESTAMP( UTC_TIMESTAMP() )" ); 
+        $Checking = $DB->to_array(); 
+        $Cache->cache_value('staff_checking',$Checking,600);
+    }
+  
+    ob_start();
+    $UserOn = false;
+    if (count($Checking)>0){
+        foreach($Checking as $Status) {
+            list( $UserID, $Username, $TimeStart, $TimeOut, $TimeLeft) =  $Status;
+            if ($UserID==$LoggedUser['ID']) $Own = true;
+            if ($Own) $UserOn = true;
+?>                           
+            <span class="staffstatus status_checking<?if($Own)echo' statusown';?>" 
+               title="<?=($Own?'Status: checking torrents ':"$Username is currently checking ");
+                        echo "&nbsp;(".time_diff($TimeStart, 2, false, false, 0).") ";
+                        if ($Own && $TimeLeft<240) echo "(".time_diff($TimeOut, 1, false, false, 0)." till time out)"; ?> ">
+                <? 
+                    if ($TimeLeft<60) echo "<blink>";
+                    if($Own) echo "<a onclick=\"change_status('".($TimeLeft<60?"1":"0")."')\">"; 
+                    echo $Username;
+                    if($Own)echo "</a>";
+                    if ($TimeLeft<60) echo "</blink>";
+                   ?> 
+            </span>
+<?  
+        }
+    } else {
+?>                           
+            <span class="nostaff_checking" title=" ">
+                there are no staff checking torrents right now
+            </span>
+<?  
+    }
+    
+    if(!$UserOn){
+?>                                  
+        <span class="staffstatus status_notchecking statusown"  title="Status: not checking">
+            <a onclick="change_status('1')"> <?=$LoggedUser['Username']?> </a>
+        </span>
+<? 
+    }
+    
+    $html = ob_get_contents(); 
+    ob_end_clean(); 
+    return $html;
+    
+}

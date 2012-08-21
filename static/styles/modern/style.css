@@ -29,8 +29,8 @@ darker shade (very top of header):
 body {
     width: 100%;
     background: #0d245a;
-    font: normal 10.5pt "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
-    font-weight: lighter;
+    font: normal 11pt "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    font-weight: normal;
     color: #000000;
 }
 
@@ -886,42 +886,6 @@ table.boxstat td:first-child {
     margin: 0px;
 }
 
-.head {
-    padding: 3px 10px 3px 3px;
-    height: 20px;
-    background: #0074b7; /* old browsers */
-    background: -moz-linear-gradient(top, #0074b7 0%, #0074b7 40%, #004b9d 100%); /* firefox */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0074b7), color-stop(40%,#0074b7), color-stop(100%,#004b9d)); /* webkit */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0074b7', endColorstr='#004b9d',GradientType=0 ); /* ie */
-
-    -moz-box-shadow:inset 1px 1px 3px #6a9bb7;
-    -webkit-box-shadow:inset 1px 1px 3px #6a9bb7;
-    box-shadow:inset 1px 1px 3px #6a9bb7;
-
-    -moz-border-radius: 3px 3px 0 0;
-    -webkit-border-top-left-radius: 3px;
-    -webkit-border-top-right-radius: 3px;
-    border-radius: 3px 3px 0 0;
-    
-    color: #eee;
-    border-bottom: 1px solid #004689;
-    line-height: 20px;
-    font-weight: normal;
-}
-
-.head a {
-    color: white;
-}
-
-#forums .head {
-    margin-top: 20px;
-}
-.latest_topics {
-    margin-top: 0px;
-}
-#forums .latest_topics {
-    margin-top: 0px;
-}
 
 .sticky_post {
     color: #050;
@@ -983,7 +947,7 @@ span.green {
 table {
     width: 100%;
     border-collapse: collapse;
-    border: 1px solid #0d245a;
+    border: 1px solid #6d94da;
 }
 
 tr {
@@ -993,7 +957,7 @@ tr {
 tr.smallhead {
     background-image: none;
     background-color: #d3e3f3;
-    color: #444;
+    color: #555;
 }
 
 tr.rowa, .rowa {    /* original alternate row color: quite blue #E1E9F2;*/
@@ -1066,7 +1030,7 @@ input.shopbutton.itembuy:hover {
     background-image: none;
     background-color: #d3e3f3;
     font-weight: bold; 
-    color: #444;
+    color: #555;
 }
 
 .colhead {
@@ -1099,8 +1063,10 @@ td.colhead, .colhead td {
     line-height: 20px;
     font-weight: normal;
     font-size: 0.9em !important;
-    background-color: #f3f3f3;
-  /*  color: #888;  */
+   /*   background-color: #f3f3f3;
+  color: #888;  */
+    background-color: #d3e3f3;
+    color: #555;
 }
 
 .colhead_dark a {
@@ -1115,6 +1081,44 @@ td.colhead, .colhead td {
 
 .colhead_red a {
     color: white;
+}
+
+
+.head {
+    padding: 3px 10px 3px 3px;
+    height: 20px;
+    background: #0074b7; /* old browsers */
+    background: -moz-linear-gradient(top, #0074b7 0%, #0074b7 40%, #004b9d 100%); /* firefox */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0074b7), color-stop(40%,#0074b7), color-stop(100%,#004b9d)); /* webkit */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0074b7', endColorstr='#004b9d',GradientType=0 ); /* ie */
+
+    -moz-box-shadow:inset 1px 1px 3px #6a9bb7;
+    -webkit-box-shadow:inset 1px 1px 3px #6a9bb7;
+    box-shadow:inset 1px 1px 3px #6a9bb7;
+
+    -moz-border-radius: 3px 3px 0 0;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    border-radius: 3px 3px 0 0;
+    
+    color: #eee;
+    border-bottom: 1px solid #004689;
+    line-height: 20px;
+    font-weight: normal;
+}
+
+.head a {
+    color: white;
+}
+
+#forums .head {
+    margin-top: 20px;
+}
+.latest_topics {
+    margin-top: 0px;
+}
+#forums .latest_topics {
+    margin-top: 0px;
 }
 
 td.label {
@@ -1209,11 +1213,12 @@ ul.poll li.graph {
     margin: 2px auto 15px;
     height:20px;
     text-align: center;
-    background-color: white; /* #D7E2EF; */
+  /*  background-color: white;  #D7E2EF; */
     border: 1px solid #98AAB1;
     padding: 6px;
     font-weight: bold;
     font-size: 14pt;
+    background-color: #d3e3f3;
 }
 
 
@@ -1246,6 +1251,14 @@ ul.poll li.graph {
     border:none;
     background-color: #eff3f6;  /* #e0e8eb; /* #D7E2EF; */
 }
+#taglist {
+    font-size:12pt;
+    font-weight: bold;
+}
+table.cat_list {
+    font-size:10pt;
+    font-weight: bold;
+}
 .taglist {
     margin-bottom: 15px;
 }
@@ -1266,7 +1279,7 @@ ul.poll li.graph {
 }
 
 .torrent_table td {
-    padding: 5px;
+  /*  padding: 5px;*/
     border-left:none;
     border-right: none;
 }
@@ -1391,6 +1404,7 @@ div.tagtable {
 
 table.forum_post {
     margin: 10px 0px;
+    font-size: 10pt;
 }
 
 table.forum_post td {
@@ -1404,6 +1418,7 @@ table.forum_unread {
 table.forum_list, table.forum_index {
     border:none;
     margin-bottom: 10px;
+    font-size: 10pt;
 } 
 table.forum_list td, table.forum_index td {
     border:none;
@@ -1937,4 +1952,123 @@ span.reported {
     font-weight: bold;
     color: red;
     float: none;
+}
+
+.reels, .reelsi {
+    background-color: #eee;
+}
+.reels.play {
+    background-color: #fff;
+}
+
+.reels img {
+    border: 3px solid #ddd;
+}
+.reelsi img {
+    border: 1px solid #ccc;
+}
+img.win {
+    border: 3px solid black;  
+}
+img.win.flash {
+    border: 3px solid gold; 
+}
+.payout {
+    width:74px;
+    vertical-align: middle;
+    display:inline-block;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    color:black;
+}
+
+.fm input[type=button] {
+    background-color: white;
+    padding: 2px 10px 2px;
+    border: 2px solid darkblue;
+    width:80px;
+    color: darkblue;
+    cursor:pointer;
+}
+
+.fm input[type=text] {
+    text-align: center;
+    color: darkblue;
+    cursor:default;
+    width:70px;
+}
+
+.chip {
+    text-align: center;
+    width:60px;
+    height:60px;
+    position:absolute;
+    left:-50px;
+    background: url('images/betchip.png') no-repeat center center;
+}
+.chip span {
+    position:relative;
+    text-align: center;
+    top:18px;
+    font-size: 18px;
+    font-weight: bold;
+    color:black;
+}
+
+.statusown a {
+	cursor: pointer; 
+}
+
+.status_box {
+      margin:-20px auto 20px;
+      width: 96%; 
+      min-width: 920px;
+      border: none;
+      padding:4px; 
+}
+.staffstatus {
+	display: inline-block;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+      margin: 4px 4px;
+	text-decoration: none;
+	color: #fff;
+	font-size: 11px;
+	vertical-align: top;
+	cursor: default; 
+	line-height: 11px;
+	text-align: center;
+	font-size: 12px;
+	line-height: 12px;
+	font-family: Verdana, Geneva, sans-serif;
+	padding: 3px 15px; 
+}
+.staffstatus a {
+	color: #fff;	
+}
+.staffstatus a:visited {
+	color: #fff;	
+}
+.status_checking {
+    float:right;
+    background: #5da53a;
+    border: 1px solid #9Be361;
+}
+.status_notchecking {
+    float:left;
+    background: #ab3041;
+    border: 1px solid #822;
+}
+.nostaff_checking {
+    margin-top:6px;
+    float:right;
+    color: #ddd;
+    margin-right:10px;
+}
+.status_loading {
+    margin-top:6px;
+    float:left;
+    color:#ccc;
 }

@@ -521,6 +521,7 @@ if(!empty($_REQUEST['action'])) {
 			authorize(); 
                   
                   include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
+                  include(SERVER_ROOT . '/sections/torrents/functions.php');
                             
                   if (check_perms('torrents_review') && !empty($_POST['groupid']) && is_number($_POST['groupid'])) {
                       
@@ -643,6 +644,7 @@ if(!empty($_REQUEST['action'])) {
                         write_log("Torrent $TorrentID ($Name) status set to $Status by ".$LoggedUser['Username']." ($LogDetails)"); // TODO: this is probably broken
                         write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], "[b]Status:[/b] $Status $LogDetails", 0);
 
+                        update_staff_checking();
                         
                         header('Location: torrents.php?id='.$GroupID);
                       
@@ -650,6 +652,36 @@ if(!empty($_REQUEST['action'])) {
                         error(403);
 			}
 			break;
+		
+		case 'change_status':  // a staff changing checking status
+			enforce_login();
+			authorize(); 
+                   
+                  if (!check_perms('torrents_review')) error(403);
+                  
+                  include(SERVER_ROOT . '/sections/torrents/functions.php');
+                  if ( $_POST['remove']=='1') {
+				$DB->query("DELETE FROM staff_checking WHERE UserID='$LoggedUser[ID]'");
+                        $Cache->delete_value('staff_checking');
+                  } else { 
+                        update_staff_checking();
+                  }
+                  
+                  echo print_staff_status();
+                  
+                  break;
+              
+            case 'update_status':
+			enforce_login();
+			authorize(); 
+                   
+                  if (!check_perms('torrents_review')) error(403);
+                  include(SERVER_ROOT . '/sections/torrents/functions.php');
+                  
+                  echo print_staff_status();
+                  
+                  break; 
+              
 		default:
 			enforce_login();
 		

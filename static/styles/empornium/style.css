@@ -2005,3 +2005,60 @@ img.win.flash {
     font-weight: bold;
     color:black;
 }
+
+.statusown a {
+	cursor: pointer; 
+}
+
+.status_box {
+      margin:10px auto 20px;
+    width: 90%;
+    min-width: 960px;
+      border: none;
+      padding:4px; 
+}
+.staffstatus {
+	display: inline-block;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+      margin: 4px 4px;
+	text-decoration: none;
+	color: #fff;
+	font-size: 11px;
+	vertical-align: top;
+	cursor: default; 
+	line-height: 11px;
+	text-align: center;
+	font-size: 12px;
+	line-height: 12px;
+	font-family: Verdana, Geneva, sans-serif;
+	padding: 3px 15px; 
+}
+.staffstatus a {
+	color: #000;	
+}
+.staffstatus a:visited {
+	color: #000;	
+}
+.status_checking {
+    float:right;
+    background: #8dd56a;
+    border: 1px solid #3B8311;
+}
+.status_notchecking {
+    float:left;
+    background: #eaa;
+    border: 1px solid #822;
+}
+.nostaff_checking {
+    margin-top:6px;
+    float:right;
+    color: #222;
+    margin-right:10px;
+}
+.status_loading {
+    margin-top:6px;
+    float:left;
+    color:#222;
+}
