@@ -993,7 +993,7 @@ tr {
 tr.smallhead {
     background-image: none;
     background-color: #d3e3f3;
-    color: #222;
+    color: #444;
 }
 
 tr.rowa, .rowa {    /* original alternate row color: quite blue #E1E9F2;*/
@@ -1005,7 +1005,7 @@ tr.rowb, .rowb {
 
 td {
     border: 1px solid #98AAB1;
-    padding: 2px 5px;
+    padding: 3px 5px;
     text-align: left;
 }
 
@@ -1066,7 +1066,7 @@ input.shopbutton.itembuy:hover {
     background-image: none;
     background-color: #d3e3f3;
     font-weight: bold; 
-    color: #000;
+    color: #444;
 }
 
 .colhead {
@@ -1736,6 +1736,13 @@ table.bb_holder td {
     padding:0px;
 }
 
+table.bb_holder td.colhead {
+    background:none;
+    background-color: #f8f8f8;
+    color:black;
+    font-weight: normal;
+}
+
 .bb_smiley_holder {
     text-align: center; 
     padding: 0px; 
@@ -1753,7 +1760,8 @@ select.bb_button {
 .bb_buttons_left {
     float: left; 
     text-align: left; 
-    margin-top: 0px;
+    margin: 6px 4px 0px 0px;
+    min-height: 20px;
 }
 
 .bb_buttons_right {
@@ -1768,12 +1776,11 @@ select.bb_button {
 
 
 a.bb_button { 
-    padding:0px 6px; 
-    /* background:white; 
-    background-color:#ddd;
-    border: 1px solid #ddd; */
+    padding:3px 6px; 
+    background:white;
     cursor:pointer;
-    color: #ddd; 
+    color: #000000; 
+    border: 1px solid #7BA3C1;
 }
 
 a.bb_button:hover { 
@@ -1784,9 +1791,10 @@ a.bb_button:hover {
 
 .bb_icon { 
     padding:2px; 
-    margin:0px 1px; 
+    margin:0px 1px 0px 0px; 
     background:white;
     cursor:pointer; 
+    border: 1px solid #7BA3C1;
 }
 
 .bb_smiley img {
@@ -1800,13 +1808,15 @@ a.bb_button:hover {
 .overflow_button {
   /*  position: relative;
     bottom: 0px;
-    height: 16px; */
+    height: 16px;
+    background: none repeat scroll 0% 0% #BACBD8;  */
     padding: 1px; 
     margin:3px 1px 2px; 
     font-weight: bold; 
     text-align: center; 
     border: 1px solid #7BA3C1;  
-    background: none repeat scroll 0% 0% #BACBD8; 
+    background-image: none;
+    background-color: #d3e3f3;
 }
 .overflow_button a {
     padding:0px 8px; 
