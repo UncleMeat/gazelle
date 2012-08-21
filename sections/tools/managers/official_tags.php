@@ -28,7 +28,7 @@ show_header('Official Tags Manager','tagmanager');
                 <input type="hidden" name="auth" value="<?= $LoggedUser['AuthKey'] ?>" />
                 <input type="hidden" name="doit" value="1" />
                 <table class="tagtable">
-                    <tr class="colhead_dark">
+                    <tr class="colhead">
                         <td style="font-weight: bold" style="text-align: center">Remove</td>
                         <td style="font-weight: bold">Tag</td>
                         <td style="font-weight: bold">Uses</td>

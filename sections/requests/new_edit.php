@@ -133,7 +133,7 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests,bbc
 						<input type="text" id="tags" name="tags" class="medium"  value="<?=(!empty($Tags) ? display_str($Tags) : '')?>" />
 						<br />
 					<? 
-                                      $taginfo = get_article('tag');
+                                      $taginfo = get_article('tagrulesinline');
                                       if($taginfo) echo $Text->full_format($taginfo, true); 
                               ?>
 					</td>

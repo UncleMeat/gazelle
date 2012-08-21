@@ -52,7 +52,7 @@ if(check_perms('site_advanced_top10')) {
 				<tr>
 					<td class="label">Tags:</td>
 					<td>
-						<input type="text" name="tags" size="75" value="<? if(!empty($_GET['tags'])) { echo display_str($_GET['tags']);} ?>" />
+						<input type="text" name="tags" class="long" value="<? if(!empty($_GET['tags'])) { echo display_str($_GET['tags']);} ?>" />
 					</td>
 				</tr>
 				<tr>

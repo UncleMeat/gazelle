@@ -29,24 +29,71 @@ darker shade (very top of header):
 body {
     width: 100%;
     background: #0d245a;
-    font: normal 11pt "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    font: normal 10.5pt "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    font-weight: lighter;
     color: #000000;
 }
 
 /* Common elements */
 
-a {
+a , .torrent_table .linkbox a {
     color:#023174;
     text-decoration: none;
     border: none;
 }
-a:hover {
+a:visited, .torrent_table .linkbox a:visited {
+    color:#023174;
+}
+a:hover, .torrent_table .linkbox a:hover {
+     /*  color:#FFaa00;   #839FBC;  */
+    color: #FF6600;
     text-decoration: underline;
-    color:#FF6600;  /* 121dd4;  /* #839FBC;  */
 }
 
+    /*   
+.linkbox a, .permission_container a,
+    .forum_index a, .forum_list a, #search_button, 
+    #request_table a, .cat_list a, .tags a, .head a, .colhead_dark a {
+    color: #bbb;
+    text-decoration: none;
+} 
+.linkbox a:visited, .permission_container a:visited,
+    .forum_index a:visited, .forum_list a:visited, #search_button:visited,
+    #request_table a:visited, .cat_list a:visited, .tags a:visited,
+    .head a:visited, .colhead_dark a:visited {
+    color: #888; 
+}
+*/
+    
+    
+.linkbox  {
+    color: #ddd; 
+}
+.linkbox a, .breadcrumbs a, .colhead a {
+    color: #eee;
+    text-decoration: none;
+}
+ 
+.linkbox a:hover, .breadcrumbs a:hover, .colhead a:hover {
+    color: #ddd;
+    text-decoration: underline;
+}
+.linkbox a:visited, .breadcrumbs a:visited, .colhead a:visited {
+    color: #bbb; /* a darker blue if you want to tell them apart */
+} 
+
+.linkbox table strong {
+    color: #000; 
+}
+.breadcrumbs {
+    color: #ddd;
+}
 h1,h2,h3,h4 {
     margin: 5px 0px;
+    color: #fff;
+}
+.box h3, .box h4 {
+    color: #000;
 }
 
 h2 {
@@ -54,7 +101,7 @@ h2 {
 }
 
 h4 {
-    font-size: 8pt;
+    font-size: 9.5pt;
 }
 
 p {
@@ -207,13 +254,13 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 
 #menu a {
-    color: #fff;
+    color: #ddd;
     font-weight: bold;
 }
 
 #menu a:hover {
    background-color: #FF6600;
-   color: #fff;
+   color: #ddd;
    text-decoration: none;
 }
 
@@ -222,7 +269,7 @@ span.infinity {
 }
 #stats_block {
     text-align: right;
-    color: white;
+    color: #ddd;
     height: 54px;
     position:absolute;
     right: 20px ;
@@ -243,7 +290,7 @@ span.infinity {
 
 #stats_block a, #stats_block a:visited, #header_bottom a, #header_bottom a:visited {
     text-decoration: none;
-    color: #fff;
+    color: #ddd;
 }
 #stats_block a:hover, #header_bottom a:hover {
     text-decoration: none;
@@ -390,7 +437,9 @@ span.stat {
 .highlight {
     font-weight: bold; 
 }
-
+.normal {
+    font-weight:normal; 
+}
 
 
 #searchbars {
@@ -552,6 +601,9 @@ li.searchbars {
 span.user_name a { 
     color: #000;
 }
+span.user_name a:visited { 
+    color: #000;
+}
 .rank {  /* rank applies to all the following styles */
     font-weight: bold; 
 }  
@@ -606,7 +658,10 @@ h2 {
 } 
 
 h2 a {
-    color: #fff; 
+    color: #ddd; 
+}
+h2 a:visited {
+    color: #ccc; 
 }
 
 .box h2 {
@@ -674,7 +729,7 @@ p.min_padding {
 }
 
 .pad {
-    padding: 1em;
+    padding: 0.4em;
 }
 
 .vertical_space {
@@ -682,9 +737,11 @@ p.min_padding {
 }
 
 .box {
-    font-size: 8pt;
+    font-size: 10pt;
     background-color: white;
-    padding: 1px 0 1px 0;
+}
+.box .box {
+    border: 1px solid #ccc;
 }
 
 .pad h3, .pad h4, .padbox h3, .padbox h4 {
@@ -714,6 +771,7 @@ p.min_padding {
 }
 table.boxstat { 
     border:none;
+    color: #000;
 }
 table.boxstat td { 
     padding: 4px 6px;
@@ -760,7 +818,7 @@ table.boxstat td:first-child {
 }
 
 .redbar {
-    background: #f397a7;
+    background: #ff5644;    /*  #f397a7; */
     color: white;
     font-weight: bolder;
 }
@@ -890,11 +948,24 @@ table.boxstat td:first-child {
     border-bottom: 1px solid #004689;
     line-height: 30px;
     font-weight: normal;
-    font-size:1.1em !important;
 }
 
 .head a {
     color: white;
+}
+
+#forums .head {
+    margin-top: 20px;
+}
+.latest_topics {
+    margin-top: 0px;
+}
+#forums .latest_topics {
+    margin-top: 0px;
+}
+
+.sticky_post {
+    color: #050;
 }
 
 .small {
@@ -958,6 +1029,10 @@ table {
 
 tr {
     background-color: white;
+}
+
+tr.smallhead {
+    background-color: #f3f3f3;
 }
 
 tr.rowa, .rowa {    /* original alternate row color: quite blue #E1E9F2;*/
@@ -1026,15 +1101,24 @@ input.shopbutton.itembuy:hover {
     /*color: #700;*/
 }
 
-.colhead {
-    background: #0261A3 url(images/colhead-grad.gif) repeat-x;  /*  #0261A3  #C6D3E4   */
-    font-weight: bold;
-    color: #eee;
+#articles tr.colhead, #forums tr.colhead  { 
+    background-image: none;
+    background-color: #f3f3f3;
+    font-weight: bold; 
+    color: #000;
 }
 
-.colhead a {
-    color: white;
+.colhead {
+  /*    #0261A3  #C6D3E4 
+    background-color: #f3f3f3; */
+    background: #0261A3 url(images/colhead-grad.gif) repeat-x; 
+    font-weight: bold;
+    color: #eee; 
 }
+
+/* .colhead a {
+    color: white;
+} */
 
 td.colhead, .colhead td {
     padding-left: 10px;
@@ -1054,12 +1138,13 @@ td.colhead, .colhead td {
     line-height: 20px;
     font-weight: normal;
     font-size: 0.9em !important;
-    color: #eee; 
+    background-color: #f3f3f3;
+  /*  color: #888;  */
 }
 
 .colhead_dark a {
     font-weight: normal;
-    color: white;
+  /*  color: white; */
 }
 
 .colhead_red {
@@ -1212,6 +1297,9 @@ ul.poll li.graph {
     margin:5px;
 }
 
+.torrent_table {
+}
+
 .torrent_table tr {
     vertical-align:top;
 }
@@ -1233,6 +1321,7 @@ ul.poll li.graph {
 
 .torrent {
     font-weight:bold;
+    font-size: 10pt;
     /*background-color:#E1E9F2;*/
 }
 .torrent span {
@@ -1327,7 +1416,7 @@ div.tagtable {
 .last_read {width: 15px; height: 15px; background: url(images/go_last_read.png) no-repeat center center; margin-left: 5px;}
 .last_read a { border: none; width: 100%; height: 100%; display: block; }
 .last_read a:hover { border: none; }
-.colhead_dark .last_read { background-image:url(images/go_last_read_white.png); }
+.colhead_dark .last_read { background-image:url(images/go_last_read.png); }
 
 .unread_locked_sticky{background: url(images/locked_sticky_unread.png) no-repeat center center;}
 .read_locked_sticky{background: url(images/locked_sticky_read.png) no-repeat center center;}
@@ -1343,12 +1432,19 @@ table.forum_post {
 }
 
 table.forum_post td {
-    /* border: 1px solid #98AAB1;  */
     border: 1px solid #dcdde4;
 }
 
 table.forum_unread {
     border: 2px solid #98AAB1;
+}
+
+table.forum_list, table.forum_index {
+    border:none;
+    margin-bottom: 10px;
+} 
+table.forum_list td, table.forum_index td {
+    border:none;
 }
 
 td.avatar {
@@ -1710,15 +1806,17 @@ select.bb_button {
 
 
 a.bb_button { 
-    padding:3px 6px; 
-    background:white;
+    padding:0px 6px; 
+    /* background:white; 
+    background-color:#ddd;
+    border: 1px solid #ddd; */
     cursor:pointer;
-    color: #000000; 
+    color: #ddd; 
 }
 
 a.bb_button:hover { 
     text-decoration:none; 
-    background:orange;
+    background-color: #FF6600;
     color: #ffffff; 
 }
 
@@ -1734,7 +1832,7 @@ a.bb_button:hover {
 }
 
 .bb_icon:hover { 
-    background:orange; 
+    background-color: #FF6600;
 }
 
 .overflow_button {
@@ -1805,6 +1903,9 @@ a.button {
 	line-height: 12px;
 	font-family: Verdana, Geneva, sans-serif;
 	padding: 7px 15px;
+}
+a.button:visited {
+	color: #fff;	
 }
 
 .greenButton {

@@ -663,10 +663,10 @@ function print_latest_forum_topics() {
     if (empty($LoggedUser['DisableLatestTopics'])) {    
         $LatestTopics = get_latest_forum_topics($LoggedUser['PermissionID']);
 
-        echo "<div class='head'>Latest forum topics</div>";
-        echo "<div class='box pad'>";
+        echo '<div class="head latest_topics">Latest forum topics</div>';
+        echo '<div class="box pad">';
         foreach($LatestTopics as $Key=>$Value) {
-            echo "<span class='sicon unread'></span><a href='forums.php?action=viewthread&threadid=".$Value['ThreadID']."&postid=".$Value['PostID']."#post".$Value['PostID']."'><strong>".$Value['Title']."</strong></a> by ".$Value['Username']." (".time_diff($Value['AddedTime'], 1,true,false,0).")&nbsp;";
+            echo '<span class="sicon unread"></span><a href="forums.php?action=viewthread&threadid='.$Value['ThreadID']."&postid=".$Value['PostID']."#post".$Value['PostID'].'"><strong>'.$Value['Title']."</strong></a> by ".$Value['Username']." (".time_diff($Value['AddedTime'], 1,true,false,0).")&nbsp;";
         }
         echo "</div>";
     }

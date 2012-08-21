@@ -1787,7 +1787,7 @@ a.bb_button {
 
 a.bb_button:hover { 
     text-decoration:none; 
-    background:orange;
+    background-color: #FF6600;
     color: #ffffff; 
 }
 
@@ -1804,7 +1804,7 @@ a.bb_button:hover {
 }
 
 .bb_icon:hover { 
-    background:orange; 
+    background-color: #FF6600;
 }
 
 .overflow_button {

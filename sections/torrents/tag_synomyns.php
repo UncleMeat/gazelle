@@ -8,7 +8,7 @@ show_header('Official Tags');
         <div class=" box pad">
 		
 			<table class="tagtable">
-				<tr class="colhead_dark">
+				<tr class="colhead">
 					<td style="font-weight: bold">Tag</td>
 					<td style="font-weight: bold">Uses</td>
 					<td>&nbsp;&nbsp;&nbsp;</td>
