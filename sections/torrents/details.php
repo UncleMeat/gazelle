@@ -114,10 +114,9 @@ if ($FreeTooltip)
 
 
 
-if (!isset($_GET['checked'])) update_staff_checking("viewing #$GroupID \"".cut_string($GroupName, 32).'"', true);
-
-
 if(check_perms('torrents_review')){ 
+    if (!isset($_GET['checked'])) update_staff_checking("viewing #$GroupID \"".cut_string($GroupName, 32).'"', true);
+ 
 ?>
     <div id="staff_status" class="status_box">
         <span class="status_loading">loading staff checking status...</span>
