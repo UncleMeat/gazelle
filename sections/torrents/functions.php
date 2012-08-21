@@ -272,8 +272,15 @@ function get_taglist_html($GroupID, $tagsort) {
 
 
 
-function update_staff_checking($location="cyberspace") { // logs the staff in as 'checking'
+function update_staff_checking($location="cyberspace",$dontactivate=false) { // logs the staff in as 'checking'
     global $Cache, $DB, $LoggedUser;
+    
+    if ($dontactivate){
+        
+        $DB->query("SELECT UserID FROM staff_checking 
+                     WHERE TimeOut >= UNIX_TIMESTAMP( UTC_TIMESTAMP() ) " );
+        if($DB->record_count()==0) return;
+    }
     
     $sqltimeout = time() + 480;
     $DB->query("INSERT INTO staff_checking (UserID, TimeOut, TimeStarted, Location)
