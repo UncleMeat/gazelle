@@ -857,6 +857,10 @@ table.boxstat td:first-child {
    /* height:30px; */
 }
 
+.tag_warning {
+    font-size: 1.1em;
+}
+
 .box_albumart{
     margin: 0px;
 }

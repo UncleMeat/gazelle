@@ -242,7 +242,7 @@ if(check_perms('torrents_review')){
 ?>
     <table id="staff_tools" class="pad">
         <form id="form_reviews" action="" method="post">
-                <tr class="colhead">
+                <tr class="head">
                     <td colspan="3">
                         <span style="float:left;"><strong>Review Tools</strong></span>
                    <? if($NumReviews>0) { ?>
@@ -362,9 +362,9 @@ if(check_perms('torrents_review')){
                     $Image = 'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?i='.urlencode($Image);
                 }
 ?>
-			<p align="center"><img style="max-width: 100%;" src="<?=$Image?>" alt="<?=$AltName?>" onclick="lightbox.init(this,220);" /></p>
+			<img style="max-width: 100%;" src="<?=$Image?>" alt="<?=$AltName?>" onclick="lightbox.init(this,220);" />
 <?          } else { ?>
-			<p align="center"><img src="<?=STATIC_SERVER?>common/noartwork/noimage.png" alt="Click to see full size image" title="Click to see full size image  " width="220" border="0" /></p>
+			<img src="<?=STATIC_SERVER?>common/noartwork/noimage.png" alt="Click to see full size image" title="Click to see full size image  " width="220" border="0" />
 <?
             }
 ?>
@@ -388,7 +388,7 @@ if(check_perms('torrents_review')){
 if(count($Tags) > 0) {
 ?>
                           <ul id="torrent_tags" class="stats nobullet">
-                                <li style="font-size:1.1em;">
+                                <li class="tag_warning">
                                     Please vote for tags based <a href="articles.php?topic=tag" target="_blank"><strong class="important_text">only</strong></a> on their appropriateness for this upload.
                                 </li>  
         <?
@@ -592,7 +592,7 @@ if (count($Requests) > 0) {
 		<div class="box">
 			<div class="head"><span style="font-weight: bold;">Requests (<?=count($Requests)?>)</span> <span style="float:right;"><a href="#" onClick="$('#requests').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span></div>
 			<table id="requests" class="hidden">
-				<tr class="colhead">
+				<tr class="head">
 					<td>Format / Bitrate / Media</td>
 					<td>Votes</td>
 					<td>Bounty</td>
@@ -626,7 +626,7 @@ if(!is_array($Collages)) {
 if(count($Collages)>0) {
 ?>
 		<table id="collages">
-			<tr class="colhead">
+			<tr class="head">
 				<td width="85%">Collage name</td>
 				<td># torrents</td>
 			</tr>
@@ -662,7 +662,7 @@ if(count($PersonalCollages)>0) {
 	}
 ?>
 		<table id="personal_collages">
-			<tr class="colhead">
+			<tr class="head">
 				<td width="85%">This torrent is in <?=count($PersonalCollages)?> personal collage<?=((count($PersonalCollages)>1)?'s':'')?><?=$SeeAll?></td>
 				<td># torrents</td>
 			</tr>
