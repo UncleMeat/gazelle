@@ -337,7 +337,7 @@ if (!empty($Results['notfound'])) {
 
 $Results = $Results['matches'];
 
-show_header('Browse Torrents', 'browse,overlib,jquery,jquery.cookie');
+show_header('Browse Torrents', 'browse,status,overlib,jquery,jquery.cookie');
 
 if(check_perms('torrents_review')){ 
 ?>

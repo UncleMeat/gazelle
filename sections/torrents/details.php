@@ -61,7 +61,7 @@ if (empty($TokenTorrents)) {
 }
 
 // Start output
-show_header($Title,'comments,torrent,bbcode,details,jquery,jquery.cookie');
+show_header($Title,'comments,status,torrent,bbcode,details,jquery,jquery.cookie');
 
 
 list($TorrentID, $FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $DoubleSeed, $TorrentTime, 
@@ -112,6 +112,22 @@ elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLe
 if ($FreeTooltip) 
     $Icons .= '<img src="static/common/symbols/freedownload.gif" alt="Freeleech" title="'.$FreeTooltip.'" />&nbsp;&nbsp;';          
 
+
+
+if (!isset($_GET['checked'])) update_staff_checking("viewing #$GroupID \"".cut_string($GroupName, 32).'"');
+
+
+if(check_perms('torrents_review')){ 
+?>
+    <div id="staff_status" class="status_box">
+        <span class="status_loading">loading staff checking status...</span>
+    </div>
+    <br class="clear"/> 
+    <script type="text/javascript">
+        setTimeout("Update_status();", 2000);
+    </script>
+<?
+}
  
 ?>
 <div class="details">

@@ -643,10 +643,10 @@ if(!empty($_REQUEST['action'])) {
                         // logging - 
                         write_log("Torrent $TorrentID ($Name) status set to $Status by ".$LoggedUser['Username']." ($LogDetails)"); // TODO: this is probably broken
                         write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], "[b]Status:[/b] $Status $LogDetails", 0);
-
-                        update_staff_checking();
+ 
+                        update_staff_checking("checked #$GroupID \"".cut_string($Name, 32).'"');
                         
-                        header('Location: torrents.php?id='.$GroupID);
+                        header('Location: torrents.php?id='.$GroupID."&checked=1");
                       
                   } else {
                         error(403);
@@ -664,7 +664,7 @@ if(!empty($_REQUEST['action'])) {
 				$DB->query("DELETE FROM staff_checking WHERE UserID='$LoggedUser[ID]'");
                         $Cache->delete_value('staff_checking');
                   } else { 
-                        update_staff_checking();
+                        update_staff_checking('browsing torrents');
                   }
                   
                   echo print_staff_status();

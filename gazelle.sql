@@ -1347,11 +1347,27 @@ CREATE TABLE IF NOT EXISTS `staff_blog_visits` (
   UNIQUE KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+
+--
+-- Table structure for table `staff_checking`
+--
+
+CREATE TABLE IF NOT EXISTS `staff_checking` (
+  `UserID` int(10) unsigned NOT NULL,
+  `TimeOut` int(10) unsigned NOT NULL,
+  `TimeStarted` datetime NOT NULL,
+  `Location` varchar(128) NOT NULL,
+  PRIMARY KEY (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 -- --------------------------------------------------------
 
 --
 -- Tabellstruktur `staff_pm_conversations`
 --
+
 
 CREATE TABLE IF NOT EXISTS `staff_pm_conversations` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,

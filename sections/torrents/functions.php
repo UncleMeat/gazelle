@@ -272,13 +272,13 @@ function get_taglist_html($GroupID, $tagsort) {
 
 
 
-function update_staff_checking() { // logs the staff in as 'checking'
+function update_staff_checking($location="cyberspace") { // logs the staff in as 'checking'
     global $Cache, $DB, $LoggedUser;
     
-    $sqltimeout = sqltime(time()+480 );
-    $DB->query("INSERT INTO staff_checking (UserID, TimeOut, TimeStarted)
-                                    VALUES ('$LoggedUser[ID]','$sqltimeout','".sqltime()."') 
-                           ON DUPLICATE KEY UPDATE TimeOut='$sqltimeout'");
+    $sqltimeout = time() + 480;
+    $DB->query("INSERT INTO staff_checking (UserID, TimeOut, TimeStarted, Location)
+                                    VALUES ('$LoggedUser[ID]','$sqltimeout','".sqltime()."','$location') 
+                           ON DUPLICATE KEY UPDATE TimeOut='$sqltimeout', Location='$location'");
     
     $Cache->delete_value('staff_checking');
 }
@@ -290,35 +290,37 @@ function print_staff_status() {
     
     $Checking = $Cache->get_value('staff_checking');
     if($Checking===false){
-        $DB->query("DELETE FROM staff_checking  WHERE UNIX_TIMESTAMP(TimeOut)< UNIX_TIMESTAMP( UTC_TIMESTAMP() )  " );
+        // delete old ones every 4 minutes
+        $DB->query("DELETE FROM staff_checking  WHERE TimeOut < UNIX_TIMESTAMP( UTC_TIMESTAMP() )  " );
  
-        $DB->query("SELECT s.UserID, u.Username, s.TimeStarted , s.TimeOut,
-                            ( UNIX_TIMESTAMP(s.TimeOut)- UNIX_TIMESTAMP( UTC_TIMESTAMP() ) )
+        $DB->query("SELECT s.UserID, u.Username, s.TimeStarted , s.TimeOut , s.Location
                       FROM staff_checking AS s
                       JOIN users_main AS u ON u.ID=s.UserID
                   ORDER BY s.TimeStarted ASC " );
-                   //  WHERE UNIX_TIMESTAMP(s.TimeOut)> UNIX_TIMESTAMP( UTC_TIMESTAMP() )" ); 
         $Checking = $DB->to_array(); 
-        $Cache->cache_value('staff_checking',$Checking,600);
+        $Cache->cache_value('staff_checking',$Checking,240);
     }
   
     ob_start();
     $UserOn = false;
     if (count($Checking)>0){
         foreach($Checking as $Status) {
-            list( $UserID, $Username, $TimeStart, $TimeOut, $TimeLeft) =  $Status;
-            if ($UserID==$LoggedUser['ID']) $Own = true;
+            list( $UserID, $Username, $TimeStart, $TimeOut ,$Location ) =  $Status;
+            $Own = $UserID==$LoggedUser['ID'];
             if ($Own) $UserOn = true;
+            
+            $TimeLeft = $TimeOut - time();
 ?>                           
             <span class="staffstatus status_checking<?if($Own)echo' statusown';?>" 
                title="<?=($Own?'Status: checking torrents ':"$Username is currently checking ");
-                        echo "&nbsp;(".time_diff($TimeStart, 2, false, false, 0).") ";
+                        echo "&nbsp;(".time_diff($TimeOut-480, 2, false, false, 0).") ";
+                        echo "&nbsp;$Location";
                         if ($Own && $TimeLeft<240) echo "(".time_diff($TimeOut, 1, false, false, 0)." till time out)"; ?> ">
                 <? 
                     if ($TimeLeft<60) echo "<blink>";
                     if($Own) echo "<a onclick=\"change_status('".($TimeLeft<60?"1":"0")."')\">"; 
                     echo $Username;
-                    if($Own)echo "</a>";
+                    if($Own) echo "</a>";
                     if ($TimeLeft<60) echo "</blink>";
                    ?> 
             </span>
