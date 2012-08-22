@@ -410,7 +410,7 @@ span.stat {
     padding: 6px 0px 0px 0px;
     background-position: bottom;
     text-align: center;
-    height: 33px;
+    height: 30px;   /*  33px; */
 }
 
 #searchbars form {
@@ -418,11 +418,18 @@ span.stat {
 }
 
 #searchbars input {
-    background-color: #e4ebef;     /*  #F4F6FB; */
+    background: #e4ebef url('images/mglass.png') no-repeat scroll 96% 0%;
     border: 1px solid black;
-    font-size: 0.9em;
+    font-size: 0.75em;
     color: #222;
     position: relative;
+    width:10%;
+    border-radius: 6px 6px 2px 2px;       /* FF9+ IE9+ */
+    -moz-border-radius: 6px 6px 2px 2px;
+    -webkit-border-top-left-radius: 6px;
+    -webkit-border-top-right-radius: 6px;
+    -webkit-border-bottom-left-radius: 2px;
+    -webkit-border-bottom-right-radius: 2px;
 }
 
 #searchbars ul {
