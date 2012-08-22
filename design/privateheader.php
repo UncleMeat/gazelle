@@ -433,7 +433,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 					<input
 						onfocus="if (this.value == 'Search Users') this.value='';"
 						onblur="if (this.value == '') this.value='Search Users';"
-						value="Search Users" type="text" name="search" size="20" title="Search Users - enter text and press return to search"
+						value="Search Users" type="text" name="search" size="17" title="Search Users - enter text and press return to search"
 					/>
 				</form>
 			</li>
