@@ -1,6 +1,10 @@
 <?
 if(!check_perms('users_view_ips')) { error(403); }
 show_header('Dupe IPs');
+?>
+<div class="thin">
+	<h2>Dupe IPs</h2>
+<?
 define('USERS_PER_PAGE', 50);
 define('IP_OVERLAPS', 5);
 list($Page,$Limit) = page_limit(USERS_PER_PAGE);
@@ -58,7 +62,10 @@ if($DB->record_count()) {
 <? echo $Pages; ?>
 	</div>
 <? } else { ?>
-	<h2 align="center">There are currently no users with more than <?=IP_OVERLAPS?> IP overlaps.</h2>
+	<h2>There are currently no users with more than <?=IP_OVERLAPS?> IP overlaps.</h2>
 <? }
+?>
+</div>
+<?
 show_footer();
 ?>

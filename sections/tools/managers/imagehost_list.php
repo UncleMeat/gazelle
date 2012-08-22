@@ -14,8 +14,8 @@ $DB->query("SELECT
 	LEFT JOIN users_main AS um ON um.ID=w.UserID
 	ORDER BY w.Time DESC");
 ?>
+<div class="thin">
 <h2>Imagehost Whitelist</h2>
-<div>
 <table>
     <tr>
         <td colspan="5" class="colhead">Add Imagehost</td>

@@ -17,8 +17,8 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 ?>
 <div class="thin">
 	<h2><?=SITE_NAME?> Staff</h2>
+	<div class="head">Contact Staff</div>
 	<div class="box pad" style="padding:10px;">
-		<h3>Contact Staff</h3>
 		<div id="below_box">
 			<p>If you are looking for help with a general question, we appreciate it if you would only message through the staff inbox, where we can all help you.</p>
                   <p>You can do that by
@@ -28,8 +28,11 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 		<? print_compose_staff_pm(!$Show, $Assign, $Subject, $Msg);  ?>
 		<br />
       </div>
+<? 
+	if( count($FrontLineSupport)>0) { 
+?>
+	<div class="head">First-line Support</div>
 	<div class="box pad" style="padding:10px;">
-		<h3>First-line Support</h3>
 		<p><strong>These users are not official staff members</strong> - they're users who have volunteered their time to help people in need. Please treat them with respect and read <a href="articles.php?topic=ranks#fls">this</a> before contacting them. </p>
 		<table class="staff" width="100%">
 			<tr class="colhead">
@@ -38,10 +41,10 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 				<td><strong>Support for</strong></td>
 			</tr>
 <?
-	$Row = 'a';
-	foreach($FrontLineSupport as $Support) {
-		list($ID, $Class, $Username, $Title, $Paranoia, $LastAccess, $SupportFor) = $Support;
-		$Row = ($Row == 'a') ? 'b' : 'a';
+            $Row = 'a';
+            foreach($FrontLineSupport as $Support) {
+                list($ID, $Class, $Username, $Title, $Paranoia, $LastAccess, $SupportFor) = $Support;
+                $Row = ($Row == 'a') ? 'b' : 'a';
 ?>
 			<tr class="row<?=$Row?>">
 				<td class="nobr">
@@ -54,12 +57,15 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 					<?=$SupportFor?>
 				</td>
 			</tr>
-<?	} ?>
+<?          } ?>
 		</table>
 	</div> 
+<? 
+      } 
+?>
 
+	<div class="head">Staff Members</div>
 	<div class="box pad" style="padding:10px;">
-            <h3>Staff Members</h3>
             <p>Staff members do something something blah blah should we even bother having a line here?</p>
 		
 <?
@@ -105,8 +111,8 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 		
 	</div>
        
+	<div class="head">Senior Staff</div>
 	<div class="box pad" style="padding:10px;">
-            <h3>Senior Staff</h3>
             <p>Senior Staff - They make the decisions, annoy them at your own peril.</p>
 <?
 	$CurClass = 0;

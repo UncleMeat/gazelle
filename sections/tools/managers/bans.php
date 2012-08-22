@@ -74,8 +74,8 @@ $DB->set_query_id($Bans);
 show_header('IP Bans');
 ?>
 
+<div class="thin">
 <h2>IP Bans</h2>
-
 <div>
 	<form action="" method="get">
 		<table cellpadding="6" cellspacing="1" border="0" class="border" width="100%">
@@ -155,4 +155,5 @@ while(list($ID, $Start, $End, $Reason) = $DB->next_record()){
 ?>
 </table>
 <?=$PageLinks?>
+</div>
 <? show_footer(); ?>

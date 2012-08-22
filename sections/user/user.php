@@ -640,13 +640,11 @@ if ($Snatched > 4 && check_paranoia_here('snatched')) {
 				$Cache->cache_value('recent_snatches_'.$UserID, $RecentSnatches, 0); //inf cache
 	}
 ?>
+            <div class="head">
+                <span style="float:left;">Recent Snatches</span>
+                <span style="float:right;"><a href="#" onclick="$('#recentsnatches').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+            </div>
 	<table class="recent" cellpadding="0" cellspacing="0" border="0">
-		<tr class="colhead">
-			<td colspan="5" style="padding:4px;">
-                      	<span style="float:left;">Recent Snatches</span>
-                        <span style="float:right;"><a href="#" onclick="$('#recentsnatches').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
-			</td>
-		</tr>
 		<tr id="recentsnatches">
 <?		
 		foreach($RecentSnatches as $RS) { ?>
@@ -678,13 +676,11 @@ if ($Uploads > 0 && check_paranoia_here('uploads')) {
 	}
       if(count($RecentUploads)>0){
 ?>
+    <div class="head">
+        <span style="float:left;">Recent Uploads</span>
+        <span style="float:right;"><a href="#" onclick="$('#recentuploads').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+    </div>
 	<table class="recent" cellpadding="0" cellspacing="0" border="0">
-		<tr class="colhead">
-			<td colspan="5" style="padding:4px;">     	
-                        <span style="float:left;">Recent Uploads</span>
-                        <span style="float:right;"><a href="#" onclick="$('#recentuploads').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>
-			</td>
-		</tr>
 		<tr id="recentuploads">
 <?              foreach($RecentUploads as $RU) { ?>
                     <td width="20%">
@@ -719,17 +715,11 @@ foreach ($Collages as $CollageInfo) {
 		ORDER BY ct.Sort LIMIT 5");
 	$Collage = $DB->to_array();
 ?>
+    <div class="head">
+        <span style="float:left;"><?=display_str($CName)?> - <a href="collages.php?id=<?=$CollageID?>">see full</a></span>
+        <span style="float:right;"><a href="#" onclick="$('#collage<?=$CollageID?>').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;"><?=$FirstCol?'(Hide)':'(View)'?></a></span>&nbsp;
+    </div>
 	<table class="recent" cellpadding="0" cellspacing="0" border="0">
-		<tr class="colhead">
-			<td colspan="5" style="padding:4px;">
-				<span style="float:left;">
-					<?=display_str($CName)?> - <a href="collages.php?id=<?=$CollageID?>">see full</a>
-				</span>
-				<span style="float:right;">
-					<a href="#" onclick="$('#collage<?=$CollageID?>').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;"><?=$FirstCol?'(Hide)':'(View)'?></a>
-				</span>
-			</td>
-		</tr>
 		<tr id="collage<?=$CollageID?>" <?=$FirstCol?'':'class="hidden"'?>>
 <?	foreach($Collage as $C) {
 			$Group = get_groups(array($C['GroupID']));
@@ -760,14 +750,14 @@ if ((check_perms('users_view_invites')) && $Invited > 0) {
 	include(SERVER_ROOT.'/classes/class_invite_tree.php');
 	$Tree = new INVITE_TREE($UserID, array('visible'=>false));
 ?>
-                <div class="head">
-			<span style="float:left;">Invite Tree</span>
-                        <span style="float:right;"><a href="#" onclick="$('#invitetree').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+            <div class="head">
+                <span style="float:left;">Invite Tree</span>
+                <span style="float:right;"><a href="#" onclick="$('#invitetree').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
 		</div>
 		<div class="box">
-                         <div id="invitetree" class="hidden">
+                <div id="invitetree" class="hidden">
 				<? $Tree->make_tree(); ?>
-			</div>
+                </div>
 		</div> 
 <?
 }

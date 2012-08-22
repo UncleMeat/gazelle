@@ -103,7 +103,7 @@ function generate_tag_table($Caption, $Tag, $Details, $Limit, $ShowVotes=true, $
 			- [<a href="top10.php?type=tags&amp;limit=250&amp;details=<?=$Tag?>">Top 250</a>]
 		</small>
 	</div>
-	<table class="border">
+	<table>
 	<tr class="colhead">
 		<td class="center">Rank</td>
 		<td>Tag</td>

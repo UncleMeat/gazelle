@@ -11,11 +11,11 @@ function Select_Action(element_id) {
     $('#cost'+element_id).disable(action=='badge');
 }
 //]]></script>
+<div class="thin">
 <h2>Manage Shop</h2>
-<div>
 <table>
-    <tr>
-        <td colspan="7" class="colhead">Add shop item</td>
+    <tr class="head">
+        <td colspan="7">Add shop item</td>
     </tr>
     <tr class="colhead">
 		<td width="120px">Name</td>

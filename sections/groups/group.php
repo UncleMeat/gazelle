@@ -58,8 +58,8 @@ list($Results) = $DB->next_record();
           <input type="hidden" name="groupid" value="<?=$GroupID?>" />
           <input type="hidden" name="applyto" value="group" />
           <table class="friends_table vertical_margin">
-                <tr>
-                      <td class="colhead" colspan="2">Testers User Group</td>
+                <tr class="colhead">
+                      <td colspan="2">Testers User Group</td>
                 </tr>
                 <tr>
                       <td valign="top">
@@ -71,8 +71,8 @@ list($Results) = $DB->next_record();
                 </tr>
           </table>
           <table class="friends_table vertical_margin">
-                <tr>
-                      <td class="colhead" colspan="2">Comment<span style="float:right;"><a href="#" onclick="$('#gcomment').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span></td>
+                <tr class="colhead">
+                      <td colspan="2">Comment<span style="float:right;"><a href="#" onclick="$('#gcomment').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span></td>
                 </tr>
                 <tr id="gcomment" class="pad">
                       <td valign="top">
@@ -86,8 +86,8 @@ list($Results) = $DB->next_record();
                 </tr>
           </table>
           <table class="friends_table vertical_margin">
-                <tr>
-                      <td class="colhead" colspan="2">Log<span style="float:right;"><a href="#" onclick="$('#grouplog').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span></td>
+                <tr class="colhead">
+                      <td colspan="2">Log<span style="float:right;"><a href="#" onclick="$('#grouplog').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span></td>
                 </tr>
                 <tr id="grouplog" class="hidden pad">
                       <td valign="top" colspan="2" >
@@ -98,8 +98,8 @@ list($Results) = $DB->next_record();
                 </tr>
           </table>
           <table class="friends_table vertical_margin">
-                <tr>
-                      <td class="colhead" colspan="2">Add users<span style="float:right;"><a href="#" onclick="$('#showuserrow').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span></td>
+                <tr class="colhead">
+                      <td colspan="2">Add users<span style="float:right;"><a href="#" onclick="$('#showuserrow').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span></td>
                 </tr> 
                 <tr id="showuserrow" class="pad">
                       <td valign="top">
@@ -114,8 +114,8 @@ list($Results) = $DB->next_record();
                 </tr>
           </table>
           <table class="friends_table vertical_margin">
-                <tr>
-                      <td class="colhead" colspan="5">Actions</td>
+                <tr class="colhead">
+                      <td colspan="5">Actions</td>
                 </tr>
                 <tr>
                       <td width="25%" class="noborder center"></td>
@@ -148,7 +148,7 @@ list($Results) = $DB->next_record();
 <?          }   ?>
     </div>
     
-    <div class="colhead">members of <?=$Name?></div>
+    <div class="head">members of <?=$Name?></div>
     <div class="box pad">          
 <?
 if($Results == 0) {

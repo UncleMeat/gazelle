@@ -43,12 +43,12 @@ $DB->query("SELECT
     </div>
 	  
     <table>
-        <tr>
-            <td colspan="3" class="colhead">Add group</td>
-        </tr>
         <tr class="colhead">
-                <td width="90%">Name</td>
-                <td width="120px"></td>
+            <td colspan="3">Add group</td>
+        </tr>
+        <tr >
+                <td width="90%" class="colhead">Name</td>
+                <td width="120px" class="colhead"></td>
         </tr> 
         <tr class="rowa">
             <form action="groups.php" method="post">

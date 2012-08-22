@@ -142,6 +142,7 @@ list($NumResults) = $DB->next_record();
 show_header(($BookmarkView)?'Your bookmarked collages':'Browse collages');
 ?>
 <div class="thin">
+    <h2>Collages</h2>
 <? if (!$BookmarkView) { ?>
 	<div>
 		<form action="" method="get">

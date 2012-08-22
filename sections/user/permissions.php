@@ -67,6 +67,7 @@ function reset() {
 	}
 }
 </script>
+<div class="thin">
 <h2><?=format_username($UserID,$Username)?> > Permissions</h2>
 <div class="linkbox">
 	[<a href="#" onclick="reset();return false;">Defaults</a>]
@@ -92,4 +93,5 @@ function reset() {
 permissions_form();
 ?>
 </form>
+</div>
 <? show_footer(); ?>

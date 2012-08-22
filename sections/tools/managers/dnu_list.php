@@ -13,8 +13,8 @@ $DB->query("SELECT
 	LEFT JOIN users_main AS um ON um.ID=d.UserID
 	ORDER BY d.Time DESC");
 ?>
+<div class="thin">
 <h2>Do Not Upload List</h2>
-<div>
 <table>
     <tr>
         <td colspan="4" class="colhead">Add item to Do Not Upload List</td>

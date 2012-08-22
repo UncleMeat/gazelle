@@ -31,8 +31,8 @@ $Awards = $DB->to_array(false, MYSQLI_BOTH);
 <?
                 }
 ?>
-      <div class="box" style="width:40%;float:right;margin:0 4% 20px 4%;display:inline-block;">
-            <div class="colhead pad">
+      <div class="" style="width:40%;float:right;margin:0 4% 20px 4%;display:inline-block;">
+            <div class="head pad">
                 <?  
                 switch($Sorter){
                     case 2:

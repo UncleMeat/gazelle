@@ -199,10 +199,10 @@ $Pages=get_pages($Page,$TorrentCount,$TorrentsPerPage,'#torrents');
 ?>
 <? if (!$INLINE) {  ?>
 <div class="thin">
-	<div>
+    <div class="head"><a href="user.php?id=<?=$UserID?>"><?=$User['Username']?></a><?='\'s '.$Action.' torrents'?></div>
+        <div>
 		<form action="" method="get">
-                        <div class="head"><a href="user.php?id=<?=$UserID?>"><?=$User['Username']?></a><?='\'s '.$Action.' torrents'?></div>
-			<table>
+                 <table>
 				<tr>
 					<td class="label"><strong>Search for:</strong></td>
 					<td>
@@ -276,8 +276,9 @@ foreach($NewCategories as $Cat) {
 	</div>
 <?	} else { ?>
 	<div class="linkbox"><?=$Pages?></div>
+	<div class="head">Torrents</div>
 	<table class="torrent_table">
-		<tr class="head">
+		<tr class="colhead">
 			<td></td>
 			<td><a href="<?=header_link('Name', 'ASC')?>">Torrent</a></td>
 			<td><a href="<?=header_link('Time')?>">Time</a></td>

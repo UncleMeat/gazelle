@@ -13,6 +13,7 @@ $DB->query("SELECT
 	LEFT JOIN users_main AS um ON um.ID=eb.UserID
 	ORDER BY eb.Time DESC");
 ?>
+<div class="thin">
 <h2>Email Blacklist</h2>
 <table>
     <tr>
@@ -73,4 +74,5 @@ while(list($ID, $UserID, $Time, $Email, $Comment, $Username) = $DB->next_record(
 	</tr>
 <? } ?>
 </table>
+</div>
 <? show_footer(); ?>

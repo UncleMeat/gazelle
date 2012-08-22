@@ -47,6 +47,7 @@ $DB->query('SELECT
 	ORDER BY CategoryID, Sort ASC');
 ?>
 
+<div class="thin">
 <h2>Forum control panel</h2>
 <table width="100%">
 	<tr class="colhead">
@@ -117,7 +118,7 @@ while(list($ID, $CategoryID, $Sort, $Name, $Description, $MinClassRead, $MinClas
 }
 ?>
 	<tr>
-		<td colspan="8" class="colhead">Create forum</td>
+		<td colspan="9" class="colhead">Create forum</td>
 	</tr>
 	<tr class="rowa">
 		<form action="" method="post">
@@ -165,4 +166,5 @@ while(list($ID, $CategoryID, $Sort, $Name, $Description, $MinClassRead, $MinClas
 		</form>
 	</tr>
 </table>
+</div>
 <? show_footer(); ?>

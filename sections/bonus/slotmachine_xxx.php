@@ -13,6 +13,7 @@ $BetAmount = 10;
 echo "var reelPix = ". json_encode($Reel) . ";\n"; ?>
 </script>
 <div class="thin">
+    <h2>Slot Machine XXX</h2>
     <div style="float:right;width:260px;">
         <div class="box pad"><h3 class="center">payouts</h3><br/>
             <span id="payout_table" class="reelsi"><? print_payout_table($BetAmount) ?></span>

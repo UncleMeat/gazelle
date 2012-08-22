@@ -66,7 +66,7 @@ a:hover, .torrent_table .linkbox a:hover {
 */
     
     
-.linkbox  {
+.linkbox {
     color: #ddd; 
 }
 .linkbox a, .breadcrumbs a, .colhead a {
@@ -90,7 +90,10 @@ a:hover, .torrent_table .linkbox a:hover {
 }
 h1,h2,h3,h4 {
     margin: 5px 0px;
-    color: #fff;
+    color: #eee;
+}
+div div div div h3, div div div h4 {
+    color: #222;
 }
 .box h3, .box h4 {
     color: #000;
@@ -185,9 +188,17 @@ ul.thin li { margin:0px 0px; padding:0px; }
     max-width: 1200px;
     background-color: #003875;
     margin: 40px auto 0px auto;
-    padding: 35px 10px 35px;
     border: 1px solid #0054b0;
     overflow: hidden;
+    padding: 0px 0px 35px;
+    
+    -moz-border-radius: 14px 14px 0 0;
+    -webkit-border-top-left-radius: 14px;
+    -webkit-border-top-right-radius: 14px;
+    border-radius: 14px 14px 0 0;
+}
+#schedule #content {
+    color:#eee;
 }
 
 #footer {
@@ -594,18 +605,48 @@ input.hidden {
     margin-right:auto;
 }
  
+/*
+.thin > .box {
+    width: 90%;
+    margin-left:auto;
+    margin-right:auto; 
+}  */
+
+.thin > h2 {
+    margin: 0px -4% 30px; 
+}
+.thin > h2:first-child {
+    -moz-border-radius: 12px 12px 0 0;
+    -webkit-border-top-left-radius: 12px;
+    -webkit-border-top-right-radius: 12px;
+    border-radius: 12px 12px 0 0;
+}
+
+.thin > .linkbox:first-child {
+    margin-top: 30px;
+}
+
+.thin > .head:first-child {
+    margin: 40px 0px 0px;
+}
+
 h2 { 
     margin: 10px 0px 20px;
     text-align: center;
     color: #fff;
     /* background-color: #024a7c; */
-    border-radius: 16px; 
-    -moz-border-radius: 16px; 
-    -webkit-border-radius: 16px;  
+ 
+    border-radius: 5px; 
+    -moz-border-radius: 5px; 
+    -webkit-border-radius: 5px;
+    /* 
+    background: #0261a3 url(images/header2.jpg) repeat-x bottom;  */
     
-    /* *** change to plain background if preferred ***  */
-    /* background-color: #0261a3; */
-    background: #0261a3 url(images/header2.jpg) repeat-x bottom;  
+    background: #006497; /* old browsers */
+    background: -moz-linear-gradient(top, #0064a1 0%, #0064a1 40%, #003b7d 100%); /* firefox    #0074b7 - #004b9d */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0064a1), color-stop(40%,#0064a1), color-stop(100%,#003b7d)); /* webkit */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0074b7', endColorstr='#003b7d',GradientType=0 ); /* ie */
+
     font-size: 18px;
     padding: 5px 40px;
 } 
@@ -624,6 +665,7 @@ h2 a:visited {
     -moz-border-radius: 14px; 
     -webkit-border-radius: 14px;
 }
+
 
 .contact_link {
     display: inline;
@@ -947,7 +989,6 @@ span.green {
 table {
     width: 100%;
     border-collapse: collapse;
-    border: 1px solid #6d94da;
 }
 
 tr {
@@ -968,7 +1009,8 @@ tr.rowb, .rowb {
 }
 
 td {
-    border: 1px solid #98AAB1;
+  /*   border: 1px solid #98AAB1; */
+    border-bottom: 1px solid #dde;
     padding: 3px 5px;
     text-align: left;
 }
@@ -980,7 +1022,21 @@ table.wid740 {
     border: 1px solid #0d245a;
 }
 
-table.noborder td {
+td.label { /* .main_column td:first-child, */
+    background-color: #eff3f6;
+    border:none;
+}
+tr#recentuploads td{
+    background-color:white;
+}
+table.border td {
+    border: 1px solid #dde;
+}
+table.staff {
+    border-left: 1px solid #dde;
+    border-right: 1px solid #dde;
+}
+table.noborder td, .torrent td, .torrent_table td {
     border:none;
 }
 /* Bonus SHop */
@@ -1026,20 +1082,31 @@ input.shopbutton.itembuy:hover {
     /*color: #700;*/
 }
 
-#articles tr.colhead, #forums tr.colhead, #top10 tr.colhead, #torrents tr.colhead , #staff tr.colhead  { 
+#articles tr.colhead, #forums tr.colhead, #top10 tr.colhead, #torrents tr.colhead , #staff tr.colhead, #collage tr.colhead, 
+    #staffpm tr.colhead, #staffpms tr.colhead, #tools tr.colhead , #userhistory tr.colhead, #user tr.colhead { 
     background-image: none;
     background-color: #d3e3f3;
     font-weight: bold; 
     color: #555;
+    -moz-box-shadow:none;
+    -webkit-box-shadow:none;
+    box-shadow:none;
 }
-
-.colhead {
-  /*    #0261A3  #C6D3E4 
-    background-color: #f3f3f3; */
-    background: #0261A3 url(images/colhead-grad.gif) repeat-x; 
+#articles tr.colhead a, #forums tr.colhead a, #top10 tr.colhead a, #torrents tr.colhead a, #staff tr.colhead a, #collage tr.colhead a, 
+    #staffpm tr.colhead a, #staffpms tr.colhead a, #tools tr.colhead a, #userhistory tr.colhead a, #user tr.colhead a { 
+    font-weight: bold; 
+    color: #555;
+}
+tr.colhead_dark td {
+    background-color: #7393b3;
+    color: #fff;
+}
+ 
+.colhead { 
+    background-color: #d3e3f3;
     font-weight: bold;
-    color: #eee; 
-}
+    color: #444;    
+} 
 
 /* .colhead a {
     color: white;
@@ -1084,7 +1151,7 @@ td.colhead, .colhead td {
 }
 
 
-.head {
+.head, tr.colhead, tr.colhead_dark {
     padding: 3px 10px 3px 3px;
     height: 20px;
     background: #0074b7; /* old browsers */
@@ -1111,15 +1178,23 @@ td.colhead, .colhead td {
     color: white;
 }
 
+.head+div.box, .colhead+div.box, tr.head+tr, tr#recentuploads, tr#recentsnatches, .head+table, #inbox,
+        .thin>table, .thin>form>table, #searchforum table, #searchthread table, #messageform .box { /* , tr:first-child */
+    -moz-box-shadow:inset 2px 1px 3px #6a9bb7;
+    -webkit-box-shadow:inset 2px 1px 3px #6a9bb7;
+    box-shadow:inset 2px 1px 3px #6a9bb7;
+}
+
 #forums .head {
     margin-top: 20px;
 }
+/*
 .latest_topics {
     margin-top: 0px;
 }
 #forums .latest_topics {
     margin-top: 0px;
-}
+} */
 
 td.label {
     font-weight: bold;
@@ -1277,12 +1352,7 @@ table.cat_list {
 .torrent_table tr {
     vertical-align:top;
 }
-
-.torrent_table td {
-  /*  padding: 5px;*/
-    border-left:none;
-    border-right: none;
-}
+ 
 .group {
     font-weight:bold;
     background-color:#D7E2EF;
@@ -1429,10 +1499,14 @@ td.avatar {
     min-height: 150px; 
     padding: 0px;
     text-align: center;
+    background-color:white;
+}
+img.avatar {
+    margin:4px 0px;
 }
 
 .newstatus{
-    color: #3f3;
+    color: #3a3;
     padding: 0px 3px;
 }
 /* td.avatar img.avatar {
@@ -1962,16 +2036,16 @@ span.reported {
 }
 
 .reels img {
-    border: 3px solid #ddd;
+    border: 2px solid #777;
 }
 .reelsi img {
-    border: 1px solid #ccc;
+    border: 1px solid #aaa;
 }
 img.win {
-    border: 3px solid black;  
+    border: 2px solid black;  
 }
 img.win.flash {
-    border: 3px solid gold; 
+    border: 2px solid gold; 
 }
 .payout {
     width:74px;
@@ -2021,9 +2095,10 @@ img.win.flash {
 }
 
 .status_box {
-      margin:-20px auto 20px;
-      width: 96%; 
+      margin: 10px auto 5px;
+      width: 90%; 
       min-width: 920px;
+      max-width: 1200px;
       border: none;
       padding:4px; 
 }

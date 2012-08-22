@@ -41,8 +41,8 @@ function print_categories($ElementID, $SelectedCat=-1){
         <input type="hidden" name="action" value="awards_alter" />
         <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
         <table>
-            <tr>
-                <td colspan="9" class="colhead">Add Automatic Award item</td>
+            <tr class="head">
+                <td colspan="9">Add Automatic Award item</td>
             </tr>
             <tr class="colhead">
                 <td width="10px" rowspan="2">Add</td>

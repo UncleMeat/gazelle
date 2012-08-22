@@ -114,7 +114,7 @@ if ($FreeTooltip)
 
 
 
-if(check_perms('torrents_review')){ 
+if(!check_perms('torrents_review')){ 
     if (!isset($_GET['checked'])) update_staff_checking("viewing #$GroupID \"".cut_string($GroupName, 32).'"', true);
  
 ?>
@@ -129,7 +129,7 @@ if(check_perms('torrents_review')){
 }
  
 ?>
-<div class="details">
+<div class="details thin">
 	<h2><?="$Icons$DisplayName"?></h2>
       
 <? 

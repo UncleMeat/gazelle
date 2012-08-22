@@ -105,7 +105,7 @@ function generate_user_table($Caption, $Tag, $Details, $Limit) {
 			- [<a href="top10.php?type=users&amp;limit=250&amp;details=<?=$Tag?>">Top 250</a>]
 		</small>
 	</div>
-	<table class="border">
+	<table>
 	<tr class="colhead">
 		<td class="center">Rank</td>
 		<td>User</td>

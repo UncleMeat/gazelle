@@ -4,11 +4,11 @@ if(!check_perms('admin_whitelist')) { error(403); }
 show_header('Whitelist Management');
 $DB->query('SELECT id, vstring, peer_id FROM xbt_client_whitelist ORDER BY peer_id ASC');
 ?>
+<div class="thin">
 <h2>Allowed Clients</h2>
-<div>
 <table class="wid740">
-    <tr>
-        <td colspan="3" class="colhead">Add a client</td>
+    <tr class="head">
+        <td colspan="3">Add a client</td>
     </tr>
     <tr class="colhead">
         <td width="40%">Client</td>

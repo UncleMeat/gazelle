@@ -53,6 +53,7 @@ list($Results) = $DB->next_record();
 // Start printing stuff
 ?>
 <div class="thin">
+      <h2><?=( $FType=='friends'?'friends':'blocked users' )?></h2>
 	<div class="linkbox">
 <?
 // Pagination

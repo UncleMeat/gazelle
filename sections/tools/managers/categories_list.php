@@ -24,9 +24,10 @@ function change_image(display_image, cat_image) {
 <h2>Categories</h2>
 <strong>Observe!</strong> You must upload new images to the <?=SERVER_ROOT?>/static/common/caticons/ folder before you can use it here.<br /><br />
 
-<div><table>
-<tr>
-	<td colspan="4" class="colhead">Add a new category</td>
+
+    <table>
+<tr class="head">
+	<td colspan="4">Add a new category</td>
 </tr>
 <tr>
 <tr class="colhead">
@@ -98,7 +99,7 @@ function change_image(display_image, cat_image) {
         </form>
 </tr>
 <? } ?>        
-</table></div>
+</table>
 </div>
 
 <? show_footer();?>

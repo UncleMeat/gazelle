@@ -21,6 +21,7 @@ else if(!empty($_GET['key']) && $_GET['type'] == "clear") {
 	}
 }
 ?>
+    <div class="thin">
 	<h2>Clear a cache key</h2>
 	
 	<form method="get" action="" name="clear_cache">
@@ -47,5 +48,6 @@ else if(!empty($_GET['key']) && $_GET['type'] == "clear") {
 <? } ?>
 		</table>
 	</form>
+    </div>
 <?
 show_footer();

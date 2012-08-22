@@ -51,12 +51,16 @@ if (empty($_GET['search']) && !isset($_GET['page']) && !$DonationTimeline = $Cac
 }
 
 show_header('Donation log');
+?>
+<div class="thin">
+    <h2>Donation Log</h2>
+<?
 if (empty($_GET['search']) && !isset($_GET['page'])) {
 ?>
 <div class="box pad">
 	<img src="<?=$DonationTimeline?>" />
 </div>
-<br / >
+<br />
 <? } ?>
 <div>
 	<form action="" method="get">
@@ -73,7 +77,7 @@ if (empty($_GET['search']) && !isset($_GET['page'])) {
 		</table>	
 	</form>
 </div>
-<br / >
+<br />
 <div class="linkbox">
 <?
 	$Pages=get_pages($Page,$Results,DONATIONS_PER_PAGE,11) ;
@@ -101,5 +105,6 @@ if (empty($_GET['search']) && !isset($_GET['page'])) {
 </table>
 <div class="linkbox">
 	<?=$Pages?>
+</div>
 </div>
 <? show_footer(); ?>

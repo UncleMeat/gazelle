@@ -45,7 +45,7 @@ show_header('Top '.$Limit.' Torrents');
 
 if(check_perms('site_advanced_top10')) {
 ?>
-	<div>
+	<div class="head">Search</div>
 		<form action="" method="get">
 			<input type="hidden" name="advanced" value="1" />
 			<table cellpadding="6" cellspacing="1" border="0" class="border" width="100%">
@@ -62,7 +62,7 @@ if(check_perms('site_advanced_top10')) {
 				</tr>
 			</table>	
 		</form>
-	</div>
+	
 <?
 }
 
@@ -236,7 +236,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 		</small>
 <?	} ?> 
 		</div>
-	<table class="border torrent_table">
+	<table class="torrent_table">
 	<tr class="colhead">
 		<td class="center" style="width:15px;"></td>
 		<td style="width:32px;"></td>

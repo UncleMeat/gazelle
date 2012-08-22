@@ -74,6 +74,7 @@ if (isset($_POST['Username'])) {
 } else {
 
 	?>
+    <div class="thin">
 	<h2>Create a User</h2>
 	
 	<form method="post" action="" name="create_user">
@@ -97,6 +98,7 @@ if (isset($_POST['Username'])) {
 		</tr>
 	</table>
 	</form>
+    </div>
 	<?
 
 }
