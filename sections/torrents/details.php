@@ -113,8 +113,15 @@ if ($FreeTooltip)
     $Icons .= '<img src="static/common/symbols/freedownload.gif" alt="Freeleech" title="'.$FreeTooltip.'" />&nbsp;&nbsp;';          
 
 
+ 
+?>
+<div class="details thin">
+	<h2><?="$Icons$DisplayName"?></h2>
+      
+<? 
+      
 
-if(!check_perms('torrents_review')){ 
+if(check_perms('torrents_review')){ 
     if (!isset($_GET['checked'])) update_staff_checking("viewing #$GroupID \"".cut_string($GroupName, 32).'"', true);
  
 ?>
@@ -127,13 +134,8 @@ if(!check_perms('torrents_review')){
     </script>
 <?
 }
- 
-?>
-<div class="details thin">
-	<h2><?="$Icons$DisplayName"?></h2>
-      
-<? 
-      
+
+
     if ($Status == 'Warned' || $Status == 'Pending') {
 ?>
 	<div id="warning_status" class="box vertical_space">
