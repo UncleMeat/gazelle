@@ -8,8 +8,8 @@ show_header('Staff Tools');
 ?>
 <div class="permissions">
 	<div class="permission_container">
+            <div class="head">Managers</div>
 		<table>
-			<tr><td class="colhead">Managers</td></tr>
 <?   if (check_perms('users_groups')) { ?>
 			<tr><td><a href="groups.php">User Groups</a></td></tr>
                   
@@ -54,9 +54,8 @@ show_header('Staff Tools');
 		</table>
 	</div>
 	<div class="permission_container">
+            <div class="head">Data</div>
 		<table>
-			<tr><td class="colhead">Data</td></tr>
-
 <?
 if (check_perms('admin_donor_log')) { ?>
 			<tr><td><a href="tools.php?action=donation_log">Donation Log</a></td></tr>
@@ -80,8 +79,8 @@ if (check_perms('admin_donor_log')) { ?>
 		</table>
 	</div>
 	<div class="permission_container">
+            <div class="head">Misc</div>
 		<table>
-			<tr><td class="colhead">Misc</td></tr>
 
 <? if (check_perms('users_mod')) { ?>
 			<tr><td><a href="tools.php?action=manipulate_tree">Manipulate Tree</a></td></tr>

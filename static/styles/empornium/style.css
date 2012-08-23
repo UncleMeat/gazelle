@@ -1587,6 +1587,7 @@ tr.unreadpm {
 }
 
 .permission_container {
+    margin-top: 20px;
     float:left;
     width:300px;
     padding:5px;

@@ -269,13 +269,13 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 
 #menu a {
-    color: #ddd;
+    color: #fff;
     font-weight: bold;
 }
 
 #menu a:hover {
    background-color: #FF6600;
-   color: #ddd;
+   color: #fff;
    text-decoration: none;
 }
 
@@ -1722,6 +1722,7 @@ tr.unreadpm {
 }
 
 .permission_container {
+    margin-top: 20px;
     float:left;
     width:300px;
     padding:5px;
