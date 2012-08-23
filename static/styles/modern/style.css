@@ -620,7 +620,7 @@ input.hidden {
 }  */
 
 .thin > h2 {
-    margin: 0px -4% 30px; 
+    margin: 0px -4% 10px; 
 }
 .thin > h2:first-child {
     -moz-border-radius: 12px 12px 0 0;
@@ -630,13 +630,16 @@ input.hidden {
 }
 
 .thin > .linkbox:first-child {
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 .thin > .head:first-child {
-    margin: 40px 0px 0px;
+    margin: 10px 0px 0px;
 }
 
+.thin > p {
+    color: #fff;
+}
 h2 { 
     margin: 10px 0px 20px;
     text-align: center;
@@ -1195,6 +1198,7 @@ td.colhead, .colhead td {
 #forums .head {
     margin-top: 20px;
 }
+
 /*
 .latest_topics {
     margin-top: 0px;
@@ -2102,8 +2106,8 @@ img.win.flash {
 }
 
 .status_box {
-      margin: 10px auto 5px;
-      width: 90%; 
+      margin: 10px auto 10px;
+      width: 96%; 
       min-width: 920px;
       max-width: 1200px;
       border: none;

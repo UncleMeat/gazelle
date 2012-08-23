@@ -190,15 +190,14 @@ if (!empty($Properties))
                     Hidden
                     FROM imagehost_whitelist
                     WHERE Hidden='0'
-                    ORDER BY Time");
+                    ORDER BY Imagehost");
         $Whitelist = $DB->to_array();
         $Cache->cache_value('imagehost_whitelist', $Whitelist);
     }
-    list($Host, $Link, $Comment, $Updated) = end($Whitelist);
-    reset($Whitelist);
-    $DB->query("SELECT IF(MAX(t.Time) < '$Updated' OR MAX(t.Time) IS NULL,1,0) FROM torrents AS t
-			WHERE UserID = " . $LoggedUser['ID']);
-    list($NewWL) = $DB->next_record();
+    $DB->query("SELECT MAX(iw.Time), IF(MAX(t.Time) < MAX(iw.Time) OR MAX(t.Time) IS NULL,1,0) 
+                  FROM imagehost_whitelist as iw
+             LEFT JOIN torrents AS t ON t.UserID = '$LoggedUser[ID]' ");
+    list($Updated, $NewWL) = $DB->next_record();
 // test $HideWL first as it may have been passed from upload_handle
     if (!$HideWL)
         $HideWL = check_perms('torrents_hide_imagehosts') || !$NewWL;
