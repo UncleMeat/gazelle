@@ -92,9 +92,9 @@ $ReceiverIDs = $DB->collect('UserID');
 
 if(!empty($ReceiverIDs) && (empty($LoggedUser['DisablePM']) || array_intersect($ReceiverIDs, array_keys($StaffIDs)))) {
 ?>
-	<h3>Reply</h3>
-	<form action="inbox.php" method="post" id="messageform">
-		<div class="box pad">
+	<div class="head">Reply</div>
+	<div class="box pad">
+            <form action="inbox.php" method="post" id="messageform">
 			<input type="hidden" name="action" value="takecompose" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 			<input type="hidden" name="toid" value="<?=implode(',',$ReceiverIDs)?>" />
@@ -106,19 +106,19 @@ if(!empty($ReceiverIDs) && (empty($LoggedUser['DisablePM']) || array_intersect($
 				<input type="button" value="Preview" onclick="Quick_Preview();" /> 
 				<input type="submit" value="Send message" />
 			</div>
-		</div>
-	</form>
+            </form>
+      </div>
 <?
 }
 ?>
-	<h3>Manage conversation</h3>
-	<form action="inbox.php" method="post">
-		<div class="box pad">
+	<div class="head">Manage conversation</div>
+	<div class="box pad">
+            <form action="inbox.php" method="post">
 			<input type="hidden" name="action" value="takeedit" />
 			<input type="hidden" name="convid" value="<?=$ConvID?>" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 
-			<table width="100%">
+			<table width="100%" class="noborder">
 				<tr>
 					<td class="center" width="33%"><label for="sticky">Sticky</label>
 						<input type="checkbox" id="sticky" name="sticky"<? if($Sticky) { echo ' checked="checked"'; } ?> />
@@ -135,16 +135,16 @@ if(!empty($ReceiverIDs) && (empty($LoggedUser['DisablePM']) || array_intersect($
 					<td class="center" colspan="3"><input type="submit" value="Manage conversation" /></td>
 				</tr>
 			</table>
-		</div>
-	</form>
+            </form>
+	</div>
 <?
 $DB->query("SELECT SupportFor FROM users_info WHERE UserID = ".$LoggedUser['ID']);
 list($FLS) = $DB->next_record();
 if((check_perms('users_mod') || $FLS != "") && (!$ForwardedID || $ForwardedID == $LoggedUser['ID'])) {
 ?>
-	<h3>Forward conversation</h3>
-	<form action="inbox.php" method="post">
-		<div class="box pad">
+	<div class="head">Forward conversation</div>
+	<div class="box pad">
+            <form action="inbox.php" method="post">
 			<input type="hidden" name="action" value="forward" />
 			<input type="hidden" name="convid" value="<?=$ConvID?>" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
@@ -162,8 +162,8 @@ if((check_perms('users_mod') || $FLS != "") && (!$ForwardedID || $ForwardedID ==
 ?>
 			</select>
 			<input type="submit" value="Forward" />
-		</div>
-	</form>
+            </form>
+     </div>
 <?
 }
 

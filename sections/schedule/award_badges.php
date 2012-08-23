@@ -151,6 +151,13 @@ foreach($AutoActions as $AutoAction) {
                           JOIN badges AS b ON b.ID=ub.BadgeID 
                          WHERE ub.UserID IN ($SQL_IN) 
                            AND b.Badge='$Badge' AND b.Rank<$Rank");
+            /*
+            "DELETE m, cu, c 
+               FROM pm_messages AS m 
+               JOIN pm_conversations AS c ON c.ID=m.ConvID
+               JOIN pm_conversations_users AS cu ON cu.ConvID=c.ID
+              WHERE m.SenderID='0'";
+            */
             
             // IF we want to send users pm's when they get an award we should do it here, 
             // BUT it means looping through each user and sending the pm 
