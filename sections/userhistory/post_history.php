@@ -261,7 +261,7 @@ if(empty($Results)) {
 	while(list($PostID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $TopicID, $ThreadTitle, $LastPostID, $LastRead, $Locked, $Sticky) = $DB->next_record()){
 ?>
 	<table class='forum_post vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>' id='post<?=$PostID ?>'>
-		<tr class='colhead_dark'>
+		<tr class='smallhead'>
 			<td  colspan="2">
 				<span style="float:left;">
 					<?=time_diff($AddedTime) ?>

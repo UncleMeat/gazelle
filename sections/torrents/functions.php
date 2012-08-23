@@ -276,18 +276,19 @@ function update_staff_checking($location="cyberspace",$dontactivate=false) { // 
     global $Cache, $DB, $LoggedUser;
     
     if ($dontactivate){
-        
+        // if not already active dont activate
         $DB->query("SELECT UserID FROM staff_checking 
-                     WHERE UserID='$LoggedUser[ID]' AND TimeOut >= UNIX_TIMESTAMP( UTC_TIMESTAMP() ) " );
+                     WHERE UserID='$LoggedUser[ID]' AND TimeOut > '".time()."' AND IsChecking='1'" );
         if($DB->record_count()==0) return;
     }
     
     $sqltimeout = time() + 480;
-    $DB->query("INSERT INTO staff_checking (UserID, TimeOut, TimeStarted, Location)
-                                    VALUES ('$LoggedUser[ID]','$sqltimeout','".sqltime()."','$location') 
-                           ON DUPLICATE KEY UPDATE TimeOut='$sqltimeout', Location='$location'");
+    $DB->query("INSERT INTO staff_checking (UserID, TimeOut, TimeStarted, Location, IsChecking)
+                                    VALUES ('$LoggedUser[ID]','$sqltimeout','".sqltime()."','$location','1') 
+                           ON DUPLICATE KEY UPDATE TimeOut='$sqltimeout', Location='$location', IsChecking='1'");
     
     $Cache->delete_value('staff_checking');
+    $Cache->delete_value('staff_lastchecked');
 }
 
 
@@ -298,11 +299,11 @@ function print_staff_status() {
     $Checking = $Cache->get_value('staff_checking');
     if($Checking===false){
         // delete old ones every 4 minutes
-        $DB->query("DELETE FROM staff_checking WHERE TimeOut <= '".time()."' " );
- 
+        $DB->query("UPDATE staff_checking SET IsChecking='0' WHERE TimeOut <= '".time()."' " );
         $DB->query("SELECT s.UserID, u.Username, s.TimeStarted , s.TimeOut , s.Location
                       FROM staff_checking AS s
                       JOIN users_main AS u ON u.ID=s.UserID
+                     WHERE s.IsChecking='1'
                   ORDER BY s.TimeStarted ASC " );
         $Checking = $DB->to_array(); 
         $Cache->cache_value('staff_checking',$Checking,240);
@@ -310,6 +311,7 @@ function print_staff_status() {
   
     ob_start();
     $UserOn = false;
+    $active=0;
     if (count($Checking)>0){
         foreach($Checking as $Status) {
             list( $UserID, $Username, $TimeStart, $TimeOut ,$Location ) =  $Status;
@@ -317,11 +319,16 @@ function print_staff_status() {
             if ($Own) $UserOn = true;
             
             $TimeLeft = $TimeOut - time();
+            if ($TimeLeft<0) {
+                $Cache->delete_value('staff_checking');
+                continue;
+            }
+            $active++;
 ?>                           
             <span class="staffstatus status_checking<?if($Own)echo' statusown';?>" 
-               title="<?=($Own?'Status: checking torrents ':"$Username is currently checking ");
-                        echo "&nbsp;(".time_diff($TimeOut-480, 1, false, false, 0).") ";
-                        echo "&nbsp;$Location";
+               title="<?=($Own?'Status: checking torrents ':"$Username is currently");
+                        echo " $Location&nbsp;";
+                        echo " (".time_diff($TimeOut-480, 1, false, false, 0).") ";
                         if ($Own && $TimeLeft<240) echo "(".time_diff($TimeOut, 1, false, false, 0)." till time out)"; ?> ">
                 <? 
                     if ($TimeLeft<60) echo "<blink>";
@@ -333,9 +340,28 @@ function print_staff_status() {
             </span>
 <?  
         }
-    } else {
+    } 
+    
+    if ($active==0) { 
+            $LastChecked = $Cache->get_value('staff_lastchecked');
+            if($LastChecked===false){ 
+                $DB->query("SELECT s.UserID, u.Username, s.TimeOut , s.Location
+                              FROM staff_checking AS s
+                              JOIN users_main AS u ON u.ID=s.UserID
+                              JOIN (
+                                        SELECT Max(TimeOut) as LastTimeOut
+                                        FROM staff_checking 
+                                    ) AS x 
+                              ON x.LastTimeOut= s.TimeOut  " );
+                if ($DB->record_count()>0) {
+                    $LastChecked = $DB->next_record(MYSQLI_ASSOC);
+                    $Cache->cache_value('staff_lastchecked',$LastChecked);
+                }
+            }
+            if ($LastChecked) $Str = time_diff($LastChecked['TimeOut']-480, 2, false)." ($LastChecked[Username])";
+            else $Str = "never";
 ?>                           
-            <span class="nostaff_checking" title=" ">
+            <span class="nostaff_checking" title="last visit: <?=$Str?>">
                 there are no staff checking torrents right now
             </span>
 <?  

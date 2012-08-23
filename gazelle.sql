@@ -1360,7 +1360,9 @@ CREATE TABLE IF NOT EXISTS `staff_checking` (
   `TimeOut` int(10) unsigned NOT NULL,
   `TimeStarted` datetime NOT NULL,
   `Location` varchar(128) NOT NULL,
-  PRIMARY KEY (`UserID`)
+  `IsChecking` ENUM( '0', '1' ) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`UserID`),
+  KEY ( `IsChecking` )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

@@ -151,8 +151,9 @@ foreach ($TorrentList as $GroupID=>$Group) {
      
 	  $AddExtra = torrent_info($Torrent, $TorrentID, $UserID);
         
+        $row = $row == 'a' ? 'b' : 'a';
 ?>
-<tr class="torrent" id="group_<?=$GroupID?>">
+<tr class="torrent row<?=$row?>" id="group_<?=$GroupID?>">
         <!--<td></td>-->
         <td class="center">
             <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
@@ -255,14 +256,14 @@ if (check_perms('site_collages_manage') || ($CanEdit && !$Locked)) { ?>
 <? } ?>
 	</div>
 	<div class="sidebar">
-		<div class="head colhead_dark"><strong>Category</strong></div>
+		<div class="head"><strong>Category</strong></div>
 		<div class="box">
 			<div class="pad"><a href="collages.php?action=search&amp;cats[<?=(int)$CollageCategoryID?>]=1"><?=$CollageCats[(int)$CollageCategoryID]?></a></div>
 		</div>
 <?
 if(check_perms('zip_downloader')){
 ?>
-		<div class="head colhead_dark"><strong>Collector</strong></div>
+		<div class="head"><strong>Collector</strong></div>
 		<div class="box">
 			<div class="pad">
 				<form action="collages.php" method="post">
@@ -279,7 +280,7 @@ if(check_perms('zip_downloader')){
 			</div>
 		</div>
 <? } ?>
-		<div class="head colhead_dark"><strong>Stats</strong></div>
+		<div class="head"><strong>Stats</strong></div>
 		<div class="box">
 			<ul class="stats nobullet">
 				<li>Torrents: <?=$NumGroups?></li>
@@ -287,7 +288,7 @@ if(check_perms('zip_downloader')){
 			</ul>
 		</div>
             
-		<div class="head colhead_dark"><strong>Created by <?=$CreatorName?></strong></div>
+		<div class="head"><strong>Created by <?=$CreatorName?></strong></div>
 		<div class="box pad"> 
                  
 <?	if (check_perms('site_collages_manage') || $CreatorID == $LoggedUser['ID']) { ?>
@@ -324,7 +325,7 @@ if(check_perms('zip_downloader')){
                 you <span style="font-weight:bold;color:black;"><?=($CanEdit?'can':'cannot')?></span> edit this collage.
 <?	} ?>
 		</div>
-		<div class="head colhead_dark"><strong>Top tags</strong></div>
+		<div class="head"><strong>Top tags</strong></div>
 		<div class="box">
 			<div class="pad">
 				<ol style="padding-left:5px;">
@@ -342,7 +343,7 @@ foreach ($Tags as $TagName => $Tag) {
 				</ol>
 			</div>
 		</div>
-		<div class="head colhead_dark"><strong>Top contributors</strong></div>
+		<div class="head"><strong>Top contributors</strong></div>
 		<div class="box">
 			<div class="pad">
 				<ol style="padding-left:5px;">
@@ -362,7 +363,7 @@ foreach ($Users as $ID => $User) {
 			</div>
 		</div>
 <? if(check_perms('site_collages_manage') || ($CanEdit && !$Locked)) { ?>
-		<div class="head colhead_dark"><strong>Add torrent</strong><span style="float: right"><a href="#" onClick="$('#addtorrent').toggle(); $('#batchadd').toggle(); this.innerHTML = (this.innerHTML == '[Batch Add]'?'[Individual Add]':'[Batch Add]'); return false;">[Batch Add]</a></span></div>
+		<div class="head"><strong>Add torrent</strong><span style="float: right"><a href="#" onClick="$('#addtorrent').toggle(); $('#batchadd').toggle(); this.innerHTML = (this.innerHTML == '[Batch Add]'?'[Individual Add]':'[Batch Add]'); return false;">[Batch Add]</a></span></div>
 		<div class="box">
 			<div class="pad" id="addtorrent">
 				<form action="collages.php" method="post">
@@ -418,15 +419,16 @@ if($CollageCovers != 0) { ?>
 		</script>
 <?		} 
 } ?>
-                <div class="head"><strong>Description</strong></div>
+            <div class="head"><strong>Description</strong></div>
 		<div class="box">
                   <div class="pad"><?=$Text->full_format($Description, get_permissions_advtags($UserID))?></div>
 		</div>
+            <div class="head"><strong>Torrents</strong></div>
 		<table class="torrent_table" id="discog_table">
-			<tr class="colhead_dark">
+			<tr class="colhead">
 				<!--<td> expand/collapse </td>-->
 				<td><!-- Category --></td>
-				<td width="70%"><strong>Torrents</strong></td>
+				<td width="70%"><strong>Name</strong></td>
 				<td>Size</td>
 				<td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
 				<td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>

@@ -142,7 +142,7 @@ foreach($Posts as $Post){
 	<div class="head"><?='Subscribed topics'.($ShowUnread?' with unread posts':'')?></div>
     
 	<table class='forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>'>
-		<tr class='colhead_dark'>
+		<tr class='smallhead'>
 			<td colspan="2">
 				<span style="float:left;">
 					<a href="forums.php?action=viewforum&amp;forumid=<?=$ForumID?>"><?=$ForumName?></a> &gt;

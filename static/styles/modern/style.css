@@ -620,9 +620,10 @@ input.hidden {
 }  */
 
 .thin > h2 {
-    margin: 0px -4% 10px; 
+    margin: 10px -4% 20px; 
 }
 .thin > h2:first-child {
+    margin: 0px -4% 20px;
     -moz-border-radius: 12px 12px 0 0;
     -webkit-border-top-left-radius: 12px;
     -webkit-border-top-right-radius: 12px;
@@ -634,7 +635,7 @@ input.hidden {
 }
 
 .thin > .head:first-child {
-    margin: 10px 0px 0px;
+    margin: 20px 0px 0px;
 }
 
 .thin > p {
@@ -671,9 +672,17 @@ h2 a:visited {
 .box h2 {
     padding: 3px 40px;
     font-size: 14px;
-    border-radius: 14px; 
-    -moz-border-radius: 14px; 
-    -webkit-border-radius: 14px;
+    border-radius: 8px; 
+    -moz-border-radius: 8px; 
+    -webkit-border-radius: 8px;
+    
+    background-image: none;
+    background-color: #d3e3f3;
+    font-weight: bold; 
+    color: #555;
+    -moz-box-shadow:none;
+    -webkit-box-shadow:none;
+    box-shadow:none;
 }
 
 
@@ -761,6 +770,9 @@ p.min_padding {
 }
 
 
+#coverart {
+    padding:5px;
+}
 
 #details_top {
     margin-bottom: 10px;
@@ -790,6 +802,9 @@ table.boxstat td {
 }
 table.boxstat td:first-child { 
     border-left:none;
+}
+table.boxstat a, table.boxstat a:visited { 
+    color: #445;
 }
 .boxstat img {
     vertical-align:middle;
@@ -1295,18 +1310,29 @@ ul.poll li.graph {
     margin-bottom:0px;
     /*margin-bottom:15px; */
 }
-.filter_slidetoggle {
-    margin: 2px auto 15px;
+#filter_slidetoggle {
+    margin: -1px auto 15px;
     height:20px;
     text-align: center;
-  /*  background-color: white;  #D7E2EF; */
     border: 1px solid #98AAB1;
     padding: 6px;
     font-weight: bold;
     font-size: 14pt;
     background-color: #d3e3f3;
+    
+    -moz-box-shadow:inset 2px 0px 1px #6a9bb7;
+    -webkit-box-shadow:inset 2px 0px 1px #6a9bb7;
+    box-shadow:inset 2px 0px 1px #6a9bb7;
+    
+    -moz-border-radius: 0 0 12px 12px;
+    -webkit-border-bottom-left-radius: 12px;
+    -webkit-border-bottom-right-radius: 12px;
+    border-radius: 0 0 12px 12px;
 }
 
+#search_box .box.pad {
+    margin-bottom:0px;
+}
 
 .filter_torrents .submit {
     text-align:right;
@@ -1338,8 +1364,18 @@ ul.poll li.graph {
     background-color: #eff3f6;  /* #e0e8eb; /* #D7E2EF; */
 }
 #taglist {
-    font-size:12pt;
+    background-color: #eff3f6;
+    font-size:1.1em;
     font-weight: bold;
+}
+#taglist tr {
+    background-color: #eff3f6;
+}
+#taglist tr:first-child td {
+    padding-top:15px;
+}
+#taglist tr:last-child td {
+    padding-bottom:15px;
 }
 table.cat_list {
     font-size:10pt;
@@ -2104,9 +2140,12 @@ img.win.flash {
 .statusown a {
 	cursor: pointer; 
 }
-
+.thin > h2:first-child + .status_box {
+      margin: -15px auto 10px; 
+      width: 100%; 
+}
 .status_box {
-      margin: 10px auto 10px;
+      margin: 10px auto 0px;
       width: 96%; 
       min-width: 920px;
       max-width: 1200px;

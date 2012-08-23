@@ -43,6 +43,9 @@ function Panel_Toggle() {
         jQuery('#search_button').text('Close Search Center');
     }
     jQuery('#search_box').slideToggle('slow');
+    if (jQuery('#filter_slidetoggle').is(':hidden')) {
+        
+    }
     return false;
 }
             

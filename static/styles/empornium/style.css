@@ -1173,8 +1173,8 @@ ul.poll li.graph {
     margin-bottom:0px;
     /*margin-bottom:15px; */
 }
-.filter_slidetoggle {
-    margin: 2px auto 15px;
+#filter_slidetoggle {
+    margin: -1px auto 15px;
     height:20px;
     text-align: center;
     background-color: white; /* #D7E2EF; */
@@ -1184,6 +1184,9 @@ ul.poll li.graph {
     font-size: 14pt;
 }
 
+#search_box .box.pad {
+    margin-bottom:0px;
+}
 
 .filter_torrents .submit {
     text-align:right;
@@ -1215,8 +1218,7 @@ ul.poll li.graph {
     background-color: #eff3f6;  /* #e0e8eb; /* #D7E2EF; */
 }
 
-.cat_label {
-    font-size: 0.8em;
+.cat_label { 
 }
 
 .taglist {
@@ -1225,6 +1227,9 @@ ul.poll li.graph {
 .taglist tr td {
     border:none;
     text-align: center;
+}
+.taglist tr {
+    background-color: #eff3f6;
 }
 
 .select_container {

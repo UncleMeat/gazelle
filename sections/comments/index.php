@@ -130,7 +130,7 @@ foreach($Posts as $Post){
       list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
 ?>   
 	<table class='forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>' id="post<?=$PostID?>">
-		<tr class='colhead_dark'>
+		<tr class='smallhead'>
 			<td  colspan="2">
 				<span style="float:left;"><a href='torrents.php?id=<?=$GroupID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>'>#<?=$PostID?></a>
 					by <?=format_username($UserID, $Username, $Donor, $Warned, $Enabled, $Class, false, true)?> <?=time_diff($AddedTime) ?>

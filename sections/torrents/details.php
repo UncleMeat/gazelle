@@ -122,7 +122,7 @@ if ($FreeTooltip)
       
 
 if(check_perms('torrents_review')){ 
-    if (!isset($_GET['checked'])) update_staff_checking("viewing #$GroupID \"".cut_string($GroupName, 32).'"', true);
+    if (!isset($_GET['checked'])) update_staff_checking("viewing \"".cut_string($GroupName, 32)."\"  #$GroupID", true);
  
 ?>
     <div id="staff_status" class="status_box">
@@ -820,7 +820,7 @@ foreach($Thread as $Key => $Post){
       //$PermissionValues = get_permissions_for_user($AuthorID, false, $AuthorPermissions);
 ?>
 <table class="forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>" id="post<?=$PostID?>">
-	<tr class="colhead_dark">
+	<tr class="smallhead">
 		<td colspan="2">
 			<span style="float:left;"><a class="post_id" href='torrents.php?id=<?=$GroupID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>'>#<?=$PostID?></a>
 				<?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, $UserTitle, true)?> <?=time_diff($AddedTime)?> <a href="reports.php?action=report&amp;type=torrents_comment&amp;id=<?=$PostID?>">[Report]</a>

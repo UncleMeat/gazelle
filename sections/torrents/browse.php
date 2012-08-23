@@ -340,6 +340,7 @@ $Results = $Results['matches'];
 show_header('Browse Torrents', 'browse,status,overlib,jquery,jquery.cookie');
 
 if(check_perms('torrents_review')){ 
+    update_staff_checking("browsing torrents", true); 
 ?>
     <div id="staff_status" class="status_box">
         <span class="status_loading">loading staff checking status...</span>
@@ -495,14 +496,14 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
             </table>
             <div>
                 <span style="float:left;margin-left:80%;"><a href="#" onclick="$('#taglist').toggle(); if(this.innerHTML=='(View Tags)'){this.innerHTML='(Hide Tags)';} else {this.innerHTML='(View Tags)';}; return false;"><?= (empty($LoggedUser['ShowTags'])) ? '(View Tags)' : '(Hide Tags)' ?></a></span>
-                    
+                <br/>
             </div>
-            <table width="100%" class="noborder taglist <? if (empty($LoggedUser['ShowTags'])) { ?>hidden<? } ?>" id="taglist">
-                <tr>
+            <table width="100%" class="taglist <? if (empty($LoggedUser['ShowTags'])) { ?>hidden<? } ?>" id="taglist">
+                <tr class="row<?=$row?>">
                     <?
                     $GenreTags = $Cache->get_value('genre_tags');
                     if (!$GenreTags) {
-                        $DB->query('SELECT Name FROM tags WHERE TagType=\'genre\' ORDER BY Uses DESC, Name');
+                        $DB->query('SELECT Name FROM tags WHERE TagType=\'genre\' ORDER BY Uses DESC, Name LIMIT 42');
                         $GenreTags = $DB->collect('Name');
                         $Cache->cache_value('genre_tags', $GenreTags, 3600 * 6);
                     }
@@ -514,9 +515,10 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                         <?
                         $x++;
                         if ($x % 7 == 0) {
+                            $row = $row == 'a' ? 'b' : 'a';
                             ?>
                         </tr>
-                        <tr>
+                        <tr class="row<?=$row?>">
                             <?
                         }
                     }
@@ -526,18 +528,17 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                     <? } ?>
                 </tr>
             </table>
-            <div><br/>
-                <span style="float:left;"><?= number_format($TorrentCount) . ($TorrentCount < SPHINX_MAX_MATCHES && $TorrentCount == $MaxMatches ? '+' : '') ?> Results</span>
-                <br/>
+            <div class="numsearchresults">
+                <span><?= number_format($TorrentCount) . ($TorrentCount < SPHINX_MAX_MATCHES && $TorrentCount == $MaxMatches ? '+' : '') ?> Results</span>
             </div>
         </div>
     </div>
 </form>
-                <script type="text/javascript">
-                    window.attachEvent('onload', Load_Cookie);
-                </script>
- <div class="filter_slidetoggle" style="margin-top:-6px;"><a href="#" id="search_button" onclick="Panel_Toggle();">Close Search Center</a> </div>
- <div class="linkbox"><?= $Pages ?></div>
+<div id="filter_slidetoggle"><a href="#" id="search_button" onclick="Panel_Toggle();">Close Search Center</a> </div>
+<script type="text/javascript">
+    window.attachEvent('onload', Load_Cookie);
+</script>
+<div class="linkbox"><?= $Pages ?></div>
 <?
 if (count($Results) == 0) {
     $DB->query("SELECT 

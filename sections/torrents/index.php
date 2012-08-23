@@ -661,8 +661,10 @@ if(!empty($_REQUEST['action'])) {
                   
                   include(SERVER_ROOT . '/sections/torrents/functions.php');
                   if ( $_POST['remove']=='1') {
-				$DB->query("DELETE FROM staff_checking WHERE UserID='$LoggedUser[ID]'");
+				//$DB->query("DELETE FROM staff_checking WHERE UserID='$LoggedUser[ID]'");
+				$DB->query("UPDATE staff_checking SET IsChecking='0' WHERE UserID='$LoggedUser[ID]'");
                         $Cache->delete_value('staff_checking');
+                        $Cache->delete_value('staff_lastchecked');
                   } else { 
                         update_staff_checking('browsing torrents');
                   }

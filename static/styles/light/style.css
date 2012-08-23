@@ -1242,8 +1242,8 @@ ul.poll li.graph {
     margin-bottom:0px;
 }
 
-.filter_slidetoggle {
-    margin: 2px auto 15px;
+#filter_slidetoggle {
+    margin: -1px auto 15px;
     height:20px;
     text-align: center;
     border: 1px solid #98AAB1;
@@ -1276,6 +1276,10 @@ ul.poll li.graph {
     overflow: hidden;  
     line-height: 38px;
     
+}
+
+#search_box .box.pad {
+    margin-bottom:0px;
 }
 
 .filter_torrents .submit {
