@@ -77,8 +77,8 @@ foreach($AutoActions as $AutoAction) {
                 $SQL = "SELECT u.ID FROM users_main AS u 
                           JOIN torrents AS t ON t.UserID=u.ID 
                           JOIN torrents_group AS tg ON tg.ID=t.GroupID 
-                           AND tg.NewCategoryID='$CategoryID'
                          WHERE u.Enabled='1'
+                           AND tg.NewCategoryID='$CategoryID'
                            AND $NOTIN
                          GROUP BY u.ID 
                         HAVING Count(t.ID)>=$Value";
