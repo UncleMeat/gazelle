@@ -339,7 +339,7 @@ $Results = $Results['matches'];
 
 show_header('Browse Torrents', 'browse,status,overlib,jquery,jquery.cookie');
 
-if(false && check_perms('torrents_review')){ 
+if(check_perms('torrents_review')){ 
     update_staff_checking("browsing torrents", true); 
 ?>
     <div id="staff_status" class="status_box">
