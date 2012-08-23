@@ -678,11 +678,11 @@ function print_latest_forum_topics() {
 * Returns a regex string in the form '/imagehost.com|otherhost.com|imgbox.com/i'
   for fast whitelist checking
   ----------------------------------- */
-function GetWhitelistRegex() {
+function get_whitelist_regex() {
     global $DB, $Cache; 
     $pattern = $Cache->get_value('imagehost_regex');
     if($pattern===false){
-        $DB->query("SELECT w.Imagehost FROM imagehost_whitelist as w");  
+        $DB->query("SELECT Imagehost FROM imagehost_whitelist");  
         if($DB->record_count()>0) {
             $pattern = '@';
             $div = '';
@@ -710,7 +710,7 @@ function GetWhitelistRegex() {
  * @param string $WhitelistRegex a regex containing valid imagehosts 
  * @return mixed Returns TRUE if it validates and a user readable error message if it fails
  */
-function ValidateImageUrl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
+function validate_imageurl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
          
        $ErrorMessage = "$Imageurl is not a valid url.";
        

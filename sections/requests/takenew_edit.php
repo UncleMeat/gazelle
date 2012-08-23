@@ -88,8 +88,8 @@ if(empty($_POST['image'])) {
 	$Image = "";
 } else {
     
-      $Result = ValidateImageUrl($_POST['image'], 12, 255, GetWhitelistRegex());
-      if($Result===false) $Err = $Result;
+      $Result = validate_imageurl($_POST['image'], 12, 255, get_whitelist_regex());
+      if($Result!==TRUE) $Err = $Result;
       else $Image = trim($_POST['image']);
       
     /*

@@ -9,7 +9,8 @@ $DB->query("SELECT
 	w.Comment, 
 	w.UserID, 
 	um.Username, 
-	w.Time 
+	w.Time ,
+      w.Hidden
 	FROM imagehost_whitelist as w
 	LEFT JOIN users_main AS um ON um.ID=w.UserID
 	ORDER BY w.Time DESC");
@@ -17,34 +18,36 @@ $DB->query("SELECT
 <div class="thin">
 <h2>Imagehost Whitelist</h2>
 <table>
-    <tr>
-        <td colspan="5" class="colhead">Add Imagehost</td>
+    <tr class="head">
+        <td colspan="6">Add Imagehost</td>
     </tr>
     <tr class="colhead">
-		<td width="25%">Imagehost</td>
-		<td width="20%">Link</td>
-		<td width="30%">Comment</td>
-		<td width="10%">Added</td>
-		<td width="15%">Submit</td>
+		<td width="25%"><span title="this field is matched against image urls. displayed on the upload page">
+                    Imagehost</span></td>
+		<td width="20%"><span title="optional, if a valid url is present then it appears as an icon that can be clicked to take you to the link in a new page">
+                    Link</span></td>
+		<td width="30%" colspan="2"><span title="displayed in the imagehost whitelist">
+                    Comment</span></td>
+            <td width="8%"><span title="hidden items will not be displayed to the user but will still be allowed in bbcode">
+                    Show in whitelist</span></td>
+		<td width="10%"><span title="hidden items will not be displayed to the user but will still be allowed in bbcode">
+                    Submit</span></td>
     </tr>
-	<tr class="rowb">
-		<td>this field is matched against image urls. displayed on the upload page.</td>
-		<td>optional, if a valid url is present then it appears as an icon that can be clicked to take you to the link in a new page.</td>
-		<td colspan="2">displayed to users on the upload page.</td>
-		<td></td> 
-	</tr>
-<tr class="rowa">
+    <tr class="rowa">
 	<form action="tools.php" method="post">
 		<input type="hidden" name="action" value="iw_alter" />
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 		<td>
 			<input class="long"  type="text" name="host" />
 		</td>
-			<td>
-				<input class="long"  type="text" name="link" />
-			</td>
+		<td>
+			<input class="long"  type="text" name="link" />
+		</td>
 		<td colspan="2">
 			<input class="long"  type="text" name="comment" />
+		</td>
+		<td>
+			<input type="checkbox" name="show"  value="1" />
 		</td>
 		<td>
 			<input type="submit" value="Create" />
@@ -52,17 +55,27 @@ $DB->query("SELECT
 	</form>
 </tr>
 </table>
-<br/>
+<br/><br/>
 <table>
+    <tr class="head">
+        <td colspan="6">Manage Imagehosts</td>
+    </tr>
     <tr class="colhead">
-		<td width="25%">Imagehost</td>
-		<td width="20%">Link</td>
-		<td width="30%">Comment</td>
-		<td width="10%">Added</td>
-		<td width="15%">Submit</td>
+		<td width="25%"><span title="this field is matched against image urls. displayed on the upload page">
+                    Imagehost</span></td>
+		<td width="20%"><span title="optional, if a valid url is present then it appears as an icon that can be clicked to take you to the link in a new page">
+                    Link</span></td>
+		<td width="30%"><span title="displayed in the imagehost whitelist">
+                    Comment</span></td>
+            <td width="8%"><span title="hidden items will not be displayed to the user but will still be allowed in bbcode">
+                    Show in whitelist</span></td>
+		<td width="10%"><span title="Date added">
+                    Added</span></td>
+		<td width="10%"><span title="hidden items will not be displayed to the user but will still be allowed in bbcode">
+                    Submit</span></td>
     </tr>
 <? $Row = 'b';
-while(list($ID, $Host, $Link, $Comment, $UserID, $Username, $WLTime) = $DB->next_record()){  
+while(list($ID, $Host, $Link, $Comment, $UserID, $Username, $WLTime, $Hide) = $DB->next_record()){  
 	$Row = ($Row === 'a' ? 'b' : 'a');
 ?>
     <tr class="row<?=$Row?>">
@@ -79,6 +92,9 @@ while(list($ID, $Host, $Link, $Comment, $UserID, $Username, $WLTime) = $DB->next
 			<td>
 				<input class="long"  type="text" name="comment" value="<?=display_str($Comment)?>" />
 			</td>
+		<td>
+			<input type="checkbox" name="show" value="1" <? if(!$Hide)echo ' checked="checked"';?> />
+		</td>
 			<td>
 				<?=format_username($UserID, $Username)?><br />
 				<?=time_diff($WLTime, 1)?>

@@ -37,7 +37,7 @@ $Image = $_POST['image'];
 
 $Text->validate_bbcode($_POST['body'],  get_permissions_advtags($LoggedUser['ID']));
         
-$whitelist_regex = GetWhitelistRegex();
+$whitelist_regex = get_whitelist_regex();
 
 $Validate->SetFields('image', '0', 'image', 'The image URL you entered was not valid.', array('regex' => $whitelist_regex, 'maxlength' => 255, 'minlength' => 12));
 

@@ -744,8 +744,10 @@ CREATE TABLE IF NOT EXISTS `imagehost_whitelist` (
   `Comment` varchar(255) NOT NULL,
   `UserID` int(10) NOT NULL,
   `Time` datetime NOT NULL,
+  `Hidden` ENUM( '0', '1' ) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`),
-  KEY `Time` (`Time`)
+  KEY `Time` (`Time`),
+  KEY `Hidden` ( `Hidden` )
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
 --

@@ -183,12 +183,14 @@ if (!empty($Properties))
     $Whitelist = $Cache->get_value('imagehost_whitelist');
     if ($Whitelist === FALSE) {
         $DB->query("SELECT 
-            w.Imagehost, 
-            w.Link,
-            w.Comment,
-            w.Time
-            FROM imagehost_whitelist as w
-            ORDER BY w.Time");
+                    Imagehost, 
+                    Link,
+                    Comment,
+                    Time,
+                    Hidden
+                    FROM imagehost_whitelist
+                    WHERE Hidden='0'
+                    ORDER BY Time");
         $Whitelist = $DB->to_array();
         $Cache->cache_value('imagehost_whitelist', $Whitelist);
     }

@@ -120,7 +120,7 @@ class VALIDATE {
                                     if(isset($Field['Regex'])) { $WLRegex=$Field['Regex']; } else { $WLRegex='/nohost.com/'; }
 
                                     // get validation result
-                                    $result = ValidateImageUrl($ValidateVar, $MinLength, $MaxLength, $WLRegex); 
+                                    $result = validate_imageurl($ValidateVar, $MinLength, $MaxLength, $WLRegex); 
                                     if ($result !== TRUE){ return $result; } 
 
                             } elseif($Field['Type']=="desc") {
@@ -169,7 +169,7 @@ class VALIDATE {
                                              // validate each image url  
                                              // (for the moment use hardcoded image lengths but ideally they should
                                              // probably be taken from some new option fields).
-                                            $result = ValidateImageUrl($imageurls[1][$j], 12, 255, $WLRegex); 
+                                            $result = validate_imageurl($imageurls[1][$j], 12, 255, $WLRegex); 
                                             if ($result !== TRUE){ return $Field['ErrorMessage'].' field: ' .$result; } 
                                          }
                                     } elseif($MinImages> 0 && $num < $MinImages) {  // if there are no img tags then it validates unless required flag is set
