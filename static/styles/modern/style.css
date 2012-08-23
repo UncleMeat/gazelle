@@ -70,16 +70,15 @@ a:hover, .torrent_table .linkbox a:hover {
     color: #ddd; 
 }
 .linkbox a, .breadcrumbs a, .colhead a {
-    color: #eee;
+    color: #fff;
     text-decoration: none;
 }
  
 .linkbox a:hover, .breadcrumbs a:hover, .colhead a:hover {
-    color: #ddd;
     text-decoration: underline;
 }
 .linkbox a:visited, .breadcrumbs a:visited, .colhead a:visited {
-    color: #bbb; /* a darker blue if you want to tell them apart */
+    color: #ddd; /* a darker blue if you want to tell them apart */
 } 
 
 .linkbox table strong {
@@ -209,6 +208,9 @@ ul.thin li { margin:0px 0px; padding:0px; }
     padding: 1em 0 0;
     color: #eee;
     font-size: 0.8em;
+}
+#footer a, #footer a:visisted {
+    color: #eee;
 }
 
 #header_top {

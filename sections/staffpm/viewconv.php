@@ -66,7 +66,7 @@ if ($ConvID = (int)$_GET['id']) {
 		<br />
 		<br />
 	</div>
-	<div id="inbox">
+	 
 <?
 	// Get messages
 	$StaffPMs = $DB->query("SELECT UserID, SentDate, Message FROM staff_pm_messages WHERE ConvID=$ConvID ORDER BY SentDate");
@@ -150,8 +150,10 @@ if ($ConvID = (int)$_GET['id']) {
 <?	}
 
 	// Replybox and buttons
-?>
-		<h3>Reply</h3>
+?> 
+		<div class="head">
+                <strong>Reply</strong>
+		</div>
 		<div class="box pad">
 			<div id="preview" class="box pad hidden"></div>
 			<div id="buttons" class="center">
@@ -247,7 +249,7 @@ if ($ConvID = (int)$_GET['id']) {
 				</form>
 			</div>
 		</div>
-	</div>
+	 
 </div>
 <?
 

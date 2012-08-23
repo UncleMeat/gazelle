@@ -116,9 +116,9 @@ if($NumResults) {
 <?
 if(!$NumResults) {
 ?>
-	<div class="center">
+	<p class="center">
 		No subscribed topics<?=$ShowUnread?' with unread posts':''?>
-	</div>
+	</p>
 <?
 } else {
 ?>
