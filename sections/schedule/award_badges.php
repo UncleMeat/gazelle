@@ -75,8 +75,8 @@ foreach($AutoActions as $AutoAction) {
         case 'NumUploaded':
             if($CategoryID >0) { // category specific awards
                 $SQL = "SELECT u.ID FROM users_main AS u 
-                     LEFT JOIN torrents AS t ON t.UserID=u.ID 
-                     LEFT JOIN torrents_group AS tg ON tg.ID=t.GroupID 
+                          JOIN torrents AS t ON t.UserID=u.ID 
+                          JOIN torrents_group AS tg ON tg.ID=t.GroupID 
                            AND tg.NewCategoryID='$CategoryID'
                          WHERE u.Enabled='1'
                            AND $NOTIN
@@ -148,7 +148,7 @@ foreach($AutoActions as $AutoAction) {
             // remove lower ranked badges of same badge set
             $DB->query("DELETE ub 
                           FROM users_badges AS ub
-                     LEFT JOIN badges AS b ON b.ID=ub.BadgeID 
+                          JOIN badges AS b ON b.ID=ub.BadgeID 
                          WHERE ub.UserID IN ($SQL_IN) 
                            AND b.Badge='$Badge' AND b.Rank<$Rank");
             
