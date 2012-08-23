@@ -130,7 +130,7 @@ if(empty($IRCKey)) {
                     // webchat.digitalwizardry.org 
                     // irc.emprn.tk
 ?>
-<div class="">
+<div class="thin">
 	<div class="head">IRC</div>
 	<div class="box pad center"> 
                 <iframe src="http://webchat.digitalwizardry.org/?nick=<?=$nick?>&channels=<?=$channels?>" width="98%" height="600"></iframe> 

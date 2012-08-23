@@ -7,7 +7,7 @@ $ShopItems = get_shop_items($LoggedUser['ID']);
 ?>
 <div class="thin">
 	<h2>Bonus shop</h2>
-            <div class="box pad">
+            <div class="box pad shadow">
                 <h3>What is a credit?</h3>
                 <p>Credits are distributed as a bonus to people who are seeding torrents. You can find your total credit amount at the top of this page, or on your user details page.</p><br/>
                 <h4>How is the credit calculated?</h4>
@@ -29,7 +29,7 @@ $ShopItems = get_shop_items($LoggedUser['ID']);
 	<div class="head">Bonus Shop</div>
             
 		<table class="bonusshop">
-			<tr class="colhead">
+			<tr class="smallhead">
 				<td width="120px">Title</td>
 				<td width="530px" colspan="2">Description</td>
 				<td width="90px" colspan="2">Price</td>

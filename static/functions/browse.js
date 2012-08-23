@@ -34,18 +34,16 @@ function Load_Cookie()  {
 }
 		
  
-function Panel_Toggle() {
-    if(jQuery.cookie('searchPanelState') == 'expanded') {
-        jQuery.cookie('searchPanelState', 'collapsed');
-        jQuery('#search_button').text('Open Search Center');
-    } else {
-        jQuery.cookie('searchPanelState', 'expanded');
-        jQuery('#search_button').text('Close Search Center');
-    }
-    jQuery('#search_box').slideToggle('slow');
-    if (jQuery('#filter_slidetoggle').is(':hidden')) {
-        
-    }
+function Panel_Toggle() { 
+    jQuery('#search_box').slideToggle('slow', function() { 
+        if(jQuery.cookie('searchPanelState') == 'expanded') {
+            jQuery.cookie('searchPanelState', 'collapsed');
+            jQuery('#search_button').text('Open Search Center');
+        } else {
+            jQuery.cookie('searchPanelState', 'expanded');
+            jQuery('#search_button').text('Close Search Center');
+        }
+    });
     return false;
 }
             

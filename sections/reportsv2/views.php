@@ -21,7 +21,7 @@ $Owner = display_str($Owner);
 <div class="thin">
 <h2>Reports v2 Information!</h2>
 <br />
-<div class="box pad thin" style="padding: 0px 0px 0px 20px; width: 70%; margin-left: auto; margin-right: auto">
+<div class="box pad">
 	<table><tr><td style="width: 50%;">
 <?
 $DB->query("SELECT um.ID, um.Username, COUNT(r.ID) AS Reports FROM reportsv2 AS r JOIN users_main AS um ON um.ID=r.ResolverID WHERE r.LastChangeTime > NOW() - INTERVAL 24 HOUR GROUP BY r.ResolverID ORDER BY Reports DESC");

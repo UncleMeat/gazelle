@@ -1336,6 +1336,13 @@ td.topic_link a {
     width:60px
 }
 
+.top10_tags {
+    max-width:800px;
+    margin:auto;
+}
+.head.top10_tags {
+    max-width:790px;
+}
 .friends_table {
     margin-bottom: 10px;
 }

@@ -209,7 +209,8 @@ ul.thin li { margin:0px 0px; padding:0px; }
     color: #eee;
     font-size: 0.8em;
 }
-#footer a, #footer a:visisted {
+
+#footer p a, #footer p a:visited {
     color: #eee;
 }
 
@@ -745,7 +746,7 @@ p.min_padding {
 }
 
 .pad {
-    padding: 5px;
+    padding: 10px;
 }
 
 .vertical_space {
@@ -1091,7 +1092,7 @@ input.shopbutton.itembuy:hover {
 }
 
 .bonusshop td {
-    padding: 10px;
+    padding: 4px;
 }
 
 .itemnotbuy input.shopbutton, input.itemnotbuy {
@@ -1206,7 +1207,7 @@ td.colhead, .colhead td {
 }
 
 .head+div.box, .colhead+div.box, tr.head+tr, tr#recentuploads, tr#recentsnatches, .head+table, #inbox,
-        .thin>table, .thin>form>table, #searchforum table, #searchthread table, #messageform .box { /* , tr:first-child */
+        .thin>table, .thin>form>table, #searchforum table, #searchthread table, #messageform .box, .shadow { /* , tr:first-child */
     -moz-box-shadow:inset 2px 1px 3px #6a9bb7;
     -webkit-box-shadow:inset 2px 1px 3px #6a9bb7;
     box-shadow:inset 2px 1px 3px #6a9bb7;
@@ -1481,6 +1482,14 @@ table.cat_list {
 }
 .top10.statlong {
     width:60px
+}
+
+.top10_tags {
+    max-width:800px;
+    margin:auto;
+}
+.head.top10_tags {
+    max-width:788px;
 }
 
 .friends_table {

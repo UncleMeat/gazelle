@@ -97,13 +97,13 @@ function generate_tag_table($Caption, $Tag, $Details, $Limit, $ShowVotes=true, $
 		$URLString = 'torrents.php?taglist=';
 	}
 ?>
-	<div class="head">Top <?=$Limit.' '.$Caption?>
+	<div class="head top10_tags">Top <?=$Limit.' '.$Caption?>
 		<small>
 			- [<a href="top10.php?type=tags&amp;limit=100&amp;details=<?=$Tag?>">Top 100</a>]
 			- [<a href="top10.php?type=tags&amp;limit=250&amp;details=<?=$Tag?>">Top 250</a>]
 		</small>
 	</div>
-	<table>
+	<table class="top10_tags">
 	<tr class="colhead">
 		<td class="center">Rank</td>
 		<td>Tag</td>

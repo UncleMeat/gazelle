@@ -144,10 +144,11 @@ show_header(($BookmarkView)?'Your bookmarked collages':'Browse collages');
 <div class="thin">
     <h2>Collages</h2>
 <? if (!$BookmarkView) { ?>
-	<div>
+	
+		<div class="head">Search</div>
 		<form action="" method="get">
-			<div><input type="hidden" name="action" value="search" /></div>
-			<table cellpadding="6" cellspacing="1" border="0" class="border" width="100%">
+			<input type="hidden" name="action" value="search" />
+			<table cellpadding="6" cellspacing="1" border="0" width="100%">
 				<tr>
 					<td class="label"><strong>Search for:</strong></td>
 					<td colspan="3">
@@ -197,7 +198,7 @@ show_header(($BookmarkView)?'Your bookmarked collages':'Browse collages');
 				</tr>
 			</table>	
 		</form>
-	</div>
+	
 <? }  ?>
 	<div class="linkbox">
 <? if (!$BookmarkView) {
