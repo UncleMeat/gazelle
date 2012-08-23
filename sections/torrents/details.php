@@ -121,7 +121,7 @@ if ($FreeTooltip)
 <? 
       
 
-if(check_perms('torrents_review')){ 
+if(check_perms('torrents_review')){
     if (!isset($_GET['checked'])) update_staff_checking("viewing \"".cut_string($GroupName, 32)."\"  #$GroupID", true);
  
 ?>

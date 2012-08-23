@@ -2248,3 +2248,10 @@ img.win.flash {
     float:left;
     color:#ccc;
 }
+
+.pager {
+    font-weight:bold;
+}
+.pager_on {
+    color: #abf;
+}

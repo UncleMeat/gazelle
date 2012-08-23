@@ -1173,8 +1173,8 @@ function get_pages($StartPage, $TotalRecords, $ItemsPerPage, $ShowPages=11, $Anc
         $Pages = '';
 
         if ($StartPage > 1) {
-            $Pages.='<a href="' . $Location . '?page=1' . $QueryString . $Anchor . '"><strong>&lt;&lt; First</strong></a> ';
-            $Pages.='<a href="' . $Location . '?page=' . ($StartPage - 1) . $QueryString . $Anchor . '" class="pager_prev"><strong>&lt; Prev</strong></a> | ';
+            $Pages.='<a href="' . $Location . '?page=1' . $QueryString . $Anchor . '" class="pager pager_first">&lt;&lt; First</a> ';
+            $Pages.='<a href="' . $Location . '?page=' . ($StartPage - 1) . $QueryString . $Anchor . '" class="pager pager_prev">&lt; Prev</a> | ';
         }
         //End change
 
@@ -1182,18 +1182,22 @@ function get_pages($StartPage, $TotalRecords, $ItemsPerPage, $ShowPages=11, $Anc
             for ($i = $StartPosition; $i <= $StopPage; $i++) {
                 //if ($i!=$StartPage) { $Pages.='<a href="'.$Location.'?page='.$i.$QueryString.'">'; }
                 if ($i != $StartPage) {
-                    $Pages.='<a href="' . $Location . '?page=' . $i . $QueryString . $Anchor . '">';
+                    $Pages.='<a href="' . $Location . '?page=' . $i . $QueryString . $Anchor . '" class="pager pager_page">';
+                } else {
+                    $Pages.='<span class="pager pager_on">';
                 }
-                $Pages.="<strong>";
+                //$Pages.="<strong>"; fuck using strong... added css classes so can be done the right way
                 if ($i * $ItemsPerPage > $TotalRecords) {
                     $Pages.=((($i - 1) * $ItemsPerPage) + 1) . '-' . ($TotalRecords);
                 } else {
                     $Pages.=((($i - 1) * $ItemsPerPage) + 1) . '-' . ($i * $ItemsPerPage);
                 }
 
-                $Pages.="</strong>";
+                //$Pages.="</strong>";
                 if ($i != $StartPage) {
                     $Pages.='</a>';
+                } else {
+                    $Pages.='</span>';
                 }
                 if ($i < $StopPage) {
                     $Pages.=" | ";
@@ -1204,8 +1208,8 @@ function get_pages($StartPage, $TotalRecords, $ItemsPerPage, $ShowPages=11, $Anc
         }
 
         if ($StartPage < $TotalPages) {
-            $Pages.=' | <a href="' . $Location . '?page=' . ($StartPage + 1) . $QueryString . $Anchor . '" class="pager_next"><strong>Next &gt;</strong></a> ';
-            $Pages.='<a href="' . $Location . '?page=' . $TotalPages . $QueryString . $Anchor . '"><strong> Last &gt;&gt;</strong></a>';
+            $Pages.=' | <a href="' . $Location . '?page=' . ($StartPage + 1) . $QueryString . $Anchor . '" class="pager pager_next">Next &gt;</a> ';
+            $Pages.='<a href="' . $Location . '?page=' . $TotalPages . $QueryString . $Anchor . '" class="pager pager_last"> Last &gt;&gt;</a>';
         }
     }
 

@@ -2118,3 +2118,7 @@ img.win.flash {
     float:left;
     color:#222;
 }
+
+.pager {
+    font-weight:bold;
+}

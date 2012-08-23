@@ -96,7 +96,7 @@ function update_forum_info($ForumID, $AdjustNumTopics = 0, $BeginEndTransaction 
     //$AdjustNumTopics=(int)$AdjustNumTopics;
     if ($AdjustNumTopics !=0) { // '-1' or '+1' etc
                 //$AdjustNumTopics = $AdjustNumTopics>0?"+$AdjustNumTopics":$AdjustNumTopics;
-                $SetNumTopics = "NumTopics=NumTopics$AdjustNumTopics,";
+                $SetNumTopics = "NumTopics=NumTopics$AdjustNumTopics, ";
                 $UpdateArray['NumTopics']=$AdjustNumTopics;
     }
     else $SetNumTopics ='';
@@ -295,7 +295,7 @@ if (isset($_POST['split'])) {
     }
             
     update_latest_topics();
-    header("'Location: forums.php?action=viewthread&threadid=$MergeTopicID&page=$Page");
+    header("Location: forums.php?action=viewthread&threadid=$MergeTopicID");
       
 
 // If we're deleting a thread
