@@ -1336,13 +1336,57 @@ td.topic_link a {
     width:60px
 }
 
-.top10_tags {
+table.top10_tags {
     max-width:800px;
     margin:auto;
 }
+table.top10_tags td {
+    border-left:none;
+    border-right:none;
+}
 .head.top10_tags {
     max-width:790px;
+    margin:auto;
 }
+
+
+.tags_rank {
+    text-align:center;
+    width:200px;
+}
+.tags_tag {
+    text-align:center;
+    width:200px;
+}
+.tags_uses {
+    text-align:center;
+}
+.tags_votes {
+    text-align:center;
+}
+.tags_votes_detail {
+    width: 40px;
+    text-align:center;
+}
+.tags_votes_detail2 {
+    width: 40px;
+    text-align:left;
+}
+
+.total_votes {
+    color: #03b;
+    text-align:center;
+}
+.neg_votes {
+    color: #911;
+    text-align:center;
+}
+.pos_votes {
+    color: #382;
+    text-align:center;
+}
+
+
 .friends_table {
     margin-bottom: 10px;
 }

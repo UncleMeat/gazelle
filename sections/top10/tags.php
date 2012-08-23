@@ -37,7 +37,7 @@ if ($Details=='all' || $Details=='ut') {
 			FROM tags AS t
 			JOIN torrents_tags AS tt ON tt.TagID=t.ID
 			GROUP BY tt.TagID
-			ORDER BY Uses DESC
+			ORDER BY Uses DESC, PosVotes DESC, NegVotes ASC
 			LIMIT $Limit");
 		$TopUsedTags = $DB->to_array();
 		$Cache->cache_value('topusedtag_'.$Limit,$TopUsedTags,3600*12);
@@ -72,11 +72,12 @@ if ($Details=='all' || $Details=='v') {
 			t.Name,
 			COUNT(tt.GroupID) AS Uses,
 			SUM(tt.PositiveVotes-1) AS PosVotes,
-			SUM(tt.NegativeVotes-1) AS NegVotes
+			SUM(tt.NegativeVotes-1) AS NegVotes,
+                    (SUM(tt.PositiveVotes-1)-SUM(tt.NegativeVotes-1)) AS Votes
 			FROM tags AS t
 			JOIN torrents_tags AS tt ON tt.TagID=t.ID
 			GROUP BY tt.TagID
-			ORDER BY PosVotes DESC
+			ORDER BY Votes DESC, Uses DESC
 			LIMIT $Limit");
 		$TopVotedTags = $DB->to_array();
 		$Cache->cache_value('topvotedtag_'.$Limit,$TopVotedTags,3600*12);
@@ -105,12 +106,13 @@ function generate_tag_table($Caption, $Tag, $Details, $Limit, $ShowVotes=true, $
 	</div>
 	<table class="top10_tags">
 	<tr class="colhead">
-		<td class="center">Rank</td>
-		<td>Tag</td>
-		<td style="text-align:right">Uses</td>
+		<td class="tags_rank">Rank</td>
+		<td class="tags_tag">Tag</td>
+		<td class="tags_uses">Uses</td>
 <?	if($ShowVotes) {	?>
-		<td style="text-align:right">Pos. Votes</td>
-		<td style="text-align:right">Neg. Votes</td>
+		<td class="tags_votes">Votes</td>
+            <td class="tags_votes_detail"></td>
+            <td class="tags_votes_detail2"></td>
 <?	}	?>
 	</tr>
 <?
@@ -133,12 +135,13 @@ function generate_tag_table($Caption, $Tag, $Details, $Limit, $ShowVotes=true, $
 		// print row
 ?>
 	<tr class="row<?=$Highlight?>">
-		<td class="center"><?=$Rank?></td>
-		<td><a href="<?=$URLString?><?=$Detail['Name']?>"><?=$Detail['Name']?></a></td>
-		<td style="text-align:right"><?=$Detail['Uses']?></td>
+		<td class="tags_rank"><?=$Rank?></td>
+		<td class="tags_tag"><a href="<?=$URLString?><?=$Detail['Name']?>"><?=$Detail['Name']?></a></td>
+		<td class="tags_uses"><?=$Detail['Uses']?></td>
 <?		if($ShowVotes) { ?>
-		<td style="text-align:right"><?=$Detail['PosVotes']?></td>
-		<td style="text-align:right"><?=$Detail['NegVotes']?></td>
+		<td class="tags_votes"><span class="total_votes"><?=($Detail['PosVotes']-$Detail['NegVotes'])?></span></td>
+            <td class="tags_votes_detail"><span class="pos_votes">+<?=$Detail['PosVotes']?></span></td>
+            <td class="tags_votes_detail2"><span class="neg_votes">-<?=$Detail['NegVotes']?></span></td>
 <?		} ?>
 	</tr>
 <?
