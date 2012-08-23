@@ -131,7 +131,6 @@ These functions are run every hour.
 
 \*************************************************************************/
 
-      include(SERVER_ROOT.'/sections/schedule/award_badges.php');
 
 if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 	echo "Ran hourly functions\n";
@@ -141,9 +140,10 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
       
       //if ($Hour == 3 || $Hour == 15) // twice daily
            // include(SERVER_ROOT.'/sections/schedule/award_badges.php');
-       
-      //include(SERVER_ROOT.'/sections/schedule/award_badges.php');
       
+	if ($Hour%3 == 0) { // every 3 hrs
+            include(SERVER_ROOT.'/sections/schedule/award_badges.php');
+      }
 	//------------- Front page stats ----------------------------------------//
 
 	//Love or hate, this makes things a hell of a lot faster
