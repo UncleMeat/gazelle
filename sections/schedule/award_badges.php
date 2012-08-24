@@ -133,11 +133,12 @@ foreach($AutoActions as $AutoAction) {
         $UserIDs = $DB->collect('ID');
         $CountUsers = count($UserIDs);
         
-        $logmsg = "Awarding $Name ($Badge/$Rank) to $CountUsers users...\n";
-        echo $logmsg;   // for debug output
         
         if ($CountUsers > 0) {
- 
+            
+            $logmsg = "Awarding $Name ($Badge/$Rank) to $CountUsers users...\n";
+            echo $logmsg;   // for debug output
+        
             $SQL_IN = implode(', ',$UserIDs);
 
             $DB->query("UPDATE users_info SET AdminComment = CONCAT('".sqltime()." - Badge ". db_string($Name)." ". db_string($Description)." by Scheduler\n', AdminComment) WHERE UserID IN ($SQL_IN)");

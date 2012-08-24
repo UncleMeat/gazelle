@@ -124,27 +124,30 @@ $DB->query("DELETE FROM xbt_files_users WHERE active='0'");
       }
       
       
+   
+      
 /*************************************************************************\
 //--------------Run every hour ------------------------------------------//
 
 These functions are run every hour.
 
 \*************************************************************************/
- 
+  
       
 if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 	echo "Ran hourly functions\n";
 	
       
 	//------------- Award Badges ----------------------------------------//
-      
-      //if ($Hour == 3 || $Hour == 15) // twice daily
-           // include(SERVER_ROOT.'/sections/schedule/award_badges.php');
+       
       
 	if ($Hour%3 == 0) { // every 3 hrs
            // include(SERVER_ROOT.'/sections/schedule/award_badges.php');
       }
+      
+      
 	//------------- Front page stats ----------------------------------------//
+ 
 
 	//Love or hate, this makes things a hell of a lot faster
 
@@ -154,11 +157,27 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 		$Cache->cache_value('stats_snatches',$SnatchStats,0);
 	}
 
+       
 	$DB->query("SELECT IF(remaining=0,'Seeding','Leeching') AS Type, COUNT(uid) FROM xbt_files_users WHERE active=1 GROUP BY Type");
 	$PeerCount = $DB->to_array(0, MYSQLI_NUM, false);
 	$SeederCount = isset($PeerCount['Seeding'][1]) ? $PeerCount['Seeding'][1] : 0;
 	$LeecherCount = isset($PeerCount['Leeching'][1]) ? $PeerCount['Leeching'][1] : 0;
 	$Cache->cache_value('stats_peers',array($LeecherCount,$SeederCount),0);
+      
+	if ($Hour%6 == 0) { // 4 times a day record site history
+           
+            $DB->query("SELECT COUNT(ID) FROM users_main WHERE Enabled='1'");
+            list($UserCount) = $DB->next_record();
+            $Cache->cache_value('stats_user_count', $UserCount, 0);
+            
+            $DB->query("SELECT COUNT(ID) FROM torrents");
+            list($TorrentCount) = $DB->next_record();
+            $Cache->cache_value('stats_torrent_count', $TorrentCount, 0);
+            
+            $DB->query("INSERT INTO site_stats_history ( TimeAdded, Users, Torrents, Seeders, Leechers )
+                                 VALUES ('".sqltime()."','$UserCount','$TorrentCount','$SeederCount','$LeecherCount')");
+            
+      }
 
 	$DB->query("SELECT COUNT(ID) FROM users_main WHERE Enabled='1' AND LastAccess>'".time_minus(3600*24)."'");
 	list($UserStats['Day']) = $DB->next_record();

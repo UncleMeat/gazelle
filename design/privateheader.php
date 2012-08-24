@@ -59,12 +59,12 @@ foreach ($Scripts as $Script) {
 	<script src="<?=STATIC_SERVER?>functions/<?=$Script?>.js?v=<?=filemtime(SERVER_ROOT.'/static/functions/'.$Script.'.js')?>" type="text/javascript"></script>
 <?
  	if ($Script == 'jquery') { ?>
-<script type="text/javascript">
-        $.noConflict();
-</script>
-<?
-	} ?>
-<?
+        <script type="text/javascript"> 
+            $.noConflict(); 
+        </script>
+<? 	} elseif ($Script == 'charts') { ?>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<?    }
 }
 if ($Mobile) { ?>
 	<script src="<?=STATIC_SERVER?>styles/mobile/style.js" type="text/javascript"></script>

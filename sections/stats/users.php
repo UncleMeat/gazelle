@@ -89,7 +89,6 @@ if(!$BrowserDistribution = $Cache->get_value('browser_distribution')) {
 	$Cache->cache_value('browser_distribution',$BrowserDistribution,3600*24*14);
 }
 
-
 //Timeline generation
 if (!list($Labels,$InFlow,$OutFlow,$Max) = $Cache->get_value('users_timeline')) {
 	$DB->query("SELECT DATE_FORMAT(JoinDate,'%b \\'%y') AS Month, COUNT(UserID) FROM users_info GROUP BY Month ORDER BY JoinDate DESC LIMIT 1, 12");
@@ -123,40 +122,45 @@ if (!list($Labels,$InFlow,$OutFlow,$Max) = $Cache->get_value('users_timeline')) 
 }
 //End timeline generation
 
+
+
 show_header('Detailed User Statistics');
+
 ?>
-<h3>User Flow</h3>
-<div class="box pad center">
-	<img src="http://chart.apis.google.com/chart?cht=lc&chs=880x160&chco=000D99,99000D&chg=0,-1,1,1&chxt=y,x&chxs=0,h&chxl=1:|<?=implode('|',$Labels)?>&chxr=0,0,<?=$Max?>&chd=t:<?=implode(',',$InFlow)?>|<?=implode(',',$OutFlow)?>&chls=2,4,0&chdl=New+Registrations|Disabled+Users&amp;chf=bg,s,FFFFFF00" />
-</div>
-<br />
-<h3>User Classes</h3>
-<div class="box pad center">
-	<img src="<?=$ClassDistribution?>" />
-</div>
-<br />
-<h3>User Platforms</h3>
-<div class="box pad center">
-	<img src="<?=$PlatformDistribution?>" />
-</div>
-<br />
-<h3>User Browsers</h3>
-<div class="box pad center">
-	<img src="<?=$BrowserDistribution?>" />
-</div>
-<br />
-<h3>Geographical Distribution Map</h3>
-<div class="box center">
-	<img src="http://chart.apis.google.com/chart?cht=map:fixed=-55,-180,73,180&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
-	<img src="http://chart.apis.google.com/chart?cht=map:fixed=37,-26,65,67&chs=440x220&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
-	<br />
-	<img src="http://chart.apis.google.com/chart?cht=map:fixed=-46,-132,24,21.5&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
-	<img src="http://chart.apis.google.com/chart?cht=map:fixed=-11,22,50,160&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
-	<br />
-	<img src="http://chart.apis.google.com/chart?cht=map:fixed=-36,-57,37,100&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
-	<img src="http://chart.apis.google.com/chart?cht=map:fixed=14.8,15,45,86&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
-	<br />
-	<img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,0,31))?>&chxl=1:|<?=implode('|',array_slice($Countries,0,31))?>|0:|<?=implode('|',$LogIncrements)?>&amp;chf=bg,s,FFFFFF00" />
+<div class="thin">
+    <div class="head">User Flow</div>
+    <div class="box pad center">
+          <img src="http://chart.apis.google.com/chart?cht=lc&chs=880x160&chco=000D99,99000D&chg=0,-1,1,1&chxt=y,x&chxs=0,h&chxl=1:|<?=implode('|',$Labels)?>&chxr=0,0,<?=$Max?>&chd=t:<?=implode(',',$InFlow)?>|<?=implode(',',$OutFlow)?>&chls=2,4,0&chdl=New+Registrations|Disabled+Users&amp;chf=bg,s,FFFFFF00" />
+    </div>
+    <br />
+    <div class="head">User Classes</div>
+    <div class="box pad center">
+          <img src="<?=$ClassDistribution?>" />
+    </div>
+    <br />
+    <div class="head">User Platforms</div>
+    <div class="box pad center">
+          <img src="<?=$PlatformDistribution?>" />
+    </div>
+    <br />
+    <div class="head">User Browsers</div>
+    <div class="box pad center">
+          <img src="<?=$BrowserDistribution?>" />
+    </div>
+    <br />
+    <div class="head">Geographical Distribution Map</div>
+    <div class="box center">
+          <img src="http://chart.apis.google.com/chart?cht=map:fixed=-55,-180,73,180&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
+          <img src="http://chart.apis.google.com/chart?cht=map:fixed=37,-26,65,67&chs=440x220&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
+          <br />
+          <img src="http://chart.apis.google.com/chart?cht=map:fixed=-46,-132,24,21.5&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
+          <img src="http://chart.apis.google.com/chart?cht=map:fixed=-11,22,50,160&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
+          <br />
+          <img src="http://chart.apis.google.com/chart?cht=map:fixed=-36,-57,37,100&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
+          <img src="http://chart.apis.google.com/chart?cht=map:fixed=14.8,15,45,86&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
+          <br />
+          <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,0,31))?>&chxl=1:|<?=implode('|',array_slice($Countries,0,31))?>|0:|<?=implode('|',$LogIncrements)?>&amp;chf=bg,s,FFFFFF00" />
+    </div>
 </div>
 <?
 show_footer();
