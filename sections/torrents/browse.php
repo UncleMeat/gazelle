@@ -539,6 +539,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
     window.attachEvent('onload', Load_Cookie);
 </script>
 <div class="linkbox"><?= $Pages ?></div>
+<div class="head">Torrents</div>
 <?
 if (count($Results) == 0) {
     $DB->query("SELECT 
@@ -570,8 +571,6 @@ if (count($Results) == 0) {
 
 $Bookmarks = all_bookmarks('torrent');
 ?>
-
-<div class="head">Torrents</div>
 <table class="torrent_table grouping" id="torrent_table">
     <tr class="colhead">
         <td class="small cats_col"></td>

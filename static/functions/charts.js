@@ -14,9 +14,10 @@ function drawSiteStats() {
     var data = new google.visualization.arrayToDataTable(chartdata);
     */
     var options = {
+            title:title,
             height:700,
             chartArea:{left:80,top:20,width:"80%",height:630},
-            vAxes:[{gridlines:{color: '#bbb', count: 20}}],
+            vAxes:[{gridlines:{color: '#bbb', count: 21}}],
             series:[{color: 'blue', visibleInLegend: true},
                     {color: 'orange', visibleInLegend: true}, 
                     {color: 'green', visibleInLegend: true}, 
