@@ -16,6 +16,9 @@
 	'make_public_templates' => 'Can make public upload templates.',
 	'delete_any_template' => 'Can delete any upload templates.',
      
+	'site_view_stats' => 'View the site stats page.',
+	'site_stats_advanced' => 'View selected site stats.',
+     
 	'site_vote' => 'Request vote access.',
 	'site_submit_requests' => 'Request create access.',
 	'site_see_old_requests' => 'View old requests.',
@@ -164,6 +167,9 @@ function permissions_form(){ ?>
 					<? display_perm('make_public_templates','Can make public upload templates.'); ?>
 					<? display_perm('delete_any_template','Can delete any upload templates.'); ?>
 
+                              <? display_perm('site_view_stats' , 'View the site stats page.'); ?> 
+                              <? display_perm('site_stats_advanced', 'View selected site stats.'); ?> 
+      
 					<? display_perm('site_vote','Can vote on requests.'); ?>
 					<? display_perm('site_submit_requests','Can submit requests.'); ?>
 					<? display_perm('site_see_old_requests','Can see old requests.'); ?>
