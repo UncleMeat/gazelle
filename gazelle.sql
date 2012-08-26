@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `bad_passwords` (
 CREATE TABLE IF NOT EXISTS `badges` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
   `Badge` varchar( 12 ) NOT NULL,
-  `Sort` int(10) NOT NULL,
+  `Rank` int(10) NOT NULL,
   `Type` enum('Shop','Single','Multiple','Unique') NOT NULL,
   `Display` INT( 3 ) NOT NULL DEFAULT '0',
   `Sort` int(10) NOT NULL,
@@ -130,6 +130,8 @@ CREATE TABLE IF NOT EXISTS `badges` (
   `Description` varchar(255) NOT NULL,
   `Image` varchar(255) NOT NULL,
   PRIMARY KEY (`ID`),
+  KEY `Badge` (`Badge`),
+  KEY `Rank` (`Rank`),
   KEY `Type` (`Type`),
   KEY `Display` (`Display`),
   KEY `Sort` (`Sort`)
@@ -968,14 +970,7 @@ CREATE TABLE IF NOT EXISTS `pm_conversations_users` (
   `Sticky` enum('1','0') NOT NULL DEFAULT '0',
   `ForwardedTo` int(12) NOT NULL DEFAULT '0',
   PRIMARY KEY (`UserID`,`ConvID`),
-  KEY `InInbox` (`InInbox`),
-  KEY `InSentbox` (`InSentbox`),
-  KEY `ConvID` (`ConvID`),
-  KEY `UserID` (`UserID`),
-  KEY `SentDate` (`SentDate`),
-  KEY `ReceivedDate` (`ReceivedDate`),
-  KEY `Sticky` (`Sticky`),
-  KEY `ForwardedTo` (`ForwardedTo`)
+  KEY `ConvID` (`ConvID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -991,7 +986,8 @@ CREATE TABLE IF NOT EXISTS `pm_messages` (
   `SenderID` int(10) NOT NULL DEFAULT '0',
   `Body` text,
   PRIMARY KEY (`ID`),
-  KEY `ConvID` (`ConvID`)
+  KEY `ConvID` (`ConvID`),
+  KEY `SenderID` (`SenderID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1872,7 +1868,9 @@ CREATE TABLE IF NOT EXISTS `users_badges` (
   `UserID` int(10) NOT NULL,
   `BadgeID` int(10) NOT NULL,
   `Description` varchar(255) NOT NULL,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `UserID` (`UserID`),
+  KEY `BadgeID` (`BadgeID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2068,9 +2066,7 @@ CREATE TABLE IF NOT EXISTS `users_info` (
   KEY `JoinDate` (`JoinDate`),
   KEY `Inviter` (`Inviter`),
   KEY `RatioWatchEnds` (`RatioWatchEnds`),
-  KEY `RatioWatchDownload` (`RatioWatchDownload`),
-  KEY `BitcoinAddress` (`BitcoinAddress`(4)),
-  KEY `BitcoinAddress_2` (`BitcoinAddress`(4))
+  KEY `RatioWatchDownload` (`RatioWatchDownload`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

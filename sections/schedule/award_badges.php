@@ -1,11 +1,7 @@
 <?
 
 /*
- * To be run from the scheduler to award badges
- *  forumwhore,Masterwhore,legendaryMasterwhore
- * 
- * requests
- * 
+ * To be run from the scheduler to award badges 
  * 
  */
 
@@ -127,7 +123,7 @@ foreach($AutoActions as $AutoAction) {
     
     
     if ($SQL){
-        $SQL .= " LIMIT 100";
+        $SQL .= " LIMIT 50";
         $DB->query($SQL);
         
         $UserIDs = $DB->collect('ID');
@@ -139,6 +135,9 @@ foreach($AutoActions as $AutoAction) {
             $logmsg = "Awarding $Name ($Badge/$Rank) to $CountUsers users...\n";
             echo $logmsg;   // for debug output
         
+            //FOR DEBUG ONLY TODO:REMOVE first log msg
+            write_log($logmsg." (starting...)");
+            
             $SQL_IN = implode(', ',$UserIDs);
 
             $DB->query("UPDATE users_info SET AdminComment = CONCAT('".sqltime()." - Badge ". db_string($Name)." ". db_string($Description)." by Scheduler\n', AdminComment) WHERE UserID IN ($SQL_IN)");
@@ -159,11 +158,19 @@ foreach($AutoActions as $AutoAction) {
                JOIN pm_conversations_users AS cu ON cu.ConvID=c.ID
               WHERE m.SenderID='0'";
             */
+             
+            if ($SendPM){
+                send_masspm($UserIDs, 0, "Congratulations you have been awarded the $Name", 
+                            "[center][br][br][img]http://".NONSSL_SITE_URL.'/'.STATIC_SERVER."common/badges/{$Image}[/img][br][br][size=5][color=white][bg=#0261a3][br]{$Description}[br][br][/bg][/color][/size][/center]");
+            }
+                
+            foreach($UserIDs as $UserID) {
+                //if (!in_array($UserID, $LuckyUsers)) $LuckyUsers[] = $UserID;
+                $Cache->delete_value('user_badges_'.$UserID);
+                $Cache->delete_value('user_badges_'.$UserID.'_limit');
+            }
             
-            // IF we want to send users pm's when they get an award we should do it here, 
-            // BUT it means looping through each user and sending the pm 
-            // (no way to shortcut afaics because you need the inserted conv_id to link message and conversation) 
-            
+            /*
             foreach($UserIDs as $UserID) {
                 if ($SendPM){
                     send_pm($UserID, 0, "Congratulations you have been awarded the $Name", 
@@ -172,7 +179,7 @@ foreach($AutoActions as $AutoAction) {
                 //if (!in_array($UserID, $LuckyUsers)) $LuckyUsers[] = $UserID;
                 $Cache->delete_value('user_badges_'.$UserID);
                 $Cache->delete_value('user_badges_'.$UserID.'_limit');
-            }
+            } */
              
             write_log($logmsg." ($SQL_IN)");
         }

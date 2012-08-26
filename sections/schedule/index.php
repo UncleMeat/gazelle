@@ -107,43 +107,44 @@ $DB->query("DELETE FROM xbt_files_users WHERE active='0'");
 
 
 //------------- Remove torrents that have expired their warning period every 15 minutes ----------//
-     
-      $DB->query("SELECT AutoDelete FROM review_options");
-      list($AutoDelete) = $DB->next_record();
-      echo "AutoDelete torrents marked for deletion: ". ($AutoDelete?'On':'Off')."\n";
-      if ($AutoDelete){
-          include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
 
-          $Torrents = get_torrents_under_review('warned', true); 
-          $NumTorrents = count($Torrents);
-          //echo "Num to auto-delete: $NumTorrents\n";
-          if($NumTorrents>0){
-                $NumDeleted = delete_torrents_list($Torrents);
-                echo "Num of torrents auto-deleted: $NumDeleted\n";
-          }
-      }
-      
-      
-   
-      
+$DB->query("SELECT AutoDelete FROM review_options");
+list($AutoDelete) = $DB->next_record();
+echo "AutoDelete torrents marked for deletion: ". ($AutoDelete?'On':'Off')."\n";
+if ($AutoDelete){
+    include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
+
+    $Torrents = get_torrents_under_review('warned', true); 
+    $NumTorrents = count($Torrents);
+    //echo "Num to auto-delete: $NumTorrents\n";
+    if($NumTorrents>0){
+        $NumDeleted = delete_torrents_list($Torrents);
+        echo "Num of torrents auto-deleted: $NumDeleted\n";
+    }
+}
+
+
+
+
 /*************************************************************************\
 //--------------Run every hour ------------------------------------------//
 
 These functions are run every hour.
 
 \*************************************************************************/
-  
-      
+
+
 if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 	echo "Ran hourly functions\n";
 	
       
+	//if ($Hour%3 == 0) { // every 3 hrs
+      //}
 	//------------- Award Badges ----------------------------------------//
        
       
-	if ($Hour%3 == 0) { // every 3 hrs
-           // include(SERVER_ROOT.'/sections/schedule/award_badges.php');
-      }
+      include(SERVER_ROOT.'/sections/schedule/award_badges.php');
+      
       
       
 	//------------- Front page stats ----------------------------------------//

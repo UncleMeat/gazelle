@@ -1852,9 +1852,11 @@ code.bbcodeblock {
 }
 
 a.anchor, a.anchor:visited, a.anchor:hover {
+    font-family:"Arial Black", "Arial Bold", Gadget, sans-serif;
     font-weight: bold;
-    font-size: larger;
-    color: #333;
+    font-size: 1.75em;
+    color: #0261a3;
+    text-decoration: none;
 }
 
 
