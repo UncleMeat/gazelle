@@ -86,18 +86,21 @@ while(list($SentDate, $SenderID, $Body, $MessageID) = $DB->next_record()) { ?>
 	</div>
 <?
 }
-$DB->query("SELECT UserID FROM pm_conversations_users WHERE UserID!='$LoggedUser[ID]' AND ConvID='$ConvID' AND (ForwardedTo=0 OR ForwardedTo=UserID)");
-$ReceiverIDs = $DB->collect('UserID');
+//$DB->query("SELECT UserID FROM pm_conversations_users WHERE UserID!='$LoggedUser[ID]' AND ConvID='$ConvID' AND (ForwardedTo=0 OR ForwardedTo=UserID)");
+//$ReceiverIDs = $DB->collect('UserID');
+//if(!empty($ReceiverIDs) && (empty($LoggedUser['DisablePM']) || array_intersect($ReceiverIDs, array_keys($StaffIDs)))) {
 
+$DB->query("SELECT SenderID FROM pm_messages WHERE ConvID='$ConvID'");
+list($ReplyID) = $DB->next_record();
 
-if(!empty($ReceiverIDs) && (empty($LoggedUser['DisablePM']) || array_intersect($ReceiverIDs, array_keys($StaffIDs)))) {
+if(!empty($ReplyID) && $ReplyID!=0 && (empty($LoggedUser['DisablePM']) || array_key_exists($ReplyID, $StaffIDs) ) ) {
 ?>
 	<div class="head">Reply</div>
 	<div class="box pad">
             <form action="inbox.php" method="post" id="messageform">
 			<input type="hidden" name="action" value="takecompose" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-			<input type="hidden" name="toid" value="<?=implode(',',$ReceiverIDs)?>" />
+			<input type="hidden" name="toid" value="<?=$ReplyID?>" />
 			<input type="hidden" name="convid" value="<?=$ConvID?>" />
             <? $Text->display_bbcode_assistant("quickpost", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
 			<textarea id="quickpost" name="body" class="long" rows="10"></textarea> <br />

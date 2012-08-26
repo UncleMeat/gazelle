@@ -160,7 +160,7 @@ foreach($AutoActions as $AutoAction) {
             */
              
             if ($SendPM){
-                send_masspm($UserIDs, 0, "Congratulations you have been awarded the $Name", 
+                send_pm($UserIDs, 0, "Congratulations you have been awarded the $Name", 
                             "[center][br][br][img]http://".NONSSL_SITE_URL.'/'.STATIC_SERVER."common/badges/{$Image}[/img][br][br][size=5][color=white][bg=#0261a3][br]{$Description}[br][br][/bg][/color][/size][/center]");
             }
                 
