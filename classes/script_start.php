@@ -1775,7 +1775,7 @@ function send_masspm($ToIDs, $FromID, $Subject, $Body, $ConvID='') {
         
 	  $Values = "('".implode("', '$ConvID', '1','0', '$sqltime', '$sqltime', '1'), ('", $ToIDs)."', '$ConvID', '1','0', '$sqltime', '$sqltime', '1')";
         if ($FromID != 0) {
-            $Values .= " ('$FromID', '$ConvID', '0','1','$sqltime', '$sqltime', '0')";
+            $Values .= ", ('$FromID', '$ConvID', '0','1','$sqltime', '$sqltime', '0')";
         }
          
         $DB->query("INSERT INTO pm_conversations_users
