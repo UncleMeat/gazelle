@@ -136,7 +136,7 @@ foreach($AutoActions as $AutoAction) {
             echo $logmsg;   // for debug output
         
             //FOR DEBUG ONLY TODO:REMOVE first log msg
-            write_log($logmsg." (starting...)");
+            //write_log($logmsg." (starting...)");
             
             $SQL_IN = implode(', ',$UserIDs);
 

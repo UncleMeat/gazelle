@@ -1676,7 +1676,7 @@ function update_hash($GroupID) {
 }
 
 
-
+/*
 // this function sends a PM to the userid $ToID and from the userid $FromID, sets date to now
 // this function no longer uses db_string() so you will need to escape strings before using this function!
 // set userid to 0 for a PM from 'system'
@@ -1734,44 +1734,34 @@ function send_pm($ToID, $FromID, $Subject, $Body, $ConvID='') {
     //}
     return $ConvID;
 }
+*/
 
 
-
-
-
-
-
-
-
-
-
-
-
-//  OPTIMISED a bit more for mass sending
+//  OPTIMISED a bit more for mass sending 
 // this function sends a PM to the userid $ToID and from the userid $FromID, sets date to now
 // this function no longer uses db_string() so you will need to escape strings before using this function!
 // set userid to 0 for a PM from 'system'
 // if $ConvID is not set, it auto increments it, ie. starting a new conversation
-function send_masspm($ToIDs, $FromID, $Subject, $Body, $ConvID='') {
+function send_pm($ToID, $FromID, $Subject, $Body, $ConvID='') {
     global $DB, $Cache ;
- 
+  
+    if (!is_array($ToID)) $ToID = array($ToID);
+     
     // Clear the caches of the inbox and sentbox 
-    foreach ($ToIDs as $ID) { 
-        if (!is_number($ID)) error(403);
-        $Cache->delete_value('inbox_new_' . $ID);
+    foreach ($ToID as $key=>$ID) { 
+        if (!is_number($ID)) return false; 
+        // Don't allow users to send messages to the system
+        if ($ToID == 0) unset($ToID[$key]);
     }
+    if (count($ToID)==0) return false;
     $sqltime = sqltime();
-    if ($ConvID == '') {
-        
-        //$num_ids = count($ToIDs); 
-        //$Subjects = array_fill(0, $num_ids," ('$Subject') "); 
-        //$DB->query("INSERT INTO pm_conversations(Subject) VALUES " . implode(',', $Subjects) );
-        
+    
+    if ($ConvID == '') { // new pm
+         
         $DB->query("INSERT INTO pm_conversations(Subject) VALUES ('" . $Subject . "')");
         $ConvID = $DB->inserted_id();
-         
         
-	  $Values = "('".implode("', '$ConvID', '1','0', '$sqltime', '$sqltime', '1'), ('", $ToIDs)."', '$ConvID', '1','0', '$sqltime', '$sqltime', '1')";
+	  $Values = "('".implode("', '$ConvID', '1','0', '$sqltime', '$sqltime', '1'), ('", $ToID)."', '$ConvID', '1','0', '$sqltime', '$sqltime', '1')";
         if ($FromID != 0) {
             $Values .= ", ('$FromID', '$ConvID', '0','1','$sqltime', '$sqltime', '0')";
         }
@@ -1779,45 +1769,14 @@ function send_masspm($ToIDs, $FromID, $Subject, $Body, $ConvID='') {
         $DB->query("INSERT INTO pm_conversations_users
                                         (UserID, ConvID, InInbox, InSentbox, SentDate, ReceivedDate, UnRead) VALUES
                                         $Values");
-        
-        /*
-        foreach($ToID as $TID) {
-                $Values[] = " ('$TID', '$ConvID', '1','0','" . sqltime() . "', '" . sqltime() . "', '1')";
-        }
-                
-        $DB->query("INSERT INTO pm_conversations_users
-                                        (UserID, ConvID, InInbox, InSentbox, SentDate, ReceivedDate, UnRead) VALUES
-                                        ('$TID', '$ConvID', '1','0','$sqltime', '$sqltime', '1')");
-                
-        if ($FromID != 0) {
-            $DB->query("INSERT INTO pm_conversations_users
-                                (UserID, ConvID, InInbox, InSentbox, SentDate, ReceivedDate, UnRead) VALUES
-                                ('$FromID', '$ConvID', '0','1','" . sqltime() . "', '" . sqltime() . "', '0')");
-        }
-        
-        foreach($ToID as $TID) {
-                $Values[] = " ('$TID', '$ConvID', '1','0','" . sqltime() . "', '" . sqltime() . "', '1')";
-                if ($FromID != 0) {
-                    $Values[]  = " ('$FromID', '$ConvID', '0','1','" . sqltime() . "', '" . sqltime() . "', '0')";
-                }
-                $ConvID++;
-        }
-        $Values = implode(',', $Values);
-        $DB->query("INSERT INTO pm_conversations_users
-                                        (UserID, ConvID, InInbox, InSentbox, SentDate, ReceivedDate, UnRead) VALUES
-                                        $Values");
-        */
-        
-                
-                
-        
-    } else {
+       
+    } else { // responding to exisiting
         
         $DB->query("UPDATE pm_conversations_users SET
 				InInbox='1',
 				UnRead='1',
 				ReceivedDate='$sqltime'
-				WHERE UserID IN (" . implode(',', $ToIDs) . ")
+				WHERE UserID IN (" . implode(',', $ToID) . ")
 				AND ConvID='$ConvID'");
 
         $DB->query("UPDATE pm_conversations_users SET
@@ -1832,7 +1791,13 @@ function send_masspm($ToIDs, $FromID, $Subject, $Body, $ConvID='') {
 			(SenderID, ConvID, SentDate, Body) VALUES
 			('$FromID', '$ConvID', '$sqltime', '" . $Body . "')");
 
-    write_log("Sent MassPM to ".count($ToIDs)." users. ConvID: $ConvID  Subject: $Subject");
+    // Clear the caches of the inbox and sentbox 
+    foreach ($ToID as $ID) { 
+        $Cache->delete_value('inbox_new_' . $ID);
+    }
+    if ($FromID != 0) $Cache->delete_value('inbox_new_' . $FromID);
+    // DEBUG only:
+    //write_log("Sent MassPM to ".count($ToID)." users. ConvID: $ConvID  Subject: $Subject");
  
     return $ConvID;
 }
