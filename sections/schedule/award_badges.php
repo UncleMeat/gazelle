@@ -123,7 +123,7 @@ foreach($AutoActions as $AutoAction) {
     
     
     if ($SQL){
-        $SQL .= " LIMIT 50";
+        $SQL .= " LIMIT 500";
         $DB->query($SQL);
         
         $UserIDs = $DB->collect('ID');
