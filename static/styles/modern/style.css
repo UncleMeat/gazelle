@@ -1821,8 +1821,8 @@ ul .invitetree {
 
 a.anchor, a.anchor:visited, a.anchor:hover {
     font-family:"Arial Black", "Arial Bold", Gadget, sans-serif;
-    font-weight: bold;
-    font-size: 1.75em;
+    font-weight: normal;
+    font-size: 1.5em;
     color: #0261a3;
     text-decoration: none;
 }
