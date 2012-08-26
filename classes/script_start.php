@@ -1753,7 +1753,7 @@ function send_pm($ToID, $FromID, $Subject, $Body, $ConvID='') {
 // set userid to 0 for a PM from 'system'
 // if $ConvID is not set, it auto increments it, ie. starting a new conversation
 function send_masspm($ToIDs, $FromID, $Subject, $Body, $ConvID='') {
-    global $DB, $Cache, $Time;
+    global $DB, $Cache ;
  
     // Clear the caches of the inbox and sentbox 
     foreach ($ToIDs as $ID) { 
@@ -1763,10 +1763,8 @@ function send_masspm($ToIDs, $FromID, $Subject, $Body, $ConvID='') {
     $sqltime = sqltime();
     if ($ConvID == '') {
         
-        //$num_ids = count($ToIDs);
-        
-        //$Subjects = array_fill(0, $num_ids," ('$Subject') ");
-
+        //$num_ids = count($ToIDs); 
+        //$Subjects = array_fill(0, $num_ids," ('$Subject') "); 
         //$DB->query("INSERT INTO pm_conversations(Subject) VALUES " . implode(',', $Subjects) );
         
         $DB->query("INSERT INTO pm_conversations(Subject) VALUES ('" . $Subject . "')");
@@ -1814,6 +1812,7 @@ function send_masspm($ToIDs, $FromID, $Subject, $Body, $ConvID='') {
                 
         
     } else {
+        
         $DB->query("UPDATE pm_conversations_users SET
 				InInbox='1',
 				UnRead='1',
@@ -1826,11 +1825,14 @@ function send_masspm($ToIDs, $FromID, $Subject, $Body, $ConvID='') {
 				SentDate='$sqltime'
 				WHERE UserID='$FromID'
 				AND ConvID='$ConvID'");
+        
     }
+    
     $DB->query("INSERT INTO pm_messages
 			(SenderID, ConvID, SentDate, Body) VALUES
 			('$FromID', '$ConvID', '$sqltime', '" . $Body . "')");
 
+    write_log("Sent MassPM to ".count($ToIDs)." users. ConvID: $ConvID  Subject: $Subject");
  
     return $ConvID;
 }
