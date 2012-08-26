@@ -970,7 +970,9 @@ CREATE TABLE IF NOT EXISTS `pm_conversations_users` (
   `Sticky` enum('1','0') NOT NULL DEFAULT '0',
   `ForwardedTo` int(12) NOT NULL DEFAULT '0',
   PRIMARY KEY (`UserID`,`ConvID`),
-  KEY `ConvID` (`ConvID`)
+  KEY `ConvID` (`ConvID`),
+  KEY `SentDate` (`SentDate`),
+  KEY `ReceivedDate` (`ReceivedDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

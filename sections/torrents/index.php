@@ -512,6 +512,9 @@ if(!empty($_REQUEST['action'])) {
                                 echo $ConvID;   // "<div class=\"messagebar\"><a href=\"staffpm.php?action=viewconv&id=$ConvID\">Message sent to staff</a></div>";   // $ConvID";
                             }
                         }
+                        $Cache->delete_value('torrent_group_' . $GroupID);
+                        $Cache->delete_value('torrent_group_light_' . $GroupID);
+                        $Cache->delete_value('torrents_details_' . $GroupID);
                   }
                 
                   break;
