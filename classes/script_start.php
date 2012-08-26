@@ -1754,9 +1754,7 @@ function send_pm($ToID, $FromID, $Subject, $Body, $ConvID='') {
 // if $ConvID is not set, it auto increments it, ie. starting a new conversation
 function send_masspm($ToIDs, $FromID, $Subject, $Body, $ConvID='') {
     global $DB, $Cache, $Time;
-    if ($ToID == 0) {  // Don't allow users to send messages to the system
-        return;
-    } 
+ 
     // Clear the caches of the inbox and sentbox 
     foreach ($ToIDs as $ID) { 
         if (!is_number($ID)) error(403);
@@ -1820,7 +1818,7 @@ function send_masspm($ToIDs, $FromID, $Subject, $Body, $ConvID='') {
 				InInbox='1',
 				UnRead='1',
 				ReceivedDate='$sqltime'
-				WHERE UserID IN (" . implode(',', $ToID) . ")
+				WHERE UserID IN (" . implode(',', $ToIDs) . ")
 				AND ConvID='$ConvID'");
 
         $DB->query("UPDATE pm_conversations_users SET
