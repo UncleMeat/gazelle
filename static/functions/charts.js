@@ -55,7 +55,10 @@ function zoomout(){
 function zoomin(){
     options.animation.duration = 1000;
     var mrange = parseInt(maxrows * 0.15);
-    if ((mrange*3) > (options.hAxis.viewWindow.max-options.hAxis.viewWindow.min)) return;  
+    if ((mrange*2)+7 > (options.hAxis.viewWindow.max-options.hAxis.viewWindow.min)) {
+        mrange = parseInt((options.hAxis.viewWindow.max-options.hAxis.viewWindow.min-7) * 0.5  );
+        if (mrange<0) return;
+    }  
     options.hAxis.viewWindow.min += mrange; 
     options.hAxis.viewWindow.max -= mrange;
     drawChart();
