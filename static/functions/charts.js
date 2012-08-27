@@ -16,6 +16,7 @@ function drawSiteStats() {
     var options = {
             title:title,
             height:700,
+            curveType:'function',
             chartArea:{left:80,top:20,width:"80%",height:630},
             vAxes:[{gridlines:{color: '#bbb', count: 21}}],
             series:[{color: 'blue', visibleInLegend: true},
