@@ -172,6 +172,11 @@ ul.thin li { margin:0px 0px; padding:0px; }
 
 /* Layout (Every page) */
 
+#adbar {
+    text-align: center;
+    margin:10px auto 0px;
+}
+
 #header {
     width: 100%;
     min-width:960px; 
