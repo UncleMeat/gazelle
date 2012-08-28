@@ -47,7 +47,6 @@ show_header('Manage articles','bbcode');
         <div id="contentpreview" style="text-align:left;"></div>
     </div>
     <form  id="quickpostform" action="tools.php" method="post">
-        <div class="head"><?=($_GET['action'] == 'articles'?"New Article":"Edit Article: $Title")?></div>
         <div class="box pad">
             <div id="quickreplytext">
 			<input type="hidden" name="action" value="<?= ($_GET['action'] == 'articles')? 'takearticle' : 'takeeditarticle';?>" />
@@ -87,14 +86,13 @@ show_header('Manage articles','bbcode');
 			<input type="text" name="description" size="100" <? if(!empty($Description)) { echo 'value="'.display_str($Description).'"'; } ?> />
 			<br />
 			<h3>Body</h3>
-                  &nbsp; special article tags allowed: [whitelist] &nbsp; [clientlist] &nbsp; [ratiolist] &nbsp; [dnulist]
                   <? $Text->display_bbcode_assistant('textbody', get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])) ?>
                   <textarea id="textbody" name="body" class="long" rows="15"><? if(!empty($Body)) { echo display_str($Body); } ?></textarea> 
             </div>
             <br />
            <div class="center">
-			<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Edit_Article();}else{Preview_Article();}" />
-                  <input type="submit" value="<?= ($_GET['action'] == 'articles')? 'Create new article' : 'Save changes';?>" />
+			<input id="post_preview" type="button" value="Preview" onclick="if(this.preview){Quick_Edit_Blog();}else{Quick_Preview_Blog();}" />
+                  <input type="submit" value="<?= ($_GET['action'] == 'articles')? 'Create new article' : 'Edit article';?>" />
             </div> 
         </div>
     </form>
@@ -103,57 +101,34 @@ show_header('Manage articles','bbcode');
         
 <?
     $OldCategory = -1;
-    $LastSubCat = -1;
-    $OpenTable=false;
+    $OldSubCat = -1;
     $DB->query("SELECT ID, Category, SubCat, TopicID, Title, Body, Time, Description 
                   FROM articles 
               ORDER BY Category, SubCat, Title");// LIMIT 20
     while(list($ArticleID,$Category,$SubCat,$TopicID, $Title,$Body,$ArticleTime,$Description)=$DB->next_record()) {
-        $Row = ($Row == 'a') ? 'b' : 'a';
   
-        if($LastSubCat != $SubCat) {  
-                $Row = 'b';
-                $LastSubCat = $SubCat;
-
-                if($OpenTable){  ?>
-            </table><br/>
-<?              }
-         
-            if($OldCategory != $Category ) { ?>
-                <br/> 
-                <h3 id="general"><?=$ArticleCats[$Category]?></h3>
+        if($OldCategory != $Category || $OldSubCat != $SubCat) { ?>
+            <h3 id="general"><?= "$ArticleCats[$Category] > ".($SubCat==1?"Other $ArticleCats[$Category] articles":$ArticleSubCats[$SubCat]) ?></h3>
 <?
-                $OldCategory = $Category; 
-            }  ?>
-            
-        <div class="head"><?=($SubCat==1?"Other $ArticleCats[$Category] articles":$ArticleSubCats[$SubCat])?></div>
-        <table width="100%" class="topic_list">
-            <tr class="colhead">
-                    <td style="width:300px;">Title</td>
-                    <td>Additional Info</td>
-            </tr>
-<? 
-            $OpenTable=true;
+            $OldCategory = $Category;
+            $OldSubCat = $SubCat;
         }
-?> 
-            <tr class="row<?=$Row?>"> 
-                <td class="nobr topic_link">
-                    <span style="float:left">
-                        <a href="articles.php?topic=<?=$TopicID?>" target="_blank" title="goto article"><?=display_str($Title)?></a>
-            <!--  <a href="tools.php?action=editarticle&amp;id=<?=$ArticleID?>" title="Edit this article"><?=display_str($Title)?></a> -->
-                    </span>
-                    <span style="float:right" class="small">posted <?=time_diff($ArticleTime)?></span>
-                </td>
-                <td class="nobr">
-                    <span style="float:left"><?=display_str($Description)?></span>
-                    <span style="float:right">
-                        <a href="tools.php?action=editarticle&amp;id=<?=$ArticleID?>">[Edit]</a>
-                        <a href="tools.php?action=deletearticle&amp;id=<?=$ArticleID?>&amp;auth=<?=$LoggedUser['AuthKey']?>" onClick="return confirm('Are you sure you want to delete this article?');">[Delete]</a>
-                    </span>
-                </td>
-            </tr>
-<?  } ?>
-        </table>
-            
+?>
+        <div class="head">
+                <strong><?=display_str($Title) ?></strong> - posted <?=time_diff($ArticleTime) ?>
+                    <span style="float:right;"><?=$TopicID?> - 
+                <a href="tools.php?action=editarticle&amp;id=<?=$ArticleID?>">[Edit]</a> 
+                <a href="tools.php?action=deletearticle&amp;id=<?=$ArticleID?>&amp;auth=<?=$LoggedUser['AuthKey']?>" onClick="return confirm('Are you sure you want to delete this article?');">[Delete]</a>
+                 - <a href="#" onClick="$('#article_<?=$ArticleID?>').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
+        </div>
+	<div class="box pad rowa">
+		
+		 <?=$Text->full_format($Description, true, true) ?> 
+	</div>
+	<div class="box vertical_space hidden" id="article_<?=$ArticleID?>">
+		
+		<div class="pad"><?=$Text->full_format($Body, true) ?></div>
+	</div>
+<? } ?>
 </div>
 <? show_footer();?>

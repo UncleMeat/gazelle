@@ -24,6 +24,9 @@ switch ($_GET['action']){
 	case 'preview':
 		require('preview.php');
 		break;
+	case 'preview_article':
+		require('preview_article.php');
+		break;
 	case 'preview_newpm':
 		require('preview_newpm.php');
 		break;

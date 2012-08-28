@@ -190,9 +190,10 @@ switch ($_REQUEST['action']){
                 if ($Count > 0) {
                     error('The topic ID must be unique for the article');
                 }
-                $DB->query("INSERT INTO articles (Category, TopicID, Title, Description, Body, Time) VALUES ('".$_POST['category']."', '".db_string($_POST['topicid'])."', '".db_string($_POST['title'])."', '".db_string($_POST['description'])."', '".db_string($_POST['body'])."', '".sqltime()."')");
-
-                header('Location: tools.php?action=articles');
+                $DB->query("INSERT INTO articles (Category, SubCat, TopicID, Title, Description, Body, Time) 
+                    VALUES ('".(int)$_POST['category']."', '".(int)$_POST['subcat']."', '".db_string($_POST['topicid'])."', '".db_string($_POST['title'])."', '".db_string($_POST['description'])."', '".db_string($_POST['body'])."', '".sqltime()."')");
+                $NewID = $DB->inserted_id();
+                header("Location: tools.php?action=editarticle&amp;id=$NewID");
                 break;
 
 	case 'deletearticle':

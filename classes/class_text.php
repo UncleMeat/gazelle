@@ -617,6 +617,14 @@ class TEXT {
 		return $HTML;
 	}
       
+/**
+ * Validates the bbcode for bad tags (uncloesd/mixed tags)
+ *
+ * @param string $Str The text to be validated
+ * @param boolean $AdvancedTags Whether AdvancedTags are allowed (this is only for the preview if errorout=true)
+ * @param boolean $ErrorOut If $ErrorOut=true then on errors the error page will be displayed with a preview of the errors (If false the function just returns the validate result)
+ * @return boolean True if there are no bad tags and false otherwise 
+ */
       function validate_bbcode($Str, $AdvancedTags = false, $ErrorOut = true){
             $preview = $this->full_format($Str, $AdvancedTags,true);
             if($this->has_errors()) {

@@ -64,7 +64,7 @@ function Sandbox_Preview() {
 
 
 function Quick_Preview_Blog() { 
-	$('#post_preview').raw().value = "Make changes";
+	$('#post_preview').raw().value = "Edit";
 	$('#post_preview').raw().preview = true;
 	ajax.post("ajax.php?action=preview_blog","quickpostform", function(response){
 		$('#quickreplypreview').show();
@@ -74,6 +74,24 @@ function Quick_Preview_Blog() {
 }
 
 function Quick_Edit_Blog() { 
+	$('#post_preview').raw().value = "Preview";
+	$('#post_preview').raw().preview = false;
+	$('#quickreplypreview').hide();
+	$('#quickreplytext').show();
+}
+
+
+function Preview_Article() { 
+	$('#post_preview').raw().value = "Edit";
+	$('#post_preview').raw().preview = true;
+	ajax.post("ajax.php?action=preview_article","quickpostform", function(response){
+		$('#quickreplypreview').show();
+		$('#contentpreview').raw().innerHTML = response;
+		$('#quickreplytext').hide();
+	});
+}
+
+function Edit_Article() { 
 	$('#post_preview').raw().value = "Preview";
 	$('#post_preview').raw().preview = false;
 	$('#quickreplypreview').hide();
