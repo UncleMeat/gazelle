@@ -175,7 +175,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
 
 #adbar {
     text-align: center;
-    margin: 10px auto 0px;
+    margin: 20px auto -10px;
 }
 #content {
     width: 90%;
