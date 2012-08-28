@@ -871,6 +871,19 @@ table.boxstat a, table.boxstat a:visited {
     height:20px;
 }
 
+
+.icon_disk_none {
+    background: url('images/disk.png') no-repeat center center;
+}
+
+.icon_disk_leech {
+    background: url('images/diskdown.png') no-repeat center center;
+}
+
+.icon_disk_seed {
+    background: url('images/diskup.png') no-repeat center center;
+}
+
 .icon_warning {
     background: url('images/warn_still.gif') no-repeat center center;
 }
