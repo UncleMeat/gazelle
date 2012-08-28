@@ -6,6 +6,7 @@ var data;
 var chart;
 var options; 
 var maxrows;
+var zoom;
 
 function Start_Google(){
     google.load("visualization", "1", {packages:["corechart"]});
@@ -32,6 +33,7 @@ function Start_Sitestats(){
             hAxis:{viewWindow: {min:startrow, max:endrow},slantedText:false,maxTextLines:1,maxAlternation:1}
         }; 
     maxrows = data.getNumberOfRows()-1;
+    zoom=0;
     drawChart();
 }
 
@@ -43,6 +45,18 @@ function drawChart() {
  
 function zoomout(){
     options.animation.duration = 1000;
+    var range = options.hAxis.viewWindow.max-options.hAxis.viewWindow.min;
+    //if(range>maxrows) range = maxrows;
+    range /= 2; 
+    var shift = range;
+    if (options.hAxis.viewWindow.min - range < 0) shift = options.hAxis.viewWindow.min;
+    options.hAxis.viewWindow.min -= shift;
+    if (options.hAxis.viewWindow.max + range > maxrows) shift = maxrows - options.hAxis.viewWindow.max;
+    else shift = range;
+    options.hAxis.viewWindow.max += shift; 
+    drawChart();
+    /*      
+    options.animation.duration = 1000;
     var mrange = parseInt(maxrows * 0.15);
     var shift = mrange;
     if (options.hAxis.viewWindow.min - mrange < 0) shift = options.hAxis.viewWindow.min;
@@ -50,10 +64,22 @@ function zoomout(){
     if (options.hAxis.viewWindow.max + mrange > maxrows) shift = maxrows - options.hAxis.viewWindow.max;
     else shift = mrange;
     options.hAxis.viewWindow.max += shift; 
-    drawChart();
+    drawChart(); */
 }   
 function zoomin(){
     options.animation.duration = 1000;
+    var range = options.hAxis.viewWindow.max-options.hAxis.viewWindow.min; 
+    if (range<14) {
+        range = range - 7;
+        if (range<0) { alert('hai'); return; }
+    }  
+    range = parseInt(range/4); 
+    //alert(range);
+    options.hAxis.viewWindow.min += range; 
+    options.hAxis.viewWindow.max -= range;
+    drawChart();
+    
+    /*
     var mrange = parseInt(maxrows * 0.15);
     if ((mrange*2)+7 > (options.hAxis.viewWindow.max-options.hAxis.viewWindow.min)) {
         mrange = parseInt((options.hAxis.viewWindow.max-options.hAxis.viewWindow.min-7) * 0.5  );
@@ -61,8 +87,8 @@ function zoomin(){
     }  
     options.hAxis.viewWindow.min += mrange; 
     options.hAxis.viewWindow.max -= mrange;
-    drawChart();
-}   
+    drawChart(); */
+}
 
 function prev(jump,durationMS) {
     options.animation.duration = durationMS;
