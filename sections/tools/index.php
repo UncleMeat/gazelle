@@ -313,14 +313,12 @@ switch ($_REQUEST['action']){
                             $Val->SetFields('maxavatarwidth',true,'number','You did not enter a valid number for MaxAvavtarWidth.');
                             $Val->SetFields('maxavatarheight',true,'number','You did not enter a valid number for MaxAvavtarHeight.');
                             $Val->SetFields('maxcollages',true,'number','You did not enter a valid number of personal collages.');
-                            
-                            //$Val->SetFields('test',true,'number','You did not enter a valid level for this permission set.');
-                            /* // Testing if this actually breaks anything... might be nice to have staff classes with same level
+                             
                             if (!is_numeric($_REQUEST['id'])) {
                                   $DB->query("SELECT ID FROM permissions WHERE Level='".db_string($_REQUEST['level'])."'");
                                   list($DupeCheck)=$DB->next_record();
                                   if ($DupeCheck) $Err = "There is already a user class with that level."; 
-                            } */
+                            }
                             $Level=$_REQUEST['level'];
                             $DisplayStaff=$_REQUEST['displaystaff'];
                             $MaxSigLength=$_REQUEST['maxsiglength'];
