@@ -754,13 +754,13 @@ if($Day != next_day() || $_GET['runday']){
 	unset($DeleteNotes);
 	
 	if(count($LogEntries) > 0) {
-		$Values = "('".implode("', '".$sqltime."'), ('",$LogEntries)."', '".$sqltime."')";
+		$Values = "('".implode("', '$sqltime'), ('",$LogEntries)."', '$sqltime')";
 		$DB->query('INSERT INTO log (Message, Time) VALUES '.$Values);
 		echo "\nDeleted $i torrents for inactivity\n";
 	}
 
 	// Daily top 10 history.
-	$DB->query("INSERT INTO top10_history (Date, Type) VALUES ('".$sqltime."', 'Daily')");
+	$DB->query("INSERT INTO top10_history (Date, Type) VALUES ('$sqltime', 'Daily')");
 	$HistoryID = $DB->inserted_id();
 
 	$Top10 = $Cache->get_value('top10tor_day_10');
@@ -777,7 +777,7 @@ if($Day != next_day() || $_GET['runday']){
 			FROM torrents AS t
 				LEFT JOIN torrents_group AS g ON g.ID = t.GroupID
 			WHERE t.Seeders>0
-				AND t.Time > ('".$sqltime."' - INTERVAL 1 DAY)
+				AND t.Time > ('$sqltime' - INTERVAL 1 DAY)
 			ORDER BY (t.Seeders + t.Leechers) DESC
 				LIMIT 10;");
 

@@ -111,8 +111,7 @@ define('LAB_CHAN', '#');
 define('STATUS_CHAN', '#');
 
 // Miscellaneous values
-
-$ForumsRevealVoters = array();
+$ForumsRevealVoters = array(15,21);
 $ForumsDoublePost = array();
 
 $CollageCats = array(0=>'Personal', 1=>'Theme', 2=>'Porn Star', 3=>'Studio', 4=>'Staff picks');

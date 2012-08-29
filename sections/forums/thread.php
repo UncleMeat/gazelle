@@ -274,8 +274,6 @@ if ($ThreadInfo['NoPoll'] == 0) {
 <?			} ?>
 			</ul>
 			<strong>Votes:</strong> <?=number_format($TotalVotes)?><br /><br />
-                </div>
-            </div>
 <?
 		} else {
 			//Staff forum, output voters, not percentages
@@ -333,6 +331,8 @@ if ($ThreadInfo['NoPoll'] == 0) {
 		}
 
 ?>        
+                </div>
+            </div>
             <br />
 <?                  
         }

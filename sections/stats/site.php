@@ -126,8 +126,8 @@ show_header('Site Statistics', 'charts,jquery');
         <div style="margin:0px auto">
         <input class="chart_button" type="button" value="<<" onclick="prev(2,1200)" title="back" />
         <input class="chart_button" type="button" value="<" onclick="prev(0.9,800)" title="back" />&nbsp;&nbsp;
-        <input class="chart_button" type="button" value="△" onclick="zoomout()" title="zoom out" />
-        <input class="chart_button" type="button" value="▽" onclick="zoomin()" title="zoom in" />&nbsp;&nbsp;
+        <input class="chart_button" type="button" value="▽" onclick="zoomout()" title="zoom out" />
+        <input class="chart_button" type="button" value="△" onclick="zoomin()" title="zoom in" />&nbsp;&nbsp;
         <input class="chart_button" type="button" value=">" onclick="next(0.9,800)" title="forward" />
         <input class="chart_button" type="button" value=">>" onclick="next(2,1200)" title="forward" />
         </div>
@@ -150,7 +150,9 @@ show_header('Site Statistics', 'charts,jquery');
             $start = array ($_POST[year1],$_POST[month1],$_POST[day1]);
             $end = array ($_POST[year2],$_POST[month2],$_POST[day2]);
         } else {
-            $start = array (2011,02,01);
+            //$start = array (2011,02,01);
+            $start =  date('Y-m-d', time() - (3600*24*365));
+            $start = explode('-', $start);
             $end =  date('Y-m-d');
             $end = explode('-', $end);
         }
