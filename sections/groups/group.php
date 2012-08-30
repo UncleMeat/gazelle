@@ -152,7 +152,7 @@ list($Results) = $DB->next_record();
                               Mass PM is much much slower if it is not sent from the system... practically speaking only send a mass PM from yourself for groups with less than a 100 members<br/>
                               Group Award sends the same PM as you get from any award/badge.<br/>
                               Adjust Credits and Download do not send any PM themselves.<br/>
-                              If you want to remove download use a '-' before the number and note the amount is in GB. ie. '-1024' will remove 1 TB.
+                              If you want to remove download (or credits) use a '-' before the number and note the download amount is in GB. ie. '-1024' will remove 1 TB.
                       </td>
                 </tr>
           </table>

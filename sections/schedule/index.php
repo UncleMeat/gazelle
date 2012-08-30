@@ -95,11 +95,51 @@ while (list($UserID,$InfoHash) = $DB->next_record(MYSQLI_NUM, false)) {
 
 //-------Gives credits to users with active torrents-------------------------//
 sleep(3);
+/*
+// method 1 : capped at 60 - linear rate
 $DB->query("update users_main
             set Credits = Credits +
                 (select if(count(*) < 60, count(*), 60) * 0.25 from xbt_files_users
                 where users_main.ID = xbt_files_users.uid AND xbt_files_users.remaining = 0 AND xbt_files_users.active = 1)");
 
+ // method 2 : no cap, diminishing returns, 0.96s 
+$DB->query("UPDATE users_main SET Credits = Credits + 
+           ( SELECT ROUND( ( SQRT( 8.0 * ( COUNT(*)/20 ) + 1.0 ) - 1.0 ) / 2.0 *20 ) * 0.25
+                    FROM xbt_files_users
+                    WHERE users_main.ID = xbt_files_users.uid
+                    AND xbt_files_users.remaining =0
+                    AND xbt_files_users.active =1 )"); 
+*/
+        
+// method 3 : no cap, diminishing returns , rewritten as join and also records seedhours, 0.06s
+$DB->query("UPDATE users_main AS um  
+              JOIN (SELECT xbt_files_users.uid AS UserID,
+                           (ROUND( ( SQRT( 8.0 * ( COUNT(*)/20 ) + 1.0 ) - 1.0 ) / 2.0 *20 ) * 0.25 ) AS SeedCount,
+                           (COUNT(*) * 0.25 ) AS SeedHours
+                      FROM xbt_files_users
+                     WHERE xbt_files_users.remaining =0
+                       AND xbt_files_users.active =1
+                  GROUP BY xbt_files_users.uid) AS s ON s.UserID=um.ID 
+                  SET Credits=Credits+SeedCount,
+                 um.SeedHours=um.SeedHours+s.SeedHours
+                    ");
+                        
+/*                
+// testing method 3 inner join
+$DB->query("SELECT um.ID, s.UserID, s.SeedHours, s.SeedCount 
+              FROM users_main AS um  
+              JOIN (SELECT xbt_files_users.uid AS UserID,
+                           (ROUND( ( SQRT( 8.0 * ( COUNT(*)/20 ) + 1.0 ) - 1.0 ) / 2.0 *20 ) * 0.25 ) AS SeedCount,
+                           (COUNT(*) * 0.25 ) AS SeedHours
+                      FROM xbt_files_users
+                     WHERE xbt_files_users.remaining =0
+                       AND xbt_files_users.active =1
+                  GROUP BY xbt_files_users.uid) AS s ON s.UserID=um.ID  
+                    ");
+*/
+                        
+                        
+                        
 //------------Remove inactive peers every 15 minutes-------------------------//
 sleep(3);
 $DB->query("DELETE FROM xbt_files_users WHERE active='0'");

@@ -2112,6 +2112,8 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `Language` char(2) NOT NULL DEFAULT '',
   `ipcc` varchar(2) NOT NULL DEFAULT '',
   `FLTokens` int(10) NOT NULL DEFAULT '0',
+  `personal_freeleech` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `SeedHours` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.00',
   `Credits` double(11,2) NOT NULL DEFAULT '0.00',
   `Signature` text,
   PRIMARY KEY (`ID`),
