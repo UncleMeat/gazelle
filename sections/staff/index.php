@@ -64,15 +64,15 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
       } 
 ?>
 
-	<div class="head">Staff Members</div>
+	<div class="head">Staff</div>
 	<div class="box pad" style="padding:10px;">
-            <p>Staff members do something something blah blah should we even bother having a line here?</p>
-		
 <?
+           /* <p>The staff are the people who run the site.</p>*/
+		
 	$CurClass = 0;
 	$CloseTable = false;
 	foreach($Staff as $Support) {
-		list($ID, $Class, $ClassName, $Username, $Title, $Paranoia, $LastAccess, $SupportFor) = $Support;
+		list($ID, $Class, $ClassName, $Username, $Title, $Paranoia, $LastAccess, $Remark) = $Support;
 		if($Class!=$CurClass) { // Start new class of staff members
 			$Row = 'a';
 			if($CloseTable) {
@@ -108,12 +108,14 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 			</tr>
 <?	} ?>
 		</table>
-		
+		<? /*
 	</div>
        
-	<div class="head">Senior Staff</div>
+	<div class="head">Admins</div>
 	<div class="box pad" style="padding:10px;">
-            <p>Senior Staff - They make the decisions, annoy them at your own peril.</p>
+            <p>Admins are staff who do things like fix the site.</p>
+             
+             */  ?>
 <?
 	$CurClass = 0;
 	$CloseTable = false;

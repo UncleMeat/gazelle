@@ -50,7 +50,7 @@ function get_forum_staff() {
 			JOIN users_info AS i ON m.ID=i.UserID
 			JOIN permissions AS p ON p.ID=m.PermissionID
 			WHERE p.DisplayStaff='1'
-				AND p.Level < 600
+				AND p.Level < 550
 			ORDER BY p.Level, m.LastAccess ASC");
 		$ForumStaff = $DB->to_array(false, MYSQLI_BOTH, array(5,'Paranoia'));
 		$Cache->cache_value('forum_staff', $ForumStaff, 180);
@@ -78,7 +78,7 @@ function get_staff() {
 			JOIN users_info AS i ON m.ID=i.UserID
 			JOIN permissions AS p ON p.ID=m.PermissionID
 			WHERE p.DisplayStaff='1'
-				AND p.Level >= 600
+				AND p.Level >= 550
 			ORDER BY p.Level, m.LastAccess ASC");
 		$Staff = $DB->to_array(false, MYSQLI_BOTH, array(5,'Paranoia'));
 		$Cache->cache_value('staff', $Staff, 180);
