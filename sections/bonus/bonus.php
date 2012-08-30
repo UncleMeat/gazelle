@@ -39,7 +39,6 @@ $ShopItems = get_shop_items($LoggedUser['ID']);
       $UserBadgeIDs = get_user_shop_badges_ids($LoggedUser['ID']);
 	foreach($ShopItems as $BonusItem) {
 		list($ItemID, $Title, $Description, $Action, $Value, $Cost, $Image, $Badge, $Rank, $UserRank) = $BonusItem;
-            //if ($Badge && $LastBadge==$Badge) continue;
             $IsBadge = $Action=='badge'; 
             $IsBuyGB = $Action=='gb'; 
             $DescExtra='';
@@ -56,9 +55,6 @@ $ShopItems = get_shop_items($LoggedUser['ID']);
                 if ($IsBuyGB && $LoggedUser['BytesDownloaded'] < get_bytes($Value.'gb') ) {
                     $DescExtra = "<br/>(WARNING: will only remove ".get_size($LoggedUser['BytesDownloaded']) .")"; // get_size(get_bytes($Value.'gb') - 
                 }
-                //if ($MaxRank && $Rank < $MaxRank) $CanBuy = false;
-                //if ($CanBuy) $LastBadge=$Badge;
-                //$BGClass= ($CanBuy?' itembuy' :' itemnotbuy');
                 if($IsBadge ) {
                     if ($LastBadge==$Badge) {
                         $CanBuy = false;

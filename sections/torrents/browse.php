@@ -395,9 +395,9 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                     <td colspan="7" style="text-align:right"> 
                         
                     <input style="float:right;position:relative;left:-12px;bottom:-116px;" class="on_cat_change <? if (!empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>" 
-                           type="submit" value="Filter Torrents" />
-    
-                        <input type="button" value="Reset" onclick="location.href='torrents.php<? if (isset($_GET['action']) && $_GET['action'] == "advanced") { ?>?action=advanced<? } ?>'" />
+                           type="submit" value="Filter Torrents" /> 
+                    
+                        <input type="button" value="Reset" onclick="location.href='torrents.php?action=<? if (isset($_GET['action']) && $_GET['action'] == "advanced") { ?>advanced<? } else { ?>basic<? } ?>'" />
                 &nbsp;&nbsp;
                 <? if (count($Queries) > 0 || count($SS->Filters) > 0) { ?>
                     <input type="submit" name="setdefault" value="Make Default" />
