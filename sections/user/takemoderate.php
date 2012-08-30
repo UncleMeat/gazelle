@@ -439,7 +439,7 @@ if ($BonusCredits!=$Cur['Credits'] && ((check_perms('users_edit_credits') && $Us
         $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$BonusSummary', i.BonusLog)";
                 
         $EditSummary[]="Bonus Credits changed from ".$Cur['Credits']." to ".$BonusCredits;
-	$Cache->delete_value('user_stats_'.$UserID);
+	  $Cache->delete_value('user_stats_'.$UserID);
         $HeavyUpdates['Credits'] = $BonusCredits;
         
 }

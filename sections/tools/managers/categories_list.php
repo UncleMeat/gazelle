@@ -4,7 +4,7 @@ if(!check_perms('admin_manage_categories')){ error(403); }
 
 show_header('Manage news','bbcode');
 $images = scandir(SERVER_ROOT.'/static/common/caticons', 0);
-unset($images[0], $images[1]);
+$images= array_diff($images, array('.','..'));
 
 $DB->query("SELECT
         id,

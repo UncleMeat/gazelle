@@ -39,10 +39,14 @@ if($Err){
 $DB->query('SELECT UserID FROM users_groups WHERE GroupID='.$GroupID);
 
 if ($DB->record_count()>0) {
-	$Users = $DB->to_array();
-	foreach ($Users as $UserID) { 
-		send_pm($UserID[0],($SenderID==$UserID[0]?0:$SenderID),$Subject,$Message); 
-	}
+    $Users = $DB->collect('UserID');
+    if ($SenderID == 0){ // we only want to send a masspm if from system
+        send_pm($Users,0,$Subject,$Message); 
+    } else {
+        foreach ($Users as $UserID) { 
+		send_pm($UserID,($SenderID==$UserID?0:$SenderID),$Subject,$Message); 
+        }
+    }
 }
 $Log = isset($_POST['showsender']) ? "[user]{$LoggedUser['Username']}[/user]" : "System ([user]{$LoggedUser['Username']}[/user])";
 $Log = sqltime()." - [color=purple]Mass PM sent[/color] by $Log - subject: $Subject";

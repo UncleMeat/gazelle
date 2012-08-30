@@ -118,19 +118,42 @@ list($Results) = $DB->next_record();
                       <td colspan="5">Actions</td>
                 </tr>
                 <tr>
-                      <td width="25%" class="noborder center"></td>
-                      <td width="200px" valign="top" class="noborder center">
-                            <input type="submit" name="action" value="mass pm" title="Mass PM this group" /><br />
+                      <td width="15%" class="noborder "></td>
+                      <td width="300px" valign="top" class="noborder ">
+                            <input type="submit" name="action" value="mass pm" title="Mass PM this group" />
                       </td>
-                      <td width="200px" valign="top" class="noborder center">
+                      <td width="250px" valign="top" class="noborder ">
                             <input type="submit" name="action" value="group award" <?
                                 if (!check_perms('users_edit_badges'))echo 'disabled="disabled" '; 
-                                ?>title="Give Award to all members of this group" /><br />
+                                ?>title="Give Award to all members of this group" />
                       </td>
-                      <td width="200px" valign="top" class="noborder center">
-                            <input type="submit" name="action" value="remove all" disabled="disabled" title="Remove all members from this group" /><br />
+                      <td width="300px" valign="top" class="noborder ">
+                            <input type="submit" name="action" value="remove all" disabled="disabled" title="Remove all members from this group" />
                       </td>
-                      <td width="25%" class="noborder center"></td>
+                      <td width="15%" class="noborder "></td>
+                </tr>
+                <tr>
+                      <td class="noborder "></td>
+                      <td valign="top" class="noborder ">
+                            <?  $disable = check_perms('users_edit_credits')?'':'disabled="disabled"';  ?>
+                            <input type="submit" name="action" value="give credits" <?=$disable?> title="Give credits" />
+                            <input type="text" name="credits" style="width:80px" value="" <?=$disable?> />
+                      </td>
+                      <td valign="top" class="noborder " colspan="2">
+                            <?  $disable = check_perms('users_edit_ratio')?'':'disabled="disabled"';  ?>
+                            <input type="submit" name="action" value="adjust download" <?=$disable?> title="Adjust download amount" />
+                            <input type="text" name="download" style="width:80px" value="" <?=$disable?> />&nbsp; <strong>(GB)</strong>
+                      </td>
+                      <td class="noborder "></td>
+                </tr>
+                <tr>
+                      <td colspan="5"> 
+                              <strong>Note:</strong> 
+                              Mass PM is much much slower if it is not sent from the system... practically speaking only send a mass PM from yourself for groups with less than a 100 members<br/>
+                              Group Award sends the same PM as you get from any award/badge.<br/>
+                              Adjust Credits and Download do not send any PM themselves.<br/>
+                              If you want to remove download use a '-' before the number and note the amount is in GB. ie. '-1024' will remove 1 TB.
+                      </td>
                 </tr>
           </table>
     </form>

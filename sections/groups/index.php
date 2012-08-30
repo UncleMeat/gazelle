@@ -71,7 +71,7 @@ if(empty($_POST['action'])) {
         case 'remove':  // user
             authorize();
 
-            if (!$UserID || !$GroupID) error("b");
+            if (!$UserID || !$GroupID) error(0);
 
             $DB->query("DELETE FROM users_groups WHERE GroupID='$GroupID' AND UserID='$UserID'");
             $DB->query("SELECT Username FROM users_main WHERE ID=$UserID");
@@ -83,14 +83,14 @@ if(empty($_POST['action'])) {
             break;
 
         case 'pm user':
-            if (!$UserID) error("d");
+            if (!$UserID) error(0);
             header('Location: inbox.php?action=compose&to=' . $UserID);
             break;
 
         case 'change name': // group
             authorize();
 
-            if (!$GroupID) error("g");
+            if (!$GroupID) error(0);
             if (!$P[name] || $P[name] == '') error("Name of group cannot be empty");
             $Log = sqltime() . " - Name [color=blue]changed[/color] to [color=green]$P[name][/color] by [user]{$LoggedUser['Username']}[/user]";
             $DB->query("UPDATE groups SET Name='$P[name]', Log=CONCAT_WS( '\n', '$Log', Log) WHERE ID='$GroupID'");
@@ -101,7 +101,7 @@ if(empty($_POST['action'])) {
         case 'delete':  // group
             authorize();
 
-            if (!$GroupID) error("f");
+            if (!$GroupID) error(0);
             $DB->query("DELETE FROM groups WHERE ID='$GroupID'");
             header('Location: groups.php');
             break;
@@ -229,6 +229,83 @@ if(empty($_POST['action'])) {
             if (!$GroupID) error(0);
             include(SERVER_ROOT . '/sections/groups/takemassaward.php');
             break;
+
+        case 'give credits':  
+            if (!check_perms('users_edit_credits')) error(403);
+            if (!$GroupID) error(0); 
+            $DB->query('SELECT UserID FROM users_groups WHERE GroupID='.$GroupID);
+
+            if ($DB->record_count()>0) {
+                $AdjustCredits = $_POST['credits']; 
+                if ( $AdjustCredits[0]=='+') $AdjustCredits = substr($AdjustCredits, 1);
+                if ( !is_number($AdjustCredits)) error(0);
+                $AdjustCredits = (int)$AdjustCredits;
+                if ($AdjustCredits>0) $AdjustCredits = "+$AdjustCredits";
+                
+                $Users = $DB->collect('UserID');
+                $UserIDs = implode(',', $Users);
+        
+                $BonusSummary = sqltime()." | $AdjustCredits | ".ucfirst("credits given by $LoggedUser[Username]");
+                $Summary = sqltime()." - Bonus Credits adjusted by $AdjustCredits (mass credit award) by $LoggedUser[Username]";
+        
+                $DB->query("UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID 
+                                   SET Credits=Credits$AdjustCredits,
+                                       AdminComment=CONCAT_WS( '\n', '$Summary', AdminComment),
+                                       BonusLog=CONCAT_WS( '\n', '$BonusSummary', BonusLog)
+                                 WHERE m.ID IN ($UserIDs)");
+                    
+                foreach ($Users as $UserID) { 
+                    $Cache->delete_value('user_stats_'.$UserID);
+                    $Cache->delete_value('user_info_'.$UserID);
+                    $Cache->delete_value('user_info_heavy_'.$UserID);
+                }
+            }
+            
+            $Log = db_string( sqltime()." - [color=purple]Credits awarded[/color] by $LoggedUser[Username] - amount: $AdjustCredits" );
+            $DB->query("UPDATE groups SET Log=CONCAT_WS( '\n', '$Log', Log) WHERE ID='$GroupID'");
+
+            header('Location: groups.php?groupid=' . $GroupID );
+       
+            break;
+
+        case 'adjust download':  
+            if (!check_perms('users_edit_ratio')) error(403);
+            if (!$GroupID) error(0); 
+            $DB->query('SELECT UserID FROM users_groups WHERE GroupID='.$GroupID);
+
+            if ($DB->record_count()>0) {
+                $AdjustDownload = $_POST['download']; 
+                if ( $AdjustDownload[0]=='+') $AdjustDownload = substr($AdjustDownload, 1);
+                if ( !is_number($AdjustDownload)) error(0);
+                $AdjustDownload = (int)$AdjustDownload;
+                $AdjustDownload = get_bytes("{$AdjustDownload}gb");
+                $StrDownload = get_size($AdjustDownload);
+                if ($AdjustDownload>0) $AdjustDownload = "+$AdjustDownload";
+                
+                $Users = $DB->collect('UserID');
+                $UserIDs = implode(',', $Users);
+         
+                $Summary = sqltime()." - Download amount adjusted by $StrDownload (mass download adjustment) by $LoggedUser[Username]";
+        
+                $DB->query("UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID 
+                                   SET Downloaded=IF(Downloaded<=".abs($AdjustDownload).",0,Downloaded$AdjustDownload),
+                                       AdminComment=CONCAT_WS( '\n', '$Summary', AdminComment)
+                                 WHERE m.ID IN ($UserIDs)");
+                    
+                foreach ($Users as $UserID) { 
+                    $Cache->delete_value('user_stats_'.$UserID);
+                    $Cache->delete_value('user_info_'.$UserID);
+                    $Cache->delete_value('user_info_heavy_'.$UserID);
+                }
+            }
+            
+            $Log = db_string( sqltime()." - [color=purple]Download adjusted[/color] by $LoggedUser[Username] - amount: $StrDownload" );
+            $DB->query("UPDATE groups SET Log=CONCAT_WS( '\n', '$Log', Log) WHERE ID='$GroupID'");
+
+            header('Location: groups.php?groupid=' . $GroupID );
+       
+        
+            break;
             
         default :
             error(0);
@@ -237,24 +314,4 @@ if(empty($_POST['action'])) {
     }
 }
 
-        /*
-          case 'add':
-          authorize();
-
-          $Log =  sqltime()." - Usergroup $P[name] created by [user]{$LoggedUser['Username']}[/user]";
-          $DB->query("INSERT IGNORE INTO groups (Name, Log)
-          VALUES ('$P[name]', '$Log')");
-          $GroupID = (int)$DB->inserted_id();
-          if (!$GroupID) error("Error - Failed to create new group!");
-          header('Location: groups.php'.($GroupID?'?groupid='.$GroupID:''));
-          break;
-         *//*
-          case 'update':
-          authorize();
-
-          if (!$GroupID) error("g");
-          $DB->query("UPDATE groups SET Comment='$P[comment]' WHERE GroupID='$GroupID'");
-          header('Location: groups.php?groupid='.$GroupID);
-          break;
-         */
 ?>

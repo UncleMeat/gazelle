@@ -1737,7 +1737,7 @@ function send_pm($ToID, $FromID, $Subject, $Body, $ConvID='') {
 */
 
 
-//  OPTIMISED a bit more for mass sending 
+//  OPTIMISED a bit more for mass sending (only put in an array of numbers if fromID==system (0)
 // this function sends a PM to the userid $ToID and from the userid $FromID, sets date to now
 // this function no longer uses db_string() so you will need to escape strings before using this function!
 // set userid to 0 for a PM from 'system'
@@ -1751,9 +1751,11 @@ function send_pm($ToID, $FromID, $Subject, $Body, $ConvID='') {
     foreach ($ToID as $key=>$ID) { 
         if (!is_number($ID)) return false; 
         // Don't allow users to send messages to the system
-        if ($ToID == 0) unset($ToID[$key]);
+        if ($ID == 0) unset($ToID[$key]);
+        if ($ID == $FromID) unset($ToID[$key]); // or themselves
     }
-    if (count($ToID)==0) return false;
+    if (count($ToID)==0) return false; 
+    if (count($ToID)>1 && $FromID===0) return false; // masspms not from the system with the same convID dont work
     $sqltime = sqltime();
     
     if ($ConvID == '') { // new pm

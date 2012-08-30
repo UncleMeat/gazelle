@@ -33,30 +33,31 @@ $Text = new TEXT;
 <div class="thin">
 	<h2>Send PM To All Users in Group: <?=$Name?></h2>
         
-	<div class="colhead">Send list<span style="float:right;"><a href="#" onclick="$('#ulist').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span></div>
+	<div class="head">Send list<span style="float:right;"><a href="#" onclick="$('#ulist').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span></div>
       <div id="ulist" class="box pad hidden">
 <?
            foreach ($Users as $User) { 
                list($UserID,$Username) = $User; ?>
                 <a href="/user.php?id=<?=$UserID?>"><?=$Username?></a><br/>
 <?           }      ?>
-      </div>
-      
+      </div> 
+      <br/>
         <div id="preview" class="hidden"></div>
         <form action="groups.php" method="post" id="messageform">
-            <div id="quickpost">  
-                <br/>
+            <div id="quickpost"> 
+                <div class="head">Compose message</div>
                 <div class="box pad">
                     <input type="hidden" name="action" value="takemasspm" />
                     <input type="hidden" name="applyto" value="group" />
                     <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
                     <input type="hidden" name="groupid" value="<?=$GroupID?>" />
                         <h3>Show Sender: </h3>
-                        <input type="checkbox" name="showsender" value="1" checked="checked" />
-                        <label for="showsender">if checked then the PM will be sent from you, if unchecked it will be sent from system</label>
+                        <input type="checkbox" name="showsender" value="1" />
+                        <label for="showsender">if checked then the PM will be sent from you, if unchecked it will be sent from system</label><br/>
+                        <strong>note:</strong> Mass PM is much much slower if it is not sent from the system... practically speaking only send a mass PM from yourself for groups with less than a 100 members<br/>
                         <br />
                         <h3>Subject</h3>
-                        <input type="text" name="subject" class="long" value="<?=(!empty($Subject) ? $Subject : '')?>"/>
+                        <input type="text" name="subject" class="long" value="<?=(!empty($Subject) ? $Subject : 'subject')?>"/>
                         <br />
                         <h3>Message</h3>  
                         <? $Text->display_bbcode_assistant("message", true); ?>
