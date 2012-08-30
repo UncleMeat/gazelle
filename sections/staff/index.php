@@ -107,7 +107,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 				</td>
 			</tr>
 <?	} ?>
-		</table>
+		</table><br/>
 		<? /*
 	</div>
        
@@ -155,7 +155,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 				</td>
 			</tr>
 <?	} ?>
-		</table>
+		</table><br/>
 		
 	</div>
 </div>
