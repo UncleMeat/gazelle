@@ -342,7 +342,7 @@ function print_staff_status() {
         }
     } 
     
-    if ($active==0) { 
+    if ($active==0) { // if no staff are checking now
             $LastChecked = $Cache->get_value('staff_lastchecked');
             if($LastChecked===false){ 
                 $DB->query("SELECT s.UserID, u.Username, s.TimeOut , s.Location
@@ -361,7 +361,7 @@ function print_staff_status() {
             if ($LastChecked) $Str = time_diff($LastChecked['TimeOut']-480, 2, false)." ($LastChecked[Username])";
             else $Str = "never";
 ?>                           
-            <span class="nostaff_checking" title="last visit: <?=$Str?>">
+            <span class="nostaff_checking" title="last check: <?=$Str?>">
                 there are no staff checking torrents right now
             </span>
 <?  

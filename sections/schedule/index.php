@@ -137,8 +137,7 @@ $DB->query("SELECT um.ID, s.UserID, s.SeedHours, s.SeedCount
                     ");
 */
                         
-                        
-                        
+
 //------------Remove inactive peers every 15 minutes-------------------------//
 sleep(3);
 $DB->query("DELETE FROM xbt_files_users WHERE active='0'");
@@ -185,6 +184,17 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
       include(SERVER_ROOT.'/sections/schedule/award_badges.php');
       
       
+      
+	//------------- Record daily seedhours  ----------------------------------------//
+       
+	if ($Hour == 4) { // 4 am servertime... want it to be daily but not on the 0 hour
+          
+            $time = date("Y-m-d", time());
+
+            $DB->query("INSERT IGNORE INTO users_seedhours_history (UserID, Time, TimeAdded, SeedHours)
+                                    SELECT ID, $time, $sqltime, SeedHours FROM users_main WHERE SeedHours>0.00 ");
+            $DB->query("UPDATE users_main SET SeedHours=0.00 WHERE SeedHours>0.00");
+      }
       
 	//------------- Front page stats ----------------------------------------//
  
