@@ -10,10 +10,7 @@ $ShopItems = get_shop_items($LoggedUser['ID']);
 ?>
 <div class="thin">
 	<h2>Bonus shop</h2>
-            <div class="box pad shadow">
-                <h3>What is a credit?</h3>
-                <p>Credits are distributed as a bonus to people who are seeding torrents. You can find your total credit amount at the top of this page, or on your user details page.</p><br/>
-                <h4>How is the credit calculated?</h4>
+            <div class="box pad shadow"> 
 <? 
                 $creditinfo = get_article('creditsinline');
                 if($creditinfo) echo $Text->full_format($creditinfo, true); 
