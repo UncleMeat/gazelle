@@ -37,6 +37,7 @@ $DB->set_query_id($Result);
 <div class="linkbox"><?=js_pages('show_peers', $_GET['torrentid'], $NumResults, $Page)?></div>
 <? } ?>
 <table>
+    <!--
         <tr class="smallhead">
             <td colspan="7">Seeders</td>
         </tr>
@@ -49,17 +50,18 @@ $DB->set_query_id($Result);
 		<td>Up</td>
 		<td>Down</td>
 		<td>%</td>
+		<td>Ratio</td>
 		<td>Client</td>
-	</tr>
+	</tr> -->
 <?
-    $LastIsSeeder = 1;
+    $LastIsSeeder = -1;
 while(list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Remaining, $UserAgent, $IsSeeder) = $DB->next_record()) {
     
     if ($IsSeeder!=$LastIsSeeder){
 ?>
  
         <tr class="smallhead">
-            <td colspan="7">Leechers</td>
+            <td colspan="7"><?=($IsSeeder?'Seeders':'Leechers')?></td>
         </tr>
 	<tr class="rowa" style="font-weight: bold;">
 		<td>User</td>
@@ -70,9 +72,11 @@ while(list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Rem
 		<td>Up</td>
 		<td>Down</td>
 		<td>%</td>
+		<td>Ratio</td>
 		<td>Client</td>
 	</tr>
 <?
+        $LastIsSeeder = $IsSeeder;
     }
 ?>
 	<tr>
@@ -84,10 +88,10 @@ while(list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Rem
 		<td><?=get_size($Uploaded) ?></td>
 		<td><?=get_size($Size-$Remaining, 2) ?></td>
 		<td><?=number_format(($Size-$Remaining)/$Size*100, 2)?></td>
+		<td><?= number_format( $Uploaded / ($Size-$Remaining) , 3)  ?></td>
 		<td><?=display_str($UserAgent)?></td>
 	</tr>
 <?
-    $LastIsSeeder = $IsSeeder;
 }
 ?>
 </table>
