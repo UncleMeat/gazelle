@@ -38,7 +38,7 @@ $DB->set_query_id($Result);
 <? } ?>
 <table>
         <tr class="smallhead">
-            <td colspan="6">Seeders</td>
+            <td colspan="7">Seeders</td>
         </tr>
 	<tr class="rowa" style="font-weight: bold;">
 		<td>User</td>
@@ -47,6 +47,7 @@ $DB->set_query_id($Result);
 		<td>Connectable</td>
 
 		<td>Up</td>
+		<td>Down</td>
 		<td>%</td>
 		<td>Client</td>
 	</tr>
@@ -58,7 +59,7 @@ while(list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Rem
 ?>
  
         <tr class="smallhead">
-            <td colspan="6">Leechers</td>
+            <td colspan="7">Leechers</td>
         </tr>
 	<tr class="rowa" style="font-weight: bold;">
 		<td>User</td>
@@ -67,6 +68,7 @@ while(list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Rem
 		<td>Connectable</td>
 
 		<td>Up</td>
+		<td>Down</td>
 		<td>%</td>
 		<td>Client</td>
 	</tr>
@@ -80,6 +82,7 @@ while(list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Rem
 		<td><?= ($Connectable) ? '<span style="color:green">Yes</span>' : '<span style="color:red">No</span>' ?></td>
 
 		<td><?=get_size($Uploaded) ?></td>
+		<td><?=get_size($Size-$Remaining, 2) ?></td>
 		<td><?=number_format(($Size-$Remaining)/$Size*100, 2)?></td>
 		<td><?=display_str($UserAgent)?></td>
 	</tr>
