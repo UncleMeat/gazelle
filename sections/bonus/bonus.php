@@ -1,4 +1,7 @@
 <?
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
+
 enforce_login();
 show_header('Bonus Shop','bonus');
   
@@ -11,6 +14,11 @@ $ShopItems = get_shop_items($LoggedUser['ID']);
                 <h3>What is a credit?</h3>
                 <p>Credits are distributed as a bonus to people who are seeding torrents. You can find your total credit amount at the top of this page, or on your user details page.</p><br/>
                 <h4>How is the credit calculated?</h4>
+<? 
+                $creditinfo = get_article('creditsinline');
+                if($creditinfo) echo $Text->full_format($creditinfo, true); 
+ 
+                /*
                 <p>You get 0.25 credits for every 15 minutes of every torrent you seed. Every torrent is counted, so 2 torrents seeded for 1 hour will give you 2 credits etc.<br/>No credits are awarded for leeching torrents.</p>
                 <h4>Okay!</h4>
                 If you seed...<br/>
@@ -18,7 +26,9 @@ $ShopItems = get_shop_items($LoggedUser['ID']);
                 ...5 torrents for 20 hours, you will get 100 credits.<br/>
                 ...10 torrents 24/7 for a week, you will get 1680 credits.<br/>
                 ...60 torrents 24/7 for a week, you will get 10,080 credits.<br/>
-                but no more than 60 torrents at once are counted; some users may abuse :P
+                but no more than 60 torrents at once are counted; some users may abuse :P */
+                    
+?>
             </div>
  <?         if(!empty($_REQUEST['result'])){  ?>
                 <div class="box pad">

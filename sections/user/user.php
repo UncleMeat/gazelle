@@ -938,10 +938,10 @@ if (check_perms('users_mod', $Class)) { ?>
 		<input type="hidden" name="userid" value="<?=$UserID?>" />
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 
-                <div class="head">
-                        <span style="float:left;">Staff Notes</span>
-                        <span style="float:right;"><a href="#" onclick="$('#staffnotes').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
-                </div>               
+            <div class="head">
+                <span style="float:left;">Staff Notes</span>
+                <span style="float:right;"><a href="#" onclick="$('#staffnotes').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+            </div>               
 		<div class="box">		
                   <div class="pad" id="staffnotes">
 				<input type="hidden" name="comment_hash" value="<?=$CommentHash?>">
@@ -954,7 +954,44 @@ if (check_perms('users_mod', $Class)) { ?>
 			</div>
 		</div>
             
-                <div class="head">User Info</div>
+            <div class="head">
+                <span style="float:left;">Seed History</span>
+                <span style="float:right;"><a href="#" onclick="$('#seedhistory').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+            </div>               
+		<div class="box">		
+                  <div class="pad" id="seedhistory">
+				
+<?
+                $SeedHoursTotal = $Cache->get_value('user_seedhours_total_'.$UserID);
+                if ($SeedHoursTotal===FALSE) {
+                    $DB->query("SELECT Sum(SeedHours) FROM users_seedhours_history WHERE UserID=$UserID");
+                    list($SeedHoursTotal)=$DB->next_record();
+                    $Cache->cache_value('user_seedhours_total_'.$UserID,$SeedHoursTotal,3600*24);
+                }
+                $Days = (int)floor($SeedHoursTotal/24);
+                $Days =  ($Days>0)?"$Days days":'';
+                $Hours = $SeedHoursTotal % 24;
+                echo '<div class="box pad">';
+                echo " Total      | $Days $Hours hrs "; 
+                echo '</div>';
+                
+                $SeedHours = $Cache->get_value('user_seedhours_'.$UserID);
+                if ($SeedHours===FALSE) {
+                    $DB->query("SELECT Time, SeedHours FROM users_seedhours_history WHERE UserID=$UserID ORDER BY Time DESC");
+                    $SeedHours =$DB->to_array();
+                    $Cache->cache_value('user_seedhours_'.$UserID,$SeedHours,3600*24);
+                }
+                                
+                echo '<div class="box pad">';
+                foreach($SeedHours as $SeedData){ 
+                    echo " $SeedData[Time] | $SeedData[SeedHours] <br/>";
+                }
+                echo '</div>';
+?>
+			</div>
+		</div>
+            
+            <div class="head">User Info</div>
 		<table>
 <?	if (check_perms('users_edit_usernames', $Class)) { ?>
 			<tr>
