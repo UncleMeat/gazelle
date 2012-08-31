@@ -3,7 +3,7 @@ include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
 
 enforce_login();
-show_header('Bonus Shop','bonus');
+show_header('Bonus Shop','bonus,bbcode');
   
             
 $ShopItems = get_shop_items($LoggedUser['ID']);
