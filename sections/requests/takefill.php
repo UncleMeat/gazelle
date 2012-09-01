@@ -84,9 +84,10 @@ list($Title, $RequesterID, $OldTorrentID, $RequestCategoryID) = $DB->next_record
 if(!empty($OldTorrentID)) {
 	$Err = "This request has already been filled";
 }
+/*  // mifune: removing category match
 if($RequestCategoryID != 0 && $TorrentCategoryID != $RequestCategoryID) {
 	$Err = "This torrent is of a different category than the request";
-}
+} */
 
 // Fill request
 if(!empty($Err)) {
@@ -106,7 +107,7 @@ $DB->query("SELECT UserID FROM requests_votes WHERE RequestID = ".$RequestID);
 $UserIDs = $DB->to_array();
 foreach ($UserIDs as $User) {
 	list($VoterID) = $User;
-	send_pm($VoterID, 0, db_string("The request '".$FullName."' has been filled"), db_string("One of your requests - [url=http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID."]".$FullName."[/url] - has been filled. You can view it at [url]http://".NONSSL_SITE_URL."/torrents.php?torrentid=".$TorrentID), '');
+	send_pm($VoterID, 0, db_string("The request '".$FullName."' has been filled"), db_string("One of your requests - [url=/requests.php?action=view&id=".$RequestID."]".$FullName."[/url] - has been filled. You can view it at [url=/torrents.php?torrentid=".$TorrentID."]http://".NONSSL_SITE_URL."/torrents.php?torrentid=".$TorrentID."[/url]"), '');
 }
 
 $RequestVotes = get_votes_array($RequestID);
