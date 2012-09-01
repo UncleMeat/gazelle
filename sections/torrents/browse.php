@@ -576,6 +576,7 @@ $Bookmarks = all_bookmarks('torrent');
         <td class="small cats_col"></td>
         <td width="100%">Name</td>
         <td>Files</td>
+        <td>Comments</td>
         <td><a href="<?= header_link('time') ?>">Time</a></td>
         <td><a href="<?= header_link('size') ?>">Size</a></td>
         <td class="sign"><a href="<?= header_link('snatched') ?>"><img src="static/styles/<?= $LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></a></td>
@@ -610,6 +611,8 @@ $row='a';
             
         $row = ($row == 'a'? 'b' : 'a');
         $IsMarkedForDeletion = $Data['Status'] == 'Warned' || $Data['Status'] == 'Pending';
+        
+        $NumComments = get_num_comments($GroupID);
         ?> 
         <tr class="torrent <?=($IsMarkedForDeletion?'redbar':"row$row")?>">
             <td class="center cats_col">
@@ -636,6 +639,7 @@ $row='a';
                 <? } ?>
             </td>
             <td><?= $Data['FileCount'] ?></td>
+            <td><?= $NumComments ?></td>
             <td class="nobr"><?= time_diff($GroupTime, 1) ?></td>
             <td class="nobr"><?= get_size($Data['Size']) ?></td>
             <td><?= number_format($TotalSnatched) ?></td>

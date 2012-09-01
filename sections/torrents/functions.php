@@ -109,6 +109,21 @@ function get_group_info($GroupID, $Return = true) {
 	}
 }
 
+function get_num_comments($GroupID){
+    global $DB, $Cache;
+
+    $Results = $Cache->get_value('torrent_comments_'.$GroupID);
+    if($Results === false) {
+          $DB->query("SELECT
+                      COUNT(c.ID)
+                      FROM torrents_comments as c
+                      WHERE c.GroupID = '$GroupID'");
+          list($Results) = $DB->next_record();
+          $Cache->cache_value('torrent_comments_'.$GroupID, $Results, 0);
+    }
+    return $Results;
+}
+
 function get_status_icon($Status){
     if ($Status == 'Warned' || $Status == 'Pending') return '<span title="This torrent will be automatically deleted unless the uploader fixes it" class="icon icon_warning"></span>';
     elseif ($Status == 'Okay') return '<span title="This torrent has been checked by staff and is okay" class="icon icon_okay"></span>';

@@ -753,7 +753,7 @@ if(count($PersonalCollages)>0) {
                 </div>
 		</div>
 <? 
-
+/*
 $Results = $Cache->get_value('torrent_comments_'.$GroupID);
 if($Results === false) {
 	$DB->query("SELECT
@@ -762,7 +762,8 @@ if($Results === false) {
 			WHERE c.GroupID = '$GroupID'");
 	list($Results) = $DB->next_record();
 	$Cache->cache_value('torrent_comments_'.$GroupID, $Results, 0);
-}
+} */
+$Results = get_num_comments($GroupID);
 
 if(isset($_GET['postid']) && is_number($_GET['postid']) && $Results > TORRENT_COMMENTS_PER_PAGE) {
 	$DB->query("SELECT COUNT(ID) FROM torrents_comments WHERE GroupID = $GroupID AND ID <= $_GET[postid]");
