@@ -970,7 +970,7 @@ if (check_perms('users_mod', $Class)) { ?>
                 }
                 $Days = (int)floor($SeedHoursTotal/24);
                 $Days =  ($Days>0)?"$Days days":'';
-                $Hours = $SeedHoursTotal % 24;
+                $Hours = modulos( $SeedHoursTotal , 24.0);
                 echo '<div class="box pad">';
                 echo " Total      | $Days $Hours hrs "; 
                 echo '</div>';

@@ -2362,6 +2362,12 @@ function starts_with($Haystack, $Needle) {
     return strpos($Haystack, $Needle) === 0;
 }
 
+// amazingly fmod() does not return remanider when var2<var1... this one does
+function modulos($var1, $var2) {
+  $tmp = $var1/$var2; 
+  return (float) ( $var1 - ( ( (int) ($tmp) ) * $var2 ) );
+}
+
 /**
  * Variant of in_array() with trailing wildcard support
  * @param string $Needle, array $Haystack
