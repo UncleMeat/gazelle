@@ -775,6 +775,11 @@ p.min_padding {
     padding-top: 0px;
 }
 
+.torrent_table table {
+    font-size:9pt;
+    color:#444;
+}
+
 #bonuslog, #admincommentlinks, #seedhistory div {
     max-height:400px;
     overflow: auto;

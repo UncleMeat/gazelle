@@ -576,7 +576,7 @@ $Bookmarks = all_bookmarks('torrent');
         <td class="small cats_col"></td>
         <td width="100%">Name</td>
         <td>Files</td>
-        <td>Comments</td>
+        <td>Comm</td>
         <td><a href="<?= header_link('time') ?>">Time</a></td>
         <td><a href="<?= header_link('size') ?>">Size</a></td>
         <td class="sign"><a href="<?= header_link('snatched') ?>"><img src="static/styles/<?= $LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></a></td>
@@ -638,8 +638,8 @@ $row='a';
                 </div>
                 <? } ?>
             </td>
-            <td><?= $Data['FileCount'] ?></td>
-            <td><?= $NumComments ?></td>
+            <td class="center"><?=number_format($Data['FileCount'])?></td>
+            <td class="center"><?=number_format($NumComments)?></td>
             <td class="nobr"><?= time_diff($GroupTime, 1) ?></td>
             <td class="nobr"><?= get_size($Data['Size']) ?></td>
             <td><?= number_format($TotalSnatched) ?></td>
