@@ -472,7 +472,7 @@ if(!$LoggedUser['DisablePosting']) {
 ?>
             
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
-                  <h3>Post reply</h3>
+                  <div class="head">Post reply</div>
 			<div class="box pad">
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
 					<tr class="head">

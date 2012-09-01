@@ -968,6 +968,7 @@ table.boxstat a, table.boxstat a:visited {
 }
 
 .box_albumart{
+    padding: 5px;
     margin: 0px;
     /* max-height: 460px;  should be 60px more than tag_inner max-height
     overflow: auto;   */

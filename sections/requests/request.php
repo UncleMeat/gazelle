@@ -72,11 +72,11 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 	<div class="sidebar">
 <? if($CategoryID != 0) { ?>
                 <div class="head"><strong>Cover</strong></div>
-		<div class="box box_albumart">
+		<div class="box box_albumart center">
 <?	if (!empty($Image)) { ?>
-			<p align="center"><img style="max-width: 220px;" src="<?=$Image?>" alt="<?=$FullName?>" onclick="lightbox.init(this,220);" /></p>
+                <img style="max-width: 220px;" src="<?=$Image?>" alt="<?=$FullName?>" onclick="lightbox.init(this,220);" />
 <?	} else { ?>
-			<p align="center"><img src="<?=STATIC_SERVER?>common/noartwork/noimage.png" alt="<?=$CategoryName?>" title="<?=$CategoryName?>" width="220" height="220" border="0" /></p>
+                <img src="<?=STATIC_SERVER?>common/noartwork/noimage.png" alt="<?=$CategoryName?>" title="<?=$CategoryName?>" width="220" height="220" border="0" />
 <?	} ?>
 		</div>
 <? } ?>
@@ -92,9 +92,8 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 <?	} ?>
 			</ul>
 		</div>
-                <div class="head"><strong>Top Contributors</strong></div>
-		<div class="box box_votes">
-			<table>
+                <div class="head"><strong>Top Contributors</strong></div> 
+			<table class="box box_votes">
 <?	$VoteMax = ($VoteCount < 5 ? $VoteCount : 5);
 	$ViewerVote = false;
 	for($i = 0; $i < $VoteMax; $i++) { 
@@ -131,10 +130,11 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 	}
 ?>
 			</table>
-		</div>
 	</div>
       <div class="main_column">
           
+          
+            <div class="head"><?=$DisplayLink?></div>
 		<table>
 			<tr>
 				<td class="label">Created</td>
@@ -373,7 +373,7 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 if(!$LoggedUser['DisablePosting']) { ?>
 			<br />
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
-                  <h3>Post comment</h3>
+                  <div class="head">Post reply</div>
 			<div class="box pad">
 				<table id="quickreplypreview" class="hidden forum_post box vertical_margin" id="preview">
 					<tr class="colhead_dark">
