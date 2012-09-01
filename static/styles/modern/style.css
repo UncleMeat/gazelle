@@ -781,10 +781,6 @@ p.min_padding {
     padding-top: 0px;
 }
 
-.torrent_table table {
-    font-size:9pt;
-    color:#444;
-}
 
 #bonuslog, #admincommentlinks, #seedhistory div {
     max-height:400px;
@@ -1434,13 +1430,6 @@ table.cat_list {
     margin:5px;
 }
 
-.torrent_table {
-}
-
-.torrent_table tr {
-    vertical-align:top;
-}
- 
 .group {
     font-weight:bold;
     background-color:#D7E2EF;
@@ -1465,6 +1454,22 @@ table.cat_list {
     float:none;
 }
 
+.torrent_table {
+}
+
+.torrent_table table {
+    width:94%;
+    margin: 10px;
+    font-size:9pt;
+    color:#444;
+}
+
+.torrent_table tr {
+    vertical-align:top;
+} 
+.torrent_table td {
+    padding: 5px;
+}
 .torrent_table div.tags {
     font-weight:normal;
 }
@@ -1482,10 +1487,6 @@ table.cat_list {
     border:none;
 }
 
-.torrent_table table {
-    width:94%;
-    margin: 10px;
-}
 
 .torrent_table table .colhead_dark {
     background-image: none;

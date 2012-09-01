@@ -1,5 +1,7 @@
 <?
 
+//include(SERVER_ROOT . '/sections/torrents/functions.php');
+
 $Orders = array('Time', 'Name', 'Seeders', 'Leechers', 'Snatched', 'Size');
 $Ways = array('ASC'=>'Ascending', 'DESC'=>'Descending');
 
@@ -281,6 +283,8 @@ foreach($NewCategories as $Cat) {
 		<tr class="colhead">
 			<td></td>
 			<td><a href="<?=header_link('Name', 'ASC')?>">Torrent</a></td>
+                  <td class="center"><span title="Number of Files">F</span></td>
+                  <td class="center"><span title="Number of Comments">c</span></td>
 			<td><a href="<?=header_link('Time')?>">Time</a></td>
 			<td><a href="<?=header_link('Size')?>">Size</a></td>
 			<td class="sign">
@@ -319,6 +323,8 @@ foreach($NewCategories as $Cat) {
 		}
             
             
+            $NumComments = get_num_comments($GroupID);
+        
             $row = $row==='b'?'a':'b';
 ?>
 		<tr class="torrent row<?=$row?>">
@@ -328,31 +334,7 @@ foreach($NewCategories as $Cat) {
                         </div> 
 			</td>
 			<td>
-                      <? print_torrent_status($TorrentID);
-                      
-                      /* ?>
-                      
-                        <span>
-                            <? if (empty($TorrentUserStatus[$TorrentID])) { ?>
-                                <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">
-                                    <span class="icon icon_disk_none"></span>
-                                </a>
-                            <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') { ?>
-                                <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Seeding Torrent">
-                                    <span class="icon icon_disk_seed"></span>
-                                </a>                    
-                            <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') { ?>
-                                <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Currently Leeching Torrent">
-                                    <span class="icon icon_disk_leech"></span>
-                                </a>                    
-
-                            <? } ?>
-                        </span> */ ?>
-                      
-			<? /*	<span style="float: right;">
-					[<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>
-					| <a href="reportsv2.php?action=report&amp;id=<?=$TorrentID?>" title="Report">RP</a>]
-				</span>  */ ?>
+                        <? print_torrent_status($TorrentID);  ?> 
 				<?=$DisplayName?>
 				<br />
                                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                                
@@ -361,6 +343,8 @@ foreach($NewCategories as $Cat) {
 				</div>
                                 <? } ?>
 			</td>
+            <td class="center"><?=number_format($Torrent['FileCount'])?></td>
+            <td class="center"><?=number_format($NumComments)?></td>
 			<td class="nobr"><?=time_diff($Time,1)?></td>
 			<td class="nobr"><?=get_size($Torrent['Size'])?></td>
 			<td><?=number_format($Torrent['Snatched'])?></td>

@@ -2168,6 +2168,20 @@ function torrent_info($Data, $TorrentID, $UserID) {
 	return implode(' / ', $Info); */
 }
 
+function get_num_comments($GroupID){
+    global $DB, $Cache;
+
+    $Results = $Cache->get_value('torrent_comments_'.$GroupID);
+    if($Results === false) {
+          $DB->query("SELECT
+                      COUNT(c.ID)
+                      FROM torrents_comments as c
+                      WHERE c.GroupID = '$GroupID'");
+          list($Results) = $DB->next_record();
+          $Cache->cache_value('torrent_comments_'.$GroupID, $Results, 0);
+    }
+    return $Results;
+}
 
 function print_torrent_status($TorrentID) {
     global $TorrentUserStatus, $LoggedUser;

@@ -126,20 +126,7 @@ $DB->query("UPDATE users_main AS um
               CreditsDaily=CreditsDaily+SeedCount,
               um.SeedHours=um.SeedHours+s.SeedHours,
          um.SeedHoursDaily=um.SeedHoursDaily+s.SeedHours  ");
-                        
-/*                
-// testing method 3 inner join
-$DB->query("SELECT um.ID, s.UserID, s.SeedHours, s.SeedCount 
-              FROM users_main AS um  
-              JOIN (SELECT xbt_files_users.uid AS UserID,
-                           (ROUND( ( SQRT( 8.0 * ( COUNT(*)/20 ) + 1.0 ) - 1.0 ) / 2.0 *20 ) * 0.25 ) AS SeedCount,
-                           (COUNT(*) * 0.25 ) AS SeedHours
-                      FROM xbt_files_users
-                     WHERE xbt_files_users.remaining =0
-                       AND xbt_files_users.active =1
-                  GROUP BY xbt_files_users.uid) AS s ON s.UserID=um.ID  
-                    ");
-*/
+ 
                         
 
 //------------Remove inactive peers every 15 minutes-------------------------//
