@@ -293,6 +293,7 @@ $Pages=get_pages($Page,$Results,TORRENT_COMMENTS_PER_PAGE,9,'#comments');
 echo $Pages;
 ?>
 	</div>
+      <div class="head">Comments</div>
 <?
 
 //---------- Begin printing
@@ -303,7 +304,7 @@ foreach($Thread as $Key => $Post){
       list($ClassLevel,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($AuthorPermissions);
       ?>
 <table class="forum_post  vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>" id="post<?=$PostID?>">
-	<tr class="colhead_dark">
+	<tr class="smallhead">
 		<td colspan="2">
 			<span style="float:left;"><a href='#post<?=$PostID?>'>#<?=$PostID?></a>
 				<?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled, $PermissionID,$UserTitle,true)?> <?=time_diff($AddedTime)?> <a href="reports.php?action=report&amp;type=requests_comment&amp;id=<?=$PostID?>">[Report Comment]</a>

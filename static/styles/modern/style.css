@@ -1237,7 +1237,7 @@ td.colhead, .colhead td {
 }
 
 .head+div.box, .colhead+div.box, tr.head+tr, tr#recentuploads, tr#recentsnatches, .head+table, #inbox, #site_debug ,
-        .thin>table, .thin>form>table, #searchforum table, #searchthread table, #messageform .box, .shadow { /* , tr:first-child */
+       .main_column>table, .thin>table, .thin>form>table, #searchforum table, #searchthread table, #messageform .box, .shadow { /* , tr:first-child */
     -moz-box-shadow:inset 2px 1px 3px #6a9bb7;
     -webkit-box-shadow:inset 2px 1px 3px #6a9bb7;
     box-shadow:inset 2px 1px 3px #6a9bb7;
@@ -1616,6 +1616,10 @@ div.tagtable {
 table.forum_post {
     margin: 10px 0px;
     font-size: 10pt;
+}
+
+#requests table.forum_post {
+    margin: 0px 0px 20px;
 }
 
 table.forum_post td {

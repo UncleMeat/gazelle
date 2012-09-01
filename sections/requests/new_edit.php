@@ -70,6 +70,7 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests,bbc
 <div class="thin">
 	<h2><?=($NewRequest ? "Create a request" : "Edit a request")?></h2>
 	
+      <div class="head"><?=($NewRequest ? "New" : "Edit")?></div>
 	<div class="box pad">
 		<form action="" method="post" id="request_form" onsubmit="Calculate();">
 			<div>
