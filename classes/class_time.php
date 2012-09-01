@@ -225,7 +225,7 @@ function time_span($TimeStamp,$Levels=2 , $Lowercase=false ) {
 	//If the time is negative, then we know that it expires in the future
 	if($Time < 0) {
 		$Time = -$Time;
-		$HideAgo = true;
+		//$HideAgo = true;
 	}
   
 	$Weeks = floor($Time/604800); // seconds in a week
@@ -295,9 +295,7 @@ function time_span($TimeStamp,$Levels=2 , $Lowercase=false ) {
 	
 	if($TimeAgo == '') {
 		$TimeAgo = '1 min';
-	} elseif (!isset($HideAgo)) {
-		$TimeAgo .= ' ago';
-	}
+	} 
 
 	if ($Lowercase) {
 		$TimeAgo = strtolower($TimeAgo);
