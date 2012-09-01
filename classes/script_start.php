@@ -1755,7 +1755,7 @@ function send_pm($ToID, $FromID, $Subject, $Body, $ConvID='') {
         if ($ID == $FromID) unset($ToID[$key]); // or themselves
     }
     if (count($ToID)==0) return false; 
-    if (count($ToID)>1 && $FromID===0) return false; // masspms not from the system with the same convID dont work
+    if (count($ToID)>1 && $FromID!==0) return false; // masspms not from the system with the same convID dont work
     $sqltime = sqltime();
     
     if ($ConvID == '') { // new pm
