@@ -2019,6 +2019,7 @@ CREATE TABLE IF NOT EXISTS `users_info` (
   `Country` int(10) unsigned NOT NULL,
   `TimeZone` VARCHAR( 128 ) NOT NULL,
   `AdminComment` text NOT NULL,
+  `SeedHistory` TEXT NOT NULL,
   `SiteOptions` text NOT NULL,
   `ViewAvatars` enum('0','1') NOT NULL DEFAULT '1',
   `Donor` enum('0','1') NOT NULL DEFAULT '0',
@@ -2113,6 +2114,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `ipcc` varchar(2) NOT NULL DEFAULT '',
   `FLTokens` int(10) NOT NULL DEFAULT '0',
   `personal_freeleech` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `SeedHoursDaily` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.00',
   `SeedHours` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.00',
   `CreditsDaily` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.00',
   `Credits` double(11,2) NOT NULL DEFAULT '0.00',
@@ -2131,7 +2133,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   KEY `torrent_pass` (`torrent_pass`),
   KEY `RequiredRatio` (`RequiredRatio`),
   KEY `cc_index` (`ipcc`),
-  KEY `SeedHours` (`SeedHours`)
+  KEY `SeedHoursDaily` (`SeedHoursDaily`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=119928 ;
 
 -- --------------------------------------------------------

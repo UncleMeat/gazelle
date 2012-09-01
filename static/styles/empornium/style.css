@@ -2125,3 +2125,7 @@ img.win.flash {
 .pager {
     font-weight:bold;
 }
+
+.seedhistory {
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+}

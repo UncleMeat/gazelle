@@ -66,7 +66,11 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
                 m.Credits,
                 i.BonusLog,
                 p.MaxAvatarWidth,
-                p.MaxAvatarHeight
+                p.MaxAvatarHeight,
+		i.SeedHistory,
+		m.SeedHours,
+		m.SeedHoursDaily,
+		m.CreditsDaily
 		FROM users_main AS m
 		JOIN users_info AS i ON i.UserID = m.ID
 		LEFT JOIN users_main AS inviter ON i.Inviter = inviter.ID
@@ -78,7 +82,12 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, $GroupPermID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $PersonalFreeLeech, $CommentHash,$BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight) = $DB->next_record(MYSQLI_NUM, array(13));
+	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, 
+              $GroupPermID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, 
+              $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, 
+              $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, 
+              $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $PersonalFreeLeech, $CommentHash,
+              $BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight, $SeedHistory, $SeedHoursTotal, $SeedHoursDaily, $CreditsDaily) = $DB->next_record(MYSQLI_NUM, array(13));
 
 } else { // Person viewing is a normal user
 	$DB->query("SELECT
@@ -962,19 +971,13 @@ if (check_perms('users_mod', $Class)) { ?>
                   <div class="pad" id="seedhistory">
 				
 <?
+/*
                 $SeedHoursTotal = $Cache->get_value('user_seedhours_total_'.$UserID);
                 if ($SeedHoursTotal===FALSE) {
                     $DB->query("SELECT Sum(SeedHours) FROM users_seedhours_history WHERE UserID=$UserID");
                     list($SeedHoursTotal)=$DB->next_record();
                     $Cache->cache_value('user_seedhours_total_'.$UserID,$SeedHoursTotal,3600*3);
                 }
-                $Days = (int)floor($SeedHoursTotal/24);
-                $Days =  ($Days>0)?"$Days days":'';
-                $Hours = modulos( $SeedHoursTotal , 24.0);
-                echo '<div class="box pad">';
-                echo " Total      | $Days $Hours hrs "; 
-                echo '</div>';
-                
                 $SeedHours = $Cache->get_value('user_seedhours_'.$UserID);
                 if ($SeedHours===FALSE) {
                     $DB->query("SELECT Time, SeedHours FROM users_seedhours_history WHERE UserID=$UserID ORDER BY Time DESC");
@@ -987,7 +990,22 @@ if (check_perms('users_mod', $Class)) { ?>
                     echo " $SeedData[Time] | $SeedData[SeedHours] hrs <br/>";
                 }
                 echo '</div>';
+ * 
+ * 
+                $Days = (int)floor($SeedHoursTotal/24);
+                $Days =  ($Days>0)?"$Days days":'';
+                $Hours = modulos( $SeedHoursTotal , 24.0);
+ */
+ 
+        
+                echo '<div class="box pad seedhistory">';
+                echo " Total &nbsp;&nbsp; | ". hoursdays($SeedHoursTotal) .'<br/>'; 
+                echo " Today &nbsp;&nbsp; | ". hoursdays($SeedHoursDaily) . " | $CreditsDaily credits"; 
+                echo '</div>';
+                
 ?>
+				<div class="box pad seedhistory"><?=$Text->full_format($SeedHistory)?></div>
+                      
 			</div>
 		</div>
             

@@ -304,5 +304,10 @@ function time_span($TimeStamp,$Levels=2 , $Lowercase=false ) {
       return $TimeAgo;
 }
 
-
+function hoursdays($TotalHours){
+    $Days = (int)floor($TotalHours/24);
+    $Days =  ($Days>0)?"$Days days":'';
+    $Hours = modulos( $TotalHours , 24.0);
+    return "$Days $Hours hrs";
+}
 ?>
