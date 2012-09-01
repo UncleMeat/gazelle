@@ -37,11 +37,14 @@ body {
 /* Common elements */
 
 a , .torrent_table .linkbox a {
-    color:#023174;
+    /* color:#0056A0; */
+    color:#006eb3;
     text-decoration: none;
     border: none;
 }
 a:visited, .torrent_table .linkbox a:visited {
+  /*  color:#023174; 
+    color:#012154; */
     color:#023174;
 }
 a:hover, .torrent_table .linkbox a:hover {
@@ -50,6 +53,9 @@ a:hover, .torrent_table .linkbox a:hover {
     text-decoration: underline;
 }
 
+tr.smallhead a, tr.smallhead a,:visited {
+    color:#023174;
+}
     /*   
 .linkbox a, .permission_container a,
     .forum_index a, .forum_list a, #search_button, 
@@ -879,6 +885,7 @@ table.boxstat a, table.boxstat a:visited {
     display:inline-block;
     width:20px;
     height:20px;
+    margin-left: 4px;
 }
 
 
@@ -1453,6 +1460,9 @@ table.cat_list {
 .torrent span {
     font-weight:normal;
     float:right;
+}
+.torrent span.time {
+    float:none;
 }
 
 .torrent_table div.tags {
