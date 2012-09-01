@@ -66,6 +66,7 @@ $DB->set_query_id($Result);
                 <td>Down</td>
                 <td>%</td>
                 <td>Ratio</td>
+                <td>Time</td>
                 <td>Client</td>
             </tr>
             <?
@@ -82,6 +83,7 @@ $DB->set_query_id($Result);
             <td><?= get_size($Size - $Remaining, 2) ?></td>
             <td><?= number_format(($Size - $Remaining) / $Size * 100, 2) ?></td>
             <td><?= number_format($Uploaded / ($Size - $Remaining), 3) ?></td>
+            <td><?= time_span($Timespent) ?></td>
             <td><?= display_str($UserAgent) ?></td>
         </tr>
         <?

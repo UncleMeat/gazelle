@@ -209,4 +209,102 @@ function validDate($DateString) {
 	list($Y, $M, $D) = $SplitDate;
 	return checkDate($M, $D, $Y);
 }
+
+
+
+function time_span($TimeStamp,$Levels=2 , $Lowercase=false ) {	
+  
+	if(!is_number($TimeStamp)) { // Assume that $TimeStamp is SQL timestamp
+		if($TimeStamp == '0000-00-00 00:00:00') { return 'None'; }
+		$TimeStamp = strtotime($TimeStamp);
+	}
+	if($TimeStamp == 0) { return 'None'; }
+        
+	$Time = $TimeStamp;
+	
+	//If the time is negative, then we know that it expires in the future
+	if($Time < 0) {
+		$Time = -$Time;
+		$HideAgo = true;
+	}
+  
+	$Weeks = floor($Time/604800); // seconds in a week
+	$Remain = $Time - $Weeks*604800;
+
+	$Days = floor($Remain/86400); // seconds in a day
+	$Remain = $Remain - $Days*86400;
+
+	$Hours=floor($Remain/3600);
+	$Remain = $Remain - $Hours*3600;
+
+	$Minutes=floor($Remain/60);
+	$Remain = $Remain - $Minutes*60;
+
+	$Seconds=$Remain;
+
+	$TimeAgo = '';
+ 
+
+	if ($Weeks>0 && $Levels>0) {
+		if ($TimeAgo!="") {
+			$TimeAgo.=', ';
+		}
+		if ($Weeks>1) { 
+			$TimeAgo.=$Weeks.' weeks';
+		} else {
+			$TimeAgo.=$Weeks.' week';
+		}
+		$Levels--;
+	}
+
+	if ($Days>0 && $Levels>0) {
+		if ($TimeAgo!='') {
+			$TimeAgo.=', ';
+		}
+		if ($Days>1) {
+			$TimeAgo.=$Days.' days';
+		} else {
+			$TimeAgo.=$Days.' day';
+		}
+		$Levels--;
+	}
+
+	if ($Hours>0 && $Levels>0) {
+		if ($TimeAgo!='') {
+			$TimeAgo.=', ';
+		}
+		if ($Hours>1) {
+			$TimeAgo.=$Hours.' hours';
+		} else {
+			$TimeAgo.=$Hours.' hour';
+		}
+		$Levels--;
+	}
+
+	if ($Minutes>0 && $Levels>0) {
+		if ($TimeAgo!='') {
+			$TimeAgo.=' and ';
+		}
+		if ($Minutes>1) {
+			$TimeAgo.=$Minutes.' mins';
+		} else {
+			$TimeAgo.=$Minutes.' min';
+		}
+		$Levels--;
+	}
+	
+	if($TimeAgo == '') {
+		$TimeAgo = '1 min';
+	} elseif (!isset($HideAgo)) {
+		$TimeAgo .= ' ago';
+	}
+
+	if ($Lowercase) {
+		$TimeAgo = strtolower($TimeAgo);
+	}
+	
+      return $TimeAgo;
+}
+
+
 ?>

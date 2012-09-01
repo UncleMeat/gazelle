@@ -10,25 +10,17 @@ $ShopItems = get_shop_items($LoggedUser['ID']);
 ?>
 <div class="thin">
 	<h2>Bonus shop</h2>
-            <div class="box pad shadow"> 
+            <div class="box pad shadow">
 <? 
                 $creditinfo = get_article('creditsinline');
-                if($creditinfo) echo $Text->full_format($creditinfo, true); 
- 
-                /*
-                <p>You get 0.25 credits for every 15 minutes of every torrent you seed. Every torrent is counted, so 2 torrents seeded for 1 hour will give you 2 credits etc.<br/>No credits are awarded for leeching torrents.</p>
-                <h4>Okay!</h4>
-                If you seed...<br/>
-                ...1 torrent for 10 hours, you will get 10 credits.<br/>
-                ...5 torrents for 20 hours, you will get 100 credits.<br/>
-                ...10 torrents 24/7 for a week, you will get 1680 credits.<br/>
-                ...60 torrents 24/7 for a week, you will get 10,080 credits.<br/>
-                but no more than 60 torrents at once are counted; some users may abuse :P */
-                    
+                if($creditinfo) echo $Text->full_format($creditinfo, true);  
 ?>
             </div>
+		<div class="box pad shadow" id="bonusdiv">
+                <h3 class="center">Credits: <?=number_format($LoggedUser['TotalCredits'],2)?></h3>
+            </div>
  <?         if(!empty($_REQUEST['result'])){  ?>
-                <div class="box pad">
+                <div class="box pad shadow">
                     <h3 class="center"><?=display_str($_REQUEST['result'])?></h3> 
                 </div>
 <?          }  ?>
