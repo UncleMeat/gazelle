@@ -2114,6 +2114,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `FLTokens` int(10) NOT NULL DEFAULT '0',
   `personal_freeleech` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `SeedHours` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.00',
+  `CreditsDaily` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.00',
   `Credits` double(11,2) NOT NULL DEFAULT '0.00',
   `Signature` text,
   PRIMARY KEY (`ID`),
@@ -2211,6 +2212,7 @@ CREATE TABLE IF NOT EXISTS `users_seedhours_history` (
   `Time` date NOT NULL DEFAULT '0000-00-00',
   `TimeAdded` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `SeedHours` double(11,2) NOT NULL DEFAULT '0.00',
+  `Credits` double(11,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`UserID`,`Time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

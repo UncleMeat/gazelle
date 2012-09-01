@@ -121,6 +121,7 @@ $DB->query("UPDATE users_main AS um
                        AND xbt_files_users.active =1
                   GROUP BY xbt_files_users.uid) AS s ON s.UserID=um.ID 
                   SET Credits=Credits+SeedCount,
+                 CreditsDaily=CreditsDaily+SeedCount,
                  um.SeedHours=um.SeedHours+s.SeedHours  ");
                         
 /*                
@@ -191,9 +192,9 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
           
             $time = date("Y-m-d", time());
 
-            $DB->query("INSERT IGNORE INTO users_seedhours_history (UserID, Time, TimeAdded, SeedHours)
-                                    SELECT ID, '$time', '$sqltime', SeedHours FROM users_main WHERE Enabled='1'");
-            $DB->query("UPDATE users_main SET SeedHours=0.00 WHERE SeedHours>0.00 AND Enabled='1'");
+            $DB->query("INSERT IGNORE INTO users_seedhours_history (UserID, Time, TimeAdded, SeedHours, Credits)
+                                    SELECT ID, '$time', '$sqltime', SeedHours, CreditsDaily FROM users_main WHERE Enabled='1' OR SeedHours>0.00");
+            $DB->query("UPDATE users_main SET SeedHours=0.00, CreditsDaily=0.00 WHERE SeedHours>0.00");
       }
       
 	//------------- Front page stats ----------------------------------------//

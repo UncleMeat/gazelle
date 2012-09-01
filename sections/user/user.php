@@ -966,7 +966,7 @@ if (check_perms('users_mod', $Class)) { ?>
                 if ($SeedHoursTotal===FALSE) {
                     $DB->query("SELECT Sum(SeedHours) FROM users_seedhours_history WHERE UserID=$UserID");
                     list($SeedHoursTotal)=$DB->next_record();
-                    $Cache->cache_value('user_seedhours_total_'.$UserID,$SeedHoursTotal,3600*24);
+                    $Cache->cache_value('user_seedhours_total_'.$UserID,$SeedHoursTotal,3600*3);
                 }
                 $Days = (int)floor($SeedHoursTotal/24);
                 $Days =  ($Days>0)?"$Days days":'';
@@ -979,12 +979,12 @@ if (check_perms('users_mod', $Class)) { ?>
                 if ($SeedHours===FALSE) {
                     $DB->query("SELECT Time, SeedHours FROM users_seedhours_history WHERE UserID=$UserID ORDER BY Time DESC");
                     $SeedHours =$DB->to_array();
-                    $Cache->cache_value('user_seedhours_'.$UserID,$SeedHours,3600*24);
+                    $Cache->cache_value('user_seedhours_'.$UserID,$SeedHours,3600*3);
                 }
                                 
                 echo '<div class="box pad">';
                 foreach($SeedHours as $SeedData){ 
-                    echo " $SeedData[Time] | $SeedData[SeedHours] <br/>";
+                    echo " $SeedData[Time] | $SeedData[SeedHours] hrs <br/>";
                 }
                 echo '</div>';
 ?>
