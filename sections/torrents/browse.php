@@ -339,26 +339,27 @@ $Results = $Results['matches'];
 
 show_header('Browse Torrents', 'browse,status,overlib,jquery,jquery.cookie');
 
-if(check_perms('torrents_review')){ 
-    update_staff_checking("browsing torrents", true); 
-?>
-<?
-}
 // List of pages  
 $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
 ?>
 
 <div class="thin">
     <h2>Browse Torrents</h2>
-    <div id="staff_status" class="status_box">
-        <span class="status_loading">loading staff checking status...</span>
-    </div>
-    <br class="clear"/> 
-    <script type="text/javascript">
-        setTimeout("Update_status();", 300);
-    </script>
-<? print_latest_forum_topics(); ?>
-    
+<?
+    if(check_perms('torrents_review')){ 
+        update_staff_checking("browsing torrents", true); 
+?>
+        <div id="staff_status" class="status_box">
+            <span class="status_loading">loading staff checking status...</span>
+        </div>
+        <br class="clear"/> 
+        <script type="text/javascript">
+            setTimeout("Update_status();", 300);
+        </script>
+<?
+    }
+    print_latest_forum_topics(); 
+?>
 <form name="filter" method="get" action=''>  
     <div id="search_box" class="filter_torrents">
         <div class="head">

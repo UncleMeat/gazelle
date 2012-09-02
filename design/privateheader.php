@@ -116,8 +116,12 @@ if ($Mobile) { ?>
                   <td><span class="stat"><?=get_size($LoggedUser['BytesDownloaded'])?></span></td>
               </tr>
               <tr>
+<?          if(!empty($LoggedUser['RequiredRatio']) && $LoggedUser['RequiredRatio']>0) {?>
                   <td style="text-align:right;"><a href="articles.php?topic=ratio">Required</a>:</td>
                   <td><span class="stat"><?=number_format($LoggedUser['RequiredRatio'], 2)?></span></td>
+<?          } else {  ?> 
+                  <td colspan="2"></td>
+<?          }  ?> 
                   <td style="text-align:right;"><a href="articles.php?topic=ratio">Ratio</a>:</td>
                   <td><span class="stat"><?=ratio($LoggedUser['BytesUploaded'], $LoggedUser['BytesDownloaded'])?></span></td>
               </tr>
