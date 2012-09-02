@@ -59,8 +59,8 @@ function Select_Action(element_id) {
     </tr>
 </table>
 <br/><br/>
+<div class="head">Auto Synch Badges Tool</div>
 <div class="box pad">
-    <h3>Auto Synch Badges Tool</h3>
     You can use this tool to automatically update the bonus shop with badge items.<br />
     It will remove all the current badge items from the bonus shop (if the checkbox is checked), then select from the badge table all badges with 'Shop' type set and insert them.<br />
     The cost is always taken from the badge table, Name and description will update from that table but you can alter the values for them here.<br />
@@ -79,6 +79,7 @@ function Select_Action(element_id) {
 		<input type="submit" style="margin-left:40px" value="Auto synchronise shop items from badges table" />
     </form>
 </div><br/>
+<div class="head">Manage Shop Items</div>
 <table>
     <tr class="colhead">
 		<td width="120px">Name</td>

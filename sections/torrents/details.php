@@ -642,8 +642,9 @@ if(!is_array($Collages)) {
 }
 if(count($Collages)>0) {
 ?>
+            <div class="head">Collages</div>
 		<table id="collages">
-			<tr class="head">
+			<tr class="colhead">
 				<td width="85%">Collage name</td>
 				<td># torrents</td>
 			</tr>
@@ -678,8 +679,9 @@ if(count($PersonalCollages)>0) {
 		$SeeAll = '';
 	}
 ?>
+            <div class="head">Personal Collages</div>
 		<table id="personal_collages">
-			<tr class="head">
+			<tr class="colhead">
 				<td width="85%">This torrent is in <?=count($PersonalCollages)?> personal collage<?=((count($PersonalCollages)>1)?'s':'')?><?=$SeeAll?></td>
 				<td># torrents</td>
 			</tr>
@@ -728,8 +730,7 @@ if(count($PersonalCollages)>0) {
                   </div>
 		</div>
             
-		<div class="head">
-            </div>
+		<div class="head">Thanks</div>
 		<div class="box pad center">
 <?
 

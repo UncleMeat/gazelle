@@ -18,12 +18,13 @@ if (!check_perms('site_collages_renamepersonal') && $Category === '0') {
 }
 ?>
 <div class="thin">
+    <h2>Create Collage</h2>
 <?
 if (!empty($Error)) { ?>
 	<div class="save_message error"><?=display_str($Error)?></div>
 	<br />
 <? } ?>
-        <div class="head">Create a collage</div>
+        <div class="head">New collage</div>
 	<form action="collages.php" method="post" name="newcollage">
 		<input type="hidden" name="action" value="new_handle" />
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />

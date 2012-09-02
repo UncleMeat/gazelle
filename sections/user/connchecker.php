@@ -43,10 +43,12 @@ show_header('Connectability Checker');
 <div class="thin">
 	<h2><a href="user.php?id=<?=$LoggedUser['ID']?>"><?=$LoggedUser['Username']?></a> &gt; Connectability Checker</h2>
 <?  if ($Body){ ?>
+	<div class="head"></div>
       <div class="box pad" style="padding:10px 10px 10px 20px;">
             <?=$Text->full_format($Body, true)?>
       </div>
 <?  }   ?>
+	<div class="head">Check IP address and port</div>
       <form action="javascript:check_ip();" method="get">
 		<table>
 			<tr>
@@ -64,6 +66,7 @@ show_header('Connectability Checker');
 			</tr>
 		</table>
 	</form><br />
+	<div class="head">results</div>
 	<div class="box pad"><div id="result" class="messagebar checking"></div></div>
 </div>
 <script type="text/javascript">

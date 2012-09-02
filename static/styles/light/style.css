@@ -286,6 +286,16 @@ span.infinity {
     margin: 0px;
 }
 
+
+table.userinfo_stats, table.userinfo_stats tr {
+    background:none;
+    background-color:transparent;
+}
+table.userinfo_stats td {
+    padding:0px 3px;
+}
+
+
 #stats_block a, #stats_block a:visited, #header_bottom a, #header_bottom a:visited, #userinfo_username li ul, #userinfo_username li ul li a {
     font-size: 1.1em;
     text-decoration: none;

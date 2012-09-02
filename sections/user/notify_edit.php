@@ -3,7 +3,8 @@ if(!check_perms('site_torrents_notify')){ error(403); }
 show_header('Manage notifications');
 ?>
 <div class="thin">
-	<div class="head">Notify me of all new torrents with...<a href="torrents.php?action=notify">(View)</a></div>
+    <h2>Notification filters</h2>
+	<h3>Notify me of all new torrents with...<a href="torrents.php?action=notify">(View)</a></h3>
 <?
 $DB->query("SELECT ID, Label, Tags, NotTags, Categories FROM users_notify_filters WHERE UserID='$LoggedUser[ID]' UNION ALL SELECT NULL, NULL, NULL, 1, NULL");
 $i = 0;
@@ -18,13 +19,13 @@ foreach($Notifications as $N) { //$N stands for Notifications
 	$i++;
 
 	if($i>$NumFilters && $NumFilters>0){ ?>
-			<h3>Create a new notification filter</h3>
+            <div class="head">Create a new notification filter</div>
 <?	} elseif($NumFilters>0) { ?>
-			<h3>
+            <div class="head">
 				<a href="feeds.php?feed=torrents_notify_<?=$N['ID']?>_<?=$LoggedUser['torrent_pass']?>&amp;user=<?=$LoggedUser['ID']?>&amp;auth=<?=$LoggedUser['RSS_Auth']?>&amp;passkey=<?=$LoggedUser['torrent_pass']?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;name=<?=urlencode($N['Label'])?>"><img src="<?=STATIC_SERVER?>/common/symbols/rss.png" alt="RSS feed" /></a>
 				<?=display_str($N['Label'])?>
 				<a href="user.php?action=notify_delete&amp;id=<?=$N['ID']?>&amp;auth=<?=$LoggedUser['AuthKey']?>">(Delete)</a>
-			</h3>
+		</div>
 <?	} ?>
 	<form action="user.php" method="post">
 		<input type="hidden" name="action" value="notify_handle" />

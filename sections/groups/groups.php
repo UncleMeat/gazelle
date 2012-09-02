@@ -35,7 +35,7 @@ $DB->query("SELECT
 // Start printing stuff
 ?>
 <div class="thin">
- 
+    <h2>User Groups</h2>
     <div class="head">Groups</div>
     <div class="box pad">
         <p>Usergroups are a way to keep track of a group of users. They can only be seen by staff and are not visible to any users.</p>

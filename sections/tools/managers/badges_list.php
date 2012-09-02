@@ -120,6 +120,7 @@ show_header('Badges','badges');
     </form>
  
     <br/><br/>
+    <div class="head"> </div>
     <div class="box pad">
         <h3>Image</h3>
         <ul><li>Images are listed from the common/badges/ directory</li></ul>
@@ -151,6 +152,7 @@ show_header('Badges','badges');
     </div>
     <br/>
     
+    <div class="head">Manage Badges</div>
     <form id="editbadges" action="tools.php" method="post">
         <input type="hidden" name="action" value="badges_alter" />
         <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />

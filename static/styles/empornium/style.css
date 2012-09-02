@@ -238,6 +238,16 @@ span.infinity {
     font-size: 8.5pt;
 }
 
+
+table.userinfo_stats, table.userinfo_stats tr {
+    background:none;
+    background-color:transparent;
+}
+table.userinfo_stats td {
+    padding:0px 3px;
+}
+
+
 #stats_block ul li, #header_bottom ul li {
     margin: 0 0.1em;
     line-height: 18px;

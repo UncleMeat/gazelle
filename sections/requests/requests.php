@@ -14,7 +14,7 @@ $UserClass = $Perms['Class'];
 $BookmarkView = false;
 
 if(empty($_GET['type'])) { 
-	$Title = 'Requests';
+	$Title = 'Search Requests';
 	if(!check_perms('site_see_old_requests') || empty($_GET['showall'])) {
 		$SS->set_filter('visible', array(1));
 	}
@@ -211,6 +211,7 @@ show_header($Title, 'requests');
 
 ?>
 <div class="thin">
+      <h2>Requests</h2>
 	<div class="linkbox">
 <?	if (!$BookmarkView) { ?>
 <?		if(check_perms('site_submit_requests')){ ?> 

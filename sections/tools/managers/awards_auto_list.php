@@ -131,6 +131,7 @@ function print_categories($ElementID, $SelectedCat=-1){
     </form>
      
     <br/><br/>
+    <div class="head"></div>
     <div class="box pad">
         When awarding these the system checks for users that do not have this badge, then checks those results against the Parameter and Value settings to determine who should get the award.
         Do not have the same badge being awarded by 2 different active items, or at least be aware the user will only get one and then be blocked from receiving the other.
@@ -143,6 +144,7 @@ function print_categories($ElementID, $SelectedCat=-1){
         </form>
     </div><br/>
  
+    <div class="head">Manage Automatic Awards</div>
     <form id="editawards" action="tools.php" method="post">
         <input type="hidden" name="action" value="awards_alter" />
         <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />

@@ -98,6 +98,7 @@ show_header($Username.' > Settings','user,validate,bbcode');
 echo $Val->GenerateJS('userform');
 ?>
 <div class="thin">
+    <h2>User Settings</h2>
 	<div class="head"><?=format_username($UserID,$Username)?> &gt; Settings</div>
 	<form id="userform" name="userform" action="" method="post" onsubmit="return formVal();" autocomplete="off">
 		<div>
@@ -106,7 +107,7 @@ echo $Val->GenerateJS('userform');
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 		</div>
 		<table cellpadding='6' cellspacing='1' border='0' width='100%' class='border'>
-			<tr class="colhead_dark">
+			<tr class="colhead">
 				<td colspan="2">
 					<strong>Site preferences</strong>
 				</td>
@@ -318,7 +319,7 @@ echo $Val->GenerateJS('userform');
 					<input type="submit" value="Save Profile" title="Save all changes" />
 				</td>
 			</tr>
-			<tr class="colhead_dark">
+			<tr class="colhead">
 				<td colspan="2">
 					<strong>User info</strong>
 				</td>
@@ -374,7 +375,7 @@ echo $Val->GenerateJS('userform');
 					<input type="submit" value="Save Profile" title="Save all changes" />
 				</td>
 			</tr>
-			<tr class="colhead_dark">
+			<tr class="colhead">
 				<td colspan="2">
 					<strong>Paranoia settings</strong>
 				</td>
@@ -499,7 +500,7 @@ list($Invited) = $DB->next_record();
 					<input type="submit" value="Save Profile" title="Save all changes" />
 				</td>
 			</tr>
-			<tr class="colhead_dark">
+			<tr class="colhead">
 				<td colspan="2">
 					<strong>Change password</strong>
 				</td>

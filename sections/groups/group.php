@@ -51,6 +51,7 @@ list($Results) = $DB->next_record();
 
 ?>
 <div class="thin">
+    <h2>User Group <?=$Name?></h2>
     <div class="head"><a href="groups.php">Groups</a>  &gt; <?=$Name?></div>
     
     <form action="groups.php" method="post">
@@ -58,9 +59,6 @@ list($Results) = $DB->next_record();
           <input type="hidden" name="groupid" value="<?=$GroupID?>" />
           <input type="hidden" name="applyto" value="group" />
           <table class="friends_table vertical_margin">
-                <tr class="colhead">
-                      <td colspan="2">Testers User Group</td>
-                </tr>
                 <tr>
                       <td valign="top">
                             <input class="long" type="text" name="name" value="<?=display_str($Name)?>" />

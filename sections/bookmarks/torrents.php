@@ -170,6 +170,7 @@ for ($i=0; $i < $NumGroups/$CollageCovers; $i++) {
 show_header($Title, 'browse,collage');
 ?>
 <div class="thin">
+    <h2>Bookmarks</h2>
 	<div class="linkbox">
 		<a href="bookmarks.php?type=torrents">[Torrents]</a>
 		<a href="bookmarks.php?type=collages">[Collages]</a>

@@ -32,7 +32,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 <div class="thin">
 	<div class="head">Staff PMs</div>
 	<div class="box pad">
-          <div class="linkbox">
+          <div class="center">
                 <a href="#" onClick="jQuery('#compose').slideToggle('slow');">[Compose New]</a>
           </div>
 		<? print_compose_staff_pm(!$Show, $Assign, $Subject, $Msg);  ?>

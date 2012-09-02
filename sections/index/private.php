@@ -27,6 +27,7 @@ if ($LoggedUser['LastReadNews'] != $News[0][0]) {
 show_header('News','bbcode');
 ?>
 <div class="thin">
+    <h2><?=SITE_NAME?> <?=((strtolower(substr( SITE_NAME,0,1))===substr( SITE_NAME,0,1))?'news':'News'); ?></h2>
 <? print_latest_forum_topics(); ?>
     
 	<div class="sidebar">

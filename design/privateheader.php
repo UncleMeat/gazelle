@@ -82,26 +82,46 @@ if ($Mobile) { ?>
     <div id="header_top">
 	<div id="logo"><a href="index.php"></a></div>
 	<div id="stats_block">
+               <? /*
 		<ul id="userinfo_stats">
                 <span class="inside_stat">
-                      <li id="stats_seeding"><a href="torrents.php?type=seeding&amp;userid=<?=$LoggedUser['ID']?>">Up</a>: <span class="stat"><?=get_size($LoggedUser['BytesUploaded'])?></span></li>
-                      <li id="stats_leeching"><a href="torrents.php?type=leeching&amp;userid=<?=$LoggedUser['ID']?>">Down</a>: <span class="stat"><?=get_size($LoggedUser['BytesDownloaded'])?></span></li>
-                </span>
-                <span class="inside_stat"> 
     <?
         if($LoggedUser['FLTokens'] > 0) { ?>
-                      <li id="fl_tokens"><a href="userhistory.php?action=token_history">Slots</a>: <span class="stat"><?=$LoggedUser['FLTokens']?></span></li>
+                    <li id="fl_tokens"><a href="userhistory.php?action=token_history">Slots</a>: <span class="stat"><?=$LoggedUser['FLTokens']?></span></li>
     <?	} ?>  
-                      <li id="credits"><a href="bonus.php">Credits</a>: <span class="stat"><?=number_format((int)$LoggedUser['TotalCredits'])?></span></li>
-
+                    <li id="stats_seeding"><a href="torrents.php?type=seeding&amp;userid=<?=$LoggedUser['ID']?>">Up</a>: <span class="stat"><?=get_size($LoggedUser['BytesUploaded'])?></span></li>
+                </span>
+                <span class="inside_stat"> 
+                    <li id="credits"><a href="bonus.php">Credits</a>: <span class="stat"><?=number_format((int)$LoggedUser['TotalCredits'])?></span></li>
+                    <li id="stats_leeching"><a href="torrents.php?type=leeching&amp;userid=<?=$LoggedUser['ID']?>">Down</a>: <span class="stat"><?=get_size($LoggedUser['BytesDownloaded'])?></span></li>
                 </span>
                 <span class="inside_stat">
-                      <li id="stats_ratio"><a href="articles.php?topic=ratio">Ratio</a>: <span class="stat"><?=ratio($LoggedUser['BytesUploaded'], $LoggedUser['BytesDownloaded'])?></span></li>
     <?	if(!empty($LoggedUser['RequiredRatio']) && $LoggedUser['RequiredRatio']>0) {?>
-                      <li id="stats_required"><a href="articles.php?topic=ratio">Required</a>: <span class="stat"><?=number_format($LoggedUser['RequiredRatio'], 2)?></span></li>
+                    <li id="stats_required"><a href="articles.php?topic=ratio">Required</a>: <span class="stat"><?=number_format($LoggedUser['RequiredRatio'], 2)?></span></li>
     <?	}  ?> 
+                    <li id="stats_ratio"><a href="articles.php?topic=ratio">Ratio</a>: <span class="stat"><?=ratio($LoggedUser['BytesUploaded'], $LoggedUser['BytesDownloaded'])?></span></li>
                 </span>
-            </ul>
+            </ul>  */  ?>
+          <table class="userinfo_stats noborder">
+              <tr>
+                  <td style="text-align:right;"><a href="bonus.php">Credits</a>:</td>
+                  <td><span class="stat"><?=number_format((int)$LoggedUser['TotalCredits'])?></span></td>
+                  <td style="text-align:right;"><a href="torrents.php?type=seeding&amp;userid=<?=$LoggedUser['ID']?>">Up</a>:</td>
+                  <td><span class="stat"><?=get_size($LoggedUser['BytesUploaded'])?></span></td>
+              </tr>
+              <tr>
+                  <td style="text-align:right;"><a href="userhistory.php?action=token_history">Slots</a>:</td>
+                  <td><span class="stat"><?=$LoggedUser['FLTokens']?></span></td>
+                  <td style="text-align:right;"><a href="torrents.php?type=leeching&amp;userid=<?=$LoggedUser['ID']?>">Down</a>:</td>
+                  <td><span class="stat"><?=get_size($LoggedUser['BytesDownloaded'])?></span></td>
+              </tr>
+              <tr>
+                  <td style="text-align:right;"><a href="articles.php?topic=ratio">Required</a>:</td>
+                  <td><span class="stat"><?=number_format($LoggedUser['RequiredRatio'], 2)?></span></td>
+                  <td style="text-align:right;"><a href="articles.php?topic=ratio">Ratio</a>:</td>
+                  <td><span class="stat"><?=ratio($LoggedUser['BytesUploaded'], $LoggedUser['BytesDownloaded'])?></span></td>
+              </tr>
+          </table>
 	</div>
 <?
 $NewSubscriptions = $Cache->get_value('subscriptions_user_new_'.$LoggedUser['ID']);

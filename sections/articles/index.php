@@ -27,6 +27,7 @@ show_header( (empty($LoggedUser['ShortTitles'])?"{$ArticleCats[$Category]} > $Ti
 ?>
 
 <div class="thin">
+    <h2><?=$ArticleCats[$Category]?> Articles</h2>
     <div class="head"><?= $Title ?></div>
     <div class="box pad" style="padding:10px 10px 10px 20px;">
         <?=$Body?>

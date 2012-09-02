@@ -201,8 +201,9 @@ $Pages=get_pages($Page,$TorrentCount,$TorrentsPerPage,'#torrents');
 ?>
 <? if (!$INLINE) {  ?>
 <div class="thin">
-    <div class="head"><a href="user.php?id=<?=$UserID?>"><?=$User['Username']?></a><?='\'s '.$Action.' torrents'?></div>
-        <div>
+    <h2><a href="user.php?id=<?=$UserID?>"><?=$User['Username']?></a><?='\'s '.$Action.' torrents'?></h2>
+         
+    <div class="head">Search</div>
 		<form action="" method="get">
                  <table>
 				<tr>
@@ -268,13 +269,15 @@ foreach($NewCategories as $Cat) {
 				<input type="submit" value="Search torrents" />
 			</div>
 		</form>
-	</div>
+	 
 <? 
 } // end if !$INLINE
 
     if(count($GroupIDs) == 0) { ?>
-	<div class="center">
-		Nothing found!
+        <br/>
+	<div class="head">Search Results</div>
+	<div class="box pad center">
+          <h2>Nothing found!</h2>
 	</div>
 <?	} else { ?>
 	<div class="linkbox"><?=$Pages?></div>
