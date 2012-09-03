@@ -1361,7 +1361,7 @@ EXPLANATION OF PARSER LOGIC
 					break;
                               
                         case 'mcom':  
-                              $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[ <a href="articles.php?topic=tutorials">Help</a> | <a href="articles.php?topic=rules">Rules</a> ]</div><div class="clear"></div></div>';
+                              $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[ <a href="articles.php?topic=tutorials">Help</a> | <a href="articles.php?topic=rules">Rules</a> ]</div></div>'; // <div class="clear"></div>
                               break;
                           
 				case 'table':

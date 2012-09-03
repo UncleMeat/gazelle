@@ -74,10 +74,10 @@ function reset() {
 </div>
 <div class="box pad">
 	Before using permissions, please understand that it allows you to both add and remove access to specific features. If you think that to add access to a feature, you need to uncheck everything else, <strong>YOU ARE WRONG</strong>. The checkmarks on the left, which are grayed out, are the standard permissions granted by their class (and donor/artist status), any changes you make to the right side will overwrite this. It's not complicated, and if you screw up, click the defaults link at the top. It will reset the user to their respective features granted by class, then you can check or uncheck the one or two things you want to change. <strong>DO NOT UNCHECK EVERYTHING.</strong>
-</div><br />
-    <div class="pad center"> 
+</div> 
+    <div class="permission_head  box shadow center"> 
         Class Permissions: <?=  make_class_string($PermissionID,true); // $PermName;
-            if ($GroupPermName) echo "&nbsp;&nbsp;&nbsp;&nbsp; Group Permissions: <strong>$GroupPermName</strong>";  ?>
+            if ($GroupPermName) echo "<br/>Group Permissions: <strong>$GroupPermName</strong>";  ?>
     </div> 
 <form name="permform" id="permform" method="post" action="" >
 	<table class="permission_head">
