@@ -594,9 +594,11 @@ class TEXT {
             
             $Str = str_replace('  ', ' &nbsp;', $Str);
 		//Inline links
-		//$Str = preg_replace('/\[link=/i', '[lnk=', $Str); |\[lnk\=
 		$Str = preg_replace('/\[video\=/i', '[vid=', $Str);
-		$URLPrefix = '(\[url\]|\[url\=|\[vid\=|\[img\=|\[img\])';
+		$Str = preg_replace('/\[thumb\]/i', '[thu]', $Str);
+		$Str = preg_replace('/\[banner\]/i', '[ban]', $Str);
+            
+		$URLPrefix = '(\[url\]|\[url\=|\[vid\=|\[img\=|\[img\]|\[thu\]|\[ban\])';
 		$Str = preg_replace('/'.$URLPrefix.'\s+/i', '$1', $Str);
 		$Str = preg_replace('/(?<!'.$URLPrefix.')http(s)?:\/\//i', '$1[inlineurl]http$2://', $Str);
 		// For anonym.to and archive.org links, remove any [inlineurl] in the middle of the link
@@ -608,7 +610,9 @@ class TEXT {
 		$Str = preg_replace('/\=\=([^=].*)\=\=/i', '[inlinesize=7]$1[/inlinesize]', $Str);
 		
 		$Str = preg_replace('/\[vid\=/i', '[video=', $Str);
-		//$Str = preg_replace('/\[lnk\=/i', '[link=', $Str);
+		$Str = preg_replace('/\[thu\]/i', '[thumb]', $Str);
+		$Str = preg_replace('/\[ban\]/i', '[banner]', $Str);
+            
 		$Str = $this->parse($Str);
 		
 		$HTML = $this->to_html($Str);
@@ -648,6 +652,16 @@ class TEXT {
 		return $Str;
 	}
 	
+        // how much readable text is in string
+        function text_count($Str) {
+                //remove tags
+                $Str = $this->db_clean_search($Str);
+                //remove endofline
+                $Str = str_replace(array("\r\n", "\n", "\r"), '', $Str);
+                $Str = trim($Str);
+                return mb_strlen($Str);
+        }
+        
         // I took a shortcut here and made this function instead of using strip_bbcode since it's purpose is a bit
         // different.
         function db_clean_search($Str) {
@@ -680,6 +694,9 @@ class TEXT {
 
                 $remove[] = '/\[cast\]/i';
 
+                $remove[] = '/\[center.*?\]/i';
+                $remove[] = '/\[\/center\]/i';
+                
                 $remove[] = '/\[codeblock.*?\]/i';
                 $remove[] = '/\[\/codeblock\]/i';
 
@@ -1085,12 +1102,17 @@ EXPLANATION OF PARSER LOGIC
 					break;
 				case 'img':
 				case 'image':
+					if(empty($Block)) {
+						$Block = $Attrib;
+					}
+					$Array[$ArrayPos] = array('Type'=>'img', 'Val'=>$Block);
+					break;
 				case 'banner':
 				case 'thumb':
 					if(empty($Block)) {
 						$Block = $Attrib;
 					}
-					$Array[$ArrayPos] = array('Type'=>'img', 'Val'=>$Block);
+					$Array[$ArrayPos] = array('Type'=>$TagName, 'Val'=>$Block);
 					break;
 				case 'aud':
 				case 'mp3':
@@ -1341,16 +1363,7 @@ EXPLANATION OF PARSER LOGIC
 						}
 					}
 					break;
-					
-                              /*
-                        case 'link': // local links and same page links to anchors
-                              $Block['Attr'] = str_replace('http://'.SITE_URL, '', $Block['Attr']);
-                              if (!preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\;\-\_]*$/', $Block['Attr'] ) ){
-                                  $Str.='[link='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/link]';
-					} else {
-                                  $Str.='<a class="link" href="'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
-                              }
-					break; */
+					 
 				case 'anchor':
 				case '#':
                               if (!preg_match('/^[a-zA-Z0-9\-\_]+$/', $Block['Attr'] ) ){
@@ -1519,18 +1532,31 @@ EXPLANATION OF PARSER LOGIC
 					$Str.='<strong>'.(($Block['Attr']) ? $Block['Attr'] : 'Hidden text').'</strong>: <a href="javascript:void(0);" onclick="BBCode.spoiler(this);">Show</a>';
 					$Str.='<blockquote class="hidden spoiler">'.$this->to_html($Block['Val']).'</blockquote>';
 					break;
+                          
 				case 'img':
+				case 'banner':
 					if($this->NoImg>0 && $this->valid_url($Block['Val'])) {
 						$Str.='<a rel="noreferrer" target="_blank" href="'.$Block['Val'].'">'.$Block['Val'].'</a> (image)';
 						break;
 					}
 					if(!$this->valid_url($Block['Val'])) {
-						$Str.='[img]'.$Block['Val'].'[/img]';
+						$Str.="[$Block[Type]]".$Block['Val']."[/$Block[Type]]";
 					} else {
 						$Str.='<img class="scale_image" onclick="lightbox.init(this,500);" alt="'.$Block['Val'].'" src="'.$Block['Val'].'" />';
 					}
 					break;
-					
+				case 'thumb':
+					if($this->NoImg>0 && $this->valid_url($Block['Val'])) {
+						$Str.='<a rel="noreferrer" target="_blank" href="'.$Block['Val'].'">'.$Block['Val'].'</a> (image)';
+						break;
+					}
+					if(!$this->valid_url($Block['Val'])) {
+						$Str.='[thumb]'.$Block['Val'].'[/thumb]';
+					} else {
+						$Str.='<img class="thumb_image" onclick="lightbox.init(this,300);" alt="'.$Block['Val'].'" src="'.$Block['Val'].'" />';
+					}
+					break;
+                              
 				case 'audio':
 					if($this->NoImg>0 && $this->valid_url($Block['Val'])) {
 						$Str.='<a rel="noreferrer" target="_blank" href="'.$Block['Val'].'">'.$Block['Val'].'</a> (audio)';

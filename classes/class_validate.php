@@ -140,7 +140,8 @@ class VALIDATE {
                                         include(SERVER_ROOT . '/classes/class_text.php');
                                         $Text = new TEXT();
                                     }
-                                    $TextLength =  strlen($Text->db_clean_search($ValidateVar));
+                                    //$TextLength =  strlen($Text->db_clean_search($ValidateVar));
+                                    $TextLength =  $Text->text_count($ValidateVar);
                                     $RealLength =  strlen($ValidateVar);
 
                                     if($TextLength>$MaxLength) { 
@@ -162,7 +163,7 @@ class VALIDATE {
 
 
                                     // get all the image urls in the field ; inside [img]url[/img] && [img=url] tags
-                                    $num = preg_match_all('#(?|\[img\](.*?)\[/img\]|\[img\=(.*?)\])#ism', $ValidateVar, $imageurls);
+                                    $num = preg_match_all('#(?|\[thumb\](.*?)\[/thumb\]|\[img\](.*?)\[/img\]|\[img\=(.*?)\])#ism', $ValidateVar, $imageurls);
 
                                     if($num && $num >= $MinImages) { // if there are no img tags then it validates 
                                         for ($j=0;$j<$num;$j++) {  

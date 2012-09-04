@@ -65,7 +65,8 @@ $GroupName = $TorrentCache[0][0][3];
 
 //$Summary = db_string($_POST['summary']);
 $Image = db_string($Image);
-$SearchText = db_string($GroupName . ' ' . $Text->db_clean_search($Body));
+//$SearchText = db_string($GroupName . ' ' . $Text->db_clean_search($Body));
+$SearchText = db_string(trim($GroupName) . ' ' . $Text->db_clean_search(trim($Body)));
 $Body =  db_string($Body);
 
 // Update torrents table

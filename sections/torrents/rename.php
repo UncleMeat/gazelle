@@ -5,7 +5,7 @@ include(SERVER_ROOT.'/classes/class_text.php');
 
 $GroupID = $_POST['groupid'];
 $OldGroupID = $GroupID;
-$NewName = db_string($_POST['name']);
+$NewName = db_string( trim( $_POST['name']) );
 
 if(!$GroupID || !is_number($GroupID)) { error(404); }
 
@@ -27,7 +27,8 @@ $Text = new TEXT;
 
 $DB->query("SELECT Name, Body FROM torrents_group WHERE ID = ".$GroupID);
 list($OldName, $Body) = $DB->next_record();
-$SearchText = db_string($NewName . ' ' . $Text->db_clean_search($Body));
+//$SearchText = db_string($NewName . ' ' . $Text->db_clean_search($Body));
+$SearchText = $NewName . ' ' . db_string($Text->db_clean_search(trim($Body)));
 
 $DB->query("UPDATE torrents_group SET Name='$NewName', SearchText='$SearchText' WHERE ID='$GroupID'");
 $Cache->delete_value('torrents_details_'.$GroupID);

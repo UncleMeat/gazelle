@@ -1,28 +1,28 @@
 pre br {
-	line-height:0px;
-	display:none;
+    line-height:0px;
+    display:none;
 }
 
 ul.collage_images {
-	padding: 0px;
-	/* width: 590px; */
-	border-collapse: collapse;
+    padding: 0px;
+    /* width: 590px; */
+    border-collapse: collapse;
 }
 
 .collage_images {
-	display: table;
+    display: table;
 }
 
 ul.collage_images li {
-	border: none;
-	float: left;
-	margin: 0;
-	list-style: none;
-	list-style-type: none;
-	max-height: 280px;
-	min-width: 160px;
-	max-width: 160px;
-      text-align: center;
+    border: none;
+    float: left;
+    margin: 0;
+    list-style: none;
+    list-style-type: none;
+    max-height: 280px;
+    min-width: 160px;
+    max-width: 160px;
+    text-align: center;
 }
 
 ul.collage_images li a {
@@ -31,36 +31,36 @@ ul.collage_images li a {
 }
 
 ul.collage_images img {
-	max-height: 280px;
-	min-width: 160px;
-	max-width: 160px;
+    max-height: 280px;
+    min-width: 160px;
+    max-width: 160px;
 }
 
 
 .selected a{
-	font-weight: bold;
-	text-decoration: underline;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .invisible {
-	visibility: hidden;
+    visibility: hidden;
 }
 
 .collage td {
-	padding: 0px;
-	border: none;
+    padding: 0px;
+    border: none;
 }
 
 .line_new {
-	color: green;
+    color: green;
 }
 
 .line_deleted {
-	color: red;
+    color: red;
 }
 
 .line_moved {
-	color: blue;
+    color: blue;
 }
 
 .line_unchanged {
@@ -69,101 +69,106 @@ ul.collage_images img {
 
 .log1 {
 
- }
- 
- .log2 {
- 	color: yellow;
- }
- 
- .log3 {
- 	color: #0E88C6;
- }
- 
- .log4 {
- 	font-weight: bold;
- }
- 
- .log5 {
- 	text-decoration: underline;
- }
- 
- .good {
- 	font-weight: bold;
- 	color: green;
- }
- 
- .bad {
- 	font-weight: bold;
- 	color: red;
- }
- 
- .goodish {
- 	font-weight: bold;
- 	color: #35BF00;
- }
- 
- .badish {
- 	font-weight: bold;
- 	color: #E5B244;
- }
- 
- pre {
- 	overflow: auto;
- }
+}
+
+.log2 {
+    color: yellow;
+}
+
+.log3 {
+    color: #0E88C6;
+}
+
+.log4 {
+    font-weight: bold;
+}
+
+.log5 {
+    text-decoration: underline;
+}
+
+.good {
+    font-weight: bold;
+    color: green;
+}
+
+.bad {
+    font-weight: bold;
+    color: red;
+}
+
+.goodish {
+    font-weight: bold;
+    color: #35BF00;
+}
+
+.badish {
+    font-weight: bold;
+    color: #E5B244;
+}
+
+pre {
+    overflow: auto;
+}
 
 .hidden {
-	display: none;
+    display: none;
 }
 
 .disable_grouping {
-	display: none;
+    display: none;
 }
 
 form textarea, form input {max-width:100%;}
 
 a.beta {
-	font-weight: bold;
-	color: #ff0000;
+    font-weight: bold;
+    color: #ff0000;
 }
 strong.important_text { 
-	color: red;
-	font-weight: bold;
+    color: red;
+    font-weight: bold;
 }
 .invalid, .warning, .error {
-	color: #ff0000;
+    color: #ff0000;
 }
 
 /* Make [+] on add multiple artists stay at the bottom (on torrent details page) */
 div#AddArtists {
-	position: relative;
+    position: relative;
 }
 
 div#AddArtists a {
-	position: absolute;
-	right: 0pt;
-	bottom: 0pt;
+    position: absolute;
+    right: 0pt;
+    bottom: 0pt;
 }
 
 .clear:after {
-	content: ".";
-	display: block;
-	height: 0;
-	clear: both;
-	visibility: hidden;
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
 }
 
 .new-subscriptions {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .scale_image {
-	max-width: 100%;
-        margin: 5px;
+    max-width: 100%;
+    margin: 5px;
 }
- 
+.thumb_image {
+    max-width: 300px;
+    max-height: 300px;
+    margin: 5px;
+}
+
 /*
 #torrents .scale_image, #upload .scale_image {
-	max-width: 100%;
+      max-width: 100%;
 }
  
 */
