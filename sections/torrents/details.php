@@ -492,7 +492,7 @@ $EditionID = 0;
         if(count($Reports) > 0) {
 		$Reported = true;
 		include(SERVER_ROOT.'/sections/reportsv2/array.php');
-		$ReportInfo = "<table><tr class='smallhead'><td>This torrent has ".count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report').":</td></tr>";
+		$ReportInfo = '<table class="reported"><tr class="smallhead"><td>This torrent has '.count($Reports)." active ".(count($Reports) > 1 ?'reports' : 'report').":</td></tr>";
 
 		foreach($Reports as $Report) {
 			list($ReportID, $ReporterID, $ReportType, $ReportReason, $ReportedTime) = $Report;

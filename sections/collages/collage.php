@@ -437,7 +437,7 @@ if($CollageCovers != 0) { ?>
 <?=$TorrentTable?>
 		</table>
             <br style="clear:both;" />
-            <div class="box pad">
+            <div class="box pad shadow">
                 <h3 style="float:left">Most recent Comments</h3> <a style="float:right" href="collages.php?action=comments&amp;collageid=<?=$CollageID?>">All comments</a>
             <br style="clear:both;" /></div>
 <?

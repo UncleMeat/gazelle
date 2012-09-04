@@ -319,9 +319,10 @@ span.infinity {
 
 
 
-table.userinfo_stats, table.userinfo_stats tr {
+table.userinfo_stats, table.userinfo_stats tr, #staff table.userinfo_stats {
     background:none;
     background-color:transparent;
+    border:none;
 }
 table.userinfo_stats td {
     padding:0px 3px;
@@ -1128,17 +1129,24 @@ td.label { /* .main_column td:first-child, */
 tr#recentuploads td{
     background-color:white;
 }
+table.border {
+    border: 1px solid #dde; 
+}
 table.border td {
   /*  border: 1px solid #dde; */
 }
 table.staff {
-    border-left: 1px solid #dde;
-    border-right: 1px solid #dde;
+  /*  border-left: 1px solid #dde;
+    border-right: 1px solid #dde; */
+    border: 1px solid #dde;
 }
 table.noborder td, .torrent td, .torrent_table td {
     border:none;
 }
 
+#staff table {
+    border: 1px solid #dde;
+}
 /* Bonus SHop */
 
 tr.itembuy {
@@ -1274,7 +1282,7 @@ td.colhead, .colhead td {
     font-weight: normal;
 }
 
-.head a {
+.head a, tr.colhead a, tr.colhead a:visited {
     color: white;
 }
 
@@ -1496,8 +1504,15 @@ table.cat_list {
 .torrent span.time {
     float:none;
 }
-
-.torrent_table {
+ 
+.torrentdetails table {
+    border: 1px solid #dde; 
+}
+.torrentdetails table tr:nth-child(even) {
+    background-color: #eff3f6;
+}
+.torrentdetails table.reported tr:nth-child(even) {
+    background-color: white;
 }
 
 .torrent_table table {
@@ -1654,6 +1669,13 @@ div.tagtable {
 .read_locked{background: url(images/locked_read.png) no-repeat center center;}
 .unread{background: url(images/unread.png) no-repeat center center;}
 .read{background: url(images/read.png) no-repeat center center;}
+
+#dnulist tr:nth-child(odd), #whitelist tr:nth-child(odd) {
+    background-color: #eff3f6;
+}
+.permission_container tr:nth-child(even) {
+    background-color: #eff3f6;
+}
 
 table.forum_post {
     margin: 10px 0px;
