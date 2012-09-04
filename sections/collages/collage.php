@@ -417,7 +417,7 @@ if($CollageCovers != 0) { ?>
 		<script type="text/javascript">
 			collageShow.init(<?=json_encode($CollagePages)?>);
 		</script>
-<?		} 
+<?		}
 } ?>
             <div class="head"><strong>Description</strong></div>
 		<div class="box">

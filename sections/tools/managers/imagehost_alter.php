@@ -39,5 +39,5 @@ $Cache->delete_value('imagehost_regex');
 $Cache->delete_value('imagehost_whitelist');
 
 // Go back
-header('Location: tools.php?action=imghost_whitelist')
+header('Location: tools.php?action=imghost_whitelist');
 ?>

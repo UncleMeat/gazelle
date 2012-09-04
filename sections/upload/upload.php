@@ -154,16 +154,19 @@ if (!empty($Properties))
 
 <div class="thin">
     <h2>Upload torrent</h2>
-    <div class="box pad" style="margin:10px auto">
-        <span style="float:right;clear:right"><p><?= $NewDNU ? '<strong class="important_text">' : '' ?>Last Updated: <?= time_diff($Updated) ?><?= $NewDNU ? '</strong>' : '' ?></p></span>
-        <h3 id="dnu_header">Do not upload from the following list</h3> 
-        <p>The following releases are currently forbidden from being uploaded to the site. Do not upload them unless your torrent meets a condition specified in the comment.
+    <div class="head">Do not upload from the following list</div>
+    <div class="box pad">
+        <span style="float:right;clear:right">
+            <p><?= $NewDNU ? '<strong class="important_text">' : '' ?>Last Updated: <?= time_diff($Updated) ?><?= $NewDNU ? '</strong>' : '' ?></p>
+        </span>
+        
+        <p>The following releases are currently forbidden from being uploaded to the site. Make sure you have read the list.
             <? if ($HideDNU) { ?>
                 <span id="showdnu"><a href="#" onclick="$('#dnulist').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
 <? } ?>
         </p>
         <table id="dnulist" class="<?= ($HideDNU ? 'hidden' : '') ?>" style="">
-            <tr class="colhead">
+            <tr class="colhead_dark">
                 <td width="50%"><strong>Name</strong></td>
                 <td><strong>Comment</strong></td>
             </tr>
@@ -202,16 +205,17 @@ if (!empty($Properties))
     if (!$HideWL)
         $HideWL = check_perms('torrents_hide_imagehosts') || !$NewWL;
     ?>
-    <div class="box pad" style="margin:10px auto;">
+    <div class="head">Approved Imagehosts</div>
+    <div class="box pad">
         <span style="float:right;clear:right"><p><?=$NewWL ? '<strong class="important_text">' : '' ?>Last Updated: <?= time_diff($Updated) ?><?= $NewWL ? '</strong>' : '' ?></p></span>
-        <h3 id="dnu_header">Approved Imagehosts</h3> 
+        
         <p>You must use one of the following approved imagehosts for all images. 
 <? if ($HideWL) { ?>
                 <span><a href="#" onclick="$('#whitelist').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(Show)':'(Hide)'); return false;">(Show)</a></span>
 <? } ?>
         </p>
         <table id="whitelist" class="<?= ($HideWL ? 'hidden' : '') ?>" style="">
-            <tr class="colhead">
+            <tr class="colhead_dark">
                 <td width="50%"><strong>Imagehost</strong></td>
                 <td><strong>Comment</strong></td>
             </tr>
@@ -232,11 +236,10 @@ foreach ($Whitelist as $ImageHost) {
     <? } ?>
         </table> 
     </div>
-    <a id="startform"></a>
 <?
     if (check_perms('use_templates')) {
 ?>
-        <div class="box pad" style="margin:10px auto;">
+        <div class="box pad shadow">
             <form action="" enctype="multipart/form-data"  method="post" onsubmit="return ($('#template').raw().value!=0);">
                 <div style="margin:10px 10%;display:inline">
                     <?
@@ -285,12 +288,15 @@ foreach ($Whitelist as $ImageHost) {
 <?
     }
 ?>
-</div>
+    <a id="startform"></a>
 <?
+
 /* -------  Draw upload torrent form  ------- */
 $TorrentForm->head();
 $TorrentForm->simple_form($GenreTags);
-$TorrentForm->foot();
-
+$TorrentForm->foot(); 
+?>
+</div>
+<?
 show_footer();
 ?>

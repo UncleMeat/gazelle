@@ -1208,6 +1208,14 @@ table.slice {
     display:none;
 }
 
+
+
+#upload .cover_image {
+    width:260px;
+    margin: 0px auto;
+}
+
+
 /* Layout (home page) */
 
 ul.stats li {

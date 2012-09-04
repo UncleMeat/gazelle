@@ -47,9 +47,9 @@ if ($_POST['submit'] == 'Delete') {
         update_tracker('add_whitelist', array('peer_id' => $PeerID));
     }
 }
-
+ 
 $Cache->delete('whitelisted_clients');
 
 // Go back
-header('Location: tools.php?action=whitelist')
+header('Location: tools.php?action=whitelist');
 ?>

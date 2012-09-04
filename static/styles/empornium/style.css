@@ -1114,6 +1114,11 @@ table.slice {
     margin-top: -1px;
 }
 
+#upload .cover_image {
+    width:260px;
+    margin: 0px auto;
+}
+
 .error_message {
     border-top: 1px solid #C1965C;
     padding: 3px 0px 3px 0px;

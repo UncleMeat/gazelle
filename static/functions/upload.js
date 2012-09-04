@@ -1,8 +1,9 @@
-function Categories() {
+/*function Categories() {
 	ajax.get('ajax.php?action=upload_section&categoryid=' + $('#categories').raw().value, function (response) {
 		$('#dynamic_form').raw().innerHTML = response;
 	});
 }
+ */
 
 function add_tag() {
 	if($('#tags').raw().value == "") {
@@ -92,7 +93,7 @@ function Upload_Quick_Preview() {
 	ajax.post("ajax.php?action=preview_upload","upload_table", function(response){
 		$('#uploadpreviewbody').show();
 		$('#contentpreview').raw().innerHTML = response;
-		$('#uploadbody').hide(); 
+		$('.uploadbody').hide(); 
 	});
 }
 
@@ -100,6 +101,6 @@ function Upload_Quick_Edit() {
 	$('#post_preview').raw().value = "Preview";
 	$('#post_preview').raw().preview = false;
 	$('#uploadpreviewbody').hide();
-	$('#uploadbody').show(); 
+	$('.uploadbody').show(); 
 }
  

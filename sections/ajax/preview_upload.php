@@ -30,7 +30,8 @@ if ($Err){
 
     if (!empty($Imageurl)) {
         if ($Text->valid_url($Imageurl)){ 
-            $Imageurl = $Text->full_format('[align=center][img]'.$Imageurl.'[/img][/align]',false,true);
+		$Imageurl = '<img style="max-width: 100%;" src="'.$Imageurl.'" onclick="lightbox.init(this,220);" />';
+            //$Imageurl = $Text->full_format('[align=center][img]'.$Imageurl.'[/img][/align]',false,true);
         } else {
             $Imageurl = "<div style=\"text-align: center;\"><strong class=\"important_text\">Not a valid url</strong></div>";
         }
@@ -39,7 +40,20 @@ if ($Err){
     }
 
 
-    echo '<table cellpadding="3" cellspacing="1" border="0" class="border slice" width="100%">
+
+
+    echo '<br/>
+          <div class="cover_image">
+                <div class="head">Cover Image</div>
+                <div class="box box_albumart">'.$Imageurl .'</div>
+          </div>
+          <div class="head">Description</div>
+          <div class="box pad">
+               '.$Text->full_format($Content, get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions']),true).'                              
+          </div><br/>';
+    
+ /*
+    echo '<table cellpadding="3" cellspacing="1" border="0" class="noborder" width="100%">
         <tr>
             <td class="label">Cover Image</td>
             <td> 
@@ -54,7 +68,7 @@ if ($Err){
         </tr> 
     </table>';
     
- 
+ */
 
    
 ?>

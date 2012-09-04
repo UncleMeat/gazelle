@@ -821,8 +821,7 @@ p.min_padding {
     margin-top: 0px;
     padding-top: 0px;
 }
-
-
+ 
 #bonuslog, #admincommentlinks, #seedhistory div {
     max-height:400px;
     overflow: auto;
@@ -1287,11 +1286,17 @@ td.colhead, .colhead td {
 }
 
 .head+div.box, .colhead+div.box, tr.head+tr, tr#recentuploads, tr#recentsnatches, .head+table, #inbox, #site_debug ,
-       .main_column>table, .thin>table, .thin>form>table, #searchforum table, #searchthread table, #messageform .box, .shadow { /* , tr:first-child */
+       .main_column>table, .thin>table, .thin>form>table, #searchforum table, #searchthread table, #messageform .box,
+       .shadow, #upload_table  { /* , tr:first-child */
     -moz-box-shadow:inset 2px 1px 3px #6a9bb7;
     -webkit-box-shadow:inset 2px 1px 3px #6a9bb7;
     box-shadow:inset 2px 1px 3px #6a9bb7;
 }
+#upload .cover_image {
+    width:260px;
+    margin: 0px auto;
+}
+ 
 #site_debug {
     background-color: white;
 }
@@ -1657,8 +1662,8 @@ div.tagtable {
 
 .last_post {width: 15px; height: 15px; background: url(images/go_last_read.png) no-repeat center center; margin-left: 5px;}
 .last_read {width: 15px; height: 15px; background: url(images/go_last_read.png) no-repeat center center; margin-left: 5px;}
-.last_read a { border: none; width: 100%; height: 100%; display: block; }
-.last_read a:hover { border: none; }
+.last_read a, .last_post a { border: none; width: 100%; height: 100%; display: block; }
+.last_read a:hover, .last_post a:hover { border: none; }
 .colhead_dark .last_read { background-image:url(images/go_last_read.png); }
 
 .unread_locked_sticky{background: url(images/locked_sticky_unread.png) no-repeat center center;}
