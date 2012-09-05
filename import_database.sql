@@ -1,12 +1,12 @@
 -- fetch data from emp.users into gazelle.users_main
 
-insert into `gazelle`.`users_main` (`ID`, `Username`, `Email`, `PassHash`, `Secret`, `Title`, `PermissionID`, `Enabled`, `Uploaded`, `Downloaded`, `LastLogin`, `LastAccess`, `IP`, `torrent_pass`, `Credits`)
-SELECT `Id`, `username`, `email`, `passhash`, `secret`, `title`, '2', '1', `uploaded`, `downloaded`, from_unixtime(`last_login`), from_unixtime(`last_access`), `Ip`, `passkey`, `Bonuspoints` FROM emp.users;
+insert into `gazelle`.`users_main` (`ID`, `Username`, `Email`, `PassHash`, `Secret`, `Title`, `PermissionID`, `Enabled`, `Uploaded`, `Downloaded`, `LastLogin`, `LastAccess`, `IP`, `torrent_pass`, `Credits`, `FLTokens`)
+SELECT `Id`, `username`, `email`, `passhash`, `secret`, `title`, '2', '1', `uploaded`, `downloaded`, from_unixtime(`last_login`), from_unixtime(`last_access`), `Ip`, `passkey`, `bonuspoints`, `freeslots` FROM emp.users;
 
 -- fetch data from emp.users into gazelle.users_info
 
-insert into `gazelle`.`users_info` (`UserID`, `StyleID`, `Avatar`, `JoinDate`, `Inviter`, `AdminComment`, `Info`)
-select `Id`, '1', `avatar`, from_unixtime(`added`), '0', `modcomment`, `info` from `emp`.`users`;
+insert into `gazelle`.`users_info` (`UserID`, `StyleID`, `Avatar`, `JoinDate`, `Inviter`, `AdminComment`, `Info`, `Warned`, `Donor` )
+select `Id`, '1', `avatar`, from_unixtime(`added`), '0', `modcomment`, `info`, from_unixtime(`warned`), `donor` from `emp`.`users`;
 
 -- set gazelle.users_main.enabled to 1 where emp.users.enabled='yes'
 
@@ -63,6 +63,18 @@ SET `PermissionID` = '15'
 WHERE EXISTS (SELECT 1 from `emp`.`users` WHERE `emp`.`users`.`id`=`gazelle`.`users_main`.`id` and `class`='6');
 
 INSERT INTO `gazelle`.`invite_tree` (`UserID`, `InviterID`, `TreePosition`, `TreeID`, `TreeLevel`) VALUES ('0', '0', '1', '0', '1');
+
+
+-- Import friends and blocks
+INSERT INTO `gazelle`.`friends` (`UserID`, `FriendID`, `Comment`, `Type`) 
+SELECT `userid`,`blockid`,'','blocked' 
+FROM emp.blocks;
+INSERT IGNORE INTO `gazelle`.`friends` (`UserID`, `FriendID`, `Comment`, `Type`) 
+SELECT `userid`,`friendid`,'','friends' 
+FROM emp.friends;
+
+
+
 
 -- Import the forum
 insert into `gazelle`.`forums_posts` (`ID`, `TopicID`, `AuthorID`, `AddedTime`, `Body`, `EditedUserID`, `EditedTime`)
