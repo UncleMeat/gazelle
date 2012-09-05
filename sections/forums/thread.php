@@ -572,16 +572,15 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 ?>
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
                   <div class="head">Post reply</div>
-			<div class="box pad">
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
-					<tr class="colhead_dark">
+					<tr class="smallhead">
 						<td colspan="2">
 							<span style="float:left;"><a href='#quickreplypreview'>#XXXXXX</a>
 								<?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'], $LoggedUser['Title'], true)?> 
 							Just now
 							</span>
 							<span id="barpreview" style="float:right;">
-								<a href="#quickreplypreview">[Report Post]</a>
+								<a href="#quickreplypreview">[Report]</a>
 								&nbsp;
 								<a href="#">&uarr;</a>
 							</span>
@@ -602,6 +601,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 						</td>
 					</tr>
 				</table>
+			<div class="box pad shadow">
 				<form id="quickpostform" action="" method="post" onsubmit="return Validate_Form('message','quickpost')" style="display: block; text-align: center;">
 					<input type="hidden" name="action" value="reply" />
 					<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />

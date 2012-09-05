@@ -894,16 +894,15 @@ if(!$LoggedUser['DisablePosting']) { ?>
 			<br />
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
                   <div class="head">Post comment</div>
-			<div class="box pad">
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
-					<tr class="colhead_dark">
+					<tr class="smallhead">
 						<td colspan="2">
 							<span style="float:left;"><a href='#quickreplypreview'>#XXXXXX</a>
 								by <strong><?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'], false, true)?></strong>
 							Just now
-							<a href="#quickreplypreview">[Report Comment]</a>
 							</span>
 							<span id="barpreview" style="float:right;">
+								<a href="#quickreplypreview">[Report]</a>
 								<a href="#">&uarr;</a>
 							</span>
 						</td>
@@ -921,6 +920,7 @@ if(!$LoggedUser['DisablePosting']) { ?>
 						</td>
 					</tr>
 				</table>
+			<div class="box pad shadow">
 				<form id="quickpostform" action="" method="post" onsubmit="return Validate_Form('message','quickpost')" style="display: block; text-align: center;">
 					<div id="quickreplytext">
 						<input type="hidden" name="action" value="reply" />

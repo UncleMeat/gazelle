@@ -1685,7 +1685,7 @@ div.tagtable {
 table.forum_post {
     margin: 10px 0px;
     font-size: 10pt;
-    border: 2px solid #98AAB1;
+    border: 1px solid #98AAB1;
 }
 
 #requests table.forum_post {
@@ -1697,7 +1697,7 @@ table.forum_post td {
 }
 
 table.forum_unread {
-    border: 2px solid #0054b0;
+    border: 2px solid #98AAB1;
 }
 
 table.forum_list, table.forum_index {
@@ -2037,10 +2037,11 @@ code.bbcodeblock {
 }
 /*  Stuff for the bbcode assistant  */
 
-.bb_holder {
+table.bb_holder {
 	border-collapse:collapse; 
 	background:	#808080; 
       width: 100%;
+      margin: 0px;
 }
  
 
