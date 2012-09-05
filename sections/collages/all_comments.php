@@ -131,7 +131,6 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
           
 ?>
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
-                  <div class="head">Post comment</div>
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
 					<tr class="smallhead">
 						<td colspan="2">
@@ -158,6 +157,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 						</td>
 					</tr>
 				</table>
+                  <div class="head">Post comment</div>
 			<div class="box pad shadow">
 				<form id="quickpostform" action="" method="post" onsubmit="return Validate_Form('message', 'quickpost')" style="display: block; text-align: center;">
 					<div id="quickreplytext">

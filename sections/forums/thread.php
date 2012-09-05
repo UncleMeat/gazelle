@@ -571,7 +571,6 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 	//TODO: Preview, come up with a standard, make it look like post or just a block of formatted bbcode, but decide and write some proper html
 ?>
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
-                  <div class="head">Post reply</div>
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
 					<tr class="smallhead">
 						<td colspan="2">
@@ -601,6 +600,7 @@ if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) {
 						</td>
 					</tr>
 				</table>
+                  <div class="head">Post reply</div>
 			<div class="box pad shadow">
 				<form id="quickpostform" action="" method="post" onsubmit="return Validate_Form('message','quickpost')" style="display: block; text-align: center;">
 					<input type="hidden" name="action" value="reply" />

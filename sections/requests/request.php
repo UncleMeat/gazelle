@@ -374,7 +374,6 @@ $AllowTags= get_permissions_advtags($AuthorID, false, $AuthorPermissions);
 if(!$LoggedUser['DisablePosting']) { ?>
 			<br />
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
-                  <div class="head">Post reply</div>
 				<table id="quickreplypreview" class="hidden forum_post box vertical_margin" id="preview">
 					<tr class="smallhead">
 						<td colspan="2">
@@ -401,6 +400,7 @@ if(!$LoggedUser['DisablePosting']) { ?>
 						</td>
 					</tr>
 				</table>
+                  <div class="head">Post reply</div>
 			<div class="box pad shadow">
 				<form id="quickpostform" action="" method="post" onsubmit="return Validate_Form('message', 'quickpost')" style="display: block; text-align: center;">
 					<div id="quickreplytext">

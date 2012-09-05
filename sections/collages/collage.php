@@ -472,7 +472,6 @@ if(!$LoggedUser['DisablePosting']) {
 ?>
             
 			<div class="messagecontainer" id="container"><div id="message" class="hidden center messagebar"></div></div>
-                  <div class="head">Post reply</div>
 				<table id="quickreplypreview" class="forum_post box vertical_margin hidden" style="text-align:left;">
 					<tr class="smallhead">
 						<td>
@@ -492,6 +491,7 @@ if(!$LoggedUser['DisablePosting']) {
 						</td>
 					</tr>
 				</table>
+                  <div class="head">Post reply</div>
 			<div class="box pad shadow">
 				<form id="quickpostform" action="" method="post" onsubmit="return Validate_Form('message', 'quickpost')" style="display: block; text-align: center;">
 					<div id="quickreplytext">
