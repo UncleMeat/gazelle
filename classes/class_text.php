@@ -1359,7 +1359,7 @@ EXPLANATION OF PARSER LOGIC
 							if($NoName) { $Block['Val'] = substr($LocalURL,1); }
 							$Str.='<a href="'.$LocalURL.'">'.$Block['Val'].'</a>';
 						} else {
-							$Str.='<a rel="noreferrer" target="_blank" href="'.$Block['Attr'].'">'.$Block['Val'].'</a>';
+							$Str.='<a rel="noreferrer" target="_blank" href="http://anonym.to/?'.$Block['Attr'].'">'.$Block['Val'].'</a>';
 						}
 					}
 					break;
@@ -1582,7 +1582,7 @@ EXPLANATION OF PARSER LOGIC
 						if($LocalURL) {
 							$Str.='<a href="'.$LocalURL.'">'.substr($LocalURL,1).'</a>';
 						} else {
-							$Str.='<a rel="noreferrer" target="_blank" href="'.$Block['Attr'].'">'.$Block['Attr'].'</a>';
+							$Str.='<a rel="noreferrer" target="_blank" href="http://anonym.to/?'.$Block['Attr'].'">'.$Block['Attr'].'</a>';
 						} 
 					}
 					

@@ -1804,10 +1804,11 @@ a.anchor, a.anchor:visited, a.anchor:hover {
 
 /*  Stuff for the bbcode assistant  */
 
-.bb_holder {
-	border-collapse:collapse; 
-	background:	#808080; 
-      width: 100%;
+table.bb_holder {
+    border-collapse:collapse; 
+    background:	#808080; 
+    width: 100%;
+    margin: 0px;
 }
  
 
