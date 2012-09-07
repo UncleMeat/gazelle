@@ -39,10 +39,11 @@ if(empty($Sent)) {
 			<td></td>
 			<td align="left"><input type="checkbox" name="readrules" id="readrules" value="1"<? if (!empty($_REQUEST['readrules'])) { ?> checked="checked"<? } ?> /> <label for="readrules">I will read the rules.</label></td>
 		</tr>
+            <!--
 		<tr valign="top">
 			<td></td>
 			<td align="left"><input type="checkbox" name="readwiki" id="readwiki" value="1"<? if (!empty($_REQUEST['readwiki'])) { ?> checked="checked"<? } ?> /> <label for="readwiki">I will read the wiki.</label></td>
-		</tr>
+		</tr> -->
 		<tr valign="top">
 			<td></td>
 			<td align="left"><input type="checkbox" name="agereq" id="agereq" value="1"<? if (!empty($_REQUEST['agereq'])) { ?> checked="checked"<? } ?> /> <label for="agereq">I am 18 years of age or older.</label></td>
