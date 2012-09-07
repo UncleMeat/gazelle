@@ -29,7 +29,7 @@ if(!empty($_GET['advanced']) && check_perms('site_advanced_top10')) {
 	
 	// defaults to 10 (duh)
 	$Limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
-	$Limit = in_array($Limit, array(10, 100, 250)) ? $Limit : 10;
+	$Limit = in_array($Limit, array(10, 100, 250,500)) ? $Limit : 10;
 }
 $Filtered = !empty($Where);
 show_header('Top '.$Limit.' Torrents');
@@ -233,6 +233,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 		<small>
 			- [<a href="top10.php?type=torrents&amp;limit=100&amp;details=<?=$Tag?>">Top 100</a>]
 			- [<a href="top10.php?type=torrents&amp;limit=250&amp;details=<?=$Tag?>">Top 250</a>]
+			- [<a href="top10.php?type=torrents&amp;limit=500&amp;details=<?=$Tag?>">Top 500</a>]
 		</small>
 <?	} ?> 
 		</div>

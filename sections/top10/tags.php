@@ -24,7 +24,7 @@ show_header('Top 10 Tags');
 
 // defaults to 10 (duh)
 $Limit = isset($_GET['limit']) ? intval($_GET['limit']) : 10;
-$Limit = in_array($Limit, array(10,100,250)) ? $Limit : 10;
+$Limit = in_array($Limit, array(10,100,250,500)) ? $Limit : 10;
 
 if ($Details=='all' || $Details=='ut') {
 	if (!$TopUsedTags = $Cache->get_value('topusedtag_'.$Limit)) {
@@ -102,6 +102,7 @@ function generate_tag_table($Caption, $Tag, $Details, $Limit, $ShowVotes=true, $
 		<small>
 			- [<a href="top10.php?type=tags&amp;limit=100&amp;details=<?=$Tag?>">Top 100</a>]
 			- [<a href="top10.php?type=tags&amp;limit=250&amp;details=<?=$Tag?>">Top 250</a>]
+			- [<a href="top10.php?type=tags&amp;limit=500&amp;details=<?=$Tag?>">Top 500</a>]
 		</small>
 	</div>
 	<table class="top10_tags">

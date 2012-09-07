@@ -270,8 +270,8 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 	$Criteria = array();
 	$Criteria[]=array('From'=>APPRENTICE, 'To'=>PERV, 'MinUpload'=>10*1024*1024*1024, 'MinRatio'=>0.7, 'MinUploads'=>0, 'TotalUploaded'=>0, 'MaxTime'=>time_minus(3600*24*7));
 	$Criteria[]=array('From'=>PERV, 'To'=>GOOD_PERV, 'MinUpload'=>25*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>0, 'TotalUploaded'=>0, 'MaxTime'=>time_minus(3600*24*7*4));
-	$Criteria[]=array('From'=>GOOD_PERV, 'To'=>SEXTREME_PERV, 'MinUpload'=>1024*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>50, 'TotalUploaded'=>0, 'MaxTime'=>time_minus(3600*24*7*26));
-	$Criteria[]=array('From'=>SEXTREME_PERV, 'To'=>SMUT_PEDDLER, 'MinUpload'=>10*1024*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>500, 'TotalUploaded'=>0, 'MaxTime'=>time_minus(3600*24*7*52));
+	$Criteria[]=array('From'=>GOOD_PERV, 'To'=>SEXTREME_PERV, 'MinUpload'=>1024*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>50, 'TotalUploaded'=>0, 'MaxTime'=>time_minus(3600*24*7*13));
+	$Criteria[]=array('From'=>SEXTREME_PERV, 'To'=>SMUT_PEDDLER, 'MinUpload'=>10*1024*1024*1024*1024, 'MinRatio'=>1.05, 'MinUploads'=>250, 'TotalUploaded'=>0, 'MaxTime'=>time_minus(3600*24*7*26));
 
       foreach($Criteria as $L){ // $L = Level
             if ($L[TotalUploaded]>0){
