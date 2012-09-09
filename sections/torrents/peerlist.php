@@ -45,7 +45,7 @@ $DB->set_query_id($Result);
     if ($NumResults==0){
             ?> 
             <tr class="smallhead">
-                <td colspan="9">There are no peers for this torrent</td>
+                <td colspan="11">There are no peers for this torrent</td>
             </tr> 
             <?
     }
@@ -56,7 +56,7 @@ $DB->set_query_id($Result);
             ?>
 
             <tr class="smallhead">
-                <td colspan="9"><?= ($IsSeeder ? 'Seeders' : 'Leechers') ?></td>
+                <td colspan="11"><?= ($IsSeeder ? 'Seeders' : 'Leechers') ?></td>
             </tr>
             <tr class="rowa" style="font-weight: bold;">
                 <td>User</td>
