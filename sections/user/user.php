@@ -958,9 +958,12 @@ if (check_perms('users_mod', $Class)) { ?>
 				<input type="hidden" name="comment_hash" value="<?=$CommentHash?>">
 				<div id="admincommentlinks" class="AdminComment box pad"><?=$Text->full_format($AdminComment)?></div>
 				<textarea id="admincomment" onkeyup="resize('admincomment');" class="AdminComment hidden" name="AdminComment" cols="65" rows="26" style="width:98%;"><?=display_str($AdminComment)?></textarea>
+<?
+        if (check_perms('users_admin_notes', $Class)) { ?>
                         <span style="float:right;">
                             <a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">(Edit Notes)</a>
                         </span>
+<?      } ?>
 			</div> 
 		</div>
             

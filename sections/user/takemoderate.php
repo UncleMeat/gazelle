@@ -714,7 +714,8 @@ if ($Pass && check_perms('users_edit_password')) {
 
 if (empty($UpdateSet) && empty($EditSummary)) {
 	if(!$Reason) {
-		if (str_replace("\r", '', $Cur['AdminComment']) != str_replace("\r", '', $AdminComment) && check_perms('users_disable_any')) {
+		if (str_replace("\r", '', $Cur['AdminComment']) != str_replace("\r", '', $AdminComment)) {
+                  if (!check_perms('users_admin_notes')) error(403);
 			$UpdateSet[]="AdminComment='$AdminComment'";
 		} else {
 			header("Location: user.php?id=$UserID");

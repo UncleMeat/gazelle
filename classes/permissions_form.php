@@ -263,7 +263,8 @@ function permissions_form(){ ?>
 					<? display_perm('users_override_paranoia', 'Can override paranoia'); ?>
 					<? display_perm('users_make_invisible', 'Can make users invisible'); ?>
 					<? display_perm('users_logout', 'Can log users out'); ?>
-					<? display_perm('users_mod', 'Can access basic moderator tools (Admin comment)','Allows access to the user moderation panels'); ?>
+					<? display_perm('users_mod', 'Can access basic moderator tools','Allows access to the user moderation panels'); ?>
+					<? display_perm('users_admin_notes', 'Can edit Admin comment','To be used sparingly - staff can add notes via the submit panel'); ?>
 					<? display_perm('users_groups', 'Can use Group tools'); ?>
 					<br/>*Everything is only applicable to users with the same or lower class level
 				</td>
