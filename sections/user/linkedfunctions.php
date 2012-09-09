@@ -40,7 +40,7 @@ function link_users($UserID, $TargetID) {
 		}
 		if ($UserGroupID) {
 			$DB->query("UPDATE users_dupes SET GroupID = $TargetGroupID WHERE GroupID = $UserGroupID");
-			$DB->query("UPDATE dupe_groups SET Comments = CONCAT('".db_string($Comments)."\n\n',Comments) WHERE ID = $TargetGroupID");
+			$DB->query("UPDATE dupe_groups SET Comments = CONCAT('".db_string($Comments)."\n',Comments) WHERE ID = $TargetGroupID");
 			$DB->query("DELETE FROM dupe_groups WHERE ID = $UserGroupID");
 			$GroupID = $UserGroupID;
 		} else {
@@ -60,7 +60,7 @@ function link_users($UserID, $TargetID) {
 	$AdminComment = sqltime()." - Linked accounts updated: [user]".$UserInfo['Username']."[/user] and [user]".$TargetInfo['Username']."[/user] linked by ".$LoggedUser['Username'];
 	$DB->query("UPDATE users_info  AS i
 				JOIN   users_dupes AS d ON d.UserID = i.UserID
-				SET i.AdminComment = CONCAT('".db_string($AdminComment)."\n\n', i.AdminComment)
+				SET i.AdminComment = CONCAT('".db_string($AdminComment)."\n', i.AdminComment)
 				WHERE d.GroupID = $GroupID");
 }
 
@@ -83,7 +83,7 @@ function unlink_user($UserID) {
 	$DB->query("UPDATE users_info  AS i
 				JOIN   users_dupes AS d1 ON d1.UserID = i.UserID
 				JOIN   users_dupes AS d2 ON d2.GroupID = d1.GroupID
-				SET i.AdminComment = CONCAT('".db_string($AdminComment)."\n\n', i.AdminComment)
+				SET i.AdminComment = CONCAT('".db_string($AdminComment)."\n', i.AdminComment)
 				WHERE d2.UserID = $UserID");
 	$DB->query("DELETE FROM users_dupes WHERE UserID='$UserID'");
 	$DB->query("DELETE g.* FROM dupe_groups AS g LEFT JOIN users_dupes AS u ON u.GroupID = g.ID WHERE u.GroupID IS NULL");
@@ -123,12 +123,12 @@ function dupe_comments($GroupID, $Comments) {
 		if ($_POST['form_comment_hash'] == $OldCommentHash) {
 			$DB->query("UPDATE dupe_groups SET Comments = '".db_string($Comments)."' WHERE ID = '$GroupID'");
 		} else {
-			$DB->query("UPDATE dupe_groups SET Comments = CONCAT('".db_string($Comments)."\n\n',Comments) WHERE ID = '$GroupID'");
+			$DB->query("UPDATE dupe_groups SET Comments = CONCAT('".db_string($Comments)."\n',Comments) WHERE ID = '$GroupID'");
 		}
 
 		$DB->query("UPDATE users_info  AS i
 					JOIN   users_dupes AS d ON d.UserID = i.UserID
-					SET i.AdminComment = CONCAT('".db_string($AdminComment)."\n\n', i.AdminComment)
+					SET i.AdminComment = CONCAT('".db_string($AdminComment)."\n', i.AdminComment)
 					WHERE d.GroupID = $GroupID");
 	}
 }
@@ -168,11 +168,11 @@ function user_dupes_table($UserID) {
 			<input type="hidden" id="form_comment_hash" name="form_comment_hash" value="<?=$CommentHash?>">
             		<div class="head">
                             <span style="float:left;"><?=max($DupeCount - 1, 0)?> Linked Account<?=(($DupeCount == 2)?'':'s')?></span>
-                            <span style="float:right;"><a href="#" onclick="$('.linkedaccounts').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+                            <span style="float:right;"><a href="#" id="linkedbutton" onclick="return Toggle_view('linked');">(Hide)</a></span>&nbsp;
                         </div>
-                        <div class="box">
-                 <table width="100%" class="hidden linkedaccounts">
-					<?=$DupeCount?'<tr>':''?>
+                 <div class="box">
+                 <table width="100%"  id="linkeddiv" class="linkedaccounts shadow">
+					<?=($DupeCount?'<tr>':'')?>
 <?
 	$i = 0;
 	foreach ($Dupes as $Dupe) {
@@ -196,21 +196,29 @@ function user_dupes_table($UserID) {
 					</tr>
 <?	}	?>
 					<tr>
-						<td colspan="5" align="left" style="border-top: thin solid"><strong>Comments:</strong></td>
+						<td colspan="5" align="left"><strong>Comments:</strong></td>
 					</tr>
 					<tr>
 						<td colspan="5" align="left">
-							<div id="dupecomments" class="<?=$DupeCount?'':'hidden'?>"><?=$Text->full_format($Comments);?></div>
+							<div id="dupecomments" class="<?=($DupeCount?'':'hidden')?>"><?=$Text->full_format($Comments);?></div>
 							<div id="editdupecomments" class="<?=$DupeCount?'hidden':''?>">
-								<textarea name="dupecomments" onkeyup="resize('dupecommentsbox');" id="dupecommentsbox" cols="65" rows="5" style="width:98%;"><?=display_str($Comments)?></textarea>
+								<textarea id="dupecommentsbox" name="dupecomments" onkeyup="resize('dupecommentsbox');" cols="65" rows="5" style="width:98%;"><?=display_str($Comments)?></textarea>
+                                                <input type="submit" name="submitcomment" value="Save" />
 							</div>
-							<span style="float:right; font-style: italic;"><a href="#" onClick="$('#dupecomments').toggle(); $('#editdupecomments').toggle(); resize('dupecommentsbox'); return false;">(Edit linked account comments)</a>
+							<span style="float:right; font-style: italic;"><a href="#" onClick="$('#dupecomments').toggle(); $('#editdupecomments').toggle(); resize('dupecommentsbox');return false;">(Edit linked account comments)</a>
 						</td>
 					</tr>
+					<tr>
+						<td colspan="5" align="left">
+                                        <label for="target">Link this user with: </label>
+                                        <input type="text" name="target" id="target" />
+                                        <input type="submit" name="submitlink" value="Link" id="submitlink" />
+                                    </td>
+					</tr>
 				</table>
-				<div class="pad hidden linkedaccounts">
+				<!--<div class="pad hidden linkedaccounts">
 					<label for="target">Link this user with: </label><input type="text" name="target" id="target"><input type="submit" value="Link" id="submitlink" />
-				</div>
+				</div>-->
 			</div>
 		</form>
 <?

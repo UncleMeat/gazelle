@@ -271,13 +271,15 @@ foreach($NewCategories as $Cat) {
 		</form>
 	 
 <? 
-} // end if !$INLINE
-
+} // end if !$INLINE 
+?>
+	 
+<?
     if(count($GroupIDs) == 0) { ?>
         <br/>
-	<div class="head">Search Results</div>
+	<div class="head">Torrents</div>
 	<div class="box pad center">
-          <h2>Nothing found!</h2>
+          <h2>No torrents found</h2>
 	</div>
 <?	} else { ?>
 	<div class="linkbox"><?=$Pages?></div>

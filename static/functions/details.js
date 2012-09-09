@@ -212,7 +212,9 @@ function TagBox_Toggle() {
 }
 
 function Get_Cookie() {
-    return json.encode([((jQuery('#details_top').is(':hidden'))?'0':'1'), ((jQuery('#coverimage').is(':hidden'))?'0':'1'), ((jQuery('#tag_container').is(':hidden'))?'0':'1')]);
+    return json.encode([((jQuery('#details_top').is(':hidden'))?'0':'1'), 
+                        ((jQuery('#coverimage').is(':hidden'))?'0':'1'), 
+                        ((jQuery('#tag_container').is(':hidden'))?'0':'1')]);
 }
 
 
@@ -226,7 +228,7 @@ function Load_Details_Cookie()  {
 		jQuery.cookie('torrentDetailsState', json.encode(['1', '1']));
 	}
 	var state = json.decode( jQuery.cookie('torrentDetailsState') );
-      
+      alert('ww');
 	if(state[0] == '0') {
 		panel.hide();
 		button.text('Show Info');

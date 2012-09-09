@@ -306,7 +306,9 @@ function spoiler(textID) {
 
 function image(textID) {
     var link;
-    var img_regex = /(?:([^:/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|gif|png|php|asp|html|htm|shtml|jsp|cgi))(?:\?([^#]*))?(?:#(.*))?/i;
+    //var img_regex = /(?:([^:/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|gif|png|php|asp|html|htm|shtml|jsp|cgi))(?:\?([^#]*))?(?:#(.*))?/i;
+    // use a more permissive regex... allows image urls with no extension in them
+    var img_regex = /^(https?):\/\/([a-z0-9\-\_]+\.)+([a-z]{1,5}[^\.])(\/[^<>]+)*$/i;
     do {
         link = prompt("Please enter the full URL for your image", "http://");
         if (img_regex.test(link) == false && link != "http://" && link){

@@ -234,10 +234,10 @@ if(check_perms('torrents_review')){
                     
                      </span>
           
-                     <span style="float: right;"><a id="slide_button"  class="button toggle infoButton" onclick="Details_Toggle();" title="Toggle display">Hide Info</a></span>
+                     <span style="float: right;"><a id="slide_button"  class="button toggle infoButton" onclick="Details_Toggle();return false;" title="Toggle display">Hide Info</a></span>
 	 
 <?		if(check_perms('torrents_review')){ ?>
-                     <span style="float: right;"><a id="slide_tools_button"  class="button toggle redButton" onclick="Tools_Toggle();" title="Toggle staff tools">Staff Tools</a></span>
+                     <span style="float: right;"><a id="slide_tools_button"  class="button toggle redButton" onclick="Tools_Toggle();return false;" title="Toggle staff tools">Staff Tools</a></span>
 <?		} ?>
             <br style="clear:both" />
       </div>
@@ -370,7 +370,7 @@ if(check_perms('torrents_review')){
 ?>
             <div class="head">
                 <strong>Cover</strong>
-                <span style="float:right;"><a href="#" id="covertoggle" onclick="Cover_Toggle()">(Hide)</a></span>
+                <span style="float:right;"><a href="#" id="covertoggle" onclick="Cover_Toggle(); return false;">(Hide)</a></span>
             </div>
             <div id="coverimage" class="box box_albumart">
 <?
@@ -394,7 +394,7 @@ if(check_perms('torrents_review')){
             <div class="head">
                 <strong><a href="torrents.php?id=<?=$GroupID?>&tsort=<?=$tagsort2?>" title="change sort order of tags to <?=$tagsort2?>">Tags</a></strong>
                 
-                <span style="float:right;margin-left:5px;"><a href="#" id="tagtoggle" onclick="TagBox_Toggle()">(Hide)</a></span>
+                <span style="float:right;margin-left:5px;"><a href="#" id="tagtoggle" onclick="TagBox_Toggle(); return false;">(Hide)</a></span>
                 <span style="float:right;font-size:0.8em;">
                     <a href="torrents.php?action=tag_synonyms" target="_blank">synonyms</a> | <a href="articles.php?topic=tag" target="_blank">Tagging rules</a>
                 </span>

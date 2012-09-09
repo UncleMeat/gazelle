@@ -12,6 +12,9 @@ $Val=NEW VALIDATE;
 if(empty($_REQUEST['action'])) { $_REQUEST['action']=''; }
 
 switch ($_REQUEST['action']) {
+      case 'dupes':
+		include('manage_linked.php');
+		break;
 	case 'notify':
 		include('notify_edit.php');
 		break;

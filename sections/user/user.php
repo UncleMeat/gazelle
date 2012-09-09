@@ -173,8 +173,8 @@ $Badges.=($Warned!='0000-00-00 00:00:00') ? '<img src="'.STATIC_SERVER.'common/s
 $Badges.=($Enabled == '1' || $Enabled == '0' || !$Enabled) ? '': '<img src="'.STATIC_SERVER.'common/symbols/disabled.png" alt="Banned" />';
 
 
+show_header($Username,'jquery,jquery.cookie,user,bbcode,requests,user');
 
-show_header($Username,'user,bbcode,requests');
 ?>
 <div class="thin">
 	<h2><?=format_username($UserID, $Username, false, $Warned, $Enabled == 2 ? false : true, $ClassID, $CustomTitle, true)?></h2>
@@ -576,19 +576,19 @@ if(check_paranoia_here('invitedcount')) {
 	</div>
 	<div class="main_column">
 <?
-if ($RatioWatchEnds!='0000-00-00 00:00:00'
+    if ($RatioWatchEnds!='0000-00-00 00:00:00'
 		&& (time() < strtotime($RatioWatchEnds))
-		&& ($Downloaded*$RequiredRatio)>$Uploaded
-		) {
+		&& ($Downloaded*$RequiredRatio)>$Uploaded ) {
 ?>
-                <div class="head">Ratio watch</div>
+            <div class="head">Ratio watch</div>
 		<div class="box">			
 			<div class="pad">This user is currently on ratio watch, and must upload <?=get_size(($Downloaded*$RequiredRatio)-$Uploaded)?> in the next <?=time_diff($RatioWatchEnds,2,true,false,0)?>, or their leeching privileges will be revoked. Amount downloaded while on ratio watch: <?=get_size($Downloaded-$RatioWatchDownload)?></div>
 		</div>
-<? } ?>
+<?  } ?>
             <div class="head">
                 <span style="float:left;">Profile<? if ($CustomTitle) { echo " - ".display_str(html_entity_decode($DisplayCustomTitle)); } ?></span>
-                <span style="float:right;"><?=!empty($Badges)?"$Badges&nbsp;&nbsp;":''?><a href="#" onclick="$('#profilediv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+                <span style="float:right;"><?=!empty($Badges)?"$Badges&nbsp;&nbsp;":''?>
+                    <a id="profilebutton" href="#" onclick="return Toggle_view('profile');">(Hide)</a></span>&nbsp;
             </div>
             <div class="box">
                 <div id="profilediv">
@@ -613,7 +613,7 @@ if ($RatioWatchEnds!='0000-00-00 00:00:00'
 if (check_perms('users_view_bonuslog',$Class) || $OwnProfile) { ?>
             <div class="head">
                 <span style="float:left;">Bonus Credits</span>
-                <span style="float:right;"><a href="#" onclick="$('#bonusdiv').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+                <span style="float:right;"><a id="bonusbutton" href="#" onclick="return Toggle_view('bonus');">(Hide)</a></span>&nbsp;
             </div>
 		<div class="box">
 			<div class="pad" id="bonusdiv">
@@ -651,10 +651,10 @@ if ($Snatched > 4 && check_paranoia_here('snatched')) {
 ?>
             <div class="head">
                 <span style="float:left;">Recent Snatches</span>
-                <span style="float:right;"><a href="#" onclick="$('#recentsnatches').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+                <span style="float:right;"><a id="snatchesbutton" href="#" onclick="return Toggle_view('snatches');">(Hide)</a></span>&nbsp;
             </div>
 	<table class="recent" cellpadding="0" cellspacing="0" border="0">
-		<tr id="recentsnatches">
+		<tr id="snatchesdiv">
 <?		
 		foreach($RecentSnatches as $RS) { ?>
 			<td>
@@ -687,10 +687,11 @@ if ($Uploads > 0 && check_paranoia_here('uploads')) {
 ?>
     <div class="head">
         <span style="float:left;">Recent Uploads</span>
-        <span style="float:right;"><a href="#" onclick="$('#recentuploads').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+        <span style="float:right;"><a id="recentuploadsbutton" href="#" onclick="return Toggle_view('recentuploads');">(Hide)</a></span>&nbsp;
     </div>
-	<table class="recent" cellpadding="0" cellspacing="0" border="0">
-		<tr id="recentuploads">
+    <div class="box">
+	<table id="recentuploadsdiv" class="recent shadow" cellpadding="0" cellspacing="0" border="0">
+		<tr>
 <?              foreach($RecentUploads as $RU) { ?>
                     <td width="20%">
                         <div>
@@ -706,6 +707,7 @@ if ($Uploads > 0 && check_paranoia_here('uploads')) {
 <?              } ?>
 		</tr>
 	</table>
+    </div>
 <?
       }
 }
@@ -761,10 +763,10 @@ if ((check_perms('users_view_invites')) && $Invited > 0) {
 ?>
             <div class="head">
                 <span style="float:left;">Invite Tree</span>
-                <span style="float:right;"><a href="#" onclick="$('#invitetree').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+                <span style="float:right;"><a id="invitebutton" href="#" onclick="return Toggle_view('invite');">(Hide)</a></span>&nbsp;
 		</div>
 		<div class="box">
-                <div id="invitetree" class="hidden">
+                <div id="invitediv" class="">
 				<? $Tree->make_tree(); ?>
                 </div>
 		</div> 
@@ -793,11 +795,11 @@ if (check_paranoia_here('requestsvoted_list')) {
 ?>
             <div class="head">
                     <span style="float:left;">Requests</span>
-                    <span style="float:right;"><a href="#" onclick="$('#requests').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+                    <span style="float:right;"><a id="requestsbutton" href="#" onclick="return Toggle_view('requests');">(Hide)</a></span>&nbsp;
             </div>                
-            <div class="box">			
-                    <div id="requests" class="hidden">
-				<table cellpadding="6" cellspacing="1" border="0" class="border" width="100%">
+            <div class="box">		
+                    <div id="requestsdiv" class="">
+				<table cellpadding="6" cellspacing="1" border="0" class="border shadow" width="100%">
 					<tr class="colhead_dark">
 						<td style="width:48%;">
 							<strong>Request Name</strong>
@@ -896,10 +898,10 @@ if (check_perms('users_mod', $Class) || $IsFLS) {
 ?>
                 <div class="head">
                         <span style="float:left;">Staff PMs</span>
-                        <span style="float:right;"><a href="#" onclick="$('#staffpms').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
+                        <span style="float:right;"><a id="staffpmsbutton" href="#" onclick="return Toggle_view('staffpms');">(Hide)</a></span>&nbsp;
                 </div>
-		<div class="box">
-                    <table width="100%" class="hidden" id="staffpms">
+                <div class="box">
+                    <table width="100%" class="shadow" id="staffpmsdiv">
 				<tr class="colhead">
 					<td>Subject</td>
 					<td>Date</td>
@@ -949,10 +951,10 @@ if (check_perms('users_mod', $Class)) { ?>
 
             <div class="head">
                 <span style="float:left;">Staff Notes</span>
-                <span style="float:right;"><a href="#" onclick="$('#staffnotes').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+                <span style="float:right;"><a id="notesbutton" href="#" onclick="return Toggle_view('notes');">(Hide)</a></span>&nbsp;
             </div>               
 		<div class="box">		
-                  <div class="pad" id="staffnotes">
+                  <div class="pad" id="notesdiv">
 				<input type="hidden" name="comment_hash" value="<?=$CommentHash?>">
 				<div id="admincommentlinks" class="AdminComment box pad"><?=$Text->full_format($AdminComment)?></div>
 				<textarea id="admincomment" onkeyup="resize('admincomment');" class="AdminComment hidden" name="AdminComment" cols="65" rows="26" style="width:98%;"><?=display_str($AdminComment)?></textarea>
@@ -965,39 +967,13 @@ if (check_perms('users_mod', $Class)) { ?>
             
             <div class="head">
                 <span style="float:left;">Seed History</span>
-                <span style="float:right;"><a href="#" onclick="$('#seedhistory').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>&nbsp;
+                <span style="float:right;"><a id="historybutton" href="#" onclick="return Toggle_view('history');">(Hide)</a></span>&nbsp;
             </div>               
 		<div class="box">		
-                  <div class="pad" id="seedhistory">
+                  <div class="pad" id="historydiv">
 				
 <?
-/*
-                $SeedHoursTotal = $Cache->get_value('user_seedhours_total_'.$UserID);
-                if ($SeedHoursTotal===FALSE) {
-                    $DB->query("SELECT Sum(SeedHours) FROM users_seedhours_history WHERE UserID=$UserID");
-                    list($SeedHoursTotal)=$DB->next_record();
-                    $Cache->cache_value('user_seedhours_total_'.$UserID,$SeedHoursTotal,3600*3);
-                }
-                $SeedHours = $Cache->get_value('user_seedhours_'.$UserID);
-                if ($SeedHours===FALSE) {
-                    $DB->query("SELECT Time, SeedHours FROM users_seedhours_history WHERE UserID=$UserID ORDER BY Time DESC");
-                    $SeedHours =$DB->to_array();
-                    $Cache->cache_value('user_seedhours_'.$UserID,$SeedHours,3600*3);
-                }
-                                
-                echo '<div class="box pad">';
-                foreach($SeedHours as $SeedData){ 
-                    echo " $SeedData[Time] | $SeedData[SeedHours] hrs <br/>";
-                }
-                echo '</div>';
- * 
- * 
-                $Days = (int)floor($SeedHoursTotal/24);
-                $Days =  ($Days>0)?"$Days days":'';
-                $Hours = modulos( $SeedHoursTotal , 24.0);
- */
  
-        
                 echo '<div class="box pad seedhistory">';
                 echo " Total &nbsp;&nbsp; | ". hoursdays($SeedHoursTotal) .'<br/>'; 
                 echo " Today &nbsp;&nbsp; | ". hoursdays($SeedHoursDaily) . " | $CreditsDaily credits"; 
@@ -1009,8 +985,12 @@ if (check_perms('users_mod', $Class)) { ?>
 			</div>
 		</div>
             
-            <div class="head">User Info</div>
-		<table>
+            <div class="head">
+                <span style="float:left;">User Info</span>
+                <span style="float:right;"><a id="infobutton" href="#" onclick="Toggle_view('info');return false;">(Hide)</a></span>&nbsp;
+            </div>                   
+		<div class="box">	
+                <table id="infodiv" class="shadow">
 <?	if (check_perms('users_edit_usernames', $Class)) { ?>
 			<tr>
 				<td class="label">Username:</td>
@@ -1220,7 +1200,8 @@ if (check_perms('users_mod', $Class)) { ?>
 				</td>
 			</tr>
 <?	} ?>
-		</table>
+                </table>
+		</div>
 
             
             
@@ -1230,11 +1211,11 @@ if (check_perms('users_mod', $Class)) { ?>
               || (check_perms('users_edit_own_badges') && $UserID == $LoggedUser['ID'])) {  ?>
 
                 <div class="head">
-                        <span style="float:left;">Manage User Badges</span>
-                        <span style="float:right;"><a href="#" onclick="$('#badgesadmin').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(View)</a></span>&nbsp;
-                </div>                
+                        <span style="float:left;">User Badges</span>
+                        <span style="float:right;"><a id="badgesadminbutton" href="#" onclick="return Toggle_view('badgesadmin');">(Hide)</a></span>&nbsp;
+                </div>
                 <div class="box">
-                  <div class="pad hidden" id="badgesadmin">
+                  <div class="pad" id="badgesadmindiv">
 <?
                       $UserBadgesIDs = array(); // used in a mo to determine what badges user has for admin 
                       if ($UserBadges){
@@ -1329,8 +1310,12 @@ if (check_perms('users_mod', $Class)) { ?>
 
 
     if (check_perms('users_warn')) { ?>
-		<div class="head">Warn User</div>
-                <table>
+		<div class="head">
+                        <span style="float:left;">Warn User</span>
+                        <span style="float:right;"><a id="warnbutton" href="#" onclick="return Toggle_view('warn');">(Hide)</a></span>&nbsp;
+            </div>
+            <div class="box">
+                <table id="warndiv" class="shadow">
 			<tr>
 				<td class="label">Warned:</td>
 				<td>
@@ -1371,9 +1356,15 @@ if (check_perms('users_mod', $Class)) { ?>
 				</td>
 			</tr>
 <?	} ?>
-		</table>
-                <div class="head">User Privileges</div>
-		<table>
+                </table>
+            </div>
+            
+            <div class="head">
+                        <span style="float:left;">User Privileges</span>
+                        <span style="float:right;"><a id="privilegebutton" href="#" onclick="return Toggle_view('privilege');">(Hide)</a></span>&nbsp;
+            </div>
+            <div class="box">
+                <table id="privilegediv" class="shadow">
 <?	if (check_perms('users_disable_posts') || check_perms('users_disable_any')) {
 		$DB->query("SELECT DISTINCT Email, IP FROM users_history_emails WHERE UserID = ".$UserID." ORDER BY Time ASC");
 		$Emails = $DB->to_array();
@@ -1438,23 +1429,30 @@ if (check_perms('users_mod', $Class)) { ?>
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Restricted Forums (comma-delimited):</td>
+				<td class="label">Restricted Forum ID's (comma-delimited):</td>
 				<td>
                             <input class="long" type="text" name="RestrictedForums" value="<?=display_str($RestrictedForums)?>" />
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Extra Forums (comma-delimited):</td>
+				<td class="label">Extra Forum ID's (comma-delimited):</td>
 				<td>
                             <input class="long" type="text" name="PermittedForums" value="<?=display_str($PermittedForums)?>" />
 				</td>
 			</tr>
 
 <?	} ?>
-		</table><!--<br />-->
+                </table>
+            </div>
+            
+            
 <?	if(check_perms('users_logout')) { ?>
-                <div class="head">Session</div>
-		<table>
+            <div class="head">
+                        <span style="float:left;">Session</span>
+                        <span style="float:right;"><a id="sessionbutton" href="#" onclick="return Toggle_view('session');">(Hide)</a></span>&nbsp;
+            </div>
+            <div class="box">
+                <table id="sessiondiv" class="shadow">
 			<tr>
 				<td class="label">Reset session:</td>
 				<td><input type="checkbox" name="ResetSession" id="ResetSession" /></td>
@@ -1464,10 +1462,15 @@ if (check_perms('users_mod', $Class)) { ?>
 				<td><input type="checkbox" name="LogOut" id="LogOut" /></td>
 			</tr>
 
-		</table>
+                </table>
+            </div>
 <?	} ?>
-                <div class="head">Submit</div>
-		<table>
+            <div class="head">
+                        <span style="float:left;">Submit</span>
+                        <span style="float:right;"><a id="submitbutton" href="#" onclick="return Toggle_view('submit');">(Hide)</a></span>&nbsp;
+            </div>
+            <div class="box">
+                <table id="submitdiv" class="shadow">
 			<tr>
 				<td class="label">Reason:</td>
 				<td>
@@ -1480,7 +1483,8 @@ if (check_perms('users_mod', $Class)) { ?>
 					<input type="submit" value="Save Changes" />
 				</td>
 			</tr>
-		</table>
+                </table>
+            </div>
         </form>
 <? } // end moderation panel ?>
       <a id="torrents"></a>

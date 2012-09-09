@@ -1,3 +1,79 @@
+
+
+function Toggle_view(elem_id) {
+
+    jQuery('#'+elem_id+'div').toggle();
+ 
+    if (jQuery('#'+elem_id+'div').is(':hidden')) 
+        jQuery('#'+elem_id+'button').text('(Show)');
+    else  
+        jQuery('#'+elem_id+'button').text('(Hide)');
+            
+    jQuery.cookie('userPageState', Get_Cookie());
+    return false;
+}
+
+function Get_Cookie() {
+    return json.encode([get_hidden_value('profilediv'), 
+                        get_hidden_value('bonusdiv'), 
+                        get_hidden_value('snatchesdiv'), 
+                        get_hidden_value('recentuploadsdiv'), 
+                        get_hidden_value('linkeddiv'), 
+                        get_hidden_value('invitediv'), 
+                        get_hidden_value('requestsdiv'), 
+                        get_hidden_value('staffpmsdiv'), 
+                        get_hidden_value('notesdiv'), 
+                        get_hidden_value('historydiv'), 
+                        get_hidden_value('infodiv'), 
+                        get_hidden_value('badgesadmindiv'), 
+                        get_hidden_value('warndiv'), 
+                        get_hidden_value('privilegediv'), 
+                        get_hidden_value('sessiondiv'),
+                        get_hidden_value('submitdiv')]);
+}
+
+function get_hidden_value(elem_id){ 
+    if (document.getElementById(elem_id) == undefined) return '0';
+    else return ( jQuery('#'+elem_id).is(':hidden') )?'0':'1';
+}
+
+function set_hidden_value(elem_id, state){
+    if (document.getElementById(elem_id+'div') == undefined) return;
+    if(state == '0') {
+        jQuery('#'+elem_id+'div').hide();
+	  jQuery('#'+elem_id+'button').text('(Show)');
+    } else {
+        //jQuery('#'+elem_id+'div').show();
+	  jQuery('#'+elem_id+'button').text('(Hide)');
+    }
+}
+
+function Load_User_Cookie()  { 
+    
+	if(jQuery.cookie('userPageState') == undefined) {
+		jQuery.cookie('userPageState', json.encode(['1', '1', '0', '0', '0', '0', '0', '0', '1', '0', '1', '1', '1', '1', '1']));
+	}
+	var state = json.decode( jQuery.cookie('userPageState') );
+      set_hidden_value('profile', state[0]);
+      set_hidden_value('bonus', state[1]);
+      set_hidden_value('snatches', state[2]);
+      set_hidden_value('recentuploads', state[3]);
+      set_hidden_value('linked', state[4]);
+      set_hidden_value('invite', state[5]);
+      set_hidden_value('requests', state[6]);
+      set_hidden_value('staffpms', state[7]);
+      set_hidden_value('notes', state[8]);
+      set_hidden_value('history', state[9]);
+      set_hidden_value('info', state[10]);
+      set_hidden_value('badgesadmin', state[11]);
+      set_hidden_value('warn', state[12]);
+      set_hidden_value('privilege', state[13]);
+      set_hidden_value('session', state[14]);
+      set_hidden_value('submit', state[15]);
+}
+
+
+
 function ChangeTo(to) {
 	if(to == "text") {
 		$('#admincommentlinks').hide();
@@ -162,4 +238,5 @@ function ParanoiaResetOn() {
 	$('input[name=p_collages_l]').raw().checked = false;
 }
 
+addDOMLoadEvent(Load_User_Cookie);
 addDOMLoadEvent(AlterParanoia);
