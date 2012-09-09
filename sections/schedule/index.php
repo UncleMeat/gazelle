@@ -112,7 +112,7 @@ $DB->query("UPDATE users_main SET Credits = Credits +
 */
         
 // method 3 : no cap, diminishing returns , rewritten as join and also records seedhours, ~2.1s with 650k seeders
-$DB->query("UPDATE users_main AS um  
+$DB->query("UPDATE users_main AS um
               JOIN (
                       SELECT xbt_files_users.uid AS UserID,
                            (ROUND( ( SQRT( 8.0 * ( COUNT(*)/20 ) + 1.0 ) - 1.0 ) / 2.0 *20 ) * 0.25 ) AS SeedCount,
@@ -121,11 +121,11 @@ $DB->query("UPDATE users_main AS um
                        WHERE xbt_files_users.remaining =0
                          AND xbt_files_users.active =1
                     GROUP BY xbt_files_users.uid
-                   ) AS s ON s.UserID=um.ID 
+                   ) AS s ON s.UserID=um.ID
                SET Credits=Credits+SeedCount,
               CreditsDaily=CreditsDaily+SeedCount,
               um.SeedHours=um.SeedHours+s.SeedHours,
-         um.SeedHoursDaily=um.SeedHoursDaily+s.SeedHours  ");
+         um.SeedHoursDaily=um.SeedHoursDaily+s.SeedHours ");
  
                         
 
@@ -181,10 +181,14 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 	if ($Hour == 4) { // 4 am servertime... want it to be daily but not on the 0 hour  //SeedHours>0.00 
  
             $DB->query("UPDATE users_main AS u JOIN users_info AS i ON u.ID=i.UserID
-                           SET BonusLog = CONCAT('$sqltime | +', CreditsDaily, ' credits | seeded ', SeedHoursDaily, ' torrent hours\n', BonusLog),
-                               SeedHistory = CONCAT('$sqltime | ', SeedHoursDaily, ' hrs | ', CreditsDaily, ' credits\n', SeedHistory),
+                           SET BonusLog = CONCAT('$sqltime | +', CreditsDaily, ' credits | seeded ', SeedHoursDaily, ' hrs\n', BonusLog),
+                               SeedHistory = CONCAT('$sqltime | ', SeedHoursDaily, ' hrs | up: ', 
+                                                FORMAT((Uploaded-UploadedLast)/1073741824, 2) , ' GB | down: ', 
+                                                FORMAT((Downloaded-DownloadedLast)/1073741824, 2) , ' GB | ', CreditsDaily, ' credits\n', SeedHistory),
                                SeedHoursDaily=0.00, 
-                               CreditsDaily=0.00 
+                               CreditsDaily=0.00 , 
+                               UploadedLast=Uploaded , 
+                               DownloadedLast=Downloaded 
                          WHERE SeedHoursDaily>0.00");
             
       }
