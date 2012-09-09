@@ -108,18 +108,13 @@ function dupe_comments($GroupID, $Comments) {
 	global $DB, $Text, $LoggedUser;
 
 	authorize();
-	if (!check_perms('users_mod')) {
-		error(403);
-	}
-
-	if (!is_number($GroupID)) {
-		error(403);
-	}
-
-	$DB->query("SELECT SHA1(Comments) AS CommentHash FROM dupe_groups WHERE ID = $GroupID");
-	list($OldCommentHash) = $DB->next_record();
+	if (!check_perms('users_mod')) error(403);
+	if (!is_number($GroupID)) error(0);
+	
+	$DB->query("SELECT Comments, SHA1(Comments) AS CommentHash FROM dupe_groups WHERE ID = '$GroupID'");
+	list($OldComment, $OldCommentHash) = $DB->next_record();
 	if ($OldCommentHash != sha1($Comments)) {
-		$AdminComment = sqltime()." - Linked accounts updated: Comments updated by ".$LoggedUser['Username'];
+		$AdminComment = sqltime()." - Linked accounts updated: Comments changed from '".db_string($OldComment)."' to '".db_string($Comments)."' by ".$LoggedUser['Username'];
 		if ($_POST['form_comment_hash'] == $OldCommentHash) {
 			$DB->query("UPDATE dupe_groups SET Comments = '".db_string($Comments)."' WHERE ID = '$GroupID'");
 		} else {
@@ -180,8 +175,8 @@ function user_dupes_table($UserID) {
 		list($DupeID) = $Dupe;
 		$DupeInfo = user_info($DupeID);
 ?>
-					<td align="left"><?=format_username($DupeID, $DupeInfo['Username'], $DupeInfo['Donor'], $DupeInfo['Warned'], ($DupeInfo['Enabled']==2)?false:true)?>
-						(<a href="user.php?action=dupes&dupeaction=remove&auth=<?=$LoggedUser['AuthKey']?>&userid=<?=$UserID?>&removeid=<?=$DupeID?>" onClick="return confirm('Are you sure you wish to remove <?=$DupeInfo['Username']?> from this group?');">x</a>)</td>
+					<td align="left"><?=format_username($DupeID, $DupeInfo['Username'], $DupeInfo['Donor'], $DupeInfo['Warned'], ($DupeInfo['Enabled']==2)?false:true, $DupeInfo['PermissionID'])?>
+						[<a href="user.php?action=dupes&dupeaction=remove&auth=<?=$LoggedUser['AuthKey']?>&userid=<?=$UserID?>&removeid=<?=$DupeID?>" onClick="return confirm('Are you sure you wish to remove <?=$DupeInfo['Username']?> from this group?');">x</a>]</td>
 <?
 		if ($i == 5) {
 			$i = 0;
@@ -205,13 +200,13 @@ function user_dupes_table($UserID) {
 								<textarea id="dupecommentsbox" name="dupecomments" onkeyup="resize('dupecommentsbox');" cols="65" rows="5" style="width:98%;"><?=display_str($Comments)?></textarea>
                                                 <input type="submit" name="submitcomment" value="Save" />
 							</div>
-							<span style="float:right; font-style: italic;"><a href="#" onClick="$('#dupecomments').toggle(); $('#editdupecomments').toggle(); resize('dupecommentsbox');return false;">(Edit linked account comments)</a>
+							<span style="float:right;"><a href="#" onClick="$('#dupecomments').toggle(); $('#editdupecomments').toggle(); resize('dupecommentsbox');return false;">(Edit comments)</a>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="5" align="left">
                                         <label for="target">Link this user with: </label>
-                                        <input type="text" name="target" id="target" />
+                                        <input type="text" name="target" id="target" title="Enter the username of the account you wish to link this to" />
                                         <input type="submit" name="submitlink" value="Link" id="submitlink" />
                                     </td>
 					</tr>

@@ -953,18 +953,20 @@ if (check_perms('users_mod', $Class)) { ?>
                 <span style="float:left;">Staff Notes</span>
                 <span style="float:right;"><a id="notesbutton" href="#" onclick="return Toggle_view('notes');">(Hide)</a></span>&nbsp;
             </div>               
-		<div class="box">		
+		<div class="box" style="padding-bottom: 20px;">		
                   <div class="pad" id="notesdiv">
 				<input type="hidden" name="comment_hash" value="<?=$CommentHash?>">
 				<div id="admincommentlinks" class="AdminComment box pad"><?=$Text->full_format($AdminComment)?></div>
 				<textarea id="admincomment" onkeyup="resize('admincomment');" class="AdminComment hidden" name="AdminComment" cols="65" rows="26" style="width:98%;"><?=display_str($AdminComment)?></textarea>
-				<a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">Toggle Edit</a>
+                        <span style="float:right;">
+                            <a href="#" name="admincommentbutton" onclick="ChangeTo('text'); return false;">(Edit Notes)</a>
+                        </span>
+			</div> 
+		</div>
+            
 				<script type="text/javascript">
 					resize('admincomment');
 				</script>
-			</div>
-		</div>
-            
             <div class="head">
                 <span style="float:left;">Seed History</span>
                 <span style="float:right;"><a id="historybutton" href="#" onclick="return Toggle_view('history');">(Hide)</a></span>&nbsp;
