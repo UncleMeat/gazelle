@@ -179,17 +179,10 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 	//------------- Record daily seedhours  ----------------------------------------//
        
 	if ($Hour == 4) { // 4 am servertime... want it to be daily but not on the 0 hour  //SeedHours>0.00 
-          
-          /*
-            $time = date("Y-m-d", time());
-
-            $DB->query("INSERT IGNORE INTO users_seedhours_history (UserID, Time, TimeAdded, SeedHours, Credits)
-                                    SELECT ID, '$time', '$sqltime', SeedHours, CreditsDaily FROM users_main WHERE Enabled='1' OR SeedHours>0.00");
-            $DB->query("UPDATE users_main SET SeedHours=0.00, CreditsDaily=0.00 WHERE SeedHours>0.00");
-            */
-            
+ 
             $DB->query("UPDATE users_main AS u JOIN users_info AS i ON u.ID=i.UserID
-                           SET SeedHistory = CONCAT('$sqltime | ', SeedHoursDaily, ' hrs | ', CreditsDaily, ' credits\n', SeedHistory),
+                           SET BonusLog = CONCAT('$sqltime | +', CreditsDaily, ' credits | seeded ', SeedHoursDaily, ' torrent hours\n', BonusLog),
+                               SeedHistory = CONCAT('$sqltime | ', SeedHoursDaily, ' hrs | ', CreditsDaily, ' credits\n', SeedHistory),
                                SeedHoursDaily=0.00, 
                                CreditsDaily=0.00 
                          WHERE SeedHoursDaily>0.00");

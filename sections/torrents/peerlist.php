@@ -22,7 +22,9 @@ $Result = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 	xu.remaining,
 	xu.useragent,
       IF(xu.remaining=0,1,0) AS IsSeeder,
-	xu.timespent
+	xu.timespent,
+	xu.upspeed,
+	xu.downspeed
 	FROM xbt_files_users AS xu
 	LEFT JOIN users_main AS um ON um.ID=xu.uid
 	JOIN torrents AS t ON t.ID=xu.fid
@@ -48,7 +50,7 @@ $DB->set_query_id($Result);
             <?
     }
     $LastIsSeeder = -1;
-    while (list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Remaining, $UserAgent, $IsSeeder, $Timespent) = $DB->next_record()) {
+    while (list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Remaining, $UserAgent, $IsSeeder, $Timespent, $UpSpeed, $DownSpeed) = $DB->next_record()) {
 
         if ($IsSeeder != $LastIsSeeder) {
             ?>
@@ -60,10 +62,12 @@ $DB->set_query_id($Result);
                 <td>User</td>
                 <td>Active</td>
 
-                <td>Connectable</td>
+                <td>Conn</td>
 
                 <td>Up</td>
+                <td>rate</td>
                 <td>Down</td>
+                <td>rate</td>
                 <td>%</td>
                 <td>Ratio</td>
                 <td>Time</td>
@@ -80,7 +84,9 @@ $DB->set_query_id($Result);
             <td><?= ($Connectable) ? '<span style="color:green">Yes</span>' : '<span style="color:red">No</span>' ?></td>
 
             <td><?= get_size($Uploaded) ?></td>
+            <td><?= get_size($UpSpeed, 2)?>/s</td>
             <td><?= get_size($Size - $Remaining, 2) ?></td>
+            <td><?= get_size($DownSpeed, 2)?>/s</td>
             <td><?= number_format(($Size - $Remaining) / $Size * 100, 2) ?></td>
             <td><?= number_format($Uploaded / ($Size - $Remaining), 3) ?></td>
             <td><?= time_span($Timespent) ?></td>

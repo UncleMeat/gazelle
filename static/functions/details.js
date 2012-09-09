@@ -228,7 +228,7 @@ function Load_Details_Cookie()  {
 		jQuery.cookie('torrentDetailsState', json.encode(['1', '1']));
 	}
 	var state = json.decode( jQuery.cookie('torrentDetailsState') );
-      alert('ww');
+      
 	if(state[0] == '0') {
 		panel.hide();
 		button.text('Show Info');
