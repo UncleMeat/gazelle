@@ -204,7 +204,8 @@ switch ($_REQUEST['action']) {
                     VALUES ('" . (int) $_POST['category'] . "', '" . (int) $_POST['subcat'] . "', '" . db_string($_POST['topicid']) . "', '" . db_string($_POST['title']) . "', '" . db_string($_POST['description']) . "', '" . db_string($_POST['body']) . "', '" . sqltime() . "','". db_string($_POST['level']) . "')");
         $NewID = $DB->inserted_id();
         $Cache->delete_value("articles_$_POST[category]");
-        header("Location: tools.php?action=editarticle&amp;id=$NewID");
+        //header("Location: tools.php?action=editarticle&amp;id=$NewID");
+	  header('Location: tools.php?action=articles');
         break;
 
     case 'deletearticle':
