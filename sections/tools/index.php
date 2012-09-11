@@ -203,9 +203,7 @@ switch ($_REQUEST['action']) {
         $DB->query("INSERT INTO articles (Category, SubCat, TopicID, Title, Description, Body, Time, MinClass) 
                     VALUES ('" . (int) $_POST['category'] . "', '" . (int) $_POST['subcat'] . "', '" . db_string($_POST['topicid']) . "', '" . db_string($_POST['title']) . "', '" . db_string($_POST['description']) . "', '" . db_string($_POST['body']) . "', '" . sqltime() . "','". db_string($_POST['level']) . "')");
         $NewID = $DB->inserted_id();
-            $Cache->delete_value("articles_0");
-            $Cache->delete_value("articles_500");
-            $Cache->delete_value("articles_600");
+        $Cache->delete_value("articles_$_POST[category]");
         header("Location: tools.php?action=editarticle&amp;id=$NewID");
         break;
 
@@ -215,13 +213,11 @@ switch ($_REQUEST['action']) {
         }
         if (is_number($_GET['id'])) {
             authorize();
-            $DB->query("SELECT TopicID FROM articles WHERE ID='" . db_string($_GET['id']) . "'");
-            list($TopicID) = $DB->next_record();
+            $DB->query("SELECT TopicID, Category FROM articles WHERE ID='" . db_string($_GET['id']) . "'");
+            list($TopicID,$CatID) = $DB->next_record();
             $DB->query("DELETE FROM articles WHERE ID='" . db_string($_GET['id']) . "'");
             $Cache->delete_value('article_' . $TopicID);
-            $Cache->delete_value("articles_0");
-            $Cache->delete_value("articles_500");
-            $Cache->delete_value("articles_600");
+            $Cache->delete_value("articles_$CatID");
         }
 
         header('Location: tools.php?action=articles');

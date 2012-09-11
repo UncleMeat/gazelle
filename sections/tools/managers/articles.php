@@ -33,7 +33,7 @@ switch($_REQUEST['action']) {
                                             WHERE ID='".db_string($_POST['articleid'])."'");
 
                 $Cache->delete_value("article_$TopicID");
-                $Cache->delete_value("articles_$_POST[level]");
+                $Cache->delete_value("articles_$_POST[category]");
 		}
 		header('Location: tools.php?action=articles');
 		break;
