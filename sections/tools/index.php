@@ -200,9 +200,12 @@ switch ($_REQUEST['action']) {
         if ($Count > 0) {
             error('The topic ID must be unique for the article');
         }
-        $DB->query("INSERT INTO articles (Category, SubCat, TopicID, Title, Description, Body, Time) 
-                    VALUES ('" . (int) $_POST['category'] . "', '" . (int) $_POST['subcat'] . "', '" . db_string($_POST['topicid']) . "', '" . db_string($_POST['title']) . "', '" . db_string($_POST['description']) . "', '" . db_string($_POST['body']) . "', '" . sqltime() . "')");
+        $DB->query("INSERT INTO articles (Category, SubCat, TopicID, Title, Description, Body, Time, MinClass) 
+                    VALUES ('" . (int) $_POST['category'] . "', '" . (int) $_POST['subcat'] . "', '" . db_string($_POST['topicid']) . "', '" . db_string($_POST['title']) . "', '" . db_string($_POST['description']) . "', '" . db_string($_POST['body']) . "', '" . sqltime() . "','". db_string($_POST['level']) . "')");
         $NewID = $DB->inserted_id();
+            $Cache->delete_value("articles_0");
+            $Cache->delete_value("articles_500");
+            $Cache->delete_value("articles_600");
         header("Location: tools.php?action=editarticle&amp;id=$NewID");
         break;
 
@@ -216,6 +219,9 @@ switch ($_REQUEST['action']) {
             list($TopicID) = $DB->next_record();
             $DB->query("DELETE FROM articles WHERE ID='" . db_string($_GET['id']) . "'");
             $Cache->delete_value('article_' . $TopicID);
+            $Cache->delete_value("articles_0");
+            $Cache->delete_value("articles_500");
+            $Cache->delete_value("articles_600");
         }
 
         header('Location: tools.php?action=articles');
