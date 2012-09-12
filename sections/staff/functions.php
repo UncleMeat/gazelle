@@ -28,7 +28,7 @@ function get_fls() {
 */
 function get_staff() {
 	global $Cache, $DB;
-	if(($ForumStaff = $Cache->get_value('forum_staff')) === false) {
+	if(($ForumStaff = $Cache->get_value('staff')) === false) {
 		$DB->query("SELECT
 			m.ID,
 			p.Level,
@@ -53,7 +53,7 @@ function get_staff() {
 
 function get_admins() {
 	global $Cache, $DB;
-	if(($Staff = $Cache->get_value('staff')) === false) {
+	if(($Staff = $Cache->get_value('admins')) === false) {
 		$DB->query("SELECT
 			m.ID,
 			p.Level,
