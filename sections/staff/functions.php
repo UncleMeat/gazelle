@@ -1,10 +1,6 @@
 <?
 function get_fls() {
 	global $Cache, $DB;
-	static $FLS;
-	if(is_array($FLS)) {
-		return $FLS;
-	}
 	if(($FLS = $Cache->get_value('fls')) === false) {
 		$DB->query("SELECT
 			m.ID,
@@ -30,12 +26,8 @@ function get_fls() {
  * are not staff then a layer of 'Mods' who are staff then senior staff... can easily change
  * back if we go that way though
 */
-function get_forum_staff() {
+function get_staff() {
 	global $Cache, $DB;
-	static $ForumStaff;
-	if(is_array($ForumStaff)) {
-		return $ForumStaff;
-	}
 	if(($ForumStaff = $Cache->get_value('forum_staff')) === false) {
 		$DB->query("SELECT
 			m.ID,
@@ -50,20 +42,17 @@ function get_forum_staff() {
 			JOIN users_info AS i ON m.ID=i.UserID
 			JOIN permissions AS p ON p.ID=m.PermissionID
 			WHERE p.DisplayStaff='1'
-				AND p.Level < 550
+				AND p.Level >= '". STAFF_LEVEL . "'
+				AND p.Level < '". ADMIN_LEVEL . "'
 			ORDER BY p.Level, m.LastAccess ASC");
 		$ForumStaff = $DB->to_array(false, MYSQLI_BOTH, array(5,'Paranoia'));
-		$Cache->cache_value('forum_staff', $ForumStaff, 180);
+		$Cache->cache_value('staff', $ForumStaff, 180);
 	}  //	AND p.Level < 700
 	return $ForumStaff;
 }
 
-function get_staff() {
+function get_admins() {
 	global $Cache, $DB;
-	static $Staff;
-	if(is_array($Staff)) {
-		return $Staff;
-	}
 	if(($Staff = $Cache->get_value('staff')) === false) {
 		$DB->query("SELECT
 			m.ID,
@@ -78,10 +67,10 @@ function get_staff() {
 			JOIN users_info AS i ON m.ID=i.UserID
 			JOIN permissions AS p ON p.ID=m.PermissionID
 			WHERE p.DisplayStaff='1'
-				AND p.Level >= 550
+				AND p.Level >= '". ADMIN_LEVEL . "'
 			ORDER BY p.Level, m.LastAccess ASC");
 		$Staff = $DB->to_array(false, MYSQLI_BOTH, array(5,'Paranoia'));
-		$Cache->cache_value('staff', $Staff, 180);
+		$Cache->cache_value('admins', $Staff, 180);
 	} //	AND p.Level >= 700
 	return $Staff;
 }
@@ -89,10 +78,7 @@ function get_staff() {
 function get_support() {
 	return array(
 		get_fls(),
-		get_forum_staff(),
 		get_staff(),
-		'fls' => get_fls(),
-		'forum_staff' => get_forum_staff(),
-		'staff' => get_staff()
+		get_admins()
 	);
 }

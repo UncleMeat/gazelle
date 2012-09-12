@@ -31,7 +31,7 @@ $SupportFor = db_string(display_str($_POST['SupportFor']));
 $Pass = db_string($_POST['ChangePassword']);
 $Warned = (isset($_POST['Warned']))? 1 : 0;
 
-    
+
 $AddBadges = $_POST['addbadge'];
 $DelBadges = $_POST['delbadge'];
     
@@ -157,6 +157,25 @@ if(!check_perms('users_mod', $Cur['Class'])) {
 
 // Gotten user info
 
+// mifune: lets put an error trap here for the mysterious 'random' error that wipes a users account...
+// important: do not remove this without trapping for blank username somewhere else!
+if ($Class==0 || $Username=='') {
+    ksort($_POST, SORT_FLAG_CASE | SORT_STRING);ksort($Cur, SORT_FLAG_CASE | SORT_STRING);
+    $_POST['AdminComment'] = "[spoiler=staff notes]$_POST[AdminComment][/spoiler]";
+    $Cur['AdminComment'] = "[spoiler=staff notes]$Cur[AdminComment][/spoiler]";
+    $ErrBody = "This is an automated error report sent to all admins+ for an unsolved error - the error was caught and no changes to the user account were made.
+        \nPost details:\n" . print_r($_POST, true) . "\n\nCurrent User Info:\n". print_r($Cur, true) ;
+    // send the admins a pm with the post & user details... then maybe we can solve this?
+    include(SERVER_ROOT.'/sections/staff/functions.php');
+    $Admins = get_admins();
+    $ToID = array();
+    foreach ($Admins as $Admin) {
+        list($ID) = $Admin;
+        $ToID[]=$ID;
+    }
+    send_pm($ToID, 0, "Account Wipe Error: id=$UserID", $ErrBody);
+    error(0);
+}
 
 // If we're deleting the user, we can ignore all the other crap
 

@@ -76,6 +76,9 @@ define('CODER',		'14');
 define('ADMIN',		'1');
 define('SYSOP',		'15');
 
+define('LEVEL_STAFF', 500); // used for comparison operations so make sure matches db value
+define('LEVEL_ADMIN', 600);
+
 //Pagination
 define('TORRENT_COMMENTS_PER_PAGE', 10);
 define('POSTS_PER_PAGE', 25);
