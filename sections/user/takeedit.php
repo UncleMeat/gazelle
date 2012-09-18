@@ -28,7 +28,7 @@ $Val->SetFields('torrentsperpage',1,"inarray","You forgot to select your torrent
 $Val->SetFields('collagecovers',1,"number","You forgot to select your collage option.");
 $Val->SetFields('showtags',1,"number","You forgot to select your show tags option.",array('minlength'=>0,'maxlength'=>1));
 $Val->SetFields('avatar',0,'image', 'Avatar: The image URL you entered was not valid.', 
-                 array('regex' => $whitelistregex, 'maxlength' => 255, 'minlength' => 6, 'maxfilesizeKB'=>512, 'dimensions'=>array(400,500)));
+                 array('regex' => $whitelistregex, 'maxlength' => 255, 'minlength' => 6, 'maxfilesizeKB'=>512, 'dimensions'=>array(-1,-1)));
 $Val->SetFields('info',0,'desc','Info',array('regex'=>$whitelistregex,'minlength'=>0,'maxlength'=>20000));	
 $Val->SetFields('signature',0,'desc','Signature',array('regex'=>$whitelistregex,'minlength'=>0,'maxlength'=>$Permissions['MaxSigLength']));	
 $Val->SetFields('email',1,"email","You did not enter a valid email address.");
