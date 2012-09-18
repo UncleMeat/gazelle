@@ -36,6 +36,22 @@ class VALIDATE {
 		if(isset($Options['minimages'])) {
 			$this->Fields[$FieldName]['MinImages']=$Options['minimages'];
 		}
+		if(isset($Options['maxfilesize'])) {
+			$this->Fields[$FieldName]['MaxFilesize']=$Options['maxfilesize'];
+		}
+		if(isset($Options['maxfilesizeKB'])) {
+			$this->Fields[$FieldName]['MaxFilesize']=$Options['maxfilesizeKB']*1024;
+		}
+		if(isset($Options['maxfilesizeMB'])) {
+			$this->Fields[$FieldName]['MaxFilesize']=$Options['maxfilesizeMB']*1024*1024;
+		}
+		if(isset($Options['maxfilesizeGB'])) {
+			$this->Fields[$FieldName]['MaxFilesize']=$Options['maxfilesizeGB']*1024*1024*1024;
+		}
+		if(isset($Options['dimensions'])) {
+			$this->Fields[$FieldName]['MaxWidth']=$Options['dimensions'][0];
+			$this->Fields[$FieldName]['MaxHeight']=$Options['dimensions'][1];
+		}
 	}
 
 	function ValidateForm($ValidateArray, $Text = null) {
@@ -112,16 +128,41 @@ class VALIDATE {
 
                             } elseif($Field['Type']=="image") {
 
-                                // Validate an imageurl : 1) valid url form 2)length 3)whilelist
+                                // Validate an imageurl : 
+                                // 1) validite function: checks url format / url length / whitelist
+                                // 2) optional image dimensions
+                                // 3) optional filesize of image (probably should not use in large batches as has to fetch remote image)
+                                
                                     // Get parameters to validate against from fields set  
                                     if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
                                     if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=10; }
+                                    if(isset($Field['MaxFilesize'])) { $MaxFileSize=$Field['MaxFilesize']; } else { $MaxFileSize=-1; }
+                                    if(isset($Field['MaxWidth'])) { $MaxWidth=$Field['MaxWidth']; } else { $MaxWidth=-1; }
+                                    if(isset($Field['MaxHeight'])) { $MaxHeight=$Field['MaxHeight']; } else { $MaxHeight=-1; }
 
                                     if(isset($Field['Regex'])) { $WLRegex=$Field['Regex']; } else { $WLRegex='/nohost.com/'; }
 
                                     // get validation result
                                     $result = validate_imageurl($ValidateVar, $MinLength, $MaxLength, $WLRegex); 
-                                    if ($result !== TRUE){ return $result; } 
+                                    if ($result !== TRUE) return "$Field[ErrorMessage]<br/>$result";
+                                    
+                                    // check image dimensions if max dimensions are specified
+                                    if($MaxWidth>=0 && $MaxHeight>=0){ 
+                                        $image_attribs = getimagesize($ValidateVar);
+                                        if($image_attribs!==FALSE){ // i guess we should ignore it if it fails .. hmmm...
+                                            list($width, $height, $type, $attr) = $image_attribs;
+                                            if ($width>$MaxWidth || $height > $MaxHeight)
+                                                return "$Field[ErrorMessage]<br/>Image dimensions are too big; width: {$width}px  height: {$height}px<br/>Max Image dimensions; width: {$MaxWidth}px  height: {$MaxHeight}px<br/>File: $ValidateVar";
+                                        }
+                                    }
+                                    
+                                    // check remote filesize if max specififed
+                                    if ($MaxFileSize>=0) {
+                                        $filesize = get_remote_file_size($ValidateVar);
+                                        //if ($filesize<0) return "error getting filesize";
+                                        if ($filesize>$MaxFileSize)
+                                            return "$Field[ErrorMessage]<br/>Filesize is too big: " . get_size($filesize). "<br/>MaxFilesize: ".get_size($MaxFileSize). "<br/>File: $ValidateVar";
+                                    }
 
                             } elseif($Field['Type']=="desc") {
                                     
@@ -282,4 +323,128 @@ class VALIDATE {
 		return $ReturnJS;
 	}
 }
+
+
+function get_remote_file_size($url, $user = "", $pw = "") {
+    ob_start();
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_HEADER, 1);
+    curl_setopt($ch, CURLOPT_NOBODY, 1);
+
+    if(!empty($user) && !empty($pw))
+    {
+        $headers = array('Authorization: Basic ' . base64_encode("$user:$pw"));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    }
+    // slightly convoluted way to get remote filesize but is more bulletproof than @fsockopen methods
+    $ok = curl_exec($ch);
+    curl_close($ch);
+    $retheaders = ob_get_contents();
+    ob_end_clean();
+
+    $return = false;
+    $retheaders = explode("\n", $retheaders);
+    foreach($retheaders as $header) {
+			
+        // follow redirect
+        $s = 'Location: ';
+        if(substr(strtolower ($header), 0, strlen($s)) == strtolower($s)) {
+            $url = trim(substr($header, strlen($s)));
+            return get_remote_file_size($url, $user, $pw );
+        }
+			
+        // parse for content length
+        $s = "Content-Length: ";
+        if(substr(strtolower ($header), 0, strlen($s)) == strtolower($s)) {
+            $return = trim(substr($header, strlen($s)));
+            return $return ? $return : -2; 
+        }
+    }
+    return -1;
+}
+
+
+
+   /*
+ 
+function get_remote_file_size($url, $readable = true){
+   $parsed = parse_url($url);
+   $host = $parsed["host"];
+   $fp = @fsockopen($host, 80, $errno, $errstr);
+   if(!$fp) return false;
+   else {
+       @fputs($fp, "HEAD $url HTTP/1.0\r\n");
+       @fputs($fp, "HOST: $host\r\n");
+       @fputs($fp, "Connection: close\r\n\r\n");
+       $headers = "";
+       while(!@feof($fp))$headers .= @fgets ($fp, 128);
+   }
+   @fclose ($fp);
+   $return = false;
+   $arr_headers = explode("\n", $headers);
+   foreach($arr_headers as $header) {
+			// follow redirect
+			$s = 'Location: ';
+			if(substr(strtolower ($header), 0, strlen($s)) == strtolower($s)) {
+				$url = trim(substr($header, strlen($s)));
+				return get_remote_file_size($url, $readable);
+			}
+			
+			// parse for content length
+       $s = "Content-Length: ";
+       if(substr(strtolower ($header), 0, strlen($s)) == strtolower($s)) {
+           $return = trim(substr($header, strlen($s)));
+           break;
+       }
+   }
+   if($return && $readable) {
+			$size = round($return / 1024, 2);
+			$sz = "KB"; // Size In KB
+			if ($size > 1024) {
+				$size = round($size / 1024, 2);
+				$sz = "MB"; // Size in MB
+			}
+			return "$size $sz";
+   }
+   return $headers;
+}
+
+/*
+function get_remote_image_size($url){
+
+    $url = preg_replace('/http:\/\//','',$url);
+    if( preg_match('/(.*?)(\/.*)/', $url, $match) ){
+    
+        $domain = $match[1];
+        $portno = 80;
+        $method = "HEAD";
+        $url    = $match[2];
+        # print "$domain\n$url\n";
+        
+        $http_response = "";
+        $http_request .= $method." ".$url ." HTTP/1.0\r\n";
+        $http_request .= "\r\n";
+
+        $fp = fsockopen($domain, $portno, $errno, $errstr);
+        if($fp){
+            fputs($fp, $http_request);
+            while (!feof($fp)) $http_response .= fgets($fp, 128);
+            fclose($fp);
+        }
+        // "Redirecting to http://hcd-1.imgbox.com/aafB53RJ.gif?st=fSQYwu7CBo6OMh7ZTCzJsA&e=1347570774";
+        
+        //$header = "Content-Length";
+        //$ret_str = "";
+        if( preg_match("/Content\-Length: (\d+)/i",$http_response, $match ) ){
+            return $match[1] . " ---> ". $http_request.$http_response;
+        }
+        if( preg_match("/Location:\s(.*)\s/i",$http_response, $match ) ){
+            //return  get_remote_image_size($match[1]);    // $match[1];   //
+        }
+        return $http_request.$http_response;
+    }
+    return -1;
+}
+*/
+
 ?>
