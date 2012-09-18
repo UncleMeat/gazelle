@@ -76,19 +76,30 @@ $ShopItems = get_shop_items($LoggedUser['ID']);
                                 <img src="<?=STATIC_SERVER.'common/badges/'.$Image?>" title="<?=$Title?>" alt="<?=$Title?>" />
                             </div>
                         </td>
-                   <?   } ?>
+                   <?   }
+                   
+                        if (strpos($Action, 'give') !== false) {
+                            $OnSubmit = 'onsubmit="return SetUsername(\'othername'.$ItemID.'\'); "';
+                        } elseif ($Action == 'title') {
+                            $OnSubmit = 'onsubmit="return SetTitle(\'title'.$ItemID.'\'); "';
+                        } elseif ($Action == 'ufl') {
+                            $OnSubmit = 'onsubmit="return SetTorrent(\'torrentid'.$ItemID.'\'); "';
+                        } else {
+                            $OnSubmit = '';
+                        }
+                   ?>
 				<td width="60px" style="text-align: center;"><strong><?=number_format($Cost) ?>c</strong></td>
 				<td width="60px" style="text-align: center;">
-                            <form method="post" action="">  
+                            <form method="post" action="" <?=$OnSubmit?>>  
                                 <input type="hidden" name="action" value="buy" />
                                 <input type="hidden" id="othername<?=$ItemID?>" name="othername" value="" />
                                 <input type="hidden" name="shopaction" value="<?=$Action?>" />
                                 <input type="hidden" name="userid" value="<?=$LoggedUser['ID']?>" />
                                 <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
                                 <input type="hidden" name="itemid" value="<?=$ItemID?>" />
-                                <input <?=(strpos($Action, 'give') !==false ? 'onclick="SetUsername(\'othername'.$ItemID.'\'); "':'')?>
-                                       <?=($Action == 'title' ? 'onclick="SetTitle(\'title'.$ItemID.'\'); "':'')?>
-                                       <?=($Action == 'ufl' ? 'onclick="SetTorrent(\'torrentid'.$ItemID.'\'); "':'')?> class="shopbutton<?=($CanBuy ? ' itembuy' : ' itemnotbuy')?>" name="submit" value="<?=($CanBuy?'Buy':'x')?>" type="submit"<?=($CanBuy ? '' : ' disabled="disabled"')?> />
+                                <input <?=(strpos($Action, 'give') !==false ? 'onclick="SetUsername2(\'othername'.$ItemID.'\'); "':'')?>
+                                       <?=($Action == 'title' ? 'onclick="SetTitle2(\'title'.$ItemID.'\'); "':'')?>
+                                       <?=($Action == 'ufl' ? 'onclick="SetTorrent2(\'torrentid'.$ItemID.'\'); "':'')?> class="shopbutton<?=($CanBuy ? ' itembuy' : ' itemnotbuy')?>" name="submit" value="<?=($CanBuy?'Buy':'x')?>" type="submit"<?=($CanBuy ? '' : ' disabled="disabled"')?> />
                                 <? if($Action == 'title') echo '<input type="hidden" id="title'.$ItemID.'" name="title" value="" />'; ?>
                                 <? if($Action == 'ufl') echo '<input type="hidden" id="torrentid'.$ItemID.'" name="torrentid" value="" />'; ?>
                             </form>

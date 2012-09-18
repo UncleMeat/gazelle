@@ -1,23 +1,29 @@
 
         
 function SetUsername(itemID){
-    var name= prompt("Enter the username of the person you wish to give a gift to")
+    var name= prompt("Enter the username of the person you wish to give a gift to");
     if (name!=null && name!="") {
         $('#' + itemID).raw().value = name;
+        return true;
     }
+    return false;
 }
 
 function SetTitle(itemID){
-    var name= prompt("Enter the custom title you want to have\n(max 32 chars)")
+    var name= prompt("Enter the custom title you want to have\n(max 32 chars)");
     if (name!=null && name!="") {
         $('#' + itemID).raw().value = name;
+        return true;
     }
+    return false;
 }
  
 function SetTorrent(itemID){
-    var id= prompt("Enter the ID of YOUR torrent (ie. that you uploaded) that you want to make permanently Freeleech")
-    if (id!=null && id!="") {
+    var id= prompt("Universal Freeleech Slot\nEnter the ID of a torrent that you uploaded to make permanently freeleech");
+    if (id!=null && id!="" ) {
         $('#' + itemID).raw().value = id;
+        return true;
     }
+    return false;
 }
 
