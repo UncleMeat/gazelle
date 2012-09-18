@@ -722,7 +722,7 @@ if($Day != next_day() || $_GET['runday']){
 		$LockIDs = implode(',', $IDs);
 		$DB->query("UPDATE forums_topics SET IsLocked='1' WHERE ID IN($LockIDs)");
 		sleep(2);
-		$DB->query("DELETE FROM forums_last_read_topics WHERE TopicID IN($LockIDs)");
+		//$DB->query("DELETE FROM forums_last_read_topics WHERE TopicID IN($LockIDs)");
 	
 		foreach($IDs as $ID) {
 			$Cache->begin_transaction('thread_'.$ID.'_info');
