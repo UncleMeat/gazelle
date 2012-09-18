@@ -126,7 +126,7 @@ $BadgeTypes = array ('Single', 'Multiple', 'Shop', 'Unique');
 $AutoAwardTypes  = array ('NumPosts', 'NumComments', 'NumUploaded', 'NumNewTags', 'NumTags', 'NumTagVotes',
                   'RequestsFilled', 'UploadedTB', 'DownloadedTB', 'MaxSnatches');
 
-$ShopActions = array('gb','givegb','givecredits','slot','title','badge','pfl');
+$ShopActions = array('gb','givegb','givecredits','slot','title','badge','pfl','ufl');
 
 // Ratio requirements, in descending order
 // Columns: Download amount, required ratio, grace period

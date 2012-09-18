@@ -187,7 +187,7 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 if(!$NewTitle){
                     $ResultMessage = "Title was not set";
                 } else {
-                    if (mb_strlen($NewTitle, "UTF-8")) $NewTitle = mb_substr($NewTitle, 0, 32,  "UTF-8"); 
+                    if (mb_strlen($NewTitle, "UTF-8")>32) $NewTitle = mb_substr($NewTitle, 0, 32,  "UTF-8"); 
                     //if (strlen($NewTitle) > 32) $NewTitle = substr($NewTitle, 0, 32); 
                     $NewTitle = db_string( display_str($NewTitle) );
                     $Summary = sqltime().' - '.ucfirst("user bought a new custom title ''$NewTitle''. Cost: $Cost credits");	
@@ -199,6 +199,38 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                     $ResultMessage=$Summary;
                 }
                 break;
+            
+            case 'ufl':
+                  
+                $GroupID = empty($_POST['torrentid']) ? '' : (int)$_POST['torrentid'];
+                
+                if(!$GroupID){
+                    $ResultMessage = "TorrentID was not set";
+                } else {
+                      
+                    $DB->query("SELECT UserID, Name, FreeTorrent FROM torrents AS t JOIN torrents_group AS tg ON t.GroupID=tg.ID WHERE GroupID='$GroupID'");
+                    if ($DB->record_count()==0)
+                        $ResultMessage = "Could not find any torrent with ID=$GroupID";
+                    else {
+                        list($OwnerID, $TName, $FreeTorrent) = $DB->next_record();
+                        if($OwnerID != $LoggedUser['ID'])
+                            $ResultMessage = "You are not the owner of torrent ID=$GroupID - only the uploader can buy Universal Freeleech for their torrent";
+                        else if($FreeTorrent == '1')
+                            $ResultMessage = "Torrent $TName is already freeleech!";
+                        else {
+                            // make torrent FL
+                            freeleech_groups($GroupID, 1);  
+                            
+                            $Summary = sqltime().' - '.ucfirst("user bought universal freeleech for torrent [torrent]{$GroupID}[/torrent]. Cost: $Cost credits");	
+                            $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
+                            $Summary = sqltime()." | -$Cost credits | ".ucfirst("you bought a universal freeleech for torrent [torrent]{$GroupID}[/torrent]");
+                            $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
+                            $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
+                            $ResultMessage= sqltime()." | -$Cost credits | ".ucfirst("you bought a universal freeleech for torrent $TName"); ;
+                        }
+                    }
+                }
+                break; 
         }
 
         if($UpdateSetOther){
