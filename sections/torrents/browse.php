@@ -593,15 +593,15 @@ $Bookmarks = all_bookmarks('torrent');
     foreach ($Results as $GroupID => $Data) {   
         list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, $NewCategoryID, $SearchText, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 
-        if ( $lastday !== date('j', strtotime($GroupTime- (int)$LoggedUser['TimeOffset'])) ) {
+        if ( $lastday !== date('j', $GroupTime - $LoggedUser['TimeOffset']) ) {
 ?>
     <tr class="colhead">
         <td colspan="10" class="center">
-            <?=date('I jS F Y',  strtotime($GroupTime- (int)$LoggedUser['TimeOffset']))?>
+            <?=date('l jS F Y', $GroupTime - $LoggedUser['TimeOffset'])?>
         </td>
     </tr>
 <?
-            $lastday = date('j', strtotime($GroupTime- (int)$LoggedUser['TimeOffset']));
+            $lastday = date('j', $GroupTime - $LoggedUser['TimeOffset']);
         }
         $TagList = explode(' ', str_replace('_', '.', $TagList));
 
