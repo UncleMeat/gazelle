@@ -587,11 +587,22 @@ $Bookmarks = all_bookmarks('torrent');
         <td>Uploader</td>
     </tr>
     <?
-// Start printing torrent list
-$row='a';
+    // Start printing torrent list
+    $row='a';
+    $lastday = 0;
     foreach ($Results as $GroupID => $Data) {   
         list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, $NewCategoryID, $SearchText, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 
+        if ( $lastday !== date('j', strtotime($GroupTime)- (int)$LoggedUser['TimeOffset']) ) {
+?>
+    <tr class="colhead">
+        <td colspan="10" class="center">
+            <?=date('I jS F Y',  strtotime($GroupTime)- (int)$LoggedUser['TimeOffset'])?>
+        </td>
+    </tr>
+<?
+            $lastday = date('j', strtotime($GroupTime)- (int)$LoggedUser['TimeOffset']);
+        }
         $TagList = explode(' ', str_replace('_', '.', $TagList));
 
         $TorrentTags = array();
