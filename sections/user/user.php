@@ -1161,6 +1161,7 @@ if (check_perms('users_mod', $Class)) { ?>
                                         <option value="24">24 hours</option>
                                         <option value="48">48 hours</option>
                                         <option value="168">1 week</option>
+                                        <option value="87648">10 years</option>
                                     <? if ($PersonalFreeLeech > sqltime()) { ?>
                                         <option value="1" selected="selected"><?=time_diff($PersonalFreeLeech, 2, false,false,0)?> (current)</option>
                                     <? } ?>

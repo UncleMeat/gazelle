@@ -101,8 +101,24 @@ if ($Mobile) { ?>
     <?	}  ?> 
                     <li id="stats_ratio"><a href="articles.php?topic=ratio">Ratio</a>: <span class="stat"><?=ratio($LoggedUser['BytesUploaded'], $LoggedUser['BytesDownloaded'])?></span></li>
                 </span>
-            </ul>  */  ?>
-          <table class="userinfo_stats noborder">
+            </ul>  */
+               
+               
+               
+if($LoggedUser['personal_freeleech'] >= sqltime()) {
+    $PFL = 'PFL for '.  time_diff($LoggedUser['personal_freeleech'],2,true,false,0);
+}
+
+
+?>
+          <table class="userinfo_stats noborder"><? 
+            if ( false && !empty($PFL)) { ?>
+              <tr>
+                  <td colspan="4">
+                    <div class="alertbar nicebar" style="display:inline-block"><?=$PFL?></div>
+                  </td>
+              </tr>
+      <?    }  ?>
               <tr>
                   <td style="text-align:right;"><a href="bonus.php">Credits</a>:</td>
                   <td><span class="stat"><?=number_format((int)$LoggedUser['TotalCredits'])?></span></td>
@@ -152,7 +168,7 @@ if($NewSubscriptions === FALSE) {
 // Moved alert bar handling to before we draw minor stats to allow showing alert status in links too
 
 //Start handling alert bars
-$Infos = array(); // an info alert bar (nicer color)
+//$Infos = '';    // array(); // an info alert bar (nicer color)
 $Alerts = array(); // warning bar (red!)
 $ModBar = array();
  
@@ -194,10 +210,10 @@ if ($CurrentNews === false) {
 	}
 	$Cache->cache_value('news_latest_id', $CurrentNews, 0);
 }
-
+/*
 if($LoggedUser['personal_freeleech'] >= sqltime()) {
-    $Infos[] = 'Freeleech for '.  time_diff($LoggedUser['personal_freeleech'],2,true,false,0);
-}
+    $Infos = 'PFL for '.  time_diff($LoggedUser['personal_freeleech'],2,true,false,0);
+}*/
 
 if ($MyNews < $CurrentNews) {
 	$Alerts[] = '<a href="index.php">New Announcement!</a>';
@@ -346,17 +362,20 @@ if(check_perms('admin_reports')) {
 <?
 
 // draw the alert bars (arrays set already^^)
-if (!empty($Alerts) || !empty($ModBar) || !empty($Infos)) {
+if (!empty($Alerts) || !empty($ModBar) ) {
 ?>
 	<div id="alerts">
-	<? foreach ($Infos as $Info) { ?>
-		<div class="alertbar nicebar"><?=$Info?></div>
-	<? } 
+	<? /*
+	if (empty($ModBar) && !empty($Infos)) {
+          //foreach ($Infos as $Info) { ?>
+		<div class="alertbar nicebar"><?=$Infos?></div>
+	<? //}
+      } */
          foreach ($Alerts as $Alert) { ?>
 		<div class="alertbar"><?=$Alert?></div>
 	<? }
-	if (!empty($ModBar)) { ?>
-		<div id="modbar" class="alertbar blend"><?=implode(' | ',$ModBar)?></div>
+        if (!empty($ModBar)) { ?>
+		<div id="modbar" class="alertbar blend"> <?=implode(' | ',$ModBar); ?></div>
 	<? } ?>
 	</div>
 <?
@@ -466,6 +485,9 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
     </div>
     
     <div id="header_bottom"> 
+        <?    if ( !empty($PFL)) { ?> 
+                    <div class="nicebar" style="display:inline-block"><?=$PFL?></div> 
+        <?    }  ?>
 
             <div id="major_stats">
 <?

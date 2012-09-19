@@ -43,14 +43,14 @@ function set_hidden_value(elem_id, state){
         jQuery('#'+elem_id+'div').hide();
 	  jQuery('#'+elem_id+'button').text('(Show)');
     } else {
-        //jQuery('#'+elem_id+'div').show();
+        jQuery('#'+elem_id+'div').show();
 	  jQuery('#'+elem_id+'button').text('(Hide)');
     }
 }
 
 function Load_User_Cookie()  { 
     
-	if(jQuery.cookie('userPageState') == undefined) {
+	if(jQuery.cookie('userPageState') == undefined) { alert("!!");
 		jQuery.cookie('userPageState', json.encode(['1', '1', '0', '0', '0', '0', '0', '0', '1', '0', '1', '1', '1', '1', '1']));
 	}
 	var state = json.decode( jQuery.cookie('userPageState') );

@@ -434,7 +434,7 @@ if ($PersonalFreeLeech != 1 && ($PersonalFreeLeech > 1 || ($PersonalFreeLeech ==
         $time = '0000-00-00 00:00:00';
         $after = 'none';
     } else {
-        $time = time_plus(60*60*$PersonalFreeLeech);
+        $time = time_plus( 60*60*$PersonalFreeLeech );
         $after = time_diff($time, 2, false);
     }
     if ($Cur['personal_freeleech'] < sqltime()) {

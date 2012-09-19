@@ -465,8 +465,20 @@ li.searchbars {
 .alertbar a:hover {
     text-decoration: none;
 }
-.nicebar {
+.nicebar { 
+    font-weight:bold;
+    color: white;
+    position: relative;
+    border-radius: 10px;       /* FF9+ IE9+ */
+    -moz-border-radius: 10px; /* for FF5 */
+    -webkit-border-radius: 10px; /* for opera */
+    padding: 2px 10px 1px;
     background-color: #1a1;
+    text-align: center;
+    width: 300px; 
+    margin-left:-160px;
+    left: 50%;
+    border: green solid 1px; 
 }
 .blend {
     padding: 2px 40px 2px;

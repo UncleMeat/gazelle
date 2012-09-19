@@ -299,10 +299,10 @@ span.infinity {
 #stats_block {
     text-align: right;
     color: #ddd;
-    height: 54px;
+    height: 60px;
     position:absolute;
     right: 20px ;
-    margin-top:-27px;
+    margin-top:-30px;
     top:50%; 
     font-size: 0.9em;
 }
@@ -573,7 +573,25 @@ li.searchbars {
    text-decoration: none;
 }
 .nicebar {
-    background-color: #1a1;
+    font-weight:normal;
+    color: white;
+    position: relative;
+    border-radius: 10px;       /* FF9+ IE9+ */
+    -moz-border-radius: 10px; /* for FF5 */
+    -webkit-border-radius: 10px; /* for opera */
+    padding: 2px 10px 1px;
+    background-color: #040;
+    text-align: center;
+    width: 300px; 
+    margin-left:-160px;
+    margin-top:-3px;
+    left: 50%; 
+    
+    background: #040; /* old browsers */
+    background: -moz-linear-gradient(top, #1a1 0%, #040 100%); /* firefox    #0074b7 - #004b9d */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1a1), color-stop(100%,#040)); /* webkit */
+    background-image: -o-linear-gradient(top, rgb(17,170,17) 0%, rgb(0,68,0) 100%); /* opera */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a1', endColorstr='#040',GradientType=0 ); /* ie */
 }
 
 .torusername
@@ -703,17 +721,15 @@ h2 {
     margin: 10px 0px 20px;
     text-align: center;
     color: #fff;
-    /* background-color: #024a7c; */
- 
+
     border-radius: 5px; 
     -moz-border-radius: 5px; 
     -webkit-border-radius: 5px;
-    /* 
-    background: #0261a3 url(images/header2.jpg) repeat-x bottom;  */
-    
-    background: #006497; /* old browsers */
+
+    background: #0064a1; /* old browsers */
     background: -moz-linear-gradient(top, #0064a1 0%, #0064a1 40%, #003b7d 100%); /* firefox    #0074b7 - #004b9d */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0064a1), color-stop(40%,#0064a1), color-stop(100%,#003b7d)); /* webkit */
+    background-image: -o-linear-gradient(top, rgb(0,100,161) 0%, rgb(0,100,161) 40%, rgb(0,59,125) 100%); /* opera */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0074b7', endColorstr='#003b7d',GradientType=0 ); /* ie */
 
     font-size: 18px;
