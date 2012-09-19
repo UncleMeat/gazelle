@@ -214,7 +214,7 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                     else {
                         list($OwnerID, $TName, $FreeTorrent) = $DB->next_record();
                         if($OwnerID != $LoggedUser['ID'])
-                            $ResultMessage = "You are not the owner of torrent ID=$GroupID - only the uploader can buy Universal Freeleech for their torrent";
+                            $ResultMessage = "You are not the owner of torrent with ID=$GroupID - only the uploader can buy Universal Freeleech for their torrent";
                         else if($FreeTorrent == '1')
                             $ResultMessage = "Torrent $TName is already freeleech!";
                         else {

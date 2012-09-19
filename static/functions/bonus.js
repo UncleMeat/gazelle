@@ -19,7 +19,7 @@ function SetTitle(itemID){
 }
  
 function SetTorrent(itemID){
-    var id= prompt("Universal Freeleech Slot\nEnter the ID of a torrent that you uploaded to make permanently freeleech");
+    var id= prompt("Universal Freeleech Slot\nEnter the ID of a torrent that you uploaded to make permanently freeleech\nie. for torrents.php?id=3333&torrentid=4444 enter the id number '3333'");
     if (id!=null && id!="" ) {
         $('#' + itemID).raw().value = id;
         return true;
