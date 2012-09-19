@@ -178,15 +178,6 @@ echo $Val->GenerateJS('userform');
 					</select>
 				</td>
 			</tr>
-<!--			<tr>
-				<td class="label"><strong>Collage album art view</strong></td>
-				<td>
-					<select name="hidecollage" id="hidecollage">
-						<option value="0"<? if ($SiteOptions['HideCollage'] == 0) { ?>selected="selected"<? } ?>>Show album art</option>
-						<option value="1"<? if ($SiteOptions['HideCollage'] == 1) { ?>selected="selected"<? } ?>>Hide album art</option>
-					</select>
-				</td>
-			</tr>-->
 			<tr>
 				<td class="label"><strong>Collage torrent covers to show per page</strong></td>
 				<td>
@@ -198,6 +189,13 @@ echo $Val->GenerateJS('userform');
 						<option value="1000000"<? if ($SiteOptions['CollageCovers'] == 1000000) { ?>selected="selected"<? } ?>>All</option>
 						<option value="0"<? if (($SiteOptions['CollageCovers'] === 0) || (!isset($SiteOptions['CollageCovers']) && $SiteOptions['HideCollage'])) { ?>selected="selected"<? } ?>>None</option>
 					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="label"><strong>Split Torrents by Days</strong></td>
+				<td>
+					<input type="checkbox" name="splitbydays" id="splitbydays" <? if (!empty($SiteOptions['SplitByDays'])) { ?>checked="checked"<? } ?> />
+					<label for="splitbydays">display new day header in browse torrents list</label>
 				</td>
 			</tr>
 			<tr>
