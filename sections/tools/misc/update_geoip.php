@@ -32,12 +32,14 @@ function get_first_day($month,$year,$dayofweek = 1,$timeformat="Ymd"){ // sunday
 // currently updated on the first tuesday of each month. See http://www.maxmind.com/app/geolite for details
 $filedate = get_first_day_current_month(2);
 
-
+//http://geolite.maxmind.com/download/geoip/database/GeoLiteCity_CSV/GeoLiteCity_20120904.zip
 //requires wget, unzip commands to be installed
+
+/*  // mifune: temp rem out and see if we can just run the fill geoip bit with uncompressed data manually got
 shell_exec('wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity_CSV/GeoLiteCity_'.$filedate.'.zip');
 //shell_exec('wget http://debug.what.cd/GeoLiteCity_'.date('Ym').'01.zip');
 shell_exec('unzip GeoLiteCity_'.$filedate.'.zip');
-shell_exec('rm GeoLiteCity_'.$filedate.'.zip');
+shell_exec('rm GeoLiteCity_'.$filedate.'.zip'); */
 
 if(($Locations = file("GeoLiteCity_".$filedate."/GeoLiteCity-Location.csv", FILE_IGNORE_NEW_LINES)) === false) {
 	error("Download or extraction of maxmind database failed<br/>DB: GeoLiteCity_CSV/GeoLiteCity_$filedate.zip");

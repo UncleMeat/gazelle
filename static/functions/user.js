@@ -50,7 +50,7 @@ function set_hidden_value(elem_id, state){
 
 function Load_User_Cookie()  { 
     
-	if(jQuery.cookie('userPageState') == undefined) { alert("!!");
+	if(jQuery.cookie('userPageState') == undefined) {
 		jQuery.cookie('userPageState', json.encode(['1', '1', '0', '0', '0', '0', '0', '0', '1', '0', '1', '1', '1', '1', '1']));
 	}
 	var state = json.decode( jQuery.cookie('userPageState') );
