@@ -160,6 +160,8 @@ show_header('Detailed User Statistics');
           <img src="http://chart.apis.google.com/chart?cht=map:fixed=14.8,15,45,86&chs=440x220&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
           <br />
           <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,0,31))?>&chxl=1:|<?=implode('|',array_slice($Countries,0,31))?>|0:|<?=implode('|',$LogIncrements)?>&amp;chf=bg,s,FFFFFF00" />
+          <br />
+          <p>GeoLite data used under Creative Commons Attribution-ShareAlike 3.0 Unported License<br/>GeoLite data from MaxMind, available from http://www.maxmind.com</p>
     </div>
 </div>
 <?

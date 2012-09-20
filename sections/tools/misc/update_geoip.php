@@ -4,17 +4,48 @@ set_time_limit(0);
 
 //if (!check_perms('site_debug')) { error(403); }
 
-show_header();
+function get_first_day_current_month($dayofweek = 1){
+    
+    $current = date('m,Y');
+    $current = explode(',', $current);
+    return get_first_day($current[0],$current[1],$dayofweek);
+}
+
+function get_first_day($month,$year,$dayofweek = 1,$timeformat="Ymd"){ // sunday =0 
+    
+    $dayofweek = $dayofweek % 7; // in case of stupid input
+    
+    $num = date("w",mktime(0,0,0,$month,1,$year));
+    
+    if($num==$dayofweek)
+        return date($timeformat,mktime(0,0,0,$month,1,$year));
+    elseif($num>=0)
+        return date($timeformat,mktime(0,0,0,$month,1,$year)+(86400*( ($dayofweek+7-$num) % 7 ) ));
+    else
+	  return date($timeformat,mktime(0,0,0,$month,1,$year)+(86400*(1-$num)));
+
+}
+
+
+
+//$filedate = date('Ym').'04';
+// currently updated on the first tuesday of each month. See http://www.maxmind.com/app/geolite for details
+$filedate = get_first_day_current_month(2);
+
 
 //requires wget, unzip commands to be installed
-shell_exec('wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity_CSV/GeoLiteCity_'.date('Ym').'07.zip');
+shell_exec('wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity_CSV/GeoLiteCity_'.$filedate.'.zip');
 //shell_exec('wget http://debug.what.cd/GeoLiteCity_'.date('Ym').'01.zip');
-shell_exec('unzip GeoLiteCity_'.date('Ym').'07.zip');
-shell_exec('rm GeoLiteCity_'.date('Ym').'07.zip');
+shell_exec('unzip GeoLiteCity_'.$filedate.'.zip');
+shell_exec('rm GeoLiteCity_'.$filedate.'.zip');
 
-if(($Locations = file("GeoLiteCity_".date('Ym')."07/GeoLiteCity-Location.csv", FILE_IGNORE_NEW_LINES)) === false) {
-	error("Download or extraction of maxmind database failed");
+if(($Locations = file("GeoLiteCity_".$filedate."/GeoLiteCity-Location.csv", FILE_IGNORE_NEW_LINES)) === false) {
+	error("Download or extraction of maxmind database failed<br/>DB: GeoLiteCity_CSV/GeoLiteCity_$filedate.zip");
 }
+
+
+show_header();
+
 array_shift($Locations);
 array_shift($Locations);
 
@@ -31,7 +62,7 @@ foreach($Locations as $Location) {
 echo "There are ".count($CountryIDs)." CountryIDs";
 echo "<br />";
 
-if(($Blocks = file("GeoLiteCity_".date('Ym')."07/GeoLiteCity-Blocks.csv", FILE_IGNORE_NEW_LINES)) === false) {
+if(($Blocks = file("GeoLiteCity_".$filedate."/GeoLiteCity-Blocks.csv", FILE_IGNORE_NEW_LINES)) === false) {
 	echo "Error";
 }
 array_shift($Blocks);
@@ -60,6 +91,14 @@ foreach($Blocks as $Index => $Block) {
 if(count($Values) > 0) {
 	$DB->query("INSERT INTO geoip_country (StartIP, EndIP, Code) VALUES ".implode(", ", $Values));
 }
+
+
+$DB->query("INSERT INTO users_geodistribution (Code, Users) 
+                       SELECT g.Code, COUNT(u.ID) AS Users 
+                         FROM geoip_country AS g JOIN users_main AS u ON INET_ATON(u.IP) BETWEEN g.StartIP AND g.EndIP 
+                        WHERE u.Enabled='1' 
+                        GROUP BY g.Code 
+                     ORDER BY Users DESC");
 
 
 show_footer();
