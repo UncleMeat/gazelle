@@ -90,7 +90,8 @@ while(list($SentDate, $SenderID, $Body, $MessageID) = $DB->next_record()) { ?>
 //$ReceiverIDs = $DB->collect('UserID');
 //if(!empty($ReceiverIDs) && (empty($LoggedUser['DisablePM']) || array_intersect($ReceiverIDs, array_keys($StaffIDs)))) {
 
-$DB->query("SELECT SenderID FROM pm_messages WHERE ConvID='$ConvID'");
+//$DB->query("SELECT SenderID FROM pm_messages WHERE ConvID='$ConvID'");
+$DB->query("SELECT SenderID FROM pm_messages WHERE ConvID='$ConvID' ORDER BY ID LIMIT 1");
 list($ReplyID) = $DB->next_record();
 
 if(!empty($ReplyID) && $ReplyID!=0 && (empty($LoggedUser['DisablePM']) || array_key_exists($ReplyID, $StaffIDs) ) ) {

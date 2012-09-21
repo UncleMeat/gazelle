@@ -50,13 +50,23 @@ if ($_REQUEST['submit']=='process'){
 else if ($_REQUEST['submit2']=='fill users_geo_distribution'){
     
     $done= 'filled users_geo_distribution';
-    $DB->query("INSERT IGNORE INTO users_geodistribution (Code, Users) 
-                       SELECT ipcc, COUNT(ID) AS Users 
+    /*   
+    $DB->query("REPLACE INTO users_geodistribution (Code, Users)
+                      SELECT ipcc, COUNT(ID) AS NumUsers 
+                        FROM users_main 
+                       WHERE Enabled='1' AND ipcc != '' 
+                    GROUP BY ipcc 
+                    ORDER BY NumUsers DESC");
+      */
+    
+    $DB->query("DELETE FROM users_geodistribution");
+    $DB->query("INSERT INTO users_geodistribution (Code, Users) 
+                       SELECT ipcc, COUNT(ID) AS NumUsers 
                          FROM users_main 
                         WHERE Enabled='1' AND ipcc != ''
                         GROUP BY ipcc 
-                     ORDER BY Users DESC");
-      
+                     ORDER BY NumUsers DESC");
+ 
     $numinserted = $DB->affected_rows();
     $ret = "inserted $numinserted records";
 }
