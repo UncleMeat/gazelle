@@ -103,6 +103,14 @@ $DB->query("INSERT INTO users_geodistribution (Code, Users)
                      ORDER BY Users DESC");
 
 
+$DB->query("INSERT INTO users_geodistribution (Code, Users) 
+                       SELECT g.Code, COUNT(u.ID) AS Users 
+                         FROM geoip_country AS g JOIN users_main AS u ON u.ip_number BETWEEN g.StartIP AND g.EndIP 
+                        WHERE u.Enabled='1' 
+                        AND u.ip_number >'0'
+                        GROUP BY g.Code 
+                     ORDER BY Users DESC");
+
 show_footer();
 
 /*

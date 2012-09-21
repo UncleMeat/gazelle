@@ -794,13 +794,13 @@ function ip2unsigned($IP) {
 
 // Geolocate an IP address. Two functions - a database one, and a dns one.
 function geoip($IP) {
-    static $IPs = array();
+    //static $IPs = array();
     if (isset($IPs[$IP])) {
         return $IPs[$IP];
     }
     $Long = ip2unsigned($IP);
     if (!$Long || $Long == 2130706433) { // No need to check cc for 127.0.0.1
-        return false;
+        return '?';
     }
     global $DB;
     $DB->query("SELECT EndIP,Code FROM geoip_country WHERE $Long >= StartIP ORDER BY StartIP DESC LIMIT 1");

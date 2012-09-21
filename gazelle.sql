@@ -1943,7 +1943,8 @@ CREATE TABLE IF NOT EXISTS `users_slots` (
 
 CREATE TABLE IF NOT EXISTS `users_geodistribution` (
   `Code` varchar(2) NOT NULL,
-  `Users` int(10) NOT NULL
+  `Users` int(10) NOT NULL,
+  PRIMARY KEY (`Code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

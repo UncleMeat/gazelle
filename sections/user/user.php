@@ -22,6 +22,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		m.Email,
 		m.LastAccess,
 		m.IP,
+		m.ipcc,
 		p.Level AS Class,
 		m.Uploaded,
 		m.Downloaded,
@@ -82,7 +83,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username,$Email,$LastAccess,$IP,$Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, 
+	list($Username,$Email,$LastAccess,$IP, $ipcc, $Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, 
               $GroupPermID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, 
               $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, 
               $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, 
@@ -95,6 +96,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		m.Email,
 		m.LastAccess,
 		m.IP,
+		m.ipcc,
 		p.Level AS Class,
 		m.Uploaded,
 		m.Downloaded,
@@ -133,7 +135,10 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		header("Location: log.php?search=User+".$UserID);
 	}
 
-	list($Username, $Email, $LastAccess, $IP, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $GroupPermID, $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$BonusLog,$MaxAvatarWidth,$MaxAvatarHeight, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(11));
+	list($Username, $Email, $LastAccess, $IP, $ipcc, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $GroupPermID, 
+              $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, 
+              $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$BonusLog,
+              $MaxAvatarWidth,$MaxAvatarHeight, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(11));
 }
  
 
@@ -145,6 +150,12 @@ if(check_perms('site_proxy_images') && !empty($CustomTitle)) {
 																	}, $CustomTitle);
 }
 
+                
+// mifune: auto set if we have an ip to work with and data is missing
+if(!$ipcc && $IP) {
+    $ipcc = geoip($IP);
+    $DB->query("UPDATE users_main SET ipcc='$ipcc' WHERE ID='$UserID'");
+}
       
 $Paranoia = unserialize($Paranoia);
 if(!is_array($Paranoia)) {
@@ -358,7 +369,9 @@ $OverallRank = $Rank->overall_score($UploadedRank, $DownloadedRank, $UploadsRank
 	if (check_perms('users_view_ips',$Class)) {
 ?>
 	<li>IPs: <?=number_format($IPChanges)?> [<a href="userhistory.php?action=ips&amp;userid=<?=$UserID?>">View</a>]&nbsp;[<a href="userhistory.php?action=ips&amp;userid=<?=$UserID?>&amp;usersonly=1">View Users</a>]</li>
-<?		if (check_perms('users_view_ips',$Class) && check_perms('users_mod',$Class)) { ?>
+<?		if (check_perms('users_view_ips',$Class) && check_perms('users_mod',$Class)) { 
+?>
+      <li>Country: <?=$ipcc?></li>
 	<li>Tracker IPs: <?=number_format($TrackerIPs)?> [<a href="userhistory.php?action=tracker_ips&amp;userid=<?=$UserID?>">View</a>]</li>
 <?		} ?>
 <?

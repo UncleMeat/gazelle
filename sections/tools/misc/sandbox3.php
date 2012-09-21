@@ -1,6 +1,6 @@
 <?
 
-//die("dont touch that!");
+ error("dont press that!"); 
 
 $filename = "peersid.txt"; 
  
