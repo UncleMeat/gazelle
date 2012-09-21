@@ -2,6 +2,9 @@
 ini_set('memory_limit', '5G');
 set_time_limit(0);
 
+
+error("I have disabled this page as automatic geoip processing kills the server - geoip can be manually updated... look at the code in sandbox's 2 and 4");
+
 //if (!check_perms('site_debug')) { error(403); }
 
 function get_first_day_current_month($dayofweek = 1){
