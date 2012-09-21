@@ -1,7 +1,7 @@
 <?
 if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements) = $Cache->get_value('geodistribution')) {
 	include_once(SERVER_ROOT.'/classes/class_charts.php');
-	$DB->query('SELECT Code, Users FROM users_geodistribution');
+	$DB->query('SELECT Code, Users FROM users_geodistribution ORDER BY Users DESC');
 	$Data = $DB->to_array();
 	$Count = $DB->record_count()-1;
 	
@@ -176,7 +176,7 @@ show_header('Detailed User Statistics');
           <img src="http://chart.apis.google.com/chart?cht=map:fixed=-11,22,50,160&chs=720x360&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
           <br /><br />*/ 
           
-            rsort($CountryUsers);
+            //rsort($CountryUsers);
           ?>
           <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,0,31))?>&chxl=1:|<?=implode('|',array_slice($Countries,0,31))?>|0:|<?=implode('|',$LogIncrements)?>&amp;chf=bg,s,FFFFFF00" />
           <br /><br /> 
