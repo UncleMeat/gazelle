@@ -95,7 +95,7 @@ tr.smallhead a, .cat_list a, tr.smallhead a:visited, .cat_list a:visited {
 }
 h1,h2,h3,h4 {
     margin: 5px 0px;
-    color: #eee;
+    color: #666;
 }
 div div div div h3, div div div h4 {
     color: #222;
