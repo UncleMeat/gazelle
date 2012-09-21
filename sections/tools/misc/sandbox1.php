@@ -49,7 +49,7 @@ show_header();
                         &nbsp;&nbsp;&nbsp;&nbsp;<label for="cap" >cap:</label>
                         <input size="6" type="text" name="cap" value="<?=$cap?>" />
                         <input type="submit" value="calculate"/>
-                    </form>
+                    </form><br/>
                 </td>
             </tr>
             <tr>
@@ -63,7 +63,7 @@ show_header();
                 </td>
                 <td  style="vertical-align: top">
                     <h4>new formula</h4>
-                    <?=$Text->full_format( get_seed_values(200, 0.21, 1, 16, 0));?>
+                    <?=$Text->full_format( get_seed_values(200, 0.21, 1, 16, 1));?>
                     <? //$Text->full_format( get_seed_values(0.74, 2, 6.5, 0));?>
                     <? //$Text->full_format( get_seed_values(4, 3, 2, 1));?>
                 </td>
