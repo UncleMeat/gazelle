@@ -67,14 +67,6 @@ show_header();
                     <? //$Text->full_format( get_seed_values(0.74, 2, 6.5, 0));?>
                     <? //$Text->full_format( get_seed_values(4, 3, 2, 1));?>
                 </td>
-                <? /*
-                <td>
-                    <?=get_seed_values(8, 6, 1.5);?>
-                </td>
-                <td>
-                    <?=get_seed_values(12, 16, 1 );?>
-                </td> */
-                ?>
             </tr>
         </table>
  
@@ -88,8 +80,7 @@ show_header();
 
 function get_bonus_points($cap, $count, $a = 8.0, $b = 1, $c=10, $d=0){
     
-    ////$num = round( ( sqrt( $a * ( $count / $b  ) + 1.0 ) - 1.0  ) *$c );
-    
+    ////$num = round( ( sqrt( $a * ( $count / $b  ) + 1.0 ) - 1.0  ) *$c ); 
     //$num = round( ( sqrt( ( $a *  $count * $b  ) + 1.0 ) - 1.0  ) *$c );
      
     if ($cap>0 && $count>$cap)$count=$cap;

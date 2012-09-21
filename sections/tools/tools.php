@@ -99,12 +99,12 @@ if (check_perms('admin_update_geoip')) { ?>
 			<tr><td><a href="tools.php?action=branches">Git branches</a></td></tr>
 <? } 	
  // screw these stupid sandbox links... if a debugger really needs to use one they can use the url manually
-
-      if (check_perms('site_debug')) { ?>  
+?>
 			<tr><td><a href="tools.php?action=sandbox1">Sandbox (1)</a></td></tr>
+<? if (check_perms('site_debug')) { ?>  
+			<tr><td><a href="tools.php?action=sandbox2">Sandbox (2)</a></td></tr>
 <? /*
                   
-			<tr><td><a href="tools.php?action=sandbox2">Sandbox (2)</a></td></tr>
 			<tr><td><a href="tools.php?action=sandbox3">Sandbox (3)</a></td></tr>
 			<tr><td><a href="tools.php?action=sandbox4">Sandbox (4)</a></td></tr>
 			<tr><td><a href="tools.php?action=sandbox5">Sandbox (5)</a></td></tr>
