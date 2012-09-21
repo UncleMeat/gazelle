@@ -40,8 +40,10 @@ $DB->query("SELECT UserID, Username, PermissionID, CustomPermissions, Enabled, D
 	JOIN users_info AS ui ON ui.UserID=pm.SenderID
 	JOIN users_main AS um ON um.ID=pm.SenderID
 	WHERE pm.ConvID='$ConvID'");
-
-while(list($PMUserID, $Username, $PermissionID, $CustomPermissions, $Enabled, $Donor, $Warned, $Title) = $DB->next_record()) {
+$UsersInMessages = $DB->to_array();
+//while(list($PMUserID, $Username, $PermissionID, $CustomPermissions, $Enabled, $Donor, $Warned, $Title) = $DB->next_record()) {
+foreach($UsersInMessages as $UserM){
+    list($PMUserID, $Username, $PermissionID, $CustomPermissions, $Enabled, $Donor, $Warned, $Title) = $UserM;
 	$PMUserID = (int)$PMUserID;
 	$Users[$PMUserID]['UserStr'] = format_username($PMUserID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, $Title, true);
 	$Users[$PMUserID]['Username'] = $Username;
@@ -50,7 +52,6 @@ while(list($PMUserID, $Username, $PermissionID, $CustomPermissions, $Enabled, $D
 $Users[0]['UserStr'] = 'System'; // in case it's a message from the system
 $Users[0]['Username'] = 'System';
 $Users[0]['AdvTags'] = true;
-
 
 
 if($UnRead=='1') {
@@ -74,9 +75,9 @@ $DB->query("SELECT SentDate, SenderID, Body, ID FROM pm_messages AS m WHERE Conv
 
 while(list($SentDate, $SenderID, $Body, $MessageID) = $DB->next_record()) { ?>
         <div class="head">
-                <?=$Users[(int)$SenderID]['UserStr'].' '.time_diff($SentDate);
+                <?=$Users[$SenderID]['UserStr'].' '.time_diff($SentDate);
                     if($SenderID!=0){ 
-              ?>  - <a href="#quickpost" onclick="Quote('<?=$MessageID?>','','<?=$Users[(int)$SenderID]['Username']?>');">[Quote]</a>	
+              ?>  - <a href="#quickpost" onclick="Quote('<?=$MessageID?>','','<?=$Users[$SenderID]['Username']?>');">[Quote]</a>	
             <?      }  ?>
         </div>
 	<div class="box vertical_space">
@@ -91,12 +92,17 @@ while(list($SentDate, $SenderID, $Body, $MessageID) = $DB->next_record()) { ?>
 //if(!empty($ReceiverIDs) && (empty($LoggedUser['DisablePM']) || array_intersect($ReceiverIDs, array_keys($StaffIDs)))) {
 
 //$DB->query("SELECT SenderID FROM pm_messages WHERE ConvID='$ConvID'");
-$DB->query("SELECT SenderID FROM pm_messages WHERE ConvID='$ConvID' ORDER BY ID LIMIT 1");
+//$DB->query("SELECT SenderID FROM pm_messages WHERE ConvID='$ConvID' ORDER BY ID LIMIT 1");
+
+$DB->query("SELECT UserID FROM pm_conversations_users 
+             WHERE UserID!='$LoggedUser[ID]' AND ConvID='$ConvID' AND (ForwardedTo=0 OR ForwardedTo=UserID)
+            ORDER BY SentDate Desc LIMIT 1");
+
 list($ReplyID) = $DB->next_record();
 
 if(!empty($ReplyID) && $ReplyID!=0 && (empty($LoggedUser['DisablePM']) || array_key_exists($ReplyID, $StaffIDs) ) ) {
 ?>
-	<div class="head">Reply</div>
+	<div class="head">Reply to <?=$Users[$ReplyID]['Username']?></div>
 	<div class="box pad">
             <form action="inbox.php" method="post" id="messageform">
 			<input type="hidden" name="action" value="takecompose" />
