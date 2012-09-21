@@ -17,7 +17,12 @@ $done='--';
 
 if ($_REQUEST['submit']=='process'){
     $done= 'done';
-    $DB->query("SELECT ID, IP, Username FROM users_main WHERE ipcc='' AND IP!='0.0.0.0' ORDER BY ID DESC LIMIT $num_users");
+    $DB->query("SELECT ID, IP, Username FROM users_main 
+                 WHERE Enabled='1' 
+                   AND ipcc='' 
+                   AND IP!='0.0.0.0' 
+              ORDER BY ID DESC 
+                 LIMIT $num_users");
     $Users = $DB->to_array();
     
         
