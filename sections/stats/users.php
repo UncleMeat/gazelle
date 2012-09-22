@@ -30,8 +30,10 @@ if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements)
 	}
 	reset($Rank);
 	
+    $j=0;
 	for ($i=$CountryMin;$i<=$CountryMax;$i++) {
-		$LogIncrements[] = human_format(pow(2,$i));
+        $LogIncrements[$j][] = human_format(pow(2,$i));
+        if ( $i % 30 == 0) $j++;
 	}
 	$Cache->cache_value('geodistribution',array($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements),0);
 }
@@ -178,17 +180,17 @@ show_header('Detailed User Statistics');
           
             //rsort($CountryUsers);
           ?>
-          <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,0,30))?>&chxl=1:|<?=implode('|',array_slice($Countries,0,30))?>|0:|<?=implode('|',$LogIncrements)?>&amp;chf=bg,s,FFFFFF00" />
+          <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,0,30))?>&chxl=1:|<?=implode('|',array_slice($Countries,0,30))?>|0:|<?=implode('|',$LogIncrements[0])?>&amp;chf=bg,s,FFFFFF00" />
           <br /><br />  
           <?  
     if (count($CountryUsers)>30){ 
           ?>
-          <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,30,30))?>&chxl=1:|<?=implode('|',array_slice($Countries,30,30))?>|0:|<?=implode('|',$LogIncrements)?>&amp;chf=bg,s,FFFFFF00" />
+          <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,30,30))?>&chxl=1:|<?=implode('|',array_slice($Countries,30,30))?>|0:|<?=implode('|',$LogIncrements[1])?>&amp;chf=bg,s,FFFFFF00" />
           <br /><br />  
           <? 
     } if (count($CountryUsers)>60){ 
           ?>
-          <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,60,30))?>&chxl=1:|<?=implode('|',array_slice($Countries,60,30))?>|0:|<?=implode('|',$LogIncrements)?>&amp;chf=bg,s,FFFFFF00" />
+          <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,60,30))?>&chxl=1:|<?=implode('|',array_slice($Countries,60,30))?>|0:|<?=implode('|',$LogIncrements[2])?>&amp;chf=bg,s,FFFFFF00" />
           <br /><br />  
           <? 
     }
