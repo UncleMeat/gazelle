@@ -1,5 +1,5 @@
 <?
-if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements,$CountryUsersNum,$RankNum) = $Cache->get_value('geodistribution')) {
+if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements,$CountryUsersNum) = $Cache->get_value('geodistribution')) {
 	include_once(SERVER_ROOT.'/classes/class_charts.php');
 	$DB->query('SELECT Code, Users FROM users_geodistribution ORDER BY Users DESC');
 	$Data = $DB->to_array();
@@ -21,7 +21,6 @@ if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements,
 		$CountryUsers[] = number_format((((log($UserCount)/log(2))-$CountryMin)/($CountryMax-$CountryMin))*100,2);
 		$Rank[] = round((1-($Key/$Count))*100);
         $CountryUsersNum[] = $UserCount;
-        $RankNum[] = $Key+1;
         
 		if(isset($CountryRegions[$Country])) {
 			foreach($CountryRegions[$Country] as $Region) {
@@ -35,7 +34,7 @@ if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements,
 	for ($i=$CountryMin;$i<=$CountryMax;$i++) {
 		$LogIncrements[] = human_format(pow(2,$i));
 	}
-	$Cache->cache_value('geodistribution',array($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements,$CountryUsersNum,$RankNum),0);
+	$Cache->cache_value('geodistribution',array($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements,$CountryUsersNum),0);
 }
 
 if(!$ClassDistribution = $Cache->get_value('class_distribution')) {
@@ -169,37 +168,28 @@ show_header('Detailed User Statistics');
           
           <img src="http://chart.apis.google.com/chart?cht=map:fixed=14.8,15,45,86&chs=720x360&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
           <br /><br />
-         
-          <? /*
-          <img src="http://chart.apis.google.com/chart?cht=map:fixed=14.8,15,45,86&chs=720x360&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
-          <br /><br />
-          <img src="http://chart.apis.google.com/chart?cht=map:fixed=-11,22,50,160&chs=720x360&chd=t:<?=implode(',',$Rank)?>&chco=FFFFFF,EDEDED,1F0066&chld=<?=implode('|',$Countries)?>&chf=bg,s,CCD6FF" />
-          <br /><br />*/ 
           
-            //rsort($CountryUsers);
-          ?>
           <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,0,31))?>&chxl=1:|<?=implode('|',array_slice($Countries,0,31))?>|0:|<?=implode('|',$LogIncrements)?>&amp;chf=bg,s,FFFFFF00" />
           <br /><br />
           <table style="width:90%;margin: 0px auto;"> 
 <?
     $len = count($Countries);
-    $numrows = ceil($len/5);
+    $numrows = ceil($len/6);
 	for ($i=0;$i<$numrows;$i++) { 
 ?>
               <tr> 
 <?
-        for ($k=0;$k<4;$k++) {
+        for ($k=0;$k<6;$k++) {
             $index = $i+($k*$numrows);
             if ($index >= $len) break;
-            if ($index == $len-1 && $k<3) $colspan = ' colspan="'.(4-$k).'"';
+            if ($index == $len-1 && $k<5) $colspan = ' colspan="'.(6-$k).'"';
             else $colspan='';
 ?>
-                  <td<?=$colspan?> style="width:150px; padding: 0px 10px;">
-                      <table style="width:150px; border:1px solid #c4c4c4;<?if ($i<$numrows-1) echo 'border-bottom: none';?>">
+                  <td<?=$colspan?> style="width:100px; padding: 0px 10px;">
+                      <table style="width:100px; border:1px solid #c4c4c4;<?if ($i<$numrows-1) echo 'border-bottom: none';?>">
                           <tr>
                               <td class="rowa" style="width:50px"><?=$Countries[$index]?></td>
-                              <td class="rowb" style="width:50px"><?=$RankNum[$index]?></td>
-                              <td class="rowa" style="width:50px"><?=$CountryUsersNum[$index]?></td>
+                              <td class="rowb" style="width:50px"><?=$CountryUsersNum[$index]?></td>
                           </tr>
                       </table>
                   </td>
