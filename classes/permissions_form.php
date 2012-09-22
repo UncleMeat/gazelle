@@ -282,10 +282,11 @@ function permissions_form(){ ?>
 				<td>
 			
 					<? display_perm('torrents_edit', 'Can edit any torrent'); ?>
-                                      <? display_perm('torrents_review', 'Can mark torrents for deletion.'); ?>
-                                      <? display_perm('torrents_review_override', 'Can overide ongoing marked for deletion process.'); ?>
-                                      <? display_perm('torrents_review_manage', 'Can set site options for marked for deletion list.'); ?>
-
+                                    <? display_perm('torrents_review', 'Can mark torrents for deletion.'); ?>
+                                    <? display_perm('torrents_review_override', 'Can overide ongoing marked for deletion process.'); ?>
+                                    <? display_perm('torrents_review_manage', 'Can set site options for marked for deletion list.'); ?>
+                                    <? display_perm('torrents_download_override', 'Can download torrents that are marked for deletion.'); ?>
+ 
 					<? display_perm('torrents_delete', 'Can delete torrents'); ?>
 					<? display_perm('torrents_delete_fast', 'Can delete more than 3 torrents at a time.'); ?>
 					<? display_perm('torrents_freeleech', 'Can make torrents freeleech'); ?>

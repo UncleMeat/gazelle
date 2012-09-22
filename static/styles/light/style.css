@@ -940,7 +940,7 @@ table.boxstat td:first-child {
 }
 
 .middle_column table {
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .middle_column .torrent_table {

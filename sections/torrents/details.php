@@ -142,7 +142,7 @@ if(check_perms('torrents_review')){
 		<div class="redbar warning">
                 <strong>Status:&nbsp;Warned&nbsp; (<?=$StatusDescription?>)</strong>
             </div>
-            <div class="pad"><strong>This torrent has been marked for deletion and will be automatically deleted unless the uploader fixes it. Download at your own risk.</strong><span style="float:right;"><?=time_diff($KillTime)?></span></div>
+            <div class="pad"><strong>This torrent has been marked for deletion and will be automatically deleted unless the uploader fixes it. </strong><span style="float:right;"><?=time_diff($KillTime)?></span></div>
 <?      if ($UserID == $LoggedUser['ID']) { // if the uploader is looking at the warning message 
             if ($Status == 'Warned') { ?>
                 <div id="user_message" class="center">If you have fixed this upload make sure you have told the staff: <a class="button greenButton" onclick="Send_Okay_Message(<?=$GroupID?>,<?=($ConvID?$ConvID:0)?>);" title="send staff a message">By clicking here</a></div>
@@ -153,7 +153,7 @@ if(check_perms('torrents_review')){
 ?>
 	</div>
 <?
-    } 
+    }
       $AlertClass = ' hidden';
 	if(isset($_GET['did']) && is_number($_GET['did'])) {
           if($_GET['did'] == 1) {
@@ -243,6 +243,7 @@ if(check_perms('torrents_review')){
 <?		} ?>
             <br style="clear:both" />
       </div>
+      <br/>
 <?
 
 // For staff draw the tools section

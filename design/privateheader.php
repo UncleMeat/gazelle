@@ -103,10 +103,21 @@ if ($Mobile) { ?>
                 </span>
             </ul>  */
                
+//if($LoggedUser['personal_freeleech'] >= sqltime()) {
                
-               
-if($LoggedUser['personal_freeleech'] >= sqltime()) {
-    $PFL = 'PFL for '.  time_diff($LoggedUser['personal_freeleech'],2,true,false,0);
+$TimeStampNow = time();
+$PFLTimeStamp = strtotime($LoggedUser['personal_freeleech']);
+
+if($PFLTimeStamp >= $TimeStampNow) {
+     
+    if (($PFLTimeStamp - $TimeStampNow) < (365*24*3600)) {
+        $TimeAgo = time_diff($LoggedUser['personal_freeleech'],2,false,false,0); 
+        $PFL = "Personal Freeleech for $TimeAgo";
+    } else {
+        $PFL = "Personal Freeleech";
+    }
+    $TimeNow = date('M d Y, H:i', $PFLTimeStamp - (int) $LoggedUser['TimeOffset']);
+    $PFL = '<span class="time" title="Personal Freeleech until '.$TimeNow.'">'.$PFL.'</span>';    
 }
 
 

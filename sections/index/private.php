@@ -138,6 +138,7 @@ for($i = 0; $i < $Limit; $i++) {
                 <div class="head colhead_dark">Stats</div>
                 <div class="box">
 			<ul class="stats nobullet">
+				<li class="center"> [<a href="stats.php?action=users">User Graphs</a>] &nbsp; [<a href="stats.php?action=site">Site History</a>]</li>
 <? if (USER_LIMIT>0) { ?>
 				<li>Maximum Users: <?=number_format(USER_LIMIT) ?></li>
 
@@ -151,7 +152,7 @@ if(($UserCount = $Cache->get_value('stats_user_count')) === false){
 }
 $UserCount = (int)$UserCount;
 ?>
-				<li>Enabled Users: <?=number_format($UserCount)?> [<a href="stats.php?action=users">Details</a>]</li>
+				<li>Enabled Users: <?=number_format($UserCount)?></li>
 <?
 
 if (($UserStats = $Cache->get_value('stats_users')) === false) {
