@@ -331,15 +331,16 @@ foreach($NewCategories as $Cat) {
             $NumComments = get_num_comments($GroupID);
         
             $row = $row==='b'?'a':'b';
+            $IsMarkedForDeletion = $Torrent['Status'] == 'Warned' || $Torrent['Status'] == 'Pending';
 ?>
-		<tr class="torrent row<?=$row?>">
+		<tr class="torrent <?=($IsMarkedForDeletion?'redbar':"row$row")?>">
 			<td class="center cats_col">
                     <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
 			<div title="<?=$NewCategories[$NewCategoryID]['tag']?>"><img src="<?=$CatImg?>" />
                         </div> 
 			</td>
 			<td>
-                        <? print_torrent_status($TorrentID);  ?> 
+                        <? print_torrent_status($TorrentID, $Torrent['Status']);  ?> 
 				<?=$DisplayName?>
 				<br />
                                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                                

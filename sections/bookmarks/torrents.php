@@ -105,14 +105,16 @@ foreach ($TorrentList as $GroupID=>$Group) {
         }
         
 	  $AddExtra = torrent_info($Torrent, $TorrentID, $UserID);
+        $row = ($row == 'a'? 'b' : 'a');
+        $IsMarkedForDeletion = $Torrent['Status'] == 'Warned' || $Torrent['Status'] == 'Pending';
 ?>
-<tr class="torrent" id="group_<?=$GroupID?>">
+<tr class="torrent <?=($IsMarkedForDeletion?'redbar':"row$row")?>" id="group_<?=$GroupID?>">
         <td class="center">
                     <? $CatImg = 'static/common/caticons/' . $NewCategories[$NewCategoryID]['image']; ?>
                 <img src="<?= $CatImg ?>" alt="<?= $NewCategories[$NewCategoryID]['tag'] ?>" title="<?= $NewCategories[$NewCategoryID]['tag'] ?>"/>
         </td>
         <td>
-                    <? print_torrent_status($TorrentID); ?>
+                    <? print_torrent_status($TorrentID, $Torrent['Status']); ?>
              
                 <strong><?=$DisplayName?></strong> <?=$AddExtra?>
                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                

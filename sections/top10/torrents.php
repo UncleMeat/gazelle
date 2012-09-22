@@ -117,11 +117,18 @@ $BaseQuery = "SELECT
       t.UserID,
       u.Username, 
       t.FreeTorrent, 
-      t.double_seed
+      t.double_seed,
+      tr.Status
 	FROM torrents AS t
 	LEFT JOIN torrents_group AS g ON g.ID = t.GroupID
+      LEFT JOIN torrents_reviews AS tr ON tr.GroupID=t.GroupID
       LEFT JOIN users_main AS u ON u.ID = t.UserID ";
-	
+      
+if (!empty($Where)) $Where .= ' AND';
+$Where .= ' (tr.Time IS NULL OR tr.Time=(SELECT MAX(torrents_reviews.Time) 
+                                                              FROM torrents_reviews 
+                                                              WHERE torrents_reviews.GroupID=t.GroupID)) ';
+
 if($Details=='all' || $Details=='day') {
 	if (!$TopTorrentsActiveLastDay = $Cache->get_value('top10tor_day_'.$Limit.$WhereSum)) {
 		$DayAgo = time_minus(86400);
@@ -270,10 +277,10 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 
 	foreach ($Details as $Detail) {
 		list($TorrentID,$GroupID,$GroupName, $NewCategoryID, $TorrentTags,
-			$Snatched,$Seeders,$Leechers,$Data,$Size,$UploaderID,$UploaderName) = $Detail;
+			$Snatched,$Seeders,$Leechers,$Data,$Size,$UploaderID,$UploaderName,,,$Status) = $Detail;
 		// highlight every other row
 		$Rank++;
-		$Highlight = ($Rank % 2 ? 'b' : 'a');
+		$row = ($Rank % 2 ? 'b' : 'a');
 
 		// generate torrent's title
 		$DisplayName = "<a href='torrents.php?id=$GroupID&amp;torrentid=$TorrentID'  title='View Torrent'>$GroupName</a>";
@@ -293,9 +300,10 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 		}
  
 	  $AddExtra = torrent_info($Detail, $TorrentID, $LoggedUser['ID']);
+        $IsMarkedForDeletion = $Status == 'Warned' || $Status == 'Pending';
 		// print row
 ?>
-	<tr class="torrent row<?=$Highlight?>">
+	<tr class="torrent <?=($IsMarkedForDeletion?'redbar':"row$row")?>">
 		<td style="padding:8px;text-align:center;"><strong><?=$Rank?></strong></td>
 		<td class="center cats_col">
                     <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
@@ -303,7 +311,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
                 </td>
 		<td>
             <? 
-                    print_torrent_status($TorrentID);  /* 
+                    print_torrent_status($TorrentID,$Status);  /* 
                   <span>[<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>]</span>
 			 */ ?>
                   <strong><?=$DisplayName?></strong> <?=$AddExtra?>

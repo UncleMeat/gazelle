@@ -114,6 +114,8 @@
               'torrents_review' => 'Can mark torrents for deletion.',
               'torrents_review_override' => 'Can overide ongoing marked for deletion process.',
               'torrents_review_manage' => 'Can set site options for marked for deletion list.',
+              'torrents_download_override' => 'Can download torrents that are marked for deletion.',
+     
 	'torrents_delete' => 'Can delete torrents.',
 	'torrents_delete_fast' => 'Can delete more than 3 torrents at a time.',
 	'torrents_freeleech' => 'Can make torrents freeleech.',

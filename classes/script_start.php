@@ -2183,10 +2183,12 @@ function get_num_comments($GroupID){
     return $Results;
 }
 
-function print_torrent_status($TorrentID) {
+function print_torrent_status($TorrentID, $MFDStatus) {
     global $TorrentUserStatus, $LoggedUser;
+    
+        if (check_perms('torrents_download_override')  || !$MFDStatus ||  $MFDStatus == 'Okay' ) {
+            
 ?>
-
                 <span>
                     <? if (empty($TorrentUserStatus[$TorrentID])) { ?>
                         <a href="torrents.php?action=download&amp;id=<?= $TorrentID ?>&amp;authkey=<?= $LoggedUser['AuthKey'] ?>&amp;torrent_pass=<?= $LoggedUser['torrent_pass'] ?>" title="Download">
@@ -2204,6 +2206,21 @@ function print_torrent_status($TorrentID) {
                     <? } ?>
                 </span>
 <?
+        } else { 
+?>
+                <span>
+                    <? if (empty($TorrentUserStatus[$TorrentID])) { ?>
+                              
+                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') { ?>
+                            <span class="icon icon_disk_seed" title="Warning: You are seeding a torrent that is marked for deletion"></span>                  
+                    <? } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') { ?>
+                            <span class="icon icon_disk_leech" title="Warning: You are seeding a torrent that is marked for deletion"></span> 
+                    <? } ?>
+                </span>
+<?
+        }
+        
+        
 }
 
 // Echo data sent in a form, typically a text area

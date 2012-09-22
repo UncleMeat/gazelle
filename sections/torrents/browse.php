@@ -205,18 +205,15 @@ if (!$AdvancedSearch) {
     if (!empty($_GET['taglist'])) {
         // do synomyn replacement and skip <=2 length tags
         $TagList = explode(' ', $_GET['taglist']);
-        //$TagListEx = array();
+        
         foreach ($TagList as $Key => &$Tag) {
             $Tag = strtolower(trim($Tag)) ;
            
             if ( ($Tag[0] != '-' && strlen($Tag)>= 2) || strlen($Tag)>= 3 ) {
                 if ($Tag[0] == '-') {
                     $Tag = '-'. get_tag_synonym( substr($Tag, 1), false);
-                    //$TagListEx[] = '!' . $SS->EscapeString(substr($Tag, 1));
-                    //unset($TagList[$Key]);
                 } else {
                     $Tag = get_tag_synonym($Tag, false);
-                    //$Tag = $SS->EscapeString($Tag);
                 }
             } else {
                 unset($TagList[$Key]);
@@ -224,7 +221,7 @@ if (!$AdvancedSearch) {
         }
         unset($Tag);
         $TagList = implode(' ', $TagList);
-        $TagList = trim(str_replace('.', '_', $TagList));       // $_GET['taglist']));
+        $TagList = trim(str_replace('.', '_', $TagList));       
         $TagList = preg_replace(array('/ -/','/ not /i', '/ or /i', '/ and /i'), array(' !', ' -', ' | ', ' & '), $TagList);
         $TagList = trim($TagList);
         
@@ -591,7 +588,8 @@ $Bookmarks = all_bookmarks('torrent');
     $row='a';
     $lastday = 0;
     foreach ($Results as $GroupID => $Data) {   
-        list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, $NewCategoryID, $SearchText, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
+        list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, 
+                $NewCategoryID, $SearchText, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 
         if ($LoggedUser['SplitByDays'] && $lastday !== date('j', $GroupTime - $LoggedUser['TimeOffset']) ) {
 ?>
@@ -634,7 +632,7 @@ $Bookmarks = all_bookmarks('torrent');
                 <div title="<?= $NewCategories[$NewCategoryID]['tag'] ?>"><a href="torrents.php?filter_cat[<?=$NewCategoryID?>]=1"><img src="<?= $CatImg ?>" /></a></div>
             </td>
             <td>
-                    <? print_torrent_status($TorrentID); ?>
+                    <? print_torrent_status($TorrentID, $Data['Status']); ?>
 
 <?                if (check_perms('torrents_review') && $Data['Status'] == 'Okay') { 
                         echo  '&nbsp;'.get_status_icon('Okay');
