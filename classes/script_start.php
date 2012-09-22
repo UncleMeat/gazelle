@@ -800,12 +800,12 @@ function geoip($IP) {
     }
     $Long = ip2unsigned($IP);
     if (!$Long || $Long == 2130706433) { // No need to check cc for 127.0.0.1
-        return '?';
+        return '??';
     }
     global $DB;
     $DB->query("SELECT EndIP,Code FROM geoip_country WHERE $Long >= StartIP ORDER BY StartIP DESC LIMIT 1");
     if ((!list($EndIP, $Country) = $DB->next_record()) || $EndIP < $Long) {
-        $Country = '?';
+        $Country = '??';
     }
     $IPs[$IP] = $Country;
     return $Country;
@@ -829,7 +829,7 @@ function old_geoip($IP) {
             if (strlen($Return) == 2 && !is_number($Return)) {
                 $Country = strtoupper($Return);
             } else {
-                $Country = '?';
+                $Country = '??';
             }
         }
         if ($Country == 'UK') {

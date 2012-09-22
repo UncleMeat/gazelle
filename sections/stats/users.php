@@ -20,7 +20,9 @@ if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements)
 		$Countries[] = $Country;
 		$CountryUsers[] = number_format((((log($UserCount)/log(2))-$CountryMin)/($CountryMax-$CountryMin))*100,2);
 		$Rank[] = round((1-($Key/$Count))*100);
-
+        $CountryUsersNum[] = $UserCount;
+        $RankNum[] = $Key+1;
+        
 		if(isset($CountryRegions[$Country])) {
 			foreach($CountryRegions[$Country] as $Region) {
 				$Countries[] = $Region;
@@ -30,10 +32,8 @@ if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements)
 	}
 	reset($Rank);
 	
-    $j=0;
 	for ($i=$CountryMin;$i<=$CountryMax;$i++) {
-        $LogIncrements[$j][] = human_format(pow(2,$i));
-        if ( $i % 30 == 0) $j++;
+		$LogIncrements[] = human_format(pow(2,$i));
 	}
 	$Cache->cache_value('geodistribution',array($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements),0);
 }
@@ -123,9 +123,7 @@ if (!list($Labels,$InFlow,$OutFlow,$Max) = $Cache->get_value('users_timeline')) 
 	$Cache->cache_value('users_timeline',array($Labels,$InFlow,$OutFlow,$Max),mktime(0,0,0,date('n')+1,2)); //Tested: fine for dec -> jan
 }
 //End timeline generation
-
-
-
+ 
 show_header('Detailed User Statistics');
 
 ?>
@@ -180,21 +178,40 @@ show_header('Detailed User Statistics');
           
             //rsort($CountryUsers);
           ?>
-          <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,0,30))?>&chxl=1:|<?=implode('|',array_slice($Countries,0,30))?>|0:|<?=implode('|',$LogIncrements[0])?>&amp;chf=bg,s,FFFFFF00" />
-          <br /><br />  
-          <?  
-    if (count($CountryUsers)>30){ 
-          ?>
-          <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,30,30))?>&chxl=1:|<?=implode('|',array_slice($Countries,30,30))?>|0:|<?=implode('|',$LogIncrements[1])?>&amp;chf=bg,s,FFFFFF00" />
-          <br /><br />  
-          <? 
-    } if (count($CountryUsers)>60){ 
-          ?>
-          <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,60,30))?>&chxl=1:|<?=implode('|',array_slice($Countries,60,30))?>|0:|<?=implode('|',$LogIncrements[2])?>&amp;chf=bg,s,FFFFFF00" />
-          <br /><br />  
-          <? 
-    }
-          ?>
+          <img src="http://chart.apis.google.com/chart?chxt=y,x&chg=0,-1,1,1&chxs=0,h&cht=bvs&chco=76A4FB&chs=880x300&chd=t:<?=implode(',',array_slice($CountryUsers,0,31))?>&chxl=1:|<?=implode('|',array_slice($Countries,0,31))?>|0:|<?=implode('|',$LogIncrements)?>&amp;chf=bg,s,FFFFFF00" />
+          <br /><br />
+          <table style="width:90%;margin: 0px auto;"> 
+<?
+    $len = count($Countries);
+    $numrows = ceil($len/5);
+	for ($i=0;$i<$numrows;$i++) { 
+?>
+              <tr> 
+<?
+        for ($k=0;$k<4;$k++) {
+            $index = $i+($k*$numrows);
+            if ($index >= $len) break;
+            if ($index == $len-1 && $k<3) $colspan = ' colspan="'.(4-$k).'"';
+            else $colspan='';
+?>
+                  <td<?=$colspan?> style="width:150px; padding: 0px 10px;">
+                      <table style="width:150px; border:1px solid #c4c4c4;<?if ($i<$numrows-1) echo 'border-bottom: none';?>">
+                          <tr>
+                              <td class="rowa" style="width:50px"><?=$Countries[$index]?></td>
+                              <td class="rowb" style="width:50px"><?=$RankNum[$index]?></td>
+                              <td class="rowa" style="width:50px"><?=$CountryUsersNum[$index]?></td>
+                          </tr>
+                      </table>
+                  </td>
+<? 
+        }
+?> 
+              </tr>
+<?
+	}
+?>
+          </table>
+          <br /><br />
           <p class="small">GeoLite data used under Creative Commons Attribution-ShareAlike 3.0 Unported License<br/>GeoLite data from MaxMind, available from http://www.maxmind.com</p>
     </div>
 </div>
