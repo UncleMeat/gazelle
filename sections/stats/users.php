@@ -1,5 +1,5 @@
 <?
-if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements) = $Cache->get_value('geodistribution')) {
+if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements,$CountryUsersNum,$RankNum) = $Cache->get_value('geodistribution')) {
 	include_once(SERVER_ROOT.'/classes/class_charts.php');
 	$DB->query('SELECT Code, Users FROM users_geodistribution ORDER BY Users DESC');
 	$Data = $DB->to_array();
@@ -35,7 +35,7 @@ if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements)
 	for ($i=$CountryMin;$i<=$CountryMax;$i++) {
 		$LogIncrements[] = human_format(pow(2,$i));
 	}
-	$Cache->cache_value('geodistribution',array($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements),0);
+	$Cache->cache_value('geodistribution',array($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements,$CountryUsersNum,$RankNum),0);
 }
 
 if(!$ClassDistribution = $Cache->get_value('class_distribution')) {
