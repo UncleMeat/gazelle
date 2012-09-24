@@ -2,24 +2,19 @@
 
 if(!check_perms('admin_manage_categories')){ error(403); }
 
-show_header('Manage news','bbcode');
 $images = scandir(SERVER_ROOT.'/static/common/caticons', 0);
 $images= array_diff($images, array('.','..'));
 
-$DB->query("SELECT
-        id,
-        name,
-        image,
-        tag
-        FROM categories");
+show_header('Manage Categories','jquery');
+
 ?>
 
-<script src="/static/functions/jquery.js"></script>
 <script type="text/javascript">//<![CDATA[
 function change_image(display_image, cat_image) {
-    $(display_image).html('<img src="/static/common/caticons/'+$(cat_image).val()+'"/>');
+    jQuery(display_image).html('<img src="/static/common/caticons/'+jQuery(cat_image).val()+'"/>');
 }
 //]]></script>
+
 <div class="thin">
 <h2>Categories</h2>
 <p><strong>Observe!</strong> You must upload new images to the <?=SERVER_ROOT?>/static/common/caticons/ folder before you can use it here.</p><br />
@@ -70,7 +65,15 @@ function change_image(display_image, cat_image) {
         <td width="39%">Tag</td>
         <td width="13%">Submit</td>
 </tr>
-<?while(list($id, $name, $image, $tag) = $DB->next_record()) { ?>        
+<?
+$DB->query("SELECT
+        id,
+        name,
+        image,
+        tag
+        FROM categories");
+
+while(list($id, $name, $image, $tag) = $DB->next_record()) { ?>        
 <tr>
         <form action="tools.php" method="post">
             <td>
@@ -80,11 +83,13 @@ function change_image(display_image, cat_image) {
                 <span id="display_image<?=$id?>">
                     <img src="/static/common/caticons/<?=$image?>" />
                 </span>
-               <span style="float:right"> <select id="cat_image<?=$id?>" name="image" onchange="change_image('#display_image<?=$id?>', '#cat_image<?=$id?>');">
-                <?foreach($images as $key=>$value) {?>
-                    <option value="<?=display_str($value)?>"<?=($image == $value) ? 'selected="selected"' : '';?>><?=$value?></option>
-                <?}?>
-                </select></span>
+                <span style="float:right"> 
+                    <select id="cat_image<?=$id?>" name="image" onchange="change_image('#display_image<?=$id?>', '#cat_image<?=$id?>');">
+                <?      foreach($images as $key=>$value) {?>
+                        <option value="<?=display_str($value)?>"<?=($image == $value) ? 'selected="selected"' : '';?>><?=$value?></option>
+                <?      }?>
+                    </select>
+                </span>
             </td>
             <td>
                 <input type="text" class="medium"  name="name" value="<?=display_str($name)?>" />

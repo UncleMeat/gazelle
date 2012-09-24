@@ -794,7 +794,7 @@ function ip2unsigned($IP) {
 
 // Geolocate an IP address. Two functions - a database one, and a dns one.
 function geoip($IP) {
-    //static $IPs = array();
+    static $IPs = array();
     if (isset($IPs[$IP])) {
         return $IPs[$IP];
     }
@@ -882,12 +882,20 @@ function get_cc($IP) {
     return '<span id="cc_' . $ID . '">Resolving CC...<script type="text/javascript">ajax.get(\'tools.php?action=get_cc&ip=' . $IP . '\',function(cc){$(\'#cc_' . $ID . '\').raw().innerHTML=cc;});</script></span>';
 }
 
+function display_ip($IP, $cc) {
+    //$cc = geoip($IP);
+    $Line = display_str($IP) . ' (' . $cc . ') ' . '<img style="margin-bottom:-3px;" src="static/common/flags/iso16/'. strtolower($cc).'.png" alt="" /> ';
+    $Line .= '[<a href="user.php?action=search&amp;ip_history=on&amp;ip=' . display_str($IP) . '&amp;matchtype=strict" title="Search">S</a>]';
+
+    return $Line;
+}
+/*
 function display_ip($IP) {
     $Line = display_str($IP) . ' (' . get_cc($IP) . ') ';
     $Line .= '[<a href="user.php?action=search&amp;ip_history=on&amp;ip=' . display_str($IP) . '&amp;matchtype=strict" title="Search">S</a>]';
 
     return $Line;
-}
+}*/
 
 function logout() {
     global $SessionID, $LoggedUser, $DB, $Cache;

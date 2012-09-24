@@ -21,13 +21,15 @@ $DB->query("SELECT
 			i.StyleURL,
 			i.SiteOptions,
 			i.UnseededAlerts,
-                  i.TimeZone
+                  i.TimeZone,
+            m.Flag
 			FROM users_main AS m
 			JOIN users_info AS i ON i.UserID = m.ID
 			LEFT JOIN permissions AS p ON p.ID=m.PermissionID
 			WHERE m.ID = '".db_string($UserID)."'");
 
-list($Username,$Email,$IRCKey,$Paranoia,$Signature,$PermissionID,$CustomPermissions,$Info,$Avatar,$Country,$StyleID,$StyleURL,$SiteOptions,$UnseededAlerts,$TimeZone)=$DB->next_record(MYSQLI_NUM, array(3,6,12));
+list($Username,$Email,$IRCKey,$Paranoia,$Signature,$PermissionID,$CustomPermissions,$Info,$Avatar,$Country,
+        $StyleID,$StyleURL,$SiteOptions,$UnseededAlerts,$TimeZone,$flag)=$DB->next_record(MYSQLI_NUM, array(3,6,12));
 
 $Permissions = get_permissions($PermissionID);
 list($Class,$PermissionValues,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight)=array_values($Permissions);
@@ -82,6 +84,9 @@ function format_offset($offset) {
 }
 
  
+$flags = scandir(SERVER_ROOT.'/static/common/flags/64', 0);
+$flags= array_diff($flags, array('.','..'));
+
 
 $DB->query("SELECT COUNT(x.uid) FROM xbt_snatched AS x INNER JOIN torrents AS t ON t.ID=x.fid WHERE x.uid='$UserID'");
 list($Snatched) = $DB->next_record();
@@ -97,6 +102,11 @@ $Text = new TEXT;
 show_header($Username.' > Settings','user,validate,bbcode');
 echo $Val->GenerateJS('userform');
 ?>
+<script type="text/javascript">//<![CDATA[
+function change_flag() {
+    $('#flag_image').raw().innerHTML='<img src="/static/common/flags/64/'+$('#flag').raw().value+'.png"/>';
+}
+//]]></script>
 <div class="thin">
     <h2>User Settings</h2>
 	<div class="head"><?=format_username($UserID,$Username)?> &gt; Settings</div>
@@ -317,6 +327,7 @@ echo $Val->GenerateJS('userform');
 					<input type="submit" value="Save Profile" title="Save all changes" />
 				</td>
 			</tr>
+            
 			<tr class="colhead">
 				<td colspan="2">
 					<strong>User info</strong>
@@ -328,6 +339,24 @@ echo $Val->GenerateJS('userform');
 					<input class="long" type="text" name="avatar" id="avatar" value="<?=display_str($Avatar)?>" />
 					<p class="min_padding">Maximum Size: <?=$MaxAvatarWidth?>x<?=$MaxAvatarHeight?> pixels (will be resized if necessary)</p>
 				</td>
+			</tr>
+			<tr>
+				<td class="label"><strong>Flag</strong></td>
+				<td style="">
+                    <span id="flag_image" >
+                        <img src="/static/common/flags/64/<?=$flag?>.png" />
+                    </span>
+                    <div style="display:inline-block;vertical-align: top;"> 
+                        <select id="flag" name="flag" onchange="change_flag();" style="margin-top: 25px">
+                            <option value="" <?=($flag == '') ? 'selected="selected"' : '';?>>none</option>
+                   <?       foreach($flags as $value) {  
+                                $value = substr($value, 0, strlen($value)-4  );
+                    ?>
+                            <option value="<?=display_str($value)?>" <?=($flag == $value) ? 'selected="selected"' : '';?>><?=$value?></option>
+                    <?      }  ?>
+                        </select>
+                    </div>
+                </td>
 			</tr>
 			<tr>
 				<td class="label"><strong>Email</strong></td>

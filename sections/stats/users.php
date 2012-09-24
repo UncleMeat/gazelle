@@ -186,7 +186,7 @@ show_header('Detailed User Statistics');
             else $colspan='';
 ?>
                   <td<?=$colspan?> style="width:100px; padding: 0px 10px;">
-                      <table style="width:100px; border:1px solid #c4c4c4;<?if ($i<$numrows-1) echo 'border-bottom: none';?>">
+                      <table style="width:100px; border:1px solid #c4c4c4;<?if ($i<$numrows-1 || $index == $len-1) echo 'border-bottom: none';?>">
                           <tr>
                               <td class="rowa" style="width:50px"><?=$Countries[$index]?></td>
                               <td class="rowb" style="width:50px"><?=$CountryUsersNum[$index]?></td>

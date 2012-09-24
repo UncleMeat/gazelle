@@ -71,7 +71,8 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		i.SeedHistory,
 		m.SeedHours,
 		m.SeedHoursDaily,
-		m.CreditsDaily
+		m.CreditsDaily,
+            m.Flag
 		FROM users_main AS m
 		JOIN users_info AS i ON i.UserID = m.ID
 		LEFT JOIN users_main AS inviter ON i.Inviter = inviter.ID
@@ -88,7 +89,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
               $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, 
               $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, 
               $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $PersonalFreeLeech, $CommentHash,
-              $BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight, $SeedHistory, $SeedHoursTotal, $SeedHoursDaily, $CreditsDaily) = $DB->next_record(MYSQLI_NUM, array(13));
+              $BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight, $SeedHistory, $SeedHoursTotal, $SeedHoursDaily, $CreditsDaily, $flag) = $DB->next_record(MYSQLI_NUM, array(14));
 
 } else { // Person viewing is a normal user
 	$DB->query("SELECT
@@ -123,7 +124,10 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
                 m.Credits,
                 i.BonusLog,
                 p.MaxAvatarWidth,
-                p.MaxAvatarHeight
+                p.MaxAvatarHeight,
+            i.RatioWatchEnds,
+            i.RatioWatchDownload,
+            m.Flag
 		FROM users_main AS m
 		JOIN users_info AS i ON i.UserID = m.ID
 		LEFT JOIN permissions AS p ON p.ID=m.PermissionID
@@ -138,7 +142,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 	list($Username, $Email, $LastAccess, $IP, $ipcc, $Class, $Uploaded, $Downloaded, $RequiredRatio, $ClassID, $GroupPermID, 
               $Enabled, $Paranoia, $Invites, $CustomTitle, $torrent_pass, $DisableLeech, $JoinDate, $Info, $Avatar, $FLTokens, 
               $Country, $Donor, $Warned, $ForumPosts, $InviterID, $DisableInvites, $InviterName,$BonusCredits,$BonusLog,
-              $MaxAvatarWidth,$MaxAvatarHeight, $RatioWatchEnds, $RatioWatchDownload) = $DB->next_record(MYSQLI_NUM, array(11));
+              $MaxAvatarWidth,$MaxAvatarHeight, $RatioWatchEnds, $RatioWatchDownload, $flag) = $DB->next_record(MYSQLI_NUM, array(12));
 }
  
 
@@ -150,13 +154,13 @@ if(check_perms('site_proxy_images') && !empty($CustomTitle)) {
 																	}, $CustomTitle);
 }
 
-                
+/*      
 // mifune: auto set if we have an ip to work with and data is missing
-if(!$ipcc && $IP) {
+if((!$ipcc || $ipcc=='?' || $ipcc=='??') && $IP) {
     $ipcc = geoip($IP);
     $DB->query("UPDATE users_main SET ipcc='$ipcc' WHERE ID='$UserID'");
-}
-      
+} */
+
 $Paranoia = unserialize($Paranoia);
 if(!is_array($Paranoia)) {
 	$Paranoia = array();
@@ -249,6 +253,18 @@ if (check_perms('users_mod')) {
                   </div>
             </div>
 <? } ?>
+        
+      
+<?	if ($flag && $flag != '??') { 
+        $flag = '<img src="static/common/flags/64/'.$flag.'.png" alt="'.$flag.'" title="'.$flag.'" />';
+?>
+		<div class="head colhead_dark">Flag</div>
+		<div class="box center">
+			  <?=$flag?> 
+		</div>
+<? } ?>
+                
+                
 		<div class="head colhead_dark">Stats</div>
 		<div class="box">
 			<ul class="stats nobullet">
@@ -371,7 +387,6 @@ $OverallRank = $Rank->overall_score($UploadedRank, $DownloadedRank, $UploadsRank
 	<li>IPs: <?=number_format($IPChanges)?> [<a href="userhistory.php?action=ips&amp;userid=<?=$UserID?>">View</a>]&nbsp;[<a href="userhistory.php?action=ips&amp;userid=<?=$UserID?>&amp;usersonly=1">View Users</a>]</li>
 <?		if (check_perms('users_view_ips',$Class) && check_perms('users_mod',$Class)) { 
 ?>
-      <li>Country: <?=$ipcc?></li>
 	<li>Tracker IPs: <?=number_format($TrackerIPs)?> [<a href="userhistory.php?action=tracker_ips&amp;userid=<?=$UserID?>">View</a>]</li>
 <?		} ?>
 <?
@@ -421,9 +436,9 @@ if($ParanoiaLevel == 0) {
 				</li>
 <?	}
 
-if (check_perms('users_view_ips',$Class)) {
+if (check_perms('users_view_ips',$Class)) { 
 ?>
-				<li>IP: <?=display_ip($IP)?></li>
+				<li>IP: <?=display_ip($IP, $ipcc)?></li>
 				<li>Host: <?=get_host($IP)?></li>
 <?
 }
@@ -1012,7 +1027,7 @@ if (check_perms('users_mod', $Class)) { ?>
 <?	if (check_perms('users_edit_usernames', $Class)) { ?>
 			<tr>
 				<td class="label">Username:</td>
-				<td><input type="text" size="20" name="Username" value="<?=display_str($Username)?>" /></td>
+				<td><input type="text" size="40" name="Username" value="<?=display_str($Username)?>" /></td>
 			</tr>
 <?
 	}
@@ -1095,7 +1110,7 @@ if (check_perms('users_mod', $Class)) { ?>
 				<td class="label">Adjust Upload:</td>
 				<td>
 					<input type="hidden" name="OldUploaded" value="<?=$Uploaded?>" />
-                              <input type="text" size="5" name="adjustupvalue" id="adjustupvalue" value="" onchange="CalculateAdjustUpload('adjustup', document.forms['form'].elements['adjustup'],<?=$Uploaded?>)" title="Use '-' to remove from Upload" /> &nbsp;&nbsp;
+                              <input type="text" size="10" name="adjustupvalue" id="adjustupvalue" value="" onchange="CalculateAdjustUpload('adjustup', document.forms['form'].elements['adjustup'],<?=$Uploaded?>)" title="Use '-' to remove from Upload" /> &nbsp;&nbsp;
                               <input name="adjustup" value="mb" type="radio"  onchange="CalculateAdjustUpload('adjustup', document.forms['form'].elements['adjustup'],<?=$Uploaded?>)" /> MB&nbsp;&nbsp;
                               <input name="adjustup" value="gb" type="radio" onchange="CalculateAdjustUpload('adjustup', document.forms['form'].elements['adjustup'],<?=$Uploaded?>)" checked="checked" /> GB&nbsp;&nbsp;
                               <input name="adjustup" value="tb" type="radio" onchange="CalculateAdjustUpload('adjustup', document.forms['form'].elements['adjustup'],<?=$Uploaded?>)" /> TB
@@ -1109,7 +1124,7 @@ if (check_perms('users_mod', $Class)) { ?>
 				<td>
 					<input type="hidden" name="OldDownloaded" value="<?=$Downloaded?>" />
                               
-                              <input type="text" size="5" name="adjustdownvalue" id="adjustdownvalue" value="" onchange="CalculateAdjustUpload('adjustdown', document.forms['form'].elements['adjustdown'],<?=$Downloaded?>)" title="Use '-' to remove from Download" /> &nbsp;&nbsp;
+                              <input type="text" size="10" name="adjustdownvalue" id="adjustdownvalue" value="" onchange="CalculateAdjustUpload('adjustdown', document.forms['form'].elements['adjustdown'],<?=$Downloaded?>)" title="Use '-' to remove from Download" /> &nbsp;&nbsp;
                               <input name="adjustdown" value="mb" type="radio"  onchange="CalculateAdjustUpload('adjustdown', document.forms['form'].elements['adjustdown'],<?=$Downloaded?>)" /> MB&nbsp;&nbsp;
                               <input name="adjustdown" value="gb" type="radio" onchange="CalculateAdjustUpload('adjustdown', document.forms['form'].elements['adjustdown'],<?=$Downloaded?>)" checked="checked" /> GB&nbsp;&nbsp;
                               <input name="adjustdown" value="tb" type="radio" onchange="CalculateAdjustUpload('adjustdown', document.forms['form'].elements['adjustdown'],<?=$Downloaded?>)" /> TB
@@ -1137,7 +1152,7 @@ if (check_perms('users_mod', $Class)) { ?>
 			<tr>
 				<td class="label">Slots:</td>
 				<td>
-					<input type="text" size="5" name="FLTokens" value="<?=$FLTokens?>" />
+					<input type="text" size="10" name="FLTokens" value="<?=$FLTokens?>" />
 				</td>
 			</tr>
 <?
@@ -1149,7 +1164,7 @@ if (check_perms('users_mod', $Class)) { ?>
 			<tr>
 				<td class="label">Bonus Credits</td>
 				<td>
-					<input type="text" size="5" name="BonusCredits" value="<?=$BonusCredits?>" />
+					<input type="text" size="10" name="BonusCredits" value="<?=$BonusCredits?>" />
 				</td>
 			</tr>
 <?
@@ -1159,7 +1174,7 @@ if (check_perms('users_mod', $Class)) { ?>
 ?>
 			<tr>
 				<td class="label">Invites:</td>
-				<td><input type="text" size="5" name="Invites" value="<?=$Invites?>" /></td>
+				<td><input type="text" size="10" name="Invites" value="<?=$Invites?>" /></td>
 			</tr>
 <?      }
 

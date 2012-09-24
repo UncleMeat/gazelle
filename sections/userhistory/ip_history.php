@@ -111,14 +111,14 @@ foreach($Results as $Index => $Result) {
 ?>
 		<tr class="rowa">
 			<td>
-				<?=$IP?> (<?=get_cc($IP)?>)				<br />
+                <? $cc = geoip($IP);  echo display_ip($IP, $cc)?><br />
 				<?=get_host($IP)?>
 			<?=($HasDupe ? 
 			'<a href="#" onclick="ShowIPs('.$Index.'); return false;">('.count($UserIDs).')</a>' 
 			: '(0)')?></td>
 			<td><?=time_diff($StartTime)?></td>
 			<td><?=time_diff($EndTime)?></td>
-			<td><?//time_diff(strtotime($StartTime), strtotime($EndTime)); ?></td>
+			<td><?=time_diff(strtotime($StartTime), strtotime($EndTime)); ?></td>
 		</tr>
 <?
 	if($HasDupe){
@@ -130,7 +130,7 @@ foreach($Results as $Index => $Result) {
 			<td>&nbsp;&nbsp;&#187;&nbsp;<?=format_username($Val, $Usernames[$Key], $UsersDonor[$Key], $UsersWarned[$Key], $UsersEnabled[$Key] == 2 ? false : true)?></td>
 			<td><?=time_diff($UserStartTimes[$Key])?></td>
 			<td><?=time_diff($UserEndTimes[$Key])?></td>
-			<td><?//time_diff(strtotime($UserStartTimes[$Key]), strtotime($UserEndTimes[$Key])); ?></td>
+			<td><?=time_diff(strtotime($UserStartTimes[$Key]), strtotime($UserEndTimes[$Key])); ?></td>
 		</tr>
 <?
 			

@@ -242,6 +242,7 @@ $Cache->update_row(false, array(
 $Cache->update_row(false, $Options);
 $Cache->commit_transaction(0);
 
+$Flag = (isset($_POST['flag']))? $_POST['flag']:'';
 
 
 $SQL="UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET
@@ -257,6 +258,7 @@ $SQL="UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET
 	i.UnseededAlerts='$UnseededAlerts',
 	m.Email='".db_string($_POST['email'])."',
 	m.IRCKey='".db_string($_POST['irckey'])."',
+	m.Flag='".db_string($Flag)."',
 	m.Signature='".db_string($_POST['signature'])."',";
 
 $SQL .= "m.Paranoia='".db_string(serialize($Paranoia))."'";
