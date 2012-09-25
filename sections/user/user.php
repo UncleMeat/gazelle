@@ -153,13 +153,7 @@ if(check_perms('site_proxy_images') && !empty($CustomTitle)) {
 																		return 'src='.$Matches[1].'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?c=1&amp;i='.urlencode($Matches[2]).$Matches[3];
 																	}, $CustomTitle);
 }
-
-/*      
-// mifune: auto set if we have an ip to work with and data is missing
-if((!$ipcc || $ipcc=='?' || $ipcc=='??') && $IP) {
-    $ipcc = geoip($IP);
-    $DB->query("UPDATE users_main SET ipcc='$ipcc' WHERE ID='$UserID'");
-} */
+ 
 
 $Paranoia = unserialize($Paranoia);
 if(!is_array($Paranoia)) {

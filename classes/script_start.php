@@ -246,7 +246,7 @@ if (isset($LoginCookie)) {
 				('$LoggedUser[ID]', '$NewIP', '" . sqltime() . "')");
 
         $ipcc = geoip($NewIP);
-        $DB->query("UPDATE users_main SET IP='$NewIP', ipcc='" . $ipcc . "' WHERE ID='$LoggedUser[ID]'");
+        $DB->query("UPDATE users_main SET IP='$NewIP', ipcc='$ipcc' WHERE ID='$LoggedUser[ID]'");
         $Cache->begin_transaction('user_info_heavy_' . $LoggedUser['ID']);
         $Cache->update_row(false, array('IP' => $_SERVER['REMOTE_ADDR']));
         $Cache->commit_transaction(0);
@@ -876,20 +876,29 @@ function lookup_ip($IP) {
     }
 }
 
+
+function display_ip($IP, $cc = '?') {
+    global $DB, $Cache;
+    //$cc = geoip($IP);
+    if ($cc=='?') return 'unknown';
+    $country = $Cache->get_value('country_'.$cc);
+    if ($country===false) {
+        $DB->query("SELECT country FROM countries WHERE cc='$cc'");
+        list($country) = $DB->next_record();
+        $Cache->cache_value('country_'.$cc, $country, 0);
+    }
+    $Line = display_str($IP) . ' <span title="'.$country.'">('.$cc.')</span> ' . '<img style="margin-bottom:-3px;" title="'.$country.'" src="static/common/flags/iso16/'. strtolower($cc).'.png" alt="" /> ';
+    $Line .= '[<a href="user.php?action=search&amp;ip_history=on&amp;ip=' . display_str($IP) . '&amp;matchtype=strict" title="Search">S</a>]';
+
+    return $Line;
+}
+/*
 function get_cc($IP) {
     static $ID = 0;
     ++$ID;
     return '<span id="cc_' . $ID . '">Resolving CC...<script type="text/javascript">ajax.get(\'tools.php?action=get_cc&ip=' . $IP . '\',function(cc){$(\'#cc_' . $ID . '\').raw().innerHTML=cc;});</script></span>';
 }
 
-function display_ip($IP, $cc) {
-    //$cc = geoip($IP);
-    $Line = display_str($IP) . ' (' . $cc . ') ' . '<img style="margin-bottom:-3px;" src="static/common/flags/iso16/'. strtolower($cc).'.png" alt="" /> ';
-    $Line .= '[<a href="user.php?action=search&amp;ip_history=on&amp;ip=' . display_str($IP) . '&amp;matchtype=strict" title="Search">S</a>]';
-
-    return $Line;
-}
-/*
 function display_ip($IP) {
     $Line = display_str($IP) . ' (' . get_cc($IP) . ') ';
     $Line .= '[<a href="user.php?action=search&amp;ip_history=on&amp;ip=' . display_str($IP) . '&amp;matchtype=strict" title="Search">S</a>]';

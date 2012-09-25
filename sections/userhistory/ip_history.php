@@ -86,9 +86,9 @@ $Pages=get_pages($Page,$NumResults,IPS_PER_PAGE,9);
         <div class="head">IP history for <a href="/user.php?id=<?=$UserID?>"><?=$Username?></a></div>
         <table>
 		<tr class="colhead">
-			<td>IP address</td>
-			<td>Started</td>
-			<td>Ended</td>
+			<td style="width:20%">IP address</td>
+			<td style="width:30%">Started</td>
+			<td style="width:20%">Ended</td>
 			<td>Elapsed</td>
 		</tr>
 <?
@@ -112,9 +112,9 @@ foreach($Results as $Index => $Result) {
 		<tr class="rowa">
 			<td>
                 <? $cc = geoip($IP);  echo display_ip($IP, $cc)?><br />
-				<?=get_host($IP)?>
+				<?=get_host($IP)?><br />
 			<?=($HasDupe ? 
-			'<a href="#" onclick="ShowIPs('.$Index.'); return false;">('.count($UserIDs).')</a>' 
+			'<a id="toggle'.$Index.'" href="#" onclick="ShowIPs('.$Index.'); return false;">show/hide dupes ('.count($UserIDs).')</a>' 
 			: '(0)')?></td>
 			<td><?=time_diff($StartTime)?></td>
 			<td><?=time_diff($EndTime)?></td>
