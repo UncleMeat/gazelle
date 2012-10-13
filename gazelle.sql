@@ -2448,6 +2448,7 @@ CREATE TABLE IF NOT EXISTS `xbt_files_users` (
   `fid` int(11) NOT NULL,
   `mtime` int(11) NOT NULL,
   `ip` varchar(15) NOT NULL DEFAULT '',
+  `port` int(6) NOT NULL DEFAULT '0',
   PRIMARY KEY (`peer_id`,`fid`),
   KEY `remaining_idx` (`remaining`),
   KEY `fid_idx` (`fid`),
