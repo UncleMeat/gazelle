@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('UTC');
 
-// Main settings
+// Main settings //
 define('SITE_NAME', ''); //The name of your site
 define('NONSSL_SITE_URL', ''); //The FQDN of your site
 define('SSL_SITE_URL', ''); //The FQDN of your site, make this different if you are using a subdomain for ssl
