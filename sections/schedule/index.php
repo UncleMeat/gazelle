@@ -446,9 +446,9 @@ if($Day != next_day() || $_GET['runday']){
 	}
 	
     
-      $DB->query("SELECT COUNT(ID) FROM torrents WHERE Time > '".time_minus(3600*24)."'");
-      list($TorrentCountLastDay) = $DB->next_record();
-      $Cache->cache_value('stats_torrent_count_daily', $TorrentCountLastDay, 0); //inf cache
+    $DB->query("SELECT COUNT(ID) FROM torrents WHERE Time > '".time_minus(3600*24)."'");
+    list($TorrentCountLastDay) = $DB->next_record();
+    $Cache->cache_value('stats_torrent_count_daily', $TorrentCountLastDay, 0); //inf cache
     
       /*
       $DB->query("INSERT INTO users_geodistribution (Code, Users) 
@@ -459,8 +459,14 @@ if($Day != next_day() || $_GET['runday']){
                      ORDER BY Users DESC");
 */
  
+    
+    // -------------- clean up users_connectable_status table
+   
+	$DB->query("DELETE FROM users_connectable_status WHERE Time<'".time() - (3600*24*7)."'");
+    
+    
+    
 	//------------- Ratio requirements
-	
 	
 	$DB->query("DELETE FROM users_torrent_history WHERE Date<date('".sqltime()."'-interval 7 day)+0");
 	$DB->query("TRUNCATE TABLE users_torrent_history_temp;");
