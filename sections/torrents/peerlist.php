@@ -12,6 +12,7 @@ if (!empty($_GET['page']) && is_number($_GET['page'])) {
     $Limit = 100;
 }
 
+/*
 $Result = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 	xu.uid,
 	t.Size,
@@ -27,6 +28,31 @@ $Result = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 	xu.downspeed
 	FROM xbt_files_users AS xu
 	LEFT JOIN users_main AS um ON um.ID=xu.uid
+	JOIN torrents AS t ON t.ID=xu.fid
+	WHERE xu.fid='$TorrentID'
+	AND um.Visible='1'
+	ORDER BY IsSeeder DESC, xu.uploaded DESC
+	LIMIT $Limit");
+ */
+
+
+
+$Result = $DB->query("SELECT SQL_CALC_FOUND_ROWS
+	xu.uid,
+	t.Size,
+	um.Username,
+	xu.active,
+	IF(ucs.Status IS NULL,'1',ucs.Status) AS Status,
+	xu.uploaded,
+	xu.remaining,
+	xu.useragent,
+      IF(xu.remaining=0,1,0) AS IsSeeder,
+	xu.timespent,
+	xu.upspeed,
+	xu.downspeed
+	FROM xbt_files_users AS xu
+	LEFT JOIN users_main AS um ON um.ID=xu.uid
+    LEFT JOIN users_connectable_status AS ucs ON ucs.UserID=xu.uid AND xu.ip=ucs.IP
 	JOIN torrents AS t ON t.ID=xu.fid
 	WHERE xu.fid='$TorrentID'
 	AND um.Visible='1'

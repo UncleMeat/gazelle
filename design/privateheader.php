@@ -183,6 +183,7 @@ if($NewSubscriptions === FALSE) {
 $Alerts = array(); // warning bar (red!)
 $ModBar = array();
  
+/*
 // is user not connectable?
 //$NotConnectable = $Cache->get_value('notconnectable_'.$LoggedUser['ID']);
 //if ($NotConnectable === false) {  /// always generate while we are trying to nail bugs with this
@@ -205,8 +206,30 @@ $ModBar = array();
     }
     //$Cache->cache_value('notconnectable_'.$LoggedUser['ID'], $NotConnectable, 600);
 //}
-if ($NotConnectable=='1'){
-	$Alerts[] = '<a href="articles.php?topic=connectable">You are not connectable!</a>';
+ */
+
+
+//$Connectable = $Cache->get_value('connectable_'.$LoggedUser['ID']);
+//if ($Connectable === false) {  /// always generate while we are trying to nail bugs with this
+    $DB->query("
+        SELECT Status, Time
+          FROM users_connectable_status
+         WHERE UserID = '".$LoggedUser['ID']."'"); 
+ 
+    if($DB->record_count() == 0) {
+        $Connectable = '1';
+    } else {
+        list($Connectable, $TimeConnectable) = $DB->next_record(); 
+    }
+    
+    //$Cache->cache_value('connectable_'.$LoggedUser['ID'], $Connectable, 3600 * 24);
+//}
+ 
+    
+    
+if ($Connectable=='0'){
+	$Alerts[] = '<a href="articles.php?topic=connectable" title="last status check: ' .  
+            time_diff($TimeConnectable,2,false,false,0). '">You are not connectable!</a>';
 }
 
 // News
