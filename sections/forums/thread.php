@@ -401,7 +401,8 @@ if($ThreadInfo['StickyPostID']) {
     // if a sticky post is present then prepend it to the array, (it will not be in the array)
 	array_unshift($Thread, $ThreadInfo['StickyPost']);
       /*  // mifune: I think this fixes sticky posts... if a stickypostID is present it will NOT be in the post list,
-       *  // so afaics it should ALWAYS be prepended to the post list - no point in testing, and why stick it on the end??
+       *  // so afaics it should ALWAYS be prepended to the post list - no point in testing if its the first post...
+       * //   and why stick it on the end??
 	if($ThreadInfo['StickyPostID'] != $Thread[0]['ID']) {
 		array_unshift($Thread, $ThreadInfo['StickyPost']);
 	}
@@ -432,7 +433,7 @@ foreach($Thread as $Key => $Post){
 <? if(!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')){ ?> 
 				- <a href="#quickpost" onclick="Quote('<?=$PostID?>','f<?=$ThreadID?>','<?=$Username?>');">[Quote]</a> 
 <? }
-if (((!$ThreadInfo['IsLocked'] && check_forumperm($ForumID, 'Write')) && ($AuthorID == $LoggedUser['ID'] && (check_perms ('site_edit_own_posts') || time_ago($AddedTime)<USER_EDIT_POST_TIME)) || check_perms('site_moderate_forums'))) { ?>
+if (((!$ThreadInfo['IsLocked'] && check_forumperm($ForumID, 'Write')) && ($AuthorID == $LoggedUser['ID'] && (check_perms ('site_edit_own_posts') || time_ago($AddedTime)<USER_EDIT_POST_TIME || time_ago($EditedTime)<USER_EDIT_POST_TIME)) || check_perms('site_moderate_forums'))) { ?>
 				- <a href="#post<?=$PostID?>" onclick="Edit_Form('<?=$PostID?>','<?=$Key?>');">[Edit]</a> 
 <? }
 if(check_perms('site_admin_forums') && $ThreadInfo['Posts'] > 1) { ?> 

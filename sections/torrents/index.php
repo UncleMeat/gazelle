@@ -298,16 +298,26 @@ if(!empty($_REQUEST['action'])) {
 				tc.Body,
 				tc.AuthorID,
 				tc.GroupID,
-				tc.AddedTime
+				tc.AddedTime,
+				tc.EditedTime
 				FROM torrents_comments AS tc
 				WHERE tc.ID='".db_string($_POST['post'])."'");
-			list($OldBody, $AuthorID,$GroupID,$AddedTime)=$DB->next_record();
+			if ($DB->record_count()==0) { error(404); }
+			list($OldBody, $AuthorID,$GroupID,$AddedTime,$EditedTime)=$DB->next_record();
 			
 			$DB->query("SELECT ceil(COUNT(ID) / ".TORRENT_COMMENTS_PER_PAGE.") AS Page FROM torrents_comments WHERE GroupID = $GroupID AND ID <= $_POST[post]");
 			list($Page) = $DB->next_record();
 			
-			if ($LoggedUser['ID']!=$AuthorID && !check_perms('site_moderate_forums')) { error(404); }
-			if ($DB->record_count()==0) { error(404); }
+			//if ($DB->record_count()==0) { error(404); }
+			//if ($LoggedUser['ID']!=$AuthorID && !check_perms('site_moderate_forums')) { error(404); }
+            if (!check_perms('site_moderate_forums')){ 
+                if ($LoggedUser['ID'] != $AuthorID){
+                    error(403,true);
+                } else if (!check_perms ('site_edit_own_posts') 
+                        && time_ago($AddedTime)>(USER_EDIT_POST_TIME+600)  && time_ago($EditedTime)>(USER_EDIT_POST_TIME+300) ) { // give them an extra 15 mins in the backend because we are nice
+                    error("Sorry - you only have ". date('i\m s\s', USER_EDIT_POST_TIME). "  to edit your comment before it is automatically locked." ,true);
+                } 
+            }
 		
 			// Perform the update
 			$DB->query("UPDATE torrents_comments SET
