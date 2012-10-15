@@ -26,6 +26,7 @@ if(isset($_GET['ip']) && isset($_GET['port'])){
 
 	//Error suppression, ugh.	
 	if(@fsockopen($_GET['ip'], $_GET['port'], $Errno, $Errstr, 20)){
+        // save results to users_connectable_status here ?
 		die('1');     //'Port '.$_GET['port'].' on '.$_GET['ip'].' connected successfully.');
 	} else {
 		die('-1');     //'Port '.$_GET['port'].' on '.$_GET['ip'].' failed to connect.');
