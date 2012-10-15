@@ -484,7 +484,7 @@ if (check_perms('users_mod') || $OwnProfile || !empty($SupportFor)) {
         
 		<?
         // connectable status(es)
-		$DB->query("SELECT IP, Status, Time FROM users_connections_status WHERE UserID = ".$UserID);
+		$DB->query("SELECT IP, Status, Time FROM users_connectable_status WHERE UserID = ".$UserID);
 		while(list($IP, $Status, $TimeChecked) = $DB->next_record()) {
             if ($Status == '1' ) {
                 $color = 'green';
