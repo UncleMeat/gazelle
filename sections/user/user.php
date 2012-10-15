@@ -480,7 +480,25 @@ if (check_perms('users_mod') || $OwnProfile || !empty($SupportFor)) {
 		}
 		echo $Clients;
 		?></li>
-<?
+        
+        
+		<?
+        // connectable status(es)
+		$DB->query("SELECT IP, Status, Time FROM users_connections_status WHERE UserID = ".$UserID);
+		while(list($IP, $Status, $TimeChecked) = $DB->next_record()) {
+            if ($Status == '1' ) {
+                $color = 'green';
+                $show = 'Yes';
+            } else {
+                $color = 'red';
+                $show = 'No';
+            }
+            ?>
+                <li title="status last checked at <?=time_ago($TimeChecked)?>">
+                    Connectable: <span style="color:<?=$color?>;"><?=$show?></span> IP: <?=$IP?>
+                </li>
+            <? 
+		}
 }
 ?>
 			</ul>

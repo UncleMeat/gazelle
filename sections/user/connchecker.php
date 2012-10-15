@@ -1,6 +1,6 @@
 <?
 //TODO: Move to somewhere more appropriate, doesn't really belong under users, tools maybe but we don't have that page publicly accessible.
-
+/*
 if(isset($_GET['ip']) && isset($_GET['port'])){
 	$Octets = explode(".", $_GET['ip']);
 	if(
@@ -32,6 +32,8 @@ if(isset($_GET['ip']) && isset($_GET['port'])){
 		die('-1');     //'Port '.$_GET['port'].' on '.$_GET['ip'].' failed to connect.');
 	}
 }
+*/
+
 
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
@@ -50,7 +52,7 @@ show_header('Connectability Checker');
       </div>
 <?  }   ?>
 	<div class="head">Check IP address and port</div>
-      <form action="javascript:check_ip();" method="get">
+      <form action="javascript:check_ip('<?=$LoggedUser['ID']?>');" method="get">
 		<table>
 			<tr>
 				<td class="label">IP</td>
@@ -70,6 +72,53 @@ show_header('Connectability Checker');
 	<div class="head">results</div>
 	<div class="box pad"><div id="result" class="messagebar checking"></div></div>
 </div>
+
+<script type="text/javascript">
+
+function check_ip(user_id) {
+    var result = $('#result');
+	var intervalid = setInterval("$('#result').raw().innerHTML += '.';",1499);
+    result.remove_class('alert');
+    result.add_class('checking');
+	result.raw().innerHTML = 'Checking.';
+	ajax.get('ajax.php?action=connchecker&ip=' 
+                            + $('#ip').raw().value 
+                            + '&port=' + $('#port').raw().value
+                            + '&userid=' + user_id, function (response) {
+		clearInterval(intervalid);
+        result.remove_class('checking');
+        var x = json.decode(response); 
+        if ( is_array(x)){
+            if ( x[0] == true){
+                
+            } else {
+                result.add_class('alert');
+            }
+            result.raw().innerHTML = x[1];
+        } else {    // error from ajax
+            alert(x);
+        }
+            if(response == '-3') {
+                result.add_class('alert');
+                result.raw().innerHTML = 'Invalid IP';
+            } else if(response == '-2') {
+                result.add_class('alert');
+                result.raw().innerHTML = 'Invalid Port';
+            }else if(response == '-1'){
+                result.add_class('alert');
+                result.raw().innerHTML = 'Port '+$('#port').raw().value+' on '+$('#ip').raw().value+' failed to connect.';
+            }else if(response == '1'){
+                result.raw().innerHTML = 'Port '+$('#port').raw().value+' on '+$('#ip').raw().value+' connected successfully.';
+            }else{
+                result.add_class('alert');
+                result.raw().innerHTML = 'Invalid response: An error occured';
+            }
+	});
+}
+</script>
+
+<?
+/*
 <script type="text/javascript">
 
 function check_ip() {
@@ -98,5 +147,6 @@ function check_ip() {
             }
 	});
 }
-</script>
+</script> */  ?>
+
 <? show_footer(); ?>

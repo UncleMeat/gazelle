@@ -54,10 +54,13 @@ switch ($_GET['action']){
 	case 'stats':
 		require(SERVER_ROOT.'/sections/ajax/stats.php');
 		break;
-        case 'get_smilies':
+    case 'get_smilies':
 		require('get_smilies.php');
 		break;
             
+	case 'connchecker':
+		include('do_conncheck.php');
+		break;
 	
 	// things not yet used on the site
 	case 'torrentgroup':
