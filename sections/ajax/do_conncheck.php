@@ -5,6 +5,7 @@ if(isset($_REQUEST['ip']) && isset($_REQUEST['port']) && isset($_REQUEST['userid
      
     if (!is_number($_REQUEST['userid'])) {
         echo json_encode(array(false, 'UserID is not a number'));
+        die();
     }
     
 	$Octets = explode(".", $_REQUEST['ip']);
@@ -24,11 +25,13 @@ if(isset($_REQUEST['ip']) && isset($_REQUEST['port']) && isset($_REQUEST['userid
 	) {
 		//echo '-3'; //'Invalid IP');
         echo json_encode(array(false, 'Invalid IP'));
+        die();
 	}
 	
 	if (empty($_REQUEST['port']) || !is_number($_REQUEST['port']) || $_REQUEST['port']<1 || $_REQUEST['port']>65535){
 		//echo '-2';    //'Invalid Port');
         echo json_encode(array(false, 'Invalid Port'));
+        die();
 	}
     
     $connresult = @fsockopen($_REQUEST['ip'], $_REQUEST['port'], $Errno, $Errstr, 20) ? '1' : '0';

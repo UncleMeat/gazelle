@@ -1,40 +1,5 @@
 <?
-//TODO: Move to somewhere more appropriate, doesn't really belong under users, tools maybe but we don't have that page publicly accessible.
-/*
-if(isset($_GET['ip']) && isset($_GET['port'])){
-	$Octets = explode(".", $_GET['ip']);
-	if(
-		empty($_GET['ip']) ||
-		!preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $_GET['ip']) ||
-		$Octets[0] < 0 ||
-		$Octets[0] > 255 ||
-		$Octets[1] < 0 ||
-		$Octets[1] > 255 ||
-		$Octets[2] < 0 ||
-		$Octets[2] > 255 ||
-		$Octets[3] < 0 ||
-		$Octets[3] > 255 ||
-		$Octets[0] == 127 ||
-		$Octets[0] == 192
-	) {
-		die('-3'); //'Invalid IP');
-	}
-	
-	if (empty($_GET['port']) || !is_number($_GET['port']) ||  $_GET['port']<1 || $_GET['port']>65535){
-		die('-2');    //'Invalid Port');
-	}
-
-	//Error suppression, ugh.	
-	if(@fsockopen($_GET['ip'], $_GET['port'], $Errno, $Errstr, 20)){
-        // save results to users_connectable_status here ?
-		die('1');     //'Port '.$_GET['port'].' on '.$_GET['ip'].' connected successfully.');
-	} else {
-		die('-1');     //'Port '.$_GET['port'].' on '.$_GET['ip'].' failed to connect.');
-	}
-}
-*/
-
-
+ 
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
 
@@ -89,49 +54,17 @@ function check_ip(user_id) {
         result.remove_class('checking');
         var x = json.decode(response); 
         if ( is_array(x)){
-            if ( x[0] == true){
-                
-            } else {
+            if ( x[0] !== true){
                 result.add_class('alert');
             }
             result.raw().innerHTML = x[1];
         } else {    // error from ajax
-            alert(x);
+            //alert(x);
+            result.add_class('alert');
+            result.raw().innerHTML = 'Invalid response: An error occured';
         } 
 	});
 }
 </script>
-
-<?
-/*
-<script type="text/javascript">
-
-function check_ip() {
-      var result = $('#result');
-	var intervalid = setInterval("$('#result').raw().innerHTML += '.';",1499);
-      result.remove_class('alert');
-      result.add_class('checking');
-	result.raw().innerHTML = 'Checking.';
-	ajax.get('user.php?action=connchecker&ip=' + $('#ip').raw().value + '&port=' + $('#port').raw().value, function (response) {
-		clearInterval(intervalid);
-            result.remove_class('checking');
-            if(response == '-3') {
-                result.add_class('alert');
-                result.raw().innerHTML = 'Invalid IP';
-            } else if(response == '-2') {
-                result.add_class('alert');
-                result.raw().innerHTML = 'Invalid Port';
-            }else if(response == '-1'){
-                result.add_class('alert');
-                result.raw().innerHTML = 'Port '+$('#port').raw().value+' on '+$('#ip').raw().value+' failed to connect.';
-            }else if(response == '1'){
-                result.raw().innerHTML = 'Port '+$('#port').raw().value+' on '+$('#ip').raw().value+' connected successfully.';
-            }else{
-                result.add_class('alert');
-                result.raw().innerHTML = 'Invalid response: An error occured';
-            }
-	});
-}
-</script> */  ?>
 
 <? show_footer(); ?>

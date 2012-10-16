@@ -481,10 +481,9 @@ if (check_perms('users_mod') || $OwnProfile || !empty($SupportFor)) {
 		echo $Clients;
 		?></li>
         
-        
-		<?
+		<li><?
         // connectable status(es)
-		$DB->query("SELECT IP, Status, Time FROM users_connectable_status WHERE UserID = ".$UserID);
+		$DB->query("SELECT IP, Status, Time FROM users_connectable_status WHERE UserID = ".$UserID . " ORDER BY Time DESC");
 		while(list($IP, $Status, $TimeChecked) = $DB->next_record()) {
             if ($Status == '1' ) {
                 $color = 'green';
@@ -494,11 +493,13 @@ if (check_perms('users_mod') || $OwnProfile || !empty($SupportFor)) {
                 $show = 'No';
             }
             ?>
-                <li title="status last checked at <?=time_diff($TimeChecked,2,false,false,0)?>">
+                <span title="status last checked at <?=time_diff($TimeChecked,2,false,false,0)?>">
                     Connectable: <span style="font-weight: bold; color:<?=$color?>;"><?=$show?></span> &nbsp; (IP: <?=$IP?>)
-                </li>
+                </span><br/>
             <? 
 		}
+        ?></li>
+<?
 }
 ?>
 			</ul>

@@ -110,7 +110,7 @@ $PFLTimeStamp = strtotime($LoggedUser['personal_freeleech']);
 
 if($PFLTimeStamp >= $TimeStampNow) {
      
-    if (($PFLTimeStamp - $TimeStampNow) < (365*24*3600)) {
+    if (($PFLTimeStamp - $TimeStampNow) < (28*24*3600)) { // more than 28 days freeleech and the time is only specififed in the tooltip
         $TimeAgo = time_diff($LoggedUser['personal_freeleech'],2,false,false,0); 
         $PFL = "Personal Freeleech for $TimeAgo";
     } else {
@@ -214,7 +214,8 @@ $ModBar = array();
     $DB->query("
         SELECT Status, Time
           FROM users_connectable_status
-         WHERE UserID = '".$LoggedUser['ID']."'"); 
+         WHERE UserID = '$LoggedUser[ID]'
+      ORDER BY Time DESC LIMIT 1"); 
  
     if($DB->record_count() == 0) {
         $Connectable = '1';
