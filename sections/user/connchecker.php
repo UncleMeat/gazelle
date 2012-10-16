@@ -97,22 +97,7 @@ function check_ip(user_id) {
             result.raw().innerHTML = x[1];
         } else {    // error from ajax
             alert(x);
-        }
-            if(response == '-3') {
-                result.add_class('alert');
-                result.raw().innerHTML = 'Invalid IP';
-            } else if(response == '-2') {
-                result.add_class('alert');
-                result.raw().innerHTML = 'Invalid Port';
-            }else if(response == '-1'){
-                result.add_class('alert');
-                result.raw().innerHTML = 'Port '+$('#port').raw().value+' on '+$('#ip').raw().value+' failed to connect.';
-            }else if(response == '1'){
-                result.raw().innerHTML = 'Port '+$('#port').raw().value+' on '+$('#ip').raw().value+' connected successfully.';
-            }else{
-                result.add_class('alert');
-                result.raw().innerHTML = 'Invalid response: An error occured';
-            }
+        } 
 	});
 }
 </script>

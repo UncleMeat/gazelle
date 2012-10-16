@@ -494,8 +494,8 @@ if (check_perms('users_mod') || $OwnProfile || !empty($SupportFor)) {
                 $show = 'No';
             }
             ?>
-                <li title="status last checked at <?=time_ago($TimeChecked)?>">
-                    Connectable: <span style="color:<?=$color?>;"><?=$show?></span> IP: <?=$IP?>
+                <li title="status last checked at <?=time_diff($TimeChecked,2,false,false,0)?>">
+                    Connectable: <span style="font-weight: bold; color:<?=$color?>;"><?=$show?></span> &nbsp; (IP: <?=$IP?>)
                 </li>
             <? 
 		}
