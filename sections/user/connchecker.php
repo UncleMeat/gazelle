@@ -21,7 +21,7 @@ if (isset($_GET['checkuser']) && check_perms('users_mod') ) {
     $Username = $LoggedUser['Username'];
 }
 
-show_header('Connectability Checker');
+show_header('Connectability Checker','bbcode');
 ?>
 <div class="thin">
 	<h2><a href="user.php?id=<?=$LoggedUser['ID']?>"><?=$LoggedUser['Username']?></a> &gt; Connectability Checker</h2>
