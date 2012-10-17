@@ -61,6 +61,9 @@ switch ($_GET['action']){
 	case 'connchecker':
 		include('do_conncheck.php');
 		break;
+	case 'remove_conn_status':
+		include('remove_connstatus.php');
+		break;
 	
 	// things not yet used on the site
 	case 'torrentgroup':

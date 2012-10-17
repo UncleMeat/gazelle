@@ -1,14 +1,19 @@
 
- 
 
 function delete_conn_record(elem_id, user_id, ip) {
-    alert('i will implement this at the weekend! - mifune');
-	 /* TODO: !!!!!!!!!!!!!
-	ajax.get('ajax.php?action=removeconnstatus&ip=' + ip + '&userid=' + user_id, function (response) {
-			$(preview_div).raw().innerHTML = data;
-			$(preview_div).toggle();
-			$('#editor_'+id).toggle();
-	}); */
+ 
+	ajax.get('ajax.php?action=remove_conn_status&ip=' + ip + '&userid=' + user_id, function (response) {
+        var x = json.decode(response); 
+        if ( is_array(x)){
+            if ( x[0] == true){
+               $('#'+elem_id).remove();
+            } else {
+                alert(x[1]);
+            }
+        } else {    // error from ajax
+            alert(x);
+        } 
+	}); 
 }
 
 function Toggle_view(elem_id) {

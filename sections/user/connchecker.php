@@ -8,10 +8,17 @@ $Body=get_article('connchecker');
 
 if (!isset($_GET['checkip'])) $_GET['checkip'] = $_SERVER['REMOTE_ADDR'];
 
-if (isset($_GET['checkuser']) && ( check_perms('users_mod') || !empty($SupportFor) )) {
+if (isset($_GET['checkuser']) && check_perms('users_mod') ) {
     $UserID = $_GET['checkuser'];
+    $DB->query("SELECT Username FROM users_main WHERE ID='$UserID'");
+	if($DB->record_count() == 0) { 
+        $UserID = $LoggedUser['ID'];
+        $Username = $LoggedUser['Username'];
+    } else
+        list($Username) = $DB->next_record();
 } else {
     $UserID = $LoggedUser['ID'];
+    $Username = $LoggedUser['Username'];
 }
 
 show_header('Connectability Checker');
@@ -28,11 +35,15 @@ show_header('Connectability Checker');
       <form action="javascript:check_ip('<?=$UserID?>');" method="get">
 		<table>
 			<tr>
-				<td class="label">IP</td>
+				<td class="label" style="width:80px;">User</td>
+				<td>
+					<input type="text" value="<?=$Username?>" size="20" disabled="disabled" />
+				</td>
+				<td class="label" style="width:80px;">IP</td>
 				<td>
 					<input type="text" id="ip" name="ip" value="<?=$_GET['checkip']?>" size="20" />
 				</td>
-				<td class="label">Port</td>
+				<td class="label" style="width:80px;">Port</td>
 				<td>
 					<input type="text" id="port" name="port" value="<?=$_GET['checkport']?>" size="10" />
 				</td>
