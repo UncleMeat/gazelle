@@ -42,14 +42,16 @@ $Result = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 	t.Size,
 	um.Username,
 	xu.active,
-	IF(ucs.Status IS NULL,'yes',ucs.Status) AS Status,
+	IF(ucs.Status IS NULL,'unset',ucs.Status) AS Status,
 	xu.uploaded,
 	xu.remaining,
 	xu.useragent,
       IF(xu.remaining=0,1,0) AS IsSeeder,
 	xu.timespent,
 	xu.upspeed,
-	xu.downspeed
+	xu.downspeed,
+    ucs.IP,
+    ucs.Port
 	FROM xbt_files_users AS xu
 	LEFT JOIN users_main AS um ON um.ID=xu.uid
     LEFT JOIN users_connectable_status AS ucs ON ucs.UserID=xu.uid AND xu.ip=ucs.IP
@@ -76,8 +78,10 @@ $DB->set_query_id($Result);
             <?
     }
     $LastIsSeeder = -1;
-    while (list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Remaining, $UserAgent, $IsSeeder, $Timespent, $UpSpeed, $DownSpeed) = $DB->next_record()) {
-
+    while (list($PeerUserID, $Size, $Username, $Active, $Connectable, $Uploaded, $Remaining, $UserAgent, 
+            $IsSeeder, $Timespent, $UpSpeed, $DownSpeed, $IP, $Port) = $DB->next_record()) {
+        
+ 
         if ($IsSeeder != $LastIsSeeder) {
             ?>
 
@@ -107,9 +111,18 @@ $DB->set_query_id($Result);
             <td><?= format_username($PeerUserID, $Username) ?></td>
             <td><?= ($Active) ? '<span style="color:green">Yes</span>' : '<span style="color:red">No</span>' ?></td>
 
-            <td><? if ($Connectable=='yes') echo '<span style="color:green">Yes</span>' ;
-                   elseif ($Connectable=='no') echo'<span style="color:red">No</span>';
-                   else echo'<span style="color:darkgrey">?</span>'; ?></td>
+            <td><?
+                if ($Port && (check_perms('users_mod') || $PeerUserID==$LoggedUser['ID'] ) ) {
+                    $link = 'user.php?action=connchecker&checkuser='.$PeerUserID.'checkip='.$IP.'&checkport='.$Port;
+                    if ($Connectable=='yes') echo '<a href="'.$link.'" style="color:green">Yes</a>' ;
+                    elseif ($Connectable=='no') echo'<a href="'.$link.'" style="color:red">No</a>';
+                    else echo'<a href="'.$link.'" style="color:darkgrey">?</a>'; 
+                } else {
+                    if ($Connectable=='yes') echo '<span style="color:green">Yes</span>' ;
+                    elseif ($Connectable=='no') echo'<span style="color:red">No</span>';
+                    else echo'<span style="color:darkgrey">?</span>'; 
+                }
+                   ?></td>
 
             <td><?= get_size($Uploaded) ?></td>
             <td><?= get_size($UpSpeed, 2)?>/s</td>

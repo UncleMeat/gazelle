@@ -238,7 +238,7 @@ $ModBar = array();
 if ($cStatus!=='yes'){
      
     if ($cPort) {
-        $link = ' &nbsp; -> <a href="user.php?action=connchecker&checkip='.$cIP.'&port='.$cPort.'" title="check now">check now</a> <-';
+        $link = ' &nbsp; -> <a href="user.php?action=connchecker&checkip='.$cIP.'&checkport='.$cPort.'" title="check now">check now</a> <-';
         $cPort = " Port:$cPort ";
     } else $link = "";
     

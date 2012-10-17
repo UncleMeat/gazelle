@@ -1,28 +1,8 @@
 
-function check_ip(elem_id, user_id, ip, port) {
-    var result = $('#result');
-	var intervalid = setInterval("$('#result').raw().innerHTML += '.';",499);
-    result.remove_class('alert');
-    result.add_class('checking');
-	result.raw().innerHTML = 'Checking.';
-	ajax.get('ajax.php?action=connchecker&ip=' + ip + '&port=' + port + '&userid=' + user_id, function (response) {
-		clearInterval(intervalid);
-        result.remove_class('checking');
-        var x = json.decode(response); 
-        if ( is_array(x)){
-            if ( x[0] !== true){
-                result.add_class('alert');
-            }
-            result.raw().innerHTML = x[1];
-        } else {    // error from ajax
-            //alert(x);
-            result.add_class('alert');
-            result.raw().innerHTML = 'Invalid response: An error occured';
-        } 
-	});
-}
+ 
 
 function delete_conn_record(elem_id, user_id, ip) {
+    alert('i will implement this at the weekend! - mifune');
 	 /* TODO: !!!!!!!!!!!!!
 	ajax.get('ajax.php?action=removeconnstatus&ip=' + ip + '&userid=' + user_id, function (response) {
 			$(preview_div).raw().innerHTML = data;

@@ -463,11 +463,11 @@ if (check_perms('users_view_invites')) {
 <?
 }
 
-if (!isset($SupportFor)) {
-	$DB->query("SELECT SupportFor FROM users_info WHERE UserID = ".$LoggedUser['ID']);
-	list($SupportFor) = $DB->next_record();
-}
-if (check_perms('users_mod') || $OwnProfile || !empty($SupportFor)) {
+//if (!isset($SupportFor)) {
+	//$DB->query("SELECT SupportFor FROM users_info WHERE UserID = ".$LoggedUser['ID']);
+	//list($SupportFor) = $DB->next_record();
+//}
+if (check_perms('users_mod') || $OwnProfile) {
 	?>
 		<li>Clients: <?
 		$DB->query("SELECT DISTINCT useragent FROM xbt_files_users WHERE uid = ".$UserID);
@@ -485,11 +485,12 @@ if (check_perms('users_mod') || $OwnProfile || !empty($SupportFor)) {
         // connectable status(es)
 		//$DB->query("SELECT IP, Status, Time FROM users_connectable_status WHERE UserID = ".$UserID . " ORDER BY Time DESC");
     $DB->query("
-        SELECT ucs.Status, ucs.IP, xbt.port, ucs.Time
+        SELECT ucs.Status, ucs.IP, xbt.port, Max(ucs.Time)
           FROM users_connectable_status AS ucs
-            LEFT JOIN xbt_files_users AS xbt ON xbt.uid=ucs.UserID AND xbt.ip=ucs.IP AND xbt.Active='1'
+     LEFT JOIN xbt_files_users AS xbt ON xbt.uid=ucs.UserID AND xbt.ip=ucs.IP AND xbt.Active='1'
          WHERE UserID = '$UserID'
-      ORDER BY Time DESC"); 
+      GROUP BY ucs.IP
+      ORDER BY Max(ucs.Time) DESC"); 
     
         $elemid = 0;
 		while(list($Status, $IP, $Port, $TimeChecked) = $DB->next_record()) {
@@ -503,9 +504,9 @@ if (check_perms('users_mod') || $OwnProfile || !empty($SupportFor)) {
             ?>
                 <span id="status<?=$elemid?>" title="status last checked at <?=time_diff($TimeChecked,2,false,false,0)?>">
                     <span style="font-weight: bold; color:<?=$color?>;"><?=$show?></span> &nbsp; (IP: <?=$IP?>)
-                    &nbsp; [<a onclick="delete_conn_record('<?=$elemid?>','<?=$UserID?>','<?=$IP?>')" title="Delete this connectable record">X</a>]
+                    &nbsp; [<a style="cursor: pointer;" onclick="delete_conn_record('<?=$elemid?>','<?=$UserID?>','<?=$IP?>')" title="Delete this connectable record">X</a>]
                     <? if ($Port) { ?>
-                    &nbsp; [<a href="user.php?action=connchecker&checkuser=<?=$UserID?>&checkip=<?=$IP?>&port=<?=$Port?>" title="check now">check</a>]
+                    [<a href="user.php?action=connchecker&checkuser=<?=$UserID?>&checkip=<?=$IP?>&checkport=<?=$Port?>" title="check now">check</a>]
                     <? } ?>
                 </span><br/>
             <? 
