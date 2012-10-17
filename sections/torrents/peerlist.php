@@ -50,8 +50,8 @@ $Result = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 	xu.timespent,
 	xu.upspeed,
 	xu.downspeed,
-    ucs.IP,
-    ucs.Port
+    xu.IP,
+    xu.Port
 	FROM xbt_files_users AS xu
 	LEFT JOIN users_main AS um ON um.ID=xu.uid
     LEFT JOIN users_connectable_status AS ucs ON ucs.UserID=xu.uid AND xu.ip=ucs.IP

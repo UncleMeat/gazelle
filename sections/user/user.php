@@ -494,12 +494,15 @@ if (check_perms('users_mod') || $OwnProfile) {
     
         $elemid = 0;
 		while(list($Status, $IP, $Port, $TimeChecked) = $DB->next_record()) {
-            if ($Status == '1' ) {
+            if ($Status == 'yes' ) {
                 $color = 'green';
                 $show = 'Yes';
-            } else {
+            } elseif ($Status == 'no' ) {
                 $color = 'red';
                 $show = 'No';
+            } else {
+                $color = 'darkgrey';
+                $show = '?';
             }
             ?>
                 <span id="status<?=$elemid?>" title="status last checked at <?=time_diff($TimeChecked,2,false,false,0)?>">
