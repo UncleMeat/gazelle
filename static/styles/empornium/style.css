@@ -497,6 +497,21 @@ li.searchbars {
    text-decoration: none;
 }
 
+
+.bluebar {
+    padding: 2px 40px 2px;
+    background-color: #003875;
+    color: white;
+}
+.bluebar a {
+    color: white;
+    padding: 2px 2px;
+} 
+.bluebar a:hover {
+    color: white;
+   text-decoration: none;
+}
+
 .torusername
 {
     

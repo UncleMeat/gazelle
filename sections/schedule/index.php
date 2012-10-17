@@ -130,8 +130,14 @@ $DB->query("UPDATE users_main AS um
  
                         
 
-//------------Remove inactive peers every 15 minutes-------------------------//
+//------------ record ip's/ports for users and refresh time field for existing status records -------------------------//
 sleep(3);
+$mtime = time();
+$DB->query("INSERT INTO users_connectable_status ( UserID, IP, Time )
+        SELECT uid, ip, '$mtime' FROM xbt_files_users GROUP BY uid, ip
+         ON DUPLICATE KEY UPDATE Time='$mtime'");
+
+//------------Remove inactive peers every 15 minutes-------------------------//
 $DB->query("DELETE FROM xbt_files_users WHERE active='0'");
 
 
@@ -450,19 +456,20 @@ if($Day != next_day() || $_GET['runday']){
     list($TorrentCountLastDay) = $DB->next_record();
     $Cache->cache_value('stats_torrent_count_daily', $TorrentCountLastDay, 0); //inf cache
     
-      /*
+      /*  a join on a function(!?!?) with 100's of 1000's of records is a bad idea....
+       * // this is now done manually as a once in a blue moon thing by iterating thru a loop (code in sandbox)
       $DB->query("INSERT INTO users_geodistribution (Code, Users) 
                        SELECT g.Code, COUNT(u.ID) AS Users 
                          FROM geoip_country AS g JOIN users_main AS u ON INET_ATON(u.IP) BETWEEN g.StartIP AND g.EndIP 
                         WHERE u.Enabled='1' 
                         GROUP BY g.Code 
                      ORDER BY Users DESC");
-*/
+    */
  
     
-    // -------------- clean up users_connectable_status table
+    // -------------- clean up users_connectable_status table - remove values older than 60 days
    
-	$DB->query("DELETE FROM users_connectable_status WHERE Time<'".time() - (3600*24*7)."'");
+	$DB->query("DELETE FROM users_connectable_status WHERE Time<'".time() - (3600*24*60)."'");
     
     
     

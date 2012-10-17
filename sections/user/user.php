@@ -481,10 +481,18 @@ if (check_perms('users_mod') || $OwnProfile || !empty($SupportFor)) {
 		echo $Clients;
 		?></li>
         
-		<li><?
+		<li>Connectable: <br/><?
         // connectable status(es)
-		$DB->query("SELECT IP, Status, Time FROM users_connectable_status WHERE UserID = ".$UserID . " ORDER BY Time DESC");
-		while(list($IP, $Status, $TimeChecked) = $DB->next_record()) {
+		//$DB->query("SELECT IP, Status, Time FROM users_connectable_status WHERE UserID = ".$UserID . " ORDER BY Time DESC");
+    $DB->query("
+        SELECT ucs.Status, ucs.IP, xbt.port, ucs.Time
+          FROM users_connectable_status AS ucs
+            LEFT JOIN xbt_files_users AS xbt ON xbt.uid=ucs.UserID AND xbt.ip=ucs.IP AND xbt.Active='1'
+         WHERE UserID = '$UserID'
+      ORDER BY Time DESC"); 
+    
+        $elemid = 0;
+		while(list($Status, $IP, $Port, $TimeChecked) = $DB->next_record()) {
             if ($Status == '1' ) {
                 $color = 'green';
                 $show = 'Yes';
@@ -493,10 +501,15 @@ if (check_perms('users_mod') || $OwnProfile || !empty($SupportFor)) {
                 $show = 'No';
             }
             ?>
-                <span title="status last checked at <?=time_diff($TimeChecked,2,false,false,0)?>">
-                    Connectable: <span style="font-weight: bold; color:<?=$color?>;"><?=$show?></span> &nbsp; (IP: <?=$IP?>)
+                <span id="status<?=$elemid?>" title="status last checked at <?=time_diff($TimeChecked,2,false,false,0)?>">
+                    <span style="font-weight: bold; color:<?=$color?>;"><?=$show?></span> &nbsp; (IP: <?=$IP?>)
+                    &nbsp; [<a onclick="delete_conn_record('<?=$elemid?>','<?=$UserID?>','<?=$IP?>')" title="Delete this connectable record">X</a>]
+                    <? if ($Port) { ?>
+                    &nbsp; [<a href="user.php?action=connchecker&checkuser=<?=$UserID?>&checkip=<?=$IP?>&port=<?=$Port?>" title="check now">check</a>]
+                    <? } ?>
                 </span><br/>
             <? 
+            $elemid++;
 		}
         ?></li>
 <?

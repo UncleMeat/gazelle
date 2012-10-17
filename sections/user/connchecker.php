@@ -6,6 +6,14 @@ $Text = new TEXT;
  
 $Body=get_article('connchecker');
 
+if (!isset($_GET['checkip'])) $_GET['checkip'] = $_SERVER['REMOTE_ADDR'];
+
+if (isset($_GET['checkuser']) && ( check_perms('users_mod') || !empty($SupportFor) )) {
+    $UserID = $_GET['checkuser'];
+} else {
+    $UserID = $LoggedUser['ID'];
+}
+
 show_header('Connectability Checker');
 ?>
 <div class="thin">
@@ -17,16 +25,16 @@ show_header('Connectability Checker');
       </div>
 <?  }   ?>
 	<div class="head">Check IP address and port</div>
-      <form action="javascript:check_ip('<?=$LoggedUser['ID']?>');" method="get">
+      <form action="javascript:check_ip('<?=$UserID?>');" method="get">
 		<table>
 			<tr>
 				<td class="label">IP</td>
 				<td>
-					<input type="text" id="ip" name="ip" value="<?=$_SERVER['REMOTE_ADDR']?>" size="20" />
+					<input type="text" id="ip" name="ip" value="<?=$_GET['checkip']?>" size="20" />
 				</td>
 				<td class="label">Port</td>
 				<td>
-					<input type="text" id="port" name="port" size="10" />
+					<input type="text" id="port" name="port" value="<?=$_GET['checkport']?>" size="10" />
 				</td>
 				<td>
 					<input type="submit" value="Check" />

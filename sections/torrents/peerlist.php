@@ -42,7 +42,7 @@ $Result = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 	t.Size,
 	um.Username,
 	xu.active,
-	IF(ucs.Status IS NULL,'1',ucs.Status) AS Status,
+	IF(ucs.Status IS NULL,'yes',ucs.Status) AS Status,
 	xu.uploaded,
 	xu.remaining,
 	xu.useragent,
@@ -107,7 +107,9 @@ $DB->set_query_id($Result);
             <td><?= format_username($PeerUserID, $Username) ?></td>
             <td><?= ($Active) ? '<span style="color:green">Yes</span>' : '<span style="color:red">No</span>' ?></td>
 
-            <td><?= ($Connectable) ? '<span style="color:green">Yes</span>' : '<span style="color:red">No</span>' ?></td>
+            <td><? if ($Connectable=='yes') echo '<span style="color:green">Yes</span>' ;
+                   elseif ($Connectable=='no') echo'<span style="color:red">No</span>';
+                   else echo'<span style="color:darkgrey">?</span>'; ?></td>
 
             <td><?= get_size($Uploaded) ?></td>
             <td><?= get_size($UpSpeed, 2)?>/s</td>

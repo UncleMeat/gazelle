@@ -179,7 +179,7 @@ if($NewSubscriptions === FALSE) {
 // Moved alert bar handling to before we draw minor stats to allow showing alert status in links too
 
 //Start handling alert bars
-//$Infos = '';    // array(); // an info alert bar (nicer color)
+$Infos = array(); // an info alert bar (nicer color)
 $Alerts = array(); // warning bar (red!)
 $ModBar = array();
  
@@ -211,26 +211,46 @@ $ModBar = array();
 
 //$Connectable = $Cache->get_value('connectable_'.$LoggedUser['ID']);
 //if ($Connectable === false) {  /// always generate while we are trying to nail bugs with this
+/*
     $DB->query("
         SELECT Status, Time
           FROM users_connectable_status
          WHERE UserID = '$LoggedUser[ID]'
       ORDER BY Time DESC LIMIT 1"); 
- 
+*/
+    $DB->query("
+        SELECT ucs.Status, ucs.IP, xbt.port, ucs.Time
+          FROM users_connectable_status AS ucs
+            LEFT JOIN xbt_files_users AS xbt ON xbt.uid=ucs.UserID AND xbt.ip=ucs.IP AND xbt.Active='1'
+         WHERE UserID = '$LoggedUser[ID]'
+      ORDER BY Time DESC LIMIT 1"); 
+    
     if($DB->record_count() == 0) {
-        $Connectable = '1';
+        $cStatus = 'yes';
     } else {
-        list($Connectable, $TimeConnectable) = $DB->next_record(); 
+        list($cStatus, $cIP, $cPort, $cTime) = $DB->next_record(); 
     }
     
     //$Cache->cache_value('connectable_'.$LoggedUser['ID'], $Connectable, 3600 * 24);
 //}
- 
+  
     
+if ($cStatus!=='yes'){
+     
+    if ($cPort) {
+        $link = ' &nbsp; -> <a href="user.php?action=connchecker&checkip='.$cIP.'&port='.$cPort.'" title="check now">check now</a> <-';
+        $cPort = " Port:$cPort ";
+    } else $link = "";
     
-if ($Connectable=='0'){
-	$Alerts[] = '<a href="articles.php?topic=connectable" title="last status check: ' .  
-            time_diff($TimeConnectable,2,false,false,0). '">You are not connectable!</a>';
+    $msg = $cStatus=='no' ? "You are not connectable!" : "Are you connectable?";
+    $link = '<a href="articles.php?topic=connectable" title="IP: '.$cIP.$cPort.' last status check: ' .  
+            time_diff($cTime,2,false,false,0). '">'.$msg.'</a>'.$link;
+    
+    if ($cStatus=='no' || $cPort) { // display annoying red banner if they have an active connection
+        $Alerts[] = $link;
+    } else {
+        $Infos[] = $link;
+    }
 }
 
 // News
@@ -397,7 +417,7 @@ if(check_perms('admin_reports')) {
 <?
 
 // draw the alert bars (arrays set already^^)
-if (!empty($Alerts) || !empty($ModBar) ) {
+if (!empty($Alerts) || !empty($ModBar)  || !empty($Infos) ) {
 ?>
 	<div id="alerts">
 	<? /*
@@ -411,7 +431,12 @@ if (!empty($Alerts) || !empty($ModBar) ) {
 	<? }
         if (!empty($ModBar)) { ?>
 		<div id="modbar" class="alertbar blend"> <?=implode(' | ',$ModBar); ?></div>
-	<? } ?>
+	<? } 
+        if (!empty($Infos)) {    
+            foreach ($Infos as $Infobar) { ?>
+            <div class="alertbar bluebar"><?=$Infobar?></div>
+	<?      } 
+        } ?>
 	</div>
 <?
 }

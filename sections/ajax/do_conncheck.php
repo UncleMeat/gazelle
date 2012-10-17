@@ -34,7 +34,7 @@ if(isset($_REQUEST['ip']) && isset($_REQUEST['port']) && isset($_REQUEST['userid
         die();
 	}
     
-    $connresult = @fsockopen($_REQUEST['ip'], $_REQUEST['port'], $Errno, $Errstr, 20) ? '1' : '0';
+    $connresult = @fsockopen($_REQUEST['ip'], $_REQUEST['port'], $Errno, $Errstr, 20) ? 'yes' : 'no';
 
    
     $now = time();

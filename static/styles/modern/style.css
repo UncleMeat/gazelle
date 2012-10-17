@@ -556,22 +556,37 @@ li.searchbars {
     text-decoration: none;
 }
 
+
 .blend {
     padding: 2px 40px 2px;
     background-color: #161d29;
     color: white;
 }
-
 .blend a {
     color: white;
     padding: 2px 2px;
 } 
-
 .blend a:hover {
    background-color: #FF6600;
-   color: #fff;
+    color: white;
    text-decoration: none;
 }
+
+
+.bluebar {
+    padding: 2px 40px 2px;
+    background-color: #003875;
+    color: white;
+}
+.bluebar a {
+    color: white;
+    padding: 2px 2px;
+} 
+.bluebar a:hover {
+    color: white;
+   text-decoration: none;
+}
+
 .nicebar {
     font-weight:normal;
     color: white;
