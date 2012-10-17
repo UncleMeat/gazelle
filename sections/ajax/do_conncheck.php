@@ -42,7 +42,7 @@ if(isset($_REQUEST['ip']) && isset($_REQUEST['port']) && isset($_REQUEST['userid
                     VALUES ( '" . db_string($_REQUEST['userid']) . "','" . db_string($_REQUEST['ip']) . "', '$connresult','$now' )
                     ON DUPLICATE KEY UPDATE Status='$connresult', Time='$now'");
      
-    if ($connresult == '1') {
+    if ($connresult == 'yes') {
         echo json_encode(array(true, "Port $_REQUEST[port] on $_REQUEST[ip] connected successfully"));
     } else {
         echo json_encode(array(false, "Port $_REQUEST[port] on $_REQUEST[ip] failed to connect"));
