@@ -1941,15 +1941,14 @@ CREATE TABLE IF NOT EXISTS `users_dupes` (
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `users_slots`
+-- table structure `users_freeleeches`
 --
-
-
-CREATE TABLE IF NOT EXISTS `users_slots` (
+ 
+CREATE TABLE IF NOT EXISTS `users_freeleeches` (
   `UserID` int(11) NOT NULL,
   `TorrentID` int(11) NOT NULL,
-  `FreeLeech` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `DoubleSeed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `Downloaded` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `Uploaded` bigint(20) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`UserID`,`TorrentID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2263,6 +2262,21 @@ CREATE TABLE IF NOT EXISTS `users_sessions` (
   KEY `Active` (`Active`),
   KEY `ActiveAgeKeep` (`Active`,`LastUpdate`,`KeepLogged`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `users_slots`
+--
+
+
+CREATE TABLE IF NOT EXISTS `users_slots` (
+  `UserID` int(11) NOT NULL,
+  `TorrentID` int(11) NOT NULL,
+  `FreeLeech` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `DoubleSeed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`UserID`,`TorrentID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
