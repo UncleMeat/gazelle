@@ -8,10 +8,10 @@ function replace_special_tags($Body) {
     
     // Deal with special article tags.
     if (preg_match("/\[clientlist\]/i", $Body)) {
-        if (!$WhitelistedClients = $Cache->get_value('whitelisted_clients')) {
-            $DB->query('SELECT vstring FROM xbt_client_whitelist WHERE vstring NOT LIKE \'//%\' ORDER BY vstring ASC');
-            $WhitelistedClients = $DB->to_array(false,MYSQLI_NUM,false);
-            $Cache->cache_value('whitelisted_clients',$WhitelistedClients,604800);
+        if (!$BlacklistedClients = $Cache->get_value('blacklisted_clients')) {
+            $DB->query('SELECT vstring FROM xbt_client_blacklist WHERE vstring NOT LIKE \'//%\' ORDER BY vstring ASC');
+            $BlacklistedClients = $DB->to_array(false,MYSQLI_NUM,false);
+            $Cache->cache_value('blacklisted_clients',$BlacklistedClients,604800);
         }
 
         $list = '<table cellpadding="5" cellspacing="1" border="0" class="border" width="100%">
@@ -20,7 +20,7 @@ function replace_special_tags($Body) {
                 </tr>';                                        
 
         $Row = 'a';
-        foreach($WhitelistedClients as $Client) {
+        foreach($BlacklistedClients as $Client) {
             //list($ClientName,$Notes) = $Client;
             list($ClientName) = $Client;
             $Row = ($Row == 'a') ? 'b' : 'a';

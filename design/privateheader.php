@@ -564,7 +564,7 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
 <?                      } if (check_perms('admin_manage_permissions')) { ?>
                             <li><a href="tools.php?action=permissions">User Classes</a></li>
 <?                      } if (check_perms('admin_whitelist')) { ?>
-                            <li><a href="tools.php?action=whitelist">Client Whitelist</a></li>
+                            <li><a href="tools.php?action=whitelist">Client Blacklist</a></li>
 <?                      } if (check_perms('admin_manage_ipbans')) { ?>
                             <li><a href="tools.php?action=ip_ban">IP Bans</a></li>
 

@@ -68,12 +68,12 @@ switch ($_REQUEST['action']) {
         include(SERVER_ROOT . '/sections/tools/managers/forum_alter.php');
         break;
 
-    case 'whitelist':
-        include(SERVER_ROOT . '/sections/tools/managers/whitelist_list.php');
+    case 'client_blacklist':
+        include(SERVER_ROOT . '/sections/tools/managers/blacklist_list.php');
         break;
 
-    case 'whitelist_alter':
-        include(SERVER_ROOT . '/sections/tools/managers/whitelist_alter.php');
+    case 'client_blacklist_alter':
+        include(SERVER_ROOT . '/sections/tools/managers/blacklist_alter.php');
         break;
 
     case 'login_watch':

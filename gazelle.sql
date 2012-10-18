@@ -2363,10 +2363,10 @@ CREATE TABLE IF NOT EXISTS `xbt_cheat` (
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `xbt_client_whitelist`
+-- Tabellstruktur `xbt_client_blacklist`
 --
 
-CREATE TABLE IF NOT EXISTS `xbt_client_whitelist` (
+CREATE TABLE IF NOT EXISTS `xbt_client_blacklist` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `peer_id` varchar(20) DEFAULT NULL,
   `vstring` varchar(200) DEFAULT '',

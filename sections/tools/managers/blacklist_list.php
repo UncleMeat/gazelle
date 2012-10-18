@@ -3,8 +3,8 @@ if (!check_perms('admin_whitelist')) {
     error(403);
 }
 
-show_header('Whitelist Management');
-$DB->query('SELECT id, vstring, peer_id FROM xbt_client_whitelist ORDER BY peer_id ASC');
+show_header('Client Blacklist Management');
+$DB->query('SELECT id, vstring, peer_id FROM xbt_client_blacklist ORDER BY peer_id ASC');
 ?>
 <div class="thin">
     <h2>Allowed Clients</h2>
@@ -20,7 +20,7 @@ $DB->query('SELECT id, vstring, peer_id FROM xbt_client_whitelist ORDER BY peer_
         <tr class="rowa">	 
         <form action="" method="post"> 
             <td>
-                <input type="hidden" name="action" value="whitelist_alter" />
+                <input type="hidden" name="action" value="client_blacklist_alter" />
                 <input type="hidden" name="auth" value="<?= $LoggedUser['AuthKey'] ?>" /> 
                 <input class="long" type="text" size="10" name="peer_id" />
             </td>
@@ -44,7 +44,7 @@ $DB->query('SELECT id, vstring, peer_id FROM xbt_client_whitelist ORDER BY peer_
         <tr class="rowa" class="multiadd">	 
         <form action="" method="post"> 
             <td>
-                <input type="hidden" name="action" value="whitelist_alter" />
+                <input type="hidden" name="action" value="client_blacklist_alter" />
                 <input type="hidden" name="auth" value="<?= $LoggedUser['AuthKey'] ?>" />
                 <textarea name="clients" class="long" title="On each line enter the peerID and then the text description. NOTE: The line will be split on the first space."><?=$Clients?></textarea><br/>
                 <input type="submit" value="Add client" />
@@ -56,7 +56,7 @@ $DB->query('SELECT id, vstring, peer_id FROM xbt_client_whitelist ORDER BY peer_
     <br />
     <table class="wid740">
         <tr class="head">
-            <td colspan="3">Mange whitelist</td>
+            <td colspan="3">Mange client blacklist</td>
         </tr>
         <tr class="colhead">
             <td width="40%">Peer ID</td>
@@ -71,7 +71,7 @@ $DB->query('SELECT id, vstring, peer_id FROM xbt_client_whitelist ORDER BY peer_
             <tr class="row<?= $Row ?>">
             <form action="" method="post">
                 <td>
-                    <input type="hidden" name="action" value="whitelist_alter" />
+                    <input type="hidden" name="action" value="client_blacklist_alter" />
                     <input type="hidden" name="auth" value="<?= $LoggedUser['AuthKey'] ?>" />
                     <input type="hidden" name="id" value="<?= $ID ?>" />
                     <input class="long" type="text" size="10" name="peer_id" value="<?= $Peer_ID ?>" />

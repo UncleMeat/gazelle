@@ -129,11 +129,16 @@ if(empty($IRCKey)) {
             
                     // webchat.digitalwizardry.org 
                     // irc.emprn.tk
+                    
+                    //http://webchat.digitalirc.org/?prompt=1&uio=MTY9ZmFsc2U67&nick=<?=$nick?/>&channels=<?=$channels?/>
+                    //http://shire.digitalirc.org:9090/
+                    
+                    
 ?>
 <div class="thin">
 	<div class="head">IRC</div>
 	<div class="box pad center"> 
-                <iframe src="http://webchat.digitalirc.org/?prompt=1&uio=MTY9ZmFsc2U67&nick=<?=$nick?>&channels=<?=$channels?>" width="98%" height="600"></iframe>  
+                <iframe src="http://shire.digitalirc.org:9090/?prompt=1&uio=MTY9ZmFsc2U67&nick=<?=$nick?>&channels=<?=$channels?>" width="98%" height="600"></iframe>  
 	</div>
 </div>
 <?

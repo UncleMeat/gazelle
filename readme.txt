@@ -1,7 +1,7 @@
 
 https://github.com/mifune/gazelle
 
-This project is a very heavily modified gazelle source for the http://torrents.empornium.me/ website.
+This project is a very heavily modified gazelle source.
 
 It requires the matching modified ocelot tracker. https://github.com/mifune/ocelot
 

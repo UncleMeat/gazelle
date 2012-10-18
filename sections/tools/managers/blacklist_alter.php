@@ -14,10 +14,10 @@ if ($_POST['submit'] == 'Delete') {
         error(0);
     }
 
-    $DB->query("SELECT peer_id FROM xbt_client_whitelist WHERE id = " . $_POST['id']);
+    $DB->query("SELECT peer_id FROM xbt_client_blacklist WHERE id = " . $_POST['id']);
     list($PeerID) = $DB->next_record();
-    $DB->query('DELETE FROM xbt_client_whitelist WHERE id=' . $_POST['id']);
-    update_tracker('remove_whitelist', array('peer_id' => $PeerID));
+    $DB->query('DELETE FROM xbt_client_blacklist WHERE id=' . $_POST['id']);
+    update_tracker('remove_blacklist', array('peer_id' => $PeerID));
     
 } else { //Edit & Create, Shared Validation
     
@@ -31,13 +31,13 @@ if ($_POST['submit'] == 'Delete') {
             $Client = db_string($_POST['client']);
             $PeerID = db_string($_POST['peer_id']);
 
-            $DB->query("SELECT peer_id FROM xbt_client_whitelist WHERE id = " . $_POST['id']);
+            $DB->query("SELECT peer_id FROM xbt_client_blacklist WHERE id = " . $_POST['id']);
             list($OldPeerID) = $DB->next_record();
-            $DB->query("UPDATE xbt_client_whitelist SET
+            $DB->query("UPDATE xbt_client_blacklist SET
 				vstring='" . $Client . "',
 				peer_id='" . $PeerID . "'
 				WHERE ID=" . $_POST['id']);
-            update_tracker('edit_whitelist', array('old_peer_id' => $OldPeerID, 'new_peer_id' => $PeerID));
+            update_tracker('edit_blacklist', array('old_peer_id' => $OldPeerID, 'new_peer_id' => $PeerID));
         }
     } else { //Create
         $Values = array();
@@ -69,22 +69,22 @@ if ($_POST['submit'] == 'Delete') {
             $Clients = implode("\n", $Clients);
         }
         
-        $DB->query("SELECT id FROM xbt_client_whitelist WHERE peer_id = '$PeerID'" );
-        if ($DB->record_count()>0) error("There is already an entry in the whitelist with peer_id=$PeerID");
+        $DB->query("SELECT id FROM xbt_client_blacklist WHERE peer_id = '$PeerID'" );
+        if ($DB->record_count()>0) error("There is already an entry in the blacklist with peer_id=$PeerID");
 
-        $DB->query("INSERT INTO xbt_client_whitelist
+        $DB->query("INSERT INTO xbt_client_blacklist
                             (vstring, peer_id) 
                      VALUES ('" . $Client . "','" . $PeerID . "')");
         
-        update_tracker('add_whitelist', array('peer_id' => $PeerID));
+        update_tracker('add_blacklist', array('peer_id' => $PeerID));
     }
 }
 
 
 
-$Cache->delete('whitelisted_clients');
+$Cache->delete('blacklisted_clients');
 
-include(SERVER_ROOT.'/sections/tools/managers/whitelist_list.php');
+include(SERVER_ROOT.'/sections/tools/managers/blacklist_list.php');
 
 // Go back
 // header('Location: tools.php?action=whitelist');
