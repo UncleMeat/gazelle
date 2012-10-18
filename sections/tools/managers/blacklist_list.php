@@ -28,7 +28,7 @@ $DB->query('SELECT id, vstring, peer_id FROM xbt_client_blacklist ORDER BY peer_
                 <input class="long" type="text" name="client" />
             </td>
             <td>
-                <input type="submit" value="Create" />
+                <input type="submit" name="submit" value="Create" />
             </td>
         </form>
         </tr>
@@ -47,7 +47,7 @@ $DB->query('SELECT id, vstring, peer_id FROM xbt_client_blacklist ORDER BY peer_
                 <input type="hidden" name="action" value="client_blacklist_alter" />
                 <input type="hidden" name="auth" value="<?= $LoggedUser['AuthKey'] ?>" />
                 <textarea name="clients" class="long" title="On each line enter the peerID and then the text description. NOTE: The line will be split on the first space."><?=$Clients?></textarea><br/>
-                <input type="submit" value="Add client" />
+                <input type="submit" name="submit"  value="Add client" />
                 You can only add one client at a time but this interface makes it slightly less painful to add many (it adds the first line and returns with that line removed)
             </td>
         </form>
