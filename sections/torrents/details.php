@@ -223,7 +223,7 @@ if(check_perms('torrents_review')){
       </div>
       <div  class="linkbox">
                      <span id="torrent_buttons"  style="float: left;">
-<?  if (check_perms('torrents_download_override') || $Status == 'Okay'  ) { ?>
+<?  if (check_perms('torrents_download_override') || !$Status || $Status == 'Okay'  ) { ?>
  
                                             <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
 

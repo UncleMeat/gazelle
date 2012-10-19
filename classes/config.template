@@ -97,21 +97,21 @@ define('THREAD_CATALOGUE', 500); // Limit to THREAD_CATALOGUE posts per cache ke
 
 // IRC settings
 define('BOT_NICK', '');
-define('BOT_SERVER', 'http://webchat.digitalwizardry.org'); // IRC server address. Used for onsite chat tool.
+define('BOT_SERVER', ''); // IRC server address. Used for onsite chat tool.
 define('BOT_PORT', 6667);
-define('BOT_CHAN', '#empornium'); // .NONSSL_SITE_URL
-define('BOT_ANNOUNCE_CHAN', '#empornium-announce');
-define('BOT_STAFF_CHAN', '#empornium-staff');
-define('BOT_DISABLED_CHAN', '#empornium-help'); // Channel to refer disabled users to.
-define('BOT_HELP_CHAN', '#empornium-help');
-define('BOT_DEBUG_CHAN', '#');
-define('BOT_REPORT_CHAN', '#');
+define('BOT_CHAN', ''); // .NONSSL_SITE_URL
+define('BOT_ANNOUNCE_CHAN', '');
+define('BOT_STAFF_CHAN', '');
+define('BOT_DISABLED_CHAN', ''); // Channel to refer disabled users to.
+define('BOT_HELP_CHAN', '');
+define('BOT_DEBUG_CHAN', '');
+define('BOT_REPORT_CHAN', '');
 define('BOT_NICKSERV_PASS', '');
 define('SOCKET_LISTEN_PORT', 51010);
 define('SOCKET_LISTEN_ADDRESS', 'localhost');
-define('ADMIN_CHAN', '#empornium-staff');
-define('LAB_CHAN', '#');
-define('STATUS_CHAN', '#');
+define('ADMIN_CHAN', '');
+define('LAB_CHAN', '');
+define('STATUS_CHAN', '');
 
 // Miscellaneous values
 $ForumsRevealVoters = array(15,21);

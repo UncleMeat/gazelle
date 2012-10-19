@@ -190,6 +190,8 @@ $TorrentName = $Name;
 
 if (!$TorrentName) { $TorrentName="No Name"; }
 
+$TorrentName = "[".SITE_URL."]$TorrentName";
+
 $FileName = ($Browser == 'Internet Explorer') ? urlencode(file_string($TorrentName)) : file_string($TorrentName);
 $MaxLength = $DownloadAlt ? 192 : 196;
 $FileName = cut_string($FileName, $MaxLength, true, false);
