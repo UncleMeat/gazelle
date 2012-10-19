@@ -2447,7 +2447,7 @@ function in_array_partial($Needle, $Haystack) {
  * @param int $FreeNeutral 0 = normal, 1 = fl, 2 = nl
  * @param int $FreeLeechType 0 = Unknown, 1 = Staff picks, 2 = Perma-FL (Toolbox, etc.), 3 = Vanity House
  */
-function freeleech_torrents($TorrentIDs, $FreeNeutral = 1) {    //  , $FreeLeechType = 0) {
+function freeleech_torrents($TorrentIDs, $FreeNeutral = 1, $FromShop = false) {    //  , $FreeLeechType = 0) {
     global $DB, $Cache, $LoggedUser;
 
     if (!is_array($TorrentIDs)) {
@@ -2463,8 +2463,13 @@ function freeleech_torrents($TorrentIDs, $FreeNeutral = 1) {    //  , $FreeLeech
         list($TorrentID, $GroupID, $InfoHash) = $Torrent;
         update_tracker('update_torrent', array('info_hash' => rawurlencode($InfoHash), 'freetorrent' => $FreeNeutral));
         $Cache->delete_value('torrent_download_' . $TorrentID);
-        write_log($LoggedUser['Username'] . " marked torrent " . $TorrentID . " as freeleech.");    // type " . $FreeLeechType . "!");
-        write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], "marked as freeleech.", 0);    //  type " . $FreeLeechType . "!", 0);
+        if($FromShop){
+            write_log($LoggedUser['Username'] . " bought universal freeleech for torrent " . $TorrentID);   
+            write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], "bought universal freeleech.", 0);  
+        } else {
+            write_log($LoggedUser['Username'] . " marked torrent " . $TorrentID . " as freeleech.");    // type " . $FreeLeechType . "!");
+            write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], "marked as freeleech.", 0);    //  type " . $FreeLeechType . "!", 0);
+        }
     }
 
     foreach ($GroupIDs as $GroupID) {
@@ -2475,7 +2480,7 @@ function freeleech_torrents($TorrentIDs, $FreeNeutral = 1) {    //  , $FreeLeech
 /**
  * Convenience function to allow for passing groups to freeleech_torrents()
  */
-function freeleech_groups($GroupIDs, $FreeNeutral = 1){     //, $FreeLeechType = 0) {
+function freeleech_groups($GroupIDs, $FreeNeutral = 1, $FromShop = false){     //, $FreeLeechType = 0) {
     global $DB;
 
     if (!is_array($GroupIDs)) {
@@ -2485,7 +2490,7 @@ function freeleech_groups($GroupIDs, $FreeNeutral = 1){     //, $FreeLeechType =
     $DB->query("SELECT ID from torrents WHERE GroupID IN (" . implode(", ", $GroupIDs) . ")");
     if ($DB->record_count()) {
         $TorrentIDs = $DB->collect('ID');
-        freeleech_torrents($TorrentIDs, $FreeNeutral);      //, $FreeLeechType);
+        freeleech_torrents($TorrentIDs, $FreeNeutral, $FromShop);      //, $FreeLeechType);
     }
 }
 

@@ -219,7 +219,7 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                             $ResultMessage = "Torrent $TName is already freeleech!";
                         else {
                             // make torrent FL
-                            freeleech_groups($GroupID, 1);  
+                            freeleech_groups($GroupID, 1, true);  
                             
                             $Summary = sqltime().' - '.ucfirst("user bought universal freeleech for torrent [torrent]{$GroupID}[/torrent]. Cost: $Cost credits");	
                             $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";

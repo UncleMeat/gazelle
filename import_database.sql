@@ -6,7 +6,7 @@ SELECT `Id`, `username`, `email`, `passhash`, `secret`, `title`, '2', '1', `uplo
 -- fetch data from emp.users into gazelle.users_info
 
 insert into `gazelle`.`users_info` (`UserID`, `StyleID`, `Avatar`, `JoinDate`, `Inviter`, `AdminComment`, `Info`, `Warned`, `Donor` )
-select `Id`, '1', `avatar`, from_unixtime(`added`), '0', `modcomment`, `info`, from_unixtime(`warned`), `donor` from `emp`.`users`;
+select `Id`, '3', `avatar`, from_unixtime(`added`), '0', `modcomment`, `info`, from_unixtime(`warned`), `donor` from `emp`.`users`;
 
 -- set gazelle.users_main.enabled to 1 where emp.users.enabled='yes'
 

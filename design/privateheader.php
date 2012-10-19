@@ -157,12 +157,12 @@ if($PFLTimeStamp >= $TimeStampNow) {
 <?
 $NewSubscriptions = $Cache->get_value('subscriptions_user_new_'.$LoggedUser['ID']);
 if($NewSubscriptions === FALSE) {
-        if($LoggedUser['CustomForums']) {
-			unset($LoggedUser['CustomForums']['']);
-			$RestrictedForums = implode("','", array_keys($LoggedUser['CustomForums'], 0));
-			$PermittedForums = implode("','", array_keys($LoggedUser['CustomForums'], 1));
-        }
-        $DB->query("SELECT COUNT(s.TopicID)
+    if($LoggedUser['CustomForums']) {
+        unset($LoggedUser['CustomForums']['']);
+		$RestrictedForums = implode("','", array_keys($LoggedUser['CustomForums'], 0));
+		$PermittedForums = implode("','", array_keys($LoggedUser['CustomForums'], 1));
+    }
+    $DB->query("SELECT COUNT(s.TopicID)
                 FROM users_subscriptions AS s
                         JOIN forums_last_read_topics AS l ON s.UserID = l.UserID AND s.TopicID = l.TopicID
                         JOIN forums_topics AS t ON l.TopicID = t.ID
@@ -172,9 +172,9 @@ if($NewSubscriptions === FALSE) {
                         AND s.UserID = ".$LoggedUser['ID'].
                 (!empty($RestrictedForums) ? "
                         AND f.ID NOT IN ('".$RestrictedForums."')" : ""));
-        list($NewSubscriptions) = $DB->next_record();
-        $Cache->cache_value('subscriptions_user_new_'.$LoggedUser['ID'], $NewSubscriptions, 0);
-} 
+    list($NewSubscriptions) = $DB->next_record();
+    $Cache->cache_value('subscriptions_user_new_'.$LoggedUser['ID'], $NewSubscriptions, 0);
+}
 
 // Moved alert bar handling to before we draw minor stats to allow showing alert status in links too
 
@@ -182,57 +182,28 @@ if($NewSubscriptions === FALSE) {
 $Infos = array(); // an info alert bar (nicer color)
 $Alerts = array(); // warning bar (red!)
 $ModBar = array();
- 
-/*
-// is user not connectable?
-//$NotConnectable = $Cache->get_value('notconnectable_'.$LoggedUser['ID']);
-//if ($NotConnectable === false) {  /// always generate while we are trying to nail bugs with this
-    $DB->query("
-        SELECT Count(fid) as Count, connectable
-          FROM xbt_files_users AS xbt
-         WHERE active='1' AND uid =  '".$LoggedUser['ID']."'
-      GROUP BY connectable
-      ORDER BY connectable DESC"); 
-    if($DB->record_count() == 0) {
-        $NotConnectable = '0';
-    } else {
-        while(list($count, $connected) = $DB->next_record()) {
-            if ($connected == '1') {
-                $NotConnectable = '0';
-                break;
-            } else
-                $NotConnectable = '1';
-        }
-    }
-    //$Cache->cache_value('notconnectable_'.$LoggedUser['ID'], $NotConnectable, 600);
-//}
- */
 
 
-//$Connectable = $Cache->get_value('connectable_'.$LoggedUser['ID']);
-//if ($Connectable === false) {  /// always generate while we are trying to nail bugs with this
-/*
-    $DB->query("
-        SELECT Status, Time
-          FROM users_connectable_status
-         WHERE UserID = '$LoggedUser[ID]'
-      ORDER BY Time DESC LIMIT 1"); 
-*/
+$Connectable = $Cache->get_value('connectable_'.$LoggedUser['ID']);
+if ($Connectable === false) {
+    // get latest connectable status info for header
     $DB->query("
         SELECT ucs.Status, ucs.IP, xbt.port, ucs.Time
           FROM users_connectable_status AS ucs
-            LEFT JOIN xbt_files_users AS xbt ON xbt.uid=ucs.UserID AND xbt.ip=ucs.IP AND xbt.Active='1'
+     LEFT JOIN xbt_files_users AS xbt ON xbt.uid=ucs.UserID AND xbt.ip=ucs.IP AND xbt.Active='1'
          WHERE UserID = '$LoggedUser[ID]'
       ORDER BY Time DESC LIMIT 1"); 
     
     if($DB->record_count() == 0) {
-        $cStatus = 'yes';
+        //$cStatus = 'yes';
+        $Connectable = array('yes');
     } else {
-        list($cStatus, $cIP, $cPort, $cTime) = $DB->next_record(); 
+        $Connectable = $DB->next_record();
+        $Cache->cache_value('connectable_'.$LoggedUser['ID'], $Connectable, 300);
     }
-    
-    //$Cache->cache_value('connectable_'.$LoggedUser['ID'], $Connectable, 3600 * 24);
-//}
+}
+
+list($cStatus, $cIP, $cPort, $cTime) = $Connectable;
   
     
 if ($cStatus!=='yes'){
@@ -564,7 +535,7 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
 <?                      } if (check_perms('admin_manage_permissions')) { ?>
                             <li><a href="tools.php?action=permissions">User Classes</a></li>
 <?                      } if (check_perms('admin_whitelist')) { ?>
-                            <li><a href="tools.php?action=whitelist">Client Blacklist</a></li>
+                            <li><a href="tools.php?action=client_blacklist">Client Blacklist</a></li>
 <?                      } if (check_perms('admin_manage_ipbans')) { ?>
                             <li><a href="tools.php?action=ip_ban">IP Bans</a></li>
 

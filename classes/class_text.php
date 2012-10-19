@@ -462,7 +462,9 @@ class TEXT {
            ':goodnight:'           => 'goodnightsign.gif',
            ':respect:'           => 'sign_respect1.gif',
            ':welcome3:'           => 'welcome3.gif',
+        
            ':banned:'           => 'banned1-smiley.gif',
+           ':hamster:'           => 'hamster.gif',
           
           
            ':elder:'           => 'elder-smiley.gif',
@@ -629,17 +631,18 @@ class TEXT {
  * @param boolean $ErrorOut If $ErrorOut=true then on errors the error page will be displayed with a preview of the errors (If false the function just returns the validate result)
  * @return boolean True if there are no bad tags and false otherwise 
  */
-      function validate_bbcode($Str, $AdvancedTags = false, $ErrorOut = true){
-            $preview = $this->full_format($Str, $AdvancedTags,true);
-            if($this->has_errors()) {
-                if($ErrorOut){
-                    $bbErrors = implode('<br/>', $this->get_errors());
-                    error("There are errors in your bbcode (unclosed tags)<br/><br/>$bbErrors<br/><div class=\"box\"><div class=\"post_content\">$preview</div></div>");
-                }
-                return false;
+    function validate_bbcode($Str, $AdvancedTags = false, $ErrorOut = true){
+        $preview = $this->full_format($Str, $AdvancedTags, true);
+        if($this->has_errors()) {
+            if($ErrorOut){
+                $bbErrors = implode('<br/>', $this->get_errors());
+                error("There are errors in your bbcode (unclosed tags)<br/><br/>$bbErrors<br/><div class=\"box\"><div class=\"post_content\">$preview</div></div>");
             }
-            return true;
-      }
+            return false;
+        }
+        return true;
+    }
+      
 	function strip_bbcode($Str) {
 		$Str = display_str($Str);
 		
