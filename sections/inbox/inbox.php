@@ -29,7 +29,7 @@ if($Section == 'inbox') { ?>
 <?
 
 $Sort = empty($_GET['sort']) || $_GET['sort'] != "unread" ? "Date DESC" : "cu.Unread = '1' DESC, DATE DESC";
- 
+ /*
 if ($Section == 'sentbox'){
     
     $sql = "SELECT
@@ -78,7 +78,51 @@ if ($Section == 'sentbox'){
           LEFT JOIN users_info AS ui ON ui.UserID=um.ID
           LEFT JOIN users_main AS um2 ON um2.ID=cu.ForwardedTo";
 
-}
+} */
+
+if ($Section == 'sentbox'){
+    
+    $sql = "SELECT
+          SQL_CALC_FOUND_ROWS
+          c.ID,
+          c.Subject,
+          cu2.Unread,
+          cu.Sticky,
+          cu2.UserID,
+          um.Username,
+          ui.Donor,
+          ui.Warned,
+          um.Enabled,
+          cu.SentDate AS Date, 
+          um.PermissionID
+          FROM pm_conversations AS c
+          LEFT JOIN pm_conversations_users AS cu ON cu.ConvID=c.ID AND cu.UserID='$UserID'
+          LEFT JOIN pm_conversations_users AS cu2 ON cu2.ConvID=c.ID AND cu2.UserID!='$UserID' AND cu2.ForwardedTo=0
+          LEFT JOIN users_main AS um ON um.ID=cu2.UserID
+          LEFT JOIN users_info AS ui ON ui.UserID=um.ID";
+    
+} else {
+    
+    $sql = "SELECT
+          SQL_CALC_FOUND_ROWS
+          c.ID,
+          c.Subject,
+          cu.Unread,
+          cu.Sticky,
+          pms.SenderID,
+          um.Username,
+          ui.Donor,
+          ui.Warned,
+          um.Enabled, 
+          cu.ReceivedDate AS Date, 
+          um.PermissionID
+          FROM pm_conversations AS c
+          LEFT JOIN pm_conversations_users AS cu ON cu.ConvID=c.ID AND cu.UserID='$UserID'
+          LEFT JOIN pm_messages AS pms ON pms.ConvID=c.ID 
+          LEFT JOIN users_main AS um ON um.ID=pms.SenderID
+          LEFT JOIN users_info AS ui ON ui.UserID=um.ID";
+
+} 
 
 if(!empty($_GET['search']) && $_GET['searchtype'] == "message") {
 	$sql .=	" JOIN pm_messages AS m ON c.ID=m.ConvID";
@@ -153,13 +197,10 @@ echo $Pages;
 					<td width="45%">Subject</td>
 					<td><?=($Section == 'sentbox')? 'Receiver' : 'Sender' ?></td>
 					<td>Date</td>
-<?		if(check_perms('users_mod')) {?>
-					<td>Forwarded to</td>
-<?		} ?>
 				</tr>
 <?
 	$Row = 'a';
-	while(list($ConvID, $Subject, $Unread, $Sticky, $ForwardedID, $ForwardedName, $SenderID, $Username, $Donor, $Warned, $Enabled, $Date, $ClassID) = $DB->next_record()) {
+	while(list($ConvID, $Subject, $Unread, $Sticky, $SenderID, $Username, $Donor, $Warned, $Enabled, $Date, $ClassID) = $DB->next_record()) {
 		if($Unread === '1') {
 			$RowClass = 'unreadpm';
 		} else {
@@ -179,9 +220,6 @@ echo $Pages;
 					</td>
 					<td><?=format_username($SenderID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $ClassID)?></td>
 					<td><?=time_diff($Date)?></td>
-<?		if(check_perms('users_mod')) { ?>
-					<td><?=($ForwardedID && $ForwardedID != $LoggedUser['ID'] ? format_username($ForwardedID, $ForwardedName):'')?></td>
-<?		} ?>
 				</tr>
 <?	} ?>
 			</table>

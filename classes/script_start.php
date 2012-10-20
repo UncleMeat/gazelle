@@ -1777,14 +1777,19 @@ function send_pm($ToID, $FromID, $Subject, $Body, $ConvID='') {
     
     if ($ConvID == '') { // new pm
          
-        $DB->query("INSERT INTO pm_conversations(Subject) VALUES ('" . $Subject . "')");
+        $DB->query("INSERT INTO pm_conversations (Subject) VALUES ('" . $Subject . "')");
         $ConvID = $DB->inserted_id();
         
-	  $Values = "('".implode("', '$ConvID', '1','0', '$sqltime', '$sqltime', '1'), ('", $ToID)."', '$ConvID', '1','0', '$sqltime', '$sqltime', '1')";
+        /*$Values = "('".implode("', '$ConvID', '1','0', '$sqltime', '$sqltime', '1'), ('", $ToID)."', '$ConvID', '1','0', '$sqltime', '$sqltime', '1')";
         if ($FromID != 0) {
             $Values .= ", ('$FromID', '$ConvID', '0','1','$sqltime', '$sqltime', '0')";
-        }
+        } */
          
+        if ($FromID != 0) {
+            $Values = "('$FromID', '$ConvID', '0','1','$sqltime', '$sqltime', '0'),";
+        }
+        $Values .= "('".implode("', '$ConvID', '1','0', '$sqltime', '$sqltime', '1'), ('", $ToID)."', '$ConvID', '1','0', '$sqltime', '$sqltime', '1')";
+        
         $DB->query("INSERT INTO pm_conversations_users
                                         (UserID, ConvID, InInbox, InSentbox, SentDate, ReceivedDate, UnRead) VALUES
                                         $Values");

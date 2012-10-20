@@ -1,14 +1,7 @@
 <?
 authorize();
 
-
-if(empty($_POST['toid'])) { error(404); }
-
-if(!empty($LoggedUser['DisablePM']) && !isset($StaffIDs[$_POST['toid']])) {
-	error(403);
-}
-
-function notBlockedPM($ToID, $FromID, &$Error){
+function blockedPM($ToID, $FromID, &$Error){
     global $StaffIDs, $DB;
     $FromID=(int)$FromID;
     $Err=false;
@@ -31,8 +24,19 @@ function notBlockedPM($ToID, $FromID, &$Error){
             }
     }
     $Error = $Err;
-    return $Err === false;
+    return $Err !== false;
 }
+
+
+if(empty($_POST['toid']) || !is_number($_POST['toid'])) { error(404); }
+
+if(!empty($LoggedUser['DisablePM']) && !isset($StaffIDs[$_POST['toid']])) {
+	error(403);
+}
+
+$ToID = $_POST['toid'];
+if (blockedPM($ToID, $LoggedUser[ID], $Err)) error($Err);
+
 
 if (isset($_POST['convid']) && is_number($_POST['convid'])) {
 	$ConvID = $_POST['convid'];
@@ -41,41 +45,50 @@ if (isset($_POST['convid']) && is_number($_POST['convid'])) {
 		error(403);
 	}
 	$Subject='';
+    /*
 	$ToID = explode(',', $_POST['toid']);
 	foreach($ToID as $TID) {
-            if (!notBlockedPM($_POST['toid'], $LoggedUser[ID], $Err)) {
-                break;
-            }
-	}
-} else {
-        $ConvID='';
+        if (blockedPM($TID, $LoggedUser[ID], $Err)) {
+            break;
+        }
+	} */
+} else {  // new convo
+    $ConvID='';
+    /*
 	$ToID = explode(',', $_POST['toid']);
 	foreach($ToID as $TID) {
-            if (!notBlockedPM($_POST['toid'], $LoggedUser[ID], $Err)) {
-                break;
-            }
-	}
-        $Subject = trim($_POST['subject']);
-        if (!$Err && empty($Subject)) {
-            $Err = "You can't send a message without a subject.";
-      }
+        if (blockedPM($TID, $LoggedUser[ID], $Err)) {
+            break;
+        }
+	} */
+    $Subject = trim($_POST['subject']);
+    if (!$Err && empty($Subject)) {
+        $Err = "You can't send a message without a subject.";
+    }
 }
 $Body = trim($_POST['body']);
 if(!$Err && empty($Body)) {
 	$Err = "You can't send a message without a body!";
 }
+if(!empty($Err)) error($Err);
+
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
 $Text->validate_bbcode($_POST['body'],  get_permissions_advtags($LoggedUser['ID']));
 
+if (isset($_POST['forwardbody'])){
+    $_POST['body'] = "$_POST[forwardbody][br]$_POST[body]";
+}
+
+/*
 if(!empty($Err)) {
 	error($Err);
 	//header('Location: inbox.php?action=compose&to='.$_POST['toid']);
 	$ToID = (int)$_POST['toid'];
 	$Return = true;
 	include(SERVER_ROOT.'/sections/inbox/compose.php');
-	die();
-}
+	die(); 
+}*/
 
 $ConvID = send_pm($ToID,$LoggedUser['ID'],db_string($Subject),db_string($_POST['body']),$ConvID);
 
