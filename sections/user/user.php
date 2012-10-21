@@ -470,13 +470,17 @@ if (check_perms('users_view_invites')) {
 if (check_perms('users_mod') || $OwnProfile) {
 	?>
 		<li>Clients: <?
-		$DB->query("SELECT DISTINCT useragent FROM xbt_files_users WHERE uid = ".$UserID);
-		while(list($Client) = $DB->next_record()) {
-			if (strlen($Clients) > 0) {
-				$Clients .= "; ".$Client;
+		//$DB->query("SELECT DISTINCT useragent FROM xbt_files_users WHERE uid = ".$UserID);
+		$DB->query("SELECT useragent, ip, LEFT(peer_id, 8) AS clientid
+                      FROM xbt_files_users WHERE uid ='".$UserID."'
+                  GROUP BY useragent, ip");
+		while(list($Client, $ClientIP, $ClientID) = $DB->next_record()) {
+            $Clients .= "<br/><span title=\"$ClientID on $ClientIP\">$Client</span>";
+			/* if (strlen($Clients) > 0) {
+				$Clients .= "<br/>".$Client;
 			} else {
 				$Clients = $Client;
-			}
+			} */
 		}
 		echo $Clients;
 		?></li>
