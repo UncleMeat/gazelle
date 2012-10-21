@@ -122,6 +122,9 @@
 	'torrents_search_fast' => 'Rapid search (for scripts).',
 	'torrents_hide_dnu' => 'Hide the Do Not Upload list by default.',
 	  'torrents_hide_imagehosts' => 'Hide the Imagehost Whitelist list by default.',
+     
+     
+        'admin_manage_cheats' => 'Can manage speed reports.',
         'admin_manage_categories' => 'Can manage categories.',
 	'admin_manage_news' => 'Can manage news.',
         'admin_manage_articles' => 'Can manage articles',
@@ -294,7 +297,7 @@ function permissions_form(){ ?>
 					<? display_perm('edit_unknowns', 'Can edit unknown release information.'); ?>
 					<? display_perm('site_add_logs', 'Can add logs to torrents after upload'); ?>
 					<? display_perm('torrents_hide_dnu', 'Hide the do not upload list by default.'); ?>
-					    <? display_perm('torrents_hide_imagehosts', 'Hide the imagehost whitelist by default.'); ?>
+					<? display_perm('torrents_hide_imagehosts', 'Hide the imagehost whitelist by default.'); ?>
 				
                         </td> 
 			</tr>
@@ -307,6 +310,7 @@ function permissions_form(){ ?>
 			</tr>
 			<tr>
 				<td>
+                                        <? display_perm('admin_manage_cheats', 'Can manage speed reports.'); ?>
                                         <? display_perm('admin_manage_categories', 'Can manage categories.'); ?>
 					<? display_perm('admin_manage_news', 'Can manage news'); ?>
                                         <? display_perm('admin_manage_articles', 'Can manage articles'); ?>

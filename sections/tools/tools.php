@@ -10,45 +10,46 @@ show_header('Staff Tools');
 	<div class="permission_container">
             <div class="head">Managers</div>
 		<table>
-<?   if (check_perms('users_groups')) { ?>
-			<tr><td><a href="groups.php">User Groups</a></td></tr>
-                  
+<?   if (check_perms('admin_manage_articles')) { ?>
+			<tr><td><a href="tools.php?action=articles">Articles</a></td></tr>                        
+<? } if (check_perms('site_manage_awards')) { ?>
+			<tr><td><a href="tools.php?action=awards_auto">Automatic Awards</a></td></tr>
+<? } if (check_perms('site_manage_badges')) { ?>
+			<tr><td><a href="tools.php?action=badges_list">Badges</a></td></tr>
+<? } if (check_perms('site_manage_shop')) { ?>
+			<tr><td><a href="tools.php?action=shop_list">Bonus Shop</a></td></tr>
 <? } if (check_perms('admin_manage_categories')) { ?>
 			<tr><td><a href="tools.php?action=categories">Categories</a></td></tr>                    
-<? } if (check_perms('admin_manage_permissions')) { ?>
-			<tr><td><a href="tools.php?action=permissions">User Classes<!--Permissions--></a></td></tr>
 <? } if (check_perms('admin_whitelist')) { ?>
 			<tr><td><a href="tools.php?action=client_blacklist">Client Blacklist</a></td></tr>
+<? } if (check_perms('admin_dnu')) { ?> 
+			<tr><td><a href="tools.php?action=dnu">Do not upload list</a></td></tr>
+<? } if (check_perms('users_mod')) { ?>
+			<tr><td><a href="tools.php?action=email_blacklist">Email Blacklist</a></td></tr>
+<? } if (check_perms('admin_manage_forums')) { ?>
+			<tr><td><a href="tools.php?action=forum">Forums</a></td></tr>
+<? } if (check_perms('admin_imagehosts')) { ?>
+			<tr><td><a href="tools.php?action=imghost_whitelist">Imagehost Whitelist</a></td></tr>
 <? } if (check_perms('admin_manage_ipbans')) { ?>
 			<tr><td><a href="tools.php?action=ip_ban">IP Bans</a></td></tr>
 
 <? } if (check_perms('admin_login_watch') || check_perms('admin_manage_ipbans')) { ?>
 			<tr><td><a href="tools.php?action=login_watch">Login Watch</a></td></tr>
-<? } if (check_perms('admin_manage_forums')) { ?>
-			<tr><td><a href="tools.php?action=forum">Forums</a></td></tr>
-<? } if (check_perms('admin_manage_news')) { ?>
-			<tr><td><a href="tools.php?action=news">News</a></td></tr>
-<? } if (check_perms('admin_manage_articles')) { ?>
-			<tr><td><a href="tools.php?action=articles">Articles</a></td></tr>                        
-<? } if (check_perms('admin_dnu')) { ?> 
-			<tr><td><a href="tools.php?action=dnu">Do not upload list</a></td></tr>
-<? } if (check_perms('admin_imagehosts')) { ?>
-			<tr><td><a href="tools.php?action=imghost_whitelist">Imagehost Whitelist</a></td></tr>
 <? } if (check_perms('users_mod')) { ?>
-			<tr><td><a href="tools.php?action=email_blacklist">Email Blacklist</a></td></tr>
 			<tr><td><a href="tools.php?action=tokens">Manage freeleech tokens</a></td></tr>
-<? } if (check_perms('site_manage_tags')) { ?>
-			<tr><td><a href="tools.php?action=official_tags">Official Tags Manager</a></td></tr> 
 <? } if (check_perms('torrents_review')) { ?>
 			<tr><td><a href="tools.php?action=marked_for_deletion">Marked for Deletion</a></td></tr>
 
-<? } if (check_perms('site_manage_shop')) { ?>
-			<tr><td><a href="tools.php?action=shop_list">Bonus Shop</a></td></tr>
-<? } if (check_perms('site_manage_badges')) { ?>
-			<tr><td><a href="tools.php?action=badges_list">Badges</a></td></tr>
-<? } if (check_perms('site_manage_awards')) { ?>
-			<tr><td><a href="tools.php?action=awards_auto">Automatic Awards</a></td></tr>
-                  
+<? } if (check_perms('admin_manage_news')) { ?>
+			<tr><td><a href="tools.php?action=news">News</a></td></tr>
+<? } if (check_perms('site_manage_tags')) { ?>
+			<tr><td><a href="tools.php?action=official_tags">Official Tags Manager</a></td></tr> 
+<? } if (check_perms('admin_manage_cheats')) { ?>
+			<tr><td><a href="tools.php?action=cheats">Speed Reports</a></td></tr>                    
+<? } if (check_perms('admin_manage_permissions')) { ?>
+			<tr><td><a href="tools.php?action=permissions">User Classes<!--Permissions--></a></td></tr>
+<? } if (check_perms('users_groups')) { ?>
+			<tr><td><a href="groups.php">User Groups</a></td></tr>
 <? } ?>
 
 		</table>

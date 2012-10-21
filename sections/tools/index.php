@@ -60,6 +60,10 @@ switch ($_REQUEST['action']) {
         include(SERVER_ROOT . '/sections/tools/services/get_cc.php');
         break;
     //Managers
+    case 'cheats':
+        include(SERVER_ROOT . '/sections/tools/managers/speed_reports_list.php');
+        break;
+
     case 'forum':
         include(SERVER_ROOT . '/sections/tools/managers/forum_list.php');
         break;
