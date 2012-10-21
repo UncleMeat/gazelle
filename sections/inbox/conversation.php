@@ -67,18 +67,6 @@ if($UnRead=='1') {
 }
 
 
-//$DB->query("SELECT UserID FROM pm_conversations_users WHERE UserID!='$LoggedUser[ID]' AND ConvID='$ConvID' AND (ForwardedTo=0 OR ForwardedTo=UserID)");
-//$ReceiverIDs = $DB->collect('UserID');
-//if(!empty($ReceiverIDs) && (empty($LoggedUser['DisablePM']) || array_intersect($ReceiverIDs, array_keys($StaffIDs)))) {
-
-//$DB->query("SELECT SenderID FROM pm_messages WHERE ConvID='$ConvID'");
-//$DB->query("SELECT SenderID FROM pm_messages WHERE ConvID='$ConvID' ORDER BY ID LIMIT 1");
-
-$DB->query("SELECT UserID FROM pm_conversations_users 
-             WHERE UserID!='$LoggedUser[ID]' AND ConvID='$ConvID' AND (ForwardedTo=0 OR ForwardedTo=UserID)
-            ORDER BY SentDate Desc LIMIT 1");
-list($ReplyID) = $DB->next_record();
-
 
 show_header('View conversation '.$Subject, 'comments,inbox,bbcode');
 
@@ -89,16 +77,25 @@ show_header('View conversation '.$Subject, 'comments,inbox,bbcode');
 		<a href="inbox.php">[Back to inbox]</a>
 	</div>
 <?
-
 // Get messages
 $DB->query("SELECT SentDate, SenderID, Body, ID FROM pm_messages AS m WHERE ConvID='$ConvID' ORDER BY ID");
+$Messages = $DB->to_array();
 
-while(list($SentDate, $SenderID, $Body, $MessageID) = $DB->next_record()) { ?>
-<?
+//while(list($SentDate, $SenderID, $Body, $MessageID) = $DB->next_record()) { 
+    
+foreach ($Messages as $Message) {
+    list($SentDate, $SenderID, $Body, $MessageID) = $Message;
+
     if (!$donedetails) {
         $donedetails=true;
         $CSenderID = $SenderID;
-        if ($SenderID==0) $ReplyID = $LoggedUser['ID'];
+        //if ($SenderID==0) $ReplyID = $LoggedUser['ID'];
+
+        $DB->query("SELECT UserID FROM pm_conversations_users 
+                     WHERE UserID!='$CSenderID' AND ConvID='$ConvID' AND (ForwardedTo=0 OR ForwardedTo=UserID)
+                    ORDER BY SentDate Desc LIMIT 1");
+        list($ReplyID) = $DB->next_record();
+
 ?>  
         <div class="head">conversation details</div>
         <div class="box pad vertical_space">
@@ -122,6 +119,18 @@ while(list($SentDate, $SenderID, $Body, $MessageID) = $DB->next_record()) { ?>
 	</div>
 <?
 }
+
+//$DB->query("SELECT UserID FROM pm_conversations_users WHERE UserID!='$LoggedUser[ID]' AND ConvID='$ConvID' AND (ForwardedTo=0 OR ForwardedTo=UserID)");
+//$ReceiverIDs = $DB->collect('UserID');
+//if(!empty($ReceiverIDs) && (empty($LoggedUser['DisablePM']) || array_intersect($ReceiverIDs, array_keys($StaffIDs)))) {
+
+//$DB->query("SELECT SenderID FROM pm_messages WHERE ConvID='$ConvID'");
+//$DB->query("SELECT SenderID FROM pm_messages WHERE ConvID='$ConvID' ORDER BY ID LIMIT 1");
+
+$DB->query("SELECT UserID FROM pm_conversations_users 
+             WHERE UserID!='$LoggedUser[ID]' AND ConvID='$ConvID' AND (ForwardedTo=0 OR ForwardedTo=UserID)
+            ORDER BY SentDate Desc LIMIT 1");
+list($ReplyID) = $DB->next_record();
 
 
 if(!empty($ReplyID) && $ReplyID!=0 && $CSenderID!=0 && ( empty($LoggedUser['DisablePM']) || array_key_exists($ReplyID, $StaffIDs) ) ) {
