@@ -51,7 +51,6 @@ show_header('Staff Tools');
 <? } if (check_perms('users_groups')) { ?>
 			<tr><td><a href="groups.php">User Groups</a></td></tr>
 <? } ?>
-
 		</table>
 	</div>
 	<div class="permission_container">

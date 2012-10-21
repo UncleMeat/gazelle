@@ -227,6 +227,7 @@ function validDate($DateString) {
     return checkDate($M, $D, $Y);
 }
 
+
 function time_span($TimeStamp, $Levels=2, $Lowercase=false) {
 
     if (!is_number($TimeStamp)) { // Assume that $TimeStamp is SQL timestamp

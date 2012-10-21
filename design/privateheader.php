@@ -527,46 +527,45 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
 ?>
                 <ul id="userinfo_tools">
                     <li id="nav_tools"><a href="tools.php">Tools</a>
-                        <ul>
-<?                      if (check_perms('users_groups')) { ?>
-                            <li><a href="groups.php">User Groups</a></li>                  
-<?                      } if (check_perms('admin_manage_categories')) { ?>
-                            <li><a href="tools.php?action=categories">Categories</a></li>                    
-<?                      } if (check_perms('admin_manage_permissions')) { ?>
-                            <li><a href="tools.php?action=permissions">User Classes</a></li>
-<?                      } if (check_perms('admin_whitelist')) { ?>
-                            <li><a href="tools.php?action=client_blacklist">Client Blacklist</a></li>
-<?                      } if (check_perms('admin_manage_ipbans')) { ?>
-                            <li><a href="tools.php?action=ip_ban">IP Bans</a></li>
-
-<?                      } if (check_perms('users_view_ips')) { ?>
-                            <li><a href="tools.php?action=login_watch">Login Watch</a></li>
-<?                      } if (check_perms('admin_manage_forums')) { ?>
-                            <li><a href="tools.php?action=forum">Forums</a></li>
-<?                      } if (check_perms('admin_manage_news')) { ?>
-                            <li><a href="tools.php?action=news">News</a></li>
-<?                      } if (check_perms('admin_manage_articles')) { ?>
+                        <ul>         
+<?                        if (check_perms('admin_manage_articles')) { ?>
                             <li><a href="tools.php?action=articles">Articles</a></li>                        
-<?                      } if (check_perms('admin_dnu')) { ?> 
-                            <li><a href="tools.php?action=dnu">Do not upload list</a></li>
-<?                      } if (check_perms('admin_imagehosts')) { ?>
-                                <li><a href="tools.php?action=imghost_whitelist">Imagehost Whitelist</a></li>
-<?                      } if (check_perms('users_mod')) { ?>
-                            <li><a href="tools.php?action=email_blacklist">Email Blacklist</a></li>
-                            <li><a href="tools.php?action=tokens">Manage freeleech tokens</a></li>
-<?                      } if (check_perms('site_manage_tags')) { ?>
-                            <li><a href="tools.php?action=official_tags">Official Tags Manager</a></li> 
-<?                      } if (check_perms('torrents_review')) { ?>
-                            <li><a href="tools.php?action=marked_for_deletion">Marked for Deletion</a></li>
-
-<?                      } if (check_perms('site_manage_shop')) { ?>
-                            <li><a href="tools.php?action=shop_list">Bonus Shop</a></li>
-                  
-<?                      } if (check_perms('site_manage_badges')) { ?>
-                            <li><a href="tools.php?action=badges_list">Badges</a></li>
-                  
 <?                      } if (check_perms('site_manage_awards')) { ?>
                             <li><a href="tools.php?action=awards_auto">Automatic Awards</a></li>
+<?                      } if (check_perms('site_manage_badges')) { ?>
+                            <li><a href="tools.php?action=badges_list">Badges</a></li>
+<?                      } if (check_perms('site_manage_shop')) { ?>
+                            <li><a href="tools.php?action=shop_list">Bonus Shop</a></li>
+<?                      } if (check_perms('admin_manage_categories')) { ?>
+                            <li><a href="tools.php?action=categories">Categories</a></li>                    
+<?                      } if (check_perms('admin_whitelist')) { ?>
+                            <li><a href="tools.php?action=client_blacklist">Client Blacklist</a></li>
+<?                      } if (check_perms('admin_dnu')) { ?> 
+                            <li><a href="tools.php?action=dnu">Do not upload list</a></li>
+<?                      } if (check_perms('users_mod')) { ?>
+                            <li><a href="tools.php?action=email_blacklist">Email Blacklist</a></li>
+<?                      } if (check_perms('admin_manage_forums')) { ?>
+                            <li><a href="tools.php?action=forum">Forums</a></li>
+<?                      } if (check_perms('admin_imagehosts')) { ?>
+                                <li><a href="tools.php?action=imghost_whitelist">Imagehost Whitelist</a></li>
+<?                      } if (check_perms('admin_manage_ipbans')) { ?>
+                            <li><a href="tools.php?action=ip_ban">IP Bans</a></li>
+<?                      } if (check_perms('users_view_ips')) { ?>
+                            <li><a href="tools.php?action=login_watch">Login Watch</a></li>
+<?                      } if (check_perms('users_mod')) { ?>
+                            <li><a href="tools.php?action=tokens">Manage freeleech tokens</a></li>
+<?                      } if (check_perms('torrents_review')) { ?>
+                            <li><a href="tools.php?action=marked_for_deletion">Marked for Deletion</a></li>
+<?                      } if (check_perms('admin_manage_news')) { ?>
+                            <li><a href="tools.php?action=news">News</a></li>
+<?                      } if (check_perms('site_manage_tags')) { ?>
+                            <li><a href="tools.php?action=official_tags">Official Tags Manager</a></li> 
+<?                      } if (check_perms('admin_manage_cheats')) { ?>
+                            <li><a href="tools.php?action=cheats">Speed Reports</a></li> 
+<?                      } if (check_perms('admin_manage_permissions')) { ?>
+                            <li><a href="tools.php?action=permissions">User Classes</a></li>
+<?                      } if (check_perms('users_groups')) { ?>
+                            <li><a href="groups.php">User Groups</a></li>                  
 <?                      }  ?> 
                           </ul>
                       </li>
