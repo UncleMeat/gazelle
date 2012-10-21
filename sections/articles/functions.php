@@ -16,7 +16,7 @@ function replace_special_tags($Body) {
 
         $list = '<table cellpadding="5" cellspacing="1" border="0" class="border" width="100%">
                     <tr class="colhead">
-                      <td style="width:150px;"><strong>Allowed Clients</strong></td>
+                      <td style="width:150px;"><strong>Banned Clients</strong></td>
                 </tr>';                                        
 
         $Row = 'a';
