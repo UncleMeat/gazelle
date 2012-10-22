@@ -475,7 +475,7 @@ if (check_perms('users_mod') || $OwnProfile) {
                       FROM xbt_files_users WHERE uid ='".$UserID."'
                   GROUP BY useragent, ip");
 		while(list($Client, $ClientIP, $ClientID) = $DB->next_record()) {
-            $Clients .= "<br/><span title=\"$ClientID on $ClientIP\">$Client</span>";
+            $Clients .= "<br/>&nbsp; &bull; <span title=\"$ClientID on $ClientIP\">$Client</span>";
 			/* if (strlen($Clients) > 0) {
 				$Clients .= "<br/>".$Client;
 			} else {
