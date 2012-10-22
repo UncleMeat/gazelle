@@ -1,8 +1,15 @@
 <?
-if(!isset($_GET['id']) || !is_number($_GET['id']) || !isset($_GET['torrentid']) || !is_number($_GET['torrentid'])) { error(0); }
-$GroupID = $_GET['id'];
-$TorrentID = $_GET['torrentid'];
+if(!check_perms('site_moderate_requests')) {
+	error(403);
+}
+//if(!isset($_GET['id']) || !is_number($_GET['id']) || !isset($_GET['torrentid']) || !is_number($_GET['torrentid'])) { error(0); }
+if( !isset($_GET['torrentid']) || !is_number($_GET['torrentid']) ) { 
+    error(0);
+}
 
+//$GroupID = $_GET['id'];
+$TorrentID = $_GET['torrentid'];
+/*
 $DB->query("SELECT
 		t.FreeTorrent,
 		t.Dupable,
@@ -14,6 +21,13 @@ $DB->query("SELECT
 		t.FreeTorrent
 		FROM torrents AS t
 		JOIN torrents_group AS tg ON tg.ID=t.GroupID
+		WHERE t.ID='$TorrentID'"); */
+
+$DB->query("SELECT
+		tg.Name AS Title,
+		t.GroupID
+		FROM torrents AS t
+		JOIN torrents_group AS tg ON tg.ID=t.GroupID
 		WHERE t.ID='$TorrentID'");
 
 list($Properties) = $DB->to_array(false,MYSQLI_BOTH);
@@ -22,9 +36,6 @@ if(!$Properties) { error(404); }
 
 show_header('Send Mass PM', 'upload,bbcode,inbox');
 
-if(!check_perms('site_moderate_requests')) {
-	error(403);
-}
 
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
@@ -41,7 +52,7 @@ $Text = new TEXT;
 		<input type="hidden" name="action" value="takemasspm" />
 		<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 		<input type="hidden" name="torrentid" value="<?=$TorrentID?>" />
-		<input type="hidden" name="groupid" value="<?=$GroupID?>" />
+		<input type="hidden" name="groupid" value="<?=$Properties['GroupID']?>" />
                         <h3>Subject</h3>
                         <input type="text" name="subject" class="long" value="<?=(!empty($Subject) ? $Subject : '')?>"/>
                         <br />
