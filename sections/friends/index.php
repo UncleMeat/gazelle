@@ -1,5 +1,5 @@
 <?
-$P = db_array($_POST);
+$P = db_array($_REQUEST);
 enforce_login();
 if(!empty($_REQUEST['friendid']) && !is_number($_REQUEST['friendid'])) {
 	error(404);

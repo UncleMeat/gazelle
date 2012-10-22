@@ -65,6 +65,11 @@ switch ($_GET['action']){
 		include('remove_connstatus.php');
 		break;
 	
+	case 'watchlist_add':
+	case 'watchlist_remove':
+		include('do_watchlist.php');
+		break;
+    
 	// things not yet used on the site
 	case 'torrentgroup':
 		// Lanz: disabled, get_group_info() is broken for this code.

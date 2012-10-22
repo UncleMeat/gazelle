@@ -182,7 +182,7 @@ $Badges.=($Warned!='0000-00-00 00:00:00') ? '<img src="'.STATIC_SERVER.'common/s
 $Badges.=($Enabled == '1' || $Enabled == '0' || !$Enabled) ? '': '<img src="'.STATIC_SERVER.'common/symbols/disabled.png" alt="Banned" />';
 
 
-show_header($Username,'jquery,jquery.cookie,user,bbcode,requests,user');
+show_header($Username,'jquery,jquery.cookie,user,bbcode,requests');
 
 ?>
 <div class="thin">
@@ -190,14 +190,20 @@ show_header($Username,'jquery,jquery.cookie,user,bbcode,requests,user');
 	<div class="linkbox">
 <? if (!$OwnProfile) { ?>
 		[<a href="inbox.php?action=compose&amp;to=<?=$UserID?>" title="Send a Private Message to <?=$Username?>">Send PM</a>]
-<? 	$DB->query("SELECT Type FROM friends WHERE UserID='$LoggedUser[ID]' AND FriendID='$UserID'");
-      if($DB->record_count() > 0) list($FType)=$DB->next_record();
+<? 	
+    $DB->query("SELECT Type FROM friends WHERE UserID='$LoggedUser[ID]' AND FriendID='$UserID'");
+    if($DB->record_count() > 0) list($FType)=$DB->next_record();
+    
 	if(!$FType || $FType != 'friends' ) { ?>
 		[<a href="friends.php?action=add&amp;friendid=<?=$UserID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">Add to friends</a>]
-<?	} 
+<?	} elseif ($FType == 'friends'){ ?>
+		[<a href="friends.php?action=Defriend&amp;friendid=<?=$UserID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">Remove friend</a>]
+<?  }
       if(!$FType || $FType != 'blocked' ) { ?>
 		[<a href="friends.php?action=add&amp;friendid=<?=$UserID?>&amp;type=blocked&amp;auth=<?=$LoggedUser['AuthKey']?>">Block User</a>]
-<?	}?> 
+<?	} elseif ($FType == 'blocked'){ ?>
+		[<a href="friends.php?action=Unblock&amp;friendid=<?=$UserID?>&amp;type=blocked&amp;auth=<?=$LoggedUser['AuthKey']?>">Remove block</a>]
+<?  } ?> 
             
 		[<a href="reports.php?action=report&amp;type=user&amp;id=<?=$UserID?>">Report User</a>] 
 <?
@@ -208,6 +214,7 @@ if (check_perms('users_edit_profiles', $Class)) {
 ?>
 		[<a href="user.php?action=edit&amp;userid=<?=$UserID?>">Settings</a>]
 <? }
+
 if (check_perms('users_view_invites', $Class)) {
 ?>
 		[<a href="user.php?action=invite&amp;userid=<?=$UserID?>">Invites</a>]
@@ -227,7 +234,18 @@ if (check_perms('admin_reports')) {
 if (check_perms('users_mod')) {
 ?>
 		[<a href="userhistory.php?action=token_history&amp;userid=<?=$UserID?>">Slots</a>]
-<? } ?>
+<? }
+if (check_perms('users_manage_cheats', $Class)) {
+    $DB->query("SELECT UserID FROM users_watch_list WHERE UserID='$UserID'"); ?>
+    <span id="wl">
+<?  if($DB->record_count() > 0)  {?>    
+		[<a onclick="watchlist_remove('<?=$UserID?>')" href="#">Remove from watchlist</a>]
+<?  } else {?>    
+		[<a onclick="watchlist_add('<?=$UserID?>')" href="#">Add to watchlist</a>]
+<?  } ?>
+    </span>
+<?
+} ?>
 	</div>
       
 	<div class="sidebar">

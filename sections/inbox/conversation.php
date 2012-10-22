@@ -98,7 +98,7 @@ foreach ($Messages as $Message) {
 
 ?>  
         <div class="head">conversation details</div>
-        <div class="box pad vertical_space">
+        <div class="box pad vertical_space colhead">
             started by <strong><?=$Users[$SenderID]['Username']?></strong> <?=time_diff($SentDate); ?>
             <span style="float:right">to <strong><?=$Users[$ReplyID]['Username']?></strong></span>&nbsp;
         </div>
@@ -147,7 +147,7 @@ if(!empty($ReplyID) && $ReplyID!=0 && $CSenderID!=0 && ( empty($LoggedUser['Disa
 			<div id="preview" class="box vertical_space body hidden"></div>
 			<div id="buttons" class="center">
 				<input type="button" value="Preview" onclick="Quick_Preview();" /> 
-				<input type="submit" value="Send message" />
+				<input type="submit" value="Send reply to <?=$Users[$ReplyID]['Username']?>" />
 			</div>
             </form>
       </div>
@@ -159,8 +159,8 @@ if(!empty($ReplyID) && $ReplyID!=0 && $CSenderID!=0 && ( empty($LoggedUser['Disa
 //list($FLS) = $DB->next_record();
 //if((check_perms('users_mod') || $FLS != "") && (!$ForwardedID || $ForwardedID == $LoggedUser['ID'])) {
 ?>
-	<div class="head">Forward</div>
-	<div class="box pad">
+	<div class="head">Forward as new PM (takes you to a new compose message page)</div>
+	<div class="box pad rowa">
             <form id="forwardform" action="inbox.php" method="post">
 			<input type="hidden" name="action" value="forward" />
 			<input type="hidden" name="convid" value="<?=$ConvID?>" />
@@ -169,11 +169,11 @@ if(!empty($ReplyID) && $ReplyID!=0 && $CSenderID!=0 && ( empty($LoggedUser['Disa
             
             <input type="radio" id="forwardto" name="forwardto" value="user" checked="checked" />
 			<label for="receivername">Forward to user:</label>
-            <input id="receivername" type="text" name="receivername" value="" size="20" />
+            <input id="receivername" type="text" name="receivername" value="" size="20" onfocus="javascript: $('#forwardto').raw().checked=true"/>
             &nbsp;&nbsp;&nbsp;
-            <input type="radio" name="forwardto" value="staff" />
+            <input type="radio" id="forwardtostaff" name="forwardto" value="staff" />
 			<label for="receiverid">Forward to staff member:</label>
-			<select id="receiverid" name="receiverid">
+			<select id="receiverid" name="receiverid" onfocus="javascript: $('#forwardtostaff').raw().checked=true">
 <?
 	foreach($StaffIDs as $StaffID => $StaffName) {
 		if($StaffID == $LoggedUser['ID'] || in_array($StaffID, $ReceiverIDs)) {
@@ -185,7 +185,8 @@ if(!empty($ReplyID) && $ReplyID!=0 && $CSenderID!=0 && ( empty($LoggedUser['Disa
 	}
 ?>
 			</select>
-			<input style="float:right" type="button" onclick="Foward_To('conversation');" value="Forward entire conversation" />
+            &nbsp;&nbsp;&nbsp;
+			<input type="button" onclick="Foward_To('conversation');" value="Forward entire conversation" />
             </form>
      </div>
 <?
@@ -193,14 +194,14 @@ if(!empty($ReplyID) && $ReplyID!=0 && $CSenderID!=0 && ( empty($LoggedUser['Disa
 
 ?>
 	<div class="head">Manage conversation</div>
-	<div class="box pad">
+	<div class="box pad rowa">
         <form action="inbox.php" method="post">
 			<input type="hidden" name="action" value="takeedit" />
 			<input type="hidden" name="convid" value="<?=$ConvID?>" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 
 			<table width="100%" class="noborder">
-				<tr>
+				<tr class="rowa">
 					<td class="center" width="33%"><label for="sticky">Sticky</label>
 						<input type="checkbox" id="sticky" name="sticky"<? if($Sticky) { echo ' checked="checked"'; } ?> />
 					</td>
@@ -211,7 +212,7 @@ if(!empty($ReplyID) && $ReplyID!=0 && $CSenderID!=0 && ( empty($LoggedUser['Disa
 						<input type="checkbox" id="delete" name="delete" />
 					</td>
 				</tr>
-				<tr>
+				<tr class="rowa">
 					<td class="center" colspan="3"><input type="submit" value="Manage conversation" /></td>
 				</tr>
 			</table>

@@ -97,7 +97,7 @@ show_header('Compose', 'inbox,bbcode');
     if ($FwdBody) {
         ?>
         <div class="head">
-            Forwarded <?=$MsgType; //"$MsgType $msgID ($Subheader)"?>:
+            <?=$MsgType; //"$MsgType $msgID ($Subheader)"?> to be forwarded:
         </div>
         <div class="box vertical_space">
             <div class="body" >
@@ -111,7 +111,7 @@ show_header('Compose', 'inbox,bbcode');
     <div id="preview" class="hidden"></div>
     <form action="inbox.php" method="post" id="messageform">
         <div id="quickpost">  
-            <div class="head">Compose message</div>
+            <div class="head"><?=($FwdBody?'Add':'Compose')?> message</div>
             <div class="box pad">
                         <input type="hidden" name="action" value="takecompose" />
                         <input type="hidden" name="toid" value="<?=$ToID?>" />
@@ -127,7 +127,7 @@ show_header('Compose', 'inbox,bbcode');
         </div>
 		<div class="center">
 			 <input type="button" id="previewbtn" value="Preview" onclick="Inbox_Preview();" /> 
-			 <input type="submit" value="Send message" />
+			 <input type="submit" value="Send <? if($FwdBody) echo 'forwarded ';?>message" />
 		</div>
     </form>
 </div>
