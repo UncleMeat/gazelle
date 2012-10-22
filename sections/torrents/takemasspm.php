@@ -41,7 +41,7 @@ if($Err){
 //******************************************************************************//
 //--------------- Send PMs to users --------------------------------------------//
 
-$DB->query('SELECT uid FROM xbt_snatched WHERE fid='.$TorrentID);
+$DB->query("SELECT DISTINCT uid FROM xbt_snatched WHERE fid='$TorrentID'");
 
 if ($DB->record_count()>0) {
 	// Save this because send_pm uses $DB to run its own query... Oops...
