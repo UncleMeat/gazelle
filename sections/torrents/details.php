@@ -198,10 +198,20 @@ if(check_perms('torrents_review')){
 
     <?	if(check_perms('torrents_delete') || $UserID == $LoggedUser['ID']) { ?>
             <a href="torrents.php?action=delete&amp;torrentid=<?=$TorrentID ?>" title="Remove">[Remove]</a>
-    <?	} ?>
+    <?	} 
 
+    if (check_perms('users_manage_cheats')) {
+        $DB->query("SELECT TorrentID FROM torrents_watch_list WHERE TorrentID='$TorrentID'"); ?>
+        <span id="wl">
+<?      if($DB->record_count() > 0)  {?>    
+            <a onclick="twatchlist_remove('<?=$GroupID?>','<?=$TorrentID?>')" href="#">[Remove from watchlist]</a>
+<?      } else {?>    
+            <a onclick="twatchlist_add('<?=$GroupID?>','<?=$TorrentID?>')" href="#">[Add to watchlist]</a>
+<?      } ?>
+        </span>
+<?  } ?>
 	</div>
-      <div  class="linkbox">
+    <div  class="linkbox">
           
                      <div id="top_info">
                          <table class="boxstat">
@@ -220,8 +230,8 @@ if(check_perms('torrents_review')){
                             </tr>
                          </table>
                        </div>
-      </div>
-      <div  class="linkbox">
+    </div>
+    <div  class="linkbox">
                      <span id="torrent_buttons"  style="float: left;">
 <?  if (check_perms('torrents_download_override') || !$Status || $Status == 'Okay'  ) { ?>
  
@@ -242,8 +252,8 @@ if(check_perms('torrents_review')){
                      <span style="float: right;"><a id="slide_tools_button"  class="button toggle redButton" onclick="Tools_Toggle();return false;" title="Toggle staff tools">Staff Tools</a></span>
 <?		} ?>
             <br style="clear:both" />
-      </div>
-      <br/>
+    </div>
+    <br/>
 <?
 
 // For staff draw the tools section

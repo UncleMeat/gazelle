@@ -560,7 +560,7 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                             <li><a href="tools.php?action=news">News</a></li>
 <?                      } if (check_perms('site_manage_tags')) { ?>
                             <li><a href="tools.php?action=official_tags">Official Tags Manager</a></li> 
-<?                      } if (check_perms('admin_manage_cheats')) { ?>
+<?                      } if (check_perms('users_manage_cheats')) { ?>
                             <li><a href="tools.php?action=cheats">Speed Reports</a></li> 
 <?                      } if (check_perms('admin_manage_permissions')) { ?>
                             <li><a href="tools.php?action=permissions">User Classes</a></li>

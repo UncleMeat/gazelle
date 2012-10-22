@@ -44,7 +44,7 @@ show_header('Staff Tools');
 			<tr><td><a href="tools.php?action=news">News</a></td></tr>
 <? } if (check_perms('site_manage_tags')) { ?>
 			<tr><td><a href="tools.php?action=official_tags">Official Tags Manager</a></td></tr> 
-<? } if (check_perms('admin_manage_cheats')) { ?>
+<? } if (check_perms('users_manage_cheats')) { ?>
 			<tr><td><a href="tools.php?action=cheats">Speed Reports</a></td></tr>                    
 <? } if (check_perms('admin_manage_permissions')) { ?>
 			<tr><td><a href="tools.php?action=permissions">User Classes<!--Permissions--></a></td></tr>

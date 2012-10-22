@@ -9,7 +9,7 @@
 function get_warning_time(){
     global $DB;
     //return time() + (12 * 60 * 60); // 12 hours...   ?
-    $DB->query("SELECT Hours FROM review_options");
+    $DB->query("SELECT ReviewHours FROM site_options");
     list($Time) = $DB->next_record();
     return time() + ((int)$Time * 3600);
 }

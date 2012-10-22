@@ -59,9 +59,112 @@ switch ($_REQUEST['action']) {
     case 'get_cc':
         include(SERVER_ROOT . '/sections/tools/services/get_cc.php');
         break;
+    
+    
     //Managers
     case 'cheats':
         include(SERVER_ROOT . '/sections/tools/managers/speed_reports_list.php');
+        break;
+    case 'edit_userwl':
+        if (!check_perms('users_manage_cheats')) error(403);
+        if ( !isset($_POST['userid']) || !is_number($_POST['userid']) || $_POST['userid']==0 ) error(0);
+        $UserID = (int)$_POST['userid'];
+        if ($_POST['submit']=='Remove'){
+            $DB->query("DELETE FROM users_watch_list WHERE UserID='$UserID'");
+            if ($DB->affected_rows()>0) {
+                write_user_log($UserID, "User removed from watchlist by $LoggedUser[Username]");
+            }
+        } elseif ($_POST['submit']=='Save') {
+            $KeepTorrents = $_POST['keeptorrent']=='1'?'1':'0';
+            $DB->query("UPDATE users_watch_list SET KeepTorrents='$KeepTorrents' WHERE UserID='$UserID'");
+        }
+        header("Location: tools.php?action=cheats&viewspeed=$_POST[viewspeed]");
+        break;
+    case 'edit_torrentwl':
+        if (!check_perms('users_manage_cheats')) error(403);
+        
+        if ( !isset($_POST['torrentid']) || !is_number($_POST['torrentid']) || $_POST['torrentid']==0 ) error(0);
+        $TorrentID = (int)$_POST['torrentid'];
+        
+        if ($_POST['submit']=='Remove'){
+            $DB->query("DELETE FROM torrents_watch_list WHERE TorrentID='$TorrentID'");
+            if ($DB->affected_rows()>0) {
+                $DB->query("SELECT GroupID FROM torrents WHERE ID='$TorrentID'");
+                list($GroupID) = $DB->next_record();
+                write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], "Torrent removed from watchlist", '1') ;
+            }
+        }
+        header("Location: tools.php?action=cheats&viewspeed=$_POST[viewspeed]");
+        break;
+    case 'save_records_options':
+        if (!check_perms('admin_manage_cheats')) error(403);
+        
+        $DelMins = (int)$_POST['delrecordmins'];
+        $KeepSpeed = (int)$_POST['keepspeed'];
+        
+        $DB->query("UPDATE site_options SET DeleteRecordsMins='$DelMins', KeepSpeed='$KeepSpeed'");
+        header("Location: tools.php?action=cheats&viewspeed=$_POST[viewspeed]");
+        break;
+    case 'delete_speed_records':
+        if (!check_perms('users_manage_cheats')) error(403);
+        
+        if(!isset($_POST['rid']) || !is_array($_POST['rid'])) error('You didn\'t select any records to delete.');
+        $recordIDS = $_POST['rid'];
+        foreach($recordIDS AS $rid) {
+            $rid = trim($rid);
+            if(!is_number($rid)) error(0);
+        }
+        $recordIDS = implode(',', $recordIDS); 
+        $DB->query("DELETE FROM xbt_peers_history WHERE ID IN ($recordIDS)"); 
+        
+        header("Location: tools.php?action=cheats&viewspeed=$_POST[viewspeed]");
+        break;
+        
+    case 'test_delete_schedule':
+        if (!check_perms('admin_manage_cheats')) error(403);
+        //------------ Remove unwatched and unwanted speed records
+
+        $DB->query("SELECT DeleteRecordsMins, KeepSpeed FROM site_options");
+        list($DeleteRecordsMins, $KeepSpeed) = $DB->next_record();
+        
+        // as we are deleting way way more than keeping, and to avoid exceeding lockrow size in innoDB we do it another way:
+        $DB->query("CREATE TABLE `temp_copy` (  
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `uid` int(11) NOT NULL,
+          `downloaded` bigint(20) NOT NULL,
+          `remaining` bigint(20) NOT NULL,
+          `uploaded` bigint(20) NOT NULL,
+          `upspeed` bigint(20) NOT NULL,
+          `downspeed` bigint(20) NOT NULL,
+          `timespent` bigint(20) NOT NULL,
+          `peer_id` binary(20) NOT NULL DEFAULT '\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',
+          `ip` varchar(15) NOT NULL DEFAULT '',
+          `fid` int(11) NOT NULL,
+          `mtime` int(11) NOT NULL,
+          PRIMARY KEY (`id`),
+          KEY `uid` (`uid`),
+          KEY `fid` (`fid`),
+          KEY `upspeed` (`upspeed`),
+          KEY `mtime` (`mtime`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8"); 
+
+        // insert the records we want to keep into the temp table
+        $DB->query("INSERT INTO temp_copy (uid, downloaded, remaining, uploaded, upspeed, downspeed, timespent, peer_id, ip, fid, mtime)
+                            SELECT x.uid, x.downloaded, x.remaining, x.uploaded, x.upspeed, x.downspeed, x.timespent, x.peer_id, x.ip, x.fid, x.mtime 
+                              FROM xbt_peers_history AS x
+                         LEFT JOIN users_watch_list AS uw ON uw.UserID=x.uid
+                         LEFT JOIN torrents_watch_list AS tw ON tw.TorrentID=x.fid
+                             WHERE uw.UserID IS NOT NULL
+                                OR tw.TorrentID IS NOT NULL
+                                OR x.upspeed >= '$KeepSpeed'
+                                OR x.mtime>'".(time() - ( $DeleteRecordsMins * 60))."'" );
+
+        //Use RENAME TABLE to atomically move the original table out of the way and rename the copy to the original name:
+        $DB->query("RENAME TABLE xbt_peers_history TO temp_old, temp_copy TO xbt_peers_history");
+        //Drop the original table:
+        $DB->query("DROP TABLE temp_old");
+        
+        header("Location: tools.php?action=cheats&viewspeed=$_POST[viewspeed]");
         break;
 
     case 'forum':
@@ -266,8 +369,8 @@ switch ($_REQUEST['action']) {
 
             $Hours = (int) $_POST['hours'];
             $AutoDelete = (int) $_POST['autodelete'] == 1 ? 1 : 0;
-            $DB->query("UPDATE review_options 
-                                   SET Hours=$Hours, AutoDelete=$AutoDelete");
+            $DB->query("UPDATE site_options 
+                                   SET ReviewHours='$Hours', AutoDelete='$AutoDelete'");
         }
         include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
         include(SERVER_ROOT.'/sections/tools/managers/mfd_manager.php');

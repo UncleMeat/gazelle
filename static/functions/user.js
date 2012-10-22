@@ -1,13 +1,13 @@
 
 function watchlist_add(user_id) {
-	ajax.get('ajax.php?action=watchlist_add&userid=' + user_id, function (response) {
+    var comm = prompt('Enter a comment for adding this user to the watchlist');
+	ajax.get('ajax.php?action=watchlist_add&userid=' + user_id + '&comm=' + comm, function (response) {
         var x = json.decode(response); 
         if ( is_array(x)){
             if ( x[0] == true){
                $('#wl').html("[<a onclick=\"watchlist_remove('"+ user_id +"')\" href=\"#\">Remove from watchlist</a>]");
-            } else {
-                alert(x[1]);
             }
+            alert(x[1]);
         } else {    // error from ajax
             alert(x);
         } 
@@ -20,9 +20,8 @@ function watchlist_remove(user_id) {
         if ( is_array(x)){
             if ( x[0] == true){
                $('#wl').html("[<a onclick=\"watchlist_add('"+ user_id +"')\" href=\"#\">Add to watchlist</a>]");
-            } else {
-                alert(x[1]);
             }
+            alert(x[1]);
         } else {    // error from ajax
             alert(x);
         } 

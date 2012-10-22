@@ -209,7 +209,7 @@ echo $Pages;
 		}
 ?>
 				<tr class="<?=$RowClass?>">
-					<td class="center"><input type="checkbox" name="messages[]=" value="<?=$ConvID?>" /></td>
+					<td class="center"><input type="checkbox" name="messages[]" value="<?=$ConvID?>" /></td>
 					<td>
 <?		if($Unread) { echo '<strong>'; } ?>
 <?		if($Sticky) { echo 'Sticky: '; }

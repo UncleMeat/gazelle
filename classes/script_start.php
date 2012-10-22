@@ -1484,6 +1484,15 @@ function write_log($Message) {
     $DB->query('INSERT INTO log (Message, Time) VALUES (\'' . db_string($Message) . '\', \'' . sqltime() . '\')');
 }
 
+// write to user admincomment
+function write_user_log($UserID, $Comment) {
+    global $DB;
+    $AdminComment = db_string( date("Y-m-d H:i:s") . " - $Comment\n" );
+    $DB->query("UPDATE users_info SET AdminComment=CONCAT('$AdminComment',AdminComment) WHERE UserID='$UserID'");
+}
+
+
+
 // Send a message to an IRC bot listening on SOCKET_LISTEN_PORT
 function send_irc($Raw) {
     $IRCSocket = fsockopen(SOCKET_LISTEN_ADDRESS, SOCKET_LISTEN_PORT);
@@ -1626,7 +1635,7 @@ function warn_user($UserID, $Duration, $Reason) {
 
         send_pm($UserID, 0, db_string("You have received multiple warnings."), db_string("When you received your latest warning (Set to expire on " . date("Y-m-d", (time() + $Duration)) . "), you already had a different warning (Set to expire on " . date("Y-m-d", strtotime($OldDate)) . ").\n\n Due to this collision, your warning status will now expire at " . $NewExpDate . "."));
 
-        $AdminComment = date("Y-m-d") . ' - Warning (Clash) extended to expire at ' . $NewExpDate . ' by ' . $LoggedUser['Username'] . "\nReason: $Reason\n\n";
+        $AdminComment = date("Y-m-d H:i:s") . ' - Warning (Clash) extended to expire at ' . $NewExpDate . ' by ' . $LoggedUser['Username'] . "\nReason: $Reason\n";
 
         $DB->query('UPDATE users_info SET
 			Warned=\'' . db_string($NewExpDate) . '\',
@@ -1641,7 +1650,7 @@ function warn_user($UserID, $Duration, $Reason) {
         $Cache->update_row(false, array('Warned' => $WarnTime));
         $Cache->commit_transaction(0);
 
-        $AdminComment = date("Y-m-d") . ' - Warned until ' . $WarnTime . ' by ' . $LoggedUser['Username'] . "\nReason: $Reason\n\n";
+        $AdminComment = date("Y-m-d H:i:s") . ' - Warned until ' . $WarnTime . ' by ' . $LoggedUser['Username'] . "\nReason: $Reason\n";
 
         $DB->query('UPDATE users_info SET
 			Warned=\'' . db_string($WarnTime) . '\',

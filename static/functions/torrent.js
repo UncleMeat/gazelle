@@ -1,3 +1,33 @@
+
+function twatchlist_add(group_id, torrent_id) {
+    var comm = prompt('Enter a comment for adding this torrent to the watchlist');
+	ajax.get('ajax.php?action=watchlist_add&groupid=' + group_id + '&torrentid=' + torrent_id + '&comm=' + comm, function (response) {
+        var x = json.decode(response); 
+        if ( is_array(x)){
+            if ( x[0] == true){
+               $('#wl').html("[<a onclick=\"twatchlist_remove('"+ group_id +"','"+ torrent_id +"')\" href=\"#\">Remove from watchlist</a>]");
+            }
+            alert(x[1]);
+        } else {    // error from ajax
+            alert(x);
+        } 
+	}); 
+}
+
+function twatchlist_remove(group_id, torrent_id) {
+	ajax.get('ajax.php?action=watchlist_remove&groupid=' + group_id + '&torrentid=' + torrent_id, function (response) {
+        var x = json.decode(response); 
+        if ( is_array(x)){
+            if ( x[0] == true){
+               $('#wl').html("[<a onclick=\"twatchlist_add('"+ group_id +"','"+ torrent_id +"')\" href=\"#\">Add to watchlist</a>]");
+            }
+            alert(x[1]);
+        } else {    // error from ajax
+            alert(x);
+        } 
+	}); 
+}
+/*
 function ChangeCategory(catid) {
 	if(catid == 1) {
 		$('#split_releasetype').show();
@@ -13,6 +43,7 @@ function ChangeCategory(catid) {
 		$('#split_year').hide();
 	}
 }
+
 
 function ArtistManager() {
 	var GroupID = window.location.search.match(/[?&]id=(\d+)/);
@@ -206,7 +237,7 @@ function ArtistManagerDelete() {
 	$('#manager_action').raw().value = 'delete';
 	ArtistManagerSubmit();
 	$('#manager_action').raw().value = 'manage';
-}
+} */
 
 function Vote(amount, requestid) {
 	if(typeof amount == 'undefined') {

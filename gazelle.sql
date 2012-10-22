@@ -1129,24 +1129,6 @@ CREATE TABLE IF NOT EXISTS `requests_votes` (
 
 
 
--- --------------------------------------------------------
-
---
--- Table structure for table `review_options`
---
-
-CREATE TABLE IF NOT EXISTS `review_options` (
-  `Hours` int(4) NOT NULL,
-  `AutoDelete` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `review_options`
---
-
-INSERT IGNORE INTO `review_options` (`Hours`, `AutoDelete`) VALUES
-(12, 0);
-
 
 -- --------------------------------------------------------
 
@@ -1192,6 +1174,26 @@ CREATE TABLE IF NOT EXISTS `schedule` (
 INSERT INTO `schedule` (`NextHour`, `NextDay`, `NextBiWeekly`) VALUES
 (0, 0, 0);
 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `site_options`
+--
+
+CREATE TABLE IF NOT EXISTS `site_options` (
+  `ReviewHours` int(4) NOT NULL,
+  `AutoDelete` tinyint(1) NOT NULL,
+  `DeleteRecordsMins` int(8) NOT NULL,
+  `KeepSpeed` bigint(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `site_options`
+--
+
+INSERT IGNORE INTO `site_options` (`ReviewHours`, `AutoDelete`, `DeleteRecordsMins`, `KeepSpeed`) VALUES
+(24, 0, 720, 1048576);
 
 -- --------------------------------------------------------
 
@@ -1449,7 +1451,9 @@ CREATE TABLE IF NOT EXISTS `stylesheets` (
 --
 
 INSERT INTO `stylesheets` (`ID`, `Name`, `Description`, `Default`) VALUES
-(1, 'empornium', 'The default empornium stylesheet', '1');
+(1, 'empornium', 'empornium stylesheet', '0'),
+(2, 'light', 'light empornium stylesheet', '0'),
+(3, 'modern', 'modern empornium stylesheet', '1');
 
 -- --------------------------------------------------------
 
@@ -1836,6 +1840,22 @@ CREATE TABLE IF NOT EXISTS `torrents_tags_votes` (
   `Way` enum('up','down') NOT NULL DEFAULT 'up',
   PRIMARY KEY (`GroupID`,`TagID`,`UserID`,`Way`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `torrents_watch_list`
+--
+
+CREATE TABLE IF NOT EXISTS `torrents_watch_list` (
+  `TorrentID` int(10) NOT NULL,
+  `StaffID` int(10) NOT NULL,
+  `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `Comment` varchar(255) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`TorrentID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 -- --------------------------------------------------------
 
@@ -2346,9 +2366,26 @@ CREATE TABLE IF NOT EXISTS `users_watch_list` (
   `UserID` int(10) NOT NULL,
   `StaffID` int(10) NOT NULL,
   `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `Comment` varchar(255) CHARACTER SET utf8 NOT NULL,
   `KeepTorrents` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_exclude_watchlist`
+--
+
+CREATE TABLE IF NOT EXISTS `users_exclude_watchlist` (
+  `UserID` int(10) NOT NULL,
+  `StaffID` int(10) NOT NULL,
+  `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `Comment` varchar(255) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 -- --------------------------------------------------------
 

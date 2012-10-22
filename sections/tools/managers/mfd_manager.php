@@ -7,7 +7,7 @@ $ViewStatus = isset($_REQUEST['viewstatus'])?$_REQUEST['viewstatus']:'both';
 $ViewStatus = in_array($ViewStatus, array('warned','pending','both'))?$ViewStatus:'pending';
 $OverdueOnly = (isset($_REQUEST['overdue']) && $_REQUEST['overdue'])?1:0;
 
-$DB->query("SELECT Hours, AutoDelete FROM review_options LIMIT 1");
+$DB->query("SELECT ReviewHours, AutoDelete FROM site_options LIMIT 1");
 list($Hours, $Delete) = $DB->next_record();
 
 $CanManage = check_perms('torrents_review_manage');

@@ -14,7 +14,7 @@ if (!empty($Groups['matches'][$GroupID])) {
 } else {
 	$Title = "Group $GroupID";
 }
-//die('sdlfkjldsaf');
+
 ?>
 
 <div class="thin">
@@ -28,11 +28,15 @@ if (!empty($Groups['matches'][$GroupID])) {
 			<td>Info</td>
 		</tr>
 <?
+    if (!$LoggedUser['DisplayStaff']=='1' && !$LoggedUser['SupportFor']!='') 
+        $XTRAWHERE = "AND Hidden='0'";
+    
 	$Log = $DB->query("SELECT TorrentID, t.Name, g.UserID, Username, Info, g.Time 
-                           FROM group_log AS g 
-                           LEFT JOIN users_main AS u ON u.ID=g.UserID
-                           LEFT JOIN torrents_group AS t ON t.ID=g.GroupID
-                           WHERE GroupID = ".$GroupID." ORDER BY Time DESC");
+                         FROM group_log AS g 
+                    LEFT JOIN users_main AS u ON u.ID=g.UserID
+                    LEFT JOIN torrents_group AS t ON t.ID=g.GroupID
+                        WHERE GroupID = ".$GroupID."  $XTRAWHERE
+                     ORDER BY Time DESC");
 
 	while (list($TorrentID, $Name, $UserID, $Username, $Info, $Time) = $DB->next_record())
 	{

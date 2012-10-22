@@ -51,6 +51,8 @@ $sqltime = sqltime();
 echo "$sqltime\n";
 
 
+$DB->query("SELECT AutoDelete, DeleteRecordsMins, KeepSpeed FROM site_options");
+list($AutoDelete,$DeleteRecordsMins,$KeepSpeed) = $DB->next_record();
 
 /*************************************************************************\
 //--------------Run every time ------------------------------------------//
@@ -132,20 +134,60 @@ $DB->query("UPDATE users_main AS um
 
 //------------ record ip's/ports for users and refresh time field for existing status records -------------------------//
 sleep(3);
-$mtime = time();
+$nowtime = time();
 $DB->query("INSERT INTO users_connectable_status ( UserID, IP, Time )
-        SELECT uid, ip, '$mtime' FROM xbt_files_users GROUP BY uid, ip
-         ON DUPLICATE KEY UPDATE Time='$mtime'");
+        SELECT uid, ip, '$nowtime' FROM xbt_files_users GROUP BY uid, ip
+         ON DUPLICATE KEY UPDATE Time='$nowtime'");
 
 //------------Remove inactive peers every 15 minutes-------------------------//
 $DB->query("DELETE FROM xbt_files_users WHERE active='0'");
 
 
+//------------ Remove unwatched and unwanted speed records
+
+// as we are deleting way way more than keeping, and to avoid exceeding lockrow size in innoDB we do it another way:
+$DB->query("CREATE TABLE `temp_copy` (  
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `downloaded` bigint(20) NOT NULL,
+  `remaining` bigint(20) NOT NULL,
+  `uploaded` bigint(20) NOT NULL,
+  `upspeed` bigint(20) NOT NULL,
+  `downspeed` bigint(20) NOT NULL,
+  `timespent` bigint(20) NOT NULL,
+  `peer_id` binary(20) NOT NULL DEFAULT '\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',
+  `ip` varchar(15) NOT NULL DEFAULT '',
+  `fid` int(11) NOT NULL,
+  `mtime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `fid` (`fid`),
+  KEY `upspeed` (`upspeed`),
+  KEY `mtime` (`mtime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8"); 
+
+// insert the records we want to keep into the temp table
+$DB->query("INSERT INTO temp_copy (uid, downloaded, remaining, uploaded, upspeed, downspeed, timespent, peer_id, ip, fid, mtime)
+                    SELECT x.uid, x.downloaded, x.remaining, x.uploaded, x.upspeed, x.downspeed, x.timespent, x.peer_id, x.ip, x.fid, x.mtime 
+                      FROM xbt_peers_history AS x
+                 LEFT JOIN users_watch_list AS uw ON uw.UserID=x.uid
+                 LEFT JOIN torrents_watch_list AS tw ON tw.TorrentID=x.fid
+                     WHERE uw.UserID IS NOT NULL
+                        OR tw.TorrentID IS NOT NULL
+                        OR x.upspeed >= '$KeepSpeed'
+                        OR x.mtime>'".($nowtime - ( $DeleteRecordsMins * 60))."'" );
+
+//Use RENAME TABLE to atomically move the original table out of the way and rename the copy to the original name:
+$DB->query("RENAME TABLE xbt_peers_history TO temp_old, temp_copy TO xbt_peers_history");
+//Drop the original table:
+$DB->query("DROP TABLE temp_old");
+
+
+//$DB->query("DELETE FROM xbt_peers_history WHERE ..."); 
+
 
 //------------- Remove torrents that have expired their warning period every 15 minutes ----------//
 
-$DB->query("SELECT AutoDelete FROM review_options");
-list($AutoDelete) = $DB->next_record();
 echo "AutoDelete torrents marked for deletion: ". ($AutoDelete?'On':'Off')."\n";
 if ($AutoDelete){
     include(SERVER_ROOT.'/sections/tools/managers/mfd_functions.php');
