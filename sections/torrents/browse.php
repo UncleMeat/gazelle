@@ -427,10 +427,10 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                             <option value="desc"<? selected('order_way', 'desc') ?>>Descending</option>
                             <option value="asc" <? selected('order_way', 'asc') ?>>Ascending</option>
                         </select>
-                        <label style="margin-left: 20px;" for="filter_freeleech"><strong>Include only freeleech torrents.</strong></label>
+                        <label style="margin-left: 20px;" for="filter_freeleech" title="Limit results to ONLY freeleech torrents"><strong>Include only freeleech torrents.</strong></label>
                         <input type="checkbox" name="filter_freeleech" value="1" <? selected('filter_freeleech', 1, 'checked') ?>/>
                     <? if (check_perms('site_search_many')) { ?>
-                            <label style="margin-left:20px;" for="limit_matches"><strong>Limited search results:</strong></label>
+                            <label style="margin-left:20px;" for="limit_matches" title="Limit results to the first 100 matches"><strong>Limit results (max 100):</strong></label>
                             <input type="checkbox" value="1" name="limit_matches" <? selected('limit_matches', 1, 'checked') ?> />
                     <? } ?>
                 <span style="float:right"><a href="#" onclick="$('.on_cat_change').toggle();$('.non_cat_change').toggle(); if(this.innerHTML=='(View Categories)'){this.innerHTML='(Hide Categories)';} else {this.innerHTML='(View Categories)';}; return false;"><?= (!empty($LoggedUser['HideCats'])) ? '(View Categories)' : '(Hide Categories)' ?></a></span>
@@ -568,6 +568,8 @@ if (count($Results) == 0) {
     die();
 }
 
+// if no searchtext or tags specified then we are showing all torrents
+$AllTorrents = (!isset($_GET['taglist']) && !isset($_GET['searchtext']))?TRUE:FALSE;
 $Bookmarks = all_bookmarks('torrent');
 ?>
 <table class="torrent_table grouping" id="torrent_table">
@@ -591,7 +593,8 @@ $Bookmarks = all_bookmarks('torrent');
         list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, 
                 $NewCategoryID, $SearchText, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 
-        if ($LoggedUser['SplitByDays'] && $lastday !== date('j', $GroupTime - $LoggedUser['TimeOffset']) ) {
+        $day = date('j', $GroupTime - $LoggedUser['TimeOffset']);
+        if ($AllTorrents && $LoggedUser['SplitByDays'] && $lastday !== $day ) {
 ?>
     <tr class="colhead">
         <td colspan="10" class="center">
@@ -599,7 +602,7 @@ $Bookmarks = all_bookmarks('torrent');
         </td>
     </tr>
 <?
-            $lastday = date('j', $GroupTime - $LoggedUser['TimeOffset']);
+            $lastday = $day;
         }
         
         $TagList = explode(' ', str_replace('_', '.', $TagList));
@@ -619,7 +622,7 @@ $Bookmarks = all_bookmarks('torrent');
         $SL = ($TotalSeeders == 0 ? "<span class=r00>" . number_format($TotalSeeders) . "</span>" : number_format($TotalSeeders)) . "/" . number_format($TotalLeechers);
         $Overlay = "<table class=overlay><tr><td class=overlay colspan=2><strong>" . $OverName . "</strong></td><tr><td class=leftOverlay><img style='max-width: 150px;' src=" . $OverImage . "></td><td class=rightOverlay><strong>Uploader:</strong><br />{$Data['Username']}<br /><br /><strong>Size:</strong><br />" . get_size($Data['Size']) . "<br /><br /><strong>Snatched:</strong><br />" . number_format($TotalSnatched) . "<br /><br /><strong>Seeders/Leechers:</strong><br />" . $SL . "</td></tr></table>";
  
-	  $AddExtra = torrent_info($Data, $TorrentID, $UserID);
+        $AddExtra = torrent_info($Data, $TorrentID, $UserID);
             
         $row = ($row == 'a'? 'b' : 'a');
         $IsMarkedForDeletion = $Data['Status'] == 'Warned' || $Data['Status'] == 'Pending';
@@ -636,8 +639,11 @@ $Bookmarks = all_bookmarks('torrent');
 
 <?                if (check_perms('torrents_review') && $Data['Status'] == 'Okay') { 
                         echo  '&nbsp;'.get_status_icon('Okay');
-                  }        
-?> 
+                  }
+                  if (in_array($GroupID, $Bookmarks) ){
+                        echo  '&nbsp;<span title="You have this torrent bookmarked" class="icon icon_bookmarked"></span>';
+                  }
+?>              
                 <script>
                     var overlay<?=$GroupID?> = <?=json_encode($Overlay)?>
                 </script>

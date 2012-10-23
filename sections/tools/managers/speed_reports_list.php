@@ -243,6 +243,9 @@ $Watchlist = $DB->to_array();
             
 list($Page,$Limit) = page_limit(50);
 
+$DB->query("SELECT Count(*) FROM xbt_peers_history");
+list($TotalResults) = $DB->next_record();
+
 $DB->query("SELECT SQL_CALC_FOUND_ROWS
                             xbt.id, uid, Username, xbt.downloaded, remaining, t.Size, xbt.uploaded, 
                             upspeed, downspeed, timespent, peer_id, xbt.ip, fid, tg.Name, xbt.mtime
@@ -263,7 +266,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
     
 	<div class="linkbox"><?=$Pages?></div>
      
-    <div class="head"><?=$NumResults?> records</div>
+    <div class="head"><?=" $NumResults / $TotalResults"?> records</div>
         <table>
             <tr class="colhead">
                 <td width="10px" rowspan="2"></td>
