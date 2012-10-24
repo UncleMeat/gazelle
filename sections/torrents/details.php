@@ -205,9 +205,9 @@ if(check_perms('torrents_review')){
         $DB->query("SELECT TorrentID FROM torrents_watch_list WHERE TorrentID='$TorrentID'"); ?>
         <span id="wl">
 <?      if($DB->record_count() > 0)  {?>    
-            <a onclick="twatchlist_remove('<?=$GroupID?>','<?=$TorrentID?>')" href="#">[Remove from watchlist]</a>
+            <a onclick="twatchlist_remove('<?=$GroupID?>','<?=$TorrentID?>');return false;" href="#">[Remove from watchlist]</a>
 <?      } else {?>    
-            <a onclick="twatchlist_add('<?=$GroupID?>','<?=$TorrentID?>')" href="#">[Add to watchlist]</a>
+            <a onclick="twatchlist_add('<?=$GroupID?>','<?=$TorrentID?>');return false;" href="#">[Add to watchlist]</a>
 <?      } ?>
         </span>
 <?  } ?>
