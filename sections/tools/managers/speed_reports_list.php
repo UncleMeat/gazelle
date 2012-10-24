@@ -26,7 +26,7 @@ if(!check_perms('users_manage_cheats')) { error(403); }
         
         $ViewSpeed = isset($_GET['viewspeed'])?(int)$_GET['viewspeed']:$KeepSpeed;
  
-show_header('Speed Reports','bbcode');
+show_header('Speed Reports','watchlist');
 
 //---------- user watch
 
@@ -35,7 +35,7 @@ $DB->query("SELECT UserID, um.Username, StaffID, um2.Username AS Staffname, Time
          LEFT JOIN users_main AS um ON um.ID=wl.UserID
          LEFT JOIN users_main AS um2 ON um2.ID=wl.StaffID
           ORDER BY Time DESC");
-$Watchlist = $DB->to_array();
+$Watchlist = $DB->to_array('UserID');
 ?>
 <div class="thin">
     <h2>Speed Reports</h2>
@@ -48,11 +48,12 @@ $Watchlist = $DB->to_array();
                 </td>
             </tr>
             <tr class="colhead">
+                <td class="center"></td>
                 <td class="center">User</td>
                 <td class="center">Time added</td>
                 <td class="center">added by</td>
                 <td class="center">comment</td>
-                <td class="center" width="100px" title="keep torrent records related to this user">keep torrents</td>
+                <!--<td class="center" width="100px" title="keep torrent records related to this user">keep torrents</td>-->
                 <td class="center" width="180px"></td>
             </tr>
 <?
@@ -60,7 +61,7 @@ $Watchlist = $DB->to_array();
             if(count($Watchlist)==0){
 ?> 
                     <tr class="rowb">
-                        <td class="center" colspan="6">no users on watch list</td>
+                        <td class="center" colspan="7">no users on watch list</td>
                     </tr>
 <?
             } else {
@@ -75,13 +76,18 @@ $Watchlist = $DB->to_array();
                             <input type="hidden" name="viewspeed" value="<?=$ViewSpeed?>" />
                             <input type="hidden" name="userid" value="<?=$UserID?>" />
                             <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+                            <td class="center">
+                                <a href="?action=cheats&viewspeed=<?=$ViewSpeed?>&userid=<?=$UserID?>" title="View records for just <?=$Username?>">
+                                    [view]
+                                </a>
+                            </td>
                             <td class="center"><?=format_username($UserID, $Username)?></td>
                             <td class="center"><?=time_diff($Time, 2, true, false, 1)?></td>
                             <td class="center"><?=format_username($StaffID, $Staffname)?></td>
                             <td class="center" title="<?=$Comment?>"><?=cut_string($Comment, 40)?></td>
-                            <td class="center">
+                            <!--<td class="center">
                                 <input type="checkbox" name="keeptorrent" <?if($KeepTorrents)echo'checked="checked"'?> value="1" title="if checked keep all torrent records this user is on as well" />
-                            </td>
+                            </td>-->
                             <td class="center">
                                 <input type="submit" name="submit" value="Save" title="Save edited value" />
                                 <input type="submit" name="submit" value="Remove" title="Remove user from watchlist" /> 
@@ -99,7 +105,7 @@ $Watchlist = $DB->to_array();
              LEFT JOIN torrents AS t ON t.ID=tl.TorrentID
              LEFT JOIN torrents_group AS tg ON tg.ID=t.GroupID
               ORDER BY Time DESC");
-    $TWatchlist = $DB->to_array();
+    $TWatchlist = $DB->to_array('TorrentID');
 
             ?>
     </table><br/>
@@ -137,6 +143,11 @@ $Watchlist = $DB->to_array();
                             <input type="hidden" name="viewspeed" value="<?=$ViewSpeed?>" />
                             <input type="hidden" name="torrentid" value="<?=$TorrentID?>" />
                             <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+                            <td class="center">
+                                <a href="?action=cheats&viewspeed=<?=$ViewSpeed?>&torrentid=<?=$TorrentID?>" title="View records for just this torrent">
+                                    [view]
+                                </a>
+                            </td>
                             <td class="center"><?=format_torrentid($TorrentID, $TName,40)?></td>
                             <td class="center"><?=time_diff($Time, 2, true, false, 1)?></td>
                             <td class="center"><?=format_username($StaffID, $Staffname)?></td>
@@ -154,6 +165,19 @@ $Watchlist = $DB->to_array();
 <?
         //---------- options 
         
+if (is_number($_GET['userid']) && $_GET['userid']>0) {
+    $_GET['userid'] = (int)$_GET['userid'];
+    $WHERE = " AND xbt.uid='$_GET[userid]' ";
+    $ViewInfo = "User ($_GET[userid]) ". $Watchlist[$_GET[userid]]['Username'] .' &nbsp;&nbsp; ';
+} elseif (is_number($_GET['torrentid']) && $_GET['torrentid']>0) {
+    $_GET['torrentid'] = (int)$_GET['torrentid'];
+    $WHERE = " AND xbt.fid='$_GET[torrentid]' ";
+    $ViewInfo = "Torrent ($_GET[torrentid]) &nbsp;&nbsp; ". $TWatchlist[$_GET[torrentid]]['Name'] .' &nbsp;&nbsp; ';
+} else {
+    $ViewInfo = 'all over speed specified';
+}
+
+
         $CanManage = check_perms('admin_manage_cheats');
 ?>
     <table class="box pad">
@@ -161,6 +185,8 @@ $Watchlist = $DB->to_array();
             <tr class="colhead"><td colspan="3">storage settings: </td></tr>
             <tr>
                 <input type="hidden" name="action" value="save_records_options" />
+                <input type="hidden" name="userid" value="<?=$_GET['userid']?>" />
+                <input type="hidden" name="torrentid" value="<?=$_GET['torrentid']?>" />
                 <input type="hidden" name="viewspeed" value="<?=$ViewSpeed?>" />
                 <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
                 <td class="center">
@@ -203,9 +229,15 @@ $Watchlist = $DB->to_array();
             </tr>
             <tr class="colhead"><td colspan="3">view settings: </td></tr>
             <tr>  
-                <td colspan="3" class="center">
+                <td class="center">
+                    Viewing: <?=$ViewInfo?> &nbsp;
+<?                  if ($ViewInfo!='all over speed specified') { ?>
+                        <a href="?action=cheats&viewspeed=<?=$ViewSpeed?>" title="Removes any user or torrent filters for viewing (still applies speed filter)">View All</a>
+<?                  } ?>
+                </td>
+                <td colspan="2" class="center">
                     <label for="viewspeed" title="View Speed">View records with upload speed over </label>
-                    <select id="viewspeed" name="viewspeed" title="Hide records under this speed" onchange="change_view()">
+                    <select id="viewspeed" name="viewspeed" title="Hide records under this speed" onchange="change_view('<?=$_GET['userid']?>','<?=$_GET['torrentid']?>')">
                         <option value="0"<?=($ViewSpeed==0?' selected="selected"':'');?>>&nbsp;0&nbsp;&nbsp;</option>
                         <option value="262144"<?=($ViewSpeed==262144?' selected="selected"':'');?>>&nbsp;<?=get_size(262144);?>/s&nbsp;&nbsp;</option>
                         <option value="524288"<?=($ViewSpeed==524288?' selected="selected"':'');?>>&nbsp;<?=get_size(524288);?>/s&nbsp;&nbsp;</option>
@@ -231,10 +263,10 @@ $Watchlist = $DB->to_array();
 <? }  ?>
     </table>
     <script type="text/javascript">
-        function change_view(){
+        function change_view(userid, torrentid){
             var selectObj = $('#viewspeed').raw();
             var selSpeed=selectObj.options[selectObj.selectedIndex].value;
-            location.href = "tools.php?action=cheats&viewspeed="+selSpeed;
+            location.href = "tools.php?action=cheats&viewspeed="+selSpeed+"&userid="+userid+"&torrentid="+torrentid;
         }
     </script>
     <br/>
@@ -248,12 +280,12 @@ list($TotalResults) = $DB->next_record();
 
 $DB->query("SELECT SQL_CALC_FOUND_ROWS
                             xbt.id, uid, Username, xbt.downloaded, remaining, t.Size, xbt.uploaded, 
-                            upspeed, downspeed, timespent, peer_id, xbt.ip, fid, tg.Name, xbt.mtime
+                            upspeed, downspeed, timespent, peer_id, xbt.ip, tg.ID, fid, tg.Name, xbt.mtime
                           FROM xbt_peers_history AS xbt
                      LEFT JOIN users_main AS um ON um.ID=xbt.uid
                      LEFT JOIN torrents AS t ON t.ID=xbt.fid
                      LEFT JOIN torrents_group AS tg ON tg.ID=t.GroupID
-                         WHERE upspeed>='$ViewSpeed'
+                         WHERE upspeed>='$ViewSpeed' $WHERE
                       ORDER BY mtime DESC
                          LIMIT $Limit");
 $Records = $DB->to_array();
@@ -269,7 +301,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
     <div class="head"><?=" $NumResults / $TotalResults"?> records</div>
         <table>
             <tr class="colhead">
-                <td width="10px" rowspan="2"></td>
+                <td class="center" style="width:20px"></td>
                 <td class="center">User</td>
                 <td class="center">Remaining</td>
                 <td class="center">Uploaded</td>
@@ -281,6 +313,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
                 </td>
             </tr>
             <tr class="colhead">
+                <td class="center" style="width:20px"></td>
                 <td class="center"><span style="color:#777">TorrentID</span></td>
                 <td class="center"><span style="color:#777">Total</span></td>
                 <td class="center"><span style="color:#777">Downloaded</span></td>
@@ -303,15 +336,24 @@ $Pages=get_pages($Page,$NumResults,50,9);
             } else {
                 foreach ($Records as $Record) {
                     list($ID, $UserID, $Username, $Downloaded, $Remaining, $Size, $Uploaded, $UpSpeed, $DownSpeed, 
-                                                    $Timespent, $ClientPeerID, $IP, $TorrentID, $Name, $Time) = $Record;
+                                                    $Timespent, $ClientPeerID, $IP, $GroupID, $TorrentID, $Name, $Time) = $Record;
                     $row = ($row === 'a' ? 'b' : 'a');
                     $ipcc = geoip($IP);
 ?> 
                     <tr class="row<?=$row?>">
-                        <td rowspan="2">
-                            <a id="<?=$ID?>"></a>#<?=$ID?><br/>
+                        <td class="center">
+<?                          if ($_GET['userid']!=$UserID) {  ?> 
+                                <a href="?action=cheats&viewspeed=0&userid=<?=$UserID?>" title="View records for just <?=$Username?>">
+                                    [view]
+                                </a>
+<?                          }  ?>
                         </td>
-                        <td class="center"><?=format_username($UserID, $Username)?></td>
+                        <td class="center">
+<?                          echo format_username($UserID, $Username);
+                            if (!array_key_exists($UserID, $Watchlist)) {  ?> 
+                                <a onclick="watchlist_add('<?=$UserID?>',true);" href="#" title="Add <?=$Username?> to watchlist"><img src="static/common/symbols/watched.png" alt="view" /></a>
+<?                          }  ?>
+                        </td>
                         <td class="center"><?=get_size($Remaining)?></td>
                         <td class="center"><?=size_span($Uploaded, get_size($Uploaded))?></td>
                         <td class="center"><?=speed_span($UpSpeed, $KeepSpeed, 'red', get_size($UpSpeed).'/s')?></td>
@@ -322,7 +364,17 @@ $Pages=get_pages($Page,$NumResults,50,9);
                         </td>
                     </tr>
                     <tr class="row<?=$row?>">
-                        <td class="center"><span style="color:#555"><?=format_torrentid($TorrentID, $Name)?></span></td>
+                        <td class="center"><span style="color:#555">
+                            <a href="?action=cheats&viewspeed=0&torrentid=<?=$TorrentID?>" title="View records for just this torrent">
+                                [view]
+                            </a>
+                        </td>
+                        <td class="center">
+                            <span style="color:#555"><?=format_torrentid($TorrentID, $Name)?></span> 
+<?                          if ($GroupID && !array_key_exists($TorrentID, $TWatchlist)) {  ?> 
+                                <a onclick="twatchlist_add('<?=$GroupID?>','<?=$TorrentID?>',true)" href="" title="Add torrent to watchlist"><img src="static/common/symbols/watched.png" alt="view" /></a>
+<?                          }   ?>
+                        </td>
                         <td class="center"><span style="color:#555"><?=get_size($Size)?></span></td>
                         <td class="center"><?=size_span($Downloaded, get_size($Downloaded))?></td>
                         <td class="center"><?=speed_span($DownSpeed, $KeepSpeed, 'purple', get_size($DownSpeed).'/s')?></td>

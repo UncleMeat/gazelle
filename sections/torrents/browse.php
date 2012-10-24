@@ -537,10 +537,12 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
 <script type="text/javascript">
     window.attachEvent('onload', Load_Cookie);
 </script>
+
 <div class="linkbox"><?= $Pages ?></div>
 <div class="head">Torrents</div>
 <?
-if (count($Results) == 0) {
+//if (count($Results) == 0) { 
+if ($TorrentCount == 0) { 
     $DB->query("SELECT 
 	tags.Name,
 	((COUNT(tags.Name)-2)*(SUM(tt.PositiveVotes)-SUM(tt.NegativeVotes)))/(tags.Uses*0.8) AS Score

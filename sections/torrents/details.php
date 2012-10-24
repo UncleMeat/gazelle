@@ -61,7 +61,7 @@ if (empty($TokenTorrents)) {
 }
 
 // Start output
-show_header($Title,'comments,status,torrent,bbcode,details,jquery,jquery.cookie');
+show_header($Title,'comments,status,torrent,bbcode,details,watchlist,jquery,jquery.cookie');
 
 
 list($TorrentID, $FileCount, $Size, $Seeders, $Leechers, $Snatched, $FreeTorrent, $DoubleSeed, $TorrentTime, 
