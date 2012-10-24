@@ -89,7 +89,7 @@ $Watchlist = $DB->to_array('UserID');
                                 <input type="checkbox" name="keeptorrent" <?if($KeepTorrents)echo'checked="checked"'?> value="1" title="if checked keep all torrent records this user is on as well" />
                             </td>-->
                             <td class="center">
-                                <input type="submit" name="submit" value="Save" title="Save edited value" />
+                                <!--<input type="submit" name="submit" value="Save" title="Save edited value" />-->
                                 <input type="submit" name="submit" value="Remove" title="Remove user from watchlist" /> 
                             </td>
                         </form>
