@@ -118,6 +118,7 @@ $Watchlist = $DB->to_array('UserID');
                 </td>
         </tr>
         <tr class="colhead">
+                <td class="center"></td>
                 <td class="center">Torrent</td>
                 <td class="center">Time added</td>
                 <td class="center">added by</td>
@@ -129,7 +130,7 @@ $Watchlist = $DB->to_array('UserID');
         if(count($TWatchlist)==0){
 ?> 
             <tr class="rowb">
-                <td class="center" colspan="5">no torrents on watch list</td>
+                <td class="center" colspan="6">no torrents on watch list</td>
             </tr>
 <?
         } else {
@@ -165,20 +166,19 @@ $Watchlist = $DB->to_array('UserID');
 <?
         //---------- options 
         
-if (is_number($_GET['userid']) && $_GET['userid']>0) {
-    $_GET['userid'] = (int)$_GET['userid'];
-    $WHERE = " AND xbt.uid='$_GET[userid]' ";
-    $ViewInfo = "User ($_GET[userid]) ". $Watchlist[$_GET[userid]]['Username'] .' &nbsp;&nbsp; ';
-} elseif (is_number($_GET['torrentid']) && $_GET['torrentid']>0) {
-    $_GET['torrentid'] = (int)$_GET['torrentid'];
-    $WHERE = " AND xbt.fid='$_GET[torrentid]' ";
-    $ViewInfo = "Torrent ($_GET[torrentid]) &nbsp;&nbsp; ". $TWatchlist[$_GET[torrentid]]['Name'] .' &nbsp;&nbsp; ';
-} else {
-    $ViewInfo = 'all over speed specified';
-}
+    if (is_number($_GET['userid']) && $_GET['userid']>0) {
+        $_GET['userid'] = (int)$_GET['userid'];
+        $WHERE = " AND xbt.uid='$_GET[userid]' ";
+        $ViewInfo = "User ($_GET[userid]) ". $Watchlist[$_GET[userid]]['Username'] .' &nbsp;&nbsp; ';
+    } elseif (is_number($_GET['torrentid']) && $_GET['torrentid']>0) {
+        $_GET['torrentid'] = (int)$_GET['torrentid'];
+        $WHERE = " AND xbt.fid='$_GET[torrentid]' ";
+        $ViewInfo = "Torrent ($_GET[torrentid]) &nbsp;&nbsp; ". $TWatchlist[$_GET[torrentid]]['Name'] .' &nbsp;&nbsp; ';
+    } else {
+        $ViewInfo = 'all over speed specified';
+    }
 
-
-        $CanManage = check_perms('admin_manage_cheats');
+    $CanManage = check_perms('admin_manage_cheats');
 ?>
     <table class="box pad">
         <form action="tools.php" method="post">
@@ -372,7 +372,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
                         <td class="center">
                             <span style="color:#555"><?=format_torrentid($TorrentID, $Name)?></span> 
 <?                          if ($GroupID && !array_key_exists($TorrentID, $TWatchlist)) {  ?> 
-                                <a onclick="twatchlist_add('<?=$GroupID?>','<?=$TorrentID?>',true)" href="" title="Add torrent to watchlist"><img src="static/common/symbols/watched.png" alt="view" /></a>
+                                <a onclick="twatchlist_add('<?=$GroupID?>','<?=$TorrentID?>',true);" href="#" title="Add torrent to watchlist"><img src="static/common/symbols/watched.png" alt="view" /></a>
 <?                          }   ?>
                         </td>
                         <td class="center"><span style="color:#555"><?=get_size($Size)?></span></td>
