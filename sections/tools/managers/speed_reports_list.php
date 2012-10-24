@@ -39,7 +39,7 @@ $Watchlist = $DB->to_array('UserID');
 ?>
 <div class="thin">
     <h2>Speed Reports</h2>
-    <div class="head">User watch list<span style="float:right;"><a href="#" onclick="$('#uwatchlist').toggle();this.innerHTML=this.innerHTML=='(hide)'?'(view)':'(hide)';">(hide)</a></span>&nbsp;</div>
+    <div class="head">User watch list &nbsp;<img src="static/common/symbols/watched.png" alt="view" /><span style="float:right;"><a href="#" onclick="$('#uwatchlist').toggle();this.innerHTML=this.innerHTML=='(hide)'?'(view)':'(hide)';">(hide)</a></span>&nbsp;</div>
         <table id="uwatchlist">
             <tr class="rowa"> 
                 <td colspan="6" style="text-align: left;color:grey"> 
@@ -54,7 +54,7 @@ $Watchlist = $DB->to_array('UserID');
                 <td class="center">added by</td>
                 <td class="center">comment</td>
                 <!--<td class="center" width="100px" title="keep torrent records related to this user">keep torrents</td>-->
-                <td class="center" width="180px"></td>
+                <td class="center" width="100px"></td>
             </tr>
 <?
             $row = 'a';
@@ -109,7 +109,7 @@ $Watchlist = $DB->to_array('UserID');
 
             ?>
     </table><br/>
-    <div class="head">Torrent watch list<span style="float:right;"><a href="#" onclick="$('#twatchlist').toggle();this.innerHTML=this.innerHTML=='(hide)'?'(view)':'(hide)';">(hide)</a></span>&nbsp;</div>
+    <div class="head">Torrent watch list &nbsp;<img src="static/common/symbols/watched.png" alt="view" /><span style="float:right;"><a href="#" onclick="$('#twatchlist').toggle();this.innerHTML=this.innerHTML=='(hide)'?'(view)':'(hide)';">(hide)</a></span>&nbsp;</div>
     <table id="twatchlist">
         <tr class="rowa"> 
                 <td colspan="6" style="text-align: left;color:grey"> 
@@ -123,7 +123,7 @@ $Watchlist = $DB->to_array('UserID');
                 <td class="center">Time added</td>
                 <td class="center">added by</td>
                 <td class="center">comment</td>
-                <td class="center" width="180px"></td>
+                <td class="center" width="100px"></td>
         </tr>
 <?
         $row = 'a';
@@ -301,7 +301,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
     <div class="head"><?=" $NumResults / $TotalResults"?> records</div>
         <table>
             <tr class="colhead">
-                <td class="center" style="width:20px"></td>
+                <td style="width:50px"></td>
                 <td class="center">User</td>
                 <td class="center">Remaining</td>
                 <td class="center">Uploaded</td>
@@ -313,7 +313,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
                 </td>
             </tr>
             <tr class="colhead">
-                <td class="center" style="width:20px"></td>
+                <td ></td>
                 <td class="center"><span style="color:#777">TorrentID</span></td>
                 <td class="center"><span style="color:#777">Total</span></td>
                 <td class="center"><span style="color:#777">Downloaded</span></td>
@@ -341,18 +341,15 @@ $Pages=get_pages($Page,$NumResults,50,9);
                     $ipcc = geoip($IP);
 ?> 
                     <tr class="row<?=$row?>">
-                        <td class="center">
-<?                          if ($_GET['userid']!=$UserID) {  ?> 
-                                <a href="?action=cheats&viewspeed=0&userid=<?=$UserID?>" title="View records for just <?=$Username?>">
-                                    [view]
-                                </a>
-<?                          }  ?>
+                        <td>
+<?                          if ($_GET['userid']!=$UserID) {   
+ ?>                           <a href="?action=cheats&viewspeed=0&userid=<?=$UserID?>" title="View records for just <?=$Username?>">[view]</a> <? 
+ }                          if (!array_key_exists($UserID, $Watchlist)) {   
+ ?>                           <a onclick="watchlist_add('<?=$UserID?>',true);" href="#" title="Add <?=$Username?> to watchlist"><img src="static/common/symbols/watched.png" alt="view" /></a><?
+                            }  ?>
                         </td>
                         <td class="center">
-<?                          echo format_username($UserID, $Username);
-                            if (!array_key_exists($UserID, $Watchlist)) {  ?> 
-                                <a onclick="watchlist_add('<?=$UserID?>',true);" href="#" title="Add <?=$Username?> to watchlist"><img src="static/common/symbols/watched.png" alt="view" /></a>
-<?                          }  ?>
+<?                          echo format_username($UserID, $Username);  ?>
                         </td>
                         <td class="center"><?=get_size($Remaining)?></td>
                         <td class="center"><?=size_span($Uploaded, get_size($Uploaded))?></td>
@@ -364,16 +361,16 @@ $Pages=get_pages($Page,$NumResults,50,9);
                         </td>
                     </tr>
                     <tr class="row<?=$row?>">
-                        <td class="center"><span style="color:#555">
-                            <a href="?action=cheats&viewspeed=0&torrentid=<?=$TorrentID?>" title="View records for just this torrent">
-                                [view]
-                            </a>
+                        <td><span style="color:#555">
+<?                          if ($_GET['torrentid']!=$TorrentID) {
+                        ?>  <a href="?action=cheats&viewspeed=0&torrentid=<?=$TorrentID?>" title="View records for just this torrent">[view] </a> <? 
+                            }
+                            if ($GroupID && !array_key_exists($TorrentID, $TWatchlist)) {
+                       ?>   <a onclick="twatchlist_add('<?=$GroupID?>','<?=$TorrentID?>',true);" href="#" title="Add torrent to watchlist"><img src="static/common/symbols/watched.png" alt="view" /></a> <? 
+                            }  ?>
                         </td>
                         <td class="center">
                             <span style="color:#555"><?=format_torrentid($TorrentID, $Name)?></span> 
-<?                          if ($GroupID && !array_key_exists($TorrentID, $TWatchlist)) {  ?> 
-                                <a onclick="twatchlist_add('<?=$GroupID?>','<?=$TorrentID?>',true);" href="#" title="Add torrent to watchlist"><img src="static/common/symbols/watched.png" alt="view" /></a>
-<?                          }   ?>
                         </td>
                         <td class="center"><span style="color:#555"><?=get_size($Size)?></span></td>
                         <td class="center"><?=size_span($Downloaded, get_size($Downloaded))?></td>
