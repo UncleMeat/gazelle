@@ -2,9 +2,8 @@
        
 error_reporting(0);
 
-define('SERVER_ROOT', '/home/lanz/www/gazelle');
 define('EMDB', 'emp');
-define('TORRENT_PATH', '/home/lanz/www/empornium.me/torrents');
+define('TORRENT_PATH', '/home/tracker/gazelle/torrents');
 
 
 $smilies = array(
@@ -731,12 +730,14 @@ function cleansearch($Str) {
                 return $Str;
         }
 
-require(SERVER_ROOT . '/classes/class_torrent.php');
+//define('SERVER_ROOT', '/home/tracker/gazelle');
+require('/home/tracker/gazelle/classes/config.php');
+require('/home/tracker/gazelle/classes/class_torrent.php');
 
 $time_start = microtime(true);
 
 echo "connecting to database\n";
-mysql_connect('localhost', 'root', 'password');
+mysql_connect(SQLHOST, SQLLOGIN, SQLPASS);
 /*
 echo "Creating new authkeys for users\n";
 mysql_query("UPDATE gazelle.users_info
