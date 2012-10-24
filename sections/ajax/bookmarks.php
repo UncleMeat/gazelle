@@ -88,12 +88,17 @@ foreach ($TorrentList as $GroupID=>$Group) {
 	ob_start(); 
         // Viewing a type that does not require grouping
 
-      list($TorrentID, $Torrent) = each($Torrents);
+    list($TorrentID, $Torrent) = each($Torrents);
 
-      $DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
+    $DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
+        
+    if ($Torrent['ReportCount'] > 0) {
+            $Title = "This torrent has ".$Torrent['ReportCount']." active ".($Torrent['ReportCount'] > 1 ?'reports' : 'report');
+            $DisplayName .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
+    }
 
-	$AddExtra = torrent_info($Torrent, $TorrentID, $UserID);
-      if($AddExtra) $DisplayName .= $AddExtra;
+    $AddExtra = torrent_info($Torrent, $TorrentID, $UserID);
+    if($AddExtra) $DisplayName .= $AddExtra;
 
 	$TorrentTable.=ob_get_clean();
 	

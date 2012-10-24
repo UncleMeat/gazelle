@@ -622,7 +622,7 @@ $Bookmarks = all_bookmarks('torrent');
         $SL = ($TotalSeeders == 0 ? "<span class=r00>" . number_format($TotalSeeders) . "</span>" : number_format($TotalSeeders)) . "/" . number_format($TotalLeechers);
         $Overlay = "<table class=overlay><tr><td class=overlay colspan=2><strong>" . $OverName . "</strong></td><tr><td class=leftOverlay><img style='max-width: 150px;' src=" . $OverImage . "></td><td class=rightOverlay><strong>Uploader:</strong><br />{$Data['Username']}<br /><br /><strong>Size:</strong><br />" . get_size($Data['Size']) . "<br /><br /><strong>Snatched:</strong><br />" . number_format($TotalSnatched) . "<br /><br /><strong>Seeders/Leechers:</strong><br />" . $SL . "</td></tr></table>";
  
-        $AddExtra = torrent_info($Data, $TorrentID, $UserID);
+        $AddExtra = torrent_icons($Data, $TorrentID, $UserID, $Data['Status'], in_array($GroupID, $Bookmarks));
             
         $row = ($row == 'a'? 'b' : 'a');
         $IsMarkedForDeletion = $Data['Status'] == 'Warned' || $Data['Status'] == 'Pending';
@@ -635,20 +635,21 @@ $Bookmarks = all_bookmarks('torrent');
                 <div title="<?= $NewCategories[$NewCategoryID]['tag'] ?>"><a href="torrents.php?filter_cat[<?=$NewCategoryID?>]=1"><img src="<?= $CatImg ?>" /></a></div>
             </td>
             <td>
-                    <? print_torrent_status($TorrentID, $Data['Status']); ?>
+                    <? //print_torrent_status($TorrentID, $Data['Status']); ?>
 
-<?                if (check_perms('torrents_review') && $Data['Status'] == 'Okay') { 
-                        echo  '&nbsp;'.get_status_icon('Okay');
-                  }
-                  if (in_array($GroupID, $Bookmarks) ){
-                        echo  '&nbsp;<span title="You have this torrent bookmarked" class="icon icon_bookmarked"></span>';
-                  }
+<?              if (check_perms('torrents_review') && $Data['Status'] == 'Okay') { 
+                    echo  '&nbsp;'.get_status_icon('Okay');
+                }
+                if ($Data['ReportCount'] > 0) {
+                    $Title = "This torrent has ".$Data['ReportCount']." active ".($Data['ReportCount'] > 1 ?'reports' : 'report');
+                    $GroupName .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
+                }
 ?>              
                 <script>
                     var overlay<?=$GroupID?> = <?=json_encode($Overlay)?>
                 </script>
-                
-                <a href="torrents.php?id=<?=$GroupID?>" onmouseover="return overlib(overlay<?=$GroupID?>, FULLHTML);" onmouseout="return nd();"><?=$GroupName?></a> <?=$AddExtra?>
+                <?=$AddExtra?>
+                <a href="torrents.php?id=<?=$GroupID?>" onmouseover="return overlib(overlay<?=$GroupID?>, FULLHTML);" onmouseout="return nd();"><?=$GroupName?></a> 
                 <br />
                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
                 <div class="tags">

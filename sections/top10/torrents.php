@@ -1,4 +1,6 @@
 <?
+include(SERVER_ROOT . '/sections/bookmarks/functions.php');
+
 $Where = array();
 
 if(!empty($_GET['advanced']) && check_perms('site_advanced_top10')) {
@@ -275,6 +277,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 		$GroupIDs[] = $Detail[1];
 	}
 
+    $Bookmarks = all_bookmarks('torrent');
 	foreach ($Details as $Detail) {
 		list($TorrentID,$GroupID,$GroupName, $NewCategoryID, $TorrentTags,
 			$Snatched,$Seeders,$Leechers,$Data,$Size,$UploaderID,$UploaderName,,,$Status) = $Detail;
@@ -299,7 +302,8 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 			$TorrentTags='<br /><div class="tags">'.$TagList.'</div>';
 		}
  
-	  $AddExtra = torrent_info($Detail, $TorrentID, $LoggedUser['ID']);
+		$Icons = torrent_icons($Detail, $TorrentID, $LoggedUser['ID'], $Detail['Status'], in_array($GroupID, $Bookmarks));
+        
         $IsMarkedForDeletion = $Status == 'Warned' || $Status == 'Pending';
 		// print row
 ?>
@@ -310,15 +314,12 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
                     <div title="<?=$NewCategories[$NewCategoryID]['tag']?>"><img src="<?=$CatImg?>" /></div>
                 </td>
 		<td>
-            <? 
-                    print_torrent_status($TorrentID,$Status);  /* 
-                  <span>[<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a>]</span>
-			 */ ?>
-                  <strong><?=$DisplayName?></strong> <?=$AddExtra?>
+            <?=$Icons?>
+            <strong><?=$DisplayName?></strong>
                     
-                        <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
+    <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
 			<?=$TorrentTags?>
-                        <? } ?>
+    <? } ?>
 		</td>
 		<td class="top10 nobr"><?=get_size($Data)?></td>
 		<td class="top10"><?=get_size($Size)?></td>
@@ -326,7 +327,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 		<td class="top10"><?=number_format((double) $Seeders)?></td>
 		<td class="top10"><?=number_format((double) $Leechers)?></td>
 		<td class="top10"><?=number_format($Seeders+$Leechers)?></td>
-            <td class="top10"><?=format_username($UploaderID, $UploaderName)?></td>
+        <td class="top10"><?=format_username($UploaderID, $UploaderName)?></td>
 	</tr>
 <?
 	}

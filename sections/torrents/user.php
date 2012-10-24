@@ -1,6 +1,7 @@
 <?
 
 //include(SERVER_ROOT . '/sections/torrents/functions.php');
+include(SERVER_ROOT . '/sections/bookmarks/functions.php');
 
 $Orders = array('Time', 'Name', 'Seeders', 'Leechers', 'Snatched', 'Size');
 $Ways = array('ASC'=>'Ascending', 'DESC'=>'Descending');
@@ -305,6 +306,7 @@ foreach($NewCategories as $Cat) {
 <?
 	$Results = $Results['matches'];
       $row = 'a';
+    $Bookmarks = all_bookmarks('torrent');
 	foreach($TorrentsInfo as $TorrentID=>$Info) {
 		list($GroupID,, $Time, $NewCategoryID) = array_values($Info);
 		
@@ -322,16 +324,20 @@ foreach($NewCategories as $Cat) {
 				
 		$DisplayName = '<a href="torrents.php?id='.$GroupID.'&amp;torrentid='.$TorrentID.'" title="View Torrent">'.$GroupName.'</a>';
 		
-		$ExtraInfo = torrent_info($Torrent, $TorrentID, $UserID);
-		if($ExtraInfo) {
-			$DisplayName.=' - '.$ExtraInfo;
-		}
+    if ($Torrent['ReportCount'] > 0) {
+            $Title = "This torrent has ".$Torrent['ReportCount']." active ".($Torrent['ReportCount'] > 1 ?'reports' : 'report');
+            $DisplayName .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
+    }
+		$Icons = torrent_icons($Torrent, $TorrentID, $UserID, $Torrent['Status'], in_array($GroupID, $Bookmarks));
+		//if($ExtraInfo) {
+		//	$DisplayName.=' - '.$ExtraInfo;
+		//}
             
             
-            $NumComments = get_num_comments($GroupID);
+        $NumComments = get_num_comments($GroupID);
         
-            $row = $row==='b'?'a':'b';
-            $IsMarkedForDeletion = $Torrent['Status'] == 'Warned' || $Torrent['Status'] == 'Pending';
+        $row = $row==='b'?'a':'b';
+        $IsMarkedForDeletion = $Torrent['Status'] == 'Warned' || $Torrent['Status'] == 'Pending';
 ?>
 		<tr class="torrent <?=($IsMarkedForDeletion?'redbar':"row$row")?>">
 			<td class="center cats_col">
@@ -340,7 +346,7 @@ foreach($NewCategories as $Cat) {
                         </div> 
 			</td>
 			<td>
-                        <? print_torrent_status($TorrentID, $Torrent['Status']);  ?> 
+                <?=$Icons?> 
 				<?=$DisplayName?>
 				<br />
                                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                                

@@ -1,6 +1,7 @@
 <?
 //~~~~~~~~~~~ Main collage page ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
+
 function compare($X, $Y){
 	return($Y['count'] - $X['count']);
 }
@@ -108,6 +109,8 @@ $Tags = array();
 $Users = array();
 $Number = 0;
 
+$Bookmarks = all_bookmarks('torrent');
+
 foreach ($TorrentList as $GroupID=>$Group) {
 	list($GroupID, $GroupName, $TagList, $Torrents) = array_values($Group);
 	list($GroupID2, $Image, $NewCategoryID, $UserID, $Username) = array_values($CollageDataList[$GroupID]);
@@ -149,7 +152,11 @@ foreach ($TorrentList as $GroupID=>$Group) {
 
         $DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>';
      
-	  $AddExtra = torrent_info($Torrent, $TorrentID, $UserID);
+        if ($Torrent['ReportCount'] > 0) {
+            $Title = "This torrent has ".$Torrent['ReportCount']." active ".($Torrent['ReportCount'] > 1 ?'reports' : 'report');
+            $DisplayName .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
+        }
+        $Icons = torrent_icons($Torrent, $TorrentID, $UserID, $Torrent['Status'], in_array($GroupID, $Bookmarks));
         
         $row = $row == 'a' ? 'b' : 'a';
         $IsMarkedForDeletion = $Torrent['Status'] == 'Warned' || $Torrent['Status'] == 'Pending';
@@ -162,8 +169,8 @@ foreach ($TorrentList as $GroupID=>$Group) {
                 </div>
         </td>
         <td>
-            <?  print_torrent_status($TorrentID, $Torrent['Status']); ?>
-                <strong><?=$DisplayName?></strong> <?=$AddExtra?>
+            <?  //print_torrent_status($TorrentID, $Torrent['Status']); ?>
+                <?=$Icons?><strong><?=$DisplayName?></strong> 
                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { 
                     echo $TorrentTags;
                  } ?>

@@ -2149,9 +2149,9 @@ function get_tags($TagNames) {
     return($TagIDs);
 }
 
-function torrent_info($Data, $TorrentID, $UserID) {
-    global $DB, $Cache;
-        $AddExtra = '';
+function torrent_icons($Data, $TorrentID, $UserID, $MFDStatus, $IsBookmarked) {
+    global $DB, $Cache, $LoggedUser;
+        //$AddExtra = '';
         $SeedTooltip='';
         $FreeTooltip='';
         if ($Data['FreeTorrent'] == '1') {
@@ -2180,17 +2180,48 @@ function torrent_info($Data, $TorrentID, $UserID) {
         }
         
         $Icons = '';
+        if ($IsBookmarked)
+            $Icons .= '<img src="static/styles/'.$LoggedUser['StyleName'].'/images/star16.png" alt="bookmarked" title="You have this torrent bookmarked" />';
+            //$Icons .= '<span title="You have this torrent bookmarked" class="icon icon_bookmarked"></span>';
         if ($SeedTooltip) 
-            $Icons = '&nbsp;&nbsp;<img src="static/common/symbols/doubleseed.gif" alt="DoubleSeed" title="'.$SeedTooltip.'" />';          
+            $Icons .= '&nbsp;<img src="static/common/symbols/doubleseed.gif" alt="DoubleSeed" title="'.$SeedTooltip.'" />';          
         if ($FreeTooltip) 
-            $Icons .= '&nbsp;&nbsp;<img src="static/common/symbols/freedownload.gif" alt="Freeleech" title="'.$FreeTooltip.'" />';          
+            $Icons .= '&nbsp;<img src="static/common/symbols/freedownload.gif" alt="Freeleech" title="'.$FreeTooltip.'" />';
         
+        
+        if (check_perms('torrents_download_override')  || !$MFDStatus ||  $MFDStatus == 'Okay' ) {
+            
+            if (empty($TorrentUserStatus[$TorrentID])) { 
+                $Icons .= '<a href="torrents.php?action=download&amp;id='.$TorrentID.'&amp;authkey='.$LoggedUser['AuthKey'].'&amp;torrent_pass='.$LoggedUser['torrent_pass'].'" title="Download">';
+                $Icons .= '<span class="icon icon_disk_none"></span>';
+                $Icons .= '</a>';
+            } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') {
+                $Icons .= '<a href="torrents.php?action=download&amp;id='.$TorrentID.'&amp;authkey='.$LoggedUser['AuthKey'].'&amp;torrent_pass='.$LoggedUser['torrent_pass'].'" title="Currently Seeding Torrent">';
+                $Icons .= '<span class="icon icon_disk_seed"></span>';
+                $Icons .= '</a>';               
+            } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') {
+                $Icons .= '<a href="torrents.php?action=download&amp;id='.$TorrentID.'&amp;authkey='.$LoggedUser['AuthKey'].'&amp;torrent_pass='.$LoggedUser['torrent_pass'].'"  title="Currently Leeching Torrent">';
+                $Icons .= '<span class="icon icon_disk_leech"></span>';
+                $Icons .= '</a>';
+            }
+        } else { 
+            if (empty($TorrentUserStatus[$TorrentID])) {
+            
+            } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') {
+                $Icons .= '<span class="icon icon_disk_seed" title="Warning: You are seeding a torrent that is marked for deletion"></span> ';                 
+            } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') {
+                $Icons .= '<span class="icon icon_disk_leech" title="Warning: You are seeding a torrent that is marked for deletion"></span> ';
+            }
+        }
+        
+        /*
         if ($Data['ReportCount'] > 0) {
             $Title = "This torrent has ".$Data['ReportCount']." active ".($Data['ReportCount'] > 1 ?'reports' : 'report');
             $AddExtra .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
         }
-        $AddExtra .= $Icons;
-        return $AddExtra;
+        $AddExtra .= $Icons;*/
+        $Icons = '<span style="float:right">'.$Icons.'</span>';
+        return $Icons;
         /*
 	$Info = array();
 	if($Data['FreeTorrent'] == '1') { $Info[]='<strong>Freeleech!</strong>'; }
@@ -2198,6 +2229,37 @@ function torrent_info($Data, $TorrentID, $UserID) {
 	if($Data['PersonalFL'] == 1) { $Info[]='<strong>Personal Freeleech!</strong>'; }
 	return implode(' / ', $Info); */
 }
+
+/*
+function disk_icon($TorrentID, $MFDStatus){
+    global $LoggedUser, $TorrentUserStatus;
+    
+        if (check_perms('torrents_download_override')  || !$MFDStatus ||  $MFDStatus == 'Okay' ) {
+            
+            if (empty($TorrentUserStatus[$TorrentID])) { 
+                $Icons .= '<a href="torrents.php?action=download&amp;id='.$TorrentID.'&amp;authkey='.$LoggedUser['AuthKey'].'&amp;torrent_pass='.$LoggedUser['torrent_pass'].'" title="Download">';
+                $Icons .= '<span class="icon icon_disk_none"></span>';
+                $Icons .= '</a>';
+            } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') {
+                $Icons .= '<a href="torrents.php?action=download&amp;id='.$TorrentID.'&amp;authkey='.$LoggedUser['AuthKey'].'&amp;torrent_pass='.$LoggedUser['torrent_pass'].'" title="Currently Seeding Torrent">';
+                $Icons .= '<span class="icon icon_disk_seed"></span>';
+                $Icons .= '</a>';               
+            } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') {
+                $Icons .= '<a href="torrents.php?action=download&amp;id='.$TorrentID.'&amp;authkey='.$LoggedUser['AuthKey'].'&amp;torrent_pass='.$LoggedUser['torrent_pass'].'"  title="Currently Leeching Torrent">';
+                $Icons .= '<span class="icon icon_disk_leech"></span>';
+                $Icons .= '</a>';
+            }
+        } else { 
+            if (empty($TorrentUserStatus[$TorrentID])) {
+            
+            } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'S') {
+                $Icons .= '<span class="icon icon_disk_seed" title="Warning: You are seeding a torrent that is marked for deletion"></span> ';                 
+            } elseif ($TorrentUserStatus[$TorrentID]['PeerStatus'] == 'L') {
+                $Icons .= '<span class="icon icon_disk_leech" title="Warning: You are seeding a torrent that is marked for deletion"></span> ';
+            }
+        }
+        return $Icons;
+} */
 
 function get_num_comments($GroupID){
     global $DB, $Cache;
@@ -2214,6 +2276,7 @@ function get_num_comments($GroupID){
     return $Results;
 }
 
+/*
 function print_torrent_status($TorrentID, $MFDStatus) {
     global $TorrentUserStatus, $LoggedUser;
     
@@ -2250,9 +2313,7 @@ function print_torrent_status($TorrentID, $MFDStatus) {
                 </span>
 <?
         }
-        
-        
-}
+} */
 
 // Echo data sent in a form, typically a text area
 function form($Index, $Return = false) {

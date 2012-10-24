@@ -94,6 +94,8 @@ if (count($Reports) > 0) {
             $DisplayName .= ' <span style="color: #FF3030; padding: 2px 4px 2px 4px;" title="'.$Title.'">Reported</span>';
 }
 
+$IsBookmarked = has_bookmarked('torrent', $GroupID);
+
 $Icons = '';
 if ( $DoubleSeed == '1' ) {
     $SeedTooltip = "Unlimited Doubleseed"; // a theoretical state?
@@ -110,17 +112,16 @@ elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLe
     $FreeTooltip = "Personal Freeleech for ".time_diff($TokenTorrents[$TorrentID]['FreeLeech'], 2, false);
 }
 if ($FreeTooltip) 
-    $Icons .= '<img src="static/common/symbols/freedownload.gif" alt="Freeleech" title="'.$FreeTooltip.'" />&nbsp;&nbsp;';          
-
-
+    $Icons .= '<img src="static/common/symbols/freedownload.gif" alt="Freeleech" title="'.$FreeTooltip.'" />&nbsp;';       
+if ($IsBookmarked)
+    $Icons .= '<img src="static/styles/'.$LoggedUser['StyleName'].'/images/star16.png" alt="bookmarked" title="You have this torrent bookmarked" />&nbsp;';
+$Icons .= '&nbsp;';
  
 ?>
 <div class="details thin">
 	<h2><?="$Icons$DisplayName"?></h2>
       
-<? 
-      
-
+<?
 if(check_perms('torrents_review')){
     if (!isset($_GET['checked'])) update_staff_checking("viewing \"".cut_string($GroupName, 32)."\"  #$GroupID", true);
  
@@ -187,7 +188,7 @@ if(check_perms('torrents_review')){
     <?	if( $CanEdit) {   ?>
                 <a href="torrents.php?action=editgroup&amp;groupid=<?=$GroupID?>">[Edit Torrent]</a>
     <?	} ?> 
-    <?	if(has_bookmarked('torrent', $GroupID)) { ?>
+    <?	if($IsBookmarked) { ?>
                 <a href="#" id="bookmarklink_torrent_<?=$GroupID?>" onclick="Unbookmark('torrent', <?=$GroupID?>,'[Bookmark]');return false;">[Remove bookmark]</a>
     <?	} else { ?>
                 <a href="#" id="bookmarklink_torrent_<?=$GroupID?>" onclick="Bookmark('torrent', <?=$GroupID?>,'[Remove bookmark]');return false;">[Bookmark]</a>
@@ -346,7 +347,7 @@ if(check_perms('torrents_review')){
                         
                         <input type="submit" name="submit" value="Mark as Okay" <?=($Status=='Okay'||($Status == 'Warned' && !check_perms('torrents_review_override')))?'disabled="disabled" ':''?>title="Mark this torrent as Okay" />
 <?                  if ($Status == 'Warned' && check_perms('torrents_review_override') )  {  ?>
-                        <strong class="important_text" style="margin-left:10px;">override warned status?</strong>
+                        <br/><strong class="important_text" style="margin-left:10px;">override warned status?</strong>
 <?                  }       ?>
 <?              }       ?>
                     </td>

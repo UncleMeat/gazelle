@@ -229,9 +229,9 @@ show_header($Title, 'requests');
 		<a href="bookmarks.php?type=requests">[Requests]</a>
 <?	} ?>
 	</div>
-    	<div class="head"><?=$Title?></div>
-
-	<div>
+      
+    <div class="head"><?=$Title?></div>
+	<div class="box">
 		<form action="" method="get">
 <?	if ($BookmarkView) { ?>
 			<input type="hidden" name="action" value="view" />
@@ -319,7 +319,7 @@ foreach($NewCategories as $Cat) {
 	<div class="linkbox">
 		<?=$PageLinks?>
 	</div>
-	<table id="request_table" cellpadding="6" cellspacing="1" border="0" class="border" width="100%">
+	<table id="request_table" cellpadding="6" cellspacing="1" border="0" class="" width="100%">
 		<tr class="colhead">
 			<td style="width: 38%;" class="nobr">
 				Request Name
@@ -347,7 +347,7 @@ foreach($NewCategories as $Cat) {
 			</td>
 		</tr>
 <?	if($NumResults == 0) { ?>
-		<tr class="rowb">
+		<tr class="rowb shadow">
 			<td colspan="8">
 				Nothing found!
 			</td>
@@ -378,7 +378,7 @@ foreach($NewCategories as $Cat) {
 			
 			$Tags = $Request['Tags'];
 ?>
-		<tr class="row<?=$Row?>">
+		<tr class="row<?=$Row?> shadow">
 			<td>
 				<?=$FullName?>
                                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>

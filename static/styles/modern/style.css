@@ -978,6 +978,9 @@ table.boxstat a, table.boxstat a:visited {
 .icon_bookmarked {
     background: url('images/star16.png') no-repeat center center;
 }
+.icon_watched {
+    background: url('images/watched.png') no-repeat center center;
+}
 
 #top_info .icon_warning {
     background: url('images/warning.gif') no-repeat center center;

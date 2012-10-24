@@ -103,20 +103,23 @@ foreach ($TorrentList as $GroupID=>$Group) {
         } elseif(!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['DoubleSeed'] > sqltime()) { 
                 $DisplayName .= ' <strong>/ Personal Doubleseed!</strong>';
         }
+    if ($Torrent['ReportCount'] > 0) {
+            $Title = "This torrent has ".$Torrent['ReportCount']." active ".($Torrent['ReportCount'] > 1 ?'reports' : 'report');
+            $DisplayName .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
+    }
         
-	  $AddExtra = torrent_info($Torrent, $TorrentID, $UserID);
+        $AddExtra = torrent_icons($Torrent, $TorrentID, $UserID, $Torrent['Status'], true );
         $row = ($row == 'a'? 'b' : 'a');
         $IsMarkedForDeletion = $Torrent['Status'] == 'Warned' || $Torrent['Status'] == 'Pending';
 ?>
-<tr class="torrent <?=($IsMarkedForDeletion?'redbar':"row$row")?>" id="group_<?=$GroupID?>">
+    <tr class="torrent <?=($IsMarkedForDeletion?'redbar':"row$row")?>" id="group_<?=$GroupID?>">
         <td class="center">
                     <? $CatImg = 'static/common/caticons/' . $NewCategories[$NewCategoryID]['image']; ?>
                 <img src="<?= $CatImg ?>" alt="<?= $NewCategories[$NewCategoryID]['tag'] ?>" title="<?= $NewCategories[$NewCategoryID]['tag'] ?>"/>
         </td>
         <td>
-                    <? print_torrent_status($TorrentID, $Torrent['Status']); ?>
-             
-                <strong><?=$DisplayName?></strong> <?=$AddExtra?>
+                    <?=$AddExtra?>
+                <strong><?=$DisplayName?></strong> 
                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                
                 <?=$TorrentTags?>
                 <? } ?>
@@ -130,7 +133,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
         <td><?=number_format($Torrent['Snatched'])?></td>
         <td<?=($Torrent['Seeders']==0)?' class="r00"':''?>><?=number_format($Torrent['Seeders'])?></td>
         <td><?=number_format($Torrent['Leechers'])?></td>
-</tr>
+    </tr>
 <?
 	$TorrentTable.=ob_get_clean();
 	
@@ -172,7 +175,7 @@ for ($i=0; $i < $NumGroups/$CollageCovers; $i++) {
 show_header($Title, 'browse,collage');
 ?>
 <div class="thin">
-    <h2>Bookmarks</h2>
+    <h2>Bookmarks &nbsp;<img src="static/styles/<?= $LoggedUser['StyleName'] ?>/images/star16.png" alt="star" title="Bookmarked torrents" /></h2>
 	<div class="linkbox">
 		<a href="bookmarks.php?type=torrents">[Torrents]</a>
 		<a href="bookmarks.php?type=collages">[Collages]</a>
@@ -194,14 +197,14 @@ show_header($Title, 'browse,collage');
 	die();
 } ?>
 	<div class="sidebar">
+        <div class="head"><strong>Stats</strong></div>
 		<div class="box">
-			<div class="head"><strong>Stats</strong></div>
 			<ul class="stats nobullet">
 				<li>Torrents: <?=$NumGroups?></li>
 			</ul>
 		</div>
+		<div class="head"><strong>Top tags</strong></div>
 		<div class="box">
-			<div class="head"><strong>Top tags</strong></div>
 			<div class="pad">
 				<ol style="padding-left:5px;">
 <?
@@ -222,8 +225,8 @@ foreach ($Tags as $TagName => $Tag) {
 	<div class="main_column">
 <?
 if($CollageCovers != 0) { ?>
+		<div class="head" id="coverhead"><strong>Cover Art</strong></div>
 		<div id="coverart" class="box">
-			<div class="head" id="coverhead"><strong>Cover Art</strong></div>
 			<ul class="collage_images" id="collage_page0">
 <?
 	$Page1 = array_slice($Collage, 0, $CollageCovers);
@@ -250,9 +253,9 @@ if($CollageCovers != 0) { ?>
 } ?>
 		<br />
 		<table class="torrent_table" id="torrent_table">
-			<tr class="colhead_dark">
+			<tr class="head">
 				<td><!-- Category --></td>
-				<td width="70%"><strong>Torrents</strong> (<a href="#" onclick="return false;">View</a>)</td>
+				<td width="70%"><strong>Torrents</strong></td>
 				<td>Size</td>
 				<td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
 				<td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>
