@@ -569,7 +569,8 @@ if (count($Results) == 0) {
 }
 
 // if no searchtext or tags specified then we are showing all torrents
-$AllTorrents = (!isset($_GET['taglist']) && !isset($_GET['searchtext']))?TRUE:FALSE;
+$AllTorrents = ((!isset($_GET['taglist']) || $_GET['taglist']=='') 
+             && (!isset($_GET['searchtext']) || $_GET['searchtext']==''))?TRUE:FALSE;
 $Bookmarks = all_bookmarks('torrent');
 ?>
 <table class="torrent_table grouping" id="torrent_table">
