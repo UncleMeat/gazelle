@@ -150,7 +150,7 @@ echo $Pages;
 if (count($Forum) == 0) {
 ?>
 		<tr>
-			<td colspan="4">
+			<td colspan="5">
 				No threads to display in this forum!
 			</td>
 		</tr>
