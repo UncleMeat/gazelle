@@ -1,6 +1,6 @@
 <?php 
        
-set_time_limit(50000);
+set_time_limit(0);
 error_reporting(0);
 
 define('EMDB', 'emp');
@@ -805,7 +805,7 @@ $info_hash_array = array();
 $i = 0;
 $TagIDCounter = 0;
 $TorrentID = 0;
-$result = mysql_query("select * from " . EMDB . ".torrents") or die(mysql_error());
+$result = mysql_query("select * from " . EMDB . ".torrents ORDER BY id") or die(mysql_error());
 
 $torrents_group_rows = array();
 $tagids = array();
@@ -841,7 +841,7 @@ while (($row = mysql_fetch_assoc($result))) {
 
     // Check for duplicated info_hash values and skip if found since they can not be added.
     if (in_array($InfoHash, $info_hash_array)) {
-        echo "x"; // just so we can see how many..
+        echo $row['id'];    //"x"; // just so we can see how many..
         continue;        
     }
     $info_hash_array[] = $InfoHash;
@@ -884,7 +884,7 @@ while (($row = mysql_fetch_assoc($result))) {
     
     $i++;
     if ($i % 1001 == 0) {
-        echo "\n" . number_format($i / $count * 100, 2) . "% ";        
+        echo "\n" . number_format($i / $count * 100, 2) . "%  - (@ $row[id])";        
     }
     elseif ($i % 50 == 0) {
         mysql_query("INSERT INTO gazelle.torrents_group
