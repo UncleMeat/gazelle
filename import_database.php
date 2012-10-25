@@ -925,7 +925,7 @@ while (($row = mysql_fetch_assoc($result))) {
 			echo "\n" . number_format($i / $count * 100, 2) . "%  - (@ $row[id])<br/>";        
 		}
 		
-        if ($i % batchsize == 0) { // Use flexible batchsize. Mobbo
+        if ($i % $batchsize == 0) { // Use flexible batchsize. Mobbo
 			mysql_query("INSERT INTO gazelle.torrents_group
 						(ID, NewCategoryID, Name, TagList, Time, Body, SearchText) VALUES " . implode(',', $torrents_group_rows)) or die(mysql_error());
 			$torrents_group_rows = array();
