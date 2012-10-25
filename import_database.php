@@ -817,6 +817,8 @@ $torrents_tags_row = array();
 $torrents_row = array();
 $torrents_files_row = array();
 
+$numemptorrents = mysql_num_rows($result);
+echo "selected $numemptorrents torrents for import...";
         
 mysql_query("TRUNCATE TABLE gazelle.torrents_group;") or die(mysql_error());;
 mysql_query("TRUNCATE TABLE gazelle.torrents;") or die(mysql_error());;
@@ -824,8 +826,18 @@ mysql_query("TRUNCATE TABLE gazelle.torrents_files;") or die(mysql_error());;
 mysql_query("TRUNCATE TABLE gazelle.tags;") or die(mysql_error());;
 mysql_query("TRUNCATE TABLE gazelle.torrents_tags;") or die(mysql_error());;
         
+if (isset($_REQUEST['logafter'])){
+    $LogAfter = (int)$_REQUEST['logafter'];
+    echo "[Logging ID's after $LogAfter]";
+}
+
 echo "0.00% ";
 while (($row = mysql_fetch_assoc($result))) {
+    if ($LogAfter > 0){ // use sparingly... only for bug hunting
+        if ($row['id'] >= $LogAfter ){
+            echo ",$row[id]";
+        }
+    }
     $File = fopen(TORRENT_PATH . '/' . $row['id'] . '.torrent', 'rb'); // open file for reading
     $Contents = fread($File, 10000000);
     $Tor = new TORRENT($Contents); // New TORRENT object
