@@ -1,5 +1,5 @@
 <?php 
-echo "<html><head></head><body>" //Get a real html-page started. Gonna make all those br-tags work. Mobbo
+
 
        
 set_time_limit(0);
@@ -8,7 +8,7 @@ error_reporting(E_ALL); // was 0 (off)
 define('EMDB', 'emp');
 define('TORRENT_PATH', '/home/tracker/gazelle/torrents');
 
-
+echo "<html><head></head><body>" //Get a real html-page started. Gonna make all those br-tags work. Mobbo
 $smilies = array(
            ':smile1:'           => 'smile1.gif',
            ':smile2:'           => 'smile2.gif',
