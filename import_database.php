@@ -787,6 +787,9 @@ while (($row = mysql_fetch_assoc($result))) {
     $TreeIndex++;
 }
 
+
+mysql_query("TRUNCATE TABLE gazelle.invite_tree;") or die(mysql_error());;
+
 mysql_query("insert into gazelle.invite_tree values ".implode(',',$values)) or die(mysql_error());
 
 $result = mysql_query("select count(*) as c from " . EMDB . ".torrents") or die(mysql_error());
