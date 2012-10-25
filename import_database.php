@@ -757,7 +757,9 @@ mysql_query("UPDATE gazelle.users_info
 
 // Added setting CatchupTime for forums - UNTESTED in situ - unaltered code above
 echo "Update users: generate new authkeys, CatchupTime=UTC_TIMESTAMP()\n";
-$sqltime = sqltime();
+//$sqltime = sqltime();
+$sqltime = date('Y-m-d H:i:s', time());
+
 mysql_query("UPDATE gazelle.users_info
 	SET AuthKey =
 		MD5(
