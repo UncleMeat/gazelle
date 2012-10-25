@@ -8,7 +8,6 @@ error_reporting(E_ALL); // was 0 (off)
 define('EMDB', 'emp');
 define('TORRENT_PATH', '/home/tracker/gazelle/torrents');
 
-echo "<html><head></head><body>" //Get a real html-page started. Gonna make all those br-tags work. Mobbo
 $smilies = array(
            ':smile1:'           => 'smile1.gif',
            ':smile2:'           => 'smile2.gif',
@@ -728,7 +727,7 @@ function cleansearch($Str) {
                 $remove[] = '/\[you\]/i';
                 
                 $Str = preg_replace($remove, '', $Str);
-                $Str = preg_replace('/[\r\n]+/', ' ', $Str);
+                //$Str = preg_replace('/[\r\n]+/', ' ', $Str);
                 
                 return $Str;
         }
@@ -925,7 +924,8 @@ while (($row = mysql_fetch_assoc($result))) {
 		if ($i % 1001 == 0) {
 			echo "\n" . number_format($i / $count * 100, 2) . "%  - (@ $row[id])<br/>";        
 		}
-		elseif ($i % batchsize == 0) { // Use flexible batchsize. Mobbo
+		
+        if ($i % batchsize == 0) { // Use flexible batchsize. Mobbo
 			mysql_query("INSERT INTO gazelle.torrents_group
 						(ID, NewCategoryID, Name, TagList, Time, Body, SearchText) VALUES " . implode(',', $torrents_group_rows)) or die(mysql_error());
 			$torrents_group_rows = array();
@@ -996,6 +996,6 @@ mysql_query("INSERT INTO gazelle.torrents_comments (GroupID, AuthorID, AddedTime
         ") or die(mysql_error());
 
 $time = microtime(true) - $time_start;
-echo "<br/>execution time: $time seconds\n<br/></body></html>";
+echo "<br/>execution time: $time seconds\n<br/>";
 
 ?>
