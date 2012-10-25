@@ -815,11 +815,11 @@ $torrents_row = array();
 $torrents_files_row = array();
 
         
-mysql_query("TRUNCATE TABLE gazelle.torrents_group;");
-mysql_query("TRUNCATE TABLE gazelle.torrents;");
-mysql_query("TRUNCATE TABLE gazelle.torrents_files;");
-mysql_query("TRUNCATE TABLE gazelle.tags;");
-mysql_query("TRUNCATE TABLE gazelle.torrents_tags;");
+mysql_query("TRUNCATE TABLE gazelle.torrents_group;") or die(mysql_error());;
+mysql_query("TRUNCATE TABLE gazelle.torrents;") or die(mysql_error());;
+mysql_query("TRUNCATE TABLE gazelle.torrents_files;") or die(mysql_error());;
+mysql_query("TRUNCATE TABLE gazelle.tags;") or die(mysql_error());;
+mysql_query("TRUNCATE TABLE gazelle.torrents_tags;") or die(mysql_error());;
         
 echo "0.00% ";
 while (($row = mysql_fetch_assoc($result))) {
