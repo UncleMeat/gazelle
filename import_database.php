@@ -737,7 +737,7 @@ require('/home/tracker/gazelle/classes/class_torrent.php');
 
 $time_start = microtime(true);
 
-echo "connecting to database\n";
+echo "connecting to database<br/>";
 mysql_connect(SQLHOST, SQLLOGIN, SQLPASS);
 /*
 echo "Creating new authkeys for users\n";
@@ -756,26 +756,32 @@ mysql_query("UPDATE gazelle.users_info
 	) or die(mysql_error());
 */
 
-// Added setting CatchupTime for forums - UNTESTED in situ - unaltered code above
-echo "Update users: generate new authkeys, CatchupTime=UTC_TIMESTAMP()\n";
-//$sqltime = sqltime();
-$sqltime = date('Y-m-d H:i:s', time());
+if (isset($_GET['skipkeys'])){
+    echo "\$_GET['skipkeys'] so skipping adding authkeys for users (for if they have already been generated)<br/>";
+}else {
+    
+    // Added setting CatchupTime for forums - UNTESTED in situ - unaltered code above
+    echo "Update users: generate new authkeys, CatchupTime=UTC_TIMESTAMP()<br/>";
+    //$sqltime = sqltime();
+    $sqltime = date('Y-m-d H:i:s', time());
 
-mysql_query("UPDATE gazelle.users_info
-	SET AuthKey =
-		MD5(
-			CONCAT(
-				AuthKey, RAND(), '".mysql_real_escape_string(make_secret2())."',
-				SHA1(
-					CONCAT(
-						RAND(), RAND(), '".mysql_real_escape_string(make_secret2())."'
-					)
-				)
-			)
-		), CatchupTime='$sqltime';"
-	) or die(mysql_error());
+    mysql_query("UPDATE gazelle.users_info
+        SET AuthKey =
+            MD5(
+                CONCAT(
+                    AuthKey, RAND(), '".mysql_real_escape_string(make_secret2())."',
+                    SHA1(
+                        CONCAT(
+                            RAND(), RAND(), '".mysql_real_escape_string(make_secret2())."'
+                        )
+                    )
+                )
+            ), CatchupTime='$sqltime';"
+        ) or die(mysql_error());
+}
 
-echo "creating new invite_tree table for users\n";
+
+echo "creating new invite_tree table for users<br/>";
 
 $result = mysql_query('select ID from gazelle.users_main') or die(mysql_error());
 
@@ -794,8 +800,8 @@ mysql_query("insert into gazelle.invite_tree values ".implode(',',$values)) or d
 
 $result = mysql_query("select count(*) as c from " . EMDB . ".torrents") or die(mysql_error());
 $count = mysql_result($result, 0);
-echo "Importing $count torrents to database... (this will take a while)\n";
-echo "Each dot is 50 torrents, an x means a torrent with an info hash that is already in the table.\n";
+echo "Importing $count torrents to database... (this will take a while)<br/>";
+echo "Each dot is 50 torrents, an x means a torrent with an info hash that is already in the table.<br/>";
 
 // Get the categories from the gazelle db
 $result = mysql_query("select * from gazelle.categories") or die(mysql_error());
@@ -818,7 +824,7 @@ $torrents_row = array();
 $torrents_files_row = array();
 
 $numemptorrents = mysql_num_rows($result);
-echo "selected $numemptorrents torrents for import...";
+echo "selected $numemptorrents torrents for import...<br/>";
         
 mysql_query("TRUNCATE TABLE gazelle.torrents_group;") or die(mysql_error());;
 mysql_query("TRUNCATE TABLE gazelle.torrents;") or die(mysql_error());;
@@ -831,7 +837,7 @@ if (isset($_REQUEST['logafter'])){
     echo "[Logging ID's after $LogAfter]";
 }
 
-echo "0.00% ";
+echo "0.00% <br/>";
 while (($row = mysql_fetch_assoc($result))) {
     if ($LogAfter > 0){ // use sparingly... only for bug hunting
         if ($row['id'] >= $LogAfter ){
@@ -906,7 +912,7 @@ while (($row = mysql_fetch_assoc($result))) {
     
     $i++;
     if ($i % 1001 == 0) {
-        echo "\n" . number_format($i / $count * 100, 2) . "%  - (@ $row[id])";        
+        echo "\n" . number_format($i / $count * 100, 2) . "%  - (@ $row[id])<br/>";        
     }
     elseif ($i % 50 == 0) {
         mysql_query("INSERT INTO gazelle.torrents_group
@@ -978,6 +984,6 @@ mysql_query("INSERT INTO gazelle.torrents_comments (GroupID, AuthorID, AddedTime
         ") or die(mysql_error());
 
 $time = microtime(true) - $time_start;
-echo "\nexecution time: $time seconds\n";
+echo "<br/>execution time: $time seconds\n";
 
 ?>
