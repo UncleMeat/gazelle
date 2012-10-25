@@ -1,7 +1,7 @@
 <?php 
        
 set_time_limit(0);
-error_reporting(0);
+error_reporting(E_ALL); // was 0 (off)
 
 define('EMDB', 'emp');
 define('TORRENT_PATH', '/home/tracker/gazelle/torrents');
