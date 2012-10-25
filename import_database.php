@@ -1,5 +1,6 @@
 <?php 
        
+set_time_limit(50000);
 error_reporting(0);
 
 define('EMDB', 'emp');
