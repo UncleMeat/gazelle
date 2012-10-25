@@ -814,6 +814,13 @@ $torrents_tags_row = array();
 $torrents_row = array();
 $torrents_files_row = array();
 
+        
+mysql_query("TRUNCATE TABLE gazelle.torrents_group;");
+mysql_query("TRUNCATE TABLE gazelle.torrents;");
+mysql_query("TRUNCATE TABLE gazelle.torrents_files;");
+mysql_query("TRUNCATE TABLE gazelle.tags;");
+mysql_query("TRUNCATE TABLE gazelle.torrents_tags;");
+        
 echo "0.00% ";
 while (($row = mysql_fetch_assoc($result))) {
     $File = fopen(TORRENT_PATH . '/' . $row['id'] . '.torrent', 'rb'); // open file for reading
