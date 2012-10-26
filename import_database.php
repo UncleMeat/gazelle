@@ -727,7 +727,7 @@ function cleansearch($Str) {
                 $remove[] = '/\[you\]/i';
                 
                 $Str = preg_replace($remove, '', $Str);
-                //$Str = preg_replace('/[\r\n]+/', ' ', $Str);
+                $Str = preg_replace('/[\r\n]+/', ' ', $Str);
                 
                 return $Str;
         }
@@ -739,7 +739,16 @@ require('/home/tracker/gazelle/classes/class_torrent.php');
 $time_start = microtime(true);
 
 echo "connecting to database<br/>";
-mysql_connect(SQLHOST, SQLLOGIN, SQLPASS);
+//mysql_connect(SQLHOST, SQLLOGIN, SQLPASS);
+
+
+$link = mysqli_connect(SQLHOST, SQLLOGIN, SQLPASS, SQLDB, SQLPORT, SQLSOCK); // defined in config.php
+			
+if (!$link) {
+	 echo "error connection to db ".mysqli_connect_errno().' '. mysqli_connect_error().'<br/>';
+}
+            
+            
 /*
 echo "Creating new authkeys for users\n";
 mysql_query("UPDATE gazelle.users_info
@@ -757,50 +766,56 @@ mysql_query("UPDATE gazelle.users_info
 	) or die(mysql_error());
 */
 
-if (isset($_GET['skipkeys'])){
-    echo "\$_GET['skipkeys'] so skipping adding authkeys for users (for if they have already been generated)<br/>";
-}else {
+$Starting = !(isset($_GET['start']) && $_GET['start']);
+
+if (!$Starting){
+    echo "\$_GET['start'] not set so skipping adding authkeys/invite_tree for users (for if they have already been generated)<br/>";
+} else {
     
-    // Added setting CatchupTime for forums - UNTESTED in situ - unaltered code above
     echo "Update users: generate new authkeys, CatchupTime=UTC_TIMESTAMP()<br/>";
-    //$sqltime = sqltime();
     $sqltime = date('Y-m-d H:i:s', time());
 
-    mysql_query("UPDATE gazelle.users_info
+    if (!mysqli_query($link, "UPDATE gazelle.users_info
         SET AuthKey =
             MD5(
                 CONCAT(
-                    AuthKey, RAND(), '".mysql_real_escape_string(make_secret2())."',
+                    AuthKey, RAND(), '".mysqli_real_escape_string($link, make_secret2())."',
                     SHA1(
                         CONCAT(
-                            RAND(), RAND(), '".mysql_real_escape_string(make_secret2())."'
+                            RAND(), RAND(), '".mysqli_real_escape_string($link, make_secret2())."'
                         )
                     )
                 )
-            ), CatchupTime='$sqltime';"
-        ) or die(mysql_error());
+            ), CatchupTime='$sqltime';")) {
+            die(mysqli_error($link));
+     }
+     
+    
+    echo "creating new invite_tree table for users<br/>";
+
+    $result = mysqli_query($link, 'select ID from gazelle.users_main');
+    if (!$result) die(mysqli_error($link));
+
+    $TreeIndex = 2;
+    $values = array();
+    $comma = "";
+    while (($row = mysqli_fetch_assoc($result))) {
+        $values[] = "(".$row["ID"].", 0, $TreeIndex, 0, 2)";
+        $TreeIndex++;
+    }
+
+    if (!mysqli_query($link, "TRUNCATE TABLE gazelle.invite_tree;")) die(mysqil_error($link));
+
+    if (!mysqli_query($link, "insert into gazelle.invite_tree values ".implode(',',$values)))
+            die(mysqil_error($link));
+
 }
 
 
-echo "creating new invite_tree table for users<br/>";
 
-$result = mysql_query('select ID from gazelle.users_main') or die(mysql_error());
-
-$TreeIndex = 2;
-$values = array();
-$comma = "";
-while (($row = mysql_fetch_assoc($result))) {
-    $values[] = "(".$row["ID"].", 0, $TreeIndex, 0, 2)";
-    $TreeIndex++;
-}
-
-
-mysql_query("TRUNCATE TABLE gazelle.invite_tree;") or die(mysql_error());;
-
-mysql_query("insert into gazelle.invite_tree values ".implode(',',$values)) or die(mysql_error());
-
-$result = mysql_query("select count(*) as c from " . EMDB . ".torrents") or die(mysql_error());
-$count = mysql_result($result, 0);
+//$result = mysqli_query($link, "select count(*) as c from " . EMDB . ".torrents") ;
+//if (!$result) die(mysqli_error($link));
+//$count = mysql_result($result, 0);
 
 // Set batchsize. Mobbo
 $batchsize = 50;
@@ -809,21 +824,37 @@ if (isset($_REQUEST['batchsize'])){
 }
 echo "[Batchsize = $batchsize]<br/>";
 
-echo "Importing $count torrents to database... (this will take a while)<br/>";
-echo "Each dot is $batchsize torrents, an x means a torrent with an info hash that is already in the table.<br/>";
+//echo "Importing $count torrents to database... (this will take a while)<br/>";
+//echo "Each dot is $batchsize torrents, an x means a torrent with an info hash that is already in the table.<br/>";
 
 // Get the categories from the gazelle db
-$result = mysql_query("select * from gazelle.categories") or die(mysql_error());
+$result = mysqli_query($link, "select * from gazelle.categories") ;
+if (!$result) die(mysqli_error($link));
+
 $categories = array();
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
     $categories[$row['id']] = $row;
 }
+  
+if($Starting){
+    if (!mysqli_query($link, "TRUNCATE TABLE gazelle.torrents_group;")) die(mysqil_error($link));
+    if (!mysqli_query($link, "TRUNCATE TABLE gazelle.torrents;")) die(mysqil_error($link));
+    if (!mysqli_query($link, "TRUNCATE TABLE gazelle.torrents_files;")) die(mysqil_error($link));
+    if (!mysqli_query($link, "TRUNCATE TABLE gazelle.tags;")) die(mysqil_error($link));
+    if (!mysqli_query($link, "TRUNCATE TABLE gazelle.torrents_tags;")) die(mysqil_error($link));
+    echo "Starting fresh: truncated all torrent related tables<br/>";
+}
+
+$result = mysqli_query($link, "select Max(GroupID) from gazelle.torrents") ;
+if (!$result) die(mysqli_error($link));
+list($StartID) = mysqli_fetch_assoc($result);
 
 $info_hash_array = array();
 $i = 0;
 $TagIDCounter = 0;
 $TorrentID = 0;
-$result = mysql_query("select * from " . EMDB . ".torrents ORDER BY id") or die(mysql_error());
+$result = mysqli_query($link, "select * from " . EMDB . ".torrents WHERE id>$StartID ORDER BY id")  ;
+if (!$result) die(mysqli_error($link));
 
 $torrents_group_rows = array();
 $tagids = array();
@@ -832,14 +863,11 @@ $torrents_tags_row = array();
 $torrents_row = array();
 $torrents_files_row = array();
 
-$numemptorrents = mysql_num_rows($result);
-echo "selected $numemptorrents torrents for import...<br/>";
-        
-mysql_query("TRUNCATE TABLE gazelle.torrents_group;") or die(mysql_error());;
-mysql_query("TRUNCATE TABLE gazelle.torrents;") or die(mysql_error());;
-mysql_query("TRUNCATE TABLE gazelle.torrents_files;") or die(mysql_error());;
-mysql_query("TRUNCATE TABLE gazelle.tags;") or die(mysql_error());;
-mysql_query("TRUNCATE TABLE gazelle.torrents_tags;") or die(mysql_error());;
+$numemptorrents = mysqli_num_rows($result);
+echo "Max GroupID in gazelle.torrents is $StartID - selecting from ID>$StartID<br/>";
+echo "Selected $numemptorrents torrents for import... (this will take a while)<br/>";
+echo "each . or : is $batchsize torrents, an id number means a torrent with an info hash that is already in the table.<br/>";
+      
         
 if (isset($_REQUEST['logafter'])){
     $LogAfter = (int)$_REQUEST['logafter'];
@@ -847,7 +875,7 @@ if (isset($_REQUEST['logafter'])){
 }
 
 echo "0.00% <br/>";
-while (($row = mysql_fetch_assoc($result))) {
+while (($row = mysqli_fetch_assoc($result))) {
     if ($LogAfter > 0){ // use sparingly... only for bug hunting
         if ($row['id'] >= $LogAfter ){
             echo ",$row[id]";
@@ -855,7 +883,15 @@ while (($row = mysql_fetch_assoc($result))) {
     }
 	if (file_exists(TORRENT_PATH . '/' . $row['id'] . '.torrent')) { 		//Check if file exists before trying to process it. Mobbo
 		$File = fopen(TORRENT_PATH . '/' . $row['id'] . '.torrent', 'rb'); // open file for reading
+        if ($File===false){ // error
+			echo "ERROR_OPEN_$row[id]";  
+			continue;   
+        }
 		$Contents = fread($File, 10000000);
+        if ($Contents===false){ // error
+			echo "ERROR_READ_$row[id]"; 
+			continue;   
+        }
 		$Tor = new TORRENT($Contents); // New TORRENT object
 
 		$Tor->set_announce_url('ANNOUNCE_URL'); // We just use the string "ANNOUNCE_URL"
@@ -870,9 +906,9 @@ while (($row = mysql_fetch_assoc($result))) {
 			$TmpFileList [] = $Name . '{{{' . $Size . '}}}'; // Name {{{Size}}}
 		}
 
-		$FilePath = $Tor->Val['info']->Val['files'] ? mysql_real_escape_string($Tor->Val['info']->Val['name']) : "";
+		$FilePath = $Tor->Val['info']->Val['files'] ? mysqli_real_escape_string($link, $Tor->Val['info']->Val['name']) : "";
 		// Name {{{Size}}}|||Name {{{Size}}}|||Name {{{Size}}}|||Name {{{Size}}}
-		$FileString = "'" . mysql_real_escape_string(implode('|||', $TmpFileList)) . "'";
+		$FileString = "'" . mysqli_real_escape_string($link, implode('|||', $TmpFileList)) . "'";
 		$NumFiles = count($FileList);
 		$TorrentText = $Tor->enc();
 		$InfoHash = pack("H*", sha1($Tor->Val['info']->enc()));
@@ -885,6 +921,9 @@ while (($row = mysql_fetch_assoc($result))) {
 		$info_hash_array[] = $InfoHash;
 			
 		// Make sure that the tags are all lowercase and unique and insert the category tag here.
+        if (!array_key_exists($row['category'], $categories)) {
+            $row['category'] = 29;  // =='other'
+        }
 		$OriginalTags = strtolower($categories[$row['category']]['tag']." ".$row['tags']);
 		$Tags = str_replace('.', '_', $OriginalTags); 
 		$Tags = explode(' ', $Tags);
@@ -892,7 +931,7 @@ while (($row = mysql_fetch_assoc($result))) {
 
 		$TagList = implode(' ', $Tags);
 		
-		$torrents_group_rows[] .= "(" . $row['id'] . ", " . $row['category'] . ", '" . mysql_real_escape_string($row['name']) . "', '" . mysql_real_escape_string($TagList) . "', from_unixtime('" . $row['added'] . "'), '" . mysql_real_escape_string($row['descr']) . "', '" . mysql_real_escape_string($row['name']) . " " . mysql_real_escape_string(cleansearch($row['descr'])) . "')";
+		$torrents_group_rows[] .= "(" . $row['id'] . ", " . $row['category'] . ", '" . mysqli_real_escape_string($link, $row['name']) . "', '" . mysqli_real_escape_string($link, $TagList) . "', from_unixtime('" . $row['added'] . "'), '" . mysqli_real_escape_string($link, $row['descr']) . "', '" . mysqli_real_escape_string($link, $row['name']) . " " . mysqli_real_escape_string($link, cleansearch($row['descr'])) . "')";
 		
 		$Tags = explode(' ', $OriginalTags);
 		$Tags = array_unique($Tags);
@@ -913,87 +952,103 @@ while (($row = mysql_fetch_assoc($result))) {
 		}
 
 		$torrents_row[] = "(" . $row['id'] . ", " . $row['owner'] . ", 
-			'" . mysql_real_escape_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'), '".$row['hits']."', '".$row['times_completed']."', '".($row['freeleech'] == 'yes' ? '1' : '0')."')";
+			'" . mysqli_real_escape_string($link, $InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'), '".$row['hits']."', '".$row['times_completed']."', '".($row['freeleech'] == 'yes' ? '1' : '0')."')";
 
 	   
 		$TorrentID++;
-		$torrents_files_row[] = "($TorrentID, '" . mysql_real_escape_string($Tor->dump_data()) . "')";
+		$torrents_files_row[] = "($TorrentID, '" . mysqli_real_escape_string($link, $Tor->dump_data()) . "')";
 		
 		
 		$i++;
-		if ($i % 1001 == 0) {
-			echo "\n" . number_format($i / $count * 100, 2) . "%  - (@ $row[id])<br/>";        
+		if ($i % 1000 == 0) {
+			echo number_format($i / $numemptorrents * 100, 2) . "%  - (done $i/$numemptorrents @ $row[id] )<br/>";        
 		}
 		
         if ($i % $batchsize == 0) { // Use flexible batchsize. Mobbo
-			mysql_query("INSERT INTO gazelle.torrents_group
-						(ID, NewCategoryID, Name, TagList, Time, Body, SearchText) VALUES " . implode(',', $torrents_group_rows)) or die(mysql_error());
+			if(!mysqli_query($link, "INSERT INTO gazelle.torrents_group
+						(ID, NewCategoryID, Name, TagList, Time, Body, SearchText) VALUES " . implode(',', $torrents_group_rows)))
+                    die(mysqli_error($link));
 			$torrents_group_rows = array();
 
-			 mysql_query("
+            if(!mysqli_query($link, "
 								INSERT INTO gazelle.tags
 								(ID, Name, UserID) VALUES ". implode(',', $tags_row) .
 								" ON DUPLICATE KEY UPDATE Uses=Uses+1;
-						") or die(mysql_error());
+						"))
+                    die(mysqli_error($link));
 			 $tags_row = array();
 			 
-			mysql_query("INSERT INTO gazelle.torrents_tags
+			if(!mysqli_query($link, "INSERT INTO gazelle.torrents_tags
 								(TagID, GroupID, UserID, PositiveVotes) VALUES " . implode(',', $torrents_tags_row)
-					   ) or die(mysql_error());
+					   ))
+                    die(mysqli_error($link));
 			$torrents_tags_row = array();
 
-			mysql_query("INSERT INTO gazelle.torrents
+			if(!mysqli_query($link, "INSERT INTO gazelle.torrents
 								(GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, completed, FreeTorrent) 
 							VALUES " . implode(',', $torrents_row)
-					) or die(mysql_error());
+					))
+                    die(mysqli_error($link));
 			$torrents_row = array();
 			
-			mysql_query("INSERT INTO gazelle.torrents_files (TorrentID, File) VALUES " . implode(',', $torrents_files_row)
-					) or die(mysql_error());
+			if(!mysqli_query($link, "INSERT INTO gazelle.torrents_files (TorrentID, File) VALUES " . implode(',', $torrents_files_row)
+					) )
+                    die(mysqli_error($link));
 			$torrents_files_row = array();
 		   
-			echo ".";
+            $j = 1 - $j;
+			echo ($j == 1)? '.':':';
 		}
 	} // end of filcheck. Mobbo
 }
 
 // flush anything that is left...
 if (count($torrents_group_rows) > 0) {
-    mysql_query("INSERT INTO gazelle.torrents_group
-                (ID, NewCategoryID, Name, TagList, Time, Body, SearchText) VALUES " . implode(',', $torrents_group_rows)) or die(mysql_error());
+    if(!mysqli_query($link, "INSERT INTO gazelle.torrents_group
+                (ID, NewCategoryID, Name, TagList, Time, Body, SearchText) VALUES " . implode(',', $torrents_group_rows)) )
+            die(mysqli_error($link));
 }
 
 if (count($tags_row) > 0) {
-    mysql_query("
+    if(!mysqli_query($link, "
                         INSERT INTO gazelle.tags
                         (ID, Name, UserID) VALUES ". implode(',', $tags_row) .
                         " ON DUPLICATE KEY UPDATE Uses=Uses+1;
-                ") or die(mysql_error());
+                ") )
+            die(mysqli_error($link));
 }
 
 if (count($torrents_tags_row) > 0) {
-    mysql_query("INSERT INTO gazelle.torrents_tags
+    if(!mysqli_query($link, "INSERT INTO gazelle.torrents_tags
                         (TagID, GroupID, UserID, PositiveVotes) VALUES " . implode(',', $torrents_tags_row)
-                ) or die(mysql_error());
+                ) )
+            die(mysqli_error($link));
 }
 
 if (count($torrents_row) > 0) {
-    mysql_query("INSERT INTO gazelle.torrents
+    if(!mysqli_query($link, "INSERT INTO gazelle.torrents
                         (GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, completed, FreeTorrent) 
                     VALUES " . implode(',', $torrents_row)
-            ) or die(mysql_error());
+            ))
+            die(mysqli_error($link));
 }
 
 if (count($torrents_files_row) > 0) {
-    mysql_query("INSERT INTO gazelle.torrents_files (TorrentID, File) VALUES " . implode(',', $torrents_files_row)
-            ) or die(mysql_error());
+    if(!mysqli_query($link, "INSERT INTO gazelle.torrents_files (TorrentID, File) VALUES " . implode(',', $torrents_files_row)
+            ) )
+            die(mysqli_error($link));
 }
 
 echo "\n\nCopying torrent comments.\n";
-mysql_query("INSERT INTO gazelle.torrents_comments (GroupID, AuthorID, AddedTime, Body, EditedUserID, EditedTime)
+if(!mysqli_query($link, "INSERT INTO gazelle.torrents_comments (GroupID, AuthorID, AddedTime, Body, EditedUserID, EditedTime)
         SELECT torrent, user, FROM_UNIXTIME( added ) AS added, ori_text, editedby, FROM_UNIXTIME( editedat ) AS edited
         FROM ".EMDB.".comments    
-        ") or die(mysql_error());
+        "))
+        die(mysqli_error($link));
+
+
+/* close connection */
+mysqli_close($link);
 
 $time = microtime(true) - $time_start;
 echo "<br/>execution time: $time seconds\n<br/>";
