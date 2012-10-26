@@ -766,7 +766,7 @@ mysql_query("UPDATE gazelle.users_info
 	) or die(mysql_error());
 */
 
-$Starting = !(isset($_GET['start']) && $_GET['start']);
+$Starting = (isset($_GET['start']) && $_GET['start']);
 
 if (!$Starting){
     echo "\$_GET['start'] not set so skipping adding authkeys/invite_tree for users (for if they have already been generated)<br/>";
@@ -848,12 +848,14 @@ if($Starting){
 $result = mysqli_query($link, "select Max(GroupID) from gazelle.torrents") ;
 if (!$result) die(mysqli_error($link));
 list($StartID) = mysqli_fetch_assoc($result);
+if ($StartID) $WHERE =  " WHERE id>$StartID ";
+else $WHERE ='';
 
 $info_hash_array = array();
 $i = 0;
 $TagIDCounter = 0;
 $TorrentID = 0;
-$result = mysqli_query($link, "select * from " . EMDB . ".torrents WHERE id>$StartID ORDER BY id")  ;
+$result = mysqli_query($link, "select * from " . EMDB . ".torrents $WHERE ORDER BY id")  ;
 if (!$result) die(mysqli_error($link));
 
 $torrents_group_rows = array();
