@@ -1,8 +1,5 @@
-<?php 
-
-
-       
-set_time_limit(0);
+<?
+set_time_limit(50000);
 error_reporting(E_ALL); // was 0 (off)
 
 define('EMDB', 'emp');
@@ -1049,8 +1046,6 @@ if(!mysqli_query($link, "INSERT INTO gazelle.torrents_comments (GroupID, AuthorI
         die(mysqli_error($link));
 
 
-/* close connection */
-mysqli_close($link);
 
 $time = microtime(true) - $time_start;
 echo "<br/>execution time: $time seconds\n<br/>";

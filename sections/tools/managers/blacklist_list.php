@@ -7,7 +7,7 @@ show_header('Client Blacklist Management');
 $DB->query('SELECT id, vstring, peer_id FROM xbt_client_blacklist ORDER BY peer_id ASC');
 ?>
 <div class="thin">
-    <h2>Allowed Clients</h2>
+    <h2>Blacklisted Clients</h2>
     <table class="wid740">
         <tr class="head">
             <td colspan="3">Add a client</td>

@@ -6,12 +6,14 @@ if (!check_perms('site_view_stats')) error(403);
 if(isset($_POST['builddata']) && check_perms('site_debug')){
     
     $date = new DateTime('2011-02-01');
-    $end = new DateTime("2012-08-25");
+    //$end = new DateTime("2012-08-25");
     
     $deleteend = date('Y-m-d H:i:s', strtotime( "$_POST[year]-$_POST[month]-$_POST[day]" )  ); 
     if($deleteend===false) error("Error in End date input");
     if (strtotime($deleteend)<strtotime("2011-02-01")) error("End date is before data range ($deleteend < 2011-02-01)");
     //if (strtotime($deleteend)>time()) $deleteend = sqltime();
+    
+    $end = new DateTime($deleteend);
     
     $DB->query("DELETE FROM site_stats_history WHERE TimeAdded <= '".$end->format('Y-m-d H:i:s')."'");
     
