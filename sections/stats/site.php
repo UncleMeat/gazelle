@@ -2,7 +2,7 @@
  
 if (!check_perms('site_view_stats')) error(403);
 
-// helper tool for building old data from exisitng dataset (for switchover)
+// helper tool for building old data from exisitng dataset (for switchover) NOTE: this is tailored to our specific data... 
 if(isset($_POST['builddata']) && check_perms('site_debug')){
     
     $date = new DateTime('2011-02-01');

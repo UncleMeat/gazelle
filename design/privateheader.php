@@ -199,7 +199,7 @@ if ($Connectable === false) {
         $Connectable = array('yes');
     } else {
         $Connectable = $DB->next_record();
-        $Cache->cache_value('connectable_'.$LoggedUser['ID'], $Connectable, 300);
+        $Cache->cache_value('connectable_'.$LoggedUser['ID'], $Connectable, 600);
     }
 }
 

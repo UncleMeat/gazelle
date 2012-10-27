@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `articles` (
   KEY `Category` (`Category`),
   KEY `SubCat` (`SubCat`),
   KEY `MinClass` (`MinClass`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=40 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 
 
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `bonus_shop_actions` (
   `Sort` int(6) NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `Sort` (`Sort`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
  
 -- --------------------------------------------------------
@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `image` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `tag` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'No Description',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=56 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
  
 -- --------------------------------------------------------
@@ -622,7 +622,7 @@ CREATE TABLE IF NOT EXISTS `group_log` (
   KEY `GroupID` (`GroupID`),
   KEY `TorrentID` (`TorrentID`),
   KEY `UserID` (`UserID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
  
 
@@ -643,7 +643,7 @@ CREATE TABLE IF NOT EXISTS `imagehost_whitelist` (
   PRIMARY KEY (`ID`),
   KEY `Time` (`Time`),
   KEY `Hidden` ( `Hidden` )
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
  
 -- --------------------------------------------------------
@@ -796,7 +796,7 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   KEY `Level` (`Level`),
   KEY `DisplayStaff` (`DisplayStaff`),
   KEY `IsUserClass` (`IsUserClass`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
  
 -- --------------------------------------------------------
@@ -1301,7 +1301,7 @@ CREATE TABLE IF NOT EXISTS `stylesheets` (
   `Description` varchar(255) NOT NULL,
   `Default` enum('0','1') NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
  
 --
 -- Dumping data for table `stylesheets`
@@ -1777,7 +1777,7 @@ CREATE TABLE IF NOT EXISTS `users_collage_subs` (
 CREATE TABLE IF NOT EXISTS `users_connectable_status` (
  `UserID` int(10) unsigned NOT NULL,
  `IP` varchar(15) NOT NULL DEFAULT '',
- `Status` enum('0','1') NOT NULL DEFAULT '1',
+ `Status` enum('no','yes') NOT NULL DEFAULT 'yes',
  `Time` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`UserID`,`IP`),
   KEY `Status` (`Status`) ,
@@ -2033,7 +2033,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   KEY `RequiredRatio` (`RequiredRatio`),
   KEY `cc_index` (`ipcc`),
   KEY `SeedHoursDaily` (`SeedHoursDaily`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=119928 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
