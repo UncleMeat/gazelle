@@ -46,6 +46,8 @@ if(isset($_REQUEST['ip']) && isset($_REQUEST['port']) && isset($_REQUEST['userid
     $DB->query("INSERT INTO users_connectable_status (UserID, IP, Status, Time) 
                     VALUES ( '" . db_string($_REQUEST['userid']) . "','" . db_string($_REQUEST['ip']) . "', '$connresult','$now' )
                     ON DUPLICATE KEY UPDATE Status='$connresult', Time='$now'");
+    
+    $Cache->delete_value('connectable_'.$LoggedUser['ID']);
      
     if ($connresult == 'yes') {
         echo json_encode(array(true, "Port $_REQUEST[port] on $_REQUEST[ip] connected successfully"));
