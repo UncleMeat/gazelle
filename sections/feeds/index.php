@@ -33,8 +33,6 @@ if(!$Enabled = $Cache->get_value('enabled_'.$User)){
 if (md5($User.RSS_HASH.$_GET['passkey']) != $_GET['auth'] || $Enabled != 1) {
 	$Feed->open_feed();
 	$Feed->channel('Blocked', 'RSS feed.');
-
-
 	$Feed->close_feed();
 	die();
 }
@@ -46,8 +44,10 @@ switch($_GET['feed']) {
 		$Text = new TEXT;
 		$Feed->channel('News', 'RSS feed for site news.');
 		if (!$News = $Cache->get_value('news')) {
-			require(SERVER_ROOT.'/classes/class_mysql.php'); //Require the database wrapper
-			$DB=NEW DB_MYSQL; //Load the database wrapper
+            if (!$DB){
+                require(SERVER_ROOT.'/classes/class_mysql.php'); //Require the database wrapper
+                $DB=NEW DB_MYSQL; //Load the database wrapper
+            }
 			$DB->query("SELECT
 				ID,
 				Title,
@@ -56,7 +56,7 @@ switch($_GET['feed']) {
 				FROM news
 				ORDER BY Time DESC
 				LIMIT 10");
-			$News = $DB->to_array(false,MYSQLI_NUM,false);
+			$News = $DB->to_array(false,MYSQLI_NUM);
 			$Cache->cache_value('news',$News,1209600);
 		}
 		$Count = 0;
@@ -65,6 +65,7 @@ switch($_GET['feed']) {
 			if (strtotime($NewsTime) >= time()) {
 				continue;
 			}
+			//echo $Feed->item($Title, "test" , 'index.php#news'.$NewsID, SITE_NAME.' Staff','','',$NewsTime);
 			echo $Feed->item($Title, $Text->strip_bbcode($Body), 'index.php#news'.$NewsID, SITE_NAME.' Staff','','',$NewsTime);
 			if (++$Count > 4) {
 				break;
@@ -76,8 +77,10 @@ switch($_GET['feed']) {
 		$Text = new TEXT;
 		$Feed->channel('Blog', 'RSS feed for site blog.');
 		if (!$Blog = $Cache->get_value('blog')) {
-			require(SERVER_ROOT.'/classes/class_mysql.php'); //Require the database wrapper
-			$DB=NEW DB_MYSQL; //Load the database wrapper
+            if (!$DB){
+                require(SERVER_ROOT.'/classes/class_mysql.php'); //Require the database wrapper
+                $DB=NEW DB_MYSQL; //Load the database wrapper
+            }
 			$DB->query("SELECT
 				b.ID,
 				um.Username,

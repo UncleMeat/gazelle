@@ -337,11 +337,13 @@ $Results = $Results['matches'];
 show_header('Browse Torrents', 'browse,status,overlib,jquery,jquery.cookie');
 
 // List of pages  
-$Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
+$Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);	
 ?>
 
 <div class="thin">
-    <h2>Browse Torrents</h2>
+    <h2>
+        <a style="float:left;margin-top:4px" href="feeds.php?feed=torrents_all&amp;user=<?=$LoggedUser['ID']?>&amp;auth=<?=$LoggedUser['RSS_Auth']?>&amp;passkey=<?=$LoggedUser['torrent_pass']?>&amp;authkey=<?=$LoggedUser['AuthKey']?>" title="<?=SITE_NAME?> : All Torrents" ><img src="<?=STATIC_SERVER?>/common/symbols/rss.png" alt="RSS feed" /></a>
+    Browse Torrents</h2>
 <?
     if(check_perms('torrents_review')){ 
         update_staff_checking("browsing torrents", true); 

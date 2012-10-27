@@ -87,6 +87,9 @@ $Forums = get_forums_info();
 
 	?>
 		<div class="thin">
+            <h2>    
+                <a style="float:left;margin-top:4px" href="feeds.php?feed=feed_blog&amp;user=<?=$LoggedUser['ID']?>&amp;auth=<?=$LoggedUser['RSS_Auth']?>&amp;passkey=<?=$LoggedUser['torrent_pass']?>&amp;authkey=<?=$LoggedUser['AuthKey']?>" title="<?=SITE_NAME?> - Blog" ><img src="<?=STATIC_SERVER?>/common/symbols/rss.png" alt="RSS feed" /></a>
+        <?=SITE_NAME?> Blog</h2>
                 <div id="quickreplypreview">
                     <div id="contentpreview" style="text-align:left;"></div>
                 </div>  

@@ -41,6 +41,25 @@ class FEED {
 		$Item .= "\t\t\t<dc:creator>$Creator</dc:creator>\n\t\t</item>\n";
 		return $Item;
 	}
+    //specialised creator function for torrent items
+	function torrent($Title, $Description, $Page, $DownLink, $Creator, $Tags='', $Category='') { //Escape with CDATA, otherwise the feed breaks.
+		
+        $Date = date("r");
+		
+		$Site = $this->UseSSL ? 'https://'.SSL_SITE_URL : 'http://'.NONSSL_SITE_URL;
+		$Item = "\t\t<item>\n";
+		$Item .= "\t\t\t<title><![CDATA[$Title]]></title>\n";
+		$Item .= "\t\t\t<description><![CDATA[$Description]]></description>\n";
+		$Item .= "\t\t\t<pubDate>$Date</pubDate>\n";
+		$Item .= "\t\t\t<link>$Site/$Page</link>\n";
+		$Item .= "\t\t\t<download>$Site/$DownLink</download>\n";
+		$Item .= "\t\t\t<guid>$Site/$Page</guid>\n";
+		$Item .= "\t\t\t<comments><![CDATA[$Tags]]></comments>\n";
+		$Item .= "\t\t\t<category><![CDATA[$Category]]></category>\n";
+		 
+		$Item .= "\t\t\t<dc:creator>$Creator</dc:creator>\n\t\t</item>\n";
+		return $Item;
+	}
 
 	function retrieve($CacheKey,$AuthKey,$PassKey) {
 		global $Cache;

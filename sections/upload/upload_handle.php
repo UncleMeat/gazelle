@@ -248,6 +248,7 @@ if ($TotalSize < (20*1024*1024*1024)){
     $Properties['FreeTorrent']=1;
 }
 
+$sqltime = sqltime();
 // Torrent
 $DB->query("
 	INSERT INTO torrents
@@ -257,7 +258,7 @@ $DB->query("
 	VALUES
 		(" . $GroupID . ", " . $LoggedUser['ID'] . ",
 		'" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", 
-		'" . sqltime() . "', '" . $Properties['FreeTorrent'] . "')");
+		'$sqltime', '" . $Properties['FreeTorrent'] . "')");
 
 $Cache->increment('stats_torrent_count');
 $TorrentID = $DB->inserted_id();
@@ -318,7 +319,15 @@ send_irc('PRIVMSG #' . NONSSL_SITE_URL . '-announce-ssl :' . $AnnounceSSL);
 // Manage notifications
 
 // For RSS
-$Item = $Feed->item($Title, $Text->strip_bbcode($Body), 'torrents.php?action=download&amp;authkey=[[AUTHKEY]]&amp;torrent_pass=[[PASSKEY]]&amp;id=' . $TorrentID, $LoggedUser['Username'], 'torrents.php?id=' . $GroupID, trim($Properties['TagList']));
+//$Item = $Feed->item($Title, $Text->strip_bbcode($Body), 'torrents.php?action=download&amp;authkey=[[AUTHKEY]]&amp;torrent_pass=[[PASSKEY]]&amp;id=' . $TorrentID, $LoggedUser['Username'], 'torrents.php?id=' . $GroupID, trim($Properties['TagList']));
+
+$Item = $Feed->torrent($Title, 
+                       "&lt;br/&gt;Category: ".$NewCategories[(int)$_POST['category']]['name']." &lt;br/&gt; " . get_size($TotalSize) . " &lt;br/&gt; Added: $sqltime &lt;br/&gt; Description: ". $Text->strip_bbcode($Body), 
+                        'torrents.php?id=' . $GroupID, 
+                        'torrents.php?action=download&amp;authkey=[[AUTHKEY]]&amp;torrent_pass=[[PASSKEY]]&amp;id=' . $TorrentID, 
+                        $LoggedUser['Username'], 
+                        trim($Properties['TagList']), 
+                        $NewCategories[(int)$_POST['category']]['name'] );
 
 
 //Notifications

@@ -25,9 +25,12 @@ if ($LoggedUser['LastReadNews'] != $News[0][0]) {
 }
 
 show_header('News','bbcode');
-?>
+?>	
 <div class="thin">
-    <h2><?=SITE_NAME?> <?=((strtolower(substr( SITE_NAME,0,1))===substr( SITE_NAME,0,1))?'news':'News'); ?></h2>
+    <h2>
+        <a style="float:left;margin-top:4px" href="feeds.php?feed=feed_news&amp;user=<?=$LoggedUser['ID']?>&amp;auth=<?=$LoggedUser['RSS_Auth']?>&amp;passkey=<?=$LoggedUser['torrent_pass']?>&amp;authkey=<?=$LoggedUser['AuthKey']?>" title="<?=SITE_NAME?> : News" ><img src="<?=STATIC_SERVER?>/common/symbols/rss.png" alt="RSS feed" /></a>
+    <?=SITE_NAME?> <?=((strtolower(substr( SITE_NAME,0,1))===substr( SITE_NAME,0,1))?'news':'News'); ?></h2>
+    
 <? print_latest_forum_topics(); ?>
     
 	<div class="sidebar">
@@ -98,7 +101,10 @@ for($i = 0; $i < $Limit; $i++) {
 			</ul>
 		</div>
 <?	}  ?>
-                <div class="head colhead_dark"><a href="blog.php">Latest blog posts</a></div>
+        <div class="head colhead_dark">
+            <a href="blog.php">Latest blog posts</a> 
+            <a style="float:right;margin-top:4px" href="feeds.php?feed=feed_blog&amp;user=<?=$LoggedUser['ID']?>&amp;auth=<?=$LoggedUser['RSS_Auth']?>&amp;passkey=<?=$LoggedUser['torrent_pass']?>&amp;authkey=<?=$LoggedUser['AuthKey']?>" title="<?=SITE_NAME?> : Blog" ><img src="<?=STATIC_SERVER?>/common/symbols/rss.png" alt="RSS feed" /></a>
+        </div>
 		<div class="box">
 			
 <?
