@@ -1371,16 +1371,21 @@ EXPLANATION OF PARSER LOGIC
 					 
 				case 'anchor':
 				case '#':
-                              if (!preg_match('/^[a-zA-Z0-9\-\_]+$/', $Block['Attr'] ) ){
-                                  $Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
-                              } else {
-                                  $Str.='<a class="anchor" id="'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
+                    if (!preg_match('/^[a-zA-Z0-9\-\_]+$/', $Block['Attr'] ) ){
+                        $Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
+                    } else {
+                        $Str.='<a class="anchor" id="'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</a>';
 					}
 					break;
                               
-                        case 'mcom':  
-                              $Str.='<div class="modcomment">'.$this->to_html($Block['Val']).'<div class="after">[ <a href="articles.php?topic=tutorials">Help</a> | <a href="articles.php?topic=rules">Rules</a> ]</div></div>'; // <div class="clear"></div>
-                              break;
+                        
+                case 'mcom':
+                    $innerhtml = $this->to_html($Block['Val']);
+                    while (ends_with($innerhtml, "\n")){ 
+                        $innerhtml = substr($innerhtml, 0, -strlen("\n"));
+                    }
+                    $Str.='<div class="modcomment">'.$innerhtml.'<div class="after">[ <a href="articles.php?topic=tutorials">Help</a> | <a href="articles.php?topic=rules">Rules</a> ]</div></div>'; // <div class="clear"></div>
+                    break;
                           
 				case 'table':
                               $InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr']) : FALSE;
