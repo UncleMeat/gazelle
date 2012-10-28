@@ -6,7 +6,21 @@ $Text = new TEXT;
  
 $Body=get_article('connchecker');
 
-if (!isset($_GET['checkip'])) $_GET['checkip'] = $_SERVER['REMOTE_ADDR'];
+//if (!isset($_GET['checkip'])) $_GET['checkip'] = $_SERVER['REMOTE_ADDR'];
+
+if (!isset($_GET['checkip'])) {
+    $DB->query("
+        SELECT ip, port, active
+          FROM xbt_files_users
+         WHERE uid = '$LoggedUser[ID]' 
+      ORDER BY active DESC, mtime DESC LIMIT 1"); 
+	if($DB->record_count() > 0) { 
+        list($_GET['checkip'], $_GET['checkport'], $active) = $DB->next_record();
+        if ($active!='1') $_GET['checkport'] = '';
+    } else {
+        $_GET['checkip'] = $_SERVER['REMOTE_ADDR'];
+    }
+}
 
 if (isset($_GET['checkuser']) && check_perms('users_mod') ) {
     $UserID = $_GET['checkuser'];
