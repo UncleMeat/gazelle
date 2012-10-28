@@ -62,7 +62,7 @@ if(strtotime($BannedUntil)<time() && !$BanID) {
 if ($Attempts > 0) {
 ?>
 	<br /><br />
-	Lost your password? <a href="login.php?act=recover">Recover it here!</a>
+	<span style="font-size:2em">Lost your password? <a href="login.php?act=recover">Recover it here!</a></span>
 <? } ?>
 <script type="text/javascript">
 cookie.set('cookie_test',1,1);
