@@ -47,7 +47,7 @@ if(isset($_REQUEST['ip']) && isset($_REQUEST['port']) && isset($_REQUEST['userid
                     VALUES ( '" . db_string($_REQUEST['userid']) . "','" . db_string($_REQUEST['ip']) . "', '$connresult','$now' )
                     ON DUPLICATE KEY UPDATE Status='$connresult', Time='$now'");
     
-    $Cache->cache_value('connectable_'.$_REQUEST['userid'], $connresult, 1800);
+    $Cache->cache_value('connectable_'.$_REQUEST['userid'], array($connresult, $_REQUEST['ip'], $_REQUEST['port'], $now), 0);
     //$Cache->delete_value('connectable_'.$_REQUEST['userid']);
      
     if ($connresult == 'yes') {

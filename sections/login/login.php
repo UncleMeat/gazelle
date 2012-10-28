@@ -16,8 +16,14 @@ if(strtotime($BannedUntil)<time() && !$BanID) {
 	<span class="warning"><?=$Err?><br /><br /></span>
 <? } ?>
       <span style="font-size:2em">
-          <br/>this is not torrents.empornium.me but a test site and access is by invitation only, do not try to login unless you are meant to be here.
-          <br/>Please use <a href="http://torrents.empornium.me">http://torrents.empornium.me</a> for all your pron related needs.<br/><br/><br/>
+          <!--<br/>this is not torrents.empornium.me but a test site and access is by invitation only, do not try to login unless you are meant to be here.
+          <br/>Please use <a href="http://torrents.empornium.me">http://torrents.empornium.me</a> for all your pron related needs.<br/>-->
+          <br/>Welcome to the empornium.me test tracker. 
+          <br/>
+      </span>
+      <span style="font-size:1em">
+          Your empornium account will not be affected by what happens on the test tracker 
+          <br/><br/><br/><br/>
       </span>
 <? if ($Attempts > 0) { ?>
 	You have <span class="info"><?=(6-$Attempts)?></span> attempts remaining.<br /><br />
