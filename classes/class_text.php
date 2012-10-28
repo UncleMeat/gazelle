@@ -1346,16 +1346,18 @@ EXPLANATION OF PARSER LOGIC
 						$NoName = false;
 					}
                               
-                              //remove the local host from address if present
-					$Block['Attr'] = str_replace('http://'.SITE_URL, '', $Block['Attr']);
-                              
-                              // first test if is in format /local.php or #anchorname
-                              if (preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\;\-\_\.]*$/', $Block['Attr'] ) ){
-                                    // a local link or anchor link
-                                    $Str.='<a class="link" href="'.$Block['Attr'].'">'.$Block['Val'].'</a>';
-                              } elseif (!$this->valid_url($Block['Attr']) ){
-                                    // not a valid tag
-						$Str.='[url='.$Block['Attr'].']'.$Block['Val'].'[/url]';
+                              //remove the local host/anonym.to from address if present
+					$Block['Attr'] = str_replace(array('http://'.SITE_URL, 'http://anonym.to/?'), '', $Block['Attr']);
+					//$Block['Attr'] = str_replace('http://'.SITE_URL, '', $Block['Attr']);
+					//$Block['Attr'] = str_replace('http://anonym.to/?', '', $Block['Attr']);
+                    
+                    // first test if is in format /local.php or #anchorname
+                    if (preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\;\-\_\.]*$/', $Block['Attr'] ) ){
+                        // a local link or anchor link
+                        $Str.='<a class="link" href="'.$Block['Attr'].'">'.$Block['Val'].'</a>';
+                    } elseif (!$this->valid_url($Block['Attr']) ){
+                        // not a valid tag
+						$Str.='[url='.$Block['Attr'].']'.$Block['Val'].'[/url] NOTE ME';
 					} else {
 						$LocalURL = $this->local_url($Block['Attr']);
 						if($LocalURL) {
@@ -1574,6 +1576,7 @@ EXPLANATION OF PARSER LOGIC
 					break;
 			 
 				case 'inlineurl':
+					$Block['Attr'] = str_replace('http://anonym.to/?', '', $Block['Attr']);
 					if(!$this->valid_url($Block['Attr'], '', true)) {
 						$Array = $this->parse($Block['Attr']);
 						$Block['Attr'] = $Array;
@@ -1656,6 +1659,7 @@ EXPLANATION OF PARSER LOGIC
 						$Array = $this->parse($Block['Attr']);
 						$Block['Attr'] = $Array;
 						$Str.=$this->raw_text($Block['Attr']);
+						$Str.="RAW";
 					}
 					else {
 						$Str.=$Block['Attr'];
