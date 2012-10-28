@@ -19,7 +19,7 @@ if(isset($_REQUEST['ip']) && isset($_REQUEST['userid']) ){
     $now = time();
     $DB->query("INSERT INTO users_connectable_status (UserID, IP, Status, Time) 
                     VALUES ( '" . db_string($_REQUEST['userid']) . "','" . db_string($_REQUEST['ip']) . "', 'unset','$now' )
-                    ON DUPLICATE KEY UPDATE Status='unset', Time='$now'");
+                    ON DUPLICATE KEY UPDATE Status='unset'");
     $result = $DB->affected_rows();
     
     $Cache->delete_value('connectable_'.$_REQUEST['userid']);
