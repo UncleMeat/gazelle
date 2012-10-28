@@ -101,8 +101,8 @@ if (count($History) == 1) {
 	$Invite['EndTime'] = $Joined;
 	$Invite['AccountAge'] = date(time() + time() - strtotime($Joined)); // Same as EndTime but without ' ago'
 	$Invite['IP'] = $History[0]['IP'];
-	$Invite['ChangedbyID'] = $History[0]['ChangedbyID'];
-	$Invite['CUsername'] = $History[0]['CUsername'];
+	//$Invite['ChangedbyID'] = $History[0]['ChangedbyID'];
+	//$Invite['CUsername'] = $History[0]['CUsername'];
 	if ($Current['StartTime'] == '0000-00-00 00:00:00') { $Current['StartTime'] = $Joined; }
 } else {
 	foreach ($History as $Key => $Val) {
@@ -161,8 +161,8 @@ if ($Old) {
 		$Old[$LastOld+1]['EndTime'] = $Old[$LastOld]['StartTime'];
 		$Old[$LastOld+1]['ElapsedTime'] = date(time()+strtotime($Old[$LastOld+1]['EndTime'] )-strtotime($Old[$LastOld+1]['StartTime']));
 		$Old[$LastOld+1]['IP'] = $Invite['IP'];
-		$Old[$LastOld+1]['ChangedbyID'] = $Invite['ChangedbyID'];
-		$Old[$LastOld+1]['CUsername'] = $Invite['CUsername'];
+		//$Old[$LastOld+1]['ChangedbyID'] = $Invite['ChangedbyID'];
+		//$Old[$LastOld+1]['CUsername'] = $Invite['CUsername'];
 	}
 }
 
