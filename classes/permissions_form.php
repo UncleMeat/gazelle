@@ -88,6 +88,8 @@
  	'users_view_friends' => 'Can view anyone\'s friends.',
 	'users_reset_own_keys' => 'Can reset own passkey/authkey.',
 	'users_edit_password' => 'Can change passwords.',
+	'users_edit_email' => 'Can change user email address.',
+     
 	'users_promote_below' => 'Can promote users to below current level.',
 	'users_promote_to' => 'Can promote users up to current level.',
         'user_group_permissions'=> 'Can manage group permissions.',
@@ -250,6 +252,8 @@ function permissions_form(){ ?>
 					<? display_perm('users_view_friends', 'Can view anyone\'s friends.'); ?>
 					<? display_perm('users_reset_own_keys', 'Can reset own passkey/authkey.'); ?>
 					<? display_perm('users_edit_password', 'Can change password.'); ?>
+					<? display_perm('users_edit_email', 'Can change user email address.'); ?>
+                    
 					<? display_perm('users_promote_below', 'Can promote users to below current level.'); ?>
 					<? display_perm('users_promote_to', 'Can promote users up to current level.'); ?>
                                         <? display_perm('user_group_permissions', 'Can manage group permissions.', 'Can change a users group permission setting.'); ?> 

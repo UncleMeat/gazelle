@@ -1285,6 +1285,22 @@ if (check_perms('users_mod', $Class)) { ?>
 					<input class="long" type="text" id="change_password" name="ChangePassword" />
 				</td>
 			</tr>
+			<tr>
+				<td class="label">(repeat) New Password:</td>
+				<td>
+					<input class="long" type="text" id="change_password2" name="ChangePassword2" />
+				</td>
+			</tr>
+<?	}
+
+	if (check_perms('users_edit_email')) {
+?>
+			<tr>
+				<td class="label">New E-Mail: </td>
+                <td><strong>note:</strong> users can change their own email - using this could be allowing someone to steal the account!
+					<input class="long" type="text" id="change_email" name="ChangeEmail" />
+				</td>
+			</tr>
 <?	} ?>
                 </table>
 		</div>

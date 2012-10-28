@@ -29,6 +29,8 @@ $Visible = (isset($_POST['Visible']))? 1 : 0;
 $Invites = (int)$_POST['Invites'];
 $SupportFor = db_string(display_str($_POST['SupportFor']));
 $Pass = db_string($_POST['ChangePassword']);
+$Pass2 = db_string($_POST['ChangePassword2']);
+$Email = db_string($_POST['ChangeEmail']);
 $Warned = (isset($_POST['Warned']))? 1 : 0;
 
 
@@ -708,7 +710,9 @@ if ($MergeStatsFrom && check_perms('users_edit_ratio')) {
 	}
 }
 
-if ($Pass && check_perms('users_edit_password')) {
+if ($Pass) {
+    if (!check_perms('users_edit_password')) error(403);
+    if ($Pass !== $Pass2) error("Password1 and Password2 did not match! You must enter the same new password twice to change a users password");
 	$Secret=make_secret();
 	$UpdateSet[]="Secret='$Secret'";
 	$UpdateSet[]="PassHash='".db_string(make_hash($Pass,$Secret))."'";
@@ -727,14 +731,22 @@ if ($Pass && check_perms('users_edit_password')) {
         
 	
 	$DB->query("DELETE FROM users_sessions WHERE UserID='$UserID'");
-	
-        
 }
+
+if ($Email){
+    if (!check_perms('users_edit_email')) error(403);
+              
+    if ($Email > 255 ) error ("Email field is too long");
+    if (!preg_match("/^".EMAIL_REGEX."$/i", $Email)) error("You did not enter a valid email address:<br/>$Email");
+	$UpdateSet[]="Email='$Email'";
+	$EditSummary[]="email changed from $Cur[email] to $Email";
+}
+
 
 if (empty($UpdateSet) && empty($EditSummary)) {
 	if(!$Reason) {
 		if (str_replace("\r", '', $Cur['AdminComment']) != str_replace("\r", '', $AdminComment)) {
-                  if (!check_perms('users_admin_notes')) error(403);
+            if (!check_perms('users_admin_notes')) error(403);
 			$UpdateSet[]="AdminComment='$AdminComment'";
 		} else {
 			header("Location: user.php?id=$UserID");
