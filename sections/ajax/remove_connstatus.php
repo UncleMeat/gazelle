@@ -17,6 +17,8 @@ if(isset($_REQUEST['ip']) && isset($_REQUEST['userid']) ){
                  WHERE UserID='" . db_string($_REQUEST['userid']) . "' AND IP='" . db_string($_REQUEST['ip']) . "' ");
     $result = $DB->affected_rows();
     
+    $Cache->delete_value('connectable_'.$_REQUEST['userid']);
+    
     if ($result > 0) {
         echo json_encode(array(true, "removed $result record for UserID: $_REQUEST[userid] IP: $_REQUEST[ip] "));
     }  elseif ($result == 0) {

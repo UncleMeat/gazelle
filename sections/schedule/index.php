@@ -511,9 +511,10 @@ if($Day != next_day() || $_GET['runday']){
     
     // -------------- clean up users_connectable_status table - remove values older than 60 days
    
-	$DB->query("DELETE FROM users_connectable_status WHERE Time<'".time() - (3600*24*60)."'");
-    
-    
+	//$DB->query("DELETE FROM users_connectable_status WHERE Time<".time() - (3600*24*60)."");
+    //echo "##  START DELETE FROM users_connectable_status ###\n";
+	$DB->query("DELETE FROM users_connectable_status WHERE Time<(".(int)(time() - (3600*24*60)).")");
+    //echo "## FINISH ##\n";
     
 	//------------- Ratio requirements
 	
