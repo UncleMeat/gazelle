@@ -51,6 +51,8 @@ $DB->query("
 		h2.Email, 
 		h2.Time,
 		h2.IP,
+		h2.ChangedbyID,
+        m1.Username AS CUsername,
 		h3.UserID AS UserIDs,
 		h3.Time AS UserSetTimes,
 		h3.IP AS UserIPs,
@@ -59,6 +61,7 @@ $DB->query("
 		i2.Donor AS UsersDonor,
 		i2.Warned AS UsersWarned
 	FROM users_history_emails AS h2
+	LEFT JOIN users_main AS m1 ON m1.ID=h2.ChangedbyID
 	LEFT JOIN users_history_emails AS h3 ON h3.Email=h2.Email AND h3.UserID<>h2.UserID
 	LEFT JOIN users_main AS m3 ON m3.ID=h3.UserID
 	LEFT JOIN users_info AS i2 ON i2.UserID=h3.UserID
@@ -72,6 +75,8 @@ $Current['Email'] = $CurrentEmail['Email'];
 $Current['StartTime'] = $History[0]['Time'];
 $Current['CurrentIP'] = $CurrentEmail['IP'];
 $Current['IP'] = $History[(count($History) - 1)]['IP'];
+$Current['ChangedbyID'] = $History[(count($History) - 1)]['ChangedbyID'];
+$Current['CUsername'] = $History[(count($History) - 1)]['CUsername'];
 
 // Matches for current email
 if ($CurrentEmail['Usernames'] != '') {
@@ -96,6 +101,8 @@ if (count($History) == 1) {
 	$Invite['EndTime'] = $Joined;
 	$Invite['AccountAge'] = date(time() + time() - strtotime($Joined)); // Same as EndTime but without ' ago'
 	$Invite['IP'] = $History[0]['IP'];
+	$Invite['ChangedbyID'] = $History[0]['ChangedbyID'];
+	$Invite['CUsername'] = $History[0]['CUsername'];
 	if ($Current['StartTime'] == '0000-00-00 00:00:00') { $Current['StartTime'] = $Joined; }
 } else {
 	foreach ($History as $Key => $Val) {
@@ -105,6 +112,8 @@ if (count($History) == 1) {
 			$Invite['EndTime'] = $Joined;
 			$Invite['AccountAge'] = date(time() + time() - strtotime($Joined)); // Same as EndTime but without ' ago'
 			$Invite['IP'] = $Val['IP'];
+			$Invite['ChangedbyID'] = $Val['ChangedbyID'];
+			$Invite['CUsername'] = $Val['CUsername'];
 
 		} elseif ($History[$Key-1]['Email'] != $Val['Email'] && $Val['Time'] != '0000-00-00 00:00:00') {
 			// Old email
@@ -115,6 +124,8 @@ if (count($History) == 1) {
 			$Old[$Key]['StartTime'] = (isset($History[$Key+$i]) && $History[$Key+$i]['Time'] != '0000-00-00 00:00:00') ? $History[$Key+$i]['Time'] : $Joined;
 			$Old[$Key]['EndTime'] = $Val['Time'];
 			$Old[$Key]['IP'] = $Val['IP'];
+			$Old[$Key]['ChangedbyID'] = $Val['ChangedbyID'];
+			$Old[$Key]['CUsername'] = $Val['CUsername'];
 			$Old[$Key]['ElapsedTime'] = date(time() + strtotime($Old[$Key]['EndTime']) - strtotime($Old[$Key]['StartTime']));
 			$Old[$Key]['Email'] =  $Val['Email'];
 
@@ -123,6 +134,8 @@ if (count($History) == 1) {
 			$Other[$Key]['StartTime'] = (isset($History[$Key+$i])) ? $History[$Key+$i]['Time'] : $Joined;
 			$Other[$Key]['EndTime'] = $Val['Time'];
 			$Other[$Key]['IP'] = $Val['IP'];
+			$Other[$Key]['ChangedbyID'] = $Val['ChangedbyID'];
+			$Other[$Key]['CUsername'] = $Val['CUsername'];
 			$Other[$Key]['ElapsedTime'] = date(time() + strtotime($Other[$Key]['EndTime']) - strtotime($Other[$Key]['StartTime']));
 			$Other[$Key]['Email'] =  $Val['Email'];
 		}
@@ -148,6 +161,8 @@ if ($Old) {
 		$Old[$LastOld+1]['EndTime'] = $Old[$LastOld]['StartTime'];
 		$Old[$LastOld+1]['ElapsedTime'] = date(time()+strtotime($Old[$LastOld+1]['EndTime'] )-strtotime($Old[$LastOld+1]['StartTime']));
 		$Old[$LastOld+1]['IP'] = $Invite['IP'];
+		$Old[$LastOld+1]['ChangedbyID'] = $Invite['ChangedbyID'];
+		$Old[$LastOld+1]['CUsername'] = $Invite['CUsername'];
 	}
 }
 
@@ -162,6 +177,7 @@ if ($Old) {
 			<td>End</td>
 			<td>Current IP [<a href="userhistory.php?action=ips&amp;userid=<?=$UserID ?>">History</a>]</td>
 			<td>Set from IP</td>
+			<td>Set by</td>
 		</tr>
 		<tr class="rowa">
 			<td><?=display_str($Current['Email'])?></td>
@@ -175,6 +191,7 @@ if ($Old) {
 				<?=display_ip($Current['IP'], geoip($Current['IP']))?> [<a href="user.php?action=search&amp;ip_history=on&amp;ip=<?=display_str($Current['IP'])?>" title="Search">S</a>] [<a href="http://whatismyipaddress.com/ip/<?=display_str($Current['IP'])?>" title="WIPA">WI</a>]<br />
 				<?=get_host($Current['IP'])?>
 			</td>
+			<td><?=format_username($Current['ChangedbyID'],$Current['CUsername'])?></td>
 		</tr>
 <?
 if ($CurrentMatches) {
@@ -190,6 +207,7 @@ if ($CurrentMatches) {
 				<?=display_ip($Match['IP'], geoip($Match['IP']))?> [<a href="user.php?action=search&amp;ip_history=on&amp;ip=<?=display_str($Match['IP'])?>" title="Search">S</a>] [<a href="http://whatismyipaddress.com/ip/<?=display_str($Match['IP'])?>" title="WIPA">WI</a>]<br />
 				<?=get_host($Match['IP'])?>
 			</td>
+			<td><?=format_username($Match['ChangedbyID'],$Match['CUsername'])?></td>
 		</tr>			
 <? 
 	}
@@ -203,6 +221,7 @@ if ($Old) {
 			<td>End</td>
 			<td>Elapsed</td>
 			<td>Set from IP</td>
+			<td>Set by</td>
 		</tr>
 <?
 	$j=0;
@@ -227,6 +246,7 @@ if ($Old) {
 				<?=display_ip($Match['IP'], geoip($Match['IP']))?> [<a href="user.php?action=search&amp;ip_history=on&amp;ip=<?=display_str($Match['IP'])?>" title="Search">S</a>] [<a href="http://whatismyipaddress.com/ip/<?=display_str($Match['IP'])?>" title="WIPA">WI</a>]<br />
 				<?=get_host($Match['IP'])?>
 			</td>
+			<td><?=format_username($Match['ChangedbyID'],$Match['CUsername'])?></td>
 		</tr>	
 <?			
 			}
@@ -246,6 +266,7 @@ if ($Old) {
 				<?=display_ip($Record['IP'], geoip($Record['IP']))?> [<a href="user.php?action=search&amp;ip_history=on&amp;ip=<?=display_str($Record['IP'])?>" title="Search">S</a>] [<a href="http://whatismyipaddress.com/ip/<?=display_str($Record['IP'])?>" title="WIPA">WI</a>]<br />
 				<?=get_host($Record['IP'])?>
 			</td>
+			<td><?=format_username($Record['ChangedbyID'],$Record['CUsername'])?></td>
 		</tr>			
 <?		
 		if ($MatchCount > 0) {
@@ -265,6 +286,7 @@ if ($Old) {
 			<td>End</td>
 			<td>Age of account</td>
 			<td>Signup IP</td>
+			<td>Set by</td>
 		</tr>
 <?
 // Matches on invite email
@@ -285,6 +307,7 @@ if ($OldMatches) {
 				<?=display_ip($Match['IP'], geoip($Match['IP']))?> [<a href="user.php?action=search&amp;ip_history=on&amp;ip=<?=display_str($Match['IP'])?>" title="Search">S</a>] [<a href="http://whatismyipaddress.com/ip/<?=display_str($Match['IP'])?>" title="WIPA">WI</a>]<br />
 				<?=get_host($Match['IP'])?>
 			</td>
+			<td><?=format_username($Match['ChangedbyID'],$Match['CUsername'])?></td>
 		</tr>	
 <?
 		}
@@ -303,6 +326,7 @@ if ($OldMatches) {
 				<?=display_ip($Invite['IP'], geoip($Invite['IP']))?> [<a href="user.php?action=search&amp;ip_history=on&amp;ip=<?=display_str($Invite['IP'])?>" title="Search">S</a>] [<a href="http://whatismyipaddress.com/ip/<?=display_str($Invite['IP'])?>" title="WIPA">WI</a>]<br />
 				<?=get_host($Invite['IP'])?>
 			</td>
+			<td><?=format_username($Invite['ChangedbyID'],$Invite['CUsername'])?></td>
 		</tr>
 <?
 

@@ -740,6 +740,12 @@ if ($Email){
     if (!preg_match("/^".EMAIL_REGEX."$/i", $Email)) error("You did not enter a valid email address:<br/>$Email");
 	$UpdateSet[]="Email='$Email'";
 	$EditSummary[]="email changed from $Cur[email] to $Email";
+    
+	//This piece of code will update the time of their last email change to the current time *not* the current change.
+	$DB->query("UPDATE users_history_emails SET Time='".sqltime()."' WHERE UserID='$UserID' AND Time='0000-00-00 00:00:00'");
+	$DB->query("INSERT INTO users_history_emails
+				(UserID, Email, Time, IP, ChangedByID) VALUES
+				('$UserID', '$Email', '0000-00-00 00:00:00', '".db_string($_SERVER['REMOTE_ADDR'])."', '$LoggedUser[ID]')");
 }
 
 

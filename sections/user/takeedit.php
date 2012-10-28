@@ -115,23 +115,24 @@ foreach ($Bounties as $B) {
 $DB->query("SELECT Email FROM users_main WHERE ID=".$UserID);
 list($CurEmail) = $DB->next_record();
 if ($CurEmail != $_POST['email']) {
-	if(!check_perms('users_edit_profiles')) { // Non-admins have to authenticate to change email
+	//if(!check_perms('users_edit_profiles')) { // Non-admins have to authenticate to change email
+    // changed- only users can change it here, admins on the user page (with edit_email permission)
 		$DB->query("SELECT PassHash,Secret FROM users_main WHERE ID='".db_string($UserID)."'");
 		list($PassHash,$Secret)=$DB->next_record();
 		if ($PassHash!=make_hash($_POST['cur_pass'],$Secret)) {
 			$Err = "You did not enter the correct password.";
 		}
-	}
+	//}
 	if(!$Err) {
 		$NewEmail = db_string($_POST['email']);		
 
 	
 		//This piece of code will update the time of their last email change to the current time *not* the current change.
-		$ChangerIP = db_string($LoggedUser['IP']);
+		//$ChangerIP = db_string($LoggedUser['IP']);
 		$DB->query("UPDATE users_history_emails SET Time='".sqltime()."' WHERE UserID='$UserID' AND Time='0000-00-00 00:00:00'");
 		$DB->query("INSERT INTO users_history_emails
 				(UserID, Email, Time, IP) VALUES
-				('$UserID', '$NewEmail', '0000-00-00 00:00:00', '".db_string($_SERVER['REMOTE_ADDR'])."')");
+				('$UserID', '$NewEmail', '0000-00-00 00:00:00', '".db_string($_SERVER['REMOTE_ADDR'])."','$UserID')");
 		
 	} else {
 		error($Err);

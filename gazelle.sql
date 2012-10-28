@@ -1849,11 +1849,12 @@ CREATE TABLE IF NOT EXISTS `users_geodistribution` (
 
 CREATE TABLE IF NOT EXISTS `users_history_emails` (
   `UserID` int(10) NOT NULL,
-  `Email` varchar(255) DEFAULT NULL,
-  `Time` datetime DEFAULT NULL,
-  `IP` varchar(15) DEFAULT NULL,
+  `Email` varchar(255) NOT NULL DEFAULT '',
+  `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `IP` varchar(15) NOT NULL DEFAULT '0.0.0.0',
+  `ChangedbyID` int(10) NOT NULL,
   KEY `UserID` (`UserID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
