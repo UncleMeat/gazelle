@@ -2152,7 +2152,7 @@ function get_tags($TagNames) {
 }
 
 function torrent_icons($Data, $TorrentID, $UserID, $MFDStatus, $IsBookmarked) {
-    global $DB, $Cache, $LoggedUser;
+    global $DB, $Cache, $LoggedUser, $TorrentUserStatus;
         //$AddExtra = '';
         $SeedTooltip='';
         $FreeTooltip='';
