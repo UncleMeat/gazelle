@@ -2,6 +2,27 @@
 if (!check_perms('site_manage_tags')) {
     error(403);
 }
+
+                    
+//$DB->query("SELECT ID, Name, Uses FROM tags WHERE TagType='other' ORDER BY Name ASC"); 
+                    
+$DB->query("SELECT t.ID, t.Name, t.Uses, Count(ts.ID)
+                                  FROM tags AS t 
+                             LEFT JOIN tag_synomyns AS ts ON ts.TagID=t.ID
+                                 WHERE t.TagType='other'
+                              GROUP BY t.ID 
+                              HAVING Count(ts.ID)=0
+                              ORDER BY Name ASC");   
+$AllTags = $DB->to_array();
+            
+ob_start();
+foreach ($AllTags as $Tag) {
+    list($TagID, $TagName, $TagUses) = $Tag;  ?>
+    <option value="<?= $TagID ?>"><?= "$TagName ($TagUses)" ?>&nbsp;</option>
+<? } 
+$taglistHTML = ob_get_clean();
+                 
+                        
 $UseMultiInterface= isset($_REQUEST['multi']);
 show_header('Official Tags Manager','tagmanager');
 ?>
@@ -207,25 +228,7 @@ show_header('Official Tags Manager','tagmanager');
                 <select id="movetagid" name="movetagid" <? if($UseMultiInterface) { 
                       ?>    onchange="Select_Tag( this.value, this.options[this.selectedIndex].text );" <?  } ?>>
                     <option value="0" selected="selected">none&nbsp;</option>
-                    <?
-                    //$DB->query("SELECT ID, Name, Uses FROM tags WHERE TagType='other' ORDER BY Name ASC"); 
-                    $DB->query("SELECT t.ID, t.Name, t.Uses, Count(ts.ID)
-                                  FROM tags AS t 
-                             LEFT JOIN tag_synomyns AS ts ON ts.TagID=t.ID
-                                 WHERE t.TagType='other'
-                              GROUP BY t.ID 
-                              HAVING Count(ts.ID)=0
-                              ORDER BY Name ASC");   
-            
-                    ob_start();
-                    $AllTags = $DB->to_array();
-                    foreach ($AllTags as $Tag) {
-                        list($TagID, $TagName, $TagUses) = $Tag;  ?>
-                        <option value="<?= $TagID ?>"><?= "$TagName ($TagUses)" ?>&nbsp;</option>
-                    <? } 
-                    $taglistHTML = ob_get_contents();
-                    echo $taglistHTML;
-                    ?>
+                    <?=$taglistHTML?>
                 </select>
 
 <?              if ($UseMultiInterface) { // Experts only! ?>
