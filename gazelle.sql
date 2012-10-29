@@ -307,7 +307,22 @@ CREATE TABLE IF NOT EXISTS `comments_edits` (
   `Body` mediumtext,
   KEY `Page` (`Page`,`PostID`),
   KEY `EditUser` (`EditUser`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `countries`
+--
+
+
+
+CREATE TABLE IF NOT EXISTS `countries` (
+  `cc` char(2) NOT NULL,
+  `country` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`cc`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1002,15 +1017,6 @@ CREATE TABLE IF NOT EXISTS `review_reasons` (
   UNIQUE KEY `Sort` (`Sort`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
---
--- Dumping data for table `review_reasons`
---
-
-INSERT IGNORE INTO `review_reasons` (`Sort`, `Name`, `Description`) VALUES
-(2, 'Screenshots', 'Not enough screenshots.'),
-(4, 'Description', 'Lack of text description.'),
-(8, 'Screenshots & Description', 'Not enough screenshots, lack of text description.');
-
 
 -- --------------------------------------------------------
 
@@ -1024,12 +1030,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `NextBiWeekly` int(2) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumpning av Data i tabell `schedule`
---
 
-INSERT INTO `schedule` (`NextHour`, `NextDay`, `NextBiWeekly`) VALUES
-(0, 0, 0);
 
 
 -- --------------------------------------------------------
@@ -1045,12 +1046,7 @@ CREATE TABLE IF NOT EXISTS `site_options` (
   `KeepSpeed` bigint(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `site_options`
---
 
-INSERT IGNORE INTO `site_options` (`ReviewHours`, `AutoDelete`, `DeleteRecordsMins`, `KeepSpeed`) VALUES
-(24, 0, 720, 1048576);
 
 -- --------------------------------------------------------
 
@@ -1303,14 +1299,7 @@ CREATE TABLE IF NOT EXISTS `stylesheets` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
  
---
--- Dumping data for table `stylesheets`
---
 
-INSERT INTO `stylesheets` (`ID`, `Name`, `Description`, `Default`) VALUES
-(1, 'empornium', 'empornium stylesheet', '0'),
-(2, 'light', 'light empornium stylesheet', '0'),
-(3, 'modern', 'modern empornium stylesheet', '1');
 
 -- --------------------------------------------------------
 
