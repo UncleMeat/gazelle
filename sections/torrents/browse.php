@@ -45,6 +45,8 @@ if (isset($LoggedUser['TorrentsPerPage'])) {
 	$TorrentsPerPage = TORRENTS_PER_PAGE;
 }
 
+$UserID = $LoggedUser['ID'];
+
 $TokenTorrents = $Cache->get_value('users_tokens_' . $UserID);
 if (empty($TokenTorrents)) {
     $DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
