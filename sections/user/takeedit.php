@@ -131,8 +131,8 @@ if ($CurEmail != $_POST['email']) {
 		//$ChangerIP = db_string($LoggedUser['IP']);
 		$DB->query("UPDATE users_history_emails SET Time='".sqltime()."' WHERE UserID='$UserID' AND Time='0000-00-00 00:00:00'");
 		$DB->query("INSERT INTO users_history_emails
-				(UserID, Email, Time, IP) VALUES
-				('$UserID', '$NewEmail', '0000-00-00 00:00:00', '".db_string($_SERVER['REMOTE_ADDR'])."','$UserID')");
+				(UserID, Email, Time, IP, ChangedbyID) VALUES
+				('$UserID', '$NewEmail', '0000-00-00 00:00:00', '".db_string($_SERVER['REMOTE_ADDR'])."','$LoggedUser[ID]')");
 		
 	} else {
 		error($Err);
