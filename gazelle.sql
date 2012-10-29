@@ -96,25 +96,26 @@ CREATE TABLE IF NOT EXISTS `bad_passwords` (
 -- Table structure for table `badges`
 --
 
-CREATE TABLE IF NOT EXISTS `badges` (
+
+DROP TABLE IF EXISTS `badges`;
+CREATE TABLE `badges` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
-  `Badge` varchar( 12 ) NOT NULL,
-  `Rank` int(10) NOT NULL,
   `Type` enum('Shop','Single','Multiple','Unique') NOT NULL,
-  `Display` INT( 3 ) NOT NULL DEFAULT '0',
+  `Display` int(3) NOT NULL DEFAULT '0',
   `Sort` int(10) NOT NULL,
   `Cost` int(20) NOT NULL DEFAULT '0',
   `Title` varchar(64) NOT NULL,
   `Description` varchar(255) NOT NULL,
   `Image` varchar(255) NOT NULL,
+  `Badge` varchar(12) NOT NULL,
+  `Rank` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`ID`),
-  KEY `Badge` (`Badge`),
-  KEY `Rank` (`Rank`),
   KEY `Type` (`Type`),
+  KEY `Sort` (`Sort`),
   KEY `Display` (`Display`),
-  KEY `Sort` (`Sort`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
+  KEY `Badge` (`Badge`),
+  KEY `Rank` (`Rank`)
+) ENGINE=InnoDB AUTO_INCREMENT=240 DEFAULT CHARSET=utf8;
 
 
 -- --------------------------------------------------------

@@ -951,7 +951,7 @@ while (($row = mysqli_fetch_assoc($result))) {
 		}
 
 		$torrents_row[] = "(" . $row['id'] . ", " . $row['id'] . ", " . $row['owner'] . ", 
-			'" . mysqli_real_escape_string($link, $InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'), '".$row['hits']."', '".$row['times_completed']."', '".($row['free'] == 'yes' ? '1' : '0')."')";
+			'" . mysqli_real_escape_string($link, $InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'), '".$row['hits']."', '".$row['times_completed']."', '".($row['free'] != '0' ? '1' : '0')."')";
 
 	   
 		//$TorrentID++;
