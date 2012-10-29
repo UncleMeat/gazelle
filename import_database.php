@@ -950,13 +950,14 @@ while (($row = mysqli_fetch_assoc($result))) {
 			}
 		}
 
-		$torrents_row[] = "(" . $row['id'] . ", " . $row['owner'] . ", 
+		$torrents_row[] = "(" . $row['id'] . ", " . $row['id'] . ", " . $row['owner'] . ", 
 			'" . mysqli_real_escape_string($link, $InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'), '".$row['hits']."', '".$row['times_completed']."', '".($row['free'] == 'yes' ? '1' : '0')."')";
 
 	   
-		$TorrentID++;
-		$torrents_files_row[] = "($TorrentID, '" . mysqli_real_escape_string($link, $Tor->dump_data()) . "')";
-		
+		//$TorrentID++;
+		//$torrents_files_row[] = "($TorrentID, '" . mysqli_real_escape_string($link, $Tor->dump_data()) . "')";
+		// instead of trusing the auto-inc and the local var stay synched we will use tID as gID
+		$torrents_files_row[] = "(" . $row['id'] . ", '" . mysqli_real_escape_string($link, $Tor->dump_data()) . "')";
 		
 		$i++;
 		if ($i % 1000 == 0) {
@@ -984,7 +985,7 @@ while (($row = mysqli_fetch_assoc($result))) {
 			$torrents_tags_row = array();
 
 			if(!mysqli_query($link, "INSERT INTO gazelle.torrents
-								(GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, completed, FreeTorrent) 
+								(ID, GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, completed, FreeTorrent) 
 							VALUES " . implode(',', $torrents_row)
 					))
                     die(mysqli_error($link));
@@ -1026,7 +1027,7 @@ if (count($torrents_tags_row) > 0) {
 
 if (count($torrents_row) > 0) {
     if(!mysqli_query($link, "INSERT INTO gazelle.torrents
-                        (GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, completed, FreeTorrent) 
+                        (ID, GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, completed, FreeTorrent) 
                     VALUES " . implode(',', $torrents_row)
             ))
             die(mysqli_error($link));
@@ -1038,7 +1039,7 @@ if (count($torrents_files_row) > 0) {
             die(mysqli_error($link));
 }
 
-echo "\n\nCopying torrent comments.\n";
+echo "<br/><br/>Copying torrent comments.<br/>\n";
 if(!mysqli_query($link, "INSERT INTO gazelle.torrents_comments (GroupID, AuthorID, AddedTime, Body, EditedUserID, EditedTime)
         SELECT torrent, user, FROM_UNIXTIME( added ) AS added, ori_text, editedby, FROM_UNIXTIME( editedat ) AS edited
         FROM ".EMDB.".comments    
@@ -1048,6 +1049,6 @@ if(!mysqli_query($link, "INSERT INTO gazelle.torrents_comments (GroupID, AuthorI
 
 
 $time = microtime(true) - $time_start;
-echo "<br/>execution time: $time seconds\n<br/>";
+echo "<br/>execution time: $time seconds<br/>";
 
 ?>

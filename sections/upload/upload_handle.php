@@ -252,9 +252,7 @@ $sqltime = sqltime();
 // Torrent
 $DB->query("
 	INSERT INTO torrents
-		(GroupID, UserID,
-		info_hash, FileCount, FileList, FilePath, Size, 
-		Time, FreeTorrent) 
+		(GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, FreeTorrent) 
 	VALUES
 		(" . $GroupID . ", " . $LoggedUser['ID'] . ",
 		'" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", 
