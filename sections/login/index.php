@@ -163,7 +163,7 @@ if (isset($_REQUEST['act']) && $_REQUEST['act']=="recover") {
 
 // Normal login
 else {
-	$Validate->SetFields('username',true,'regex','You did not enter a valid username.',array('regex'=>'/^[a-z0-9_?-]{1,20}$/i'));
+	$Validate->SetFields('username',true,'regex','You did not enter a valid username.',array('regex'=>'/^[A-Za-z0-9_\-\.]{1,20}$/i'));
 	$Validate->SetFields('password','1','string','You entered an invalid password.',array('maxlength'=>'40','minlength'=>'6'));
 
 	$DB->query("SELECT ID, Attempts, Bans, BannedUntil FROM login_attempts WHERE IP='".db_string($_SERVER['REMOTE_ADDR'])."'");

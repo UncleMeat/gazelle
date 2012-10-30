@@ -18,18 +18,10 @@ if(empty($_POST['submit']) || empty($_POST['username'])) {
               <label for="email">Email&nbsp;</label>
               <input type="text" name="email" id="email" class="inputtext" />
               <input type="submit" name="reset" value="Reset!" class="submit" />
-              <!--
-                    <table cellpadding="2" cellspacing="1" border="0" align="center">
-                          <tr valign="top">
-                                <td align="right">Email&nbsp;</td>
-                                <td align="left"><input type="text" name="email" id="email" class="inputtext" /></td>
-                          </tr>
-                          <tr>
-                                <td colspan="2" align="right"><input type="submit" name="reset" value="Reset!" class="submit" /></td>
-                          </tr>
-                    </table> -->
+ 
         <? } else { ?>
-              An email has been sent to you, please follow the directions in that email to reset your password.
+              An email has been sent to you, please follow the directions in that email to reset your password.<br />
+              (check your spam folder if you haven't recieved it within a few minutes)<br />
         <? } ?>
               </div>
         </form>
