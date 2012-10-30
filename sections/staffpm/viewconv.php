@@ -91,9 +91,9 @@ if ($ConvID = (int)$_GET['id']) {
                         <span style="float:right"><em>Assigned to: <?=$Assigned?></em></span>    
 <?                  }  ?> 
                 </div>
-                <div class="box pad">
+                <div class="box pad vertical_space colhead">
                     <span style="float:right"> 
-<?                      $SenderString = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID']);
+<?                      $SenderString = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID'], false, true);
                         echo "sent by $SenderString&nbsp;&nbsp;"; ?>
                     </span>
                     Sent to  <?=$UserInitiated?'<strong>Staff</strong>':$UserStr;?> 

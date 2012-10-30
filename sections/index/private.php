@@ -26,30 +26,6 @@ if ($Page!=1 || !$News = $Cache->get_value("news")){
     }
 }
 
-/*
-$News = $Cache->get_value("news_$Page");
-$NumResults = $Cache->get_value("news_totalnum");
-
-if ($News === false || $NumResults === false) {
-    if (!$NumResults) $SQL = "SQL_CALC_FOUND_ROWS";
-    else $SQL = '';
-	$DB->query("SELECT $SQL 
-                       ID,
-                       Title,
-                       Body,
-                       Time
-                  FROM news
-              ORDER BY Time DESC
-                 LIMIT $Limit");
-	$News = $DB->to_array(false,MYSQLI_NUM,false);
-    if (!$NumResults) {
-        $DB->query("SELECT FOUND_ROWS()");
-        list($NumResults) = $DB->next_record();
-        $Cache->cache_value("news_totalnum",$NumResults);
-    }
-	$Cache->cache_value("news_$Page",$News);
-	$Cache->cache_value('news_latest_id', $News[0][0], 0);
-} */
 
 $Pages=get_pages($Page,$NumResults,5,9);
 
