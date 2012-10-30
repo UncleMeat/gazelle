@@ -13,7 +13,8 @@ if(empty($_POST['submit']) || empty($_POST['username'])) {
         ?>
                     <font color="red"><strong><?=$Err ?></strong></font><br /><br />
         <?	} ?>
-              An email will be sent to your email address with information on how to reset your password<br /><br />
+              An email will be sent to your email address with information on how to reset your password<br />
+              (check your spam folder if you haven't recieved it within a few minutes)<br /><br />
               <label for="email">Email&nbsp;</label>
               <input type="text" name="email" id="email" class="inputtext" />
               <input type="submit" name="reset" value="Reset!" class="submit" />
