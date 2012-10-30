@@ -22,27 +22,35 @@ $DB->query('SELECT
 	FROM login_attempts AS l
 	LEFT JOIN users_main AS m ON m.ID=l.UserID
 	LEFT JOIN users_info AS i ON i.UserID=l.UserID
-	WHERE l.BannedUntil > "'.sqltime().'"
-	ORDER BY l.BannedUntil ASC');
+    ORDER BY l.BannedUntil ASC');
+
+	//
+	//WHERE l.BannedUntil > "'.sqltime().'"
+$FailedLogins = $DB->to_array();
 
 
 show_header('Login Watch');
 ?>
 <div class="thin">
-<h2>Login Watch Management</h2>
+<h2>Login Watch Management! <?=$DB->record_count();?></h2>
 <table width="100%">
 	<tr class="colhead">
 		<td>IP</td>
 		<td>User</td>
+		<td>Attempts</td>
+		<td>Last Attempt</td>
 		<td>Bans</td>
 		<td>Remaining</td>
-		<td>Submit</td>
-		<? if(check_perms('admin_manage_ipbans')) { ?>		<td>Submit</td><? } ?>
+		<td style="width:160px">Submit</td> 
 	</tr>
 <?
 $Row = 'b';
-while(list($ID, $IP, $UserID, $LastAttempt, $Attempts, $BannedUntil, $Bans, $Username, $PermissionID, $Enabled, $Donor, $Warned) = $DB->next_record()){
+foreach ($FailedLogins as $Item) {
+    list($ID, $IP, $UserID, $LastAttempt, $Attempts, $BannedUntil, $Bans, $Username, $PermissionID, $Enabled, $Donor, $Warned) = $Item;
+//while(list($ID, $IP, $UserID, $LastAttempt, $Attempts, $BannedUntil, $Bans, $Username, $PermissionID, $Enabled, $Donor, $Warned) = $DB->next_record() ) {
 	$Row = ($Row === 'a' ? 'b' : 'a');
+    
+    
 ?>
 	<tr class="row<?=$Row?>">
 			<td>
@@ -52,22 +60,26 @@ while(list($ID, $IP, $UserID, $LastAttempt, $Attempts, $BannedUntil, $Bans, $Use
 				<? if ($UserID != 0) { echo format_username($UserID, $Username, $Donor, $Warned, $Enabled, $PermissionID); } ?>
 			</td>
 			<td>
+				<?=$Attempts?>
+			</td>
+			<td>
+				<?=time_diff($LastAttempt)?>
+			</td>
+			<td>
 				<?=$Bans?>
 			</td>
 			<td>
 				<?=time_diff($BannedUntil)?>
 			</td>	
 			<td>
-				<form action="" method="post">
+				<form action="" method="post" style="display:inline-block">
 					<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 					<input type="hidden" name="id" value="<?=$ID?>" />
 					<input type="hidden" name="action" value="login_watch" />
 					<input type="submit" name="submit" value="Unban" />
-				</form>
-			</td>
-<? if(check_perms('admin_manage_ipbans')) { ?>
-			<td>
-				<form action="" method="post">
+				</form> 
+<? if(check_perms('admin_manage_ipbans')) { ?> 
+				<form action="" method="post" style="display:inline-block">
 					<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 					<input type="hidden" name="id" value="<?=$ID?>" />
 					<input type="hidden" name="action" value="ip_ban" />
@@ -76,8 +88,8 @@ while(list($ID, $IP, $UserID, $LastAttempt, $Attempts, $BannedUntil, $Bans, $Use
 					<input type="hidden" name="notes" value="Banned per <?=$Bans?> bans on login watch." />
 					<input type="submit" name="submit" value="IP Ban" />
 				</form>
-			</td>
 <? } ?>
+			</td>
 	</tr>
 <?
 }

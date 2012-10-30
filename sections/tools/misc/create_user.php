@@ -5,10 +5,20 @@ if(!check_perms('admin_create_users')) { error(403); }
 //Show our beautiful header
 show_header('Create a User');
 
+require(SERVER_ROOT."/classes/class_validate.php");
+$Val =NEW VALIDATE;
+
+
 //Make sure the form was sent
 if (isset($_POST['Username'])) {
 	authorize();
 
+	$Val->SetFields('Username',true,'regex','You did not enter a valid username.',array('regex'=>'/^[A-Za-z0-9_\-\.]{1,20}$/i'));
+	$Val->SetFields('Password','1','string','You entered an invalid password.',array('maxlength'=>'40','minlength'=>'6'));
+				
+    $Err=$Val->ValidateForm($_POST);
+    if ($Err) error($Err);
+    
 	//Create variables for all the fields
 	$Username = $_POST['Username'];
 	$Email = $_POST['Email'];
@@ -83,7 +93,7 @@ if (isset($_POST['Username'])) {
 		<table cellpadding="2" cellspacing="1" border="0" align="center">
 		<tr valign="top">
 			<td align="right">Username&nbsp;</td>
-			<td align="left"><input type="text" name="Username" id="username" class="inputtext"  maxlength="20" pattern="[A-Za-z0-9_?]{1,20}"  /></td>
+			<td align="left"><input type="text" name="Username" id="username" class="inputtext"  maxlength="20" pattern="[A-Za-z0-9_\-\.]{1,20}"  /></td>
 		</tr>
 		<tr valign="top">
 			<td align="right">Email&nbsp;</td>
