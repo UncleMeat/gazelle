@@ -269,6 +269,7 @@ switch ($_REQUEST['action']) {
             authorize();
             $DB->query("DELETE FROM news WHERE ID='" . db_string($_GET['id']) . "'");
             $Cache->delete_value('news');
+            $Cache->delete_value('news_totalnum');
             $Cache->delete_value('feed_news');
 
             // Deleting latest news
@@ -287,7 +288,10 @@ switch ($_REQUEST['action']) {
 
         $DB->query("INSERT INTO news (UserID, Title, Body, Time) VALUES ('$LoggedUser[ID]', '" . db_string($_POST['title']) . "', '" . db_string($_POST['body']) . "', '" . sqltime() . "')");
         $Cache->cache_value('news_latest_id', $DB->inserted_id(), 0);
+        
         $Cache->delete_value('news');
+        $Cache->delete_value('news_totalnum');
+        $Cache->delete_value('feed_news');
 
         header('Location: index.php');
         break;

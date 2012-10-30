@@ -2,19 +2,56 @@
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
 
-if (!$News = $Cache->get_value('news')) {
-	$DB->query("SELECT
-		ID,
-		Title,
-		Body,
-		Time
-		FROM news
-		ORDER BY Time DESC
-		LIMIT 5");
-	$News = $DB->to_array(false,MYSQLI_NUM,false);
-	$Cache->cache_value('news',$News,3600*24*30);
-	$Cache->cache_value('news_latest_id', $News[0][0], 0);
+list($Page,$Limit) = page_limit(5);
+   
+if (!$NumResults = $Cache->get_value("news_totalnum") ){ 
+	$DB->query("SELECT Count(*) FROM news");
+    list($NumResults) = $DB->next_record();
+    $Cache->cache_value("news_totalnum",$NumResults);
 }
+
+if ($Page!==1 || !$News = $Cache->get_value("news")){  
+    
+	$DB->query("SELECT ID,
+                       Title,
+                       Body,
+                       Time
+                  FROM news
+              ORDER BY Time DESC
+                 LIMIT $Limit");
+	$News = $DB->to_array(false,MYSQLI_NUM,false);
+    if ($Page==1) {
+        $Cache->cache_value("news",$News);
+        $Cache->cache_value('news_latest_id', $News[0][0], 0);
+    }
+}
+
+/*
+$News = $Cache->get_value("news_$Page");
+$NumResults = $Cache->get_value("news_totalnum");
+
+if ($News === false || $NumResults === false) {
+    if (!$NumResults) $SQL = "SQL_CALC_FOUND_ROWS";
+    else $SQL = '';
+	$DB->query("SELECT $SQL 
+                       ID,
+                       Title,
+                       Body,
+                       Time
+                  FROM news
+              ORDER BY Time DESC
+                 LIMIT $Limit");
+	$News = $DB->to_array(false,MYSQLI_NUM,false);
+    if (!$NumResults) {
+        $DB->query("SELECT FOUND_ROWS()");
+        list($NumResults) = $DB->next_record();
+        $Cache->cache_value("news_totalnum",$NumResults);
+    }
+	$Cache->cache_value("news_$Page",$News);
+	$Cache->cache_value('news_latest_id', $News[0][0], 0);
+} */
+
+$Pages=get_pages($Page,$NumResults,5,9);
 
 if ($LoggedUser['LastReadNews'] != $News[0][0]) {
 	$Cache->begin_transaction('user_info_heavy_'.$UserID);
@@ -363,9 +400,11 @@ foreach ($News as $NewsItem) {
 	}
 }
 ?>
-                <div class="head">
+	<div class="linkbox"><?=$Pages?></div>
+    
+    <!--       <div class="head">
                         <em>For older news posts, <a href="forums.php?action=viewforum&amp;forumid=19">click here</a></em>
-                </div>
+                </div> -->
 	</div>
 </div>
 <?

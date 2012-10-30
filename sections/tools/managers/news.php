@@ -25,6 +25,7 @@ switch($_GET['action']) {
 		list($Title, $Body) = $DB->next_record();
 	}
 }
+
 ?>
 <div class="thin">
     <h2><?= ($_GET['action'] == 'news')? 'Create a news post' : 'Edit news post';?></h2> 
