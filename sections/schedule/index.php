@@ -135,9 +135,14 @@ $DB->query("UPDATE users_main AS um
 //------------ record ip's/ports for users and refresh time field for existing status records -------------------------//
 sleep(3);
 $nowtime = time();
-$DB->query("INSERT INTO users_connectable_status ( UserID, IP, Time )
-        SELECT uid, ip, '$nowtime' FROM xbt_files_users GROUP BY uid, ip
-         ON DUPLICATE KEY UPDATE Time='$nowtime'");
+
+//$DB->query("INSERT INTO users_connectable_status ( UserID, IP, Time )
+//        SELECT uid, ip, '$nowtime' FROM xbt_files_users GROUP BY uid, ip
+//         ON DUPLICATE KEY UPDATE Time='$nowtime'");
+
+// er time ends up being 'last checked' so shouldnt be updated here
+$DB->query("INSERT IGNORE INTO users_connectable_status ( UserID, IP, Status, Time )
+            SELECT uid, ip, 'unset', '$nowtime' FROM xbt_files_users GROUP BY uid, ip ");
 
 //------------Remove inactive peers every 15 minutes-------------------------//
 $DB->query("DELETE FROM xbt_files_users WHERE active='0'");

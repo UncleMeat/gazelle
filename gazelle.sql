@@ -115,7 +115,7 @@ CREATE TABLE `badges` (
   KEY `Display` (`Display`),
   KEY `Badge` (`Badge`),
   KEY `Rank` (`Rank`)
-) ENGINE=InnoDB AUTO_INCREMENT=240 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
 -- --------------------------------------------------------
@@ -1767,7 +1767,7 @@ CREATE TABLE IF NOT EXISTS `users_collage_subs` (
 CREATE TABLE IF NOT EXISTS `users_connectable_status` (
  `UserID` int(10) unsigned NOT NULL,
  `IP` varchar(15) NOT NULL DEFAULT '',
- `Status` enum('no','yes') NOT NULL DEFAULT 'yes',
+ `Status` enum('no','yes','unset') NOT NULL DEFAULT 'unset',
  `Time` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`UserID`,`IP`),
   KEY `Status` (`Status`) ,

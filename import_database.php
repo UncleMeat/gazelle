@@ -881,14 +881,15 @@ while (($row = mysqli_fetch_assoc($result))) {
         }
     }
 	if (file_exists(TORRENT_PATH . '/' . $row['id'] . '.torrent')) { 		//Check if file exists before trying to process it. Mobbo
-		$File = fopen(TORRENT_PATH . '/' . $row['id'] . '.torrent', 'rb'); // open file for reading
-        if ($File===false){ // error
+		$filehandle = fopen(TORRENT_PATH . '/' . $row['id'] . '.torrent', 'rb'); // open file for reading
+        if ($filehandle===false){ // error
 			echo "ERROR_OPEN_$row[id]";  
 			continue;   
         }
-		$Contents = fread($File, 10000000);
+		$Contents = fread($filehandle, 10000000);
         if ($Contents===false){ // error
 			echo "ERROR_READ_$row[id]"; 
+            fclose($filehandle) ;
 			continue;   
         }
 		$Tor = new TORRENT($Contents); // New TORRENT object
@@ -904,7 +905,8 @@ while (($row = mysqli_fetch_assoc($result))) {
 			list($Size, $Name) = $File;
 			$TmpFileList [] = $Name . '{{{' . $Size . '}}}'; // Name {{{Size}}}
 		}
-
+        fclose($filehandle) ;
+        
 		$FilePath = $Tor->Val['info']->Val['files'] ? mysqli_real_escape_string($link, $Tor->Val['info']->Val['name']) : "";
 		// Name {{{Size}}}|||Name {{{Size}}}|||Name {{{Size}}}|||Name {{{Size}}}
 		$FileString = "'" . mysqli_real_escape_string($link, implode('|||', $TmpFileList)) . "'";
