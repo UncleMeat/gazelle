@@ -39,8 +39,8 @@ $Watchlist = $DB->to_array('UserID');
 ?>
 <div class="thin">
     <h2>Speed Reports</h2>
-    <div class="head">User watch list &nbsp;<img src="static/common/symbols/watched.png" alt="view" /><span style="float:right;"><a href="#" onclick="$('#uwatchlist').toggle();this.innerHTML=this.innerHTML=='(hide)'?'(view)':'(hide)';">(hide)</a></span>&nbsp;</div>
-        <table id="uwatchlist">
+    <div class="head">User watch list &nbsp;<img src="static/common/symbols/watched.png" alt="view" /><span style="float:right;"><a href="#" onclick="$('#uwatchlist').toggle();this.innerHTML=this.innerHTML=='(hide)'?'(view)':'(hide)';">(view)</a></span>&nbsp;</div>
+        <table id="uwatchlist" class="hidden">
             <tr class="rowa"> 
                 <td colspan="6" style="text-align: left;color:grey"> 
                     Users in the watch list will have their records retained until they are manually deleted. You can use this information to help detect ratio cheaters.<br/>
@@ -109,8 +109,8 @@ $Watchlist = $DB->to_array('UserID');
 
             ?>
     </table><br/>
-    <div class="head">Torrent watch list &nbsp;<img src="static/common/symbols/watched.png" alt="view" /><span style="float:right;"><a href="#" onclick="$('#twatchlist').toggle();this.innerHTML=this.innerHTML=='(hide)'?'(view)':'(hide)';">(hide)</a></span>&nbsp;</div>
-    <table id="twatchlist">
+    <div class="head">Torrent watch list &nbsp;<img src="static/common/symbols/watched.png" alt="view" /><span style="float:right;"><a href="#" onclick="$('#twatchlist').toggle();this.innerHTML=this.innerHTML=='(hide)'?'(view)':'(hide)';">(view)</a></span>&nbsp;</div>
+    <table id="twatchlist" class="hidden">
         <tr class="rowa"> 
                 <td colspan="6" style="text-align: left;color:grey"> 
                     Torrents in the watch list will have all their records retained until they are manually deleted. You can use this information to help detect ratio cheaters.<br/>

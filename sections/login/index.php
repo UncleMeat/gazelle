@@ -201,16 +201,16 @@ else {
 					if($DB->record_count() > 0) {
 						//Ban exists already, only add new entry if not for same reason
 						list($Reason) = $DB->next_record(MYSQLI_BOTH, false);
-						if($Reason != "Automated ban per >60 failed login attempts") {
+						if($Reason != "Automated ban per >6 failed login attempts") {
 							$DB->query("UPDATE ip_bans
-								SET Reason = CONCAT('Automated ban per >60 failed login attempts AND ', Reason)
+								SET Reason = CONCAT('Automated ban per >6 failed login attempts AND ', Reason)
 								WHERE FromIP = ".$IP." AND ToIP = ".$IP);
 						}
 					} else {
 						//No ban
 						$DB->query("INSERT INTO ip_bans
 							(FromIP, ToIP, Reason) VALUES
-							('$IP','$IP', 'Automated ban per >60 failed login attempts')");
+							('$IP','$IP', 'Automated ban per >6 failed login attempts')");
 						$Cache->delete_value('ip_bans');
 					}
 				}
