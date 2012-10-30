@@ -53,7 +53,7 @@ if ($News === false || $NumResults === false) {
 
 $Pages=get_pages($Page,$NumResults,5,9);
 
-if ($LoggedUser['LastReadNews'] != $News[0][0]) {
+if ($Page==1 && $LoggedUser['LastReadNews'] != $News[0][0]) {
 	$Cache->begin_transaction('user_info_heavy_'.$UserID);
 	$Cache->update_row(false, array('LastReadNews' => $News[0][0]));
 	$Cache->commit_transaction(0);
