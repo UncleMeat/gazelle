@@ -10,7 +10,7 @@ if (!$NumResults = $Cache->get_value("news_totalnum") ){
     $Cache->cache_value("news_totalnum",$NumResults);
 }
 
-if ($Page!==1 || !$News = $Cache->get_value("news")){  
+if ($Page!=1 || !$News = $Cache->get_value("news")){  
     
 	$DB->query("SELECT ID,
                        Title,
