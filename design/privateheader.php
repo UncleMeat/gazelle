@@ -192,7 +192,7 @@ if ($Connectable === false) {
           FROM users_connectable_status AS ucs
      LEFT JOIN xbt_files_users AS xbt ON xbt.uid=ucs.UserID AND xbt.ip=ucs.IP AND xbt.Active='1'
          WHERE UserID = '$LoggedUser[ID]'
-      ORDER BY Time DESC LIMIT 1"); 
+      ORDER BY xbt.mtime DESC, ucs.Time DESC LIMIT 1"); 
     
     if($DB->record_count() == 0) {
         //$cStatus = 'yes';
