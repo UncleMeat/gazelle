@@ -1191,11 +1191,25 @@ EXPLANATION OF PARSER LOGIC
 	}
 	
        
-      function is_color_attrib($Attrib) {
+      function is_color_attrib(&$Attrib) {
             static $ColorAttribs;
-            if (!$ColorAttribs) // only build it once per page  
+            if (!$ColorAttribs) { // only define it once per page  
                 $ColorAttribs = array('orange', 'aqua', 'aquamarine', 'magenta', 'darkmagenta', 'slategrey', 'pink', 'hotpink', 'black', 'wheat', 'midnightblue', 'forestgreen', 'blue', 'lightblue', 'fuchsia', 'lightgreen', 'green', 'grey', 'lightgrey', 'lime', 'maroon', 'navy', 'olive', 'khaki', 'darkkhaki', 'gold', 'goldenrod', 'darkgoldenrod', 'purple', 'violet', 'red', 'crimson', 'firebrick', 'gainsboro', 'silver', 'teal', 'linen', 'aliceblue', 'lavender', 'white', 'whitesmoke', 'lightyellow', 'yellow');
-		
+                $ReplaceVals = array('goodperv','modperv','apprentice','perv','sextreme','smutpeddlar','admin','sysop');
+                $ReplaceCols = array('#3c3','#000','#92a5c2','#4ec89b','orange','#00f','#606','#8b0000');
+                /* 
+.Apprentice { color:#92a5c2; }
+.Perv { color:#4Ec89B; }
+.GoodPerv { color:#3c3; }
+.SextremePerv { color:orange; }
+.SmutPeddler { color:#00f; }
+.ModPerv { color:#000; }
+.Admin { color:#606; }
+.Sysop { color:#8B0000; } 
+      */
+            }
+            $Attrib = str_replace($ReplaceVals, $ReplaceCols, $Attrib);
+            
             return (in_array($Attrib, $ColorAttribs) || preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/', $Attrib));
       }
       
@@ -1277,29 +1291,30 @@ EXPLANATION OF PARSER LOGIC
 				case 'quote':
 					$this->NoImg++; // No images inside quote tags
 					if(!empty($Block['Attr'])) { 
-                                    list($qname, $qID1, $qID2) = explode(",", $Block['Attr']); 
-                                    if($qID1){
-                                        $qType = substr($qID1, 0, 1);
-                                        $qID1 = substr($qID1, 1);
-                                        if (  in_array( $qType, array('f','t','c','r')  ) && is_number($qID1) && is_number($qID2) ) { 
-                                            switch($qType){
-                                                case 'f':
-                                                    $postlink = '<a class="postlink" href="forums.php?action=viewthread&threadid='.$qID1.'&postid='.$qID2.'#post'.$qID2.'"><span class="postlink"></span></a>';
-                                                    break;
-                                                case 't':
-                                                    $postlink = '<a class="postlink" href="torrents.php?id='.$qID1.'&postid='.$qID2.'#post'.$qID2.'"><span class="postlink"></span></a>';
-                                                    break;
-                                                case 'c':
-                                                    $postlink = '<a class="postlink" href="collages.php?action=comments&collageid='.$qID1.'#post'.$qID2.'"><span class="postlink"></span></a>';
-                                                    break;
-                                                case 'r':
-                                                    $postlink = '<a class="postlink" href="requests.php?action=view&id='.$qID1.'#post'.$qID2.'"><span class="postlink"></span></a>';
-                                                    break;
-                                            }
-                                        }
-                                    }
-						$Str.= '<span class="quote_label"><strong>'.display_str($qname).'</strong> wrote: '.$postlink.'</span>'; 
-                              }
+                        // [quote=name,[F|T|R|C]number1,number2]
+                        list($qname, $qID1, $qID2) = explode(",", $Block['Attr']); 
+                        if($qID1){  // if we have numbers
+                            $qType = substr($qID1, 0, 1); /// F or T or C or R (forums/torrents/collags/requests)
+                            $qID1 = substr($qID1, 1);
+                            if (  in_array( $qType, array('f','t','c','r')  ) && is_number($qID1) && is_number($qID2) ) { 
+                                switch($qType){
+                                    case 'f':
+                                        $postlink = '<a class="postlink" href="forums.php?action=viewthread&threadid='.$qID1.'&postid='.$qID2.'#post'.$qID2.'"><span class="postlink"></span></a>';
+                                        break;
+                                    case 't':
+                                        $postlink = '<a class="postlink" href="torrents.php?id='.$qID1.'&postid='.$qID2.'#post'.$qID2.'"><span class="postlink"></span></a>';
+                                        break;
+                                    case 'c':
+                                        $postlink = '<a class="postlink" href="collages.php?action=comments&collageid='.$qID1.'#post'.$qID2.'"><span class="postlink"></span></a>';
+                                        break;
+                                    case 'r':
+                                        $postlink = '<a class="postlink" href="requests.php?action=view&id='.$qID1.'#post'.$qID2.'"><span class="postlink"></span></a>';
+                                        break;
+                                }
+                            }
+                        }
+                        $Str.= '<span class="quote_label"><strong>'.display_str($qname).'</strong> wrote: '.$postlink.'</span>'; 
+                    }
 					$Str.='<blockquote class="bbcode">'.$this->to_html($Block['Val']).'</blockquote>';
 					$this->NoImg--;
 					break;
@@ -1344,13 +1359,10 @@ EXPLANATION OF PARSER LOGIC
 					} else {
 						$Block['Val'] = $this->to_html($Block['Val']);
 						$NoName = false;
-					}
-                              
-                              //remove the local host/anonym.to from address if present
+					}    
+                    //remove the local host/anonym.to from address if present
 					$Block['Attr'] = str_replace(array('http://'.SITE_URL, 'http://anonym.to/?'), '', $Block['Attr']);
-					//$Block['Attr'] = str_replace('http://'.SITE_URL, '', $Block['Attr']);
-					//$Block['Attr'] = str_replace('http://anonym.to/?', '', $Block['Attr']);
-                    
+					
                     // first test if is in format /local.php or #anchorname
                     if (preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\;\-\_\.]*$/', $Block['Attr'] ) ){
                         // a local link or anchor link
@@ -1517,10 +1529,8 @@ EXPLANATION OF PARSER LOGIC
 					break;
 				case 'color':
 				case 'colour':
-					//$ValidAttribs = array('aqua', 'black', 'blue', 'fuchsia', 'green', 'grey', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'white', 'yellow');
-					if(!$this->is_color_attrib($Block['Attr'])) { 
-					//if(!is_color_attrib($Block['Attr'])) {
-                                  	$Str.='[color='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/color]';
+					if(!$this->is_color_attrib($Block['Attr'])) {
+                        $Str.='[color='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/color]';
 					} else {
 						$Str.='<span style="color:'.$Block['Attr'].'">'.$this->to_html($Block['Val']).'</span>';
 					}

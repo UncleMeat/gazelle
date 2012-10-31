@@ -454,6 +454,11 @@ CREATE TABLE IF NOT EXISTS `forums_categories` (
   KEY `Sort` (`Sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+--
+-- Dumping data for table `forums_categories`
+--
+
+INSERT INTO `forums_categories` VALUES (1,'Site',2),(5,'Community',5),(10,'Help',10),(15,'Archive',15),(16,'Testing',1);
  
 
 -- --------------------------------------------------------
@@ -1018,6 +1023,12 @@ CREATE TABLE IF NOT EXISTS `review_reasons` (
   UNIQUE KEY `Sort` (`Sort`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+--
+-- Dumping data for table `review_reasons`
+--
+
+INSERT INTO `review_reasons` VALUES (1,2,'Screenshots','Not enough screenshots.'),(2,4,'Description','Lack of text description.'),(3,8,'Screenshots & Description','Not enough screenshots, lack of text description.');
+
 
 -- --------------------------------------------------------
 
@@ -1031,6 +1042,11 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `NextBiWeekly` int(2) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `schedule`
+--
+
+INSERT INTO `schedule` VALUES (15,29,8);
 
 
 
@@ -1047,6 +1063,11 @@ CREATE TABLE IF NOT EXISTS `site_options` (
   `KeepSpeed` bigint(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `site_options`
+--
+ 
+INSERT INTO `site_options` VALUES (24,0,720,524288);
 
 
 -- --------------------------------------------------------

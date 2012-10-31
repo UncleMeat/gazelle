@@ -136,7 +136,7 @@ $DB->query("UPDATE users_main AS um
 sleep(3);
 $nowtime = time();
 
-//$DB->query("INSERT INTO users_connectable_status ( UserID, IP, Time )
+//z$DB->query("INSERT INTO users_connectable_status ( UserID, IP, Time )
 //        SELECT uid, ip, '$nowtime' FROM xbt_files_users GROUP BY uid, ip
 //         ON DUPLICATE KEY UPDATE Time='$nowtime'");
 
