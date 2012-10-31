@@ -169,7 +169,16 @@ if (empty($ThreadID)) { ?>
 <?
 
 // Break search string down into individual words
-$Words = explode(' ',  db_string($Search));
+$Words = explode(' ',  $Search);
+foreach($Words as $Key => &$Word) {
+    $Word = trim($Word);
+    $slen = strlen($Word);
+	if($slen > 2 || $Word[0] != '!' &&  $slen >= 2) { 
+        $word = db_string($word);
+	} else {
+        unset($Words[$Key]);
+	}
+}
 
 if($Type == 'body') {
 

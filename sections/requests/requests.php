@@ -64,6 +64,7 @@ if($Submitted && empty($_GET['show_filled'])) {
 if(!empty($_GET['search'])) {
 	$Words = explode(' ', $_GET['search']);
 	foreach($Words as $Key => &$Word) {
+        $Word = trim($Word);
 		if($Word[0] == '!' && strlen($Word) > 2) {
 			if(strpos($Word,'!',1) === false) {
 				$Word = '!'.$SS->EscapeString(substr($Word,1));

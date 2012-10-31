@@ -6,18 +6,32 @@ if (!defined('LOG_ENTRIES_PER_PAGE')) {
 }
 list($Page,$Limit) = page_limit(LOG_ENTRIES_PER_PAGE);
 
+$_GET['search'] = trim($_GET['search']);
+
 if(!empty($_GET['search'])) {
-	$Search = db_string($_GET['search']);
+	$Search = ($_GET['search']);
 } else {
 	$Search = false;
 }
-$Words = explode(' ', $Search);
+//$Words = explode(' ', $Search);
+
 $sql = "SELECT
 	SQL_CALC_FOUND_ROWS 
 	Message,
 	Time
 	FROM log ";
 if($Search) {
+    // Break search string down into individual words
+    $Words = explode(' ',  $Search);
+    foreach($Words as $Key => &$Word) {
+        $Word = trim($Word);
+        $slen = strlen($Word);
+        if($slen > 2 || $Word[0] != '!' &&  $slen >= 2) { 
+            $word = db_string($word);
+        } else {
+            unset($Words[$Key]);
+        }
+    }
 	$sql .= "WHERE Message LIKE '%";
 	$sql .= implode("%' AND Message LIKE '%", $Words);
 	$sql .= "%' ";
