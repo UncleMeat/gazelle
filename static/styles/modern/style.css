@@ -44,8 +44,12 @@ a , .torrent_table .linkbox a {
 }
 a:visited, .torrent_table .linkbox a:visited {
   /*  color:#023174; 
-    color:#012154; */
+    color:#012154; 
+  
     color:#023174;
+    color:#003875;
+    color:#001835; */
+    color:#250855;
 }
 a:hover, .torrent_table .linkbox a:hover {
      /*  color:#FFaa00;   #839FBC;  */

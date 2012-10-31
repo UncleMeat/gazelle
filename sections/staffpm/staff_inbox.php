@@ -96,7 +96,7 @@ if ($DB->record_count() == 0) {
 	if ($ViewString != 'Resolved' && $IsStaff) {
 		// Open multiresolve form
 ?>
-		<form method="post" action="staffpm.php" id="messageform">
+		<form method="post" action="staffpm.php" id="messageform" onsubmit="return anyChecks('messageform')">
 			<input type="hidden" name="action" value="multiresolve" />
 			<input type="hidden" name="view" value="<?=strtolower($View)?>" />
 <?

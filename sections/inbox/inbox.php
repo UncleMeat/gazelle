@@ -188,7 +188,7 @@ echo $Pages;
 				/>
 			</div>
 		</form>
-		<form action="inbox.php" method="post" id="messageform">
+		<form action="inbox.php" method="post" id="messageform" onsubmit="return anyChecks('messageform')">
 			<input type="hidden" name="action" value="masschange" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 			<table>

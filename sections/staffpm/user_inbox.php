@@ -49,7 +49,7 @@ if ($DB->record_count() == 0) {
 } else {
 	// Messages, draw table
 ?>
-		<form method="post" action="staffpm.php" id="multiresolveform">
+		<form method="post" action="staffpm.php" id="multiresolveform" onsubmit="return anyChecks('messageform')">
 			<input type="hidden" name="action" value="multiresolve" />
 			<h3>Open messages</h3>
 			<table>
