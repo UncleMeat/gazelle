@@ -19,7 +19,7 @@ function Start_Sitestats(){
     options = {
             title:'start',
             height:700,
-            chartArea:{left:80,top:20,width:"80%",height:630},
+            chartArea:{left:80,top:20,width:"82%",height:630},
             vAxes:[{gridlines:{color: '#bbb', count: 21}}],
             series:[{color: 'blue', visibleInLegend: true},
                     {color: 'orange', visibleInLegend: true}, 
@@ -32,7 +32,7 @@ function Start_Sitestats(){
             }, 
             hAxis:{viewWindow: {min:startrow, max:endrow},slantedText:false,maxTextLines:1,maxAlternation:1}
         }; 
-    maxrows = data.getNumberOfRows()-1;
+    maxrows = data.getNumberOfRows();//-1;
     zoom=0;
     drawChart();
 }
