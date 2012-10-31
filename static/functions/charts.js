@@ -45,7 +45,7 @@ function drawChart() {
  
 function zoomout(){
     options.animation.duration = 1000;
-    var range = options.hAxis.viewWindow.max-options.hAxis.viewWindow.min;
+    var range = options.hAxis.viewWindow.max-options.hAxis.viewWindow.min+1;
     //if(range>maxrows) range = maxrows;
     range /= 2; 
     var shift = range;
@@ -68,10 +68,10 @@ function zoomout(){
 }   
 function zoomin(){
     options.animation.duration = 1000;
-    var range = options.hAxis.viewWindow.max-options.hAxis.viewWindow.min; 
+    var range = options.hAxis.viewWindow.max-options.hAxis.viewWindow.min+1; 
     if (range<14) {
         range = range - 7;
-        if (range<0) { alert('hai'); return; }
+        if (range<0) { return; }
     }  
     range = parseInt(range/4); 
     //alert(range);
@@ -92,7 +92,7 @@ function zoomin(){
 
 function prev(jump,durationMS) {
     options.animation.duration = durationMS;
-    var range = parseInt( (options.hAxis.viewWindow.max  - options.hAxis.viewWindow.min) * jump);
+    var range = parseInt( (options.hAxis.viewWindow.max  - options.hAxis.viewWindow.min+1) * jump);
     if (options.hAxis.viewWindow.min - range < 0) range = options.hAxis.viewWindow.min;
     options.hAxis.viewWindow.min -= range;
     options.hAxis.viewWindow.max -= range;
@@ -101,7 +101,7 @@ function prev(jump,durationMS) {
 
 function next(jump,durationMS) {
     options.animation.duration = durationMS;
-    var range = parseInt( (options.hAxis.viewWindow.max  - options.hAxis.viewWindow.min) * jump);
+    var range = parseInt( (options.hAxis.viewWindow.max  - options.hAxis.viewWindow.min+1) * jump);
     if (options.hAxis.viewWindow.max + range > maxrows) range = maxrows - options.hAxis.viewWindow.max;
     options.hAxis.viewWindow.min += range;
     options.hAxis.viewWindow.max += range;
