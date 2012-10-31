@@ -126,12 +126,14 @@ show_header('Site Statistics', 'charts,jquery');
         <span style="position:relative;left:0px;"><?=$title?></span>
         <div id="chart_div"></div>
         <div style="margin:0px auto">
+        <input class="chart_button" type="button" value="|<" onclick="gstart(1200)" title="start" />
         <input class="chart_button" type="button" value="<<" onclick="prev(2,1200)" title="back" />
         <input class="chart_button" type="button" value="<" onclick="prev(0.9,800)" title="back" />&nbsp;&nbsp;
         <input class="chart_button" type="button" value="▽" onclick="zoomout()" title="zoom out" />
         <input class="chart_button" type="button" value="△" onclick="zoomin()" title="zoom in" />&nbsp;&nbsp;
         <input class="chart_button" type="button" value=">" onclick="next(0.9,800)" title="forward" />
         <input class="chart_button" type="button" value=">>" onclick="next(2,1200)" title="forward" />
+        <input class="chart_button" type="button" value=">|" onclick="gend(1200)" title="end" />
         </div>
         <script type="text/javascript">
             var startrow = <?=$startrow?>;

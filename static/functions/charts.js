@@ -108,6 +108,22 @@ function next(jump,durationMS) {
     drawChart();
 }
 
+function gstart(durationMS){
+    options.animation.duration = durationMS;
+    var shift = options.hAxis.viewWindow.min;
+    options.hAxis.viewWindow.min -= shift;
+    options.hAxis.viewWindow.max -= shift;
+    drawChart();
+}
+
+function gend(durationMS){
+    options.animation.duration = durationMS;
+    var shift = maxrows - options.hAxis.viewWindow.max;
+    options.hAxis.viewWindow.min += shift;
+    options.hAxis.viewWindow.max += shift;
+    drawChart();
+}
+
 
 
 
