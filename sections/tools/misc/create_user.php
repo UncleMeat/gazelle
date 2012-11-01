@@ -18,13 +18,16 @@ if (isset($_POST['Username'])) {
     if ($Err) error($Err);
     
 	//Create variables for all the fields
-	$Username = $_POST['Username'];
-	$Email = $_POST['Email'];
-	$Password = $_POST['Password'];
+	$Username = trim($_POST['Username']);
+	$Email =  trim($_POST['Email']);
+	$Password =  trim($_POST['Password']);
 	
 	//Make sure all the fields are filled in
 	if (!empty($Username) && !empty($Email) && !empty($Password)) {
 
+        $DB->query("SELECT ID FROM users_main WHERE Username='".db_string($Username)."'");
+        if ($DB->record_count()>0) error("A User with name '$Username' already exists");
+        
 		//Create hashes...
 		$Secret=make_secret();
 		$torrent_pass=make_secret();

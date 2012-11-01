@@ -112,48 +112,48 @@ function replace_special_tags($Body) {
                       </tr>
                       <tr class="row'.($LoggedUser['BytesDownloaded'] >= 5*1024*1024*1024 && $LoggedUser['BytesDownloaded'] < 10*1024*1024*1024?'a':'b').'">
                             <td>5-10GB</td>
-                            <td>0.15</td>
+                            <td>0.10</td>
                             <td>0.00</td>
                       </tr>
                       <tr class="row'.($LoggedUser['BytesDownloaded'] >= 10*1024*1024*1024 && $LoggedUser['BytesDownloaded'] < 20*1024*1024*1024?'a':'b').'">
                             <td>10-20GB</td>
-                            <td>0.20</td>
+                            <td>0.15</td>
                             <td>0.00</td>
                       </tr>
                       <tr class="row'.($LoggedUser['BytesDownloaded'] >= 20*1024*1024*1024 && $LoggedUser['BytesDownloaded'] < 30*1024*1024*1024?'a':'b').'">
                             <td>20-30GB</td>
-                            <td>0.30</td>
-                            <td>0.05</td>
+                            <td>0.20</td>
+                            <td>0.00</td>
                       </tr>
                       <tr class="row'.($LoggedUser['BytesDownloaded'] >= 30*1024*1024*1024 && $LoggedUser['BytesDownloaded'] < 40*1024*1024*1024?'a':'b').'">
                             <td>30-40GB</td>
-                            <td>0.40</td>
-                            <td>0.10</td>
+                            <td>0.30</td>
+                            <td>0.05</td>
                       </tr>
                       <tr class="row'.($LoggedUser['BytesDownloaded'] >= 40*1024*1024*1024 && $LoggedUser['BytesDownloaded'] < 50*1024*1024*1024?'a':'b').'">
                             <td>40-50GB</td>
-                            <td>0.50</td>
-                            <td>0.20</td>
+                            <td>0.40</td>
+                            <td>0.10</td>
                       </tr>
                       <tr class="row'.($LoggedUser['BytesDownloaded'] >= 50*1024*1024*1024 && $LoggedUser['BytesDownloaded'] < 60*1024*1024*1024?'a':'b').'">
                             <td>50-60GB</td>
-                            <td>0.60</td>
-                            <td>0.30</td>
+                            <td>0.50</td>
+                            <td>0.20</td>
                       </tr>
                       <tr class="row'.($LoggedUser['BytesDownloaded'] >= 60*1024*1024*1024 && $LoggedUser['BytesDownloaded'] < 80*1024*1024*1024?'a':'b').'">
                             <td>60-80GB</td>
-                            <td>0.60</td>
-                            <td>0.40</td>
+                            <td>0.50</td>
+                            <td>0.30</td>
                       </tr>
                       <tr class="row'.($LoggedUser['BytesDownloaded'] >= 80*1024*1024*1024 && $LoggedUser['BytesDownloaded'] < 100*1024*1024*1024?'a':'b').'">
                             <td>80-100GB</td>
-                            <td>0.60</td>
                             <td>0.50</td>
+                            <td>0.40</td>
                       </tr>
                       <tr class="row'.($LoggedUser['BytesDownloaded'] >= 100*1024*1024*1024?'a':'b').'">
                             <td>100+GB</td>
-                            <td>0.60</td>
-                            <td>0.60</td>
+                            <td>0.50</td>
+                            <td>0.50</td>
                       </tr>
                 </table>';
 

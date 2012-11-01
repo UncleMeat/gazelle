@@ -556,6 +556,7 @@ if($Day != next_day() || $_GET['runday']){
 		SET um.RequiredRatioWork=(1-(t.SeedingAvg/s.NumSnatches))
 		WHERE s.NumSnatches>0;");
 	
+    /*
 	$RatioRequirements = array(
 		array(80*1024*1024*1024, 0.60, 0.50),
 		array(60*1024*1024*1024, 0.60, 0.40),
@@ -565,9 +566,42 @@ if($Day != next_day() || $_GET['runday']){
 		array(20*1024*1024*1024, 0.30, 0.05),
 		array(10*1024*1024*1024, 0.20, 0.0),
 		array(5*1024*1024*1024,  0.15, 0.0)
-	);
-	
+	); 
+    
 	$DB->query("UPDATE users_main SET RequiredRatio=0.60 WHERE Downloaded>100*1024*1024*1024");
+     
+	
+	$DownloadBarrier = 100*1024*1024*1024;
+	foreach($RatioRequirements as $Requirement) {
+		list($Download, $Ratio, $MinRatio) = $Requirement;
+		
+		$DB->query("UPDATE users_main SET RequiredRatio=RequiredRatioWork*$Ratio WHERE Downloaded >= '$Download' AND Downloaded < '$DownloadBarrier'");
+		
+		$DB->query("UPDATE users_main SET RequiredRatio=$MinRatio WHERE Downloaded >= '$Download' AND Downloaded < '$DownloadBarrier' AND RequiredRatio<$MinRatio");
+		
+		$DB->query("UPDATE users_main SET RequiredRatio=$Ratio WHERE Downloaded >= '$Download' AND Downloaded < '$DownloadBarrier' AND can_leech='0' AND Enabled='1'");
+		
+		$DownloadBarrier = $Download;
+	}
+	
+	$DB->query("UPDATE users_main SET RequiredRatio=0.00 WHERE Downloaded<5*1024*1024*1024");
+	
+     */
+	
+	
+	$RatioRequirements = array(
+		array(80*1024*1024*1024, 0.50, 0.40),
+		array(60*1024*1024*1024, 0.50, 0.30),
+		array(50*1024*1024*1024, 0.50, 0.20),
+		array(40*1024*1024*1024, 0.40, 0.10),
+		array(30*1024*1024*1024, 0.30, 0.05),
+		array(20*1024*1024*1024, 0.20, 0.0),
+		array(10*1024*1024*1024, 0.15, 0.0),
+		array(5*1024*1024*1024,  0.10, 0.0)
+	);
+    
+    
+	$DB->query("UPDATE users_main SET RequiredRatio=0.50 WHERE Downloaded>100*1024*1024*1024");
 	
 	
 	
