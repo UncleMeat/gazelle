@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `bonus_shop_actions` (
   `ID` int(5) unsigned NOT NULL AUTO_INCREMENT,
   `Title` varchar(256) NOT NULL,
   `Description` varchar(1024) NOT NULL,
-  `Action` enum('gb','givegb','givecredits','slot','title','badge') NOT NULL,
+  `Action` enum('gb','givegb','givecredits','slot','title','badge','pfl','ufl') NOT NULL,
   `Value` int(10) NOT NULL DEFAULT '0',
   `Cost` int(9) unsigned NOT NULL,
   `Sort` int(6) NOT NULL,
