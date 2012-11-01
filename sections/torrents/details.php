@@ -233,24 +233,29 @@ if(check_perms('torrents_review')){
                        </div>
     </div>
     <div  class="linkbox">
-                     <span id="torrent_buttons"  style="float: left;">
+        <span id="torrent_buttons"  style="float: left;">
 <?  if (check_perms('torrents_download_override') || !$Status || $Status == 'Okay'  ) { ?>
  
-                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
+            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
 
 <?      if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['FreeLeech'] < sqltime()) && ($FreeTorrent == '0') && ($LoggedUser['CanLeech'] == '1')) { ?>
-                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" class="button greenButton" title="This will use 1 slot" onClick="return confirm('Are you sure you want to use a freeleech slot here?');">FREELEECH TORRENT</a>
-<?      } ?>				
-<?      if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['DoubleSeed'] < sqltime()) && ($DoubleSeed == '0')) { ?>
-                                            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=2" class="button orangeButton" title="This will use 1 slot" onClick="return confirm('Are you sure you want to use a doubleseed slot here?');">DOUBLESEED TORRENT</a>
-<?      } ?>	
+            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" class="button greenButton" title="This will use 1 slot" onClick="return confirm('Are you sure you want to use a freeleech slot here?');">FREELEECH TORRENT</a>
+<?      } 				
+        if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['DoubleSeed'] < sqltime()) && ($DoubleSeed == '0')) { ?>
+            <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=2" class="button orangeButton" title="This will use 1 slot" onClick="return confirm('Are you sure you want to use a doubleseed slot here?');">DOUBLESEED TORRENT</a>
+<?      } 
+        if (check_perms('site_debug')) { ?>
+            [<a href="torrents.php?action=output&torrentid=<?=$TorrentID ?>" title="View torrent data">view data</a>]
+            [<a href="torrents.php?action=output_enc&torrentid=<?=$TorrentID ?>" title="View bencode data">view bencode</a>]
+<?      } ?>
+                                             
 <?  } ?>
-                     </span>
+        </span>
           
-                     <span style="float: right;"><a id="slide_button"  class="button toggle infoButton" onclick="Details_Toggle();return false;" title="Toggle display">Hide Info</a></span>
+        <span style="float: right;"><a id="slide_button"  class="button toggle infoButton" onclick="Details_Toggle();return false;" title="Toggle display">Hide Info</a></span>
 	 
 <?		if(check_perms('torrents_review')){ ?>
-                     <span style="float: right;"><a id="slide_tools_button"  class="button toggle redButton" onclick="Tools_Toggle();return false;" title="Toggle staff tools">Staff Tools</a></span>
+            <span style="float: right;"><a id="slide_tools_button"  class="button toggle redButton" onclick="Tools_Toggle();return false;" title="Toggle staff tools">Staff Tools</a></span>
 <?		} ?>
             <br style="clear:both" />
     </div>
