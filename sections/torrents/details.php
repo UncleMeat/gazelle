@@ -96,11 +96,13 @@ if (count($Reports) > 0) {
 
 $IsBookmarked = has_bookmarked('torrent', $GroupID);
 
+$sqltime = sqltime();
+
 $Icons = '';
 if ( $DoubleSeed == '1' ) {
     $SeedTooltip = "Unlimited Doubleseed"; // a theoretical state?
-} elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['DoubleSeed'] > sqltime()) {
-    $SeedTooltip = "Personal Doubleseed for ".time_diff($TokenTorrents[$TorrentID]['DoubleSeed'], 2, false);
+} elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['DoubleSeed'] > $sqltime) {
+    $SeedTooltip = "Personal Doubleseed Slot for ".time_diff($TokenTorrents[$TorrentID]['DoubleSeed'], 2, false);
 }
 if ($SeedTooltip) 
     $Icons = '<img src="static/common/symbols/doubleseed.gif" alt="DoubleSeed" title="'.$SeedTooltip.'" />&nbsp;&nbsp;';          
@@ -108,9 +110,13 @@ if ($SeedTooltip)
 if ( $FreeTorrent == '1' ) { 
     $FreeTooltip = "Unlimited Freeleech";
 }
-elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > sqltime()) {
-    $FreeTooltip = "Personal Freeleech for ".time_diff($TokenTorrents[$TorrentID]['FreeLeech'], 2, false);
-}
+elseif (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > $sqltime) {
+    $FreeTooltip = "Personal Freeleech Slot for ".time_diff($TokenTorrents[$TorrentID]['FreeLeech'], 2, false);
+} 
+elseif ( $LoggedUser['personal_freeleech'] > $sqltime) {
+    $FreeTooltip = "Personal Freeleech for ".time_diff($LoggedUser['personal_freeleech'], 2, false);
+} 
+
 if ($FreeTooltip) 
     $Icons .= '<img src="static/common/symbols/freedownload.gif" alt="Freeleech" title="'.$FreeTooltip.'" />&nbsp;';       
 if ($IsBookmarked)
@@ -238,10 +244,10 @@ if(check_perms('torrents_review')){
  
             <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" class="button blueButton" title="Download">DOWNLOAD TORRENT</a>
 
-<?      if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['FreeLeech'] < sqltime()) && ($FreeTorrent == '0') && ($LoggedUser['CanLeech'] == '1')) { ?>
+<?      if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['FreeLeech'] < $sqltime) && ($FreeTorrent == '0')  && ($LoggedUser['personal_freeleech'] < $sqltime) && ($LoggedUser['CanLeech'] == '1')) { ?>
             <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" class="button greenButton" title="This will use 1 slot" onClick="return confirm('Are you sure you want to use a freeleech slot here?');">FREELEECH TORRENT</a>
 <?      } 				
-        if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['DoubleSeed'] < sqltime()) && ($DoubleSeed == '0')) { ?>
+        if (($LoggedUser['FLTokens'] > 0) && $HasFile  && (empty($TokenTorrents[$TorrentID]) || $TokenTorrents[$TorrentID]['DoubleSeed'] < $sqltime) && ($DoubleSeed == '0')) { ?>
             <a href="torrents.php?action=download&amp;id=<?=$TorrentID ?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=2" class="button orangeButton" title="This will use 1 slot" onClick="return confirm('Are you sure you want to use a doubleseed slot here?');">DOUBLESEED TORRENT</a>
 <?      } 
         if (check_perms('site_debug')) { ?>
