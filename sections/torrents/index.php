@@ -700,7 +700,7 @@ if(!empty($_REQUEST['action'])) {
               
         case 'output':
 			enforce_login();
-			authorize(); 
+			//authorize(); 
                    
                 if (!check_perms('site_debug')) error(403);
                 if(!isset($_GET['torrentid']) || !is_number($_GET['torrentid'])) error(0);
