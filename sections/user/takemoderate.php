@@ -448,6 +448,8 @@ if ($PersonalFreeLeech != 1 && ($PersonalFreeLeech > 1 || ($PersonalFreeLeech ==
     $UpdateSet[]="personal_freeleech='$time'";
     $EditSummary[]="Personal Freeleech changed from ".$before." to ".$after;
     $HeavyUpdates['personal_freeleech'] = $time;
+    update_tracker('set_personal_freeleech', array('passkey' => $LoggedUser['torrent_pass'], 'until_time' => $time));
+    
 }
 
 if ($BonusCredits!=$Cur['Credits'] && ((check_perms('users_edit_credits') && $UserID != $LoggedUser['ID']) 
