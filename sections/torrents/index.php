@@ -726,7 +726,7 @@ if(!empty($_REQUEST['action'])) {
                 unset($Tor->Val['libtorrent_resume']);
                 // Torrent name takes the format of Album - YYYY
                   
-                error ( "[pre]". print_r($Tor->Val,true)."[/pre]" );
+                error ( "<pre>". print_r($Tor->Val,true)."</pre>" );
                 break; 
                   
                   
