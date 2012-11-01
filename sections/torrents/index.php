@@ -724,9 +724,10 @@ if(!empty($_REQUEST['action'])) {
             // Remove libtorrent resume info
             unset($Tor->Val['libtorrent_resume']);
 
-            if ($_GET['action']=='output')
+            if ($_GET['action']=='output') {
+                ksort($Tor->Val);
                 error ( "<pre>". print_r($Tor->Val,true)."</pre>" );
-            else
+            } else
                 error ( "<pre>". print_r($Tor->enc(),true)."</pre>" );
                 
             break; 
