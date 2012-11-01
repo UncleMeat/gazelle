@@ -674,8 +674,8 @@ if(!empty($_REQUEST['action'])) {
                   
                   include(SERVER_ROOT . '/sections/torrents/functions.php');
                   if ( $_POST['remove']=='1') {
-				//$DB->query("DELETE FROM staff_checking WHERE UserID='$LoggedUser[ID]'");
-				$DB->query("UPDATE staff_checking SET IsChecking='0' WHERE UserID='$LoggedUser[ID]'");
+                        //$DB->query("DELETE FROM staff_checking WHERE UserID='$LoggedUser[ID]'");
+                        $DB->query("UPDATE staff_checking SET IsChecking='0' WHERE UserID='$LoggedUser[ID]'");
                         $Cache->delete_value('staff_checking');
                         $Cache->delete_value('staff_lastchecked');
                   } else { 
@@ -686,7 +686,7 @@ if(!empty($_REQUEST['action'])) {
                   
                   break;
               
-            case 'update_status':
+        case 'update_status':
 			enforce_login();
 			authorize(); 
                    
@@ -697,6 +697,39 @@ if(!empty($_REQUEST['action'])) {
                   
                   break; 
               
+              
+        case 'output':
+			enforce_login();
+			authorize(); 
+                   
+                if (!check_perms('site_debug')) error(403);
+                if(!isset($_GET['torrentid']) || !is_number($_GET['torrentid'])) error(0);
+                $TorrentID = (int)$_GET['torrentid'];
+                
+                require(SERVER_ROOT.'/classes/class_torrent.php');
+                  
+                $DB->query("SELECT File FROM torrents_files WHERE TorrentID='$TorrentID'");
+
+                list($Contents) = $DB->next_record(MYSQLI_NUM, array(0));
+                $Contents = unserialize(base64_decode($Contents));
+                $Tor = new TORRENT($Contents, true); // New TORRENT object
+                // Set torrent announce URL
+                $Tor->set_announce_url(ANNOUNCE_URL.'/uSeRsToRrEntPaSs/announce');
+
+                $Tor->set_comment('http://'. SITE_URL."/torrents.php?torrentid=$TorrentID");
+
+                // Remove multiple trackers from torrent
+                unset($Tor->Val['announce-list']);
+                // Remove web seeds (put here for old torrents not caught by previous commit
+                unset($Tor->Val['url-list']);
+                // Remove libtorrent resume info
+                unset($Tor->Val['libtorrent_resume']);
+                // Torrent name takes the format of Album - YYYY
+                  
+                error ( print_r($Tor->Val,true) );
+                break; 
+                  
+                  
 		default:
 			enforce_login();
 		
