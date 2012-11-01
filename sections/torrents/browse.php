@@ -127,8 +127,9 @@ if (!$AdvancedSearch) {
         $SearchListEx = array();
         foreach ($SearchList as $Key => &$Word) {
             $Word = trim($Word);
-            if (strlen($Word) >= 2) {
-                if ($Word[0] == '-' && strlen($Word) >= 3) {
+            $wlen = strlen($Word);
+            if ( $wlen >= 3 || ($Word[0] != '-'  && $wlen >= 2)) {
+                if ($Word[0] == '-') {
                     $SearchListEx[] = '!' . $SS->EscapeString(substr($Word, 1));
                     unset($SearchList[$Key]);
                 } else {
@@ -148,12 +149,12 @@ if (!$AdvancedSearch) {
         } else {
             $Queries[] = '@searchtext ( ' . implode(' | ', $SearchList) . ' )';
         }
-    } elseif (!empty($SearchList)) {
+    } elseif (!empty($SearchList) || !empty($SearchListEx)) {
         $Queries[] = '@searchtext ' . implode(' ', array_merge($SearchList, $SearchListEx));
     } else {
         $_GET['search_type'] = '1';
     }
-        
+    
     if (!empty($_GET['taglist'])) {
         $_GET['taglist'] = cleanup_tags($_GET['taglist']);
         //$_GET['taglist'] = str_replace('.', '_', $_GET['taglist']);
@@ -161,12 +162,12 @@ if (!$AdvancedSearch) {
         $TagListEx = array();
         foreach ($TagList as $Key => &$Tag) {
             $Tag = strtolower(trim($Tag)) ;
-            
-            if ( ($Tag[0] != '-' && strlen($Tag)>= 2) || strlen($Tag)>= 3 ) {
+            $tlen = strlen($Tag);
+            if ( $tlen >= 3 || ($Tag[0] != '-' && $tlen >= 2)) {
                 if ($Tag[0] == '-') {
-                    $Tag = '-'. get_tag_synonyn( substr($Tag, 1), false);
+                    $Tag = get_tag_synonym( substr($Tag, 1), false);
                     $Tag = str_replace('.', '_', $Tag);
-                    $TagListEx[] = '!' . $SS->EscapeString(substr($Tag, 1));
+                    $TagListEx[] = '!' . $SS->EscapeString( $Tag );
                     unset($TagList[$Key]);
                 } else {
                     $Tag = get_tag_synonym($Tag, false);
@@ -181,7 +182,7 @@ if (!$AdvancedSearch) {
         // moved this to bottom so we can grab synomyns more easily
         $_GET['taglist'] = str_replace('.', '_', $_GET['taglist']);
     }
-
+    
     if (empty($_GET['tags_type']) && !empty($TagList) && count($TagList) > 1) {
         $_GET['tags_type'] = '0';
         if (!empty($TagListEx)) {
@@ -189,7 +190,7 @@ if (!$AdvancedSearch) {
         } else {
             $Queries[] = '@taglist ( ' . implode(' | ', $TagList) . ' )';
         }
-    } elseif (!empty($TagList)) {
+    } elseif (!empty($TagList) || !empty($TagListEx)) {
         $Queries[] = '@taglist ' . implode(' ', array_merge($TagList, $TagListEx));
     } else {
         $_GET['tags_type'] = '1';

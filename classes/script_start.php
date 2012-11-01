@@ -1389,7 +1389,7 @@ function display_array($Array, $Escape = array()) {
 
 // Removes any inconsistencies in the list of tags before they are split into an array.
 function cleanup_tags($s) {
-    return preg_replace(array('/[^a-z0-9.-]/i', '/^\s*/s', '/\s*$/s', '/\s+/s'), array(" ", "", "", " ", ""), $s);
+    return preg_replace(array('/[^A-Za-z0-9.-]/i', '/^\s*/s', '/\s*$/s', '/\s+/s'), array(" ", "", "", " ", ""), $s);
 }
 
 // Gets a tag ready for database input and display

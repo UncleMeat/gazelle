@@ -1364,12 +1364,12 @@ EXPLANATION OF PARSER LOGIC
 					$Block['Attr'] = str_replace(array('http://'.SITE_URL, 'http://anonym.to/?'), '', $Block['Attr']);
 					
                     // first test if is in format /local.php or #anchorname
-                    if (preg_match('/^#[a-zA-Z0-9\-\_]+$|^\/[a-zA-Z0-9\&\-\_]+\.php[a-zA-Z0-9\=\?\#\&\;\-\_\.]*$/', $Block['Attr'] ) ){
+                    if (preg_match('/^#[a-zA-Z0-9\-\_.,%\@~&=:;()+*\^$!#|]+$|^\/[a-zA-Z0-9\-\_.,%\@~&=:;()+*\^$!#|]+\.php[a-zA-Z0-9\?\-\_.,%\@~&=:;()+*\^$!#|]*$/', $Block['Attr'] ) ){
                         // a local link or anchor link
                         $Str.='<a class="link" href="'.$Block['Attr'].'">'.$Block['Val'].'</a>';
                     } elseif (!$this->valid_url($Block['Attr']) ){
                         // not a valid tag
-						$Str.='[url='.$Block['Attr'].']'.$Block['Val'].'[/url] NOTE ME';
+						$Str.='[url='.$Block['Attr'].']'.$Block['Val'].'[/url]';
 					} else {
 						$LocalURL = $this->local_url($Block['Attr']);
 						if($LocalURL) {
