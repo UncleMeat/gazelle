@@ -167,6 +167,9 @@ class BENCODE_DICT extends BENCODE {
 	function enc(){
 		$Str = 'd';
 		reset($this->Val);
+		// Sort by key to respect spec
+		ksort($this->Val);
+        
 		foreach ($this->Val as $Key => $Value) {
 			$Str.=strlen($Key).':'.$Key.$this->encode($Value);
 		}
