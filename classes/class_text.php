@@ -1192,7 +1192,7 @@ EXPLANATION OF PARSER LOGIC
 	
        
       function is_color_attrib(&$Attrib) {
-            static $ColorAttribs;
+            static $ColorAttribs; static $ReplaceVals; static $ReplaceCols;
             if (!$ColorAttribs) { // only define it once per page  
                 $ColorAttribs = array('orange', 'aqua', 'aquamarine', 'magenta', 'darkmagenta', 'slategrey', 'pink', 'hotpink', 'black', 'wheat', 'midnightblue', 'forestgreen', 'blue', 'lightblue', 'fuchsia', 'lightgreen', 'green', 'grey', 'lightgrey', 'lime', 'maroon', 'navy', 'olive', 'khaki', 'darkkhaki', 'gold', 'goldenrod', 'darkgoldenrod', 'purple', 'violet', 'red', 'crimson', 'firebrick', 'gainsboro', 'silver', 'teal', 'linen', 'aliceblue', 'lavender', 'white', 'whitesmoke', 'lightyellow', 'yellow');
                 $ReplaceVals = array('goodperv','modperv','apprentice','perv','sextreme','smutpeddlar','admin','sysop');
