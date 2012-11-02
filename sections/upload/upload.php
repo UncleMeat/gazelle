@@ -103,11 +103,11 @@ if (!isset($Text)) {
     $Text = new TEXT;
 }
 
-$GenreTags = $Cache->get_value('genre_tags');
+$GenreTags = $Cache->get_value('genre_tags_upload');
 if (!$GenreTags) {
     $DB->query("SELECT Name FROM tags WHERE TagType='genre' ORDER BY Name");
     $GenreTags = $DB->collect('Name');
-    $Cache->cache_value('genre_tags', $GenreTags, 3600 * 6);
+    $Cache->cache_value('genre_tags_upload', $GenreTags, 3600 * 6);
 }
 
 /* -------  Draw a box with do_not_upload list  -------   */

@@ -507,7 +507,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                     <?
                     $GenreTags = $Cache->get_value('genre_tags');
                     if (!$GenreTags) {
-                        $DB->query('SELECT Name FROM tags WHERE TagType=\'genre\' ORDER BY Uses DESC, Name LIMIT 42');
+                        $DB->query("SELECT Name FROM tags WHERE TagType='genre' ORDER BY Uses DESC, Name LIMIT 42");
                         $GenreTags = $DB->collect('Name');
                         $Cache->cache_value('genre_tags', $GenreTags, 3600 * 6);
                     }
