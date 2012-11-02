@@ -1076,10 +1076,10 @@ if (check_perms('users_mod', $Class)) { ?>
             </div>                   
 		<div class="box">	
                 <table id="infodiv" class="shadow">
-<?	if (check_perms('users_edit_usernames', $Class)) {  //  pattern="[A-Za-z0-9_\-\.]{1,20}"  ?>
+<?	if (check_perms('users_edit_usernames', $Class)) {  ?>
 			<tr>
 				<td class="label">Username:</td>
-				<td><input type="text" size="40" name="Username" maxlength="20"  value="<?=display_str($Username)?>" /></td>
+				<td><input type="text" size="40" name="Username" maxlength="20"  pattern="[A-Za-z0-9_\-\.]{1,20}" value="<?=display_str($Username)?>" /></td>
 			</tr>
 <?
 	}
