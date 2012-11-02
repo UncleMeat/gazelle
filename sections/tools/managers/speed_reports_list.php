@@ -347,7 +347,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
                 <td class="center"><a href="<?=header_link('remaining') ?>">Remaining</a></td>
                 <td class="center"><a href="<?=header_link('uploaded') ?>">Uploaded</a></td>
                 <td class="center"><a href="<?=header_link('upspeed') ?>">UpSpeed</a></td>
-                <td class="center"><a href="<?=header_link('ip') ?>">Client IP address</a></td>
+                <td class="center"><span style="color:#777">-clientID-</span> &nbsp;<a href="<?=header_link('ip') ?>">Client IP address</a></td>
                 <td class="center"><a href="<?=header_link('mtime') ?>">date time</a></td>
                 <td width="10px" rowspan="2" title="toggle selection for all records on this page">
                     <input type="checkbox" onclick="toggleChecks('speedrecords',this)" title="toggle selection for all records on this page" />
@@ -359,7 +359,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
                 <td class="center"><a href="<?=header_link('Size') ?>"><span style="color:#777">Total</span></a></td>
                 <td class="center"><a href="<?=header_link('downloaded') ?>"><span style="color:#777">Downloaded</span></a></td>
                 <td class="center"><a href="<?=header_link('downspeed') ?>"><span style="color:#777">DownSpeed</span></a></td>
-                <td class="center"><span style="color:#777">ClientID</span></td>
+                <td class="center"><span style="color:#777">host</span></td>
                 <td class="center"><a href="<?=header_link('timespent') ?>"><span style="color:#777">total time</span></a></td>
             </tr>
     <form id="speedrecords" action="tools.php" method="post">
@@ -395,7 +395,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
                         <td class="center"><?=get_size($Remaining)?></td>
                         <td class="center"><img src="static/styles/<?= $LoggedUser['StyleName'] ?>/images/seeders.png" title="up"/> <?=size_span($Uploaded, get_size($Uploaded))?></td>
                         <td class="center"><?=speed_span($UpSpeed, $KeepSpeed, 'red', get_size($UpSpeed).'/s')?></td>
-                        <td class="center"><?=display_ip($IP, $ipcc)?></td>
+                        <td class="center"><span style="color:#555"><?=substr($ClientPeerID,0,8)?></span> &nbsp;<?=display_ip($IP, $ipcc)?></td>
                         <td class="center"><?=time_diff($Time, 2, true, false, 1)?></td>
                         <td rowspan="2">
                             <input class="remove" type="checkbox"  name="rid[]" value="<?=$ID?>" title="check to remove selected records" />
@@ -416,7 +416,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
                         <td class="center"><span style="color:#555"><?=get_size($Size)?></span></td>
                         <td class="center"><img src="static/styles/<?= $LoggedUser['StyleName'] ?>/images/leechers.png" title="down"/> <?=size_span($Downloaded, get_size($Downloaded))?></td>
                         <td class="center"><?=speed_span($DownSpeed, $KeepSpeed, 'purple', get_size($DownSpeed).'/s')?></td>
-                        <td class="center"><span style="color:#555"><?=substr($ClientPeerID,0,8)?></span></td>
+                        <td class="center"><span style="color:#555"><?=get_host($IP)?> </span></td>
                         <td class="center"><span style="color:#555" title="<?=time_span($Timespent, 4)?>"><?=time_span($Timespent, 2)?></span></td>
                     </tr>
 <?              }
