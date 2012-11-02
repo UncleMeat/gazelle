@@ -398,7 +398,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                 <tr>
                     <td colspan="7" style="text-align:right"> 
                         
-                    <input style="float:right;position:relative;left:-12px;bottom:-116px;" class="on_cat_change <? if (!empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>" 
+                    <input style="float:right;position:relative;left:-32px;bottom:-116px;" class="on_cat_change <? if (!empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>" 
                            type="submit" value="Filter Torrents" /> 
                     
                         <input type="button" value="Reset" onclick="location.href='torrents.php?action=<? if (isset($_GET['action']) && $_GET['action'] == "advanced") { ?>advanced<? } else { ?>basic<? } ?>'" />
@@ -440,7 +440,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                     <? } ?>
                 <span style="float:right"><a href="#" onclick="$('.on_cat_change').toggle();$('.non_cat_change').toggle(); if(this.innerHTML=='(View Categories)'){this.innerHTML='(Hide Categories)';} else {this.innerHTML='(View Categories)';}; return false;"><?= (!empty($LoggedUser['HideCats'])) ? '(View Categories)' : '(Hide Categories)' ?></a></span>
                     
-                    <input class="non_cat_change <? if (empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>" style="float:right;position:relative;right:-88px;top:45px;" 
+                    <input class="non_cat_change <? if (empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>" style="float:right;position:relative;right:2px;top:45px;" 
                            type="submit" value="Filter Torrents" />
                     </td>
                 </tr>
