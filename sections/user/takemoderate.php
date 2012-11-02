@@ -68,6 +68,8 @@ $WarnLength = (int)$_POST['WarnLength'];
 $ExtendWarning = (int)$_POST['ExtendWarning'];
 $WarnReason = $_POST['WarnReason'];
 $UserReason = $_POST['UserReason'];
+$SuppressConnPrompt = (isset($_POST['ConnCheck']))? 1 : 0;
+
 $DisableAvatar = (isset($_POST['DisableAvatar']))? 1 : 0;
 $DisableInvites = (isset($_POST['DisableInvites']))? 1 : 0;
 $DisablePosting = (isset($_POST['DisablePosting']))? 1 : 0;
@@ -121,6 +123,7 @@ $DB->query("SELECT
 	i.SupportFor,
 	i.RestrictedForums,
 	i.PermittedForums,
+    i.SuppressConnPrompt,
 	DisableAvatar,
 	DisableInvites,
 	DisablePosting,
@@ -322,6 +325,11 @@ if ($Donor!=$Cur['Donor']  && check_perms('users_give_donor')) {
 	$LightUpdates['Donor']=$Donor;
 }
 
+if ($SuppressConnPrompt!=$Cur['SuppressConnPrompt']  && check_perms('users_set_suppressconncheck')) {
+	$UpdateSet[]="SuppressConnPrompt='$SuppressConnPrompt'";
+	$EditSummary[]="SuppressConnPrompt status changed";
+	$HeavyUpdates['SuppressConnPrompt']=$SuppressConnPrompt;
+}
 
 if ($Visible!=$Cur['Visible']  && check_perms('users_make_invisible')) {
 	$UpdateSet[]="Visible='$Visible'";

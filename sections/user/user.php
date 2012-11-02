@@ -51,6 +51,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 		COUNT(posts.id) AS ForumPosts,
 		i.RatioWatchEnds,
 		i.RatioWatchDownload,
+        i.SuppressConnPrompt,
 		i.DisableAvatar,
 		i.DisableInvites,
 		i.DisablePosting,
@@ -87,7 +88,7 @@ if(check_perms('users_mod')) { // Person viewing is a staff member
 	list($Username,$Email,$LastAccess,$IP, $ipcc, $Class, $Uploaded, $Downloaded, $RequiredRatio, $CustomTitle, $torrent_pass, $ClassID, 
               $GroupPermID, $Enabled, $Paranoia, $Invites, $DisableLeech, $Visible, $JoinDate, $Info, $Avatar, $Country, 
               $AdminComment, $Donor, $Warned, $SupportFor, $RestrictedForums, $PermittedForums, $InviterID, $InviterName, $ForumPosts, 
-              $RatioWatchEnds, $RatioWatchDownload, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, 
+              $RatioWatchEnds, $RatioWatchDownload, $SuppressConnPrompt, $DisableAvatar, $DisableInvites, $DisablePosting, $DisableForums, $DisableTagging, 
               $DisableUpload, $DisablePM, $DisableIRC, $DisableRequests, $DisableCountry, $FLTokens, $PersonalFreeLeech, $CommentHash,
               $BonusCredits,$BonusLog,$MaxAvatarWidth, $MaxAvatarHeight, $SeedHistory, $SeedHoursTotal, $SeedHoursDaily, $CreditsDaily, $flag) = $DB->next_record(MYSQLI_NUM, array(14));
 
@@ -1229,6 +1230,17 @@ if (check_perms('users_mod', $Class)) { ?>
 				<td><input type="text" size="10" name="Invites" value="<?=$Invites?>" /></td>
 			</tr>
 <?      }
+
+	if (check_perms('users_set_suppressconncheck')) {
+?>
+			<tr>
+				<td class="label">Suppress ConnCheck prompt:</td>
+				<td><input type="checkbox" name="ConnCheck" <? if ($SuppressConnPrompt == 1) { ?>checked="checked" <? } ?> />
+                    &nbsp;if checked then this user will never see a prompt to check their connectable status in the header bar
+                </td>
+			</tr>
+<?
+	}
 
         if ((check_perms('users_edit_pfl',$Class) && $UserID != $LoggedUser['ID'])
         || (check_perms('users_edit_own_pfl') && $UserID == $LoggedUser['ID'])) {

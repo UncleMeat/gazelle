@@ -183,46 +183,51 @@ $Infos = array(); // an info alert bar (nicer color)
 $Alerts = array(); // warning bar (red!)
 $ModBar = array();
 
-
-$Connectable = $Cache->get_value('connectable_'.$LoggedUser['ID']);
-if ($Connectable === false) {
-    // get latest connectable status info for header
-    $DB->query("
-        SELECT ucs.Status, ucs.IP, xbt.port, ucs.Time
-          FROM users_connectable_status AS ucs
-     LEFT JOIN xbt_files_users AS xbt ON xbt.uid=ucs.UserID AND xbt.ip=ucs.IP AND xbt.Active='1'
-         WHERE UserID = '$LoggedUser[ID]'
-      ORDER BY xbt.mtime DESC, ucs.Time DESC LIMIT 1"); 
+if ($LoggedUser['SuppressConnPrompt'] == '0'){
     
-    if($DB->record_count() == 0) {
-        //$cStatus = 'yes';
-        $Connectable = array('yes');
-    } else {
-        $Connectable = $DB->next_record();
-        $Cache->cache_value('connectable_'.$LoggedUser['ID'], $Connectable, 600);
+    $Connectable = $Cache->get_value('connectable_'.$LoggedUser['ID']);
+    if ($Connectable === false) {
+        // get latest connectable status info for header
+        $DB->query("
+            SELECT ucs.Status, ucs.IP, xbt.port, ucs.Time
+              FROM users_connectable_status AS ucs
+         LEFT JOIN xbt_files_users AS xbt ON xbt.uid=ucs.UserID AND xbt.ip=ucs.IP AND xbt.Active='1'
+             WHERE UserID = '$LoggedUser[ID]'
+          ORDER BY xbt.mtime DESC, ucs.Time DESC LIMIT 1"); 
+
+        if($DB->record_count() == 0) {
+            //$cStatus = 'yes';
+            $Connectable = array('yes');
+        } else {
+            $Connectable = $DB->next_record();
+            $Cache->cache_value('connectable_'.$LoggedUser['ID'], $Connectable, 600);
+        }
+    }
+
+    list($cStatus, $cIP, $cPort, $cTime) = $Connectable;
+
+
+    if ($cStatus!=='yes'){
+
+        if ($cPort) {
+            $link = ' &nbsp; -> <a href="user.php?action=connchecker&checkip='.$cIP.'&checkport='.$cPort.'" title="check now">check now</a> <-';
+            $cPort = " Port:$cPort ";
+        } else $link = "";
+
+        $msg = $cStatus=='no' ? "You are not connectable!" : "Are you connectable?";
+        $link = '<a href="articles.php?topic=connectable" title="IP: '.$cIP.$cPort.' last status check: ' .  
+                time_diff($cTime,2,false,false,0). '">'.$msg.'</a>'.$link;
+
+        if ($cStatus=='no' || $cPort) { // display annoying red banner if they have an active connection
+            $Alerts[] = $link;
+        } else {
+            $Infos[] = $link;
+        }
     }
 }
 
-list($cStatus, $cIP, $cPort, $cTime) = $Connectable;
-  
-    
-if ($cStatus!=='yes'){
-     
-    if ($cPort) {
-        $link = ' &nbsp; -> <a href="user.php?action=connchecker&checkip='.$cIP.'&checkport='.$cPort.'" title="check now">check now</a> <-';
-        $cPort = " Port:$cPort ";
-    } else $link = "";
-    
-    $msg = $cStatus=='no' ? "You are not connectable!" : "Are you connectable?";
-    $link = '<a href="articles.php?topic=connectable" title="IP: '.$cIP.$cPort.' last status check: ' .  
-            time_diff($cTime,2,false,false,0). '">'.$msg.'</a>'.$link;
-    
-    if ($cStatus=='no' || $cPort) { // display annoying red banner if they have an active connection
-        $Alerts[] = $link;
-    } else {
-        $Infos[] = $link;
-    }
-}
+
+
 
 // News
 $MyNews = $LoggedUser['LastReadNews']+0;

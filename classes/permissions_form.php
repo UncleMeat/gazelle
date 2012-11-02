@@ -112,7 +112,8 @@
 	'users_mod' => 'Basic moderator tools.',
 	'users_groups' => 'Can use Group tools.',
 	'users_manage_cheats' => 'Can manage watchlist.',
-
+    'users_set_suppressconncheck' => 'Can set Suppress ConnCheck prompt for users.',
+     
 	'torrents_edit' => 'Can edit any torrent.',
               'torrents_review' => 'Can mark torrents for deletion.',
               'torrents_review_override' => 'Can overide ongoing marked for deletion process.',
@@ -277,6 +278,7 @@ function permissions_form(){ ?>
 					<? display_perm('users_admin_notes', 'Can edit Admin comment','To be used sparingly - staff can add notes via the submit panel'); ?>
 					<? display_perm('users_groups', 'Can use Group tools'); ?>
                     <? display_perm('users_manage_cheats', 'Can manage watchlist', 'Can add and remove users from watchlist, and view speed reports page'); ?>
+                    <? display_perm('users_set_suppressconncheck', 'Can set Suppress ConnCheck prompt for users', 'Suppress ConnCheck if set for a user stops any prompts in the header bar re: connectable status'); ?>
  
 					<br/>*Everything is only applicable to users with the same or lower class level
 				</td>

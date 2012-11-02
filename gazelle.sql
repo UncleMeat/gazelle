@@ -2040,10 +2040,8 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   KEY `Downloaded` (`Downloaded`),
   KEY `Enabled` (`Enabled`),
   KEY `Invites` (`Invites`),
-  KEY `Cursed` (`Cursed`),
   KEY `torrent_pass` (`torrent_pass`),
   KEY `RequiredRatio` (`RequiredRatio`),
-  KEY `cc_index` (`ipcc`),
   KEY `SeedHoursDaily` (`SeedHoursDaily`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

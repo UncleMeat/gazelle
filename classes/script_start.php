@@ -374,7 +374,8 @@ function user_heavy_info($UserID) {
                     i.SupportFor,
                     i.BlockPMs,
                     i.CommentsNotify,
-                    i.TimeZone
+                    i.TimeZone,
+               i.SuppressConnPrompt
 			FROM users_main AS m
 			INNER JOIN users_info AS i ON i.UserID=m.ID
 			WHERE m.ID='$UserID'");
