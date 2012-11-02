@@ -92,7 +92,7 @@ if (empty($Properties) && !empty($_POST['fill']) && is_number($_POST['template']
 		WHERE r.ID=" . $_GET['requestid']);
 
     list($Properties) = $DB->to_array(false, MYSQLI_BOTH);
-    $Properties['TagList'] = implode(", ", get_request_tags($_GET['requestid']));
+    $Properties['TagList'] = implode(" ", get_request_tags($_GET['requestid']));
 }
 
 require(SERVER_ROOT . '/classes/class_torrent_form.php');
