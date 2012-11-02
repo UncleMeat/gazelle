@@ -1948,6 +1948,7 @@ CREATE TABLE IF NOT EXISTS `users_info` (
   `Inviter` int(10) DEFAULT NULL,
   `BitcoinAddress` tinytext,
   `WarnedTimes` int(2) NOT NULL DEFAULT '0',
+  `SuppressConnPrompt` enum('0','1') NOT NULL DEFAULT '0',
   `DisableAvatar` enum('0','1') NOT NULL DEFAULT '0',
   `DisableInvites` enum('0','1') NOT NULL DEFAULT '0',
   `DisablePosting` enum('0','1') NOT NULL DEFAULT '0',
