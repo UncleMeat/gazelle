@@ -302,7 +302,7 @@ function generate_torrent_table($Caption, $Tag, $Details, $Limit) {
 			$TorrentTags='<br /><div class="tags">'.$TagList.'</div>';
 		}
  
-		$Icons = torrent_icons($Detail, $TorrentID, $LoggedUser['ID'], $Detail['Status'], in_array($GroupID, $Bookmarks));
+		$Icons = torrent_icons($Detail, $TorrentID, $Detail['Status'], in_array($GroupID, $Bookmarks));
         
         $IsMarkedForDeletion = $Status == 'Warned' || $Status == 'Pending';
 		// print row

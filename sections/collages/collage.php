@@ -156,7 +156,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
             $Title = "This torrent has ".$Torrent['ReportCount']." active ".($Torrent['ReportCount'] > 1 ?'reports' : 'report');
             $DisplayName .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
         }
-        $Icons = torrent_icons($Torrent, $TorrentID, $UserID, $Torrent['Status'], in_array($GroupID, $Bookmarks));
+        $Icons = torrent_icons($Torrent, $TorrentID, $Torrent['Status'], in_array($GroupID, $Bookmarks));
         
         $row = $row == 'a' ? 'b' : 'a';
         $IsMarkedForDeletion = $Torrent['Status'] == 'Warned' || $Torrent['Status'] == 'Pending';

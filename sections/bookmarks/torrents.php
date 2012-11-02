@@ -47,11 +47,11 @@ if($Data) {
 	}
 }
 
-$TokenTorrents = $Cache->get_value('users_tokens_'.$UserID);
+$TokenTorrents = $Cache->get_value('users_tokens_'.$LoggedUser['ID']);
 if (empty($TokenTorrents)) {
-	$DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
+	$DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$LoggedUser[ID]");
 	$TokenTorrents = $DB->to_array('TorrentID');
-	$Cache->cache_value('users_tokens_'.$UserID, $TokenTorrents);
+	$Cache->cache_value('users_tokens_'.$LoggedUser['ID'], $TokenTorrents);
 }
 
 $Title = ($Sneaky)?"$Username's bookmarked torrents":'Your bookmarked torrents';
@@ -108,7 +108,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
             $DisplayName .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
     }
         
-        $AddExtra = torrent_icons($Torrent, $TorrentID, $UserID, $Torrent['Status'], true );
+        $AddExtra = torrent_icons($Torrent, $TorrentID, $Torrent['Status'], true );
         $row = ($row == 'a'? 'b' : 'a');
         $IsMarkedForDeletion = $Torrent['Status'] == 'Warned' || $Torrent['Status'] == 'Pending';
 ?>

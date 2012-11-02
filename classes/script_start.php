@@ -2152,7 +2152,7 @@ function get_tags($TagNames) {
     return($TagIDs);
 }
 
-function torrent_icons($Data, $TorrentID, $UserID, $MFDStatus, $IsBookmarked) {
+function torrent_icons($Data, $TorrentID, $MFDStatus, $IsBookmarked) {  //  $UserID,
     global $DB, $Cache, $LoggedUser, $TorrentUserStatus;
         //$AddExtra = '';
         $SeedTooltip='';
@@ -2167,11 +2167,11 @@ function torrent_icons($Data, $TorrentID, $UserID, $MFDStatus, $IsBookmarked) {
             $SeedTooltip = "Unlimited Doubleseed";
         }
          
-        $TokenTorrents = $Cache->get_value('users_tokens_' . $UserID);
+        $TokenTorrents = $Cache->get_value('users_tokens_' . $LoggedUser['ID']);
         if (empty($TokenTorrents)) {
-            $DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
+            $DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$LoggedUser[ID]");
             $TokenTorrents = $DB->to_array('TorrentID');
-            $Cache->cache_value('users_tokens_' . $UserID, $TokenTorrents);
+            $Cache->cache_value('users_tokens_' . $LoggedUser['ID'], $TokenTorrents);
         }
         
         if (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > sqltime()) {
@@ -2221,16 +2221,10 @@ function torrent_icons($Data, $TorrentID, $UserID, $MFDStatus, $IsBookmarked) {
         if ($Data['ReportCount'] > 0) {
             $Title = "This torrent has ".$Data['ReportCount']." active ".($Data['ReportCount'] > 1 ?'reports' : 'report');
             $AddExtra .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
-        }
-        $AddExtra .= $Icons;*/
+        } */
         $Icons = '<span style="float:right">'.$Icons.'</span>';
         return $Icons;
-        /*
-	$Info = array();
-	if($Data['FreeTorrent'] == '1') { $Info[]='<strong>Freeleech!</strong>'; }
-	if($Data['FreeTorrent'] == '2') { $Info[]='<strong>Neutral Leech!</strong>'; }
-	if($Data['PersonalFL'] == 1) { $Info[]='<strong>Personal Freeleech!</strong>'; }
-	return implode(' / ', $Info); */
+ 
 }
 
 /*
