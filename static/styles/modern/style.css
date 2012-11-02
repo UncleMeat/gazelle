@@ -1337,6 +1337,9 @@ td.colhead, .colhead td {
     width:260px;
     margin: 0px auto;
 }
+
+tr.uploadbody {
+}
  
 #site_debug {
     background-color: white;

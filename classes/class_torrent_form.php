@@ -125,23 +125,23 @@ class TORRENT_FORM {
 			<tr class="uploadbody">
 				<td class="label">Tags</td>
 				<td>
-                                    <div id="tagtext"><strong>No category selected.</strong></div>
-<?			if($OfficialTags) { ?>
+               <?
+                $taginfo = get_article('tagrulesinline');
+                if($taginfo) echo $Text->full_format($taginfo, true); 
+                ?>
+                    <div id="tagtext"></div>
+<?              if($OfficialTags) { ?>
 					<select id="genre_tags" name="genre_tags" onchange="add_tag();return false;" <?=$this->Disabled?>>
 						<option>---</option>
-<?				foreach(display_array($OfficialTags) as $Tag) { ?>
+<?                  foreach(display_array($OfficialTags) as $Tag) { ?>
 						<option value="<?=$Tag ?>"><?=$Tag ?></option>
-<?				}   ?>
+<?                  }   ?>
 					</select>
-<?			}         ?> 
-					<!--<input type="text" id="tags" name="tags" class="medium" value="<?=display_str($Torrent['TagList']) ?>" <?=$this->Disabled?>/>-->
-					<textarea id="tags" name="tags" class="medium" style="height:1.4em;" <?=$this->Disabled?>><?=display_str($Torrent['TagList']) ?></textarea>
-                              <br />
-                              <? 
-                              $taginfo = get_article('tagrulesinline');
-                              if($taginfo) echo $Text->full_format($taginfo, true); 
-                              ?>
-				</td>
+<?              } 
+                ?>
+                    <textarea id="tags" name="tags" class="medium" style="height:1.4em;" <?=$this->Disabled?>><?=display_str($Torrent['TagList']) ?></textarea>
+                    <br />
+                </td>
 			</tr> 
 			<!--<tr id="uploadpreviewbody" class="hidden"> 
 				<td colspan="2"> 

@@ -141,7 +141,7 @@ foreach ($NewCategories as $cat) {
 }
 ?>
         if ($('#category').raw().value == 0) {
-            $('#tagtext').html("<strong>No category selected.</strong>");
+            $('#tagtext').html("");
         } else {
             $('#tagtext').html("<strong>The tag "+tags[$('#category').raw().value]+" will be added automatically.</strong>");
         }
