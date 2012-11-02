@@ -21,10 +21,19 @@ if(isset($_POST['builddata']) && check_perms('site_debug')){
         $time = $date->format('Y-m-d H:i:s');
         $lastaccess = date('Y-m-d H:i:s', $date->getTimestamp() - (3600*24*30*4));
         
+        /*
         $DB->query("INSERT INTO site_stats_history ( TimeAdded, Users, Torrents, Seeders, Leechers )
                        VALUES ('$time', 
                                 (SELECT Count(UserID) AS Users FROM users_info AS u JOIN users_main AS um ON um.ID=u.UserID
                                     WHERE JoinDate < '$time' AND LastAccess > '$lastaccess' 
+                                      AND ( BanDate > '$time' OR BanDate='0000-00-00 00:00:00' ) ),
+                                (SELECT Count(ID) AS NumT FROM torrents WHERE Time < '$time'),
+                                '0','0' )"); */
+        
+        $DB->query("INSERT INTO site_stats_history ( TimeAdded, Users, Torrents, Seeders, Leechers )
+                       VALUES ('$time', 
+                                (SELECT Count(UserID) AS Users FROM users_info AS u JOIN users_main AS um ON um.ID=u.UserID
+                                    WHERE JoinDate < '$time' AND Enabled='1' 
                                       AND ( BanDate > '$time' OR BanDate='0000-00-00 00:00:00' ) ),
                                 (SELECT Count(ID) AS NumT FROM torrents WHERE Time < '$time'),
                                 '0','0' )");
