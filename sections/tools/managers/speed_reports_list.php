@@ -1,5 +1,22 @@
 <?
 
+// The "order by x" links on columns headers
+function header_link($SortKey, $DefaultWay = "desc") {
+    global $OrderBy, $OrderWay;
+    if ($SortKey == $OrderBy) {
+        if ($OrderWay == "desc") {
+            $NewWay = "asc";
+        } else {
+            $NewWay = "desc";
+        }
+    } else {
+        $NewWay = $DefaultWay;
+    }
+
+    return "tools.php?action=cheats&amp;order_way=" . $NewWay . "&amp;order_by=" . $SortKey . "&amp;" . get_url(array('order_way', 'order_by'));
+}
+
+
 function format_torrentid($torrentID, $name, $maxlen = 20) {
     if ($torrentID == 0) return 'None';
     if ($name == '') $tname = $torrentID;
@@ -21,10 +38,32 @@ function speed_span($speed, $highlightlimit, $color, $text) {
 
 if(!check_perms('users_manage_cheats')) { error(403); }
 
-        $DB->query("SELECT DeleteRecordsMins, KeepSpeed FROM site_options ");
-        list($DeleteRecordsMins, $KeepSpeed) = $DB->next_record();
+
+if (!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
+    $OrderWay = 'asc'; // For header links
+} else {
+    $_GET['order_way'] = 'desc';
+    $OrderWay = 'desc';
+}
+                       //     xbt.id, uid, Username, xbt.downloaded, remaining, t.Size, xbt.uploaded, 
+                     ////       upspeed, downspeed, timespent, peer_id, xbt.ip, tg.ID, fid, tg.Name, xbt.mtime
+                                    
+// User 	Remaining 	Uploaded 	UpSpeed 	ClientIPaddress 	date time 	
+//	TorrentID 	Total 	Downloaded 	DownSpeed 	                	total time 
+                                    
+if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('Username', 'Name', 'remaining', 'Size', 'uploaded', 'downloaded',
+                                                                        'upspeed', 'downspeed', 'ip', 'mtime', 'timespent' ))) {
+    $_GET['order_by'] = 'mtime';
+    $OrderBy = 'mtime'; 
+} else {
+    $OrderBy = $_GET['order_by'];
+}
+
         
-        $ViewSpeed = isset($_GET['viewspeed'])?(int)$_GET['viewspeed']:$KeepSpeed;
+$DB->query("SELECT DeleteRecordsMins, KeepSpeed FROM site_options ");
+list($DeleteRecordsMins, $KeepSpeed) = $DB->next_record();
+        
+$ViewSpeed = isset($_GET['viewspeed'])?(int)$_GET['viewspeed']:$KeepSpeed;
  
 show_header('Speed Reports','watchlist');
 
@@ -230,7 +269,7 @@ $Watchlist = $DB->to_array('UserID');
             <tr class="colhead"><td colspan="3">view settings: </td></tr>
             <tr>  
                 <td class="center">
-                    Viewing: <?=$ViewInfo?> &nbsp;
+                    Viewing: <?=$ViewInfo?> &nbsp; (order: <?="$OrderBy $OrderWay"?>)
 <?                  if ($ViewInfo!='all over speed specified') { ?>
                         <a href="?action=cheats&viewspeed=<?=$ViewSpeed?>" title="Removes any user or torrent filters for viewing (still applies speed filter)">View All</a>
 <?                  } ?>
@@ -286,7 +325,7 @@ $DB->query("SELECT SQL_CALC_FOUND_ROWS
                      LEFT JOIN torrents AS t ON t.ID=xbt.fid
                      LEFT JOIN torrents_group AS tg ON tg.ID=t.GroupID
                          WHERE upspeed>='$ViewSpeed' $WHERE
-                      ORDER BY mtime DESC
+                      ORDER BY $OrderBy $OrderWay
                          LIMIT $Limit");
 $Records = $DB->to_array();
 $DB->query("SELECT FOUND_ROWS()");
@@ -294,6 +333,8 @@ list($NumResults) = $DB->next_record();
  
 $Pages=get_pages($Page,$NumResults,50,9);
 
+ // array('Username', 'Name', 'remaining', 'Size', 'uploaded', 'downloaded',
+                                  //              'upspeed', 'downspeed', 'ip', 'mtime', 'timespent' ) 
 ?>
     
 	<div class="linkbox"><?=$Pages?></div>
@@ -302,24 +343,24 @@ $Pages=get_pages($Page,$NumResults,50,9);
         <table>
             <tr class="colhead">
                 <td style="width:50px"></td>
-                <td class="center">User</td>
-                <td class="center">Remaining</td>
-                <td class="center">Uploaded</td>
-                <td class="center">UpSpeed</td>
-                <td class="center">Client IP address</td>
-                <td class="center">date time</td>
+                <td class="center"><a href="<?=header_link('Username') ?>">User</a></td>
+                <td class="center"><a href="<?=header_link('remaining') ?>">Remaining</a></td>
+                <td class="center"><a href="<?=header_link('uploaded') ?>">Uploaded</a></td>
+                <td class="center"><a href="<?=header_link('upspeed') ?>">UpSpeed</a></td>
+                <td class="center"><a href="<?=header_link('ip') ?>">Client IP address</a></td>
+                <td class="center"><a href="<?=header_link('mtime') ?>">date time</a></td>
                 <td width="10px" rowspan="2" title="toggle selection for all records on this page">
                     <input type="checkbox" onclick="toggleChecks('speedrecords',this)" title="toggle selection for all records on this page" />
                 </td>
             </tr>
             <tr class="colhead">
                 <td ></td>
-                <td class="center"><span style="color:#777">TorrentID</span></td>
-                <td class="center"><span style="color:#777">Total</span></td>
-                <td class="center"><span style="color:#777">Downloaded</span></td>
-                <td class="center"><span style="color:#777">DownSpeed</span></td>
+                <td class="center"><a href="<?=header_link('Name') ?>"><span style="color:#777">TorrentID</span></a></td>
+                <td class="center"><a href="<?=header_link('Size') ?>"><span style="color:#777">Total</span></a></td>
+                <td class="center"><a href="<?=header_link('downloaded') ?>"><span style="color:#777">Downloaded</span></a></td>
+                <td class="center"><a href="<?=header_link('downspeed') ?>"><span style="color:#777">DownSpeed</span></a></td>
                 <td class="center"><span style="color:#777">ClientID</span></td>
-                <td class="center"><span style="color:#777">total time</span></td>
+                <td class="center"><a href="<?=header_link('timespent') ?>"><span style="color:#777">total time</span></a></td>
             </tr>
     <form id="speedrecords" action="tools.php" method="post">
         <input type="hidden" name="action" value="delete_speed_records" />
@@ -352,7 +393,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
 <?                          echo format_username($UserID, $Username);  ?>
                         </td>
                         <td class="center"><?=get_size($Remaining)?></td>
-                        <td class="center"><?=size_span($Uploaded, get_size($Uploaded))?></td>
+                        <td class="center"><img src="static/styles/<?= $LoggedUser['StyleName'] ?>/images/seeders.png" title="up"/> <?=size_span($Uploaded, get_size($Uploaded))?></td>
                         <td class="center"><?=speed_span($UpSpeed, $KeepSpeed, 'red', get_size($UpSpeed).'/s')?></td>
                         <td class="center"><?=display_ip($IP, $ipcc)?></td>
                         <td class="center"><?=time_diff($Time, 2, true, false, 1)?></td>
@@ -373,7 +414,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
                             <span style="color:#555"><?=format_torrentid($TorrentID, $Name)?></span> 
                         </td>
                         <td class="center"><span style="color:#555"><?=get_size($Size)?></span></td>
-                        <td class="center"><?=size_span($Downloaded, get_size($Downloaded))?></td>
+                        <td class="center"><img src="static/styles/<?= $LoggedUser['StyleName'] ?>/images/leechers.png" title="down"/> <?=size_span($Downloaded, get_size($Downloaded))?></td>
                         <td class="center"><?=speed_span($DownSpeed, $KeepSpeed, 'purple', get_size($DownSpeed).'/s')?></td>
                         <td class="center"><span style="color:#555"><?=substr($ClientPeerID,0,8)?></span></td>
                         <td class="center"><span style="color:#555" title="<?=time_span($Timespent, 4)?>"><?=time_span($Timespent, 2)?></span></td>
