@@ -288,12 +288,13 @@ if($GroupPerm!=$Cur['GroupPermissionID'] &&
 }
 
 if ($Username!=$Cur['Username'] && check_perms('users_edit_usernames', $Cur['Class']-1)) {
+    if (!preg_match('/^[A-Za-z0-9_\-\.]{1,20}$/i', $Username)) error("You entered an invalid username");
 	$DB->query("SELECT ID FROM users_main WHERE Username = '".$Username."' AND ID != $UserID");
 	if($DB->record_count() > 0) {
 		list($UsedUsernameID) = $DB->next_record();
 		error("Username already in use by <a href='user.php?id=".$UsedUsernameID."'>".$Username."</a>");
-		header("Location: user.php?id=".$UserID);
-		die();
+		//header("Location: user.php?id=".$UserID);
+		//die();
 	} else {
 		$UpdateSet[]="Username='".$Username."'";
 		$EditSummary[]="username changed from ".$Cur['Username']." to [b]{$Username}[/b]";
@@ -306,8 +307,8 @@ if ($Title!=db_string($Cur['Title']) && check_perms('users_edit_titles')) {
       $len = mb_strlen($_POST['Title'], "UTF-8");
 	if ( $len > 32) {
 		error("Title length: $len. Custom titles can be at most 32 characters. (max 128 bytes for multibyte strings)");
-		header("Location: user.php?id=".$UserID);
-		die();
+		//header("Location: user.php?id=".$UserID);
+		//die();
 	} else {
 		$UpdateSet[]="Title='$Title'";
 		$EditSummary[]="title changed to $Title";
