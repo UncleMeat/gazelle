@@ -32,6 +32,7 @@ function Toggle_view(elem_id) {
 function Get_Cookie() {
     return json.encode([get_hidden_value('profilediv'), 
                         get_hidden_value('bonusdiv'), 
+                        get_hidden_value('donatediv'), 
                         get_hidden_value('snatchesdiv'), 
                         get_hidden_value('recentuploadsdiv'), 
                         get_hidden_value('linkeddiv'), 
@@ -67,25 +68,26 @@ function set_hidden_value(elem_id, state){
 function Load_User_Cookie()  { 
     
 	if(jQuery.cookie('userPageState') == undefined) {
-		jQuery.cookie('userPageState', json.encode(['1', '1', '0', '0', '0', '0', '0', '0', '1', '0', '1', '1', '1', '1', '1']));
+		jQuery.cookie('userPageState', json.encode(['1', '1', '1', '0', '0', '0', '0', '0', '0', '1', '0', '1', '0', '1', '1', '1', '1']));
 	}
 	var state = json.decode( jQuery.cookie('userPageState') );
       set_hidden_value('profile', state[0]);
       set_hidden_value('bonus', state[1]);
-      set_hidden_value('snatches', state[2]);
-      set_hidden_value('recentuploads', state[3]);
-      set_hidden_value('linked', state[4]);
-      set_hidden_value('invite', state[5]);
-      set_hidden_value('requests', state[6]);
-      set_hidden_value('staffpms', state[7]);
-      set_hidden_value('notes', state[8]);
-      set_hidden_value('history', state[9]);
-      set_hidden_value('info', state[10]);
-      set_hidden_value('badgesadmin', state[11]);
-      set_hidden_value('warn', state[12]);
-      set_hidden_value('privilege', state[13]);
-      set_hidden_value('session', state[14]);
-      set_hidden_value('submit', state[15]);
+      set_hidden_value('donate', state[2]);
+      set_hidden_value('snatches', state[3]);
+      set_hidden_value('recentuploads', state[4]);
+      set_hidden_value('linked', state[5]);
+      set_hidden_value('invite', state[6]);
+      set_hidden_value('requests', state[7]);
+      set_hidden_value('staffpms', state[8]);
+      set_hidden_value('notes', state[9]);
+      set_hidden_value('history', state[10]);
+      set_hidden_value('info', state[11]);
+      set_hidden_value('badgesadmin', state[12]);
+      set_hidden_value('warn', state[13]);
+      set_hidden_value('privilege', state[14]);
+      set_hidden_value('session', state[15]);
+      set_hidden_value('submit', state[16]);
 }
 
 

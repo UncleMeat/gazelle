@@ -211,9 +211,9 @@ if(check_perms('torrents_review')){
         $DB->query("SELECT TorrentID FROM torrents_watch_list WHERE TorrentID='$TorrentID'"); ?>
         <span id="wl">
 <?      if($DB->record_count() > 0)  {?>    
-            <a onclick="twatchlist_remove('<?=$GroupID?>','<?=$TorrentID?>');return false;" href="#">[Remove from watchlist]</a>
+            <a onclick="twatchlist_remove('<?=$GroupID?>','<?=$TorrentID?>');return false;" href="#" title="Remove this torrent from the speed records torrent watchlist">[Remove from watchlist]</a>
 <?      } else {?>    
-            <a onclick="twatchlist_add('<?=$GroupID?>','<?=$TorrentID?>');return false;" href="#">[Add to watchlist]</a>
+            <a onclick="twatchlist_add('<?=$GroupID?>','<?=$TorrentID?>');return false;" href="#" title="Add this torrent to the speed records torrent watchlist">[Add to watchlist]</a>
 <?      } ?>
         </span>
 <?  } ?>
@@ -562,39 +562,37 @@ $EditionID = 0;
 ?>
 
 			<tr class="groupid_<?=$GroupID?> edition_<?=$EditionID?> group_torrent" style="font-weight: normal;" id="torrent<?=$TorrentID?>">
-                      <td class="center cats_col" rowspan="2" style="border-bottom:none;border-right:none;">
-                         <? $CatImg = 'static/common/caticons/' . $NewCategories[$GroupCategoryID]['image']; ?>
-                         <div title="<?= $NewCategories[$GroupCategoryID]['tag'] ?>"><img src="<?= $CatImg ?>" /></div>
-                      </td>
-                      <td style="border-bottom:none;border-left:none;">
-                          <strong><?=$ExtraInfo; ?></strong>
-						<!-- Uploaded by <?=format_username($UserID, $TorrentUploader)?> <?=time_diff($TorrentTime);?> -->
-
-                      </td>
+                <td class="center cats_col" rowspan="2" style="border-bottom:none;border-right:none;">
+                    <? $CatImg = 'static/common/caticons/' . $NewCategories[$GroupCategoryID]['image']; ?>
+                    <div title="<?= $NewCategories[$GroupCategoryID]['tag'] ?>"><img src="<?= $CatImg ?>" /></div>
+                </td>
+                <td style="border-bottom:none;border-left:none;">
+                    <strong><?=$ExtraInfo; ?></strong>
+                </td>
 				<td class="nobr"><?=get_size($Size)?></td>
 				<td><?=number_format($Snatched)?></td>
 				<td><?=number_format($Seeders)?></td>
 				<td><?=number_format($Leechers)?></td>
 			</tr>
-                  <tr>
-                      <td colspan="5" class="right" style="border-top:none;border-bottom:none;border-left:none;">
-                          <em>Uploaded by   <?=format_username($UserID, $TorrentUploader)?> <?=time_diff($TorrentTime);?> </em>
-                          
-                      </td>
-                  </tr>
+            <tr>
+                <td colspan="5" class="right" style="border-top:none;border-bottom:none;border-left:none;">
+                    <em>Uploaded by   <?=format_username($UserID, $TorrentUploader)?> <?=time_diff($TorrentTime);?> </em>
+                </td>
+            </tr>
 			<tr class="groupid_<?=$GroupID?> edition_<?=$EditionID?> torrentdetails pad" id="torrent_<?=$TorrentID; ?>">
 				<td colspan="6" style="border-top:none;"> 
                             
 <? if($Seeders == 0){ ?>            
                             <blockquote  style="text-align: center;">
 						<?
-						if ($LastActive != '0000-00-00 00:00:00' && time() - strtotime($LastActive) >= 432000) { ?>
+						if ($LastActive != '0000-00-00 00:00:00' && time() - strtotime($LastActive) >= 86400) { // 432000  ?>
 							<strong>Last active: <?=time_diff($LastActive);?></strong>
 						<?} else { ?>
                                           Last active: <?=time_diff($LastActive);?>
 						<?} ?>
 						<?
-						if ($LastActive != '0000-00-00 00:00:00' && time() - strtotime($LastActive) >= 345678 && time()-strtotime($LastReseedRequest)>=864000) { ?>
+						if ($Snatched > 2 && $LastActive != '0000-00-00 00:00:00' 
+                                && time() - strtotime($LastActive) >= 86400 && time()-strtotime($LastReseedRequest)>=432000) { ?>
 						<a href="torrents.php?action=reseed&amp;torrentid=<?=$TorrentID?>&amp;groupid=<?=$GroupID?>"> [Request re-seed] </a>
 						<?} ?>
                             </blockquote>

@@ -15,7 +15,7 @@ $ShopItem = get_shop_item($ItemID);
 
 if(!empty($ShopItem) && is_array($ShopItem)){
     
-    list($ItemID, $Title, $Description, $Action, $Value, $Cost) = $ShopItem[0];
+    list($ItemID, $Title, $Description, $Action, $Value, $Cost) = $ShopItem;
  
     $OtherID = true;
     

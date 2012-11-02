@@ -17,7 +17,7 @@ list($GroupID, $GroupName, $TagList, $Torrents) = array_values($Group);
 
 $Name = $GroupName;
 
-$DB->query("SELECT uid, tstamp FROM xbt_snatched WHERE fid='$TorrentID' ORDER BY tstamp DESC LIMIT 10");
+$DB->query("SELECT uid, tstamp FROM xbt_snatched WHERE fid='$TorrentID' ORDER BY tstamp DESC LIMIT 20");
 if($DB->record_count()>0) {
 	$Users = $DB->to_array();
 	foreach($Users as $User) {

@@ -96,10 +96,8 @@ $ShopItems = get_shop_items($LoggedUser['ID']);
                                 <input type="hidden" name="shopaction" value="<?=$Action?>" />
                                 <input type="hidden" name="userid" value="<?=$LoggedUser['ID']?>" />
                                 <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-                                <input type="hidden" name="itemid" value="<?=$ItemID?>" />
-                                <input <?=(strpos($Action, 'give') !==false ? 'onclick="SetUsername2(\'othername'.$ItemID.'\'); "':'')?>
-                                       <?=($Action == 'title' ? 'onclick="SetTitle2(\'title'.$ItemID.'\'); "':'')?>
-                                       <?=($Action == 'ufl' ? 'onclick="SetTorrent2(\'torrentid'.$ItemID.'\'); "':'')?> class="shopbutton<?=($CanBuy ? ' itembuy' : ' itemnotbuy')?>" name="submit" value="<?=($CanBuy?'Buy':'x')?>" type="submit"<?=($CanBuy ? '' : ' disabled="disabled"')?> />
+                                <input type="hidden" name="itemid" value="<?=$ItemID?>" /> 
+                                <input class="shopbutton<?=($CanBuy ? ' itembuy' : ' itemnotbuy')?>" name="submit" value="<?=($CanBuy?'Buy':'x')?>" type="submit"<?=($CanBuy ? '' : ' disabled="disabled"')?> />
                                 <? if($Action == 'title') echo '<input type="hidden" id="title'.$ItemID.'" name="title" value="" />'; ?>
                                 <? if($Action == 'ufl') echo '<input type="hidden" id="torrentid'.$ItemID.'" name="torrentid" value="" />'; ?>
                             </form>

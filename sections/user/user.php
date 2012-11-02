@@ -240,9 +240,9 @@ if (check_perms('users_manage_cheats', $Class)) {
     $DB->query("SELECT UserID FROM users_watch_list WHERE UserID='$UserID'"); ?>
     <span id="wl">
 <?  if($DB->record_count() > 0)  {?>    
-		[<a onclick="watchlist_remove('<?=$UserID?>')" href="#">Remove from watchlist</a>]
+		[<a onclick="watchlist_remove('<?=$UserID?>')" href="#" title="Remove this user from the speed records user watchlist">Remove from watchlist</a>]
 <?  } else {?>    
-		[<a onclick="watchlist_add('<?=$UserID?>')" href="#">Add to watchlist</a>]
+		[<a onclick="watchlist_add('<?=$UserID?>')" href="#" title="Add this user to the speed records user watchlist">Add to watchlist</a>]
 <?  } ?>
     </span>
 <?
@@ -707,6 +707,51 @@ if (check_perms('users_view_bonuslog',$Class) || $OwnProfile) { ?>
                           </div>
                       </div>
                   </div>
+		</div>
+<?
+}
+
+if (!$OwnProfile) {
+    include(SERVER_ROOT.'/sections/bonus/functions.php'); 
+    $ShopItems = get_shop_items_other();
+     
+ ?>
+        <div class="head">
+            <span style="float:left;">Donate to user</span>
+            <span style="float:right;"><a id="donatebutton" href="#" onclick="return Toggle_view('donate');">(Hide)</a></span>&nbsp;
+        </div>
+		<div class="box">
+			<div class="pad" id="donatediv">
+                <table style="width:600px;margin:auto">
+<?
+                     
+	foreach($ShopItems as $BonusItem) {
+            list($ItemID, $Title, $Description, $Action, $Value, $Cost) = $BonusItem;
+            $CanBuy = is_float((float)$LoggedUser['Credits']) ? $LoggedUser['Credits'] >= $Cost: false;
+            //echo $Title;
+            if ($Action=='givegb') $Title = str_replace ('other', $Username, $Title);
+            else $Title .= " to $Username";
+            $Row = ($Row == 'a') ? 'b' : 'a';
+?> 
+                <tr class="row<?=$Row?>">
+                    <td title="<?=display_str($Description)?>"><strong><?=display_str($Title) ?></strong></td>
+                    <td style="text-align: left;">(cost <?=number_format($Cost) ?>c)</td>
+                    <td style="text-align: right;">
+                    <form method="post" action="bonus.php" style="display:inline-block">  
+                        <input type="hidden" name="action" value="buy" />
+                        <input type="hidden" name="othername" value="<?=$Username?>" />
+                        <input type="hidden" name="userid" value="<?=$LoggedUser['ID']?>" />
+                        <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+                        <input type="hidden" name="itemid" value="<?=$ItemID?>" /> 
+                        <input class="shopbutton<?=($CanBuy ? ' itembuy' : ' itemnotbuy')?>" name="submit" value="<?=($CanBuy?'Buy':'x')?>" type="submit"<?=($CanBuy ? '' : ' disabled="disabled"')?> />
+                    </form>
+                    </td>
+                </tr>
+<?
+    }
+?>
+                </table>
+            </div>
 		</div>
 <?
 }

@@ -1,4 +1,21 @@
 <?
+function get_shop_items_other(){
+	global $Cache, $DB;
+	if(($ShopItems = $Cache->get_value('shop_items_other')) === false) {
+		$DB->query("SELECT ID, 
+                           Title, 
+                           Description, 
+                           Action, 
+                           Value,
+                           Cost
+                      FROM bonus_shop_actions
+                     WHERE Action = 'givegb' OR Action = 'givecredits'
+                  ORDER BY Sort");
+		$ShopItems = $DB->to_array(false, MYSQLI_BOTH);
+		$Cache->cache_value('shop_items_other', $ShopItems);
+	}
+	return $ShopItems;
+}
 function get_shop_items($UserID){ 
 	global $Cache, $DB;
 	if(($ShopItems = $Cache->get_value('shop_items')) === false) {
@@ -53,7 +70,7 @@ function get_shop_item($ItemID){
 		$ShopItem = $DB->to_array(false, MYSQLI_BOTH);
 		$Cache->cache_value('shop_item_'.$ItemID, $ShopItem);
 	}
-	return $ShopItem;
+	return $ShopItem[0];
 }
 function get_user_stats($UserID){
 	global $Cache, $DB;
