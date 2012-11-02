@@ -80,8 +80,8 @@ foreach($TagList as $ID=>$Tag) {
 }
 $TagList = implode(' ',$NewTags);
 
-if(!is_number($P[permission])) error(404); 
-if ($P[permission] !=0 && !array_key_exists($P[permission], $ClassLevels)) error(403);
+if(!is_number($P['permission'])) error(404); 
+if ($P['permission'] !=0 && !array_key_exists($P['permission'], $ClassLevels)) error(0);
 
 $DB->query("INSERT INTO collages 
 	(Name, Description, UserID, TagList, CategoryID, Permissions) 
@@ -90,7 +90,7 @@ $DB->query("INSERT INTO collages
 
 $CollageID = $DB->inserted_id();
 $Cache->delete_value('collage_'.$CollageID);
-write_log("Collage ".$CollageID." (".$P[name].") was created by ".$LoggedUser['Username']);
+write_log("Collage $CollageID ($P[name]) was created by $LoggedUser[Username]");
 header('Location: collages.php?id='.$CollageID);
 
 ?>

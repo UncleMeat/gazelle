@@ -1,12 +1,12 @@
 -- fetch data from emp.users into gazelle.users_main
 
 insert into `gazelle`.`users_main` (`ID`, `Username`, `Email`, `PassHash`, `Secret`, `Title`, `PermissionID`, `Enabled`, `Uploaded`, `Downloaded`, `LastLogin`, `LastAccess`, `IP`, `torrent_pass`, `Credits`, `FLTokens`)
-SELECT `Id`, `username`, `email`, `passhash`, `secret`, `title`, '2', '1', `uploaded`, `downloaded`, from_unixtime(`last_login`), from_unixtime(`last_access`), `Ip`, `passkey`, `bonuspoints`, `freeslots` FROM emp.users;
+SELECT `Id`, `username`, `email`, `passhash`, `secret`, `title`, '2', '1', `uploaded`, `downloaded`, IF(`last_login`=0,'0000-00-00 00:00:00', from_unixtime(`last_login`)), IF(`last_access`=0,'0000-00-00 00:00:00', from_unixtime(`last_access`)), `Ip`, `passkey`, `bonuspoints`, `freeslots` FROM emp.users;
 
 -- fetch data from emp.users into gazelle.users_info
 
 insert into `gazelle`.`users_info` (`UserID`, `StyleID`, `Avatar`, `JoinDate`, `Inviter`, `AdminComment`, `Info`, `Warned`, `Donor` )
-select `Id`, '3', `avatar`, from_unixtime(`added`), '0', `modcomment`, `info`, from_unixtime(`warned`), `donor` from `emp`.`users`;
+select `Id`, '3', `avatar`, IF(`added`=0,'0000-00-00 00:00:00', from_unixtime(`added`)), '0', `modcomment`, `info`, IF(`warned`=0,'0000-00-00 00:00:00', from_unixtime(`warned`)), `donor` from `emp`.`users`;
 
 -- set gazelle.users_main.enabled to 1 where emp.users.enabled='yes'
 
@@ -92,7 +92,7 @@ if(sticky='yes', '1', '0') as sticky,
 forumid,
 (select count(*) as count from emp.posts where emp.posts.topicid=emp.topics.id) as numposts,
 lastpost, 
-(select from_unixtime(added) as added from emp.posts where emp.posts.id=emp.topics.id) as time,
+(select from_unixtime(added) as added from emp.posts where emp.posts.id=lastpost) as time,
 (select userid from emp.posts where emp.posts.id=emp.topics.lastpost) as authorid
 FROM
 emp.topics;

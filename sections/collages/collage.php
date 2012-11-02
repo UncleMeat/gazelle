@@ -51,12 +51,12 @@ if ($CreatorID == $LoggedUser['ID']) {
 }
  
 
-
+/*
 if($CollageCategoryID == 0 && !check_perms('site_collages_delete')) {
 	if(!check_perms('site_collages_personal') || $CreatorID!=$LoggedUser['ID']) {
 		//$Locked = true;
 	}
-}
+}*/
 
 //Handle subscriptions
 if(($CollageSubscriptions = $Cache->get_value('collage_subs_user_'.$LoggedUser['ID'])) === FALSE) {
@@ -207,6 +207,8 @@ foreach ($TorrentList as $GroupID=>$Group) {
 	$Collage[]=ob_get_clean();
 }
 
+$NumUsers = count($Users);
+
 if(($MaxGroups>0 && $NumGroups>=$MaxGroups)  || ($MaxGroupsPerUser>0 && $NumGroupsByUser>=$MaxGroupsPerUser)) {
 	$Locked = true;
 }
@@ -259,7 +261,9 @@ if (check_perms('site_collages_manage') || ($CanEdit && !$Locked)) { ?>
 		<a href="collages.php?action=manage&amp;collageid=<?=$CollageID?>">[Manage torrents]</a> 
 <? } ?>
 	<a href="reports.php?action=report&amp;type=collage&amp;id=<?=$CollageID?>">[Report Collage]</a>
-<? if (check_perms('site_collages_delete') || $CreatorID == $LoggedUser['ID'] ) { ?>
+<? if (check_perms('site_collages_delete') || 
+        ($CreatorID == $LoggedUser['ID'] && 
+                        ( $CollageCategoryID ==0 || $NumUsers == 0 || ($NumUsers ==1 && isset($Users[$CreatorID]) ))) ) { ?>
 		<a href="collages.php?action=delete&amp;collageid=<?=$CollageID?>&amp;auth=<?=$LoggedUser['AuthKey']?>" onclick="return confirm('Are you sure you want to delete this collage?.');">[Delete]</a> 
 <? } ?>
 	</div>
@@ -292,7 +296,7 @@ if(check_perms('zip_downloader')){
 		<div class="box">
 			<ul class="stats nobullet">
 				<li>Torrents: <?=$NumGroups?></li>
-				<li>Built by <?=count($Users)?> user<?=(count($Users)>1) ? 's' : ''?></li>
+				<li>Built by <?=$NumUsers?> user<?=($NumUsers>1) ? 's' : ''?></li>
 			</ul>
 		</div>
             
@@ -306,11 +310,11 @@ if(check_perms('zip_downloader')){
                     <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
                     <input type="hidden" name="collageid" value="<?=$CollageID?>" /> 
                     The collage creator can set the permission level for who can add/delete torrents<br/>
-                    <em>only the collage creator (and staff) can edit the description or delete the torrent</em><br/>
+                    <em>the collage creator can edit the description</em><br/>
                     <select name="permission">
 <?
 		foreach ($ClassLevels as $CurClass) { 
-                    if ($CurClass['Level']>=500) break;
+                    if ($CurClass['Level']>=STAFF_LEVEL) break;
                     if ($CollagePermissions==$CurClass['Level']) { $Selected='selected="selected"'; } else { $Selected=""; }
 ?>
                     <option value="<?=$CurClass['Level']?>" <?=$Selected?>><?=$CurClass['Name'];?></option>
