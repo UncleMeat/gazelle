@@ -652,12 +652,16 @@ $Bookmarks = all_bookmarks('torrent');
                     $Title = "This torrent has ".$Data['ReportCount']." active ".($Data['ReportCount'] > 1 ?'reports' : 'report');
                     $GroupName .= ' /<span class="reported" title="'.$Title.'"> Reported</span>';
                 }
-?>              
-                <script>
-                    var overlay<?=$GroupID?> = <?=json_encode($Overlay)?>
-                </script>
-                <?=$AddExtra?>
-                <a href="torrents.php?id=<?=$GroupID?>" onmouseover="return overlib(overlay<?=$GroupID?>, FULLHTML);" onmouseout="return nd();"><?=$GroupName?></a> 
+                
+                if ($LoggedUser['HideFloat']){?>
+                    <?=$AddExtra?> <a href="torrents.php?id=<?=$GroupID?>"><?=$GroupName?></a> 
+<?              } else { ?>
+                    <script>
+                        var overlay<?=$GroupID?> = <?=json_encode($Overlay)?>
+                    </script>
+                    <?=$AddExtra?>
+                    <a href="torrents.php?id=<?=$GroupID?>" onmouseover="return overlib(overlay<?=$GroupID?>, FULLHTML);" onmouseout="return nd();"><?=$GroupName?></a> 
+<?              }  ?>              
                 <br />
                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
                 <div class="tags">

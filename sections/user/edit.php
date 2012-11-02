@@ -234,6 +234,13 @@ function change_flag() {
 				</td>
 			</tr>
 			<tr>
+				<td class="label"><strong>Hover info window</strong></td>
+				<td>
+					<input type="checkbox" name="hidefloatinfo" id="hidefloatinfo" <? if (!empty($SiteOptions['HideFloat'])) { ?>checked="checked"<? } ?> />
+					<label for="hidetagsinlists">Hide floating info window on browse torrents page</label>
+				</td>
+			</tr>
+			<tr>
 				<td class="label"><strong>Add tag behaviour</strong></td>
 				<td>
 					<input type="checkbox" name="voteuptags" id="voteuptags" <? if (empty($SiteOptions['NotVoteUpTags'])) { ?>checked="checked"<? } ?> />
