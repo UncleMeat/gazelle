@@ -59,19 +59,41 @@ function checked($Checked) {
 }
  
 
+function sorttz($a, $b) {
+    if ($a[1] == $b[1]) {
+        if ($a[0] == $b[0]) {
+            return 0;
+        } else {
+            return ($a[0] < $b[0]) ? -1 : 1;
+        }
+    } else {
+        return ($a[1] < $b[1]) ? -1 : 1;
+    }
+}
+
+
+
 function get_timezones_list(){ 
-    $zones = timezone_identifiers_list();
+    global $Cache; 
+    $zones = $Cache->get_value('timezones');
+    if ($zones !== false) return $zones;
+    $rawzones = timezone_identifiers_list();
     $Continents = array('Africa', 'America', 'Antarctica', 'Arctic', 'Asia', 'Atlantic','Australia','Europe','Indian','Pacific');
     $i = 0;
-    foreach($zones AS $szone) {
+    foreach($rawzones AS $szone) {
         $z = explode('/',$szone);
         if( in_array($z[0], $Continents )){      
-            $zone[$i][0] = $szone;
-            $zone[$i][1] = format_offset(-get_timezone_offset($szone));
+            $zones[$i][0] = $szone;
+            $zones[$i][1] = -get_timezone_offset($szone);    // format_offset(-get_timezone_offset($szone));
             $i++;
         }
-    } 
-    return $zone;
+    }
+    usort($zones, "sorttz");
+    foreach($zones AS &$zone) {
+        $zone[1] = format_offset($zone[1]);
+    }
+    $Cache->cache_value('timezones', $zones);
+    return $zones;
 }
 
 function format_offset($offset) {
@@ -79,7 +101,7 @@ function format_offset($offset) {
         $sign = $hours > 0 ? '+' : '-';
         $hour = (int) abs($hours);
         $minutes = (int) abs(($offset % 3600) / 60); // for stupid half hour timezones
-        if ($hour == 0 && $minutes == 0) $sign = ' ';
+        if ($hour == 0 && $minutes == 0) $sign = '&nbsp;';
         return "GMT $sign" . str_pad($hour, 2, '0', STR_PAD_LEFT) .':'. str_pad($minutes,2, '0'); 
 }
 
@@ -142,8 +164,8 @@ function change_flag() {
                                     $zones = get_timezones_list();
                                     foreach($zones as $tzone) { 
                                         list($zone,$offset)=$tzone;
-?>
-                                <option value="<?=$zone?>"<? if ($zone == $TimeZone) { ?>selected="selected"<? } ?>><?="($offset) &nbsp;".str_replace(array('_','/'),array(' ',' / '),$zone)?></option>
+                                        //$offset = format_offset($offset);
+?>                              <option value="<?=$zone?>"<? if ($zone == $TimeZone) { ?>selected="selected"<? } ?>><?="$offset &nbsp;&nbsp;".str_replace(array('_','/'),array(' ',' / '),$zone)?></option>
 <?                                  } ?>
                             </select>
 				</td>
