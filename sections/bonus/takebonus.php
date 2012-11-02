@@ -244,6 +244,7 @@ if(!empty($ShopItem) && is_array($ShopItem)){
             $DB->query($sql);
             $Cache->delete_value('user_stats_'.$OtherID);
             $Cache->delete_value('user_info_heavy_'.$OtherID);
+            $Cache->delete_value('user_info_' . $UserID);
         }
         
         if($UpdateSet){
@@ -252,6 +253,7 @@ if(!empty($ShopItem) && is_array($ShopItem)){
             $DB->query($sql);
             $Cache->delete_value('user_stats_'.$UserID);
             $Cache->delete_value('user_info_heavy_'.$UserID);
+            $Cache->delete_value('user_info_' . $UserID);
         }
     }
 }
