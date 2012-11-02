@@ -167,7 +167,7 @@ if($Details=='all' || $Details=='overall') {
 		// IMPORTANT NOTE - we use WHERE t.Seeders>500 in order to speed up this query. You should remove it!
 		$Query = $BaseQuery;
 		if ($Details=='all' && !$Filtered) {
-			$Query .= " WHERE t.Seeders>=500 ";
+			//$Query .= " WHERE t.Seeders>=500 ";
 			if (!empty($Where)) { $Query .= ' AND '.$Where; }
 		}
 		elseif (!empty($Where)) { $Query .= ' WHERE '.$Where; }
