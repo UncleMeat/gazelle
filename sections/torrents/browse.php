@@ -418,7 +418,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
             <table class="noborder">
                 <tr class="on_cat_change <? if (!empty($LoggedUser['HideCats'])) { ?>hidden<? } ?>"><td colspan="3">&nbsp;</td></tr>
                 <tr>
-                    <td class="label">Order by:</td>
+                    <td class="label" style="width:140px">Order by:</td>
                     <td colspan="<?= ($AdvancedSearch) ? '3' : '1' ?>">
                         <select name="order_by" style="width:auto;">
                             <option value="time"<? selected('order_by', 'time') ?>>Time added</option>
@@ -451,21 +451,21 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                         </td>
                     </tr>
                     <tr>
-                        <td class="label">Search Term:</td>
+                        <td class="label" style="width:140px">Search Term:</td>
                         <td colspan="3">
                             <input type="text" spellcheck="false" size="40" name="searchtext" class="inputtext" title="Supports full boolean search" value="<? form('searchtext') ?>" />
                             <input type="hidden" name="action" value="advanced" />
                         </td>
                     </tr>
                     <tr>
-                        <td class="label">File List:</td>
+                        <td class="label" style="width:140px">File List:</td>
                         <td colspan="3">
                             <input type="text" spellcheck="false" size="40" name="filelist" class="inputtext" value="<? form('filelist') ?>" />
                         </td>
                     </tr>
                 <? } else { // BASIC SEARCH ?>
                     <tr>
-                        <td class="label">Search terms:</td>
+                        <td class="label" style="width:140px">Search terms:</td>
                         <td colspan="3">
                             <input type="text" spellcheck="false" size="40" name="searchtext" class="inputtext" title="Use -word to exclude a word" value="<? form('searchtext') ?>" />
                             <input type="radio" name="search_type" id="search_type0" value="0" <? selected('search_type', 0, 'checked') ?> /><label for="search_type0"> Any</label>&nbsp;&nbsp;
@@ -478,7 +478,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                 <? } ?>
                 <? if ($AdvancedSearch) { ?>                    
                 <tr>                    
-                    <td class="label">Tags:</td>
+                    <td class="label" style="width:140px">Tags:</td>
                     <td colspan="3">
                         <input type="text" size="40" id="tags" name="taglist" class="inputtext" title="Supports full boolean search" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />&nbsp;					
                     
@@ -487,7 +487,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                 </tr>
                 <? } else { // BASIC SEARCH ?>
                 <tr>                    
-                    <td class="label">Tags:</td>
+                    <td class="label" style="width:140px">Tags:</td>
                     <td colspan="3">
                         <input type="text" size="40" id="tags" name="taglist" class="inputtext" title="Use -tag to exclude tag" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />&nbsp;					
                         <input type="radio" name="tags_type" id="tags_type0" value="0" <? selected('tags_type', 0, 'checked') ?> /><label for="tags_type0"> Any</label>&nbsp;&nbsp;
