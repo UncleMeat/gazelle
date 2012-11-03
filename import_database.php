@@ -953,7 +953,7 @@ while (($row = mysqli_fetch_assoc($result))) {
 		}
 
 		$torrents_row[] = "(" . $row['id'] . ", " . $row['id'] . ", " . $row['owner'] . ", 
-			'" . mysqli_real_escape_string($link, $InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'), '".$row['hits']."', '".$row['times_completed']."', '".($row['free'] != '0' ? '1' : '0')."')";
+			'" . mysqli_real_escape_string($link, $InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", from_unixtime('" . $row['added'] . "'), from_unixtime('". $row['last_action']."'), '".$row['times_completed']."', '".($row['free'] != '0' ? '1' : '0')."')";
 
 	   
 		//$TorrentID++;
@@ -987,7 +987,7 @@ while (($row = mysqli_fetch_assoc($result))) {
 			$torrents_tags_row = array();
 
 			if(!mysqli_query($link, "INSERT INTO gazelle.torrents
-								(ID, GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, completed, FreeTorrent) 
+								(ID, GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, FreeTorrent) 
 							VALUES " . implode(',', $torrents_row)
 					))
                     die(mysqli_error($link));
@@ -1029,7 +1029,7 @@ if (count($torrents_tags_row) > 0) {
 
 if (count($torrents_row) > 0) {
     if(!mysqli_query($link, "INSERT INTO gazelle.torrents
-                        (ID, GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, completed, FreeTorrent) 
+                        (ID, GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, last_action, Snatched, FreeTorrent) 
                     VALUES " . implode(',', $torrents_row)
             ))
             die(mysqli_error($link));
