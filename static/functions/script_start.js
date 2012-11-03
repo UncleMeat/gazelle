@@ -159,7 +159,9 @@ function save_message(message) {
 	var messageDiv = document.createElement("div");
 	messageDiv.className = "save_message";
 	messageDiv.innerHTML = message;
-	$("#content").raw().insertBefore(messageDiv,$("#content").raw().firstChild);
+	//$("#content").raw().insertBefore(messageDiv,$("#messages").raw());
+    $("#messages").raw().parentNode.insertBefore(messageDiv,$("#messages").raw());
+	//$("#content").raw().insertBefore(messageDiv,$("#content").raw().firstChild);
 }
 
 function error_message(message) {

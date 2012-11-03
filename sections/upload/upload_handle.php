@@ -357,7 +357,6 @@ if ($DB->record_count() > 0) {
     $UserArray = $DB->to_array('UserID');
     $FilterArray = $DB->to_array('ID');
 
-    $InsertSQL = "INSERT IGNORE INTO users_notify_torrents (UserID, GroupID, TorrentID, FilterID) VALUES ";
     $Rows = array();
     foreach ($UserArray as $User) {
         list($FilterID, $UserID, $Passkey) = $User;
@@ -365,6 +364,7 @@ if ($DB->record_count() > 0) {
         $Feed->populate('torrents_notify_' . $Passkey, $Item);
         $Cache->delete_value('notifications_new_' . $UserID);
     }
+    $InsertSQL = "INSERT IGNORE INTO users_notify_torrents (UserID, GroupID, TorrentID, FilterID) VALUES ";
     $InsertSQL.=implode(',', $Rows);
     $DB->query($InsertSQL);
 

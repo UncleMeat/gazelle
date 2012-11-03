@@ -58,17 +58,17 @@ function Vote(amount, requestid) {
 				votecount.innerHTML = (parseInt(votecount.innerHTML)) + 1;
 			}
 
-			if($('#total_bounty').results() > 0) {
-				totalBounty = parseInt($('#total_bounty').raw().value);
-				totalBounty += (amount * (1 - $('#request_tax').raw().value));
+			//if($('#total_bounty').raw().value > 0) {
+				var startBounty = parseInt($('#total_bounty').raw().value);
+				var totalBounty = startBounty + amount;
 				$('#total_bounty').raw().value = totalBounty;
 				$('#formatted_bounty').raw().innerHTML = get_size(totalBounty);
 
-				save_message("Your vote of " + get_size(amount) + ", adding a " + get_size(amount * (1 - $('#request_tax').raw().value)) + " bounty, has been added");
+				save_message("Bounty was " + get_size(startBounty) + " + your vote of " + get_size(amount) + " = Total Bounty: " + get_size(totalBounty));
 				$('#button').raw().disabled = true;
-			} else {
-				save_message("Your vote of " + get_size(amount) + " has been added");
-			}
+			//} else {
+				//save_message("Your vote of " + get_size(amount) + " has been added");
+			//}
 		}
 	);
 }

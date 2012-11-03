@@ -50,6 +50,7 @@ show_header('View request: '.$FullName, 'comments,requests,bbcode,jquery');
 ?>
 <div class="thin">
 	<h2><a href="requests.php">Requests</a> &gt; <?=$CategoryName?> &gt; <?=$DisplayLink?></h2>
+    <a id="messages" ></a>
 	<div class="linkbox">
 <? if($CanEdit) { ?> 
 		<a href="requests.php?action=edit&amp;id=<?=$RequestID?>">[Edit]</a>
@@ -134,8 +135,16 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
       <div class="main_column">
           
           
-            <div class="head"><?=$DisplayLink?></div>
+            <div class="head">Request</div>
 		<table>
+			<tr>
+				<td class="label" >Title</td>
+				<td style="font-size: 1.8em;"><?=$DisplayLink?></td>
+			</tr>
+			<tr id="bounty">
+				<td class="label" >Total Bounty</td>
+				<td id="formatted_bounty" style="font-size: 1.8em;"><?=get_size($RequestVotes['TotalBounty'])?></td>
+			</tr>
 			<tr>
 				<td class="label">Created</td>
 				<td>
@@ -174,17 +183,19 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 			</tr>
 			<tr>
 				<td class="label">Post vote information</td>
-				<td>
+				<td> 
+                <?
+                    //$tot_bounty = $RequestVotes['TotalBounty'];
+                ?>
 					<form action="requests.php" method="get" id="request_form">
 						<input type="hidden" name="action" value="vote" />
-						<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 						<input type="hidden" id="requestid" name="id" value="<?=$RequestID?>" />
 						<input type="hidden" id="auth" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 						<input type="hidden" id="amount" name="amount" value="0" />
-                                                <input type="hidden" id="readable" name="readable" value="" />
+                        <input type="hidden" id="readable" name="readable" value="" />
 						<input type="hidden" id="current_uploaded" value="<?=$LoggedUser['BytesUploaded']?>" />
 						<input type="hidden" id="current_downloaded" value="<?=$LoggedUser['BytesDownloaded']?>" />
-						<input id="total_bounty" type="hidden" value="<?=$RequestVotes['TotalBounty']?>" />
+						<input type="hidden" id="total_bounty" value="<?=$RequestVotes['TotalBounty']?>" />
 						If you add the entered <strong><span id="new_bounty">0.00 MB</span></strong> of bounty, your new stats will be: <br/>
 						Uploaded: <span id="new_uploaded"><?=get_size($LoggedUser['BytesUploaded'])?></span>
 						Ratio: <span id="new_ratio"><?=ratio($LoggedUser['BytesUploaded'],$LoggedUser['BytesDownloaded'])?></span>
@@ -193,10 +204,6 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 				</td>
 			</tr>
 <? }?> 
-			<tr id="bounty">
-				<td class="label">Bounty</td>
-				<td id="formatted_bounty"><?=get_size($RequestVotes['TotalBounty'])?></td>
-			</tr>
 <?
 	if($IsFilled) {
 		$TimeCompare = 1267643718; // Requests v2 was implemented 2010-03-03 20:15:18
@@ -221,15 +228,16 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 							<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 							<input type="hidden" name="requestid" value="<?=$RequestID?>" />
 							<input type="text" size="50" name="link" <?=(!empty($Link) ? "value='$Link' " : '')?>/>
-							<br />
-                                                        <strong>Should be the permalink (PL) to the torrent (e.g. http://<?=NONSSL_SITE_URL?>/torrents.php?id=xxxx).</strong>
-							<br />
-							<br />
-							<? if(check_perms('site_moderate_requests')) { ?> For User: <input type="text" size="25" name="user" <?=(!empty($FillerUsername) ? "value='$FillerUsername' " : '')?>/>
-							<br />
+							<br/>Should be the permalink (PL) to the torrent
+                            <br/>e.g. http://<?=NONSSL_SITE_URL?>/torrents.php?id=xxxx
+							<br/><br/>
+							<? if(check_perms('site_moderate_requests')) { ?> 
+                            <span title="Fill this request on behalf of user:">
+                            Fill for user: <input type="text" size="50" name="user" <?=(!empty($FillerUsername) ? "value='$FillerUsername' " : '')?>/>
+							</span><br/><br/>
 							<? } ?>
 							<input type="submit" value="Fill request" />
-							<br /> 
+							<br/> 
 						</div>
 					</form>
 					
@@ -237,7 +245,7 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 			</tr>
 <?	} ?>
 			<tr>
-				<td colspan="2" class="center"><strong>Description</strong></td>
+				<td colspan="2" class="head"><strong>Description</strong></td>
 			</tr>
 			<tr>
                       <td colspan="2"><?=$Text->full_format($Description, get_permissions_advtags($RequestorID))?></td>
