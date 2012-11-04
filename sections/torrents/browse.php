@@ -608,7 +608,7 @@ $Bookmarks = all_bookmarks('torrent');
 ?>
     <tr class="colhead">
         <td colspan="10" class="center">
-            <?=$day; //date('l jS F Y', $Data['Time'] - $LoggedUser['TimeOffset'])?>
+            <?= date('l jS F Y', strtotime($Data['Time']) - $LoggedUser['TimeOffset'])?>
         </td>
     </tr>
 <?
