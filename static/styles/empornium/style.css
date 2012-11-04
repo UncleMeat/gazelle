@@ -475,8 +475,8 @@ li.searchbars {
     padding: 2px 10px 1px;
     background-color: #1a1;
     text-align: center;
-    width: 300px; 
-    margin-left:-160px;
+    width: 80px; 
+    margin-left:-40px;
     left: 50%;
     border: green solid 1px; 
 }

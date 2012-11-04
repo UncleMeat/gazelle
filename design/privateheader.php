@@ -104,32 +104,11 @@ if ($Mobile) { ?>
             </ul>  */
                
 //if($LoggedUser['personal_freeleech'] >= sqltime()) {
-               
-$TimeStampNow = time();
-$PFLTimeStamp = strtotime($LoggedUser['personal_freeleech']);
-
-if($PFLTimeStamp >= $TimeStampNow) {
-     
-    if (($PFLTimeStamp - $TimeStampNow) < (28*24*3600)) { // more than 28 days freeleech and the time is only specififed in the tooltip
-        $TimeAgo = time_diff($LoggedUser['personal_freeleech'],2,false,false,0); 
-        $PFL = "Personal Freeleech for $TimeAgo";
-    } else {
-        $PFL = "Personal Freeleech";
-    }
-    $TimeNow = date('M d Y, H:i', $PFLTimeStamp - (int) $LoggedUser['TimeOffset']);
-    $PFL = '<span class="time" title="Personal Freeleech until '.$TimeNow.'">'.$PFL.'</span>';    
-}
+            
 
 
 ?>
-          <table class="userinfo_stats noborder"><? 
-            if ( false && !empty($PFL)) { ?>
-              <tr>
-                  <td colspan="4">
-                    <div class="alertbar nicebar" style="display:inline-block"><?=$PFL?></div>
-                  </td>
-              </tr>
-      <?    }  ?>
+          <table class="userinfo_stats noborder">
               <tr>
                   <td style="text-align:right;"><a href="bonus.php">Credits</a>:</td>
                   <td><span class="stat"><?=number_format((int)$LoggedUser['TotalCredits'])?></span></td>
@@ -521,9 +500,25 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
     </div>
     
     <div id="header_bottom"> 
-        <?    if ( !empty($PFL)) { ?> 
+        <?    
+           
+$TimeStampNow = time();
+$PFLTimeStamp = strtotime($LoggedUser['personal_freeleech']);
+
+if($PFLTimeStamp >= $TimeStampNow) {
+     
+    if (($PFLTimeStamp - $TimeStampNow) < (28*24*3600)) { // more than 28 days freeleech and the time is only specififed in the tooltip
+        $TimeAgo = " for ".time_diff($LoggedUser['personal_freeleech'],2,false,false,0); 
+        //$PFL = "Personal Freeleech for $TimeAgo";
+    //} else {
+        //$PFL = "Personal Freeleech";
+    }
+    $TimeNow = date('M d Y, H:i', $PFLTimeStamp - (int) $LoggedUser['TimeOffset']);
+    $PFL = '<span class="time" title="Personal Freeleech'.$TimeAgo.' (until '.$TimeNow.')">PFL</span>';    
+}
+            if ( !empty($PFL)) { ?> 
                     <div class="nicebar" style="display:inline-block"><?=$PFL?></div> 
-        <?    }  ?>
+        <?  }  ?>
 
             <div id="major_stats">
 <?
