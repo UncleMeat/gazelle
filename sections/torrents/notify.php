@@ -140,7 +140,6 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
                 <td> 
                     <?=$Icons?> 
                     <?=$DisplayName?>
-                    <br />
                     <? if($UnRead) { echo '<strong>New!</strong>'; } ?>
                       
                 <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>

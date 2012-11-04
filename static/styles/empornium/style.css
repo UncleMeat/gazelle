@@ -293,6 +293,10 @@ table.userinfo_stats td {
     float:left;
     margin: 0px;
 }
+#major_stats_left {
+    position: absolute;
+    margin: -20px 0 0 10px;
+}
 #major_stats { 
     float:right;
     margin: 0 0 0 10px;
@@ -333,6 +337,9 @@ table.userinfo_stats td {
     color: #00436b;
 }
 
+#userinfo_username {
+    margin-right: 20px;
+}
 #userinfo_username, #userinfo_tools {
     display:inline;
     position: relative;
@@ -475,9 +482,9 @@ li.searchbars {
     padding: 2px 10px 1px;
     background-color: #1a1;
     text-align: center;
-    width: 300px; 
-    margin-left:0px;
-    left: 5%;
+    width: 240px; 
+    margin-left:-125px;
+    left: 50%;
     border: green solid 1px; 
 }
 .blend {

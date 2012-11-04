@@ -509,7 +509,7 @@ if($PFLTimeStamp >= $TimeStampNow) {
      
     if (($PFLTimeStamp - $TimeStampNow) < (28*24*3600)) { // more than 28 days freeleech and the time is only specififed in the tooltip
         $TimeAgo = time_diff($LoggedUser['personal_freeleech'],2,false,false,0); 
-        $PFL = "Personal Freeleech for $TimeAgo";
+        $PFL = "PFL for $TimeAgo";
     } else {
         $PFL = "Personal Freeleech";
     }
@@ -517,9 +517,16 @@ if($PFLTimeStamp >= $TimeStampNow) {
     $PFL = '<span class="time" title="Personal Freeleech until '.$TimeNow.'">'.$PFL.'</span>';    
 }
             if ( !empty($PFL)) { ?> 
-                    <div class="nicebar" style="display:inline-block"><?=$PFL?></div> 
+                    <div class="nicebar" style="display:inline-block"><?=$PFL?></div>
         <?  }  ?>
 
+      
+            <div id="major_stats_left">
+                <ul id="userinfo_major">
+                        <li id="nav_logout" class="brackets"><a href="logout.php?auth=<?=$LoggedUser['AuthKey']?>">Logout</a></li>
+                      <li id="nav_donate" class="brackets"><a href="donate.php">Donate</a></li>
+                </ul>
+            </div>
             <div id="major_stats">
 <?
 
@@ -571,12 +578,14 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                       </li>
                 </ul>       
 <? } ?> 
+                <!--
                 <ul id="userinfo_major">
                       <li id="nav_upload" class="brackets"><a href="upload.php">Upload</a></li>
                       <li id="nav_donate" class="brackets"><a href="donate.php">Donate</a></li>
-                </ul>
+                </ul> -->
                 <ul id="userinfo_username">
-                      <li id="nav_userinfo" class="<?=($NewMessages||$NumStaffPMs||$NewStaffPMs||$NewNotifications||$NewSubscriptions)? 'highlight' : 'normal'?>"><a href="user.php?id=<?=$LoggedUser['ID']?>" class="username"><?=$LoggedUser['Username']?></a>
+                          <li id="nav_upload" class="brackets"><a href="upload.php">Upload</a></li>
+                 <li id="nav_userinfo" class="<?=($NewMessages||$NumStaffPMs||$NewStaffPMs||$NewNotifications||$NewSubscriptions)? 'highlight' : 'normal'?>"><a href="user.php?id=<?=$LoggedUser['ID']?>" class="username"><?=$LoggedUser['Username']?></a>
                           <ul>
                                 <li id="nav_inbox" class="<?=$NewMessages ? 'highlight' : 'normal'?>"><a onmousedown="Stats('inbox');" href="inbox.php">Inbox<?=$NewMessages ? "($NewMessages)" : ''?></a></li>
     <? if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {  ?>
@@ -612,8 +621,7 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                           </ul>
                       </li>
                       <li id="nav_useredit" class="brackets"><a href="user.php?action=edit&amp;userid=<?=$LoggedUser['ID']?>" title="Edit User Settings">Settings</a></li>
-                      <li id="nav_logout" class="brackets"><a href="logout.php?auth=<?=$LoggedUser['AuthKey']?>">Logout</a></li>
-                </ul>
+               </ul>
             </div>
     </div>
 </div>
