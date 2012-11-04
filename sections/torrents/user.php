@@ -341,19 +341,17 @@ foreach($NewCategories as $Cat) {
 ?>
 		<tr class="torrent <?=($IsMarkedForDeletion?'redbar':"row$row")?>">
 			<td class="center cats_col">
-                    <? $CatImg = 'static/common/caticons/'.$NewCategories[$NewCategoryID]['image']; ?>
-			<div title="<?=$NewCategories[$NewCategoryID]['tag']?>"><img src="<?=$CatImg?>" />
-                        </div> 
+                <div title="<?=$NewCategories[$NewCategoryID]['tag']?>"><img src="<?='static/common/caticons/'.$NewCategories[$NewCategoryID]['image']?>" /></div>
 			</td>
 			<td>
                 <?=$Icons?> 
 				<?=$DisplayName?>
 				<br />
-                                <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                                
+          <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                                
 				<div class="tags">
 					<?=$TorrentTags?>
 				</div>
-                                <? } ?>
+          <? } ?>
 			</td>
             <td class="center"><?=number_format($Torrent['FileCount'])?></td>
             <td class="center"><?=number_format($NumComments)?></td>

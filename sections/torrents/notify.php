@@ -54,19 +54,20 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 ?>
 <div class="thin">
     <h2>Notifications</h2>
+    <div  class="linkbox"> 
+            [<a href="user.php?action=notify" title="Add or edit notification filters">Add/Edit my notification filters</a>]
+    </div>
     <div class="linkbox">
           <?=$Pages?>
     </div>
-    <div class="head">Latest notifications <a href="torrents.php?action=notify_clear&amp;auth=<?=$LoggedUser['AuthKey']?>">(clear all)</a> <a href="javascript:SuperGroupClear()">(clear selected)</a> <a href="user.php?action=notify">(edit filters)</a></div>
-<? if($DB->record_count()==0) { ?>
-    <table class="border">
-          <tr class="rowb">
-                <td colspan="8" class="center">
-                      No new notifications! &nbsp;&nbsp; <a href="user.php?action=notify">Add/Edit notification filters</a>
-                </td>
-          </tr>
-    </table>
-<? } else {
+    <div class="head">Latest notifications <a href="torrents.php?action=notify_clear&amp;auth=<?=$LoggedUser['AuthKey']?>">(clear all)</a> <a href="javascript:SuperGroupClear()">(clear all selected)</a> </div>
+<? 
+    $NumNotices = $DB->record_count();
+    if($NumNotices==0) { ?>
+    <div class="box pad center"> 
+           <strong>   No new notifications!  </strong>
+    </div>
+<? } else { 
 	$FilterGroups = array();
 	while($Result = $DB->next_record()) {
 		if(!$Result['FilterID']) {
@@ -79,21 +80,29 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 		array_push($FilterGroups[$Result['FilterID']], $Result);
 	}
 	unset($Result);
+?>
+    <div class="box pad center"> 
+           <strong> <?=$NumNotices?> notifications in <?=count($FilterGroups)?> filters </strong>
+    </div>
+<?
 	foreach($FilterGroups as $ID => $FilterResults) {
 ?>
-    <h3>Matches for <?=$FilterResults['FilterLabel']?> (<a href="torrents.php?action=notify_cleargroup&amp;filterid=<?=$ID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">Clear</a>) <a href="javascript:GroupClear($('#notificationform_<?=$ID?>').raw())">(clear selected)</a></h3>
+    <br/>
+    <div class="head">
+        Matches for filter <?=$FilterResults['FilterLabel']?> (<a href="torrents.php?action=notify_cleargroup&amp;filterid=<?=$ID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">Clear</a>) <a href="javascript:GroupClear($('#notificationform_<?=$ID?>').raw())">(clear selected)</a></h3>
+    </div>
+    <table class="torrent_table">
     <form id="notificationform_<?=$ID?>">
-    <table class="border">
           <tr class="colhead">
                 <td style="text-align: center"><input type="checkbox" name="toggle" onClick="ToggleBoxes(this.form, this.checked)" /></td>
                 <td class="small cats_col"></td>
-                <td style="width:100%;"><strong>Name</strong></td>
-                <td><strong>Files</strong></td>
-                <td><strong>Time</strong></td>
-                <td><strong>Size</strong></td>
-                <td style="text-align:right"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
-                <td style="text-align:right"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>
-                <td style="text-align:right"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/leechers.png" alt="Leechers" title="Leechers" /></td>
+                <td style="width:100%;">Torrent</td>
+                <td>Files</td>
+                <td>Time</td>
+                <td>Size</td>
+                <td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
+                <td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>
+                <td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/leechers.png" alt="Leechers" title="Leechers" /></td>
           </tr>
 <?
 		unset($FilterResults['FilterLabel']);
@@ -101,61 +110,55 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 			list($TorrentID, $GroupID, $GroupName, $GroupCategoryID, $TorrentTags, $Size, $FileCount,
 				$Snatched, $Seeders, 
 				$Leechers, $NotificationTime, $FreeTorrent, $DoubleSeed, $LogInDB, $UnRead, $FilterLabel, $FilterLabel) = $Result;
-			// generate torrent's title
-			$DisplayName='';
-					
-			if ((!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > sqltime()) && empty($Torrent['FreeTorrent'])) {
-				$Data['PersonalFL'] = 1;
-			}
 			
-			$DisplayName.= "<a href='torrents.php?id=$GroupID&amp;torrentid=$TorrentID#torrent$TorrentID'  title='View Torrent'>".$GroupName."</a>";
-					
+            $DisplayName = '<a href="torrents.php?id='.$GroupID.'&amp;torrentid='.$TorrentID.'" title="View Torrent">'.$GroupName.'</a>';
+				
 			$TagLinks=array();
 			if($TorrentTags!='') {
 				$TorrentTags=explode(' ',$TorrentTags);
-				$MainTag = $TorrentTags[0];
+				//$MainTag = $TorrentTags[0];
 				foreach ($TorrentTags as $TagKey => $TagName) {
 					$TagName = str_replace('_','.',$TagName);
 					$TagLinks[]='<a href="torrents.php?taglist='.$TagName.'">'.$TagName.'</a>';
 				}
 				$TagLinks = implode(', ', $TagLinks);
 				$TorrentTags='<br /><div class="tags">'.$TagLinks.'</div>';
-			} else {
-				$MainTag = $NewCategories[$GroupCategoryID-1]['name'];
+			//} else {
+				//$MainTag = $NewCategories[$GroupCategoryID-1]['name'];
 			}
+            
+            $Icons = torrent_icons(array('FreeTorrent'=>$FreeTorrent,'double_seed'=>$DoubleSeed), $TorrentID, false, false);
 
 		// print row
+          $row = $row == 'a' ? 'b' : 'a';
 ?>
-          <tr class="group_torrent" id="torrent<?=$TorrentID?>">
+          <tr class="torrent row<?=$row?>" id="torrent<?=$TorrentID?>">
                 <td style="text-align: center"><input type="checkbox" value="<?=$TorrentID?>" id="clear_<?=$TorrentID?>" /></td>
-                <td class="center cats_cols"><div title="<?=ucfirst(str_replace('_',' ',$MainTag))?>" class="cats_<?=strtolower(str_replace(array('-',' '),array('',''),$Categories[$GroupCategoryID-1])).' tags_'.str_replace('.','_',$MainTag)?>"></div></td>
-                <td>
-                    <span>
-                            [<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">DL</a> 
-<?			if (($LoggedUser['FLTokens'] > 0) && ($Size < 1073741824) 
-                            && (empty($TokenTorrents) || $TokenTorrents[$TorrentID]['FreeLeech'] < sqltime()) && empty($FreeTorrent) && ($LoggedUser['CanLeech'] == '1')) { ?>
-                            | <a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>&usetoken=1" title="Use a FL Token" onClick="return confirm('Are you sure you want to use a freeleech token here?');">FL</a>
-<?			} ?>
-                            | <a href="#" onclick="Clear(<?=$TorrentID?>);return false;" title="Remove from notifications list">CL</a>]
-                      </span>
-                      <strong><?=$DisplayName?></strong> <?=$ExtraInfo ?>
-                      <? if($UnRead) { echo '<strong>New!</strong>'; } ?>
-                            <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
-                      <?=$TorrentTags?>
-                            <? } ?>
+                <td class="center cats_cols">
+                <div title="<?=$NewCategories[$GroupCategoryID]['tag']?>"><img src="<?='static/common/caticons/'.$NewCategories[$GroupCategoryID]['image']?>" /></div>
                 </td>
-                <td><?=$FileCount ?></td>
-                <td style="text-align:right" class="nobr"><?=time_diff($NotificationTime)?></td>
-                <td class="nobr" style="text-align:right"><?=get_size($Size)?></td>
-                <td style="text-align:right"><?=number_format($Snatched)?></td>
-                <td style="text-align:right"><?=number_format($Seeders)?></td>
-                <td style="text-align:right"><?=number_format($Leechers)?></td>
+                <td> 
+                    <?=$Icons?> 
+                    <?=$DisplayName?>
+                    <br />
+                    <? if($UnRead) { echo '<strong>New!</strong>'; } ?>
+                      
+                <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>
+                      <?=$TorrentTags?>
+                <? } ?>
+                </td>
+                <td class="center"><?=number_format($FileCount)?></td>
+                <td class="nobr"><?=time_diff($NotificationTime, 1)?></td>
+                <td class="nobr"><?=get_size($Size)?></td>
+                <td><?=number_format($Snatched)?></td>
+                <td<?=($Seeders==0)?' class="r00"':''?>><?=number_format($Seeders)?></td>
+                <td><?=number_format($Leechers)?></td>
           </tr>
 <?
 		}
 ?>
-    </table>
     </form>
+    </table>
 <?
 	}
 }

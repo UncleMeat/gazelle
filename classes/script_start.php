@@ -2169,7 +2169,7 @@ function torrent_icons($Data, $TorrentID, $MFDStatus, $IsBookmarked) {  //  $Use
          
         $UserID = $LoggedUser['ID'];
         $TokenTorrents = $Cache->get_value('users_tokens_' .$UserID );
-        if (empty($TokenTorrents)) {
+        if ($TokenTorrents===false) {
             $DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
             $TokenTorrents = $DB->to_array('TorrentID');
             $Cache->cache_value('users_tokens_' . $UserID, $TokenTorrents);
