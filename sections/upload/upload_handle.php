@@ -184,6 +184,7 @@ if (!preg_match("/^" . URL_REGEX . "$/i", $Properties['Image'])) {
     $T['Image'] = "''";
 } */
 
+$sqltime = db_string( sqltime() );
 
 //Needs to be here as it isn't set for add format until now
 $LogName .= $Properties['Title'];
@@ -197,7 +198,7 @@ $LogName .= $Properties['Title'];
     $DB->query("
 		INSERT INTO torrents_group
 		(NewCategoryID, Name, Time, Body, Image, SearchText) VALUES
-		(" . $T['Category'] . ", " . $T['Title'] . ", '" . sqltime() . "', '" . db_string($Body) . "', $T[Image], '$SearchText')");
+		(" . $T['Category'] . ", " . $T['Title'] . ", '$sqltime', '" . db_string($Body) . "', $T[Image], '$SearchText')");
     $GroupID = $DB->inserted_id();
     $Cache->increment('stats_group_count');
 /* } else {
@@ -248,7 +249,6 @@ if ($TotalSize < (20*1024*1024*1024)){
     $Properties['FreeTorrent']=1;
 }
 
-$sqltime = sqltime();
 // Torrent
 $DB->query("
 	INSERT INTO torrents

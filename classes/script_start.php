@@ -2167,11 +2167,12 @@ function torrent_icons($Data, $TorrentID, $MFDStatus, $IsBookmarked) {  //  $Use
             $SeedTooltip = "Unlimited Doubleseed";
         }
          
-        $TokenTorrents = $Cache->get_value('users_tokens_' . $LoggedUser['ID']);
+        $UserID = $LoggedUser['ID'];
+        $TokenTorrents = $Cache->get_value('users_tokens_' .$UserID );
         if (empty($TokenTorrents)) {
-            $DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$LoggedUser[ID]");
+            $DB->query("SELECT TorrentID, FreeLeech, DoubleSeed FROM users_slots WHERE UserID=$UserID");
             $TokenTorrents = $DB->to_array('TorrentID');
-            $Cache->cache_value('users_tokens_' . $LoggedUser['ID'], $TokenTorrents);
+            $Cache->cache_value('users_tokens_' . $UserID, $TokenTorrents);
         }
         
         if (!empty($TokenTorrents[$TorrentID]) && $TokenTorrents[$TorrentID]['FreeLeech'] > sqltime()) {

@@ -601,6 +601,7 @@ $Bookmarks = all_bookmarks('torrent');
         list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, 
                 $NewCategoryID, $SearchText, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 
+        /*
         $day = date('j', $GroupTime - $LoggedUser['TimeOffset']);
         if ($AllTorrents && $LoggedUser['SplitByDays'] && $lastday !== $day ) {
 ?>
@@ -612,7 +613,7 @@ $Bookmarks = all_bookmarks('torrent');
 <?
             $lastday = $day;
         }
-        
+        */
         $TagList = explode(' ', str_replace('_', '.', $TagList));
 
         $TorrentTags = array();
@@ -671,7 +672,7 @@ $Bookmarks = all_bookmarks('torrent');
             </td>
             <td class="center"><?=number_format($Data['FileCount'])?></td>
             <td class="center"><?=number_format($NumComments)?></td>
-            <td class="nobr"><?= time_diff($GroupTime, 1) ?></td>
+            <td class="nobr"><?= time_diff($GroupTime, 1). " | " .time_diff($Data['Time'], 1) ?></td>
             <td class="nobr"><?= get_size($Data['Size']) ?></td>
             <td><?= number_format($TotalSnatched) ?></td>
             <td<?= ($TotalSeeders == 0) ? ' class="r00"' : '' ?>><?= number_format($TotalSeeders) ?></td>
