@@ -524,16 +524,16 @@ if (check_perms('users_mod') || $OwnProfile) {
                 $color = 'red';
                 $show = 'No';
             } else {
-                $color = 'darkgrey';
+                $color = 'grey';
                 $show = '?';
             }
             ?>
-                <span id="status<?=$elemid?>" title="status last checked at <?=time_diff($TimeChecked,2,false,false,0)?>">
-                    <span style="font-weight: bold; color:<?=$color?>;"><?=$show?></span> &nbsp; (IP: <?=$IP?>)
+                <span id="statuscont<?=$elemid?>" title="status last checked at <?=time_diff($TimeChecked,2,false,false,0)?>">
+                    <span id="status<?=$elemid?>" class="<?=$color?>"><?=$show?></span> &nbsp; (IP: <?=$IP?>)
                 <?   if ($Status!='unset') {  ?>
                 &nbsp; [<a style="cursor: pointer;" onclick="unset_conn_status('status<?=$elemid?>','<?=$UserID?>','<?=$IP?>')" title="Set this connectable record to status=unset">U</a>]
                 <?   }   ?>    
-                &nbsp; [<a style="cursor: pointer;" onclick="delete_conn_record('status<?=$elemid?>','<?=$UserID?>','<?=$IP?>')" title="Remove this connectable record">X</a>]
+                &nbsp; [<a style="cursor: pointer;" onclick="delete_conn_record('statuscont<?=$elemid?>','<?=$UserID?>','<?=$IP?>')" title="Remove this connectable record">X</a>]
                     <? if ($Port) { ?>
                     [<a href="user.php?action=connchecker&checkuser=<?=$UserID?>&checkip=<?=$IP?>&checkport=<?=$Port?>" title="check now">check</a>]
                     <? } ?>
