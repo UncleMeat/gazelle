@@ -24,6 +24,9 @@ else
         case 'buy':
             include(SERVER_ROOT.'/sections/bonus/takebonus.php');
             break;
+        case 'msg':
+            include(SERVER_ROOT.'/sections/bonus/result.php');
+            break;
         default:
             include(SERVER_ROOT.'/sections/bonus/bonus.php');
             break;

@@ -269,7 +269,7 @@ if(check_perms('torrents_review')){
 <?
 
 // For staff draw the tools section
-if(check_perms('torrents_review')){ 
+if(check_perms('torrents_review')){
         // get review history
         if($ReviewID && is_number($ReviewID)) { // if reviewID == null then no history
             $DB->query("SELECT r.Status, r.Time, r.ConvID,
@@ -387,6 +387,57 @@ if(check_perms('torrents_review')){
     </script>
 <?
 } // end draw staff tools 
+
+
+
+
+if ($FreeTorrent == '0' && $IsUploader) {
+    include(SERVER_ROOT.'/sections/bonus/functions.php'); 
+    $ShopItems = get_shop_items_ufl();
+     
+ ?>
+    <div class="head">
+        <span style="float:left;">Buy unlimited universal freeleech for your torrent</span>
+        <span style="float:right;"><a id="donatebutton" href="#" onclick="BuyFL_Toggle();return false;">(Hide)</a></span>&nbsp;
+    </div>
+	<div class="box">
+        <div class="pad" id="donatediv">
+            <table style="width:600px;margin:auto">
+<?
+                     
+	foreach($ShopItems as $BonusItem) {
+            list($ItemID, $Title, $Description, $Action, $Value, $Cost) = $BonusItem;
+            $CanBuy = is_float((float)$LoggedUser['Credits']) ? $LoggedUser['Credits'] >= $Cost: false;
+            
+            $Row = ($Row == 'a') ? 'b' : 'a';
+?> 
+                <tr class="row<?=$Row?>">
+                    <td title="<?=display_str($Description)?>"><strong><?=display_str($Title) ?></strong></td>
+                    <td style="text-align: left;">(cost <?=number_format($Cost) ?>c)</td>
+                    <td style="text-align: right;">
+                    <form method="post" action="bonus.php" style="display:inline-block">  
+                        <input type="hidden" name="action" value="buy" />
+                        <input type="hidden" name="torrentid" value="<?=$GroupID?>" />
+                        <input type="hidden" name="userid" value="<?=$LoggedUser['ID']?>" />
+                        <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+                        <input type="hidden" name="itemid" value="<?=$ItemID?>" />
+                        <input type="hidden" name="rett" value="<?=$GroupID?>" /> 
+                        <input class="shopbutton<?=($CanBuy ? ' itembuy' : ' itemnotbuy')?>" name="submit" value="<?=($CanBuy?'Buy':'x')?>" type="submit"<?=($CanBuy ? '' : ' disabled="disabled"')?> />
+                    </form>
+                    </td>
+                </tr>
+<?
+    }
+?>
+            </table>
+        </div>
+    </div>
+    <br/>
+<?
+}
+
+
+
 ?>
  <div id="details_top">
     <div class="sidebar" style="float: right;">

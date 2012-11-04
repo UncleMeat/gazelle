@@ -9,6 +9,8 @@ if($_POST['submit'] == 'Delete') {
 	if(!is_number($_POST['id']) || $_POST['id'] == ''){ error(0); }
 	$DB->query('DELETE FROM bonus_shop_actions WHERE ID='.$_POST['id']); 
       $Cache->delete_value('shop_items');
+      $Cache->delete_value('shop_items_other');
+      $Cache->delete_value('shop_items_ufl');
       $Cache->delete_value('shop_item_'.$_POST['id']);
       
 } elseif ($_POST['autosynch'] == 'autosynch') {
@@ -37,12 +39,14 @@ if($_POST['submit'] == 'Delete') {
       }
       $DB->query($SQL);
       $Cache->delete_value('shop_items');
+      $Cache->delete_value('shop_items_other');
+      $Cache->delete_value('shop_items_ufl');
 
 } else {
 	
 	$Val->SetFields('name', '1','string','The name must be set, and has a max length of 64 characters', array('maxlength'=>64, 'minlength'=>1));
 	$Val->SetFields('desc', '1','string','The description must be set, and has a max length of 255 characters', array('maxlength'=>255, 'minlength'=>1));
-      $Val->SetFields('shopaction', '1','inarray','Invalid shop action was set.',array('inarray'=>$ShopActions));
+    $Val->SetFields('shopaction', '1','inarray','Invalid shop action was set.',array('inarray'=>$ShopActions));
 	$Err=$Val->ValidateForm($_POST); // Validate the form
 	if($Err){ error($Err); }
       
@@ -63,14 +67,15 @@ if($_POST['submit'] == 'Delete') {
                               Cost='$Cost',
                               Sort='$Sort'
                               WHERE ID='{$_POST['id']}'");
-           $Cache->delete_value('shop_items');
            $Cache->delete_value('shop_item_'.$_POST['id']);
 	} else { //Create
 		$DB->query("INSERT INTO bonus_shop_actions 
 			(Title, Description, Action, Value, Cost, Sort) VALUES
 			('$Name','$Desc','$Action','$Value','$Cost','$Sort')");
-            $Cache->delete_value('shop_items');
 	}
+    $Cache->delete_value('shop_items');
+    $Cache->delete_value('shop_items_other');
+    $Cache->delete_value('shop_items_ufl');
 }
 
 // Go back

@@ -320,7 +320,7 @@ send_irc('PRIVMSG #' . NONSSL_SITE_URL . '-announce-ssl :' . $AnnounceSSL);
 //$Item = $Feed->item($Title, $Text->strip_bbcode($Body), 'torrents.php?action=download&amp;authkey=[[AUTHKEY]]&amp;torrent_pass=[[PASSKEY]]&amp;id=' . $TorrentID, $LoggedUser['Username'], 'torrents.php?id=' . $GroupID, trim($Properties['TagList']));
 
 $Item = $Feed->torrent($Title, 
-                       "<br />Category: ".$NewCategories[(int)$_POST['category']]['name']." <br /> " . get_size($TotalSize) . " <br /> Added: $sqltime <br /> Description: ". $Text->strip_bbcode($Body), 
+                       "Category: ".$NewCategories[(int)$_POST['category']]['name']." <br />Size: ". get_size($TotalSize) ."<br />Added: $sqltime<br />Description:<br />". $Text->strip_bbcode($Body), 
                         'torrents.php?id=' . $GroupID, 
                         'torrents.php?action=download&amp;authkey=[[AUTHKEY]]&amp;torrent_pass=[[PASSKEY]]&amp;id=' . $TorrentID, 
                         $LoggedUser['Username'], 
@@ -391,8 +391,14 @@ $Feed->populate('torrents_all', $Item);
 if (!$Private) {
     show_header("Warning");
     ?>
-    <h1>Warning</h1>
-    <p><strong>Your torrent has been uploaded however, you must download your torrent from <a href="torrents.php?id=<?= $GroupID ?>">here</a> because you didn't choose the private option.</strong></p>
+    <h2>Warning</h2>
+    <div class="thin">
+        <div class="box pad shadow">
+            <span style="font-size: 1.5em;">
+                Your torrent has been uploaded however, because you didn't choose the private option you <span class="red">must</span> download the torrent file from <a href="torrents.php?id=<?= $GroupID ?>">here</a> before you can start seeding.
+            </span>
+        </div>
+    </div>
     <?
     show_footer();
     die();

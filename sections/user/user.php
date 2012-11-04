@@ -745,7 +745,8 @@ if (!$OwnProfile) {
                         <input type="hidden" name="othername" value="<?=$Username?>" />
                         <input type="hidden" name="userid" value="<?=$LoggedUser['ID']?>" />
                         <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-                        <input type="hidden" name="itemid" value="<?=$ItemID?>" /> 
+                        <input type="hidden" name="itemid" value="<?=$ItemID?>" />
+                        <input type="hidden" name="retu" value="<?=$UserID?>" /> 
                         <input class="shopbutton<?=($CanBuy ? ' itembuy' : ' itemnotbuy')?>" name="submit" value="<?=($CanBuy?'Buy':'x')?>" type="submit"<?=($CanBuy ? '' : ' disabled="disabled"')?> />
                     </form>
                     </td>

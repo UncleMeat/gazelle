@@ -1,4 +1,21 @@
 <?
+function get_shop_items_ufl(){
+	global $Cache, $DB;
+	if(($ShopItems = $Cache->get_value('shop_items_ufl')) === false) {
+		$DB->query("SELECT ID, 
+                           Title, 
+                           Description, 
+                           Action, 
+                           Value,
+                           Cost
+                      FROM bonus_shop_actions
+                     WHERE Action = 'ufl'
+                  ORDER BY Sort");
+		$ShopItems = $DB->to_array(false, MYSQLI_BOTH);
+		$Cache->cache_value('shop_items_ufl', $ShopItems);
+	}
+	return $ShopItems;
+}
 function get_shop_items_other(){
 	global $Cache, $DB;
 	if(($ShopItems = $Cache->get_value('shop_items_other')) === false) {

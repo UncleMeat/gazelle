@@ -169,7 +169,7 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                 
                 // The user already have personal freeleech time, add to it.
                 if ($personal_freeleech >= sqltime()) {
-                    $personal_freeleech = date('Y-m-d H:i:s', strtotime($personal_freeleech) + 60 * 60 * $Value);
+                    $personal_freeleech = date('Y-m-d H:i:s', strtotime($personal_freeleech) + (60 * 60 * $Value));
                 // No current freeleech time.
                 } else {
                     $personal_freeleech = time_plus(60 * 60 * $Value);
@@ -236,7 +236,14 @@ if(!empty($ShopItem) && is_array($ShopItem)){
                     }
                 }
                 break; 
+                
+           default:
+               $Cost = 0;
+               $ResultMessage ='No valid action!';
+               break;
         }
+        
+        //$LoggedUser['Credits'] -= $Cost;
 
         if($UpdateSetOther){
             $SET = implode(', ', $UpdateSetOther);
@@ -258,7 +265,14 @@ if(!empty($ShopItem) && is_array($ShopItem)){
     }
 }
 
+            
+//include(SERVER_ROOT.'/sections/bonus/bonus.php');
 // Go back
-header("Location: bonus.php". (!empty($ResultMessage) ? "?result=" . htmlentities($ResultMessage):"")); 
+$Msg ='';
+if (isset($_REQUEST['retu']) && is_number($_REQUEST['retu']))
+    $Msg .= "&retu=".$_REQUEST['retu'];
+elseif (isset($_REQUEST['rett']) && is_number($_REQUEST['rett']))
+    $Msg .= "&rett=".$_REQUEST['rett'];
+header("Location: bonus.php?action=msg&". (!empty($ResultMessage) ? "result=" .urlencode($ResultMessage):"").$Msg); 
 
 ?>
