@@ -2,11 +2,30 @@
 
 function delete_conn_record(elem_id, user_id, ip) {
  
-	ajax.get('ajax.php?action=remove_conn_status&ip=' + ip + '&userid=' + user_id, function (response) {
+	ajax.get('ajax.php?action=delete_conn_record&ip=' + ip + '&userid=' + user_id, function (response) {
         var x = json.decode(response); 
         if ( is_array(x)){
             if ( x[0] == true){
                $('#'+elem_id).remove();
+            } else {
+                alert(x[1]);
+            }
+        } else {    // error from ajax
+            alert(x);
+        } 
+	}); 
+}
+
+
+function unset_conn_status(elem_id, user_id, ip) {
+ 
+	ajax.get('ajax.php?action=remove_conn_status&ip=' + ip + '&userid=' + user_id, function (response) {
+        var x = json.decode(response); 
+        if ( is_array(x)){
+            if ( x[0] == true){
+               $('#'+elem_id).raw().firstChild.innerHTML = "?"; 
+               //$('#'+elem_id).raw().insertBefore(newElement, $('#'+elem_id).raw().firstChild)(); 
+               //'<span style="font-weight: bold; color:<?=$color?>;"><?=$show?></span>';
             } else {
                 alert(x[1]);
             }

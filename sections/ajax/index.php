@@ -64,6 +64,9 @@ switch ($_GET['action']){
 	case 'remove_conn_status':
 		include('remove_connstatus.php');
 		break;
+	case 'delete_conn_record':
+		include('delete_connrecord.php');
+		break;
 	
 	case 'watchlist_add':
 	case 'watchlist_remove':

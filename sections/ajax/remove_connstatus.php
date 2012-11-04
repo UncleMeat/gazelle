@@ -12,26 +12,21 @@ if(isset($_REQUEST['ip']) && isset($_REQUEST['userid']) ){
         die();
     }
  
-     
-    //$DB->query("DELETE FROM users_connectable_status
-    //             WHERE UserID='" . db_string($_REQUEST['userid']) . "' AND IP='" . db_string($_REQUEST['ip']) . "' ");
-    
     $now = time();
     $DB->query("INSERT INTO users_connectable_status (UserID, IP, Status, Time) 
-                    VALUES ( '" . db_string($_REQUEST['userid']) . "','" . db_string($_REQUEST['ip']) . "', 'unset','$now' )
-                    ON DUPLICATE KEY UPDATE Status='unset'");
+                         VALUES ( '" . db_string($_REQUEST['userid']) . "','" . db_string($_REQUEST['ip']) . "', 'unset','$now' )
+                    ON DUPLICATE KEY UPDATE Status='unset'"); 
+     
     $result = $DB->affected_rows();
     
-    $Cache->delete_value('connectable_'.$_REQUEST['userid']);
-    
     if ($result > 0) {
-        echo json_encode(array(true, "removed $result record for UserID: $_REQUEST[userid] &nbsp; IP: $_REQUEST[ip] "));
+        $Cache->delete_value('connectable_'.$_REQUEST['userid']);
+        echo json_encode(array(true, "unset status in $result record for UserID: $_REQUEST[userid]  IP: $_REQUEST[ip] "));
     }  elseif ($result == 0) {
-        echo json_encode(array(false, "no record to remove for UserID: $_REQUEST[userid] &nbsp; IP: $_REQUEST[ip] "));
+        echo json_encode(array(false, "could not unset status for UserID: $_REQUEST[userid]  IP: $_REQUEST[ip] "));
     } else {
-        echo json_encode(array(false, "error: failed to remove record for UserID: $_REQUEST[userid] &nbsp; IP: $_REQUEST[ip] "));
+        echo json_encode(array(false, "error: failed to unset status for UserID: $_REQUEST[userid]  IP: $_REQUEST[ip] "));
     } 
-    
     
 } else {
     // didnt get ip and port info
