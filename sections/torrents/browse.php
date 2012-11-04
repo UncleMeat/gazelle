@@ -597,10 +597,11 @@ $Bookmarks = all_bookmarks('torrent');
     // Start printing torrent list
     $row='a';
     $lastday = 0;
-    foreach ($Results as $GroupID => $Data) {   
+    foreach ($Results as $GroupID => $GData) {   
         list($GroupID2, $GroupName, $TagList, $Torrents, $FreeTorrent, $Image, $TotalLeechers, 
-                $NewCategoryID, $SearchText, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
+                $NewCategoryID, $SearchText, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($GData);
 
+        list($TorrentID, $Data) = each($Torrents);
         
         $day = date('j', strtotime($Data['Time'])  - $LoggedUser['TimeOffset']);
         if ($AllTorrents && $LoggedUser['SplitByDays'] && $lastday !== $day ) {
@@ -625,7 +626,6 @@ $Bookmarks = all_bookmarks('torrent');
 
         // Viewing a type that does not require grouping
 
-        list($TorrentID, $Data) = each($Torrents);
         $OverImage = $Image != '' ? $Image : '/static/common/noartwork/noimage.png';
         $OverName = mb_strlen($GroupName) <= 60 ? $GroupName : mb_substr($GroupName, 0, 56) . '...';
         $SL = ($TotalSeeders == 0 ? "<span class=r00>" . number_format($TotalSeeders) . "</span>" : number_format($TotalSeeders)) . "/" . number_format($TotalLeechers);
