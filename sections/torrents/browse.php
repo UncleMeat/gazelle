@@ -602,12 +602,12 @@ $Bookmarks = all_bookmarks('torrent');
                 $NewCategoryID, $SearchText, $TotalSeeders, $MaxSize, $TotalSnatched, $GroupTime) = array_values($Data);
 
         
-        $day = date('j', $Data['Time'] - $LoggedUser['TimeOffset']);
+        $day = date('j', strtotime($Data['Time'])  - $LoggedUser['TimeOffset']);
         if ($AllTorrents && $LoggedUser['SplitByDays'] && $lastday !== $day ) {
 ?>
     <tr class="colhead">
         <td colspan="10" class="center">
-            <?=date('l jS F Y', $Data['Time'] - $LoggedUser['TimeOffset'])?>
+            <?=$day; //date('l jS F Y', $Data['Time'] - $LoggedUser['TimeOffset'])?>
         </td>
     </tr>
 <?
