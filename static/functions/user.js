@@ -17,18 +17,17 @@ function delete_conn_record(elem_id, user_id, ip) {
 }
 
 
-function unset_conn_status(elem_id, user_id, ip) {
+function unset_conn_status(elemstatus_id, elemlink_id, user_id, ip) {
  
 	ajax.get('ajax.php?action=remove_conn_status&ip=' + ip + '&userid=' + user_id, function (response) {
         var x = json.decode(response); 
         if ( is_array(x)){
             if ( x[0] == true){
-               $('#'+elem_id).html("?"); 
-               $('#'+elem_id).remove_class("red"); 
-               $('#'+elem_id).remove_class("green"); 
-               $('#'+elem_id).add_class("grey"); 
-               //$('#'+elem_id).raw().insertBefore(newElement, $('#'+elem_id).raw().firstChild)(); 
-               //'<span style="font-weight: bold; color:<?=$color?>;"><?=$show?></span>';
+               $('#'+elemstatus_id).html("?"); 
+               $('#'+elemstatus_id).remove_class("red"); 
+               $('#'+elemstatus_id).remove_class("green"); 
+               $('#'+elemstatus_id).add_class("grey"); 
+               $('#'+elemlink_id).remove();
             } else {
                 alert(x[1]);
             }

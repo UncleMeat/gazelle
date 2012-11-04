@@ -529,13 +529,13 @@ if (check_perms('users_mod') || $OwnProfile) {
             }
             ?>
                 <span id="statuscont<?=$elemid?>" title="status last checked at <?=time_diff($TimeChecked,2,false,false,0)?>">
-                    <span id="status<?=$elemid?>" class="<?=$color?>"><?=$show?></span> &nbsp; (IP: <?=$IP?>)
+                    <span id="status<?=$elemid?>" class="<?=$color?>"><?=$show?></span> &nbsp; <?=$IP?> 
                 <?   if ($Status!='unset') {  ?>
-                &nbsp; [<a style="cursor: pointer;" onclick="unset_conn_status('status<?=$elemid?>','<?=$UserID?>','<?=$IP?>')" title="Set this connectable record to status=unset">U</a>]
+                &nbsp; &nbsp;<a id="unset<?=$elemid?>" style="cursor: pointer;" onclick="unset_conn_status('status<?=$elemid?>', 'unset<?=$elemid?>', '<?=$UserID?>','<?=$IP?>')" title="Set this connectable record to status=unset">[U]</a>
                 <?   }   ?>    
-                &nbsp; [<a style="cursor: pointer;" onclick="delete_conn_record('statuscont<?=$elemid?>','<?=$UserID?>','<?=$IP?>')" title="Remove this connectable record">X</a>]
+                 <a style="cursor: pointer;" onclick="delete_conn_record('statuscont<?=$elemid?>','<?=$UserID?>','<?=$IP?>')" title="Remove this connectable record">[X]</a>
                     <? if ($Port) { ?>
-                    [<a href="user.php?action=connchecker&checkuser=<?=$UserID?>&checkip=<?=$IP?>&checkport=<?=$Port?>" title="check now">check</a>]
+                 [<a href="user.php?action=connchecker&checkuser=<?=$UserID?>&checkip=<?=$IP?>&checkport=<?=$Port?>" title="check now">check</a>]
                     <? } ?>
                 </span><br/>
             <? 
