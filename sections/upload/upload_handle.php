@@ -320,7 +320,7 @@ send_irc('PRIVMSG #' . NONSSL_SITE_URL . '-announce-ssl :' . $AnnounceSSL);
 //$Item = $Feed->item($Title, $Text->strip_bbcode($Body), 'torrents.php?action=download&amp;authkey=[[AUTHKEY]]&amp;torrent_pass=[[PASSKEY]]&amp;id=' . $TorrentID, $LoggedUser['Username'], 'torrents.php?id=' . $GroupID, trim($Properties['TagList']));
 
 $Item = $Feed->torrent($Title, 
-                       "\nCategory: ".$NewCategories[(int)$_POST['category']]['name']." \n " . get_size($TotalSize) . " \n Added: $sqltime \n Description: ". $Text->strip_bbcode($Body), 
+                       "<br />Category: ".$NewCategories[(int)$_POST['category']]['name']." <br /> " . get_size($TotalSize) . " <br /> Added: $sqltime <br /> Description: ". $Text->strip_bbcode($Body), 
                         'torrents.php?id=' . $GroupID, 
                         'torrents.php?action=download&amp;authkey=[[AUTHKEY]]&amp;torrent_pass=[[PASSKEY]]&amp;id=' . $TorrentID, 
                         $LoggedUser['Username'], 

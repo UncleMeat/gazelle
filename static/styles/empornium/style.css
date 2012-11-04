@@ -1000,6 +1000,10 @@ span.green {
     font-weight: bold;
     color: green;
 }
+span.grey {
+    font-weight: bold;
+    color: darkgrey;
+}
 
 
 table {
