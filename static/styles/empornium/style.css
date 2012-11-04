@@ -295,7 +295,7 @@ table.userinfo_stats td {
 }
 #major_stats_left {
     position: absolute;
-    margin: -20px 0 0 10px;
+    margin: 0px 0 0 10px;
 }
 #major_stats { 
     float:right;

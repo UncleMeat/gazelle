@@ -499,7 +499,13 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 	</div>
     </div>
     
-    <div id="header_bottom"> 
+    <div id="header_bottom">
+            <div id="major_stats_left">
+                <ul id="userinfo_major">
+                        <li id="nav_logout" class="brackets"><a href="logout.php?auth=<?=$LoggedUser['AuthKey']?>">Logout</a></li>
+                      <li id="nav_donate" class="brackets"><a href="donate.php">Donate</a></li>
+                </ul>
+            </div>
         <?    
            
 $TimeStampNow = time();
@@ -521,12 +527,6 @@ if($PFLTimeStamp >= $TimeStampNow) {
         <?  }  ?>
 
       
-            <div id="major_stats_left">
-                <ul id="userinfo_major">
-                        <li id="nav_logout" class="brackets"><a href="logout.php?auth=<?=$LoggedUser['AuthKey']?>">Logout</a></li>
-                      <li id="nav_donate" class="brackets"><a href="donate.php">Donate</a></li>
-                </ul>
-            </div>
             <div id="major_stats">
 <?
 
