@@ -441,13 +441,15 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
 				<form action="torrents.php" method="get">
 <? if(isset($LoggedUser['SearchType']) && $LoggedUser['SearchType']) { // Advanced search searchtext=anal&action=advanced ?> 
 					<input type="hidden" name="action" value="advanced" />
+<? } else { ?>
+					<input type="hidden" name="tags_type" value="1" />
 <? } ?>
 					<input
 						accesskey="t"
 						spellcheck="false"
 						onfocus="if (this.value == 'Search Torrents') this.value='';"
 						onblur="if (this.value == '') this.value='Search Torrents';"
-						value="Search Torrents" type="text" name="searchtext" size="17" title="Search Torrents - enter text and press return to search"
+						value="Search Torrents" type="text" name="taglist" size="17" title="Search Torrents - enter text and press return to search"
  
 					/>
 				</form>
