@@ -189,53 +189,48 @@ show_header($Username,'jquery,jquery.cookie,user,bbcode,requests,watchlist');
 <div class="thin">
 	<h2><?=format_username($UserID, $Username, false, $Warned, $Enabled == 2 ? false : true, $ClassID, $CustomTitle, true)?></h2>
 	<div class="linkbox">
-<? if (!$OwnProfile) { ?>
+<?  if (!$OwnProfile) { ?>
 		[<a href="inbox.php?action=compose&amp;to=<?=$UserID?>" title="Send a Private Message to <?=$Username?>">Send PM</a>]
 <? 	
-    $DB->query("SELECT Type FROM friends WHERE UserID='$LoggedUser[ID]' AND FriendID='$UserID'");
-    if($DB->record_count() > 0) list($FType)=$DB->next_record();
+        $DB->query("SELECT Type FROM friends WHERE UserID='$LoggedUser[ID]' AND FriendID='$UserID'");
+        if($DB->record_count() > 0) list($FType)=$DB->next_record();
     
-	if(!$FType || $FType != 'friends' ) { ?>
-		[<a href="friends.php?action=add&amp;friendid=<?=$UserID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">Add to friends</a>]
-<?	} elseif ($FType == 'friends'){ ?>
-		[<a href="friends.php?action=Defriend&amp;friendid=<?=$UserID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">Remove friend</a>]
-<?  }
-      if(!$FType || $FType != 'blocked' ) { ?>
-		[<a href="friends.php?action=add&amp;friendid=<?=$UserID?>&amp;type=blocked&amp;auth=<?=$LoggedUser['AuthKey']?>">Block User</a>]
-<?	} elseif ($FType == 'blocked'){ ?>
-		[<a href="friends.php?action=Unblock&amp;friendid=<?=$UserID?>&amp;type=blocked&amp;auth=<?=$LoggedUser['AuthKey']?>">Remove block</a>]
-<?  } ?> 
-            
+        if(!$FType || $FType != 'friends' ) { ?>
+            [<a href="friends.php?action=add&amp;friendid=<?=$UserID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">Add to friends</a>]
+<?      } elseif ($FType == 'friends'){ ?>
+            [<a href="friends.php?action=Defriend&amp;friendid=<?=$UserID?>&amp;auth=<?=$LoggedUser['AuthKey']?>">Remove friend</a>]
+<?      }
+        if(!$FType || $FType != 'blocked' ) { ?>
+            [<a href="friends.php?action=add&amp;friendid=<?=$UserID?>&amp;type=blocked&amp;auth=<?=$LoggedUser['AuthKey']?>">Block User</a>]
+<?      } elseif ($FType == 'blocked'){ ?>
+            [<a href="friends.php?action=Unblock&amp;friendid=<?=$UserID?>&amp;type=blocked&amp;auth=<?=$LoggedUser['AuthKey']?>">Remove block</a>]
+<?      } ?>
 		[<a href="reports.php?action=report&amp;type=user&amp;id=<?=$UserID?>">Report User</a>] 
 <?
+        $links2 = '<br/>';
+    }
 
-}
-
-if (check_perms('users_edit_profiles', $Class)) {
-?>
-		[<a href="user.php?action=edit&amp;userid=<?=$UserID?>">Settings</a>]
-<? }
-
-if (check_perms('users_view_invites', $Class)) {
-?>
-		[<a href="user.php?action=invite&amp;userid=<?=$UserID?>">Invites</a>]
-<? }
-if (check_perms('admin_manage_permissions', $Class)) {
-?>
-		[<a href="user.php?action=permissions&amp;userid=<?=$UserID?>">Permissions</a>]
-<? }
-if (check_perms('users_logout', $Class) && check_perms('users_view_ips', $Class)) {
-?>
-		[<a href="user.php?action=sessions&amp;userid=<?=$UserID?>">Sessions</a>]
-<? }
-if (check_perms('admin_reports')) {
-?>
-		[<a href="reportsv2.php?view=reporter&amp;id=<?=$UserID?>">Reports</a>]
-<? }
-if (check_perms('users_mod')) {
-?>
-		[<a href="userhistory.php?action=token_history&amp;userid=<?=$UserID?>">Slots</a>]
-<? }
+    if (check_perms('users_edit_profiles', $Class)) { 
+		$links2 .= '[<a href="user.php?action=edit&amp;userid='.$UserID.'">Settings</a>]';
+    }
+    if (check_perms('users_view_invites', $Class)) {
+		$links2 .= '[<a href="user.php?action=invite&amp;userid='.$UserID.'">Invites</a>]';
+    }
+    if (check_perms('admin_manage_permissions', $Class)) {
+		$links2 .= '[<a href="user.php?action=permissions&amp;userid='.$UserID.'">Permissions</a>]';
+    }
+    if (check_perms('users_logout', $Class) && check_perms('users_view_ips', $Class)) {
+		$links2 .= '[<a href="user.php?action=sessions&amp;userid='.$UserID.'">Sessions</a>]';
+    }
+    if (check_perms('admin_reports')) {
+		$links2 .= '[<a href="reportsv2.php?view=reporter&amp;id='.$UserID.'">Reports</a>]';
+    }
+    if (check_perms('users_mod')) {
+		$links2 .= '[<a href="userhistory.php?action=token_history&amp;userid='.$UserID.'">Slots</a>]';
+    }
+ 
+    if ($links2) echo $links2;
+ 
 if (check_perms('users_manage_cheats', $Class)) {
     $DB->query("SELECT UserID FROM users_watch_list WHERE UserID='$UserID'"); ?>
     <span id="wl">
