@@ -5,6 +5,7 @@
 
 authorize();
 
+if(!check_perms('site_submit_requests')) error(403);
 
 if($_POST['action'] != "takenew" &&  $_POST['action'] != "takeedit") {
 	error(0);

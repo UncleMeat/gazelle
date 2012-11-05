@@ -9,6 +9,7 @@
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
 
+if(!check_perms('site_submit_requests')) error(403);
 
 $NewRequest = ($_GET['action'] == "new" ? true : false);
 
@@ -70,22 +71,33 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests,bbc
 <div class="thin">
 	<h2><?=($NewRequest ? "Create a request" : "Edit a request")?></h2>
 	
-      <div class="head"><?=($NewRequest ? "New" : "Edit")?></div>
+	<div class="linkbox">
+            <a href="requests.php">[Search requests]</a> 
+            <a href="requests.php?type=created">[My requests]</a>
+<?	 if(check_perms('site_vote')){?> 
+            <a href="requests.php?type=voted">[Requests I've voted on]</a>
+<?		}  ?>
+ 
+	</div>
+      <div class="head"><?=($NewRequest ? "Create New Request" : "Edit Request")?></div>
 	<div class="box pad">
 		<form action="" method="post" id="request_form" onsubmit="Calculate();">
-			<div>
 <? if(!$NewRequest) { ?>
 				<input type="hidden" name="requestid" value="<?=$RequestID?>" /> 
 <? } ?>
 				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 				<input type="hidden" name="action" value="<?=$NewRequest ? 'takenew' : 'takeedit'?>" />
-			</div>
 			
 			<table>
 				<tr>
 					<td colspan="2" class="center">Please make sure your request follows <a href="articles.php?topic=requests">the request rules!</a></td>
 				</tr>
 <?	if($NewRequest || $CanEdit) { ?>
+                <tr class="pad">
+                    <td colspan="2" class="center">
+                        <strong class="important_text">NOTE: Once you create a  request you can not get the bounty back, it is gone forever.</strong>
+                    </td>
+                </tr>
 				<tr>
 					<td class="label">
 						Category
@@ -104,8 +116,8 @@ show_header(($NewRequest ? "Create a request" : "Edit a request"), 'requests,bbc
 						<input type="text" name="title" class="long" value="<?=(!empty($Title) ? display_str($Title) : '')?>" />
 					</td>
 				</tr>
-<?	} ?>
-<?	if($NewRequest || $CanEdit) { ?>
+<?	//} ?>
+<?	//if($NewRequest || $CanEdit) { ?>
 				<tr id="image_tr">
                             <td class="label">Cover Image</td>
                             <td>    <strong>Enter the full url for your image.</strong><br/>

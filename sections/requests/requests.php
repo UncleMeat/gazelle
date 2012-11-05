@@ -212,28 +212,31 @@ show_header($Title, 'requests');
 
 ?>
 <div class="thin">
-      <h2>Requests</h2>
+    <h2>Requests</h2>
+      
 	<div class="linkbox">
 <?	if (!$BookmarkView) { ?>
+        <a href="requests.php">[Search requests]</a>
 <?		if(check_perms('site_submit_requests')){ ?> 
-		<a href="requests.php?action=new">[New request]</a>
-		<a href="requests.php?type=created">[My requests]</a>
-<?		} else { ?>
-            <em> <a href="articles.php?topic=requests">You must be a Good Perv with a ratio of at least 1.05 to be able to make a Request.</a></em>
-<?          }
+            <a href="requests.php?action=new">[New request]</a>
+            <a href="requests.php?type=created">[My requests]</a>
+<?		}
 		if(check_perms('site_vote')){?> 
-		<a href="requests.php?type=voted">[Requests I've voted on]</a>
-<?		} ?>
-<?	} else { ?>
+            <a href="requests.php?type=voted">[Requests I've voted on]</a>
+<?		} 
+ 		if(!check_perms('site_submit_requests')){ ?> 
+            <br/><em> <a href="articles.php?topic=requests">You must be a Good Perv with a ratio of at least 1.05 to be able to make a Request.</a></em>
+<?      }
+ 	} else { ?>
 		<a href="bookmarks.php?type=torrents">[Torrents]</a>
 		<a href="bookmarks.php?type=collages">[Collages]</a>
 		<a href="bookmarks.php?type=requests">[Requests]</a>
 <?	} ?>
 	</div>
       
-    <div class="head"><?=$Title?></div>
-	<div class="box">
 		<form action="" method="get">
+    <div class="head"><?=$Title?></div>
+	<div class="box pad">
 <?	if ($BookmarkView) { ?>
 			<input type="hidden" name="action" value="view" />
 			<input type="hidden" name="type" value="requests" />
@@ -244,7 +247,7 @@ show_header($Title, 'requests');
 <?	if(!empty($_GET['userid']) && is_number($_GET['userid'])) { ?>
 			<input type="hidden" name="userid" value="<?=$_GET['userid']?>" />
 <?	} ?>
-			<table cellpadding="6" cellspacing="1" border="0" class="border" width="100%">
+			<table cellpadding="6" cellspacing="1" border="0" class="" width="100%">
 				<tr>
 					<td class="label">Search terms:</td>
 					<td>
@@ -280,7 +283,7 @@ show_header($Title, 'requests');
 					</td>
 				</tr>
 <?	*/} ?>
-			</table>
+			</table><br/>
 			<table class="cat_list">
 <?
 $x=0;
@@ -314,8 +317,8 @@ foreach($NewCategories as $Cat) {
 					</td>
 				</tr>
 			</table>	
-		</form>
 	</div>
+		</form>
 	
 	<div class="linkbox">
 		<?=$PageLinks?>
