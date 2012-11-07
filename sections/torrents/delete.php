@@ -27,30 +27,33 @@ if($Snatches > 4 && !check_perms('torrents_delete')) { // Should this be torrent
 show_header('Delete torrent', 'reportsv2');
 ?>
 <div class="thin center">
-	<div class="box" style="width:600px; margin:0px auto;">
-		<div class="head colhead">
-			Delete torrent
-		</div>
-		<div class="pad">
-			<form action="torrents.php" method="post">
-				<input type="hidden" name="action" value="takedelete" />
-				<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-				<input type="hidden" name="torrentid" value="<?=$TorrentID?>" />
-				<strong>Reason: </strong>
-				<select name="reason">
-					<option value="Dead">Dead</option>
-					<option value="Dupe">Dupe</option>
-					<option value="Trumped">Trumped</option>
-					<option value="Rules Broken">Rules broken</option>
-					<option value="" selected="selected">Other</option>
-				</select>
-				&nbsp;
-				<strong>Extra info: </strong>
-				<input type="text" name="extra" size="30" />
-				<input value="Delete" type="submit" />
-			</form>
-		</div>
-	</div>
+    <h2>Delete torrent </h2>
+    <div style="width:80%; margin:0px auto;">
+        <div class="head">Basic delete</div>
+        <div class="box pad" >
+            <div class="pad">
+                <form action="torrents.php" method="post">
+                    <input type="hidden" name="action" value="takedelete" />
+                    <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+                    <input type="hidden" name="torrentid" value="<?=$TorrentID?>" />
+                    <strong>Reason: </strong>
+                    <select name="reason">
+                        <option value="Dead">Dead</option>
+                        <option value="Dupe">Dupe</option>
+                        <!--<option value="Trumped">Trumped</option>-->
+                        <option value="Screenshot Rules Broken">Screenshot Rules broken</option>
+                        <option value="Description Rules Broken">Description Rules broken</option>
+                        <option value="Rules Broken">Rules broken</option>
+                        <option value="" selected="selected">Other</option>
+                    </select>
+                    &nbsp;
+                    <strong>Extra info: </strong>
+                    <input type="text" name="extra" size="30" />
+                    <input value="Delete" type="submit" />
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <?
 if(check_perms('admin_reports')) {
@@ -93,6 +96,7 @@ if(check_perms('admin_reports')) {
         $BBName = "[url=torrents.php?id=$GroupID]$GroupName"."[/url] (".get_size($Size).")" ; 
 ?>	
 	<div id="report<?=$ReportID?>">
+        <div class="head">Use Report resolve system to delete (much better logging/auto actions)</div>
 		<form id="report_form<?=$ReportID?>" action="reports.php" method="post">
 			<? 
 				/*
@@ -112,7 +116,7 @@ if(check_perms('admin_reports')) {
 				<input type="hidden" id="pm_type<?=$ReportID?>" name="pm_type" value="Uploader" />
 				<input type="hidden" id="from_delete<?=$ReportID?>" name="from_delete" value="<?=$GroupID?>" />
 			</div>
-			<table cellpadding="5">
+			<table class="report" cellpadding="5">
 				<tr>
 					<td class="label">Torrent:</td>
 					<td colspan="3">
