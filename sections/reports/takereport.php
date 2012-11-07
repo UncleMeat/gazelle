@@ -1,8 +1,12 @@
 <?
 authorize();
 
-if(empty($_POST['id']) || !is_number($_POST['id']) || empty($_POST['type']) || ($_POST['type'] != "request_update" && empty($_POST['reason']))) {
-	error(404);
+if(empty($_POST['id']) || !is_number($_POST['id']) || empty($_POST['type']) ) {
+	error(0);
+}
+    
+if ($_POST['type'] != "request_update" && empty($_POST['reason'])) {
+	error("You must enter a reason for your report");
 }
 
 include(SERVER_ROOT.'/sections/reports/array.php');

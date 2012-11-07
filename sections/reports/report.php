@@ -3,7 +3,7 @@
 include(SERVER_ROOT.'/sections/reports/array.php');
 
 if(empty($_GET['type']) || empty($_GET['id']) || !is_number($_GET['id'])) {
-	error(404);
+	error(0);
 }
 
 if(!array_key_exists($_GET['type'], $Types)) {
@@ -92,7 +92,7 @@ show_header('Report a '.$Type['title'],'bbcode');
 ?>
 <div class="thin">
 	<h2>Report <?=$Type['title']?></h2>
-	<h3>Reporting guidelines</h3>
+	<div class="head">Reporting guidelines</div>
 	<div class="box pad">
 		<p>Following these guidelines will help the moderators deal with your report in a timely fashion. </p>
 		<ul>
@@ -118,7 +118,7 @@ switch($Short) {
 		break;
 	case "request_update" :
 ?>
-	<p>You are reporting the request:</p>
+	<div class="head">You are reporting the request:</div>
 	<table>
 		<tr class="colhead">
 			<td width="20%">Title</td>
@@ -157,7 +157,7 @@ switch($Short) {
 		break;
 	case "request" :
 ?>
-	<p>You are reporting the request:</p>
+	<div class="head">You are reporting the request:</div>
 	<table>
 		<tr class="colhead">
 			<td width="20%">Title</td>
@@ -174,8 +174,8 @@ switch($Short) {
 		break;
 	case "collage" :
 ?>
-		<p>You are reporting the collage:</p>
-		<table>
+	<div class="head">You are reporting the collage:</div>
+	<table>
 		<tr class="colhead">
 			<td width="20%">Title</td>
 			<td>Description</td>
@@ -189,8 +189,8 @@ switch($Short) {
 		break;
 	case "thread" :
 ?>
-		<p>You are reporting the thread:</p>
-		<table>
+	<div class="head">You are reporting the thread:</div>
+	<table>
 		<tr class="colhead">
 			<td width="20%">Username</td>
 			<td>Title</td>
@@ -204,8 +204,8 @@ switch($Short) {
 		break;
 	case "post" :
 ?>
-		<p>You are reporting the post:</p>
-		<table>
+	<div class="head">You are reporting the post:</div>
+	<table>
 		<tr class="colhead">
 			<td width="20%">Username</td>
 			<td>Body</td>
@@ -221,8 +221,8 @@ switch($Short) {
 	case "torrents_comment" :
 	case "collages_comment" :
 ?>
-		<p>You are reporting the <?=$Types[$Short]['title']?>:</p>
-		<table>
+	<div class="head">You are reporting the <?=$Types[$Short]['title']?>:</div>
+	<table>
 		<tr class="colhead">
 			<td width="20%">Username</td>
 			<td>Body</td>
@@ -237,14 +237,15 @@ switch($Short) {
 }
 if(empty($NoReason)) {
 ?>
-	<h3>Reason</h3>
+    <br/>
+	<div class="head">Your reason for reporting:</div>
 	<div class="box pad center">
 		<form action="" method="post">
 			<input type="hidden" name="action" value="takereport" />
 			<input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 			<input type="hidden" name="id" value="<?=$ID?>" />
 			<input type="hidden" name="type" value="<?=$Short?>" />
-			<textarea rows="10" cols="95" name="reason"></textarea><br /><br />
+			<textarea rows="10" class="long" name="reason"></textarea><br /><br />
 			<input type="submit" value="Submit report" />
 		</form>
 	</div>
