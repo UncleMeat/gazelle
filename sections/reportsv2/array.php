@@ -33,7 +33,8 @@ $Types = array(
             'delete' => '1',
             'pm' => 'Your torrent has been deleted for being a duplicate of another torrent.',
             'bounty' => 400
-        )
+        ),
+        'article' => array ('duperules', "Dupe Rules")
     ),
     'banned' => array(
         'priority' => '23',
@@ -49,7 +50,8 @@ $Types = array(
             'delete' => '1',
             'pm' => 'The releases on the Do Not Upload list (on the upload page) are currently forbidden from being uploaded from the site. Do not upload them unless your torrent meets a condition specified in the comment.',
             'bounty' => 400
-        )
+        ),
+        'article' => array ('forbiddencontent', "Forbidden Content (Do Not Upload list)")
     ),
     'urgent' => array(
         'priority' => '28',
@@ -106,11 +108,11 @@ $Types = array(
             'bounty' => 0
         )
     ),*/
-    'images' => array(
+    'screens' => array(
         'priority' => '8',
         'title' => 'No Images',
         'report_messages' => array(
-            'If possible, please provide a link to an accurate image',
+            'If possible, please provide a link to proper screens',
         ),
         'report_fields' => array(
             'link' => '0'
@@ -119,9 +121,10 @@ $Types = array(
             'upload' => '0',
             'warn' => '1',
             'delete' => '0',
-            'pm' => 'The torrent must have an image.',
+            'pm' => 'The torrent must have screenshots as per the rules.',
             'bounty' => 0
-        )
+        ),
+        'article' => array ('screenrules', "Screenshot Rules")
     ),
     'description' => array(
         'priority' => '8',
@@ -138,7 +141,8 @@ $Types = array(
             'delete' => '0',
             'pm' => 'Torrents must have a description that describes the content of the torrent.',
             'bounty' => 0
-        )
+        ),
+        'article' => array ('descrules', "Description Rules")
     ),
     'pack' => array(
         'priority' => '2',
@@ -155,7 +159,8 @@ $Types = array(
             'delete' => '1',
             'pm' => 'Torrents can not contain compressed files such as .rar or .zip, unless it contains a large number of images.',
             'bounty' => 0
-        )
+        ),
+        'article' => array ('ziprules', "Compressed Files Rules")
     ),
     'virus' => array(
         'priority' => '6',

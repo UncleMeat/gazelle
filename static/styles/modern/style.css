@@ -1983,7 +1983,7 @@ ul .invitetree {
 
 /* bbcode */
 
-a.anchor, a.anchor:visited, a.anchor:hover {
+.anchor, a.anchor:visited, a.anchor:hover {
     font-family:"Arial Black", "Arial Bold", Gadget, sans-serif;
     font-weight: normal;
     font-size: 1.5em;

@@ -14,7 +14,7 @@
 authorize();
 
 if(!is_number($_POST['torrentid'])) {
-	error(404);
+	error(0);
 } else {
 	$TorrentID = $_POST['torrentid'];
 }
@@ -41,10 +41,11 @@ foreach($ReportType['report_fields'] as $Field => $Value) {
 
 if(!empty($_POST['sitelink'])) {
 	if(preg_match_all('/((https?:\/\/)?([a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*\.)?'.NONSSL_SITE_URL.'\/torrents.php\?(id=[0-9]+\&)?id=([0-9]+))/is', $_POST['sitelink'], $Matches)) {
-		$ExtraIDs = implode(' ', $Matches[6]);
-		if(in_array($TorrentID, $Matches[6])) {
-			$Err = "The extra permalinks you gave included the link to the torrent you're reporting!";
-		}
+		// ** mifune: torrent id is not groupid, strange mixup
+        ////$ExtraIDs = implode(' ', $Matches[6]);
+		//if(in_array($TorrentID, $Matches[6])) {
+		//	$Err = "The extra permalinks you gave included the link to the torrent you're reporting!";
+		//}
 	} else {
 		$Err = "Permalink was incorrect, should look like http://".NONSSL_SITE_URL."/torrents.php?id=12345";
 	}
@@ -97,8 +98,8 @@ if($DB->record_count() < 1) {
 
 if(!empty($Err)) {
 	error($Err);
-	include(SERVER_ROOT.'/sections/reportsv2/report.php');
-	die();
+	//include(SERVER_ROOT.'/sections/reportsv2/report.php');
+	//die();
 }
 
 $DB->query("SELECT ID FROM reportsv2 WHERE TorrentID=".$TorrentID." AND ReporterID=".db_string($LoggedUser['ID'])." AND ReportedTime > '".time_minus(3)."'");
