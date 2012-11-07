@@ -26,7 +26,7 @@ if(isset($_REQUEST['ip']) && isset($_REQUEST['port']) && isset($_REQUEST['userid
 		$Octets[3] < 0 ||
 		$Octets[3] > 255 ||
 		$Octets[0] == 127 ||
-		$Octets[0] == 192
+		$Octets[0] == 192 && $Octets[1] == 168
 	) {
 		//echo '-3'; //'Invalid IP');
         echo json_encode(array(false, 'Invalid IP'));

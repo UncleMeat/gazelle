@@ -17,11 +17,21 @@ body {
 
 table {
     font-size: inherit;
+    margin: 0px auto;
 }
 
 a {
     color:#a5a5a5;
     text-decoration: none;
+}
+
+.strong {
+    font-weight: bold;
+}
+.stronger {
+    font-size: large;
+    color: lightblue;
+    font-weight: bold;
 }
 
 a:hover {

@@ -1,7 +1,34 @@
 -- fetch data from emp.users into gazelle.users_main
 
-insert into `gazelle`.`users_main` (`ID`, `Username`, `Email`, `PassHash`, `Secret`, `Title`, `PermissionID`, `Enabled`, `Uploaded`, `Downloaded`, `LastLogin`, `LastAccess`, `IP`, `torrent_pass`, `Credits`, `FLTokens`)
-SELECT `Id`, `username`, `email`, `passhash`, `secret`, `title`, '2', '1', `uploaded`, `downloaded`, IF(`last_login`=0,'0000-00-00 00:00:00', from_unixtime(`last_login`)), IF(`last_access`=0,'0000-00-00 00:00:00', from_unixtime(`last_access`)), `Ip`, `passkey`, `bonuspoints`, `freeslots` FROM emp.users;
+--insert into `gazelle`.`users_main` (`ID`, `Username`, `Email`, `PassHash`, `Secret`, `Title`, `PermissionID`, `Enabled`, `Uploaded`, `Downloaded`, `LastLogin`, `LastAccess`, `IP`, `torrent_pass`, `Credits`, `FLTokens`)
+-- SELECT `Id`, `username`, `email`, `passhash`, `secret`, `title`, '2', '1', `uploaded`, `downloaded`, IF(`last_login`=0,'0000-00-00 00:00:00', from_unixtime(`last_login`)), IF(`last_access`=0,'0000-00-00 00:00:00', from_unixtime(`last_access`)), `Ip`, `passkey`, `bonuspoints`, `freeslots` FROM emp.users;
+
+insert into `gazelle`.`users_main` (`ID`, `Username`, `Email`, `PassHash`, `Secret`, `Title`, `PermissionID`, `Enabled`, `Uploaded`, `Downloaded`, `LastLogin`, `LastAccess`, `IP`, `torrent_pass`, `Credits`, `FLTokens`, `Flag`)
+SELECT `eu`.`id`, `username`, `email`, `passhash`, `secret`, `title`, '2', '1', `uploaded`, `downloaded`, 
+        IF(`last_login`=0,'0000-00-00 00:00:00', from_unixtime(`last_login`)), IF(`last_access`=0,'0000-00-00 00:00:00', from_unixtime(`last_access`)), 
+        `Ip`, `passkey`, `bonuspoints`, `freeslots`, IF( `ec`.`name` is null, 'Empornium', REPLACE( `ec`.`name`, ' ', '-' )) FROM emp.users AS eu LEFT JOIN emp.countries AS ec ON ec.id = eu.country;
+
+UPDATE `gazelle`.`users_main` 
+SET  `Flag` = 'Antigua-and-Barbuda'
+WHERE `Flag` = 'Antigua-Barbuda';
+
+UPDATE `gazelle`.`users_main` 
+SET  `Flag` = 'Bosnia-and-Herzegovina'
+WHERE `Flag` = 'Bosnia-Herzegovina';
+
+UPDATE `gazelle`.`users_main` 
+SET  `Flag` = 'Trinidad-and-Tobago'
+WHERE `Flag` = 'Trinidad-&-Tobago';
+
+UPDATE `gazelle`.`users_main` 
+SET  `Flag` = 'United-States'
+WHERE `Flag` = 'United-States-of-America';
+
+UPDATE `gazelle`.`users_main` 
+SET  `Flag` = 'Samoa'
+WHERE `Flag` = 'Western-Samoa';
+
+ 
 
 -- fetch data from emp.users into gazelle.users_info
 
@@ -83,13 +110,7 @@ select `id`, `topicid`, `userid`, from_unixtime(`added`), `body`, `editedby`, fr
 --
 
 INSERT INTO gazelle.forums_topics (ID, Title, AuthorID, IsLocked, IsSticky, ForumID, NumPosts, LastPostID, LastPostTime, LastPostAuthorID)
-SELECT 
-id, 
-subject, 
-userid, 
-0, 
-if(sticky='yes', '1', '0') as sticky, 
-forumid,
+SELECT id, subject, userid, 0, if(sticky='yes', '1', '0') as sticky, forumid,
 (select count(*) as count from emp.posts where emp.posts.topicid=emp.topics.id) as numposts,
 lastpost, 
 (select from_unixtime(added) as added from emp.posts where emp.posts.id=lastpost) as time,
@@ -100,14 +121,7 @@ emp.topics;
 --
 
 insert into gazelle.forums (ID, CategoryID, Sort, Name, Description, NumTopics, NumPosts, LastPostID, LastPostAuthorID, LastPostTopicID, LastPostTime)
-select 
-id, 
-1,
-sort, 
-Name, 
-description, 
-topiccount, 
-postcount,
+select id, 1, sort, Name, description, topiccount, postcount, 
 
 (select p.id from emp.topics as t
 inner join emp.posts as p on t.id=p.topicid

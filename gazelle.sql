@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Databas: `gazelle`
+-- Database: `gazelle`
 --
 CREATE DATABASE IF NOT EXISTS gazelle;
 
@@ -473,8 +473,7 @@ CREATE TABLE IF NOT EXISTS `forums_last_read_topics` (
   `PostID` int(10) NOT NULL,
   PRIMARY KEY (`UserID`,`TopicID`),
   KEY `TopicID` (`TopicID`),
-  KEY `UserID` (`UserID`),
-  KEY `TopicID_2` (`TopicID`)
+  KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -714,8 +713,7 @@ CREATE TABLE IF NOT EXISTS `ip_bans` (
   `ToIP` int(11) unsigned NOT NULL,
   `Reason` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`),
-  UNIQUE KEY `FromIP_2` (`FromIP`,`ToIP`),
-  KEY `FromIP` (`FromIP`,`ToIP`),
+  UNIQUE KEY `FromIP` (`FromIP`,`ToIP`),
   KEY `ToIP` (`ToIP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -1252,7 +1250,7 @@ CREATE TABLE IF NOT EXISTS `staff_checking` (
   `UserID` int(10) unsigned NOT NULL,
   `TimeOut` int(10) unsigned NOT NULL,
   `TimeStarted` datetime NOT NULL,
-  `Location` varchar(128) NOT NULL,
+  `Location` varchar(256) NOT NULL,
   `IsChecking` ENUM( '0', '1' ) NOT NULL DEFAULT '0',
   PRIMARY KEY (`UserID`),
   KEY ( `IsChecking` )
@@ -1277,7 +1275,7 @@ CREATE TABLE IF NOT EXISTS `staff_pm_conversations` (
   `Unread` tinyint(1) DEFAULT NULL,
   `ResolverID` int(11) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1292,7 +1290,7 @@ CREATE TABLE IF NOT EXISTS `staff_pm_messages` (
   `Message` text,
   `ConvID` int(11) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1305,7 +1303,7 @@ CREATE TABLE IF NOT EXISTS `staff_pm_responses` (
   `Message` text,
   `Name` text,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2030,7 +2028,7 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   `CreditsDaily` DOUBLE( 11, 2 ) NOT NULL DEFAULT '0.00',
   `Credits` double(11,2) NOT NULL DEFAULT '0.00',
   `Signature` text,
-  `Flag` VARCHAR( 50 ) NOT NULL DEFAULT '??',
+  `Flag` VARCHAR( 50 ) NOT NULL DEFAULT '',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Username` (`Username`),
   KEY `Email` (`Email`),

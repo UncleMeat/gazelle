@@ -126,7 +126,10 @@ echo $Val->GenerateJS('userform');
 ?>
 <script type="text/javascript">//<![CDATA[
 function change_flag() {
-    $('#flag_image').raw().innerHTML='<img src="/static/common/flags/64/'+$('#flag').raw().value+'.png"/>';
+    var flag = $('#flag').raw().value;
+    if (flag == '' || flag == '??') flag = '';
+    else flag = '<img src="/static/common/flags/64/'+flag+'.png"/>'
+    $('#flag_image').raw().innerHTML=flag;
 }
 //]]></script>
 <div class="thin">
@@ -373,13 +376,15 @@ function change_flag() {
 				<td class="label"><strong>Flag</strong></td>
 				<td style="">
                     <span id="flag_image" >
-                        <img src="/static/common/flags/64/<?=$flag?>.png" />
+                        <? if ($flag && $flag != '??'){ ?>
+                            <img src="/static/common/flags/64/<?=$flag?>.png" />
+                        <? } ?>
                     </span>
                     <div style="display:inline-block;vertical-align: top;"> 
                         <select id="flag" name="flag" onchange="change_flag();" style="margin-top: 25px">
-                            <option value="" <?=($flag == '') ? 'selected="selected"' : '';?>>none</option>
+                            <option value="" <?=($flag == '' || $flag == '??') ? 'selected="selected"' : '';?>>none</option>
                    <?       foreach($flags as $value) {  
-                                $value = substr($value, 0, strlen($value)-4  );
+                                $value = substr($value, 0, strlen($value)-4  ); // remove .png extension
                     ?>
                             <option value="<?=display_str($value)?>" <?=($flag == $value) ? 'selected="selected"' : '';?>><?=$value?></option>
                     <?      }  ?>

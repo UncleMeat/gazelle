@@ -52,6 +52,9 @@ class VALIDATE {
 			$this->Fields[$FieldName]['MaxWidth']=$Options['dimensions'][0];
 			$this->Fields[$FieldName]['MaxHeight']=$Options['dimensions'][1];
 		}
+		if(isset($Options['maxwordlength'])) {
+			$this->Fields[$FieldName]['MaxWordLength']=$Options['maxwordlength'];
+		}
 	}
 
 	function ValidateForm($ValidateArray, $Text = null) {
@@ -72,9 +75,17 @@ class VALIDATE {
                             if($Field['Type']=="string") {
                                   if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
                                   if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
+                                  if(isset($Field['MaxWordLength'])) { $MaxWordLength=$Field['MaxWordLength']; } else { $MaxWordLength=0; }
 
-                                  if(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
-                                  elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
+                                  if(strlen($ValidateVar)>$MaxLength) { return "$Field[ErrorMessage] Max length of field is $MaxLength characters."; }
+                                  elseif(strlen($ValidateVar)<$MinLength) { return "$Field[ErrorMessage] Min length of field is $MinLength characters."; }
+                                  elseif($MaxWordLength>0){
+                                      $Words = explode(' ', $ValidateVar);
+                                      foreach($Words as $Word){
+                                          if ($Word && strlen($Word) > $MaxWordLength ) 
+                                              return "$Field[ErrorMessage] The maximum allowed length of a single word is $MaxWordLength, please add some spaces in your text.";
+                                      }
+                                  }
 
                             } elseif($Field['Type']=="number") {
                                   if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=''; }
@@ -108,7 +119,7 @@ class VALIDATE {
                                     if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=20; }
                                     if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=1; }
 
-                                    if(preg_match('/[^a-z0-9_\-?]/i', $ValidateVar)) { return $Field['ErrorMessage']; }
+                                    if(preg_match('/[^a-z0-9_\-?\.]/i', $ValidateVar)) { return $Field['ErrorMessage']; }
                                     elseif(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
                                     elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
 

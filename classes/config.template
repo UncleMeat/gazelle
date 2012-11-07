@@ -68,11 +68,6 @@ define('GOOD_PERV',	'4');
 define('DONOR',		'20');
 define('SEXTREME_PERV',	'5');
 define('SMUT_PEDDLER',  '6');
-define('LEGEND',	'8');
-define('CELEB',		'9');
-define('MOD',		'11');
-define('DESIGNER',	'13');
-define('CODER',		'14');
 define('ADMIN',		'1');
 define('SYSOP',		'15');
 
@@ -128,16 +123,7 @@ $AutoAwardTypes  = array ('NumPosts', 'NumComments', 'NumUploaded', 'NumNewTags'
 
 $ShopActions = array('gb','givegb','givecredits','slot','title','badge','pfl','ufl');
 
-// Ratio requirements, in descending order
-// Columns: Download amount, required ratio, grace period
-$RatioRequirements = array(
-	array(50*1024*1024*1024, 0.60, date('Y-m-d H:i:s')),
-	array(40*1024*1024*1024, 0.50, date('Y-m-d H:i:s')),
-	array(30*1024*1024*1024, 0.40, date('Y-m-d H:i:s')),
-	array(20*1024*1024*1024, 0.30, date('Y-m-d H:i:s')),
-	array(10*1024*1024*1024, 0.20, date('Y-m-d H:i:s')),
-	array(5*1024*1024*1024,  0.15, date('Y-m-d H:i:s', time()-(60*60*24*14)))
-);
+
 
 //Captcha fonts should be located in /classes/fonts
 $CaptchaFonts=array('ARIBLK.TTF','IMPACT.TTF','TREBUC.TTF','TREBUCBD.TTF','TREBUCBI.TTF','TREBUCIT.TTF','VERDANA.TTF','VERDANAB.TTF','VERDANAI.TTF','VERDANAZ.TTF');

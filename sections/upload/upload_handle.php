@@ -48,8 +48,8 @@ $RequestID = $_POST['requestid'];
 //--------------- Validate data in upload form ---------------------------------//
 //** note: if the same field is set to be validated more than once then each time it is set it overwrites the previous test
 //** ie.. one test per field max, last one set for a specific field is what is used
-$Validate->SetFields('title', '1', 'string', 'Title must be between 2 and 200 characters.', array('maxlength' => 200, 'minlength' => 2));
-$Validate->SetFields('tags', '1', 'string', 'You must enter at least one tag. Maximum length is 10000 characters.', array('maxlength' => 10000, 'minlength' => 2));
+$Validate->SetFields('title', '1', 'string', 'You must enter a Title.', array('maxlength' => 200, 'minlength' => 2, 'maxwordlength'=>64));
+$Validate->SetFields('tags', '1', 'string', 'You must enter at least one tag.', array('maxlength' => 1000, 'minlength' => 2));
 $whitelist_regex = get_whitelist_regex();
 $Validate->SetFields('image', '0', 'image', 'The image URL you entered was not valid.', array('regex' => $whitelist_regex, 'maxlength' => 255, 'minlength' => 12));
 $Validate->SetFields('desc', '1', 'desc', 'Description', array('regex' => $whitelist_regex, 'minimages'=>1, 'maxlength' => 1000000, 'minlength' => 20));

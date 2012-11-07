@@ -15,9 +15,13 @@ if(empty($Sent)) {
 ?>
 	<font color="red"><strong><?=$Err?></strong></font><br /><br />
 <?	} ?>
+    <div>
+        <p class="stronger">IMPORTANT: Emp is a private tracker, you must maintain a good ratio or your downloading rights will be restricted and eventually your account disabled. Please read the rules carefully!</p>
+    </div>
+    <br/><br/><br/>
 	<table cellpadding="2" cellspacing="1" border="0" align="center">
 		<tr valign="top">
-			<td align="right">Username&nbsp;</td>
+			<td align="right" width="150px">Username&nbsp;</td>
 			<td align="left">
 				<input type="text" name="username" id="username" class="inputtext" value="<?=(!empty($_REQUEST['username']) ? display_str($_REQUEST['username']) : '')?>" />
 				<p>It is recommended that you do NOT use your real name for personal security! We will not be changing it for you.</p>
