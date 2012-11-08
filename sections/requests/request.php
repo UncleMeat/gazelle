@@ -41,9 +41,9 @@ $DisplayLink = $Title;
 //Votes time
 $RequestVotes = get_votes_array($RequestID);
 $VoteCount = count($RequestVotes['Voters']);
-$ProjectCanEdit = (check_perms('project_team') && !$IsFilled && (($CategoryID == 0)));
+//$ProjectCanEdit = (check_perms('project_team') && !$IsFilled && (($CategoryID == 0)));
 $UserCanEdit = (!$IsFilled && $LoggedUser['ID'] == $RequestorID && $VoteCount < 2);
-$CanEdit = ($UserCanEdit || $ProjectCanEdit || check_perms('site_moderate_requests'));
+$CanEdit = ($UserCanEdit || check_perms('site_moderate_requests'));  // $ProjectCanEdit ||
 
 show_header('View request: '.$FullName, 'comments,requests,bbcode,jquery');
 
@@ -65,9 +65,9 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 <?	} ?>
 		<a href="reports.php?action=report&amp;type=request&amp;id=<?=$RequestID?>">[Report Request]</a>
 		<a href="upload.php?requestid=<?=$RequestID?><?=($GroupID?"&groupid=$GroupID":'')?>">[Upload Request]</a>
-<? if(!$IsFilled && $CategoryID == 0) { ?>
+<?  /* if(!$IsFilled && $CategoryID == 0) { ?>
 		<a href="reports.php?action=report&amp;type=request_update&amp;id=<?=$RequestID?>">[Request Update]</a>
-<? } ?>
+<? } */   ?>
 	</div>
 	
 	<div class="sidebar">
@@ -132,17 +132,37 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 ?>
 			</table>
 	</div>
-      <div class="main_column">
+      <div class="middle_column">
           
           
             <div class="head">Request</div>
 		<table>
+			<!--<tr>
+				<td class="label">Category</td>
+				<td style="font-size: 1.2em;vertical-align: middle;">
+                    <div class="center cats_col"  style="float:left;margin-right:30px;border-bottom:none;border-right:none;">
+                        <? $CatImg = 'static/common/caticons/' . $NewCategories[$CategoryID]['image']; ?>
+                        <div title="<?= $NewCategories[$CategoryID]['tag'] ?>"><img src="<?= $CatImg ?>" /></div>
+                    </div>
+                    <div class="center cats_col"  style="float:left;margin-right:30px;padding-top:15px;">
+                        <?=$NewCategories[$CategoryID]['name']?>
+                    </div>
+                </td>
+			</tr>-->
 			<tr>
-				<td class="label" >Title</td>
-				<td style="font-size: 1.8em;"><?=$DisplayLink?></td>
+				<td class="label">
+                        Title
+                </td>
+				<td style="font-size: 1.8em;">
+                        <?=$DisplayLink?>
+                    <div class="center cats_col"  style="float:right;margin-right:10px;border-bottom:none;border-right:none;">
+                        <? $CatImg = 'static/common/caticons/' . $NewCategories[$CategoryID]['image']; ?>
+                        <div title="<?= $NewCategories[$CategoryID]['tag'] ?>"><img src="<?= $CatImg ?>" /></div>
+                    </div>
+                </td>
 			</tr>
 			<tr id="bounty">
-				<td class="label" >Total Bounty</td>
+				<td class="label">Total Bounty</td>
 				<td id="formatted_bounty" style="font-size: 1.8em;"><?=get_size($RequestVotes['TotalBounty'])?></td>
 			</tr>
 			<tr>
@@ -244,13 +264,20 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 				</td>
 			</tr>
 <?	} ?>
-			<tr>
-				<td colspan="2" class="head"><strong>Description</strong></td>
-			</tr>
-			<tr>
-                      <td colspan="2"><?=$Text->full_format($Description, get_permissions_advtags($RequestorID))?></td>
-			</tr>
 		</table>
+            
+          
+    </div>  
+      <div style="clear:both"></div>
+    <div class="main_column">
+            <table>
+                <tr>
+                    <td colspan="2" class="head"><strong>Description</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><?=$Text->full_format($Description, get_permissions_advtags($RequestorID))?></td>
+                </tr>
+            </table>
 <?
 
 $Results = $Cache->get_value('request_comments_'.$RequestID);

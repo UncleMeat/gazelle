@@ -9,6 +9,7 @@
 	| <a href="reportsv2.php?view=staff&amp;id=<?=$LoggedUser['ID']?>">Mine</a>
  	| <a href="reportsv2.php?view=resolved">Old</a>
  	| <a href="reportsv2.php?action=search">Search</a>
+ 	| <a href="reportsv2.php?action=search">Search</a>
 </div>
  */
 ?>
@@ -18,5 +19,4 @@
 	| <a href="reportsv2.php?view=unauto">New (Unassigned)</a>
 	| <a href="reportsv2.php?view=staff&amp;id=<?=$LoggedUser['ID']?>">Mine</a>
  	| <a href="reportsv2.php?view=resolved">Old</a>
- 	| <a href="reportsv2.php?action=search">Search</a>
 </div>

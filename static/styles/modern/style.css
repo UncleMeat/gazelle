@@ -1025,11 +1025,11 @@ table.boxstat a, table.boxstat a:visited {
     margin: 0px;    /* 12px 0px 1px 0px; */
 }
 
-.details .sidebar {
+.details .sidebar, #requests .sidebar {
     width: 260px;
 }
 
-.details .middle_column {
+.details .middle_column, #requests .middle_column {
     margin: 0px 270px 10px 0px;
 }
 
@@ -1041,7 +1041,7 @@ table.boxstat a, table.boxstat a:visited {
     margin-top: 0px;
 }
 
-.details .main_column {
+.details .main_column, #requests .main_column {
     margin: 0px 0px 10px 0px;
 }
 .details .tag_inner {

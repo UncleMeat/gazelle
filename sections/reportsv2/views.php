@@ -19,8 +19,9 @@ $Owner = display_str($Owner);
 
 ?>
 <div class="thin">
-<h2>Reports v2 Information!</h2>
+<h2>Torrent Reports</h2>
 <br />
+<div class="head">history</div>
 <div class="box pad">
 	<table><tr><td style="width: 50%;">
 <?
@@ -164,8 +165,8 @@ $Results = $DB->to_array();
 				<a href="reportsv2.php?view=resolver&amp;id=<?=$OwnerID?>">http://<?=NONSSL_SITE_URL?>/reportsv2.php?view=resolver&amp;id=<?=$OwnerID?></a>
 			</li>
 		</ul>
-		<br /><br />
-		<strong>For browsing anything more complicated than these, use the search feature.</strong>
+		<br /><!--<br />
+		<strong>For browsing anything more complicated than these, use the search feature.</strong>-->
 	</td>
 	<td style="vertical-align: top;">
 <?
