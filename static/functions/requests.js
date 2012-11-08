@@ -1,3 +1,92 @@
+ 
+
+function Cover_Toggle() {
+
+    jQuery('#coverimage').toggle();
+ 
+    if (jQuery('#coverimage').is(':hidden')) 
+        jQuery('#covertoggle').html('(Show)');
+    else  
+        jQuery('#covertoggle').html('(Hide)');
+            
+    jQuery.cookie('requestDetailsState', Get_Cookie());
+    return false;
+}
+
+function TagBox_Toggle() {
+
+    jQuery('#tag_container').toggle();
+ 
+    if (jQuery('#tag_container').is(':hidden')) 
+        jQuery('#tagtoggle').html('(Show)');
+    else  
+        jQuery('#tagtoggle').html('(Hide)');
+            
+    jQuery.cookie('requestDetailsState', Get_Cookie());
+    return false;
+}
+
+function Desc_Toggle() {
+
+    jQuery('#descbox').toggle();
+ 
+    if (jQuery('#descbox').is(':hidden')) 
+        jQuery('#desctoggle').html('(Show)');
+    else  
+        jQuery('#desctoggle').html('(Hide)');
+            
+    jQuery.cookie('requestDetailsState', Get_Cookie());
+    return false;
+}
+
+ 
+
+function Get_Cookie() {
+    return json.encode([((jQuery('#coverimage').is(':hidden'))?'0':'1'), 
+                        ((jQuery('#tag_container').is(':hidden'))?'0':'1'), 
+                        ((jQuery('#descbox').is(':hidden'))?'0':'1')]);
+}
+
+
+function Load_Details_Cookie()  {
+  
+    
+	if(jQuery.cookie('requestDetailsState') == undefined) {
+		jQuery.cookie('requestDetailsState', json.encode(['1', '1','1']));
+	}
+	var state = json.decode( jQuery.cookie('requestDetailsState') );
+    
+	if(state[0] == '0') {
+		jQuery('#coverimage').hide();
+		jQuery('#covertoggle').text('(Show)');
+      } else 
+		jQuery('#covertoggle').text('(Hide)');
+ 
+	if(state[1] == '0') {
+		jQuery('#tag_container').hide();
+		jQuery('#tagtoggle').text('(Show)');
+      } else 
+		jQuery('#tagtoggle').text('(Hide)');
+ 
+	if(state[2] == '0') {
+		jQuery('#descbox').hide();
+		jQuery('#desctoggle').text('(Show)');
+      } else 
+		jQuery('#desctoggle').text('(Hide)');
+     
+}
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
 function Preview_Request() {
 	if ($('#preview').has_class('hidden')) {
@@ -107,45 +196,7 @@ function Calculate() {
                 $('#inform').raw().innerHTML = value + unit.toUpperCase() + ' will immediately be removed from your upload total.'
 	}
 }
-
-function AddArtistField() {
-		var ArtistCount = document.getElementsByName("artists[]").length;
-		if (ArtistCount >= 100) { return; }
-		var ArtistField = document.createElement("input");
-		ArtistField.type = "text";
-		ArtistField.id = "artist";
-		ArtistField.name = "artists[]";
-		ArtistField.size = 45;
-		
-		var ImportanceField = document.createElement("select");
-		ImportanceField.id = "importance";
-		ImportanceField.name = "importance[]";
-		ImportanceField.options[0] = new Option("Main", "1");
-		ImportanceField.options[1] = new Option("Guest", "2");
-		ImportanceField.options[2] = new Option("Composer", "4");
-		ImportanceField.options[3] = new Option("Conductor", "5");
-		ImportanceField.options[4] = new Option("DJ / Compiler", "6");
-		ImportanceField.options[5] = new Option("Remixer", "3");
-		ImportanceField.options[6] = new Option("Producer", "7");
-		
-		var x = $('#artistfields').raw();
-		x.appendChild(document.createElement("br"));
-		x.appendChild(ArtistField);
-		x.appendChild(ImportanceField);
-		ArtistCount++;
-}
-
-function RemoveArtistField() {
-		var ArtistCount = document.getElementsByName("artists[]").length;
-		if (ArtistCount == 1) { return; }
-		var x = $('#artistfields').raw();
-		
-		while(x.lastChild.tagName != "INPUT") { 
-			x.removeChild(x.lastChild); 
-		}
-		x.removeChild(x.lastChild); 
-		ArtistCount--;
-}
+ 
 
 function add_tag() {
 	if ($('#tags').raw().value == "") {
@@ -194,3 +245,9 @@ function ToggleLogScore() {
 		$('#minlogscore_span').hide();
 	}
 }
+
+
+
+addDOMLoadEvent(Load_Details_Cookie);
+
+

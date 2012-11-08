@@ -45,7 +45,7 @@ $VoteCount = count($RequestVotes['Voters']);
 $UserCanEdit = (!$IsFilled && $LoggedUser['ID'] == $RequestorID && $VoteCount < 2);
 $CanEdit = ($UserCanEdit || check_perms('site_moderate_requests'));  // $ProjectCanEdit ||
 
-show_header('View request: '.$FullName, 'comments,requests,bbcode,jquery');
+show_header('View request: '.$FullName, 'comments,requests,bbcode,jquery,jquery.cookie');
 
 ?>
 <div class="thin">
@@ -71,20 +71,24 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 	</div>
 	
 	<div class="sidebar">
-<? if($CategoryID != 0) { ?>
-                <div class="head"><strong>Cover</strong></div>
-		<div class="box box_albumart center">
-<?	if (!empty($Image)) { ?>
-                <img style="max-width: 220px;" src="<?=$Image?>" alt="<?=$FullName?>" onclick="lightbox.init(this,220);" />
-<?	} else { ?>
-                <img src="<?=STATIC_SERVER?>common/noartwork/noimage.png" alt="<?=$CategoryName?>" title="<?=$CategoryName?>" width="220" height="220" border="0" />
-<?	} ?>
+<? if(!empty($Image)) { ?>
+        <div class="head">
+            <strong>Cover</strong>
+            <span style="float:right;"><a href="#" id="covertoggle" onclick="Cover_Toggle(); return false;">(Hide)</a></span>
+        </div>
+		<div id="coverimage" class="box box_albumart center">
+ 
+            <img style="max-width: 220px;" src="<?=$Image?>" alt="<?=$FullName?>" onclick="lightbox.init(this,220);" />
+ 
 		</div>
 <? } ?>
 
-                <div class="head"><strong>Tags</strong></div>
-		<div class="box box_tags">
-			<ul class="stats nobullet">
+        <div class="head">
+            <strong>Tags</strong>
+            <span style="float:right;margin-left:5px;"><a href="#" id="tagtoggle" onclick="TagBox_Toggle(); return false;">(Hide)</a></span>
+        </div>
+		<div id="tag_container" class="box box_tags">
+			<ul id="torrent_tags" class="stats nobullet">
 <?	foreach($Request['Tags'] as $TagID => $TagName) { ?>
 				<li>
 					<a href="torrents.php?taglist=<?=$TagName?>"><?=display_str($TagName)?></a>
@@ -92,9 +96,9 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 				</li>
 <?	} ?>
 			</ul>
-		</div>
-                <div class="head"><strong>Top Contributors</strong></div> 
-			<table class="box box_votes">
+		</div><br/>
+        <div class="head"><strong>Top Contributors</strong></div> 
+		<table class="box box_votes">
 <?	$VoteMax = ($VoteCount < 5 ? $VoteCount : 5);
 	$ViewerVote = false;
 	for($i = 0; $i < $VoteMax; $i++) { 
@@ -130,7 +134,7 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 		}
 	}
 ?>
-			</table>
+        </table><br/>
 	</div>
       <div class="middle_column">
           
@@ -150,11 +154,11 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
                 </td>
 			</tr>-->
 			<tr>
-				<td class="label">
-                        Title
-                </td>
-				<td style="font-size: 1.8em;">
+				<td class="label">  Title </td>
+				<td style="font-size: 1.2em;">
+                    <div class=""  style="float:left;padding-top:0.8em;">
                         <?=$DisplayLink?>
+                    </div>
                     <div class="center cats_col"  style="float:right;margin-right:10px;border-bottom:none;border-right:none;">
                         <? $CatImg = 'static/common/caticons/' . $NewCategories[$CategoryID]['image']; ?>
                         <div title="<?= $NewCategories[$CategoryID]['tag'] ?>"><img src="<?= $CatImg ?>" /></div>
@@ -268,16 +272,16 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
             
           
     </div>  
-      <div style="clear:both"></div>
+    <div style="clear:both"></div>
     <div class="main_column">
-            <table>
-                <tr>
-                    <td colspan="2" class="head"><strong>Description</strong></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><?=$Text->full_format($Description, get_permissions_advtags($RequestorID))?></td>
-                </tr>
-            </table>
+        <div class="head">
+            <strong>Description</strong>
+            <span style="float:right;"><a href="#" id="desctoggle" onclick="Desc_Toggle(); return false;">(Hide)</a></span>
+        </div>
+		<div id="descbox" class="box pad">
+            <?=$Text->full_format($Description, get_permissions_advtags($RequestorID))?> 
+        </div>
+        <br/>
 <?
 
 $Results = $Cache->get_value('request_comments_'.$RequestID);

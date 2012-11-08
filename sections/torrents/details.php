@@ -789,7 +789,7 @@ if(count($PersonalCollages)>0) {
 	<div class="main_column">
 		<div class="head">
                 <strong>Description</strong>
-                <span style="float:right;"><a href="#" onclick="$('#descbox').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;">(Hide)</a></span>
+                <span style="float:right;"><a href="#" id="desctoggle" onclick="Desc_Toggle(); return false;">(Hide)</a></span>
             </div>
 		<div class="box">
 			<div id="descbox" class="body">

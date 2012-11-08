@@ -211,6 +211,19 @@ function TagBox_Toggle() {
     return false;
 }
 
+function Desc_Toggle() {
+
+    jQuery('#descbox').toggle();
+ 
+    if (jQuery('#descbox').is(':hidden')) 
+        jQuery('#desctoggle').html('(Show)');
+    else  
+        jQuery('#desctoggle').html('(Hide)');
+            
+    jQuery.cookie('torrentDetailsState', Get_Cookie());
+    return false;
+}
+
 function BuyFL_Toggle() {
 
     jQuery('#donatediv').toggle();
@@ -228,7 +241,8 @@ function Get_Cookie() {
     return json.encode([((jQuery('#details_top').is(':hidden'))?'0':'1'), 
                         ((jQuery('#coverimage').is(':hidden'))?'0':'1'), 
                         ((jQuery('#tag_container').is(':hidden'))?'0':'1'), 
-                        ((jQuery('#donatediv').is(':hidden'))?'0':'1')]);
+                        ((jQuery('#donatediv').is(':hidden'))?'0':'1'), 
+                        ((jQuery('#descbox').is(':hidden'))?'0':'1')]);
 }
 
 
@@ -239,7 +253,7 @@ function Load_Details_Cookie()  {
 	var button = jQuery('#slide_button');
     
 	if(jQuery.cookie('torrentDetailsState') == undefined) {
-		jQuery.cookie('torrentDetailsState', json.encode(['1', '1', '1', '1']));
+		jQuery.cookie('torrentDetailsState', json.encode(['1', '1', '1', '1','1']));
 	}
 	var state = json.decode( jQuery.cookie('torrentDetailsState') );
       
@@ -266,6 +280,12 @@ function Load_Details_Cookie()  {
 		jQuery('#donatebutton').text('(Show)');
       } else 
 		jQuery('#donatebutton').text('(Hide)');
+    
+	if(state[3] == '0') {
+		jQuery('#descbox').hide();
+		jQuery('#desctoggle').text('(Show)');
+      } else 
+		jQuery('#desctoggle').text('(Hide)');
 }
  
  function Say_Thanks() {

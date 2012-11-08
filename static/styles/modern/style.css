@@ -1073,7 +1073,7 @@ table.boxstat a, table.boxstat a:visited {
     margin: 0 auto 20px;
 }
 
-.details .box {
+.details .box, #requests .box {
     margin: 0px;
 }
 
