@@ -80,7 +80,7 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
  
             <img style="max-width: 220px;" src="<?=$Image?>" alt="<?=$FullName?>" onclick="lightbox.init(this,220);" />
  
-		</div>
+		</div><br/>
 <? } ?>
 
         <div class="head">
