@@ -84,7 +84,7 @@ show_header('Repair Geo-Distribution','bbcode');
             <tr>
                 <td class="center">
                     <form action="" method="post">
-                        <input type="hidden" name="action" value="sandbox4" />
+                        <input type="hidden" name="action" value="repair_geoip" />
                         <label for="numusers" >num:</label>
                         <input size="6" type="text" name="numusers" value="<?=$num_users?>" />
                         <input type="submit" name="submit" value="process"/>
@@ -105,7 +105,7 @@ show_header('Repair Geo-Distribution','bbcode');
             <tr>
                 <td class="center">
                     <form action="" method="post">
-                        <input type="hidden" name="action" value="sandbox4" /> 
+                        <input type="hidden" name="action" value="repair_geoip" /> 
                         <input type="submit" name="submit2" value="fill users_geo_distribution"/>
                     </form><br/>
                 </td>

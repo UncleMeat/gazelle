@@ -575,7 +575,7 @@ switch ($_REQUEST['action']) {
     //END Data
     //Misc
     case 'update_geoip':
-        include(SERVER_ROOT.'/sections/tools/misc/update_geodist.php');
+        include(SERVER_ROOT.'/sections/tools/misc/update_geoip.php');
         break;
     
     case 'repair_geoip':
