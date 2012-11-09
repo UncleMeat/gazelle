@@ -26,7 +26,7 @@
 		<strong>Time:</strong> <?=number_format(((microtime(true)-$ScriptStartTime)*1000),5)?> ms
 		<strong>Used:</strong> <?=get_size(memory_get_usage(true))?>
 		<strong>Load:</strong> <?=number_format($Load[0],2).' '.number_format($Load[1],2).' '.number_format($Load[2],2)?>
-		<strong>Date:</strong> <?=date('M d Y, H:i')?>
+		<strong>Date:</strong> <?=time_diff(time(),2,false,false,1)  //date('M d Y, H:i')?>
 
 	</p>
     <p>
