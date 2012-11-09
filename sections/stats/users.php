@@ -15,19 +15,22 @@ if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements,
 	$CountryMin = floor(log(Max(1,$Data[$CountryMinThreshold][1]))/log(2));
 
 	$CountryRegions = array('RS' => array('RS-KM')); // Count Kosovo as Serbia as it doesn't have a TLD
+    $i=0;
 	foreach ($Data as $Key => $Item) {
 		list($Country,$UserCount,$CName) = $Item;
-		$Countries[] = $Country;
-		$CountryUsers[] = number_format((((log($UserCount)/log(2))-$CountryMin)/($CountryMax-$CountryMin))*100,2);
-		$Rank[] = round((1-($Key/$Count))*100);
-        $CountryUsersNum[] = $UserCount;
-        $CountryName[] = $CName;
+		$Countries[$i] = $Country;
+		$CountryUsers[$i] = number_format((((log($UserCount)/log(2))-$CountryMin)/($CountryMax-$CountryMin))*100,2);
+		$Rank[$i] = round((1-($Key/$Count))*100);
+        $CountryUsersNum[$i] = $UserCount;
+        $CountryName[$i] = $CName;
 		if(isset($CountryRegions[$Country])) {
 			foreach($CountryRegions[$Country] as $Region) {
-				$Countries[] = $Region;
-				$Rank[] = end($Rank);
+                $i++;
+				$Countries[$i] = $Region;
+				$Rank[$i] = end($Rank);
 			}
 		}
+        $i++;
 	}
 	reset($Rank);
 	
