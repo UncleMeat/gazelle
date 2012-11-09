@@ -577,6 +577,10 @@ switch ($_REQUEST['action']) {
     case 'update_geoip':
         include(SERVER_ROOT.'/sections/tools/misc/update_geoip.php');
         break;
+    
+    case 'repair_geoip':
+        include(SERVER_ROOT.'/sections/tools/misc/repair_geodist.php');
+        break;
 
     case 'dupe_ips':
         include(SERVER_ROOT.'/sections/tools/misc/dupe_ip.php');

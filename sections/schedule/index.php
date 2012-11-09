@@ -513,6 +513,13 @@ if($Day != next_day() || $_GET['runday']){
                      ORDER BY Users DESC");
     */
  
+    $DB->query("TRUNCATE TABLE users_geodistribution");
+    $DB->query("INSERT INTO users_geodistribution (Code, Users) 
+                       SELECT ipcc, COUNT(ID) AS NumUsers 
+                         FROM users_main 
+                        WHERE Enabled='1' AND ipcc != ''
+                        GROUP BY ipcc 
+                     ORDER BY NumUsers DESC");
     
     // -------------- clean up users_connectable_status table - remove values older than 60 days
    

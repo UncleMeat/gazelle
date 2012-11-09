@@ -1845,10 +1845,10 @@ CREATE TABLE IF NOT EXISTS `users_freeleeches` (
 --
 
 CREATE TABLE IF NOT EXISTS `users_geodistribution` (
-  `Code` varchar(2) NOT NULL,
+  `Code` char(2) NOT NULL,
   `Users` int(10) NOT NULL,
   PRIMARY KEY (`Code`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 

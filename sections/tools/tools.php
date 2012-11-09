@@ -85,8 +85,10 @@ if (check_perms('admin_donor_log')) { ?>
 <? if (check_perms('users_mod')) { ?>
 			<tr><td><a href="tools.php?action=manipulate_tree">Manipulate Tree</a></td></tr>
 <? } 
-if (check_perms('admin_update_geoip')) { ?>
-			<tr><td><a href="tools.php?action=update_geoip">Update GeoIP </a></td></tr>
+if (check_perms('admin_update_geoip')) { 
+			// <tr><td><a href="tools.php?action=update_geoip">Update GeoIP </a></td></tr> // no longer done automagically
+    ?>
+			<tr><td><a href="tools.php?action=repair_geoip">Repair GeoIP </a></td></tr>
 <? } if (check_perms('admin_create_users')) { ?>
 			<tr><td><a href="tools.php?action=create_user">Create User</a></td></tr>
 <? } if (check_perms('admin_clear_cache')) { ?>

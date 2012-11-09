@@ -1,7 +1,7 @@
 <?
 if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements,$CountryUsersNum) = $Cache->get_value('geodistribution')) {
 	include_once(SERVER_ROOT.'/classes/class_charts.php');
-	$DB->query('SELECT Code, Users FROM users_geodistribution ORDER BY Users DESC');
+	$DB->query('SELECT Code, Users, country FROM users_geodistribution AS ug LEFT JOIN countries AS c ON c.cc=ug.Code ORDER BY Users DESC');
 	$Data = $DB->to_array();
 	$Count = $DB->record_count()-1;
 	
@@ -16,12 +16,12 @@ if (!list($Countries,$Rank,$CountryUsers,$CountryMax,$CountryMin,$LogIncrements,
 
 	$CountryRegions = array('RS' => array('RS-KM')); // Count Kosovo as Serbia as it doesn't have a TLD
 	foreach ($Data as $Key => $Item) {
-		list($Country,$UserCount) = $Item;
+		list($Country,$UserCount,$CName) = $Item;
 		$Countries[] = $Country;
 		$CountryUsers[] = number_format((((log($UserCount)/log(2))-$CountryMin)/($CountryMax-$CountryMin))*100,2);
 		$Rank[] = round((1-($Key/$Count))*100);
         $CountryUsersNum[] = $UserCount;
-        
+        $CountryName[] = $CName;
 		if(isset($CountryRegions[$Country])) {
 			foreach($CountryRegions[$Country] as $Region) {
 				$Countries[] = $Region;
@@ -188,7 +188,7 @@ show_header('Detailed User Statistics');
                   <td<?=$colspan?> style="width:100px; padding: 0px 10px;">
                       <table style="width:100px; border:1px solid #c4c4c4;<?if ($i<$numrows-1 || $index == $len-1) echo 'border-bottom: none';?>">
                           <tr>
-                              <td class="rowa" style="width:50px"><?=$Countries[$index]?></td>
+                              <td class="rowa" style="width:50px" title="<?=$CountryName[$index]?>"><?=$Countries[$index]?></td>
                               <td class="rowb" style="width:50px"><?=$CountryUsersNum[$index]?></td>
                           </tr>
                       </table>
