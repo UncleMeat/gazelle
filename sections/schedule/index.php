@@ -231,7 +231,7 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
       
       
 	//------------- Record daily seedhours  ----------------------------------------//
-       
+       /* // Moved to daily section
 	if ($Hour == 4) { // 4 am servertime... want it to be daily but not on the 0 hour  //SeedHours>0.00 
  
             $DB->query("UPDATE users_main AS u JOIN users_info AS i ON u.ID=i.UserID
@@ -246,10 +246,11 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
                          WHERE SeedHoursDaily>0.00");
             
       }
+      */
+      
       
 	//------------- Front page stats ----------------------------------------//
  
-
 	//Love or hate, this makes things a hell of a lot faster
 
 	if ($Hour%2 == 0) {
@@ -520,6 +521,7 @@ if($Day != next_day() || $_GET['runday']){
                         WHERE Enabled='1' AND ipcc != ''
                         GROUP BY ipcc 
                      ORDER BY NumUsers DESC");
+	$Cache->delete_value('geodistribution');
     
     // -------------- clean up users_connectable_status table - remove values older than 60 days
    
@@ -627,6 +629,22 @@ if($Day != next_day() || $_GET['runday']){
 	
 	$DB->query("UPDATE users_main SET RequiredRatio=0.00 WHERE Downloaded<5*1024*1024*1024");
 	
+    
+    
+    // keep a daily change history
+            $DB->query("UPDATE users_main AS u JOIN users_info AS i ON u.ID=i.UserID
+                           SET BonusLog = CONCAT('$sqltime | +', CreditsDaily, ' credits | seeded ', SeedHoursDaily, ' hrs\n', BonusLog),
+                               SeedHistory = CONCAT('$sqltime | ', SeedHoursDaily, ' hrs | up: ', 
+                                                FORMAT((Uploaded-UploadedLast)/1073741824, 2) , ' GB | down: ', 
+                                                FORMAT((Downloaded-DownloadedLast)/1073741824, 2) , ' GB | ', CreditsDaily, ' credits\n', SeedHistory),
+                               SeedHoursDaily=0.00, 
+                               CreditsDaily=0.00 , 
+                               UploadedLast=Uploaded , 
+                               DownloadedLast=Downloaded 
+                         WHERE SeedHoursDaily>0.00");
+            
+            
+            
 	// Here is where we manage ratio watch
 	
 	$OffRatioWatch = array();
@@ -1138,7 +1156,7 @@ if($BiWeek != next_biweek() || $_GET['runbiweek']) {
 
 echo "-------------------------\n\n";
 if (check_perms('admin_schedule')) {	
-	echo '<pre>';
+	echo '</pre>';
 	show_footer();
 }
 ?>
