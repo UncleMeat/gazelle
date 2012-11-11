@@ -187,11 +187,12 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 
 #menu {
-    height: 20px;
-    width: 65%;
+   /* height: 20px;
+    width: 65%; 
+    margin: 0px auto;*/
     text-align: center;
     font-size: 10pt;
-    margin: 0px auto;
+    margin: 0px 240px;
     padding-top: 12px;
 }
 
@@ -316,9 +317,6 @@ table.userinfo_stats td {
 #userinfo_username li a, #userinfo_tools li a {
     padding: 2px 0 2px 0;
 }
-#userinfo_username li ul {
-   top: 17px;
-}
 #userinfo_username li ul, #userinfo_tools li ul {
     list-style: none;
     display: none;
@@ -326,6 +324,10 @@ table.userinfo_stats td {
     left: 7px;
     background-color: #00436b;
     z-index: 10;
+}
+#userinfo_username li ul {
+    left: 66px;
+    top: 17px;
 }
 
 #userinfo_username li ul li a, #userinfo_tools li ul li a {

@@ -361,12 +361,17 @@ if(check_perms('admin_reports')) {
 			<li id="nav_index"><a href="index.php">Home</a></li>
 			<li id="nav_torrents"><a href="torrents.php">Torrents</a></li>
 			<li id="nav_requests"><a href="requests.php">Requests</a></li>
+                                <li id="nav_collages" class="normal"><a href="collages.php">Collages</a></li>
 			<li id="nav_forums"><a href="forums.php">Forums</a></li>
 			<li id="nav_irc"><a href="chat.php">IRC</a></li>
-			<li id="nav_top10"><a href="top10.php">Top 10</a></li>
+			<li id="nav_top10"><a href="top10.php">Top10</a></li>
 			<li id="nav_rules"><a href="articles.php?topic=rules">Rules</a></li>
                   <li id="nav_help"><a href="articles.php?topic=tutorials">Help</a></li>
 			<li id="nav_staff"><a href="staff.php">Staff</a></li>
+            
+                                <li id="nav_bonus" class="normal" title="Spend your credits in the bonus shop"><a href="bonus.php">Shop</a></li>
+                                <li id="nav_logs" class="normal"><a href="log.php">Logs</a></li>
+                                <li id="nav_conncheck" class="normal"><a onmousedown="Stats('conncheck');" href="user.php?action=connchecker">Conn-Checker</a></li> 
 		</ul>
 	</div>
 <?
@@ -605,10 +610,13 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                                 <li id="nav_comments" class="normal"><a onmousedown="Stats('comments');" href="comments.php">Comments</a></li>
                                 <li id="nav_friends" class="normal"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>
                                 
-                                <li id="nav_collages" class="normal"><a href="collages.php">Collages</a></li>
+                                <li id="nav_sandbox" class="normal"><a href="sandbox.php">Sandbox</a></li>
+                                
+                        <!--    <li id="nav_collages" class="normal"><a href="collages.php">Collages</a></li>
                                 <li id="nav_logs" class="normal"><a onmousedown="Stats('logs');" href="log.php">Logs</a></li>
                                 <li id="nav_bonus" class="normal"><a onmousedown="Stats('bonus');" href="bonus.php">Bonus</a></li>
-                                <li id="nav_sandbox" class="normal"><a onmousedown="Stats('sandbox');" href="sandbox.php">Sandbox</a></li>
+                                <li id="nav_sandbox" class="normal"><a onmousedown="Stats('sandbox');" href="sandbox.php">Sandbox</a></li> 
+                                <li id="nav_conncheck" class="normal"><a onmousedown="Stats('conncheck');" href="user.php?action=connchecker">Conn-Checker</a></li> -->
     <? /* 
     if(check_perms('site_send_unlimited_invites')) {
           $Invites = ' (∞)';
@@ -618,8 +626,7 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
           $Invites = '';
     }
     ?>
-                        <?      <li id="nav_invite" class="normal brackets"><a href="user.php?action=invite">Invite<?=$Invites?></a></li> */ ?>
-                                <li id="nav_conncheck" class="normal"><a onmousedown="Stats('conncheck');" href="user.php?action=connchecker">Conn-Checker</a></li>                                    
+                        <?      <li id="nav_invite" class="normal brackets"><a href="user.php?action=invite">Invite<?=$Invites?></a></li> */ ?>                                   
                           </ul>
                       </li>
                       <li id="nav_useredit" class="brackets"><a href="user.php?action=edit&amp;userid=<?=$LoggedUser['ID']?>" title="Edit User Settings">Settings</a></li>

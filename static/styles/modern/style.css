@@ -259,11 +259,12 @@ ul.thin li { margin:0px 0px; padding:0px; }
 }
 
 #menu {
-    height: 20px;
-    width: 65%;
+    /* height: 20px;
+    width: 65%; 
+    margin: 0px auto;*/
+    margin: 0px 240px;
     text-align: center;
     font-size: 9pt;
-    margin: 0px auto;
     padding-top: 12px;
     font-size: 1.1em;
 }
@@ -391,7 +392,7 @@ span.inside_stat {
     float:right;
     margin: 0 0 0 10px;
 }
-#major_stats a:hover { 
+#major_stats a:hover, #major_stats_left a:hover { 
     background-color: white;
     color: #00436b;
 }
@@ -410,9 +411,6 @@ span.inside_stat {
 #userinfo_username li a, #userinfo_tools li a {
     padding: 2px 0 2px 0;
 }
-#userinfo_username li ul {
-   top: 17px;
-}
 #userinfo_username li ul, #userinfo_tools li ul {
     list-style: none;
     display: none;
@@ -423,6 +421,10 @@ span.inside_stat {
     /* background-color: #00436b; */ 
     z-index: 10;
     border: 1px solid #0054b0;
+}
+#userinfo_username li ul {
+    left: 69px;
+    top: 17px;
 }
 
 #userinfo_username li ul li a, #userinfo_tools li ul li a {
