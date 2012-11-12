@@ -231,9 +231,10 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
       
       
 	//------------- Record daily seedhours  ----------------------------------------//
-       /* // Moved to daily section
+
 	if ($Hour == 4) { // 4 am servertime... want it to be daily but not on the 0 hour  //SeedHours>0.00 
  
+        /*
             $DB->query("UPDATE users_main AS u JOIN users_info AS i ON u.ID=i.UserID
                            SET BonusLog = CONCAT('$sqltime | +', CreditsDaily, ' credits | seeded ', SeedHoursDaily, ' hrs\n', BonusLog),
                                SeedHistory = CONCAT('$sqltime | ', SeedHoursDaily, ' hrs | up: ', 
@@ -243,10 +244,21 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
                                CreditsDaily=0.00 , 
                                UploadedLast=Uploaded , 
                                DownloadedLast=Downloaded 
+                         WHERE SeedHoursDaily>0.00");   */
+            
+            $DB->query("UPDATE users_main AS u JOIN users_info AS i ON u.ID=i.UserID
+                           SET BonusLog = CONCAT('$sqltime | +', CreditsDaily, ' credits | seeded ', SeedHoursDaily, ' hrs\n', BonusLog),
+                               SeedHistory = CONCAT('$sqltime | ', SeedHoursDaily, ' hrs | up: ', 
+                                                FORMAT(UploadedDaily/1073741824, 2) , ' GB | down: ', 
+                                                FORMAT(DownloadedDaily/1073741824, 2) , ' GB | ', CreditsDaily, ' credits\n', SeedHistory),
+                               SeedHoursDaily=0.00, 
+                               CreditsDaily=0.00 , 
+                               UploadedDaily=0.00 , 
+                               DownloadedDaily=0.00 
                          WHERE SeedHoursDaily>0.00");
             
+            
       }
-      */
       
       
 	//------------- Front page stats ----------------------------------------//
@@ -629,22 +641,7 @@ if($Day != next_day() || $_GET['runday']){
 	
 	$DB->query("UPDATE users_main SET RequiredRatio=0.00 WHERE Downloaded<5*1024*1024*1024");
 	
-    
-    
-    // keep a daily change history
-            $DB->query("UPDATE users_main AS u JOIN users_info AS i ON u.ID=i.UserID
-                           SET BonusLog = CONCAT('$sqltime | +', CreditsDaily, ' credits | seeded ', SeedHoursDaily, ' hrs\n', BonusLog),
-                               SeedHistory = CONCAT('$sqltime | ', SeedHoursDaily, ' hrs | up: ', 
-                                                FORMAT((Uploaded-UploadedLast)/1073741824, 2) , ' GB | down: ', 
-                                                FORMAT((Downloaded-DownloadedLast)/1073741824, 2) , ' GB | ', CreditsDaily, ' credits\n', SeedHistory),
-                               SeedHoursDaily=0.00, 
-                               CreditsDaily=0.00 , 
-                               UploadedLast=Uploaded , 
-                               DownloadedLast=Downloaded 
-                         WHERE SeedHoursDaily>0.00");
-            
-            
-            
+
 	// Here is where we manage ratio watch
 	
 	$OffRatioWatch = array();
