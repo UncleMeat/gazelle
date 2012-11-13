@@ -16,7 +16,7 @@ authorize();
 $Escaped = db_array($_POST, array('log_message','admin_message', 'raw_name'));
 
 //If we're here from the delete torrent page instead of the reports page.
-if(!isset($Escaped['from_delete'])) {
+if(!isset($Escaped['from_delete']) || $Escaped['from_delete']==0) {
 	$Report = true;
 } else if(!is_number($Escaped['from_delete'])) {
 	echo 'Hax occured in from_delete';
@@ -90,14 +90,14 @@ if(($Escaped['resolve_type'] == "manual" || $Escaped['resolve_type'] == "dismiss
 	} else {
 	//Someone beat us to it. Inform the staffer.
 ?>
-	<table cellpadding="5">
-		<tr>
-			<td>
-				<a href="reportsv2.php?view=report&amp;id=<?=$ReportID?>">Somebody has already resolved this report</a>
-				<input type="button" value="Clear" onclick="ClearReport(<?=$ReportID?>);" />
-			</td>
-		</tr>
-	</table>
+        <table cellpadding="5">
+            <tr>
+                <td>
+                    <a href="reportsv2.php?view=report&amp;id=<?=$ReportID?>">Somebody has already resolved this report</a>
+                    <input type="button" value="Clear" onclick="ClearReport(<?=$ReportID?>);" />
+                </td>
+            </tr>
+        </table>
 <?
 	}
 	die();
@@ -110,7 +110,7 @@ if(!isset($Escaped['resolve_type'])) {
 	$ResolveType = $Types[$_POST['resolve_type']];
 } else {
 	//There was a type but it wasn't an option!
-	echo 'HAX (Invalid Resolve Type)';
+	echo "HAX (Invalid Resolve Type)";
 	die();
 }
 

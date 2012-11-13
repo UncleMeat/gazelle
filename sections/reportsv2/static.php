@@ -253,6 +253,7 @@ if(count($Reports) == 0) {
 						<input type="hidden" id="report_reason<?=$ReportID?>" name="report_reason" value="<?=$UserComment?>" />
 						<input type="hidden" id="raw_name<?=$ReportID?>" name="raw_name" value="<?=$RawName?>" />
 						<input type="hidden" id="type<?=$ReportID?>" name="type" value="<?=$Type?>" />
+                        <input type="hidden" id="from_delete<?=$ReportID?>" name="from_delete" value="0" />
 					</div>
 					<table cellpadding="5">
 						<tr>
@@ -476,12 +477,12 @@ if(count($Reports) == 0) {
 										<strong>Disable Upload</strong>
 										<input type="checkbox" name="upload" id="upload<?=$ReportID?>"/>
 									</span>
-<?                                      if ($ReportType['resolve_options']['bounty'] != '0') {  ?>
-                                                      <span title="Pay bounty to reporter (<?=$ReporterName?>)">
-                                                            <strong>Pay Bounty (<?=$ReportType['resolve_options']['bounty']?>)</strong>
-                                                            <input type="checkbox" name="bounty" id="bounty<?=$ReportID?>"/>
-                                                      </span>
-<?                                      }       ?>
+<?                                      //if ($ReportType['resolve_options']['bounty'] != '0') {  ?>
+                                    <span title="Pay bounty to reporter (<?=$ReporterName?>)">
+                                        <strong>Pay Bounty (<span id="bounty_amount<?=$ReportID?>"><?=$ReportType['resolve_options']['bounty']?></span>)</strong>
+                                        <input type="checkbox" name="bounty" id="bounty<?=$ReportID?>"/>
+                                    </span>
+<?                                      //}       ?>
 									<span title="Change report type / resolve action">
 										<input type="button" name="update_resolve" id="update_resolve<?=$ReportID?>" value="Change report type" onclick="UpdateResolve(<?=$ReportID?>)" />
 									</span>
@@ -497,7 +498,8 @@ if(count($Reports) == 0) {
 								</select>
 							</td> 
 							<td colspan="3">A PM is automatically generated for the uploader (and if a bounty is paid to the reporter). Any text here is appended to the uploaders auto PM unless using 'Send Now' to immediately send a message.<br />
-                                                <span title="Uploader: Appended to the regular message unless using send now. Reporter: Must be used with send now">
+                                <blockquote><strong>uploader pm text:</strong><br/><span id="pm_message<?=$ReportID?>"><?=$ReportType['resolve_options']['pm']?></span></blockquote>
+                                <span title="Uploader: Appended to the regular message unless using send now. Reporter: Must be used with send now">
 									<textarea name="uploader_pm" id="uploader_pm<?=$ReportID?>" cols="50" rows="1"></textarea>
 								</span>
 								<input type="button" value="Send Now" onclick="SendPM(<?=$ReportID?>)" />

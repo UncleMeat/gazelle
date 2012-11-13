@@ -8,16 +8,17 @@ function ChangeResolve(reportid) {
 	ajax.get('reportsv2.php?action=ajax_change_resolve&id=' + reportid + '&type=' + $('#resolve_type' + reportid).raw().value, function (response) {
 			var x = json.decode(response);
 			$('#delete' + reportid).raw().checked = (x[0] == '1' ? true : false);
+            $('#bounty_amount' + reportid).raw().innerHTML =x[3];
+			$('#bounty' + reportid).raw().disabled = (x[3] == '0' ? true : false);
+            $('#pm_message' + reportid).raw().innerHTML =x[4];
 			if($('#uploaderid' + reportid).raw().value == $('#reporterid' + reportid).raw().value) {
 				$('#warning' + reportid).raw().selectedIndex = 0;
 				$('#upload' + reportid).raw().checked = false;
 				$('#bounty' + reportid).raw().checked = false;
-				$('#bounty' + reportid).raw().disabled = (x[3] == '0' ? true : false);
 			} else {
 				$('#upload' + reportid).raw().checked = (x[1] == '1' ? true : false);
 				$('#warning' + reportid).raw().selectedIndex = x[2];
 				$('#bounty' + reportid).raw().checked = (x[3] != '0' ? true : false);
-				$('#bounty' + reportid).raw().disabled = (x[3] == '0' ? true : false);
 			}
 			$('#update_resolve' + reportid).raw().disabled = false;
 		}
@@ -36,16 +37,17 @@ function Load(reportid) {
 	ajax.get('reportsv2.php?action=ajax_change_resolve&id=' + reportid + '&type=' + $('#resolve_type' + reportid).raw().value , function (response) {
 		var x = json.decode(response);
 			$('#delete' + reportid).raw().checked = (x[0] == '1' ? true : false);
+            $('#bounty_amount' + reportid).raw().innerHTML =x[3];
+			$('#bounty' + reportid).raw().disabled = (x[3] == '0' ? true : false);
+            $('#pm_message' + reportid).raw().innerHTML =x[4];
 			if($('#uploaderid' + reportid).raw().value == $('#reporterid' + reportid).raw().value) {
 				$('#warning' + reportid).raw().selectedIndex = 0;
 				$('#upload' + reportid).raw().checked = false;
 				$('#bounty' + reportid).raw().checked = false;
-				$('#bounty' + reportid).raw().disabled = (x[3] == '0' ? true : false);
 			} else {
 				$('#upload' + reportid).raw().checked = (x[1] == '1' ? true : false);
 				$('#warning' + reportid).raw().selectedIndex = x[2];
 				$('#bounty' + reportid).raw().checked = (x[3] != '0' ? true : false);
-				$('#bounty' + reportid).raw().disabled = (x[3] == '0' ? true : false);
 			}
 			$('#update_resolve' + reportid).raw().disabled = false;
 		}
@@ -71,8 +73,9 @@ function TakeResolve(reportid) {
 		if(response) {
 			ErrorBox(reportid, response);
 		} else {
-			if($('#from_delete' + reportid).results()) {
-				window.location = location.protocol + '//' + location.host + location.pathname + "?id=" + $('#from_delete' + reportid).raw().value;
+			if($('#from_delete' + reportid).raw().value > 0) {
+                window.location = location.protocol + '//' + location.host + "//log.php?search=Torrent+"+ $('#from_delete' + reportid).raw().value;
+                //window.location = location.protocol + '//' + location.host + location.pathname + "?id=" + $('#from_delete' + reportid).raw().value;
 			} else {
 				$('#report' + reportid).remove();
 				if($('#dynamic').raw().checked) {
