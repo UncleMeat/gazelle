@@ -1,94 +1,118 @@
 <?
-
- error("dont press that!"); 
-
-$filename = "peersid.txt"; 
+//set_time_limit(0);
+//error_reporting(E_ALL); // was 0 (off)
  
-$input = file($filename);
-
-$i=0;
-
-echo count($input)."<br/>";
- 
-$Values = array();
-$fname=1;
-
-$Peers = array();
-
-foreach($input as $key=>$line){
- 
-    if (strpos($line, "INSERT INTO")!==FALSE){
- 
-    } else {
-        $parts = explode("', '", $line);
-        if (count($parts)>1) {
-            $parts[0] = substr($parts[0], 2, 8);
-            if (substr($parts[0], 0, 4)!='exbc'){
-                $str = preg_replace('/[^a-z0-9]/', '', $parts[0]);
-                if ( !array_key_exists($str, $Peers)){
-                    $i++;
-                    $parts[1] = substr($parts[1], 0, strlen($parts[1])-4 );
-                    //$Values[] = "('$parts[0]', '$parts[1]'),\n";
-                    //$Peers[$str] = array(0, "('$parts[0]', '$parts[1]'),\n");
-                    $Peers[$str] = array(0, db_string($parts[0]) , $parts[1] );
-                } else {
-                    $Peers[$str][0]=$Peers[$str][0]+1;
-                }
-            
-            }
-        } 
-    } 
-}
-
-
-foreach($Peers as $key=>$val){
-                    //$Peers[$str] = array(0, "('$parts[0]', '$parts[1]'),\n");
-    $Values[] = "('$val[0]', '$val[1]', '$val[2]'),\n";
-}
-
-            if (!saverest( "/home/mifune/www/gazelle/peersid_ALL.sql", $Values)) {
-                echo "Error<br/>";
-                break;
-            }
-
-
-echo $i;
  
 
-function saverest($filename, $output){
-    
-    //$filename = 'peersid2.txt';
-    //$somecontent = "Add this to the file\n";
-    $handle = fopen($filename, 'w');
-    
-        if ( $handle === FALSE) {
-             echo "Cannot open file ($filename)<br/>";
-             exit;
-        }
+
+ 
+
+$time_start = microtime(true);
+
         
-    // Let's make sure the file exists and is writable first.
-    if (is_writable($filename)) {
+  
+$DoFix = isset($_POST['submit']) && $_POST['submit']=='Fix Titles';
+$WordLength = isset($_POST['wordlength'])? (int)$_POST['wordlength'] : 64;
 
-        // In our example we're opening $filename in append mode.
-        // The file pointer is at the bottom of the file hence
-        // that's where $somecontent will go when we fwrite() it.
+ 
 
-        $output = implode("", $output);
-        $output = substr($output,0, strlen($output)-2).";\n";
-        // Write $somecontent to our opened file.
-        if (fwrite($handle, $output) === FALSE) {
-            echo "Cannot write to file ($filename)<br/>";
-            exit;
+$DB->query("SELECT Name FROM torrents_group WHERE CHAR_LENGTH(Name)>$WordLength ORDER BY id");
+
+$numtorrents = $DB->record_count();
+
+   
+
+show_header("Fix Torrent Titles");
+
+
+?>
+<div class="thin">
+    <h2>Fix Torrent Titles</h2>
+        
+    <form method="post" action="" name="create_user">
+        <div class="head"></div>
+        <div class="box pad">
+            <input type="hidden" name="action" value="sandbox3" />
+            <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+            Max Word length in titles: <input type="text" name="wordlength" size="3" value="<?=$WordLength?>" /><br/>
+<?
+        
+        echo "Selected $numtorrents torrents for examination... <br/><br/><pre>";
+
+        $i=0;
+        $updaterow = array();
+
+        //while (($row = mysqli_fetch_assoc($result))) {
+        while ( $row = $DB->next_record(MYSQLI_ASSOC)  ) {
+
+            $Title = $row['Name'];
+            $Words = explode(' ', $Title);
+            //uasort($Words, 'tsort');
+
+            $found = false;
+            foreach($Words as &$word) {
+                $len = strlen($word);
+                if ($len <= $WordLength) continue;
+
+                $cutat = strrpos($word, '.', $WordLength - $len);
+                if ($cutat===false) $cutat = strrpos($word, '-', $WordLength - $len);
+                if ($cutat===false) $cutat = $WordLength-4;
+                $word = substr($word, 0, $cutat).' '.substr($word, $cutat+1);
+                $found = true;
+            }
+
+            if ($found) {
+                echo "<br/>     012345678901234567890123456789012345678901234567-50-234567-60-2345--8901234567-80-234567890<br/><br/>";
+                echo "OLD: $Title<br/>";
+                $Title = implode(' ', $Words);
+                echo "New: $Title<br/>";
+
+                $updaterow[] = "(" . $row['ID'] . ", '" . db_string($Title) . "')"; 
+                $i++;
+            }
+
+             /* 
+        SELECT id, name
+        FROM emp.torrents
+        WHERE CHAR_LENGTH( name ) >64
+        AND name NOT
+        REGEXP '[[:blank:]]+'
+        ORDER BY id
+        LIMIT 0 , 30
+              */ 
         }
 
-        echo "Success, wrote input to file ($filename)<br/>";
+        if ($DoFix && $i>0){
 
-        fclose($handle);
-        return true;
-    } else {
-        echo "The file $filename is not writable<br/>";
-        return false;
-    }
-}
- 
+            $DB->query("INSERT INTO torrents_groups (ID, Name) VALUES " 
+                    . implode(',', $updaterow) 
+                    . " ON DUPLICATE KEY UPDATE Name=Values(Name)");
+
+        }
+
+
+        echo "</pre><br/>" . ($DoFix? 'FIXED':'Found' ) ." $i titles with overlong words in them<br/>";
+
+        $time = microtime(true) - $time_start;
+        echo "<br/>execution time: $time seconds<br/>";
+        
+?>
+        
+            <input type="submit" name="submit" value="Search" />
+        </div>
+    
+<? if (!$DoFix) {  ?>
+        <div class="head"></div>
+        <div class="box pad">     
+            <input type="submit" name="submit" value="Fix Titles" />
+        </div>
+    </form>
+<? }  ?>
+</div>
+<?
+
+show_footer();
+
+
+
 ?>
