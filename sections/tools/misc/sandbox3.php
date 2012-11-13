@@ -84,7 +84,7 @@ $numtorrents = $DB->record_count();
 
         if ($DoFix && $i>0){
 
-            $DB->query("INSERT INTO torrents_groups (ID, Name) VALUES " 
+            $DB->query("INSERT INTO torrents_group (ID, Name) VALUES " 
                     . implode(',', $updaterow) 
                     . " ON DUPLICATE KEY UPDATE Name=Values(Name)");
 
