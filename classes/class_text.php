@@ -565,9 +565,9 @@ class TEXT {
 	private $NoImg = 0; // If images should be turned into URLs
 	private $Levels = 0; // nesting level
 	private $Advanced = false; // allow advanced tags to be printed
-      private $ShowErrors = false;
-      private $Errors = array();
-      
+    private $ShowErrors = false;
+    private $Errors = array();
+    
       //public $Smilies = array(); // for testing only
 	function __construct() {
 		foreach($this->Smileys as $Key=>$Val) {

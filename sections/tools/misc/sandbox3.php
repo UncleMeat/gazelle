@@ -16,13 +16,13 @@ $WordLength = isset($_POST['wordlength'])? (int)$_POST['wordlength'] : 64;
 
  
 
-$DB->query("SELECT Name FROM torrents_group WHERE CHAR_LENGTH(Name)>$WordLength ORDER BY id");
-
-$numtorrents = $DB->record_count();
-
    
 
 show_header("Fix Torrent Titles");
+
+$DB->query("SELECT ID, Name FROM torrents_group WHERE CHAR_LENGTH(Name)>$WordLength ORDER BY id");
+
+$numtorrents = $DB->record_count();
 
 
 ?>
@@ -37,17 +37,17 @@ show_header("Fix Torrent Titles");
             Max Word length in titles: <input type="text" name="wordlength" size="3" value="<?=$WordLength?>" /><br/>
 <?
         
-        echo "Selected $numtorrents torrents for examination... <br/><br/><pre>";
+        echo "Selected $numtorrents torrents for examination (max wordlength=$WordLength) ... <br/><br/><code class=\"bbcode\">";
 
         $i=0;
         $updaterow = array();
 
         //while (($row = mysqli_fetch_assoc($result))) {
-        while ( $row = $DB->next_record(MYSQLI_ASSOC)  ) {
+        while ( list($ID, $Title) = $DB->next_record()  ) {
 
-            $Title = $row['Name'];
+            //$Title = $row['Name'];
             $Words = explode(' ', $Title);
-            //uasort($Words, 'tsort');
+            //uasort($Words, 'tsort'); 
 
             $found = false;
             foreach($Words as &$word) {
@@ -62,12 +62,12 @@ show_header("Fix Torrent Titles");
             }
 
             if ($found) {
-                echo "<br/>     012345678901234567890123456789012345678901234567-50-234567-60-2345--8901234567-80-234567890<br/><br/>";
+                echo "<br/>---- 012345678901234567890123456789012345678901234567-50-234567-60-2345--8901234567-80-234567890<br/><br/>";
                 echo "OLD: $Title<br/>";
                 $Title = implode(' ', $Words);
                 echo "New: $Title<br/>";
 
-                $updaterow[] = "(" . $row['ID'] . ", '" . db_string($Title) . "')"; 
+                $updaterow[] = "(" . $ID . ", '" . db_string($Title) . "')"; 
                 $i++;
             }
 
@@ -91,7 +91,7 @@ show_header("Fix Torrent Titles");
         }
 
 
-        echo "</pre><br/>" . ($DoFix? 'FIXED':'Found' ) ." $i titles with overlong words in them<br/>";
+        echo "</code><br/>" . ($DoFix? 'FIXED':'Found' ) ." $i titles with overlong words in them<br/>";
 
         $time = microtime(true) - $time_start;
         echo "<br/>execution time: $time seconds<br/>";
