@@ -64,20 +64,9 @@ minutes).
 
 echo "Ran every-time functions\n";
 
-//------------- Freeleech -----------------------------------------------//
-
-//We use this to control 6 hour freeleeches. They're actually 7 hour, but don't tell anyone. 
-/*
-$TimeMinus = time_minus(3600*7);
-
-$DB->query("SELECT DISTINCT GroupID FROM torrents WHERE FreeTorrent='1' AND FreeLeechType='3' AND Time<'$TimeMinus'");
-while(list($GroupID) = $DB->next_record()) {
-	$Cache->delete_value('torrents_details_'.$GroupID);
-	$Cache->delete_value('torrent_group_'.$GroupID);
-}
-$DB->query("UPDATE torrents SET FreeTorrent='0',FreeLeechType='0',flags='2' WHERE FreeTorrent='1' AND FreeLeechType='3' AND Time<'$TimeMinus'");
-*/
+ 
 sleep(5);
+
 //------------- Delete unpopular tags -------// moved to vote_tag so torrents_group.taglist can be adjusted if tag is deleted
 //$DB->query("DELETE FROM torrents_tags WHERE NegativeVotes>PositiveVotes");
 
@@ -140,9 +129,6 @@ $DB->query("INSERT INTO users_connectable_status ( UserID, IP, Time )
         SELECT uid, ip, '$nowtime' FROM xbt_files_users GROUP BY uid, ip
          ON DUPLICATE KEY UPDATE Time='$nowtime'");
 
-// er time ends up being 'last checked' so shouldnt be updated here
-//$DB->query("INSERT IGNORE INTO users_connectable_status ( UserID, IP, Status, Time )
- //           SELECT uid, ip, 'unset', '$nowtime' FROM xbt_files_users GROUP BY uid, ip ");
 
 //------------Remove inactive peers every 15 minutes-------------------------//
 $DB->query("DELETE FROM xbt_files_users WHERE active='0'");
@@ -232,7 +218,7 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
       
 	//------------- Record daily seedhours  ----------------------------------------//
 
-	if ($Hour == 19) { // 4 am servertime... want it to be daily but not on the 0 hour  //SeedHours>0.00 
+	if ($Hour == 3) { // 3 am servertime... want it to be daily but not on the 0 hour  //SeedHours>0.00 
  
         /*
             $DB->query("UPDATE users_main AS u JOIN users_info AS i ON u.ID=i.UserID
@@ -386,7 +372,7 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
 
 /*
  * Lanz: Lets not demote anyone that doesn't have the required upload today but perhaps "unfairly" got promoted earlier.
- *                 
+ * Mifune: Required uploads is now only for promotions, not demotions (to avoid users being demoted by the torrent reaper)
 		// Demote users with less than the required uploads
 		
 		$Query = "SELECT ID FROM users_main JOIN users_info ON users_main.ID = users_info.UserID
@@ -517,7 +503,7 @@ if($Day != next_day() || $_GET['runday']){
     $Cache->cache_value('stats_torrent_count_daily', $TorrentCountLastDay, 0); //inf cache
     
       /*  a join on a function(!?!?) with 100's of 1000's of records is a bad idea....
-       * // this is now done manually as a once in a blue moon thing by iterating thru a loop (code in sandbox)
+       * // this is now done differently,... ipcc is set for each user on login - see below
       $DB->query("INSERT INTO users_geodistribution (Code, Users) 
                        SELECT g.Code, COUNT(u.ID) AS Users 
                          FROM geoip_country AS g JOIN users_main AS u ON INET_ATON(u.IP) BETWEEN g.StartIP AND g.EndIP 
@@ -536,11 +522,9 @@ if($Day != next_day() || $_GET['runday']){
 	$Cache->delete_value('geodistribution');
     
     // -------------- clean up users_connectable_status table - remove values older than 60 days
-   
-	//$DB->query("DELETE FROM users_connectable_status WHERE Time<".time() - (3600*24*60)."");
-    //echo "##  START DELETE FROM users_connectable_status ###\n";
+    
 	$DB->query("DELETE FROM users_connectable_status WHERE Time<(".(int)(time() - (3600*24*60)).")");
-    //echo "## FINISH ##\n";
+   
     
 	//------------- Ratio requirements
 	
@@ -577,7 +561,7 @@ if($Day != next_day() || $_GET['runday']){
 		SET um.RequiredRatioWork=(1-(t.SeedingAvg/s.NumSnatches))
 		WHERE s.NumSnatches>0;");
 	
-    /*
+    /*  // OLD Ratio Reqs - we have lowered them to 0.50 max 
 	$RatioRequirements = array(
 		array(80*1024*1024*1024, 0.60, 0.50),
 		array(60*1024*1024*1024, 0.60, 0.40),
@@ -587,26 +571,7 @@ if($Day != next_day() || $_GET['runday']){
 		array(20*1024*1024*1024, 0.30, 0.05),
 		array(10*1024*1024*1024, 0.20, 0.0),
 		array(5*1024*1024*1024,  0.15, 0.0)
-	); 
-    
-	$DB->query("UPDATE users_main SET RequiredRatio=0.60 WHERE Downloaded>100*1024*1024*1024");
-     
-	
-	$DownloadBarrier = 100*1024*1024*1024;
-	foreach($RatioRequirements as $Requirement) {
-		list($Download, $Ratio, $MinRatio) = $Requirement;
-		
-		$DB->query("UPDATE users_main SET RequiredRatio=RequiredRatioWork*$Ratio WHERE Downloaded >= '$Download' AND Downloaded < '$DownloadBarrier'");
-		
-		$DB->query("UPDATE users_main SET RequiredRatio=$MinRatio WHERE Downloaded >= '$Download' AND Downloaded < '$DownloadBarrier' AND RequiredRatio<$MinRatio");
-		
-		$DB->query("UPDATE users_main SET RequiredRatio=$Ratio WHERE Downloaded >= '$Download' AND Downloaded < '$DownloadBarrier' AND can_leech='0' AND Enabled='1'");
-		
-		$DownloadBarrier = $Download;
-	}
-	
-	$DB->query("UPDATE users_main SET RequiredRatio=0.00 WHERE Downloaded<5*1024*1024*1024");
-	
+	);  
      */
 	
 	

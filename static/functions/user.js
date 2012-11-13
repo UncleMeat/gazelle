@@ -45,13 +45,34 @@ function Toggle_view(elem_id) {
         jQuery('#'+elem_id+'button').text('(Show)');
     else  
         jQuery('#'+elem_id+'button').text('(Hide)');
+     
+    var t= [get_hidden_value('profile'), 
+                        get_hidden_value('bonus'), 
+                        get_hidden_value('donate'), 
+                        get_hidden_value('snatches'), 
+                        get_hidden_value('recentuploads'), 
+                        get_hidden_value('linked'), 
+                        get_hidden_value('invite'), 
+                        get_hidden_value('requests'), 
+                        get_hidden_value('staffpms'), 
+                        get_hidden_value('notes'), 
+                        get_hidden_value('history'), 
+                        get_hidden_value('info'), 
+                        get_hidden_value('badgesadmin'), 
+                        get_hidden_value('warn'), 
+                        get_hidden_value('privilege'), 
+                        get_hidden_value('session'),
+                        get_hidden_value('submit')]; 
             
-    jQuery.cookie('userPageState', Get_Cookie());
+    jQuery.cookie('userPageState', json.encode(t));
     return false;
 }
 
+
+/*
 function Get_Cookie() {
-    return json.encode([get_hidden_value('profilediv'), 
+    alert("g");
+    var t= [get_hidden_value('profilediv'), 
                         get_hidden_value('bonusdiv'), 
                         get_hidden_value('donatediv'), 
                         get_hidden_value('snatchesdiv'), 
@@ -67,17 +88,38 @@ function Get_Cookie() {
                         get_hidden_value('warndiv'), 
                         get_hidden_value('privilegediv'), 
                         get_hidden_value('sessiondiv'),
-                        get_hidden_value('submitdiv')]);
-}
+                        get_hidden_value('submitdiv')]; 
+                    alert(t);
+    return json.encode(t);  
+} */
 
-function get_hidden_value(elem_id){ 
-    if (document.getElementById(elem_id) == undefined) return '0';
-    else return ( jQuery('#'+elem_id).is(':hidden') )?'0':'1';
+function get_hidden_value(elem_id){
+    
+    if (!in_array(elem_id, cookieitems, false)) 
+        return 'not';
+    else
+        return ( jQuery('#'+elem_id+'div').is(':hidden') )?'0':'1';
+     
+    /*
+    var element =  document.getElementById(elem_id);
+ 
+    if (typeof(element) != 'undefined' && element != null)
+    {
+      // exists.
+      return ( jQuery('#'+elem_id).is(':hidden') )?'0':'1';
+    }
+    return '0';
+    //if (jQuery('#'+elem_id).length == 0) alert("un: "+elem_id);
+    if (jQuery('#'+elem_id).length == 0) return '0';
+    else return ( jQuery('#'+elem_id).is(':hidden') )?'0':'1'; */
 }
 
 function set_hidden_value(elem_id, state){
-    if (document.getElementById(elem_id+'div') == undefined) return;
-    if(state == '0') {
+    
+    if (!in_array(elem_id, cookieitems, false))  return ;
+   
+    //if (jQuery('#'+elem_id).length == 0) return;
+    if(state != '1') {
         jQuery('#'+elem_id+'div').hide();
 	  jQuery('#'+elem_id+'button').text('(Show)');
     } else {
@@ -89,9 +131,10 @@ function set_hidden_value(elem_id, state){
 function Load_User_Cookie()  { 
     
 	if(jQuery.cookie('userPageState') == undefined) {
-		jQuery.cookie('userPageState', json.encode(['1', '1', '1', '0', '0', '0', '0', '0', '0', '1', '0', '1', '0', '1', '1', '1', '1']));
+		jQuery.cookie('userPageState', json.encode(['0', '1', '1', '0', '0', '0', '0', '0', '0', '1', '0', '1', '0', '1', '1', '1', '1']));
 	}
 	var state = json.decode( jQuery.cookie('userPageState') );
+     
       set_hidden_value('profile', state[0]);
       set_hidden_value('bonus', state[1]);
       set_hidden_value('donate', state[2]);

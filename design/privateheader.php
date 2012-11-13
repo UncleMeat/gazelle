@@ -82,32 +82,6 @@ if ($Mobile) { ?>
     <div id="header_top">
 	<div id="logo"><a href="index.php"></a></div>
 	<div id="stats_block">
-               <? /*
-		<ul id="userinfo_stats">
-                <span class="inside_stat">
-    <?
-        if($LoggedUser['FLTokens'] > 0) { ?>
-                    <li id="fl_tokens"><a href="userhistory.php?action=token_history">Slots</a>: <span class="stat"><?=$LoggedUser['FLTokens']?></span></li>
-    <?	} ?>  
-                    <li id="stats_seeding"><a href="torrents.php?type=seeding&amp;userid=<?=$LoggedUser['ID']?>">Up</a>: <span class="stat"><?=get_size($LoggedUser['BytesUploaded'])?></span></li>
-                </span>
-                <span class="inside_stat"> 
-                    <li id="credits"><a href="bonus.php">Credits</a>: <span class="stat"><?=number_format((int)$LoggedUser['TotalCredits'])?></span></li>
-                    <li id="stats_leeching"><a href="torrents.php?type=leeching&amp;userid=<?=$LoggedUser['ID']?>">Down</a>: <span class="stat"><?=get_size($LoggedUser['BytesDownloaded'])?></span></li>
-                </span>
-                <span class="inside_stat">
-    <?	if(!empty($LoggedUser['RequiredRatio']) && $LoggedUser['RequiredRatio']>0) {?>
-                    <li id="stats_required"><a href="articles.php?topic=ratio">Required</a>: <span class="stat"><?=number_format($LoggedUser['RequiredRatio'], 2)?></span></li>
-    <?	}  ?> 
-                    <li id="stats_ratio"><a href="articles.php?topic=ratio">Ratio</a>: <span class="stat"><?=ratio($LoggedUser['BytesUploaded'], $LoggedUser['BytesDownloaded'])?></span></li>
-                </span>
-            </ul>  */
-               
-//if($LoggedUser['personal_freeleech'] >= sqltime()) {
-            
-
-
-?>
           <table class="userinfo_stats noborder">
               <tr>
                   <td style="text-align:right;"><a href="bonus.php">Credits</a>:</td>
@@ -369,9 +343,7 @@ if(check_perms('admin_reports')) {
                   <li id="nav_help"><a href="articles.php?topic=tutorials">Help</a></li>
 			<li id="nav_staff"><a href="staff.php">Staff</a></li>
             
-                                <li id="nav_bonus" class="normal" title="Spend your credits in the bonus shop"><a href="bonus.php">Shop</a></li>
                                 <li id="nav_logs" class="normal"><a href="log.php">Logs</a></li>
-                                <li id="nav_conncheck" class="normal"><a onmousedown="Stats('conncheck');" href="user.php?action=connchecker">Conn-Checker</a></li> 
 		</ul>
 	</div>
 <?
@@ -511,6 +483,7 @@ if(!$Mobile && $LoggedUser['Rippy'] != 'Off') {
                 <ul id="userinfo_major">
                         <li id="nav_logout" class="brackets"><a href="logout.php?auth=<?=$LoggedUser['AuthKey']?>">Logout</a></li>
                       <li id="nav_donate" class="brackets"><a href="donate.php">Donate</a></li>
+                                <li id="nav_conncheck" class="normal"><a href="user.php?action=connchecker">Conn-Checker</a></li> 
                 </ul>
             </div>
         <?    
@@ -610,12 +583,12 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                                 <li id="nav_comments" class="normal"><a onmousedown="Stats('comments');" href="comments.php">Comments</a></li>
                                 <li id="nav_friends" class="normal"><a onmousedown="Stats('friends');" href="friends.php">Friends</a></li>
                                 
+                                <li id="nav_bonus" class="normal" title="Spend your credits in the bonus shop"><a href="bonus.php">Bonus Shop</a></li>
+                                
                                 <li id="nav_sandbox" class="normal"><a href="sandbox.php">Sandbox</a></li>
                                 
                         <!--    <li id="nav_collages" class="normal"><a href="collages.php">Collages</a></li>
                                 <li id="nav_logs" class="normal"><a onmousedown="Stats('logs');" href="log.php">Logs</a></li>
-                                <li id="nav_bonus" class="normal"><a onmousedown="Stats('bonus');" href="bonus.php">Bonus</a></li>
-                                <li id="nav_sandbox" class="normal"><a onmousedown="Stats('sandbox');" href="sandbox.php">Sandbox</a></li> 
                                 <li id="nav_conncheck" class="normal"><a onmousedown="Stats('conncheck');" href="user.php?action=connchecker">Conn-Checker</a></li> -->
     <? /* 
     if(check_perms('site_send_unlimited_invites')) {

@@ -649,12 +649,15 @@ if(check_paranoia_here('invitedcount')) {
 ?>
 				<li>Invited: <?=number_format($Invited)?></li>
 <?
-} ?>
+}?>
 			</ul>
 		</div>
 	</div>
 	<div class="main_column">
 <?
+        $CookieItems=array();
+        $CookieItems[] = 'profile';
+
     if ($RatioWatchEnds!='0000-00-00 00:00:00'
 		&& (time() < strtotime($RatioWatchEnds))
 		&& ($Downloaded*$RequiredRatio)>$Uploaded ) {
@@ -689,7 +692,9 @@ if(check_paranoia_here('invitedcount')) {
             </div>
 <?
 
-if (check_perms('users_view_bonuslog',$Class) || $OwnProfile) { ?>
+if (check_perms('users_view_bonuslog',$Class) || $OwnProfile) { 
+        $CookieItems[] = 'bonus';
+    ?>
             <div class="head">
                 <span style="float:left;">Bonus Credits</span>
                 <span style="float:right;"><a id="bonusbutton" href="#" onclick="return Toggle_view('bonus');">(Hide)</a></span>&nbsp;
@@ -710,6 +715,7 @@ if (check_perms('users_view_bonuslog',$Class) || $OwnProfile) { ?>
 }
 
 if (!$OwnProfile) {
+        $CookieItems[] = 'donate';
     include(SERVER_ROOT.'/sections/bonus/functions.php'); 
     $ShopItems = get_shop_items_other();
      
@@ -756,6 +762,7 @@ if (!$OwnProfile) {
 }
 
 if ($Snatched > 4 && check_paranoia_here('snatched')) {
+        $CookieItems[] = 'snatches';
 	$RecentSnatches = $Cache->get_value('recent_snatches_'.$UserID);
 	if(!is_array($RecentSnatches)){
 		$DB->query("SELECT
@@ -809,6 +816,7 @@ if ($Uploads > 0 && check_paranoia_here('uploads')) {
 		$Cache->cache_value('recent_uploads_'.$UserID, $RecentUploads, 0); //inf cache
 	}
       if(count($RecentUploads)>0){
+        $CookieItems[] = 'recentuploads';
 ?>
     <div class="head">
         <span style="float:left;">Recent Uploads</span>
@@ -878,11 +886,13 @@ foreach ($Collages as $CollageInfo) {
 
 // Linked accounts
 if(check_perms('users_mod')) {
+        $CookieItems[] = 'linked';
 	include(SERVER_ROOT.'/sections/user/linkedfunctions.php');
 	user_dupes_table($UserID);
 }
 
 if ((check_perms('users_view_invites')) && $Invited > 0) {
+        $CookieItems[] = 'invite';
 	include(SERVER_ROOT.'/classes/class_invite_tree.php');
 	$Tree = new INVITE_TREE($UserID, array('visible'=>false));
 ?>
@@ -900,6 +910,7 @@ if ((check_perms('users_view_invites')) && $Invited > 0) {
 
 // Requests
 if (check_paranoia_here('requestsvoted_list')) {
+        $CookieItems[] = 'requests';
 	$DB->query("SELECT
 			r.ID,
 			r.CategoryID,
@@ -923,7 +934,7 @@ if (check_paranoia_here('requestsvoted_list')) {
                     <span style="float:right;"><a id="requestsbutton" href="#" onclick="return Toggle_view('requests');">(Hide)</a></span>&nbsp;
             </div>                
             <div class="box">		
-                    <div id="requestsdiv" class="">
+            <div id="requestsdiv" class="">
 				<table cellpadding="6" cellspacing="1" border="0" class="border shadow" width="100%">
 					<tr class="colhead_dark">
 						<td style="width:48%;">
@@ -1019,6 +1030,7 @@ if (check_perms('users_mod', $Class) || $IsFLS) {
 				WHERE UserID = $UserID AND (Level <= $UserLevel OR AssignedToUser='".$LoggedUser['ID']."')
 				ORDER BY Date DESC");
 	if ($DB->record_count()) {
+        $CookieItems[] = 'staffpms';
 		$StaffPMs = $DB->to_array();
 ?>
                 <div class="head">
@@ -1068,7 +1080,12 @@ if (check_perms('users_mod', $Class) || $IsFLS) {
 <?	}
 }
 
-if (check_perms('users_mod', $Class)) { ?>
+if (check_perms('users_mod', $Class)) { 
+        $CookieItems[] = 'notes';
+        $CookieItems[] = 'history';
+        $CookieItems[] = 'info';
+        $CookieItems[] = 'privilege';
+        $CookieItems[] = 'submit'; ?>
         <form id="form" action="user.php" method="post">
 		<input type="hidden" name="action" value="moderate" />
 		<input type="hidden" name="userid" value="<?=$UserID?>" />
@@ -1366,17 +1383,19 @@ if (check_perms('users_mod', $Class)) { ?>
             
 <? 
 	if ((check_perms('users_edit_badges', $Class) && $UserID != $LoggedUser['ID'])
-              || (check_perms('users_edit_own_badges') && $UserID == $LoggedUser['ID'])) {  ?>
+              || (check_perms('users_edit_own_badges') && $UserID == $LoggedUser['ID'])) {
+                
+        $CookieItems[] = 'badgesadmin';  ?>
 
-                <div class="head">
-                        <span style="float:left;">User Badges</span>
-                        <span style="float:right;"><a id="badgesadminbutton" href="#" onclick="return Toggle_view('badgesadmin');">(Hide)</a></span>&nbsp;
-                </div>
-                <div class="box">
-                  <div class="pad" id="badgesadmindiv">
+        <div class="head">
+            <span style="float:left;">User Badges</span>
+            <span style="float:right;"><a id="badgesadminbutton" href="#" onclick="return Toggle_view('badgesadmin');">(Hide)</a></span>&nbsp;
+        </div>
+        <div class="box">
+            <div class="pad" id="badgesadmindiv">
 <?
-                      $UserBadgesIDs = array(); // used in a mo to determine what badges user has for admin 
-                      if ($UserBadges){
+                $UserBadgesIDs = array(); // used in a mo to determine what badges user has for admin 
+                if ($UserBadges){
 ?>
                       <div class="pad"><h3>Current user badges (select to remove)</h3>
 <?
@@ -1467,7 +1486,8 @@ if (check_perms('users_mod', $Class)) { ?>
 
 
 
-    if (check_perms('users_warn')) { ?>
+    if (check_perms('users_warn')) {
+        $CookieItems[] = 'warn';  ?>
 		<div class="head">
                         <span style="float:left;">Warn User</span>
                         <span style="float:right;"><a id="warnbutton" href="#" onclick="return Toggle_view('warn');">(Hide)</a></span>&nbsp;
@@ -1604,7 +1624,8 @@ if (check_perms('users_mod', $Class)) { ?>
             </div>
             
             
-<?	if(check_perms('users_logout')) { ?>
+<?	if(check_perms('users_logout')) {
+        $CookieItems[] = 'session';  ?>
             <div class="head">
                         <span style="float:left;">Session</span>
                         <span style="float:right;"><a id="sessionbutton" href="#" onclick="return Toggle_view('session');">(Hide)</a></span>&nbsp;
@@ -1644,7 +1665,15 @@ if (check_perms('users_mod', $Class)) { ?>
                 </table>
             </div>
         </form>
-<? } // end moderation panel ?>
+<? } // end moderation panel 
+
+    //$CookieItems = "['" . implode("','", $CookieItems) . "']";
+?>
+            
+				<script type="text/javascript">
+                    var cookieitems= new Array( '<?= implode("','", $CookieItems) ?>' );  //   <?=$CookieItems?> ; //   
+				</script>
+                
       <a id="torrents"></a>
 <?    
 	  if ($LoggedUser['HideUserTorrents']==0 && check_paranoia_here('uploads')) { 
