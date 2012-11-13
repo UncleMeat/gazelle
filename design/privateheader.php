@@ -343,7 +343,7 @@ if(check_perms('admin_reports')) {
                   <li id="nav_help"><a href="articles.php?topic=tutorials">Help</a></li>
 			<li id="nav_staff"><a href="staff.php">Staff</a></li>
             
-                                <li id="nav_logs" class="normal"><a href="log.php">Logs</a></li>
+                              <!--  <li id="nav_logs" class="normal"><a href="log.php">Logs</a></li> -->
 		</ul>
 	</div>
 <?

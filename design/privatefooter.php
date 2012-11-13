@@ -46,6 +46,7 @@
         <a style="margin-left:3px;" href="feeds.php?feed=torrents_notify_<?=$LoggedUser['torrent_pass']?>&amp;user=<?=$LoggedUser['ID']?>&amp;auth=<?=$LoggedUser['RSS_Auth']?>&amp;passkey=<?=$LoggedUser['torrent_pass']?>&amp;authkey=<?=$LoggedUser['AuthKey']?>" title="<?=SITE_NAME?> : Torrent Notifications" >notifications</a>
      
     </p>
+    <p><a href="log.php">Site Logs</a></p>
 </div>
 <div id="footer_bottom">
 </div>
