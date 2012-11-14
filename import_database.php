@@ -845,9 +845,11 @@ if($Starting){
     echo "Starting fresh: truncated all torrent related tables<br/>";
 }
 
-$result = mysqli_query($link, "select Max(GroupID) from gazelle.torrents") ;
+$result = mysqli_query($link, "select Max(GroupID) AS MaxID from gazelle.torrents") ;
 if (!$result) die(mysqli_error($link));
-list($StartID) = mysqli_fetch_assoc($result);
+//list($StartID) = mysqli_fetch_assoc($result);
+$row = mysqli_fetch_assoc($result);
+$StartID = $row['MaxID'];
 if ($StartID) $WHERE =  " WHERE id>$StartID ";
 else $WHERE ='';
 
