@@ -729,10 +729,13 @@ function cleansearch($Str) {
                 return $Str;
         }
 
-//define('SERVER_ROOT', '/home/tracker/gazelle');
-require('/home/tracker/gazelle/classes/config.php');
-require('/home/tracker/gazelle/classes/class_torrent.php');
+//////define('SERVER_ROOT', '/home/tracker/gazelle');
+//require('/home/tracker/gazelle/classes/config.php');
+//require('/home/tracker/gazelle/classes/class_torrent.php');
 
+require('/var/www/emp3/classes/config.php');
+require('/var/www/emp3/classes/class_torrent.php');
+    
 $time_start = microtime(true);
 
 echo "connecting to database<br/>";
