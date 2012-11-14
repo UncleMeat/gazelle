@@ -261,7 +261,7 @@ if ($Classes[$Class]['Level']!=$Cur['Class'] && (
 	($Classes[$Class]['Level'] < $LoggedUser['Class'] && check_perms('users_promote_below', $Cur['Class']))
 	|| ($Classes[$Class]['Level'] <= $LoggedUser['Class'] && check_perms('users_promote_to', $Cur['Class']-1)))) {
 	$UpdateSet[]="PermissionID='$Class'";
-	$EditSummary[]="class changed to [b]".make_class_string($Class).'[/b]';
+	$EditSummary[]="class changed to [b][color=".str_replace(" ", "", $Classes[$Class]['Name'])."]" .make_class_string($Class).'[/color][/b]';
 	$LightUpdates['PermissionID']=$Class;
 
 	$DB->query("SELECT DISTINCT DisplayStaff FROM permissions WHERE ID = $Class OR ID = ".$ClassLevels[$Cur['Class']]['ID']);

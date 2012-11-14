@@ -4,10 +4,10 @@
 	<title>Empornium</title>
 </head>
 <body>
-<br/>
+    <br/>
     <h1>Empornium is closed for upgrade</h1>
     <br/><br/>
-    <h2>we will be back shortly... bigger and better than ever!</h2>
+    <h2>we will be back in a few hours time... bigger and better than ever!</h2>
     <br/>
     <h2> you can find us on irc in the meantime</h2>
     <div class="thin">

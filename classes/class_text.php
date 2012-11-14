@@ -1195,7 +1195,7 @@ EXPLANATION OF PARSER LOGIC
             static $ColorAttribs; static $ReplaceVals; static $ReplaceCols;
             if (!$ColorAttribs) { // only define it once per page  
                 $ColorAttribs = array('orange', 'aqua', 'aquamarine', 'magenta', 'darkmagenta', 'slategrey', 'pink', 'hotpink', 'black', 'wheat', 'midnightblue', 'forestgreen', 'blue', 'lightblue', 'fuchsia', 'lightgreen', 'green', 'grey', 'lightgrey', 'lime', 'maroon', 'navy', 'olive', 'khaki', 'darkkhaki', 'gold', 'goldenrod', 'darkgoldenrod', 'purple', 'violet', 'red', 'crimson', 'firebrick', 'gainsboro', 'silver', 'teal', 'linen', 'aliceblue', 'lavender', 'white', 'whitesmoke', 'lightyellow', 'yellow');
-                $ReplaceVals = array('goodperv','modperv','apprentice','perv','sextreme','smutpeddlar','admin','sysop');
+                $ReplaceVals = array('goodperv','modperv','apprentice','perv','sextreme','smutpeddler','admin','sysop');
                 $ReplaceCols = array('#3c3','#000','#92a5c2','#4ec89b','orange','#00f','#606','#8b0000');
                 /* 
 .Apprentice { color:#92a5c2; }
