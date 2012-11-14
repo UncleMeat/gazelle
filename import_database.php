@@ -3,7 +3,7 @@ set_time_limit(50000);
 error_reporting(E_ALL); // was 0 (off)
 
 define('EMDB', 'emp');
-define('TORRENT_PATH', '/home/tracker/gazelle/torrents');
+define('TORRENT_PATH', '/var/www/emp2/torrents');
 
 $smilies = array(
            ':smile1:'           => 'smile1.gif',
@@ -845,7 +845,7 @@ if($Starting){
     echo "Starting fresh: truncated all torrent related tables<br/>";
 }
 
-$result = mysqli_query($link, "select Max(GroupID) AS MaxID from gazelle.torrents") ;
+$result = mysqli_query($link, "SELECT Max(GroupID) AS MaxID FROM gazelle.torrents") ;
 if (!$result) die(mysqli_error($link));
 //list($StartID) = mysqli_fetch_assoc($result);
 $row = mysqli_fetch_assoc($result);
