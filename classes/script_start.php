@@ -10,9 +10,14 @@
 /* generates the page are at the bottom.				 */
 /* ------------------------------------------------------ */
 /* * ***************************************************** */
-//die("<br/><h1>Site Closed for maintenance</h1><br/><br/><h2>we will be back shortly... you can find us on irc in the meantime</h2>");
 
 require 'config.php'; //The config contains all site wide configuration information
+
+/*
+if (!isset($_GET['in'])) {
+    require SERVER_ROOT . '/redirect_index.php';
+    die();
+} */
 
 //Deal with dumbasses
 if (isset($_REQUEST['info_hash']) && isset($_REQUEST['peer_id'])) {

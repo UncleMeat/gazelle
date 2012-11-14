@@ -1,8 +1,5 @@
 -- fetch data from emp.users into gazelle.users_main
-
---insert into `gazelle`.`users_main` (`ID`, `Username`, `Email`, `PassHash`, `Secret`, `Title`, `PermissionID`, `Enabled`, `Uploaded`, `Downloaded`, `LastLogin`, `LastAccess`, `IP`, `torrent_pass`, `Credits`, `FLTokens`)
--- SELECT `Id`, `username`, `email`, `passhash`, `secret`, `title`, '2', '1', `uploaded`, `downloaded`, IF(`last_login`=0,'0000-00-00 00:00:00', from_unixtime(`last_login`)), IF(`last_access`=0,'0000-00-00 00:00:00', from_unixtime(`last_access`)), `Ip`, `passkey`, `bonuspoints`, `freeslots` FROM emp.users;
-
+ 
 insert into `gazelle`.`users_main` (`ID`, `Username`, `Email`, `PassHash`, `Secret`, `Title`, `PermissionID`, `Enabled`, `Uploaded`, `Downloaded`, `LastLogin`, `LastAccess`, `IP`, `torrent_pass`, `Credits`, `FLTokens`, `Flag`)
 SELECT `eu`.`id`, `username`, `email`, `passhash`, `secret`, `title`, '2', '1', `uploaded`, `downloaded`, 
         IF(`last_login`=0,'0000-00-00 00:00:00', from_unixtime(`last_login`)), IF(`last_access`=0,'0000-00-00 00:00:00', from_unixtime(`last_access`)), 
