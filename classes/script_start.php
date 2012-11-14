@@ -13,11 +13,11 @@
 
 require 'config.php'; //The config contains all site wide configuration information
 
-/*
+
 if (!isset($_GET['in'])) {
     require SERVER_ROOT . '/redirect_index.php';
     die();
-} */
+} 
 
 //Deal with dumbasses
 if (isset($_REQUEST['info_hash']) && isset($_REQUEST['peer_id'])) {
