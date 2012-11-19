@@ -2,9 +2,6 @@
 set_time_limit(50000);
 error_reporting(E_ALL); // was 0 (off)
 
-define('EMDB', 'emp'); 
- 
-	
 
 function is_number($Str) {
     $Return = true;
