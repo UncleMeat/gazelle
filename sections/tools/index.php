@@ -127,7 +127,9 @@ switch ($_REQUEST['action']) {
         $DB->query("SELECT DeleteRecordsMins, KeepSpeed FROM site_options");
         list($DeleteRecordsMins, $KeepSpeed) = $DB->next_record();
         
+        
         // as we are deleting way way more than keeping, and to avoid exceeding lockrow size in innoDB we do it another way:
+        $DB->query("DROP TABLE IF EXISTS temp_copy"); // jsut in case!
         $DB->query("CREATE TABLE `temp_copy` (  
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `uid` int(11) NOT NULL,
