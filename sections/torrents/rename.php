@@ -2,6 +2,7 @@
 authorize();
 
 include(SERVER_ROOT.'/classes/class_text.php');
+include(SERVER_ROOT.'/classes/class_validate.php');
 
 $GroupID = $_POST['groupid'];
 $OldGroupID = $GroupID;
@@ -9,9 +10,6 @@ $NewName = db_string( trim( $_POST['name']) );
 
 if(!$GroupID || !is_number($GroupID)) { error(404); }
 
-//if(empty($NewName)) {
-//	error("Torrents cannot have a blank name");
-//}
 
 $DB->query("SELECT UserID FROM torrents WHERE GroupID='$GroupID'");
 if($DB->record_count() > 0) {
