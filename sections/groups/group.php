@@ -186,7 +186,7 @@ if($Results == 0) {
           <table class="friends_table vertical_margin">
                 <tr>
                       <td class="colhead" colspan="3">
-                            <span style="float:left;"><?=format_username($UserID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $Class, $Title, true)?>
+                            <span style="float:left;"><?=format_username($UserID, $Username, $Donor, $Warned, $Enabled, $Class, $Title, true)?>
     <?	if(check_paranoia('ratio', $Paranoia, $Class, $UserID)) { ?>
                             &nbsp;Ratio: <strong><?=ratio($Uploaded, $Downloaded)?></strong>
     <?	} ?>

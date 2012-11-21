@@ -699,7 +699,7 @@ echo $Pages;
 <?
 while(list($UserID, $Username, $Uploaded, $Downloaded, $Snatched, $Class, $Email, $Enabled, $IP, $Invites, $DisableInvites, $Warned, $Donor, $JoinDate, $LastAccess) = $DB->next_record()){ ?>
 		<tr>
-			<td><?=format_username($UserID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $Class)?></td>
+			<td><?=format_username($UserID, $Username, $Donor, $Warned, $Enabled, $Class)?></td>
 			<td><?=ratio($Uploaded, $Downloaded)?></td>
 			<td><?=display_str($IP)?></td>
 			<td><?=display_str($Email)?></td>

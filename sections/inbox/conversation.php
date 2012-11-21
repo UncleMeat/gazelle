@@ -50,7 +50,7 @@ foreach($UsersInMessages as $UserM){
     list($PMUserID, $Username, $PermissionID, $CustomPermissions, $Enabled, $Donor, $Warned, $Title) = $UserM;
 	$PMUserID = (int)$PMUserID;
     //if($SenderID==-1)$SenderID=$PMUserID;//kind of hacky way of getting the sender without waiting for loop thru messages later
-	$Users[$PMUserID]['UserStr'] = format_username($PMUserID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $PermissionID, $Title, true);
+	$Users[$PMUserID]['UserStr'] = format_username($PMUserID, $Username, $Donor, $Warned, $Enabled, $PermissionID, $Title, true);
 	$Users[$PMUserID]['Username'] = $Username;
 	$Users[$PMUserID]['AdvTags'] = get_permissions_advtags($PMUserID, $CustomPermissions);
 }

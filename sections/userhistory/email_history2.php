@@ -89,7 +89,7 @@ if ($CurrentEmail['Usernames'] != '') {
 	$UserIPs=explode('|', $CurrentEmail['UserIPs']);
 
 	foreach($UserIDs as $Key => $Val) {
-		$CurrentMatches[$Key]['Username'] = '&nbsp;&nbsp;&#187;&nbsp;'.format_username($Val, $Usernames[$Key], $UsersDonor[$Key], $UsersWarned[$Key], $UsersEnabled[$Key] == 2 ? false : true);
+		$CurrentMatches[$Key]['Username'] = '&nbsp;&nbsp;&#187;&nbsp;'.format_username($Val, $Usernames[$Key], $UsersDonor[$Key], $UsersWarned[$Key], $UsersEnabled[$Key]);
 		$CurrentMatches[$Key]['IP'] = $UserIPs[$Key];
 		$CurrentMatches[$Key]['EndTime'] = $UserSetTimes[$Key];
 	}
@@ -143,7 +143,7 @@ if (count($History) == 1) {
 		if ($Val['Usernames'] != '') {
 			// Match with old email
 			$OldMatches[$Key]['Email'] = $Val['Email'];
-			$OldMatches[$Key]['Username'] = '&nbsp;&nbsp;&#187;&nbsp;'.format_username($Val['UserIDs'], $Val['Usernames'], $Val['UsersDonor'], $Val['UsersWarned'], $Val['UsersEnabled'] == 2 ? false : true);
+			$OldMatches[$Key]['Username'] = '&nbsp;&nbsp;&#187;&nbsp;'.format_username($Val['UserIDs'], $Val['Usernames'], $Val['UsersDonor'], $Val['UsersWarned'], $Val['UsersEnabled']);
 			$OldMatches[$Key]['EndTime'] = $Val['UserSetTimes'];
 			$OldMatches[$Key]['IP'] = $Val['UserIPs'];
 		}

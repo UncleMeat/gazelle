@@ -418,7 +418,7 @@ if(!$LoggedUser['DisablePosting']) { ?>
 					<tr class="smallhead">
 						<td colspan="2">
 							<span style="float:left;"><a href='#quickreplypreview'>#XXXXXX</a>
-								<?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'],$LoggedUser['Title'],true)?> 
+								<?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'], $LoggedUser['PermissionID'],$LoggedUser['Title'],true)?> 
 								Just now
 							</span>
 							<span id="barpreview" style="float:right;">

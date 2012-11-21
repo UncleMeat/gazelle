@@ -1450,7 +1450,7 @@ function make_hash($Str, $Secret) {
   $IsDonor, $IsWarned and $IsEnabled can be omitted for a *very* abbreviated version
  */
 
-function format_username($UserID, $Username, $IsDonor = false, $IsWarned = '0000-00-00 00:00:00', $IsEnabled = true, $Class = false, $Title = false, $DrawInBox = false) {
+function format_username($UserID, $Username, $IsDonor = false, $IsWarned = '0000-00-00 00:00:00', $Enabled = 1, $Class = false, $Title = false, $DrawInBox = false) {
     if ($UserID == 0) {
         return 'System';
     } elseif ($Username == '') {
@@ -1461,7 +1461,14 @@ function format_username($UserID, $Username, $IsDonor = false, $IsWarned = '0000
 
 
     $str.=($IsWarned != '0000-00-00 00:00:00' && $IsWarned !== false) ? '<img src="' . STATIC_SERVER . 'common/symbols/warned.png" alt="Warned" title="Warned" />' : '';
-    $str.=(!$IsEnabled) ? '<img src="' . STATIC_SERVER . 'common/symbols/disabled.png" alt="Banned" title="Be good, and you won\'t end up like this user" />' : '';
+    
+    if ($Enabled !== '1' || $Enabled !== true){
+        if ($Enabled == '0')
+            $str.= '<img src="' . STATIC_SERVER . 'common/symbols/unconfirmed.png" alt="Unconfirmed" title="This user has not confirmed their membership" />' ;
+        else 
+            $str.= '<img src="' . STATIC_SERVER . 'common/symbols/disabled.png" alt="Banned" title="Be good, and you won\'t end up like this user" />' ;
+    }
+    //$str.=(!$IsEnabled) ? '<img src="' . STATIC_SERVER . 'common/symbols/disabled.png" alt="Banned" title="Be good, and you won\'t end up like this user" />' : '';
 
     $str.=($Class) ? ' (' . make_class_string($Class, TRUE) . ')' : '';
     $str.=($Title && $Class) ? '&nbsp;<span class="user_title">' . display_str($Title) . '</span>' : '';

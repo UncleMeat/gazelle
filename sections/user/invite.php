@@ -201,7 +201,7 @@ if (!empty($Pending)) {
 		$Row = ($Row == 'a') ? 'b' : 'a';
 ?> 
 			<tr class="row<?=$Row?>">
-				<td><?=format_username($ID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $Class)?></td>
+				<td><?=format_username($ID, $Username, $Donor, $Warned, $Enabled, $Class)?></td>
 				<td><?=display_str($Email)?></td>
 				<td><?=time_diff($JoinDate,1)?></td>
 				<td><?=time_diff($LastAccess,1);?></td>

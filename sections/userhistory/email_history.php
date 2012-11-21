@@ -105,7 +105,7 @@ foreach($History as $Key => $Values){
 			list($Enabled)=$DB->next_record();
 			$DB->set_query_id($ueQuery);
 ?>
-		<td><a href="<?=display_str($UserURL)?>"><?=format_username($UserID2, $Username, 0, 0, $Enabled == 2 ? false : true, "")?></a></td>
+		<td><a href="<?=display_str($UserURL)?>"><?=format_username($UserID2, $Username, 0, 0, $Enabled, "")?></a></td>
 	</tr>	
 <?
 		}

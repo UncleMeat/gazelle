@@ -46,7 +46,7 @@ show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode,jquery');
 			<tr class="colhead_dark">
 				<td colspan="2">
 					<span style="float:left;"><a href='#newthreadpreview'>#XXXXXX</a>
-						<?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'] == 2 ? false : true, $LoggedUser['PermissionID'], $LoggedUser['Title'], true)?> <? //if (!empty($LoggedUser['Title'])) { echo '('.$LoggedUser['Title'].')'; }?>
+						<?=format_username($LoggedUser['ID'], $LoggedUser['Username'], $LoggedUser['Donor'], $LoggedUser['Warned'], $LoggedUser['Enabled'], $LoggedUser['PermissionID'], $LoggedUser['Title'], true)?> <? //if (!empty($LoggedUser['Title'])) { echo '('.$LoggedUser['Title'].')'; }?>
 					Just now
 					</span>
 					<span id="barpreview" style="float:right;">

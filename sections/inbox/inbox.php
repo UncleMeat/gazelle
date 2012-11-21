@@ -218,7 +218,7 @@ echo $Pages;
 <?
 		if($Unread) { echo '</strong>';} ?>
 					</td>
-					<td><?=format_username($SenderID, $Username, $Donor, $Warned, $Enabled == 2 ? false : true, $ClassID)?></td>
+					<td><?=format_username($SenderID, $Username, $Donor, $Warned, $Enabled, $ClassID)?></td>
 					<td><?=time_diff($Date)?></td>
 				</tr>
 <?	} ?>
