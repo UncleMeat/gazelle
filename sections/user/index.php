@@ -73,6 +73,11 @@ switch ($_REQUEST['action']) {
 		include('takemoderate.php');
 		break;	
 	default:
+        if($_REQUEST['action']=='reset_login_watch' && is_number($_POST['loginid']) ) {
+            authorize();
+            if (!check_perms('admin_login_watch')) error(403); 
+            $DB->query("DELETE FROM login_attempts WHERE ID='$_POST[loginid]'");
+        }
 		if (isset($_REQUEST['id'])) {
 			include(SERVER_ROOT.'/sections/user/user.php');
 		} else {

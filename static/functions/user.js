@@ -62,7 +62,8 @@ function Toggle_view(elem_id) {
                         get_hidden_value('warn'), 
                         get_hidden_value('privilege'), 
                         get_hidden_value('session'),
-                        get_hidden_value('submit')]; 
+                        get_hidden_value('submit'),
+                        get_hidden_value('loginwatch')]; 
             
     jQuery.cookie('userPageState', json.encode(t));
     return false;
@@ -131,7 +132,7 @@ function set_hidden_value(elem_id, state){
 function Load_User_Cookie()  { 
     
 	if(jQuery.cookie('userPageState') == undefined) {
-		jQuery.cookie('userPageState', json.encode(['0', '1', '1', '0', '0', '0', '0', '0', '0', '1', '0', '1', '0', '1', '1', '1', '1']));
+		jQuery.cookie('userPageState', json.encode(['0', '1', '1', '0', '0', '0', '0', '0', '0', '1', '0', '1', '0', '1', '1', '1', '1', '1']));
 	}
 	var state = json.decode( jQuery.cookie('userPageState') );
      
@@ -152,6 +153,7 @@ function Load_User_Cookie()  {
       set_hidden_value('privilege', state[14]);
       set_hidden_value('session', state[15]);
       set_hidden_value('submit', state[16]);
+      set_hidden_value('loginwatch', state[17]);
 }
 
 

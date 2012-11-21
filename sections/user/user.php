@@ -5,8 +5,8 @@ $Text = new TEXT;
 
 include(SERVER_ROOT.'/sections/requests/functions.php');
 
-if (empty($_GET['id']) || !is_numeric($_GET['id'])) { error(0); }
-$UserID = $_GET['id'];
+if (empty($_REQUEST['id']) || !is_numeric($_REQUEST['id'])) { error(0); }
+$UserID = $_REQUEST['id'];
 
 
 
@@ -692,24 +692,113 @@ if(check_paranoia_here('invitedcount')) {
             </div>
 <?
 
+if (check_perms('admin_login_watch',$Class)) {
+    // get any failed login attempts
+    $DB->query("SELECT 
+                   l.ID,
+                   l.IP,
+                   l.LastAttempt,
+                   l.Attempts,
+                   l.BannedUntil,
+                   l.Bans 
+              FROM login_attempts AS l 
+             WHERE l.Attempts>0
+               AND l.UserID = '$UserID'
+          ORDER BY LastAttempt DESC ");
+
+    if ($DB->record_count()>0) {
+        
+        $CookieItems[] = 'loginwatch';
+    
+?>
+        <div class="head">
+            <span style="float:left;">Login Watch</span>
+            <span style="float:right;"><a id="loginwatchbutton" href="#" onclick="return Toggle_view('loginwatch');">(Hide)</a></span>&nbsp;
+        </div>
+                            
+		<div class="box">	
+            <table width="100%" id="loginwatchdiv" class="shadow">
+                <tr class="colhead">
+                    <td>IP</td>
+                    <td>Attempts</td>
+                    <td>Last Attempt</td>
+                    <td>Bans</td>
+                    <td>Remaining</td>
+                    <td style="width:160px"></td> 
+                </tr>
+<?
+            $Row = 'b';
+            while (list($loginID, $loginIP, $LastAttempt, $Attempts, $BannedUntil, $Bans) = $DB->next_record()) {
+                $Row = ($Row === 'a' ? 'b' : 'a');
+     
+?>
+                <tr class="row<?=$Row?>">
+                    <td>
+                        <?=$loginIP?>
+                    </td>
+                    <td>
+                        <?=$Attempts?>
+                    </td>
+                    <td>
+                        <?=time_diff($LastAttempt)?>
+                    </td>
+                    <td>
+                        <?=$Bans?>
+                    </td>
+                    <td>
+                        <?=time_diff($BannedUntil)?>
+                    </td>	
+                    <td>
+                        <form action="user.php?id=<?=$UserID?>" method="post" style="display:inline-block">
+                            <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+                            <input type="hidden" name="loginid" value="<?=$loginID?>" />
+                            <input type="hidden" name="action" value="reset_login_watch" />
+                            <input type="hidden" name="id" value="<?=$UserID?>" />
+                            <input type="submit" name="submit" title="remove any bans (and reset attempts) from login watch" value="Unban" />
+                        </form> 
+<?      if(check_perms('admin_manage_ipbans')) { ?> 
+                        <form action="tools.php" method="post" style="display:inline-block">
+                            <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+                            <input type="hidden" name="id" value="<?=$loginID?>" />
+                            <input type="hidden" name="action" value="ip_ban" />
+                            <input type="hidden" name="start" value="<?=$loginIP?>" />
+                            <input type="hidden" name="end" value="<?=$loginIP?>" />
+                            <input type="hidden" name="notes" value="Banned per <?=$Bans?> bans on login watch." />
+                            <input type="submit" name="submit" title="IP Ban this ip address (use carefully!)" value="IP Ban" />
+                        </form>
+<?      } ?>
+                    </td>
+                </tr>
+<?
+    }
+?>
+            </table>
+        </div>
+                 
+<?
+    }
+}
+    
+    
+
 if (check_perms('users_view_bonuslog',$Class) || $OwnProfile) { 
         $CookieItems[] = 'bonus';
-    ?>
-            <div class="head">
-                <span style="float:left;">Bonus Credits</span>
-                <span style="float:right;"><a id="bonusbutton" href="#" onclick="return Toggle_view('bonus');">(Hide)</a></span>&nbsp;
-            </div>
+?>
+        <div class="head">
+            <span style="float:left;">Bonus Credits</span>
+            <span style="float:right;"><a id="bonusbutton" href="#" onclick="return Toggle_view('bonus');">(Hide)</a></span>&nbsp;
+        </div>
 		<div class="box">
 			<div class="pad" id="bonusdiv">
-                      <h4 class="center">Credits: <?=(!$BonusCredits ? '0.00' : number_format($BonusCredits,2))?></h4>
-                      <span style="float:right;"><a href="#" onclick="$('#bonuslogdiv').toggle(); this.innerHTML=(this.innerHTML=='(Show Log)'?'(Hide Log)':'(Show Log)'); return false;">(Show Log)</a></span>&nbsp;
+                <h4 class="center">Credits: <?=(!$BonusCredits ? '0.00' : number_format($BonusCredits,2))?></h4>
+                <span style="float:right;"><a href="#" onclick="$('#bonuslogdiv').toggle(); this.innerHTML=(this.innerHTML=='(Show Log)'?'(Hide Log)':'(Show Log)'); return false;">(Show Log)</a></span>&nbsp;
 
-                      <div class="hidden" id="bonuslogdiv" style="padding-top: 10px;">
-                          <div id="bonuslog" class="box pad">
-                                <?=(!$BonusLog ? 'no bonus history' :$Text->full_format($BonusLog))?>
-                          </div>
-                      </div>
-                  </div>
+                <div class="hidden" id="bonuslogdiv" style="padding-top: 10px;">
+                    <div id="bonuslog" class="box pad">
+                        <?=(!$BonusLog ? 'no bonus history' :$Text->full_format($BonusLog))?>
+                    </div>
+                </div>
+           </div>
 		</div>
 <?
 }
@@ -723,10 +812,9 @@ if (!$OwnProfile) {
         <div class="head">
             <span style="float:left;">Donate to user</span>
             <span style="float:right;"><a id="donatebutton" href="#" onclick="return Toggle_view('donate');">(Hide)</a></span>&nbsp;
-        </div>
-		<div class="box">
-			<div class="pad" id="donatediv">
-                <table style="width:600px;margin:auto">
+        </div> 
+		<div class="box">	
+            <table width="100%" id="donatediv" class="shadow">
 <?
                      
 	foreach($ShopItems as $BonusItem) {
@@ -755,9 +843,8 @@ if (!$OwnProfile) {
 <?
     }
 ?>
-                </table>
-            </div>
-		</div>
+            </table> 
+        </div>
 <?
 }
 
