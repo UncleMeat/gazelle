@@ -41,11 +41,11 @@ foreach($ReportType['report_fields'] as $Field => $Value) {
 
 if(!empty($_POST['sitelink'])) {
 	if(preg_match_all('/((https?:\/\/)?([a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*\.)?'.NONSSL_SITE_URL.'\/torrents.php\?(id=[0-9]+\&)?id=([0-9]+))/is', $_POST['sitelink'], $Matches)) {
-		// ** mifune: torrent id is not groupid, strange mixup
-        ////$ExtraIDs = implode(' ', $Matches[6]);
-		//if(in_array($TorrentID, $Matches[6])) {
-		//	$Err = "The extra permalinks you gave included the link to the torrent you're reporting!";
-		//}
+		
+        $ExtraIDs = implode(' ', $Matches[6]);
+		if(in_array($TorrentID, $Matches[6])) {
+			$Err = "The extra permalinks you gave included the link to the torrent you're reporting!";
+		}
 	} else {
 		$Err = "Permalink was incorrect, should look like http://".NONSSL_SITE_URL."/torrents.php?id=12345";
 	}
