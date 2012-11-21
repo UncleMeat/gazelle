@@ -45,7 +45,7 @@ if(!check_perms('site_view_full_log')) {
 	$sql .= " Time>'".time_minus(3600*24*28)."' ";
 }
 
-$sql .= "ORDER BY ID DESC LIMIT $Limit";
+$sql .= "ORDER BY Time DESC LIMIT $Limit";
 
 show_header("Site log");
 
