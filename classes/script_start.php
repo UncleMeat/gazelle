@@ -1462,7 +1462,7 @@ function format_username($UserID, $Username, $IsDonor = false, $IsWarned = '0000
 
     $str.=($IsWarned != '0000-00-00 00:00:00' && $IsWarned !== false) ? '<img src="' . STATIC_SERVER . 'common/symbols/warned.png" alt="Warned" title="Warned" />' : '';
     
-    if ($Enabled !== '1' || $Enabled !== true){
+    if ($Enabled != '1' || $Enabled != true){
         if ($Enabled == '0')
             $str.= '<img src="' . STATIC_SERVER . 'common/symbols/unconfirmed.png" alt="Unconfirmed" title="This user has not confirmed their membership" />' ;
         else 
