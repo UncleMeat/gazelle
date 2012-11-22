@@ -24,13 +24,18 @@ show_header('All torrent comments' , 'comments,bbcode,jquery');
     <h2>Latest Torrent Comments</h2>
 <?
  
+if ($_GET['order_by']=='id') 
+    $ORDERBY = "c.ID";
+ else
+    $ORDERBY = "c.AddedTime";
+ 
 
 $DB->query("SELECT SQL_CALC_FOUND_ROWS
                     tg.Name, c.ID, c.GroupID, c.AuthorID, c.AddedTime, c.Body, c.EditedUserID, c.EditedTime ,  u.Username 
               FROM torrents_comments AS c
          LEFT JOIN torrents_group AS tg ON tg.ID=c.GroupID 
 		 LEFT JOIN users_main AS u ON u.ID=c.EditedUserID
-          ORDER BY c.AddedTime DESC
+          ORDER BY $ORDERBY DESC
              LIMIT $Limit");
 
 $Comments = $DB->to_array();
