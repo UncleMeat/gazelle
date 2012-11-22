@@ -204,6 +204,11 @@ if(!empty($_REQUEST['action'])) {
 			require(SERVER_ROOT.'/sections/torrents/download.php');
 			break;
 			
+        case 'allcomments':
+            
+			require(SERVER_ROOT.'/sections/torrents/all_comments.php');
+            break;
+        
 		case 'reply':
 			enforce_login();
 			authorize();
