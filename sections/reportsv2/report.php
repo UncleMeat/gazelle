@@ -11,7 +11,7 @@ if(!isset($_GET['id']) || !is_number($_GET['id'])) {
 	}
 } else {
 	$TorrentID = (int)$_GET['id'];
-    $DB->query("SELECT GroupID, Name FROM torrents_group AS tg JOIN torrents AS t ON t.GroupID=tg.ID WHERE tg.ID=$TorrentID");
+    $DB->query("SELECT GroupID, Name FROM torrents_group AS tg JOIN torrents AS t ON t.GroupID=tg.ID WHERE t.ID=$TorrentID");
     if ($DB->record_count()==0) error("Not a valid torrentid! ($TorrentID)");
     list($GroupID, $TorrentName) = $DB->next_record();
 }
