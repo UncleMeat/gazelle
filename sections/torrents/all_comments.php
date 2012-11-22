@@ -8,8 +8,13 @@ if (!check_perms('users_mod')) error(403);
 include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
 $Text = new TEXT;
  
+if (isset($LoggedUser['PostsPerPage'])) {
+	$PerPage = $LoggedUser['PostsPerPage'];
+} else {
+	$PerPage = POSTS_PER_PAGE;
+}
 
-list($Page, $Limit) = page_limit(TORRENT_COMMENTS_PER_PAGE);
+list($Page, $Limit) = page_limit($PerPage);
  
 
 // Start printing
@@ -33,13 +38,10 @@ $DB->query("SELECT FOUND_ROWS()");
 list($NumResults) = $DB->next_record();
  
 
-
-//This is a hybrid to reduce the catalogue down to the page elements: We use the page limit % catalogue
-////$Thread = array_slice($Catalogue,((TORRENT_COMMENTS_PER_PAGE*$Page-TORRENT_COMMENTS_PER_PAGE)%THREAD_CATALOGUE),TORRENT_COMMENTS_PER_PAGE,true);
 ?>
 	<div class="linkbox"><a name="comments"></a>
 <?
-$Pages=get_pages($Page,$NumResults,TORRENT_COMMENTS_PER_PAGE,9);
+$Pages=get_pages($Page,$NumResults,$PerPage,9);
 echo $Pages;
 ?>
 	</div>
