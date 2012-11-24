@@ -26,6 +26,7 @@ if(!empty($_REQUEST['confirm'])) {
 	$Val->SetFields('email',true,'email', 'You did not enter a valid email address.');
 	$Val->SetFields('password',true,'string', 'You did not enter a valid password (6 - 40 characters).',array('minlength'=>6,'maxlength'=>40));
 	$Val->SetFields('confirm_password',true,'compare', 'Your passwords do not match.',array('comparefield'=>'password'));
+	//$Val->SetFields('discreq',true,'checkbox', 'You did not check the box that says you agree to our disclaimer.');
 	$Val->SetFields('readrules',true,'checkbox', 'You did not check the box that says you will read the rules.');
 	//$Val->SetFields('readwiki',true,'checkbox', 'You did not check the box that says you will read the wiki.');
 	$Val->SetFields('agereq',true,'checkbox', 'You did not check the box that says you are 18 or older.');

@@ -682,6 +682,31 @@ function print_latest_forum_topics() {
 
 
 
+
+/* --------------------------------
+* Returns a regex string in the form '/email.com|otheremail.com|email2.com/i'
+  for fast email blacklist checking
+  ----------------------------------- */
+function get_emailblacklist_regex() {
+    global $DB, $Cache; 
+    $pattern = $Cache->get_value('emailblacklist_regex');
+    if($pattern===false){
+        $DB->query("SELECT Email FROM email_blacklist");  
+        if($DB->record_count()>0) {
+            $pattern = '@';
+            $div = '';
+            while(list($host)=$DB->next_record()){
+                $pattern .= $div . preg_quote($host, '@');
+                $div = '|';
+            }
+            $pattern .= '@i';
+            $Cache->cache_value('emailblacklist_regex', $pattern);
+        }  else  {
+            $pattern = '@nohost.non@i';
+        }
+    }
+    return $pattern;
+}
 /* --------------------------------
 * Returns a regex string in the form '/imagehost.com|otherhost.com|imgbox.com/i'
   for fast whitelist checking
@@ -738,6 +763,21 @@ function validate_imageurl($Imageurl, $MinLength, $MaxLength, $WhitelistRegex) {
            return TRUE;
        }
 }
+
+
+
+function validate_email($email) {
+          
+       if(preg_match(get_emailblacklist_regex(), $email)) { 
+           return "$email is on a blacklisted email host."; 
+       }
+       else { // hooray it validated 
+           return TRUE;
+       }
+}
+
+
+
 
 
 // for getting an article to display on some other page 

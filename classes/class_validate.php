@@ -100,12 +100,16 @@ class VALIDATE {
                                   elseif($ValidateVar<$MinLength) { return $Field['ErrorMessage']."$MinLength"; }
 
                             } elseif($Field['Type']=="email") {
-                                  if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
-                                  if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=6; }
+                                    if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
+                                    if(isset($Field['MinLength'])) { $MinLength=$Field['MinLength']; } else { $MinLength=6; }
 
-                                  if(!preg_match("/^".EMAIL_REGEX."$/i", $ValidateVar)) { return $Field['ErrorMessage']; }
-                                  elseif(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
-                                  elseif(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
+                                    if(strlen($ValidateVar)>$MaxLength) { return $Field['ErrorMessage']; }
+                                    if(strlen($ValidateVar)<$MinLength) { return $Field['ErrorMessage']; }
+                                    if(!preg_match("/^".EMAIL_REGEX."$/i", $ValidateVar)) { return $Field['ErrorMessage']; } 
+                                    // get validation result
+                                    $result = validate_email($ValidateVar); 
+                                    if ($result !== TRUE) return "$Field[ErrorMessage]<br/>$result"; 
+                                    
 
                             } elseif($Field['Type']=="link") {
                                   if(isset($Field['MaxLength'])) { $MaxLength=$Field['MaxLength']; } else { $MaxLength=255; }
