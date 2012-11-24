@@ -25,7 +25,7 @@ $ForumArray = $DB->to_array(); // used for generating the 'parent' drop down lis
 unset($ForumCats);
 $ForumCats = $Cache->get_value('forums_categories');
 if ($ForumCats === false) {
-	$DB->query("SELECT ID, Name FROM forums_categories");
+	$DB->query("SELECT ID, Name FROM forums_categories ORDER BY Sort");
 	$ForumCats = array();
 	while (list($ID, $Name) =  $DB->next_record()) {
 		$ForumCats[$ID] = $Name;
@@ -34,17 +34,17 @@ if ($ForumCats === false) {
 }
 
 $DB->query('SELECT
-	ID,
+	f.ID,
 	CategoryID,
-	Sort,
-	Name,
+	f.Sort,
+	f.Name,
 	Description,
 	MinClassRead,
 	MinClassWrite,
 	MinClassCreate,
 	AutoLock
-	FROM forums
-	ORDER BY CategoryID, Sort ASC');
+	FROM forums AS f LEFT JOIN forums_categories AS fc ON f.CategoryID=fc.ID
+	ORDER BY fc.Sort, f.Sort ASC');
 ?>
 
 <div class="thin">
