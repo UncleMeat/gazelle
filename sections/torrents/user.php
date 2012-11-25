@@ -196,7 +196,7 @@ $User = user_info($UserID);
 
 if(!$INLINE) show_header($User['Username'].'\'s '.$Action.' torrents');
 
-$Pages=get_pages($Page,$TorrentCount,$TorrentsPerPage,11,'#torrents');
+$Pages=get_pages($Page,$TorrentCount,$TorrentsPerPage,8,'#torrents');
 
 
 ?>
