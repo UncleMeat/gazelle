@@ -16,7 +16,7 @@ $DB->query("SELECT Name, Comment, Log
 if ($DB->record_count()==0) error(0);
 list($Name, $Comment, $Log) = $DB->next_record();
 
-show_header("User Group : $Name",'jquery,groups');
+show_header("User Group : $Name",'jquery,bbcode,groups');
  
 
 
