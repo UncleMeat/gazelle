@@ -192,6 +192,7 @@ $LogName .= $Properties['Title'];
 //For notifications--take note now whether it's a new group
 //$IsNewGroup = !$GroupID;
 
+/*
 // mifune: hackky bullshit way of synching torrentid and groupid... yes this is bad design TM but occaisonally the db throws a spanner and 
 // if we dont correct we end up with groupid and torrentid out by one for the same torrent which is too sucky and confusing for users
 $DB->query("SELECT Max(ID) as TorrentID, Max(GroupID) AS GroupID FROM torrents");
@@ -201,7 +202,7 @@ else $GroupID = $MaxGroupID+1;
 $DB->query("SELECT Max(ID) AS GroupID FROM torrents_group");
 list($MaxGroupID) = $DB->next_record();
 if($MaxGroupID>=$GroupID) $GroupID = $MaxGroupID+1;
-
+*/
 
 //----- Start inserts
 //if (!$GroupID) {
@@ -209,9 +210,9 @@ if($MaxGroupID>=$GroupID) $GroupID = $MaxGroupID+1;
     // Create torrent group
     $DB->query("
 		INSERT INTO torrents_group
-		(ID, NewCategoryID, Name, Time, Body, Image, SearchText) VALUES
-		( $GroupID, " . $T['Category'] . ", " . $T['Title'] . ", '$sqltime', '" . db_string($Body) . "', $T[Image], '$SearchText')");
-    //$GroupID = $DB->inserted_id();
+		(NewCategoryID, Name, Time, Body, Image, SearchText) VALUES
+		( " . $T['Category'] . ", " . $T['Title'] . ", '$sqltime', '" . db_string($Body) . "', $T[Image], '$SearchText')");
+    $GroupID = $DB->inserted_id();
     $Cache->increment('stats_group_count');
     
 /* } else { // this is long ago stuff from when groups could have more than one torrent in them
@@ -222,6 +223,30 @@ if($MaxGroupID>=$GroupID) $GroupID = $MaxGroupID+1;
     $Cache->delete_value('torrents_details_' . $GroupID);
     $Cache->delete_value('detail_files_' . $GroupID);
 } */
+
+    
+// Torrent
+$DB->query("
+	INSERT INTO torrents
+		(GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, FreeTorrent) 
+	VALUES
+		($GroupID, " . $LoggedUser['ID'] . ",
+		'" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", 
+		'$sqltime', '" . $Properties['FreeTorrent'] . "')");
+
+$Cache->increment('stats_torrent_count');
+$TorrentID = $DB->inserted_id();
+
+if($TorrentID>$GroupID) {
+    $DB->query("UPDATE torrents_group SET ID='$TorrentID' WHERE ID='$GroupID'");
+    $DB->query("UPDATE torrents SET GroupID='$TorrentID' WHERE ID='$TorrentID'");
+    $GroupID = $TorrentID;
+} elseif($GroupID>$TorrentID) {
+    $DB->query("UPDATE torrents SET ID='$GroupID' WHERE ID='$TorrentID'");
+    $TorrentID = $GroupID;
+}
+
+
 
 // lanz: insert the category tag here. 
 $Tags = explode(' ', strtolower($NewCategories[(int)$_POST['category']]['tag']." ".$Properties['TagList']));
@@ -262,6 +287,7 @@ if ($TotalSize < (20*1024*1024*1024)){
     $Properties['FreeTorrent']=1;
 }
 
+/*
 // Torrent
 $DB->query("
 	INSERT INTO torrents
@@ -274,6 +300,7 @@ $DB->query("
 $Cache->increment('stats_torrent_count');
 $TorrentID = $GroupID;
 //$TorrentID = $DB->inserted_id();
+*/
 
 update_tracker('add_torrent', array('id' => $TorrentID, 'info_hash' => rawurlencode($InfoHash), 'freetorrent' => (int) $Properties['FreeTorrent']));
 
