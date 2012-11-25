@@ -304,7 +304,7 @@ function spoiler(textID) {
     }
 }
 
-function image(textID) {
+function image_prompt(textID) {
     var link;
     //var img_regex = /(?:([^:/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|gif|png|php|asp|html|htm|shtml|jsp|cgi))(?:\?([^#]*))?(?:#(.*))?/i;
     // use a more permissive regex... allows image urls with no extension in them

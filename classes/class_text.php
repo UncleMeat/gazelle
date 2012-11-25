@@ -1730,7 +1730,7 @@ EXPLANATION OF PARSER LOGIC
                     <a class="bb_button" onclick="anchor('<?=$textarea;?>')" title="Anchored heading: [anchor=name]Heading text[/anchor] or [#=name]Heading text[/#]" alt="Anchor">Anchor</a>
                     <!-- <a class="bb_button" onclick="link('<?=$textarea;?>')" title="Local link: [link=/localpage.php]Link text[/link] or [link=#anchorname]Link text[/link]" alt="Link">Link</a> -->
                     
-                    <a class="bb_button" onclick="image('<?=$textarea;?>')" title="Image: [img]http://image_url[/img]" alt="Image">Img</a>
+                    <a class="bb_button" onclick="image_prompt('<?=$textarea;?>')" title="Image: [img]http://image_url[/img]" alt="Image">Img</a>
                     <a class="bb_button" onclick="tag('code', '<?=$textarea;?>')" title="Code display: [code]code[/code]" alt="Code">Code</a>
                     <a class="bb_button" onclick="tag('quote', '<?=$textarea;?>')" title="Quote text: [quote]text[/quote]" alt="Quote">Quote</a>
  
