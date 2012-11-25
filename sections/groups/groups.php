@@ -84,7 +84,7 @@ if ($DB->record_count()==0){
         $Row = ($Row === 'a' ? 'b' : 'a');
 ?>
         <tr class="row<?=$Row?>">
-            <form action="groups.php" method="post">
+            <form action="groups.php" method="post" onsubmit="return confirm('Are you sure you want to delete this group and all its members?');">
                 <input type="hidden" name="applyto" value="group" />
                 <input type="hidden" name="groupid" value="<?=$ID?>" />
                 <input type="hidden" name="action" value="delete" />
