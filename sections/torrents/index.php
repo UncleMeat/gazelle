@@ -387,9 +387,9 @@ if(!empty($_REQUEST['action'])) {
 			$DB->query("DELETE FROM torrents_comments WHERE ID='".db_string($_GET['postid'])."'");
 		
 			//We need to clear all subsequential catalogues as they've all been bumped with the absence of this post
-			$ThisCatalogue = floor((TORRENT_COMMENTS_PER_PAGE*$Page-TORRENT_COMMENTS_PER_PAGE)/THREAD_CATALOGUE);
+			//$ThisCatalogue = floor((TORRENT_COMMENTS_PER_PAGE*$Page-TORRENT_COMMENTS_PER_PAGE)/THREAD_CATALOGUE);
 			$LastCatalogue = floor((TORRENT_COMMENTS_PER_PAGE*$Pages-TORRENT_COMMENTS_PER_PAGE)/THREAD_CATALOGUE);
-			for($i=$ThisCatalogue;$i<=$LastCatalogue;$i++) {
+			for($i=0;$i<=$LastCatalogue;$i++) {
 				$Cache->delete('torrent_comments_'.$GroupID.'_catalogue_'.$i);
 			}
 			
