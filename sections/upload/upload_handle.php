@@ -48,7 +48,7 @@ $RequestID = $_POST['requestid'];
 //--------------- Validate data in upload form ---------------------------------//
 //** note: if the same field is set to be validated more than once then each time it is set it overwrites the previous test
 //** ie.. one test per field max, last one set for a specific field is what is used
-$Validate->SetFields('title', '1', 'string', 'You must enter a Title.', array('maxlength' => 200, 'minlength' => 2, 'maxwordlength'=>64));
+//$Validate->SetFields('title', '1', 'string', 'You must enter a Title.', array('maxlength' => 200, 'minlength' => 2, 'maxwordlength'=>64));
 $Validate->SetFields('tags', '1', 'string', 'You must enter at least one tag.', array('maxlength' => 1000, 'minlength' => 2));
 $whitelist_regex = get_whitelist_regex();
 $Validate->SetFields('image', '0', 'image', 'The image URL you entered was not valid.', array('regex' => $whitelist_regex, 'maxlength' => 255, 'minlength' => 12));
@@ -87,7 +87,7 @@ if ($Err) { // Show the upload form, with the data the user entered
     die();
 }
 
-//******************************************************************************//
+/***************************************************************************** 
 //--------------- Make variables ready for database input ----------------------//
 // Shorten and escape $Properties for database input
 $T = array();
@@ -100,6 +100,7 @@ foreach ($Properties as $Key => $Value) {
 
 $SearchText = db_string(trim($Properties['Title']) . ' ' . $Text->db_clean_search(trim($Properties['GroupDescription'])));
 
+*/
 
 //******************************************************************************//
 //--------------- Generate torrent file ----------------------------------------//
@@ -141,6 +142,23 @@ foreach ($FileList as $File) {
 // To be stored in the database
 $FilePath = $Tor->Val['info']->Val['files'] ? db_string($Tor->Val['info']->Val['name']) : "";
 
+
+
+if (!isset($Properties['Title']) || $Properties['Title']=='') {
+    if ($FilePath) $Properties['Title'] = $FilePath;
+    else if (isset($TmpFileList[0])) $Properties['Title'] = $TmpFileList[0];
+}
+
+$Validate = new VALIDATE;
+$Validate->SetFields('Title', '1', 'string', 'You must enter a Title.', array('maxlength' => 200, 'minlength' => 2, 'maxwordlength'=>64)); 
+$Err = $Validate->ValidateForm($Properties, $Text); // Validate the form
+if ($Err) { // Show the upload form, with the data the user entered
+    include(SERVER_ROOT . '/sections/upload/upload.php');
+    die();
+}
+
+
+
 // Name {{{Size}}}|||Name {{{Size}}}|||Name {{{Size}}}|||Name {{{Size}}}
 $FileString = "'" . db_string(implode('|||', $TmpFileList)) . "'";
 
@@ -172,6 +190,21 @@ if (!empty($Err)) { // Show the upload form, with the data the user entered
     include(SERVER_ROOT . '/sections/upload/upload.php');
     die();
 }
+
+
+//******************************************************************************//
+//--------------- Make variables ready for database input ----------------------//
+// Shorten and escape $Properties for database input
+$T = array();
+foreach ($Properties as $Key => $Value) {
+    $T[$Key] = "'" . db_string(trim($Value)) . "'";
+    if (!$T[$Key]) {
+        $T[$Key] = NULL;
+    }
+}
+
+$SearchText = db_string(trim($Properties['Title']) . ' ' . $Text->db_clean_search(trim($Properties['GroupDescription'])));
+
 
 //******************************************************************************//
 //--------------- Start database stuff -----------------------------------------//
