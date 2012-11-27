@@ -51,8 +51,8 @@ if (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 80) {
 	define('STATIC_SERVER', SSL_STATIC_SERVER);
 }
 
-// crude way of dealing with this... but add any sites you want the bbcode parser to identify as local
-define('INTERNAL_URLS_REGEX', '/(\S+\.)*'.NONSSL_SITE_URL.'|anotherlinkedsite.com/');
+// crude way of dealing with this... but add any sites you want the bbcode parser to identify as local for anonto treatment
+define('INTERNAL_URLS_REGEX', '@'.NONSSL_SITE_URL.'/|anotherlinkedsite.com/@');
 
 // Site settings
 define('DEBUG_MODE', false); //Set to false if you dont want everyone to see debug information, can be overriden with 'site_debug' 
