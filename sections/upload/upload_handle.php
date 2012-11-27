@@ -225,9 +225,15 @@ if($MaxGroupID>=$GroupID) $GroupID = $MaxGroupID+1;
 } */
 
     
+ 
+// Use this section to control freeleeches
+if ($TotalSize < (20*1024*1024*1024)){
+    $Properties['FreeTorrent']='0';
+} else {
+    $Properties['FreeTorrent']='1';
+}
 
-if (!$Properties['FreeTorrent']) $Properties['FreeTorrent'] = '0';
-    
+
 // Torrent
 $DB->query("
 	INSERT INTO torrents
@@ -282,12 +288,6 @@ $Tags = explode(' ', strtolower($NewCategories[(int)$_POST['category']]['tag']."
     $Tags = $TagsAdded;
 //}
 
-// Use this section to control freeleeches
-if ($TotalSize < (20*1024*1024*1024)){
-    $Properties['FreeTorrent']=0;
-} else {
-    $Properties['FreeTorrent']=1;
-}
 
 /*
 // Torrent
