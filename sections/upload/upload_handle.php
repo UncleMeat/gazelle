@@ -225,13 +225,15 @@ if($MaxGroupID>=$GroupID) $GroupID = $MaxGroupID+1;
 } */
 
     
+
+if (!$Properties['FreeTorrent']) $Properties['FreeTorrent'] = '0';
+    
 // Torrent
 $DB->query("
 	INSERT INTO torrents
 		(GroupID, UserID, info_hash, FileCount, FileList, FilePath, Size, Time, FreeTorrent) 
 	VALUES
-		($GroupID, " . $LoggedUser['ID'] . ",
-		'" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", 
+		( $GroupID, " . $LoggedUser['ID'] . ", '" . db_string($InfoHash) . "', " . $NumFiles . ", " . $FileString . ", '" . $FilePath . "', " . $TotalSize . ", 
 		'$sqltime', '" . $Properties['FreeTorrent'] . "')");
 
 $Cache->increment('stats_torrent_count');
