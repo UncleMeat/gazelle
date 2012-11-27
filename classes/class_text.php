@@ -837,7 +837,7 @@ class TEXT {
 		$Host = $URLInfo['host'];
 		// If for some reason your site does not require subdomains or contains a directory in the SITE_URL, revert to the line below.
 		//if($Host == NONSSL_SITE_URL || $Host == SSL_SITE_URL || $Host == 'www.'.NONSSL_SITE_URL) {
-		if(preg_match('/(\S+\.)*'.NONSSL_SITE_URL.'/', $Host)) {
+		if(preg_match(INTERNAL_URLS_REGEX, $Host)) {
 			$URL = $URLInfo['path'];
 			if(!empty($URLInfo['query'])) {
 				$URL.='?'.$URLInfo['query'];
@@ -1376,7 +1376,8 @@ EXPLANATION OF PARSER LOGIC
 							if($NoName) { $Block['Val'] = substr($LocalURL,1); }
 							$Str.='<a href="'.$LocalURL.'">'.$Block['Val'].'</a>';
 						} else {
-							$Str.='<a rel="noreferrer" target="_blank" href="http://anonym.to/?'.$Block['Attr'].'">'.$Block['Val'].'</a>';
+                            if (!$LoggedUser['NotForceLinks']) $target = 'target="_blank"';
+							$Str.='<a rel="noreferrer" '.$target.' href="http://anonym.to/?'.$Block['Attr'].'">'.$Block['Val'].'</a>';
 						}
 					}
 					break;
@@ -1603,7 +1604,8 @@ EXPLANATION OF PARSER LOGIC
 						if($LocalURL) {
 							$Str.='<a href="'.$LocalURL.'">'.substr($LocalURL,1).'</a>';
 						} else {
-							$Str.='<a rel="noreferrer" target="_blank" href="http://anonym.to/?'.$Block['Attr'].'">'.$Block['Attr'].'</a>';
+                            if (!$LoggedUser['NotForceLinks']) $target = 'target="_blank"';
+							$Str.='<a rel="noreferrer" '.$target.' href="http://anonym.to/?'.$Block['Attr'].'">'.$Block['Attr'].'</a>';
 						} 
 					}
 					

@@ -186,6 +186,7 @@ $Options['ShortTitles'] = (!empty($_POST['shortpagetitles']) ? 1 : 0);
 $Options['HideUserTorrents'] = (!empty($_POST['showusertorrents']) ? 0 : 1);
 $Options['SplitByDays'] = (!empty($_POST['splitbydays']) ? 1 : 0);
 $Options['HideFloat'] = (!empty($_POST['hidefloatinfo']) ? 1 : 0);
+$Options['NotForceLinks'] = (!empty($_POST['forcelinks']) ? 0 : 1);
 
 if(isset($LoggedUser['DisableFreeTorrentTop10'])) {
 	$Options['DisableFreeTorrentTop10'] = $LoggedUser['DisableFreeTorrentTop10'];

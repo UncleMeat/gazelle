@@ -266,6 +266,13 @@ function change_flag() {
 				</td>
 			</tr>
 			<tr>
+				<td class="label"><strong>External link behaviour</strong></td>
+				<td>
+					<input type="checkbox" name="forcelinks" id="forcelinks" <? if (empty($SiteOptions['NotForceLinks'])) { ?>checked="checked"<? } ?> />
+					<label for="forcelinks">Force external links to open in a new page</label>
+				</td>
+			</tr>
+			<tr>
 				<td class="label"><strong>Add tag behaviour</strong></td>
 				<td>
 					<input type="checkbox" name="voteuptags" id="voteuptags" <? if (empty($SiteOptions['NotVoteUpTags'])) { ?>checked="checked"<? } ?> />
