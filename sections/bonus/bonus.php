@@ -2,6 +2,14 @@
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
 
+// check if their credits need updating (if they have been online whilst creds are accumalting)
+$DB->query("SELECT Credits as TotalCredits FROM users_main WHERE ID='$LoggedUser[ID]'");
+list($TotalCredits) = $DB->next_record();
+if($TotalCredits != $LoggedUser['TotalCredits']){
+    $LoggedUser['TotalCredits'] = $TotalCredits; // for interface below
+    $Cache->delete_value('user_stats_' . $LoggedUser['ID']);
+}
+
 enforce_login();
 show_header('Bonus Shop','bonus,bbcode');
   
@@ -49,7 +57,7 @@ $ShopItems = get_shop_items($LoggedUser['ID']);
                 $CanBuy = false;
                 $BGClass= ' itemnotbuy';
             } else { //
-                $CanBuy = is_float((float)$LoggedUser['Credits']) ? $LoggedUser['Credits'] >= $Cost: false;
+                $CanBuy = is_float((float)$LoggedUser['TotalCredits']) ? $LoggedUser['TotalCredits'] >= $Cost: false;
                 $BGClass= ($CanBuy?' itembuy' :' itemnotbuy');
                 if ($IsBuyGB && $LoggedUser['BytesDownloaded'] < get_bytes($Value.'gb') ) {
                     $DescExtra = "<br/>(WARNING: will only remove ".get_size($LoggedUser['BytesDownloaded']) .")"; // get_size(get_bytes($Value.'gb') - 
