@@ -289,7 +289,7 @@ function Load_Details_Cookie()  {
 }
  
  function Say_Thanks() {
-    
+    $('#thanksbutton').raw().disabled=true;
     ajax.post("torrents.php?action=thank","thanksform", function (response) {
         if(response=='err'){
             alert('Error: GroupID not set!');
