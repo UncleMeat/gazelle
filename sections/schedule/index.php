@@ -473,7 +473,7 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
         $DB->query("UPDATE users_info SET Warned='0000-00-00 00:00:00' WHERE Warned<'$sqltime'");
 
 	// If a user has downloaded more than 10 gigs while on ratio watch, banhammer
-
+/*
         $DB->query("SELECT ID FROM users_info AS i JOIN users_main AS m ON m.ID=i.UserID
                 WHERE i.RatioWatchEnds!='0000-00-00 00:00:00'
                 AND i.RatioWatchDownload+10*1024*1024*1024<m.Downloaded
@@ -483,7 +483,41 @@ if($Hour != next_hour() || $_GET['runhour'] || isset($argv[2])){
         if(count($UserIDs) > 0) {
                 disable_users($UserIDs, "Disabled by ratio watch system for downloading more than 10 gigs on ratio watch.", 2);
         }
+ */
+        
+	$UserQuery = $DB->query("SELECT ID, torrent_pass FROM users_info AS i JOIN users_main AS m ON m.ID=i.UserID
+                WHERE i.RatioWatchEnds!='0000-00-00 00:00:00'
+                AND i.RatioWatchDownload+10*1024*1024*1024<m.Downloaded
+                And m.Enabled='1'
+                AND m.can_leech='1'");
+         
 
+	$UserIDs = $DB->collect('ID');
+	if(count($UserIDs) > 0) {
+		$DB->query("UPDATE users_info AS i JOIN users_main AS m ON m.ID=i.UserID
+			SET 
+			m.can_leech='0',
+			i.AdminComment=CONCAT('$sqltime - Leeching ability disabled by ratio watch system for downloading more than 10 gigs on ratio watch - required ratio: ', m.RequiredRatio,'
+'			, i.AdminComment)
+			WHERE m.ID IN(".implode(',',$UserIDs).")");
+	}
+	
+	foreach($UserIDs as $UserID) {
+		$Cache->begin_transaction('user_info_heavy_'.$UserID);
+		$Cache->update_row(false, array('RatioWatchDownload'=>0, 'CanLeech'=>0));
+		$Cache->commit_transaction(0);
+		send_pm($UserID, 0, db_string("Your downloading rights have been disabled"), db_string("As you downloaded more than 10GB whilst on ratio watch your downloading rights have been revoked. You will not be able to download any torrents until your ratio is above your new required ratio."), '');
+		echo "Ratio watch leeching disabled (>10GB): $UserID\n";
+	}
+
+	$DB->set_query_id($UserQuery);
+	$Passkeys = $DB->collect('torrent_pass');
+	foreach($Passkeys as $Passkey) {
+		update_tracker('update_user', array('passkey' => $Passkey, 'can_leech' => '0'));
+	}
+        
+	sleep(6);
+        
 }
 /*************************************************************************\
 //--------------Run every day -------------------------------------------//
@@ -610,6 +644,7 @@ if($Day != next_day() || $_GET['runday']){
 
 	// Here is where we manage ratio watch
 	
+	sleep(4);
 	$OffRatioWatch = array();
 	$OnRatioWatch = array();
 	
