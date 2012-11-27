@@ -259,6 +259,7 @@ if(count($Reports) == 0) {
 						<tr>
 							<td class="label"><a href="reportsv2.php?view=report&amp;id=<?=$ReportID?>">Reported </a>Torrent:</td>
 							<td colspan="3">
+								<!--<div style="text-align: right;">was reported by <a href="user.php?id=<?=$ReporterID?>"><?=$ReporterName?></a> <?=time_diff($ReportedTime)?> for the reason: <strong><?=$ReportType['title']?></strong></div>-->
 			<?	if(!$GroupID) { ?>
 								<a href="log.php?search=Torrent+<?=$TorrentID?>"><?=$TorrentID?></a> (Deleted)
 			<?  } else {?>
@@ -266,7 +267,6 @@ if(count($Reports) == 0) {
 								<a href="torrents.php?action=download&amp;id=<?=$TorrentID?>&amp;authkey=<?=$LoggedUser['AuthKey']?>&amp;torrent_pass=<?=$LoggedUser['torrent_pass']?>" title="Download">[DL]</a>
 								uploaded by <a href="user.php?id=<?=$UploaderID?>"><?=$UploaderName?></a> <?=time_diff($Time)?>
 								<br />
-								<div style="text-align: right;">was reported by <a href="user.php?id=<?=$ReporterID?>"><?=$ReporterName?></a> <?=time_diff($ReportedTime)?> for the reason: <strong><?=$ReportType['title']?></strong></div>
 			<?	if($Status != 'Resolved') {
 				
 					$DB->query("SELECT r.ID 
@@ -318,6 +318,12 @@ if(count($Reports) == 0) {
 				}
 			}
 				?>
+							</td>
+						</tr>
+						<tr>
+							<td class="label">Reported By:</td>
+							<td colspan="3">
+                                <a href="user.php?id=<?=$ReporterID?>"><?=$ReporterName?></a> <?=time_diff($ReportedTime)?> for the reason: <strong><?=$ReportType['title']?></strong>
 							</td>
 						</tr>
 			<? if($Tracks) { ?>
