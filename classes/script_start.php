@@ -1720,12 +1720,12 @@ function warn_user($UserID, $Duration, $Reason) {
 /* This function is to update the cache and sphinx delta index to keep    */
 /* everything up to date                                                  */
 /* -- TODO ---------------------------------------------------------------- */
-/* Add in tag sorting based on positive negative votes algo               */
+/* Add in tag sorting based on positive negative votes algo   - done mifune -            */
 /* * *********************************************************************** */
 
 function update_hash($GroupID) {
     global $DB, $SpecialChars, $Cache;
-    $DB->query("UPDATE torrents_group SET TagList=(SELECT REPLACE(GROUP_CONCAT(tags.Name SEPARATOR ' '),'.','_')
+    $DB->query("UPDATE torrents_group SET TagList=(SELECT REPLACE(GROUP_CONCAT(tags.Name ORDER BY  (t.PositiveVotes-t.NegativeVotes) DESC SEPARATOR ' '),'.','_')
 		FROM torrents_tags AS t
 		INNER JOIN tags ON tags.ID=t.TagID
 		WHERE t.GroupID='$GroupID'
