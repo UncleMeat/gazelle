@@ -250,7 +250,7 @@ CREATE TABLE IF NOT EXISTS `collages` (
   `Deleted` enum('0','1') DEFAULT '0',
   `Locked` enum('0','1') NOT NULL DEFAULT '0',
   `CategoryID` int(2) NOT NULL DEFAULT '1',
-  `TagList` varchar(500) NOT NULL DEFAULT '',
+  `TagList` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `MaxGroups` int(10) NOT NULL DEFAULT '0',
   `MaxGroupsPerUser` int(10) NOT NULL DEFAULT '0',
   `Featured` tinyint(4) NOT NULL DEFAULT '0',
@@ -1113,7 +1113,7 @@ CREATE TABLE IF NOT EXISTS `sm_results` (
 CREATE TABLE IF NOT EXISTS `sphinx_delta` (
   `ID` int(10) NOT NULL,
   `GroupName` varchar(255) DEFAULT NULL,
-  `TagList` varchar(728) DEFAULT NULL,
+  `TagList` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `NewCategoryID` int(11) NOT NULL,
   `Image` varchar(255) NOT NULL,
   `Time` int(12) DEFAULT NULL,
@@ -1137,7 +1137,7 @@ CREATE TABLE IF NOT EXISTS `sphinx_delta` (
 CREATE TABLE IF NOT EXISTS `sphinx_hash` (
   `ID` int(10) NOT NULL,
   `GroupName` varchar(255) DEFAULT NULL,
-  `TagList` varchar(728) DEFAULT NULL,
+  `TagList` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `NewCategoryID` int(11) NOT NULL,
   `Image` varchar(255) NOT NULL,
   `Time` int(12) DEFAULT NULL,
@@ -1556,7 +1556,7 @@ CREATE TABLE IF NOT EXISTS `torrents_group` (
   `NewCategoryID` int(11) NOT NULL,
   `Name` varchar(300) DEFAULT NULL,
   `ReleaseType` tinyint(2) DEFAULT '21',
-  `TagList` varchar(500) NOT NULL,
+  `TagList` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `Body` mediumtext NOT NULL,
   `Image` varchar(255) NOT NULL,
@@ -1802,13 +1802,11 @@ CREATE TABLE IF NOT EXISTS `users_connectable_status` (
 
 CREATE TABLE IF NOT EXISTS `users_downloads` (
   `UserID` int(10) NOT NULL,
-  `TorrentID` int(1) NOT NULL,
+  `TorrentID` int(10) NOT NULL,
   `Time` datetime NOT NULL,
   PRIMARY KEY (`UserID`,`TorrentID`,`Time`),
   KEY `TorrentID` (`TorrentID`),
-  KEY `UserID` (`UserID`),
-  KEY `UserID_2` (`UserID`),
-  KEY `TorrentID_2` (`TorrentID`)
+  KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
