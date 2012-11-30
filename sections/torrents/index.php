@@ -509,7 +509,7 @@ if(!empty($_REQUEST['action'])) {
                                 $Subject = "I have fixed my upload '$Name'";
                                 $DB->query("INSERT INTO staff_pm_conversations 
                                                  (Subject, Status, Level, UserID, Date)
-                                          VALUES ('".db_string($Subject)."', 'Unanswered', 0, ".$LoggedUser['ID'].", '".sqltime()."')");
+                                          VALUES ('".db_string($Subject)."', 'Unanswered', 500, ".$LoggedUser['ID'].", '".sqltime()."')");
 
                                 $PMSetStatus = false;
                                 $ConvID = $DB->inserted_id();
