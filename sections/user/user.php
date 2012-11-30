@@ -1200,12 +1200,12 @@ if (check_perms('users_mod', $Class)) {
 					resize('admincomment');
 				</script>
             <div class="head">
-                <span style="float:left;">Seed History</span>
+                <span style="float:left;">Tracker History</span>
                 <span style="float:right;"><a id="historybutton" href="#" onclick="return Toggle_view('history');">(Hide)</a></span>&nbsp;
             </div>               
 		<div class="box">		
                   <div class="pad" id="historydiv">
-				
+                      This is a record of up/down from the tracker, plus credits awarded 
 <?
  
                 echo '<div class="box pad seedhistory">';
@@ -1220,7 +1220,7 @@ if (check_perms('users_mod', $Class)) {
 		</div>
             
             <div class="head">
-                <span style="float:left;">User Info</span>
+                <span style="float:left;">User Moderation</span>
                 <span style="float:right;"><a id="infobutton" href="#" onclick="Toggle_view('info');return false;">(Hide)</a></span>&nbsp;
             </div>                   
 		<div class="box">	

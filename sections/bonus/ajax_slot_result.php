@@ -47,6 +47,7 @@ if($NumBets>2) {    // top line
 // record spins
 $DB->query( "INSERT INTO sm_results (UserID, Won, Bet, Spins, Result, Time) 
                       VALUES ( '$UserID','$Win','$BetAmount','$NumBets','$Result','".sqltime()."')");
+$Cache->delete_value('sm_sum_history');
 
 $HighPayout = $Cache->get_value('sm_lowest_top_payout');
  if($Win>=$HighPayout){
