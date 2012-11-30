@@ -64,7 +64,10 @@
 	'site_debug' => 'Developer access.',
 	'site_proxy_images' => 'Image proxy & Anti-Canary.',
 	'site_search_many' => 'Can go past low limit of search results.',
+	'site_play_slots' => 'Can play the slot machine.',
 
+     
+     
 	'users_edit_usernames' => 'Can edit usernames.',
 	'users_edit_ratio' => 'Can edit other\'s upload/download amounts.',
 	'users_edit_own_ratio' => 'Can edit own upload/download amounts.',
@@ -219,6 +222,7 @@ function permissions_form(){ ?>
 					<? display_perm('site_collages_recover', 'Can recover \'deleted\' collages.'); ?>
 					<? display_perm('site_forums_double_post', 'Can double post in the forums.'); ?>
 					<? display_perm('project_team', 'Part of the project team.'); ?>
+					<? display_perm('site_play_slots', 'Can play the slot machine.'); ?> 
 				</td>
 			</tr>
 		</table>

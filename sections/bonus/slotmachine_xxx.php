@@ -2,6 +2,8 @@
  
 enforce_login();
  
+if (!check_perms( 'site_play_slots')) error ("You do not have permission to play the xxx slot machine!");
+
 include(SERVER_ROOT.'/sections/bonus/slot_xxx_arrays.php');
             
 show_header('Slot Machine','slotmachine_xxx');

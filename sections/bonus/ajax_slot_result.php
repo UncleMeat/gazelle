@@ -6,6 +6,8 @@
 
 enforce_login();
 
+if (!check_perms( 'site_play_slots')) ajax_error ("You do not have permission to play the xxx slot machine!");
+
 include(SERVER_ROOT.'/sections/bonus/slot_xxx_arrays.php');
 
 header('Content-Type: application/json; charset=utf-8');
