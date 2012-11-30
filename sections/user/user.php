@@ -663,12 +663,13 @@ if(check_paranoia_here('invitedcount')) {
 		 && (time() < strtotime($RatioWatchEnds))
 		&& ($Downloaded*$RequiredRatio)>$Uploaded ) { */
         
-    if($LoggedUser['RatioWatch']) {
+    if( $RatioWatchEnds!='0000-00-00 00:00:00' 
+		&& ($Downloaded*$RequiredRatio)>$Uploaded ) {
 ?>
         <div class="head">Ratio watch</div>
 		<div class="box pad">
 <?  
-            if ( $LoggedUser['CanLeech'] == 1 ) { 
+            if ( $DisableLeech == 1 ) { 
 ?>
                 This user is currently on ratio watch, and must upload <?=get_size(($Downloaded*$RequiredRatio)-$Uploaded)?> in the next <?=time_diff($RatioWatchEnds,2,true,false,0)?>, or their leeching privileges will be revoked. Amount downloaded while on ratio watch: <?=get_size($Downloaded-$RatioWatchDownload)?>
 <?          } else {    ?>
