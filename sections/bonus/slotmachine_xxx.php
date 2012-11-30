@@ -74,7 +74,7 @@ echo "var reelPix = ". json_encode($Reel) . ";\n"; ?>
             <label for="playsound">Sound</label>
             <input id="playsound" name="playsound" type="checkbox" value="1" checked="checked" />
         </div>
-        <a href="#" style="position:absolute;right:-80px;top:40px;" onclick="Pull_Lever()">
+        <a href="#" style="position:absolute;right:-80px;top:40px;" onclick="Pull_Lever(); return false">
             <img id="lever" src="<?=STATIC_SERVER?>common/casino/leverUp.png" />
         </a>
         <div id="beta" class="chip hidden" style="top:63px;"><span id="betanum">10</span></div>
