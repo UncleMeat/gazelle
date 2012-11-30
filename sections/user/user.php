@@ -658,13 +658,22 @@ if(check_paranoia_here('invitedcount')) {
         $CookieItems=array();
         $CookieItems[] = 'profile';
 
+        /*
     if ($RatioWatchEnds!='0000-00-00 00:00:00'
-		&& (time() < strtotime($RatioWatchEnds))
-		&& ($Downloaded*$RequiredRatio)>$Uploaded ) {
+		 && (time() < strtotime($RatioWatchEnds))
+		&& ($Downloaded*$RequiredRatio)>$Uploaded ) { */
+        
+    if($LoggedUser['RatioWatch']) {
 ?>
-            <div class="head">Ratio watch</div>
-		<div class="box">			
-			<div class="pad">This user is currently on ratio watch, and must upload <?=get_size(($Downloaded*$RequiredRatio)-$Uploaded)?> in the next <?=time_diff($RatioWatchEnds,2,true,false,0)?>, or their leeching privileges will be revoked. Amount downloaded while on ratio watch: <?=get_size($Downloaded-$RatioWatchDownload)?></div>
+        <div class="head">Ratio watch</div>
+		<div class="box pad">
+<?  
+            if ( $LoggedUser['CanLeech'] == 1 ) { 
+?>
+                This user is currently on ratio watch, and must upload <?=get_size(($Downloaded*$RequiredRatio)-$Uploaded)?> in the next <?=time_diff($RatioWatchEnds,2,true,false,0)?>, or their leeching privileges will be revoked. Amount downloaded while on ratio watch: <?=get_size($Downloaded-$RatioWatchDownload)?>
+<?          } else {    ?>
+                This user is currently on ratio watch, their downloading privileges are disabled until they meet their required ratio. Upload required: <?=get_size(($Downloaded*$RequiredRatio)-$Uploaded)?>
+<?          }       ?> 
 		</div>
 <?  } ?>
             <div class="head">

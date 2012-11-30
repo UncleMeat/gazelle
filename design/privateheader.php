@@ -228,9 +228,11 @@ if ($NewMessages > 0) {
 }
 
 if($LoggedUser['RatioWatch']) {
-	$Alerts[] = '<a href="articles.php?topic=ratio">'.'Ratio Watch'.'</a>: '.'You have '.time_diff($LoggedUser['RatioWatchEnds'],3,true,false,0).' to get your ratio over your required ratio or your leeching abilities will be disabled.';
-} else if($LoggedUser['CanLeech'] != 1) {
-	$Alerts[] = '<a href="articles.php?topic=ratio">'.'Ratio Watch'.'</a>: '.'Your downloading privileges are disabled until you meet your required ratio.';
+    if ( $LoggedUser['CanLeech'] == 1 ) {  // time() < strtotime($LoggedUser['RatioWatchEnds']) && 
+        $Alerts[] = '<a href="articles.php?topic=ratio">'.'Ratio Watch'.'</a>: '.'You have '.time_diff($LoggedUser['RatioWatchEnds'],3,true,false,0).' to get your ratio over your required ratio or your leeching abilities will be disabled.';
+    } else { //if($LoggedUser['CanLeech'] != 1) {
+        $Alerts[] = '<a href="articles.php?topic=ratio">'.'Ratio Watch'.'</a>: '.'Your downloading privileges are disabled until you meet your required ratio.';
+    }
 }
 
 if (check_perms('site_torrents_notify')) {
