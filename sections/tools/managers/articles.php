@@ -6,9 +6,11 @@ include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
 
 $StaffClass = 0;
-if ($LoggedUser['Class']>=500){ // only interested in staff classes
+if ($LoggedUser['Class']>=STAFF_LEVEL){ // only interested in staff classes
                     // should there be a way for FLS to see these... perm setting maybe?
     $StaffClass = $LoggedUser['Class'];
+} elseif ($LoggedUser['SupportFor']) {
+    $StaffClass = STAFF_LEVEL;
 }
 
 switch($_REQUEST['action']) {
@@ -75,7 +77,7 @@ show_header('Manage articles','bbcode');
                             <select name="level">
                                 <option value="0"<?if($MinClass<500)echo ' selected="selected"';?>>All Users</option>
 <?                          if ($StaffClass >= 500) {  ?>
-                                <option value="500"<?if($MinClass==500)echo ' selected="selected"';?>>Staff</option>
+                                <option value="500"<?if($MinClass==500)echo ' selected="selected"';?>>Staff & FLS</option>
 <?                          }
                             if ($StaffClass >= 600) {  ?>
                                 <option value="600"<?if($MinClass==600)echo ' selected="selected"';?>>Admins</option>

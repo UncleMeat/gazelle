@@ -12,8 +12,10 @@ if (isset($_REQUEST['topic'])) {
 }
 
 $StaffClass = 0;
-if ($LoggedUser['Class']>=500){ // only interested in staff classes
+if ($LoggedUser['Class']>=STAFF_LEVEL){ // only interested in staff classes
     $StaffClass = $LoggedUser['Class'];
+} elseif ($LoggedUser['SupportFor']) {
+    $StaffClass = STAFF_LEVEL;
 }
 //if (empty($Page)) {
 //}
