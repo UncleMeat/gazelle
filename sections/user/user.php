@@ -807,6 +807,24 @@ if (check_perms('users_view_bonuslog',$Class) || $OwnProfile) {
                     <div id="bonuslog" class="box pad">
                         <?=(!$BonusLog ? 'no bonus history' :$Text->full_format($BonusLog))?>
                     </div>
+<?
+                    $UserResults = $Cache->get_value('sm_sum_history_'.$UserID);
+                    if($UserResults === false) {
+                        $DB->query("SELECT Count(ID), SUM(Spins), SUM(Won),SUM(Bet*Spins),(SUM(Won)/SUM(Bet*Spins)) 
+                                  FROM sm_results WHERE UserID = $UserID");
+                        $UserResults = $DB->next_record();
+                        $Cache->cache_value('sm_sum_history_'.$UserID, $UserResults, 86400);
+                    }
+                    if (is_array($UserResults) && $UserResults[0] > 0) {
+
+                        list($Num, $NumSpins, $TotalWon, $TotalBet, $TotalReturn) = $UserResults;
+?>
+                        <div class="box pad" title="<?="spins: $NumSpins ($Num) | -$TotalBet | +$TotalWon | return: $TotalReturn"?>">
+                            <strong>Slot Machine:</strong> <?= ($TotalWon-$TotalBet)?> credits
+                        </div>
+<?                 
+                    }   
+?>
                 </div>
            </div>
 		</div>

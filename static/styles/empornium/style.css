@@ -2095,6 +2095,18 @@ img.win.flash {
     color:black;
 }
 
+.fmresults td {
+    text-align: center;
+    border: none;
+}
+.fmresults td.fmheader {
+    text-align: center;
+    border: none;
+    background-color: #ddd;
+    color: darkblue;
+    font-weight: bold;
+}
+
 .fm input[type=button] {
     background-color: white;
     padding: 2px 10px 2px;

@@ -2311,7 +2311,7 @@ span.reported {
 }
 
 .reels, .reelsi {
-    background-color: #eee;
+    background-color: #ddd;
 }
 .reels.play {
     background-color: #fff;
@@ -2337,6 +2337,18 @@ img.win.flash {
     font-weight: bold;
     font-size: 14px;
     color:black;
+}
+
+.fmresults td {
+    text-align: center;
+    border: none;
+}
+.fmresults td.fmheader {
+    text-align: center;
+    border: none;
+    background-color: #aaa;
+    color: white;
+    font-weight: bold;
 }
 
 .fm input[type=button] {
