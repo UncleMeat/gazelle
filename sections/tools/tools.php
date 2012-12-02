@@ -24,7 +24,7 @@ show_header('Staff Tools');
 			<tr><td><a href="tools.php?action=client_blacklist">Client Blacklist</a></td></tr>
 <? } if (check_perms('admin_dnu')) { ?> 
 			<tr><td><a href="tools.php?action=dnu">Do not upload list</a></td></tr>
-<? } if (check_perms('users_mod')) { ?>
+<? } if (check_perms('admin_email_blacklist')) { ?>
 			<tr><td><a href="tools.php?action=email_blacklist">Email Blacklist</a></td></tr>
 <? } if (check_perms('admin_manage_forums')) { ?>
 			<tr><td><a href="tools.php?action=forum">Forums</a></td></tr>

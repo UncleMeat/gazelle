@@ -1,5 +1,5 @@
 <?
-if(!check_perms('users_mod')) { error(403); }
+if(!check_perms('admin_email_blacklist')) { error(403); }
 
 authorize();
 

@@ -132,6 +132,7 @@
 	'torrents_hide_dnu' => 'Hide the Do Not Upload list by default.',
 	  'torrents_hide_imagehosts' => 'Hide the Imagehost Whitelist list by default.',
      
+        'admin_email_blacklist' => 'Can manage the email blacklist',
         'admin_manage_cheats' => 'Can admin watchlist.',
         'admin_manage_categories' => 'Can manage categories.',
 	'admin_manage_news' => 'Can manage news.',
@@ -327,6 +328,7 @@ function permissions_form(){ ?>
 			</tr>
 			<tr>
 				<td>
+                                        <? display_perm('admin_email_blacklist', 'Can manage the email blacklist'); ?>
                                         <? display_perm('admin_manage_cheats', 'Can admin watchlist.', 'Can change site options for watchlist'); ?>
                                         <? display_perm('admin_manage_categories', 'Can manage categories.'); ?>
 					<? display_perm('admin_manage_news', 'Can manage news'); ?>

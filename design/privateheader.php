@@ -531,7 +531,7 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                             <li><a href="tools.php?action=client_blacklist">Client Blacklist</a></li>
 <?                      } if (check_perms('admin_dnu')) { ?> 
                             <li><a href="tools.php?action=dnu">Do not upload list</a></li>
-<?                      } if (check_perms('users_mod')) { ?>
+<?                      } if (check_perms('admin_email_blacklist')) { ?>
                             <li><a href="tools.php?action=email_blacklist">Email Blacklist</a></li>
 <?                      } if (check_perms('admin_manage_forums')) { ?>
                             <li><a href="tools.php?action=forum">Forums</a></li>
