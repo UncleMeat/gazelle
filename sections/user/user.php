@@ -418,6 +418,34 @@ $OverallRank = $Rank->overall_score($UploadedRank, $DownloadedRank, $UploadsRank
 		<div class="head colhead_dark">Personal</div>
 		<div class="box">
 			<ul class="stats nobullet">
+                
+<?      if (check_perms('users_view_language', $Class) || $OwnProfile) {  
+    
+                $Userlangs = $Cache->get_value('user_langs_' .$UserID);
+                if($Userlangs===false){
+                    $DB->query("SELECT ul.LangID, l.flag_cc AS cc, l.language  
+                              FROM users_languages AS ul 
+                              JOIN languages AS l ON l.ID=ul.LangID  
+                             WHERE UserID=$UserID");
+                    $Userlangs = $DB->to_array(false, MYSQL_ASSOC);
+                    $Cache->cache_value('user_langs_'.$UserID, $Userlangs);
+                }
+                //$DB->query("SELECT ul.cc, country  FROM users_languages AS ul LEFT JOIN countries AS c ON c.cc=ul.cc WHERE UserID=$UserID");
+                if($Userlangs) {
+?>
+                <li>Languages: 
+<?
+                    foreach($Userlangs as $langresult) {
+?>
+                        <img style="vertical-align: bottom" title="<?=$langresult['language']?>" src="http://<?=SITE_URL?>/static/common/flags/iso16/<?=$langresult['cc']?>.png" />
+<?
+                    }
+?>
+                </li>        
+<?
+                }
+        }
+?>
 				<li>Class: <?=$ClassLevels[$Class]['Name']?></li>
 <?
 // An easy way for people to measure the paranoia of a user, for e.g. contest eligibility

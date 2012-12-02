@@ -1,5 +1,19 @@
 
 
+function change_flag() {
+    var flag = $('#flag').raw().value;
+    if (flag == '' || flag == '??') flag = '';
+    else flag = '<img src="/static/common/flags/64/'+flag+'.png"/>'
+    $('#flag_image').raw().innerHTML=flag;
+}
+
+function change_lang_flag() {
+    var flag = $('#new_lang').raw().value;
+    if (flag == '' || flag == '??') flag = '';
+    else flag = '<img src="/static/common/flags/iso16/'+flag+'.png"/>'
+    $('#lang_image').raw().innerHTML=flag;
+}
+
 function delete_conn_record(elem_id, user_id, ip) {
  
 	ajax.get('ajax.php?action=delete_conn_record&ip=' + ip + '&userid=' + user_id, function (response) {

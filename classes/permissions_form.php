@@ -65,6 +65,7 @@
 	'site_proxy_images' => 'Image proxy & Anti-Canary.',
 	'site_search_many' => 'Can go past low limit of search results.',
 	'site_play_slots' => 'Can play the slot machine.',
+    'site_set_language' => 'Can set own user language(s) in settings',
 
      
      
@@ -116,6 +117,7 @@
 	'users_groups' => 'Can use Group tools.',
 	'users_manage_cheats' => 'Can manage watchlist.',
     'users_set_suppressconncheck' => 'Can set Suppress ConnCheck prompt for users.',
+    'users_view_language' => 'Can view user language(s) on user profile',
      
 	'torrents_edit' => 'Can edit any torrent.',
               'torrents_review' => 'Can mark torrents for deletion.',
@@ -129,7 +131,6 @@
 	'torrents_search_fast' => 'Rapid search (for scripts).',
 	'torrents_hide_dnu' => 'Hide the Do Not Upload list by default.',
 	  'torrents_hide_imagehosts' => 'Hide the Imagehost Whitelist list by default.',
-     
      
         'admin_manage_cheats' => 'Can admin watchlist.',
         'admin_manage_categories' => 'Can manage categories.',
@@ -223,6 +224,8 @@ function permissions_form(){ ?>
 					<? display_perm('site_forums_double_post', 'Can double post in the forums.'); ?>
 					<? display_perm('project_team', 'Part of the project team.'); ?>
 					<? display_perm('site_play_slots', 'Can play the slot machine.'); ?> 
+					<? display_perm('site_set_language', 'Can set own user language(s).', 'Can set own user language(s) on settings page.'); ?> 
+ 
 				</td>
 			</tr>
 		</table>
@@ -283,7 +286,8 @@ function permissions_form(){ ?>
 					<? display_perm('users_groups', 'Can use Group tools'); ?>
                     <? display_perm('users_manage_cheats', 'Can manage watchlist', 'Can add and remove users from watchlist, and view speed reports page'); ?>
                     <? display_perm('users_set_suppressconncheck', 'Can set Suppress ConnCheck prompt for users', 'Suppress ConnCheck if set for a user stops any prompts in the header bar re: connectable status'); ?>
- 
+                    <? display_perm('users_view_language', 'Can view user language(s) on user profile', 'Can view user language(s) on user profile - to other users they can only be seen on the staff page'); ?>
+  
 					<br/>*Everything is only applicable to users with the same or lower class level
 				</td>
 			</tr>

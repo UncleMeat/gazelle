@@ -280,10 +280,7 @@ if($ResetPassword) {
 	
 }
 
-if (isset($_POST['resetpasskey'])) {
-	
-	
-	
+if (isset($_POST['resetpasskey'])) { 
 	$UserInfo = user_heavy_info($UserID);
 	$OldPassKey = db_string($UserInfo['torrent_pass']);
 	$NewPassKey = db_string(make_secret());
@@ -302,6 +299,39 @@ if (isset($_POST['resetpasskey'])) {
 
 $SQL.="WHERE m.ID='".db_string($UserID)."'";
 $DB->query($SQL);
+
+
+if (check_perms('site_set_language')) {
+    
+    $DelLangs = $_POST['del_lang'];
+    if (is_array($DelLangs) ) {
+
+          $Div = '';
+          $SQL_IN ='';
+          foreach($DelLangs as $langID) { //   
+                $SQL_IN .= "$Div " . (int)$langID ;
+                $Div = ',';
+          }
+          /*
+          $BadgesRemoved = '';
+          $Div = '';
+          $DB->query("SELECT country FROM countries WHERE cc IN ( $SQL_IN )");
+          while(list($Name)=$DB->next_record()) {
+                $LangsRemoved .= "$Div $Name";
+                $Div = ',';
+          } */
+          if ($SQL_IN) $DB->query("DELETE FROM users_languages WHERE UserID='$UserID' AND LangID IN ( $SQL_IN )");
+
+          //$EditSummary[] = 'Badge'.(count($DelLangs)>1?'s':'')." removed: $LangsRemoved";
+    }
+
+    if (isset($_POST['new_lang']) && is_number($_POST['new_lang'])) { 
+        $DB->query("INSERT IGNORE INTO users_languages (UserID, LangID) VALUES ('$UserID', '$_POST[new_lang]' )"); 
+        $Cache->delete_value('user_langs_'.$UserID);
+    } elseif ($SQL_IN) {
+        $Cache->delete_value('user_langs_'.$UserID);
+    }
+}
 
 if ($ResetPassword) {
 	logout();

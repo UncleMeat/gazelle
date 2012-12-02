@@ -55,6 +55,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 				</td>
 				<td class="nobr">
 					<?=$SupportFor?>
+                    <?=get_user_languages($ID)?>
 				</td>
 			</tr>
 <?          } ?>
@@ -104,6 +105,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 				</td>
 				<td class="nobr">
 					<?=$Remark?>
+                    <?=get_user_languages($ID)?>
 				</td>
 			</tr>
 <?	} ?>
@@ -152,6 +154,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 				</td>
 				<td class="nobr">
 					<?=$Remark?>
+                    <?=get_user_languages($ID)?>
 				</td>
 			</tr>
 <?	} ?>

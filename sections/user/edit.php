@@ -121,17 +121,10 @@ if ($SiteOptions) {
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
 
-show_header($Username.' > Settings','user,validate,bbcode');
+show_header($Username.' > Settings','user,validate,bbcode,jquery,jquery.cookie');
 echo $Val->GenerateJS('userform');
 ?>
-<script type="text/javascript">//<![CDATA[
-function change_flag() {
-    var flag = $('#flag').raw().value;
-    if (flag == '' || flag == '??') flag = '';
-    else flag = '<img src="/static/common/flags/64/'+flag+'.png"/>'
-    $('#flag_image').raw().innerHTML=flag;
-}
-//]]></script>
+ 
 <div class="thin">
     <h2>User Settings</h2>
 	<div class="head"><?=format_username($UserID,$Username)?> &gt; Settings</div>
@@ -399,6 +392,64 @@ function change_flag() {
                     </div>
                 </td>
 			</tr>
+                    
+<?      if ( check_perms('site_set_language') ) {  ?>
+            
+            <tr>
+                <td class="label"><strong>Language(s)</strong></td>
+                <td>           
+<?    
+     
+                $Userlangs = $Cache->get_value('user_langs_' .$UserID);
+                if($Userlangs===false){
+                    $DB->query("SELECT ul.LangID, l.flag_cc AS cc, l.language  
+                              FROM users_languages AS ul 
+                              JOIN languages AS l ON l.ID=ul.LangID  
+                             WHERE UserID=$UserID");
+                    $Userlangs = $DB->to_array('LangID', MYSQL_ASSOC);
+                    $Cache->cache_value('user_langs_'.$UserID, $Userlangs);
+                }
+                if($Userlangs) {
+?> 
+                    select language to remove it:<br/>
+<?
+                    foreach($Userlangs as $langresult) {
+?>
+                    <input type="checkbox" name="del_lang[]" value="<?=$langresult['LangID']?>" />
+                        <img style="vertical-align: bottom" title="<?=$langresult['language']?>" src="http://<?=SITE_URL?>/static/common/flags/iso16/<?=$langresult['cc']?>.png" />
+<?
+                    }
+?>
+                     <br/>
+<?
+                }
+                 
+                $SiteLanguages = $Cache->get_value('site_languages');
+                if($SiteLanguages===false){
+                    $DB->query("SELECT ID, language FROM languages WHERE active='1' ORDER BY language");
+                    $SiteLanguages = $DB->to_array('ID', MYSQL_ASSOC);
+                    $Cache->cache_value('site_languages', $SiteLanguages);
+                }
+?>
+                    <div style="display:inline-block;vertical-align: top;"> 
+                        add language: 
+                        <span id="lang_image" > 
+                        </span>
+                        <select id="new_lang" name="new_lang" onchange="change_lang_flag();" style="margin-top: 25px">
+                            <option value="" selected="selected" >none</option>
+                   <?       foreach($SiteLanguages as $key=>$value) {   
+                                if (!array_key_exists($key, $Userlangs)  ) { ?> 
+                                    <option value="<?=$key?>"><?=$value['language']?></option>
+                   <?           } 
+                            }  ?>
+                        </select>
+                    </div>
+                     <br/>(only staff can see your selected language) <br/>
+                </td>
+            </tr>
+<?  
+        }
+?> 
 			<tr>
 				<td class="label"><strong>Email</strong></td>
 				<td><input class="long" type="text" name="email" id="email" value="<?=display_str($Email)?>" />

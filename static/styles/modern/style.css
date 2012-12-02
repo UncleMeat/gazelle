@@ -1418,6 +1418,9 @@ table.slice {
 }
 
 /* Layout (home page) */
+ul.stats {
+    padding: 5px 0px;
+}
 
 ul.stats li {
     padding: 0px 0px 1px 0px;

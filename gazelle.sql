@@ -719,6 +719,19 @@ CREATE TABLE IF NOT EXISTS `ip_bans` (
 
 -- --------------------------------------------------------
 
+-- Table structure for languages
+ 
+CREATE TABLE IF NOT EXISTS `languages` (
+  `ID` smallint(3) NOT NULL AUTO_INCREMENT,
+  `language` char(49) NOT NULL,
+  `code` char(2) NOT NULL,
+  `flag_cc` char(2) DEFAULT NULL,
+  `active` enum('0','1') NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
 --
 -- Tabellstruktur `library_contest`
 --
@@ -1975,6 +1988,18 @@ CREATE TABLE IF NOT EXISTS `users_info` (
   KEY `Inviter` (`Inviter`),
   KEY `RatioWatchEnds` (`RatioWatchEnds`),
   KEY `RatioWatchDownload` (`RatioWatchDownload`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_languages`
+--
+
+CREATE TABLE IF NOT EXISTS `users_languages` (
+  `UserID` int(10) NOT NULL,
+  `LangID` smallint(3) NOT NULL,
+  PRIMARY KEY (`UserID`,`LangID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
