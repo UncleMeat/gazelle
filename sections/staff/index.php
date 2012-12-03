@@ -38,7 +38,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 			<tr class="colhead">
 				<td width="300px">Username</td>
 				<td width="150px">Last seen</td>
-				<td><strong>Support for</strong></td>
+				<td colspan="2"><strong>Support For</strong></td>
 			</tr>
 <?
             $Row = 'a';
@@ -55,6 +55,8 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 				</td>
 				<td class="nobr">
 					<?=$SupportFor?>
+				</td>
+				<td width="20%" class="nobr">
                     <?=get_user_languages($ID)?>
 				</td>
 			</tr>
@@ -88,7 +90,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 			<tr class="colhead">
 				<td width="300px">Username</td>
 				<td width="150px">Last seen</td>
-				<td><strong>Remark</strong></td>
+				<td colspan="2"><strong>Remark</strong></td>
 			</tr>
 <?
 		} // End new class header
@@ -105,6 +107,8 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 				</td>
 				<td class="nobr">
 					<?=$Remark?>
+				</td>
+				<td width="20%" class="nobr">
                     <?=get_user_languages($ID)?>
 				</td>
 			</tr>
@@ -137,7 +141,7 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 			<tr class="colhead">
 				<td width="300px">Username</td>
 				<td width="150px">Last seen</td>
-				<td><strong>Remark</strong></td>
+				<td colspan="2"><strong>Remark</strong></td>
 			</tr>
 <?
 		} // End new class header
@@ -154,6 +158,8 @@ $Msg = isset($_REQUEST['msg'])?$_REQUEST['msg']:'';
 				</td>
 				<td class="nobr">
 					<?=$Remark?>
+				</td>
+				<td width="20%" class="nobr">
                     <?=get_user_languages($ID)?>
 				</td>
 			</tr>
