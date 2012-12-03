@@ -90,7 +90,7 @@ function get_user_languages($UserID) {
 
     $Userlangs = $Cache->get_value('user_langs_' . $UserID);
     if ($Userlangs === false) {
-        $DB->query("SELECT ul.LangID, l.flag_cc AS cc, l.language  
+        $DB->query("SELECT ul.LangID, l.code, l.flag_cc AS cc, l.language  
                               FROM users_languages AS ul 
                               JOIN languages AS l ON l.ID=ul.LangID  
                              WHERE UserID=$UserID");
@@ -101,7 +101,10 @@ function get_user_languages($UserID) {
     if ($Userlangs) {
         $Str = '<span style="float:right;">';
         foreach ($Userlangs as $langresult) {
-            $Str .= '<img style="vertical-align: bottom" title="'.$langresult['language'].'" src="http://'. SITE_URL.'/static/common/flags/iso16/'.$langresult['cc'].'.png" />&nbsp;';
+            if ($langresult['cc'])
+                $Str .= '<img style="vertical-align: bottom" alt="['.$langresult['code'].']" title="['.$langresult['code'].'] '.$langresult['language'].'" src="http://'. SITE_URL.'/static/common/flags/iso16/'.$langresult['cc'].'.png" />&nbsp;';
+            else
+                $str .= "[{$langresult[code]}]&nbsp;";
         }
         $Str .= '</span>';
     }

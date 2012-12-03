@@ -47,7 +47,9 @@ show_header('Staff Tools');
 <? } if (check_perms('users_mod')) { ?>
 			<tr><td><a href="torrents.php?action=allcomments">Recent Comments</a></td></tr> 
 <? } if (check_perms('users_manage_cheats')) { ?>
-			<tr><td><a href="tools.php?action=cheats">Speed Reports</a></td></tr>                    
+			<tr><td><a href="tools.php?action=cheats">Speed Reports</a></td></tr>     
+<? } if (check_perms('admin_manage_languages')) { ?>
+			<tr><td><a href="tools.php?action=languages">Site Languages</a></td></tr>               
 <? } if (check_perms('admin_manage_permissions')) { ?>
 			<tr><td><a href="tools.php?action=permissions">User Classes<!--Permissions--></a></td></tr>
 <? } if (check_perms('users_groups')) { ?>

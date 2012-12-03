@@ -62,6 +62,15 @@ switch ($_REQUEST['action']) {
     
     
     //Managers
+    
+    case 'languages':
+        include(SERVER_ROOT . '/sections/tools/managers/languages_list.php');
+        break;
+    case 'languages_alter':
+        include(SERVER_ROOT . '/sections/tools/managers/languages_alter.php');
+        break;
+    
+    
     case 'cheats':
         include(SERVER_ROOT . '/sections/tools/managers/speed_reports_list.php');
         break;

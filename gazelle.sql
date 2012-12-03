@@ -720,14 +720,15 @@ CREATE TABLE IF NOT EXISTS `ip_bans` (
 -- --------------------------------------------------------
 
 -- Table structure for languages
- 
+
 CREATE TABLE IF NOT EXISTS `languages` (
   `ID` smallint(3) NOT NULL AUTO_INCREMENT,
-  `language` char(49) NOT NULL,
+  `language` varchar(64) NOT NULL,
   `code` char(2) NOT NULL,
   `flag_cc` char(2) DEFAULT NULL,
   `active` enum('0','1') NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `code` (`code`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
