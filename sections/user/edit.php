@@ -402,7 +402,7 @@ echo $Val->GenerateJS('userform');
      
                 $Userlangs = $Cache->get_value('user_langs_' .$UserID);
                 if($Userlangs===false){
-                    $DB->query("SELECT ul.LangID, l.flag_cc AS cc, l.language  
+                    $DB->query("SELECT ul.LangID, l.code, l.flag_cc AS cc, l.language  
                               FROM users_languages AS ul 
                               JOIN languages AS l ON l.ID=ul.LangID  
                              WHERE UserID=$UserID");
@@ -416,7 +416,7 @@ echo $Val->GenerateJS('userform');
                     foreach($Userlangs as $langresult) {
 ?>
                     <input type="checkbox" name="del_lang[]" value="<?=$langresult['LangID']?>" />
-                        <img style="vertical-align: bottom" title="<?=$langresult['language']?>" src="http://<?=SITE_URL?>/static/common/flags/iso16/<?=$langresult['cc']?>.png" />
+                        <img style="vertical-align: bottom" title="<?=$langresult['language']?>" alt="[<?=$langresult['code']?>]" src="http://<?=SITE_URL?>/static/common/flags/iso16/<?=$langresult['cc']?>.png" />
 <?
                     }
 ?>
@@ -433,14 +433,14 @@ echo $Val->GenerateJS('userform');
 ?>
                     <div style="display:inline-block;vertical-align: top;"> 
                         add language: 
-                        <span id="lang_image" > 
+                        <span id="lang_image"> 
                         </span>
                         <select id="new_lang" name="new_lang" onchange="change_lang_flag();" style="margin-top: 25px">
                             <option value="" selected="selected" >none</option>
-                   <?       foreach($SiteLanguages as $key=>$value) {   
-                                if (!array_key_exists($key, $Userlangs)  ) { ?> 
+                   <?       foreach($SiteLanguages as $key=>$value) {
+                                if (!array_key_exists($key, $Userlangs)  ) { ?>
                                     <option value="<?=$key?>"><?=$value['language']?></option>
-                   <?           } 
+                   <?           }
                             }  ?>
                         </select>
                     </div>
