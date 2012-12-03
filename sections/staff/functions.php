@@ -99,12 +99,12 @@ function get_user_languages($UserID) {
     }
     $Str = '';
     if ($Userlangs) {
-        $Str = '<span style="float:right;">';
+        $Str = '<span class="languages" style="float:right;">';
         foreach ($Userlangs as $langresult) {
             if ($langresult['cc'])
                 $Str .= '<img style="vertical-align: bottom" alt="['.$langresult['code'].']" title="['.$langresult['code'].'] '.$langresult['language'].'" src="http://'. SITE_URL.'/static/common/flags/iso16/'.$langresult['cc'].'.png" />&nbsp;';
             else
-                $str .= "[{$langresult[code]}]&nbsp;";
+                $Str .= "[{$langresult[code]}]&nbsp;";
         }
         $Str .= '</span>';
     }
