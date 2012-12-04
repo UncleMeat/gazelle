@@ -873,8 +873,7 @@ if($Day != next_day() || $_GET['runday']){
 // Lanz: don't remove torrents while we test and move the code to the live server.
 // We need to get the seeders back on most torrents before we delete what the
 // code would consider inactive torrents.
-        
-/*       
+           
 	$i = 0;
 	$DB->query("SELECT
 		t.ID,
@@ -919,7 +918,7 @@ if($Day != next_day() || $_GET['runday']){
 		}
 	}
 	echo "$i torrents deleted for inactivity.\n";
-*/
+ 
 	foreach($DeleteNotes as $UserID => $MessageInfo){
 		$Singular = ($MessageInfo['Count'] == 1) ? true : false;
 		send_pm($UserID,0,db_string($MessageInfo['Count'].' of your torrents '.($Singular?'has':'have').' been deleted for inactivity'), db_string(($Singular?'One':'Some').' of your uploads '.($Singular?'has':'have').' been deleted for being unseeded.  Since '.($Singular?'it':'they').' didn\'t break any rules (we hope), please feel free to re-upload '.($Singular?'it':'them').".\nThe following torrent".($Singular?' was':'s were').' deleted:'.$MessageInfo['Msg']));
