@@ -27,6 +27,7 @@ $Val->SetFields('torrentsperpage',1,"inarray","You forgot to select your torrent
 //$Val->SetFields('hidecollage',1,"number","You forgot to select your collage option.",array('minlength'=>0,'maxlength'=>1));
 $Val->SetFields('collagecovers',1,"number","You forgot to select your collage option.");
 $Val->SetFields('showtags',1,"number","You forgot to select your show tags option.",array('minlength'=>0,'maxlength'=>1));
+$Val->SetFields('maxtags',1,"number","You forgot to select your maximum tags to show in lists option.",array('minlength'=>0,'maxlength'=>10000));
 $Val->SetFields('avatar',0,'image', 'Avatar: The image URL you entered was not valid.', 
                  array('regex' => $whitelistregex, 'maxlength' => 255, 'minlength' => 6, 'maxfilesizeKB'=>-1, 'dimensions'=>array(300,500)));
 $Val->SetFields('info',0,'desc','Info',array('regex'=>$whitelistregex,'minlength'=>0,'maxlength'=>20000));	
@@ -187,6 +188,7 @@ $Options['HideUserTorrents'] = (!empty($_POST['showusertorrents']) ? 0 : 1);
 $Options['SplitByDays'] = (!empty($_POST['splitbydays']) ? 1 : 0);
 $Options['HideFloat'] = (!empty($_POST['hidefloatinfo']) ? 1 : 0);
 $Options['NotForceLinks'] = (!empty($_POST['forcelinks']) ? 0 : 1);
+$Options['MaxTags'] = (isset($_POST['maxtags']) ? (int)$_POST['maxtags'] : 16);
 
 if(isset($LoggedUser['DisableFreeTorrentTop10'])) {
 	$Options['DisableFreeTorrentTop10'] = $LoggedUser['DisableFreeTorrentTop10'];

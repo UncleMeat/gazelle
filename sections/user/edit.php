@@ -118,6 +118,8 @@ if ($SiteOptions) {
 } else { 
 	$SiteOptions = array();
 }
+if (!isset($SiteOptions['MaxTags'])) $SiteOptions['MaxTags'] = 16;
+
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
 
@@ -249,6 +251,13 @@ echo $Val->GenerateJS('userform');
 				<td>
 					<input type="checkbox" name="hidetagsinlists" id="hidetagsinlists" <? if (!empty($SiteOptions['HideTagsInLists'])) { ?>checked="checked"<? } ?> />
 					<label for="hidetagsinlists">Hide tags in lists</label>
+				</td>
+			</tr>
+			<tr>
+				<td class="label"><strong>Max Tags in lists</strong></td>
+				<td> <? //if (!isset($SiteOptions['MaxTags'])) $SiteOptions['MaxTags']=20; ?>
+					<input type="text" name="maxtags" id="maxtags" size="8" value="<?=((int)$SiteOptions['MaxTags'])?>" />
+					<label for="maxtags">The maximum number of tags to show in a torrent list</label>
 				</td>
 			</tr>
 			<tr>

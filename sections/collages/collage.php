@@ -133,7 +133,9 @@ foreach ($TorrentList as $GroupID=>$Group) {
 	$TagList = explode(' ',str_replace('_','.',$TagList));
 
 	$TorrentTags = array();
+    $numtags=0;
 	foreach($TagList as $Tag) {
+        if ($numtags++>=$LoggedUser['MaxTags'])  break;
 		if(!isset($Tags[$Tag])) {
 			$Tags[$Tag] = array('name'=>$Tag, 'count'=>1);
 		} else {

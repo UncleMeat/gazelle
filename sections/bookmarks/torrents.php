@@ -74,7 +74,9 @@ foreach ($TorrentList as $GroupID=>$Group) {
 	$TagList = explode(' ',str_replace('_','.',$TagList));
 
 	$TorrentTags = array();
-	foreach($TagList as $Tag) {
+    $numtags=0;
+    foreach($TagList as $Tag) {
+        if ($numtags++>=$LoggedUser['MaxTags'])  break;
 		if(!isset($Tags[$Tag])) {
 			$Tags[$Tag] = array('name'=>$Tag, 'count'=>1);
 		} else {
@@ -120,9 +122,9 @@ foreach ($TorrentList as $GroupID=>$Group) {
         <td>
                     <?=$AddExtra?>
                 <strong><?=$DisplayName?></strong> 
-                <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                
-                <?=$TorrentTags?>
-                <? } ?>
+                <? if ($LoggedUser['HideTagsInLists'] !== 1) {             
+                        echo $TorrentTags;
+                   } ?>
 <? if(!$Sneaky){ ?>
                 <span style="float:left;"><a href="#group_<?=$GroupID?>" onclick="Unbookmark('torrent', <?=$GroupID?>, '');return false;">Remove Bookmark</a></span>
 <? } ?>

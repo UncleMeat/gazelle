@@ -423,7 +423,9 @@ function user_heavy_info($UserID) {
             $HeavyInfo = array_merge($HeavyInfo, $HeavyInfo['SiteOptions']);
         }
         unset($HeavyInfo['SiteOptions']);
-
+         
+        if (!isset($HeavyInfo['MaxTags'])) $HeavyInfo['MaxTags'] = 16;
+        
         if (!empty($HeavyInfo['Badges'])) {
             $HeavyInfo['Badges'] = unserialize($HeavyInfo['Badges']);
             //$HeavyInfo = array_merge($HeavyInfo, $HeavyInfo['Badges']);

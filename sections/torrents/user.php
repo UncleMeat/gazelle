@@ -317,7 +317,9 @@ foreach($NewCategories as $Cat) {
 		$TagList = explode(' ',str_replace('_','.',$TagList));
 		
 		$TorrentTags = array();
+        $numtags=0;
 		foreach($TagList as $Tag) {
+            if ($numtags++>=$LoggedUser['MaxTags'])  break;
 			$TorrentTags[]='<a href="torrents.php?type='.$Action.'&amp;userid='.$UserID.'&amp;tags='.$Tag.'">'.$Tag.'</a>';
 		}
 		$TorrentTags = implode(' ', $TorrentTags);

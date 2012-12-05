@@ -622,7 +622,9 @@ $Bookmarks = all_bookmarks('torrent');
         $TagList = explode(' ', str_replace('_', '.', $TagList));
 
         $TorrentTags = array();
-        foreach ($TagList as $Tag) {
+        $numtags=0;
+		foreach($TagList as $Tag) {
+            if ($numtags++>=$LoggedUser['MaxTags'])  break;
             $TorrentTags[] = '<a href="torrents.php?' . $Action . '&amp;taglist=' . $Tag . '">' . $Tag . '</a>';
         }
         $TorrentTags = implode(' ', $TorrentTags);
@@ -632,8 +634,9 @@ $Bookmarks = all_bookmarks('torrent');
 
         $OverImage = $Image != '' ? $Image : '/static/common/noartwork/noimage.png';
         $OverName = mb_strlen($GroupName) <= 60 ? $GroupName : mb_substr($GroupName, 0, 56) . '...';
-        $SL = ($TotalSeeders == 0 ? "<span class=r00>" . number_format($TotalSeeders) . "</span>" : number_format($TotalSeeders)) . "/" . number_format($TotalLeechers);
-        $Overlay = "<table class=overlay><tr><td class=overlay colspan=2><strong>" . $OverName . "</strong></td><tr><td class=leftOverlay><img style='max-width: 150px;' src=" . $OverImage . "></td><td class=rightOverlay><strong>Uploader:</strong><br />{$Data['Username']}<br /><br /><strong>Size:</strong><br />" . get_size($Data['Size']) . "<br /><br /><strong>Snatched:</strong><br />" . number_format($TotalSnatched) . "<br /><br /><strong>Seeders/Leechers:</strong><br />" . $SL . "</td></tr></table>";
+        //$SL = ($TotalSeeders == 0 ? "<span class=r00>" . number_format($TotalSeeders) . "</span>" : number_format($TotalSeeders)) . "/" . number_format($TotalLeechers);
+        $SL = ($Data['Seeders'] == 0 ? "<span class=r00>" . number_format($Data['Seeders']) . "</span>" : number_format($Data['Seeders'])) . "/" . number_format($Data['Leechers']);
+        $Overlay = "<table class=overlay><tr><td class=overlay colspan=2><strong>" . $OverName . "</strong></td><tr><td class=leftOverlay><img style='max-width: 150px;' src=" . $OverImage . "></td><td class=rightOverlay><strong>Uploader:</strong><br />{$Data['Username']}<br /><br /><strong>Size:</strong><br />" . get_size($Data['Size']) . "<br /><br /><strong>Snatched:</strong><br />" . number_format($Data['Snatched']) . "<br /><br /><strong>Seeders/Leechers:</strong><br />" . $SL . "</td></tr></table>";
  
         $AddExtra = torrent_icons($Data, $TorrentID, $Data['Status'], in_array($GroupID, $Bookmarks));
             
@@ -678,9 +681,9 @@ $Bookmarks = all_bookmarks('torrent');
             <td class="center"><?=number_format($NumComments)?></td>
             <td class="nobr"><?=time_diff($Data['Time'], 1) ?></td>
             <td class="nobr"><?= get_size($Data['Size']) ?></td>
-            <td><?= number_format($TotalSnatched) ?></td>
-            <td<?= ($TotalSeeders == 0) ? ' class="r00"' : '' ?>><?= number_format($TotalSeeders) ?></td>
-            <td><?= number_format($TotalLeechers) ?></td>
+            <td><?= number_format($Data['Snatched']) ?></td>
+            <td<?= ($Data['Seeders'] == 0) ? ' class="r00"' : '' ?>><?= number_format($Data['Seeders']) ?></td>
+            <td><?= number_format($Data['Leechers']) ?></td>
             <td class="user"><a href="user.php?id=<?= $Data['UserID'] ?>" class="user"><?= $Data['Username'] ?></a></td>
         </tr>
         <?

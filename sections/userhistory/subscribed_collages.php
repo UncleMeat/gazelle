@@ -107,7 +107,9 @@ $CollageSubs = $DB->to_array();
                 $TagList = explode(' ', str_replace('_', '.', $TagList));
 
                 $TorrentTags = array();
-                foreach ($TagList as $Tag) {
+                $numtags=0;
+                foreach($TagList as $Tag) {
+                    if ($numtags++>=$LoggedUser['MaxTags'])  break;
                     if (!isset($Tags[$Tag])) {
                         $Tags[$Tag] = array('name' => $Tag, 'count' => 1);
                     } else {
@@ -145,9 +147,9 @@ $CollageSubs = $DB->to_array();
                             | <a href="reportsv2.php?action=report&amp;id=<?= $TorrentID ?>" title="Report">RP</a>]
                         </span>
                         <strong><?= $DisplayName ?></strong>
-                        <? if ($LoggedUser['HideTagsInLists'] !== 1) { ?>                   
-                        <?= $TorrentTags ?>
-                        <? } ?>
+                        <? if ($LoggedUser['HideTagsInLists'] !== 1) {                 
+                                echo $TorrentTags;
+                           } ?>
                     </td>
                     <td class="nobr"><?= get_size($Torrent['Size']) ?></td>
                     <td><?= number_format($Torrent['Snatched']) ?></td>
