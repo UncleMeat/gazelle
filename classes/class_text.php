@@ -1402,7 +1402,8 @@ EXPLANATION OF PARSER LOGIC
                     break;
                           
 				case 'table':
-                              $InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr']) : FALSE;
+                      //$InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr']) : FALSE; 
+                    $InlineStyle = $this->get_multi_attributes($Block['Attr']) ;
 					if ($InlineStyle === FALSE) {
                                   	$Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
                               } else  {
@@ -1414,7 +1415,10 @@ EXPLANATION OF PARSER LOGIC
                               }
 					break;
 				case 'tr':
-                              $InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr'], false, true, false, true) : FALSE;
+                              
+                    //$InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr'], false, true, false, true) : FALSE;
+                    $InlineStyle = $this->get_multi_attributes($Block['Attr'], false, true, false, true) ;
+                    
 					if ($InlineStyle === FALSE) {
                                   	$Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
                               } else  {
@@ -1424,14 +1428,14 @@ EXPLANATION OF PARSER LOGIC
 					break;
 				case 'th':
 				case 'td':
-                              $InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr'], false) : FALSE;
+                    $InlineStyle = $this->get_multi_attributes($Block['Attr'], false) ;
 					if ($InlineStyle === FALSE) {
                                   	$Str.='['.$Block['Type'].'='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/'.$Block['Type'].']';
                               } else  
                                   $Str.='<'.$Block['Type'].' class="bbcode"'.$InlineStyle.'>'.$this->to_html($Block['Val']).'</'.$Block['Type'].'>';
 					break;
 				case 'bg':
-                              $InlineStyle = $this->Advanced ? $this->get_multi_attributes($Block['Attr'], true, true, true, false) : FALSE;
+                    $InlineStyle = $this->get_multi_attributes($Block['Attr'], true, true, true, false);
 					if (!$InlineStyle || $InlineStyle =='') {
                                   	$Str.='[bg='.$Block['Attr'].']'.$this->to_html($Block['Val']).'[/bg]';
                               } else  
