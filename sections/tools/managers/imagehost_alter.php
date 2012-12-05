@@ -22,13 +22,12 @@ if($_POST['submit'] == 'Delete'){ //Delete
 	if($_POST['submit'] == 'Edit'){ //Edit
 		if(!is_number($_POST['id']) || $_POST['id'] == ''){ error(0); }
 		$DB->query("UPDATE imagehost_whitelist SET
-			Imagehost='$P[host]',
-			Link='$P[link]',
-			Comment='$P[comment]',
-			UserID='$LoggedUser[ID]',
-			Time='".sqltime()."',
-                  Hidden='$P[hidden]'
-			WHERE ID='$P[id]'");
+                            Imagehost='$P[host]',
+                            Link='$P[link]',
+                            Comment='$P[comment]',
+                            UserID='$LoggedUser[ID]',
+                            Hidden='$P[hidden]'
+                     WHERE ID='$P[id]'");  //  Time='".sqltime()."',
 	} else { //Create
 		$DB->query("INSERT INTO imagehost_whitelist 
 			(Imagehost, Link, Comment, UserID, Time, Hidden) VALUES

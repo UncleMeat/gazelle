@@ -193,7 +193,7 @@ if (!empty($Properties))
                     Hidden
                     FROM imagehost_whitelist
                     WHERE Hidden='0'
-                    ORDER BY Imagehost");
+                    ORDER BY Time DESC");
         $Whitelist = $DB->to_array();
         $Cache->cache_value('imagehost_whitelist', $Whitelist);
     }

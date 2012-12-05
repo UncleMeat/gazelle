@@ -37,7 +37,15 @@ function replace_special_tags($Body) {
 
         $ImageWhitelist = $Cache->get_value('imagehost_whitelist');
         if($ImageWhitelist === FALSE) {
-                $DB->query("SELECT Imagehost, Link, Comment, Time FROM imagehost_whitelist ORDER BY Time");
+                $DB->query("SELECT 
+                    Imagehost, 
+                    Link,
+                    Comment,
+                    Time,
+                    Hidden
+                    FROM imagehost_whitelist
+                    WHERE Hidden='0'
+                    ORDER BY Time DESC");
                 $ImageWhitelist = $DB->to_array();
                 $Cache->cache_value('imagehost_whitelist', $ImageWhitelist);
         }
