@@ -423,9 +423,9 @@ function user_heavy_info($UserID) {
             $HeavyInfo = array_merge($HeavyInfo, $HeavyInfo['SiteOptions']);
         }
         unset($HeavyInfo['SiteOptions']);
-         
-        if (!isset($HeavyInfo['MaxTags'])) $HeavyInfo['MaxTags'] = 16;
         
+        //if (!isset($HeavyInfo['MaxTags'])) $HeavyInfo['MaxTags'] = 16;
+                
         if (!empty($HeavyInfo['Badges'])) {
             $HeavyInfo['Badges'] = unserialize($HeavyInfo['Badges']);
             //$HeavyInfo = array_merge($HeavyInfo, $HeavyInfo['Badges']);
@@ -441,6 +441,10 @@ function user_heavy_info($UserID) {
             
         $Cache->cache_value('user_info_heavy_' . $UserID, $HeavyInfo, 0);
     }
+    // add this here for implementation to live server (so logged in users dont get blank tags) 
+    // but can move up a few lines to inside if statements at some point in the future.
+    if (!isset($HeavyInfo['MaxTags'])) $HeavyInfo['MaxTags'] = 16; 
+    
     return $HeavyInfo;
 }
 
