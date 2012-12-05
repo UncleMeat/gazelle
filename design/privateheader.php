@@ -203,7 +203,7 @@ if ($MyNews < $CurrentNews) {
 	$Alerts[] = '<a href="index.php">New Announcement!</a>';
 }
 
-//Staff PM
+//Staff PMs for users
 $NewStaffPMs = $Cache->get_value('staff_pm_new_'.$LoggedUser['ID']);
 if ($NewStaffPMs === false) {
 	$DB->query("SELECT COUNT(ID) FROM staff_pm_conversations WHERE UserID='".$LoggedUser['ID']."' AND Unread = '1'");
@@ -277,7 +277,8 @@ if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {
     //if ($NumStaffPMs === false) {
             $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations 
                                  WHERE (AssignedToUser={$LoggedUser['ID']} OR Level <={$LoggedUser['Class']}) 
-                                   AND Status IN ('Open', 'Unanswered')");
+                                   AND Status = 'Unanswered'");
+                               //    AND Status IN ('Open', 'Unanswered')");
             list($NumStaffPMs) = $DB->next_record();
             //$Cache->cache_value('num_staff_pms_open_'.$UserID, $NumStaffPMs , 1000);
     //}

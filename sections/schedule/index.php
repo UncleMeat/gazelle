@@ -872,7 +872,8 @@ if($Day != next_day() || $_GET['runday']){
 
 // Lanz: don't remove torrents while we test and move the code to the live server.
 // We need to get the seeders back on most torrents before we delete what the
-// code would consider inactive torrents.
+// code would consider inactive torrents. 
+    // mifune: re-enabled now we are live
            
 	$i = 0;
 	$DB->query("SELECT
