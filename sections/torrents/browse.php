@@ -111,6 +111,10 @@ if (!empty($_GET['setdefault'])) {
     }
 }
 
+    
+$_GET['search_type'] = (isset($_GET['search_type']) && $_GET['search_type']=='1' )?'1':'0';
+$_GET['tags_type'] = (isset($_GET['tags_type']) && $_GET['tags_type']=='1' )?'1':'0';
+
 $AdvancedSearch = false;
 $Action = 'action=basic';
 if (((!empty($_GET['action']) && strtolower($_GET['action']) == "advanced") || (!empty($LoggedUser['SearchType']) && ((!empty($_GET['action']) && strtolower($_GET['action']) != "basic") || empty($_GET['action'])))) && check_perms('site_advanced_search')) {
@@ -141,7 +145,7 @@ if (!$AdvancedSearch) {
         }
         unset($Word);
     }
-
+    
     if (empty($_GET['search_type']) && !empty($SearchList) && count($SearchList) > 1) {
         $_GET['search_type'] = '0';
         if (!empty($SearchListEx)) {
