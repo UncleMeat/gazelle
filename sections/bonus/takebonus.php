@@ -40,7 +40,7 @@ if(!empty($ShopItem) && is_array($ShopItem)){
     }
     
     // again lets not trust the check on the previous page as to whether they can afford it
-    if ($OtherID && ($Cost <= $LoggedUser['Credits'])) {
+    if ($OtherID && ($Cost <= $LoggedUser['TotalCredits'])) {
         
         $UpdateSet = array();
         $UpdateSetOther = array();

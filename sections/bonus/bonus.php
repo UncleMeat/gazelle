@@ -3,7 +3,7 @@ include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
 
 // check if their credits need updating (if they have been online whilst creds are accumalting)
-$DB->query("SELECT Credits as TotalCredits FROM users_main WHERE ID='$LoggedUser[ID]'");
+$DB->query("SELECT Credits FROM users_main WHERE ID='$LoggedUser[ID]'");
 list($TotalCredits) = $DB->next_record();
 if($TotalCredits != $LoggedUser['TotalCredits']){
     $LoggedUser['TotalCredits'] = $TotalCredits; // for interface below
@@ -24,7 +24,7 @@ $ShopItems = get_shop_items($LoggedUser['ID']);
                 if($creditinfo) echo $Text->full_format($creditinfo, true);  
 ?>
             </div>
-		<div class="box pad shadow" id="bonusdiv">
+            <div class="box pad shadow" id="bonusdiv">
                 <h3 class="center">Credits: <?=number_format($LoggedUser['TotalCredits'],2)?></h3>
             </div>
  <?         if(!empty($_REQUEST['result'])){  ?>
