@@ -275,14 +275,20 @@ if (check_perms('users_mod')) {
 if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {
     //$NumStaffPMs = $Cache->get_value('num_staff_pms_open_'.$LoggedUser['ID']);
     //if ($NumStaffPMs === false) {
-            $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations 
-                                 WHERE (AssignedToUser={$LoggedUser['ID']} OR Level <={$LoggedUser['Class']}) 
-                                   AND Status = 'Unanswered'");
+    $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations 
+                 WHERE (AssignedToUser={$LoggedUser['ID']} OR Level <={$LoggedUser['Class']}) 
+                   AND Status = 'Unanswered'");
                                //    AND Status IN ('Open', 'Unanswered')");
-            list($NumStaffPMs) = $DB->next_record();
-            //$Cache->cache_value('num_staff_pms_open_'.$UserID, $NumStaffPMs , 1000);
+    list($NumUnansweredStaffPMs) = $DB->next_record();
+    //$Cache->cache_value('num_staff_pms_open_'.$UserID, $NumStaffPMs , 1000);
+    $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations 
+                 WHERE (AssignedToUser={$LoggedUser['ID']} OR Level <={$LoggedUser['Class']}) 
+                   AND Status = 'Open'");
+    list($NumOpenStaffPMs) = $DB->next_record();
+    $NumOpenStaffPMs += $NumUnansweredStaffPMs;
     //}
-    if ($NumStaffPMs > 0) $ModBar[] = '<a href="staffpm.php?view=open">'.$NumStaffPMs.' Staff PMs</a>';
+    if ($NumUnansweredStaffPMs > 0 || $NumOpenStaffPMs >0) $ModBar[] = 
+        '<a href="staffpm.php?view=unanswered">('.$NumUnansweredStaffPMs.')</a><a href="staffpm.php?view=open">('.$NumOpenStaffPMs.') Staff PMs</a>';
 }
 
 if(check_perms('admin_reports')) {
@@ -572,11 +578,14 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                 </ul> -->
                 <ul id="userinfo_username">
                           <li id="nav_upload" class="brackets"><a href="upload.php">Upload</a></li>
-                 <li id="nav_userinfo" class="<?=($NewMessages||$NumStaffPMs||$NewStaffPMs||$NewNotifications||$NewSubscriptions)? 'highlight' : 'normal'?>"><a href="user.php?id=<?=$LoggedUser['ID']?>" class="username"><?=$LoggedUser['Username']?></a>
+                 <li id="nav_userinfo" class="<?=($NewMessages||$NumAnsweredStaffPMs||$NumOpenStaffPMs||$NewStaffPMs||$NewNotifications||$NewSubscriptions)? 'highlight' : 'normal'?>"><a href="user.php?id=<?=$LoggedUser['ID']?>" class="username"><?=$LoggedUser['Username']?></a>
                           <ul>
                                 <li id="nav_inbox" class="<?=$NewMessages ? 'highlight' : 'normal'?>"><a onmousedown="Stats('inbox');" href="inbox.php">Inbox<?=$NewMessages ? "($NewMessages)" : ''?></a></li>
     <? if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 ) {  ?>
-                      <li id="nav_staffinbox" class="<?=$NumStaffPMs ? 'highlight' : 'normal'?>"><a onmousedown="Stats('staffinbox');" href="staffpm.php?action=staff_inbox&amp;view=open">Staff Inbox<?=$NumStaffPMs ? "($NumStaffPMs)" : ''?></a></li>
+                      <li id="nav_staffinbox" class="<?=($NumUnansweredStaffPMs||$NumOpenStaffPMs)? 'highlight' : 'normal'?>">
+                          <a onmousedown="Stats('staffinbox');" href="staffpm.php?action=staff_inbox&amp;view=open">Staff Inbox <?="($NumUnansweredStaffPMs) ($NumOpenStaffPMs)"?></a>
+                          <!--<a onmousedown="Stats('staffinbox');" href="staffpm.php?action=staff_inbox&amp;view=open">Staff Inbox<?=$NumStaffPMs ? "($NumStaffPMs)" : ''?></a>-->
+                      </li>
     <? } ?>                  
                                 <li id="nav_staffmessages" class="<?=$NewStaffPMs ? 'highlight' : 'normal'?>"><a onmousedown="Stats('staffpm');" href="staffpm.php?action=user_inbox">Message Staff<?=$NewStaffPMs ? "($NewStaffPMs)" : ''?></a></li>                      
     
