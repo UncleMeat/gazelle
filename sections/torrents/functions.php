@@ -92,9 +92,11 @@ function get_group_info($GroupID, $Return = true) {
 			die();
 		}
 		if(in_array(0, $DB->collect('Seeders'))) {
-			$CacheTime = 600;
+			$CacheTime = 120;
+			//$CacheTime = 600;
 		} else {
-			$CacheTime = 3600;
+			//$CacheTime = 3600;
+            $CacheTime = 600; // lets just see how it goes with a time of 10 mins
 		}
 		// Store it all in cache
             $Cache->cache_value('torrents_details_'.$GroupID,array($TorrentDetails,$TorrentList),$CacheTime);
