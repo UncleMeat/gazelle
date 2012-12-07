@@ -493,9 +493,9 @@ if(count($Tags) > 0) {
                                       <a href="torrents.php?taglist=<?=$Tag['name']?>" style="float:left; display:block;"><?=display_str($Tag['name'])?></a>
                                       <div style="float:right; display:block; letter-spacing: -1px;">
         <?		if(check_perms('site_vote_tag') || ($IsUploader && $LoggedUser['ID']==$Tag['userid'])){  ?>
-                                      <a title="Vote down tag '<?=$Tag['name']?>'"  onclick="return Vote_Tag(<?="'{$Tag['name']}',{$Tag['id']},$GroupID,'down'"?>)" style="font-family: monospace;" >[-]</a>
+                                      <a title="Vote down tag '<?=$Tag['name']?>'" href="#tags"  onclick="return Vote_Tag(<?="'{$Tag['name']}',{$Tag['id']},$GroupID,'down'"?>)" style="font-family: monospace;" >[-]</a>
                                       <span id="tagscore<?=$Tag['id']?>" style="width:10px;text-align:center;display:inline-block;"><?=$Tag['score']?></span>
-                                      <a title="Vote up tag '<?=$Tag['name']?>'"  onclick="return Vote_Tag(<?="'{$Tag['name']}',{$Tag['id']},$GroupID,'up'"?>)" style="font-family: monospace;">[+]</a>
+                                      <a title="Vote up tag '<?=$Tag['name']?>'" href="#tags"  onclick="return Vote_Tag(<?="'{$Tag['name']}',{$Tag['id']},$GroupID,'up'"?>)" style="font-family: monospace;">[+]</a>
       
         <?          
                   } else {  // cannot vote on tags ?>
@@ -509,7 +509,7 @@ if(count($Tags) > 0) {
         <?		if(check_perms('site_delete_tag') ) { // || ($IsUploader && $LoggedUser['ID']==$Tag['userid']) 
                                   /*    <a title="Delete tag '<?=$Tag['name']?>'" href="torrents.php?action=delete_tag&amp;groupid=<?=$GroupID?>&amp;tagid=<?=$Tag['id']?>&amp;auth=<?=$LoggedUser['AuthKey']?>" style="font-family: monospace;">[X]</a> */
                                    ?>
-                                   <a title="Delete tag '<?=$Tag['name']?>'"  onclick="return Del_Tag(<?="'{$Tag['id']}',$GroupID,'$tagsort'"?>)"   style="font-family: monospace;">[X]</a>
+                                   <a title="Delete tag '<?=$Tag['name']?>'" href="#tags"  onclick="return Del_Tag(<?="'{$Tag['id']}',$GroupID,'$tagsort'"?>)"   style="font-family: monospace;">[X]</a>
         <?		} else { ?>
                                       <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;</span>
         <?		} ?>
