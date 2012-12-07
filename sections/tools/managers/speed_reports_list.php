@@ -70,7 +70,7 @@ show_header('Speed Reports','watchlist');
 //---------- user watch
 
 $DB->query("SELECT wl.UserID, um.Username, StaffID, um2.Username AS Staffname, Time, wl.Comment, KeepTorrents,
-                             ui.Donor, ui.Warned, um.Enabled, um.PermissionID, um.Title
+                             ui.Donor, ui.Warned, um.Enabled, um.PermissionID
               FROM users_watch_list AS wl
          LEFT JOIN users_main AS um ON um.ID=wl.UserID
          LEFT JOIN users_info AS ui ON ui.UserID=wl.UserID
@@ -108,7 +108,7 @@ $Watchlist = $DB->to_array('UserID');
             } else {
                 foreach ($Watchlist as $Watched) {
                     list($UserID, $Username, $StaffID, $Staffname, $Time, $Comment, $KeepTorrents,
-                                       $IsDonor, $Warned, $Enabled, $ClassID, $CustomTitle) = $Watched;
+                                       $IsDonor, $Warned, $Enabled, $ClassID) = $Watched;
                     $row = ($row === 'b' ? 'a' : 'b');
 ?> 
     
@@ -123,7 +123,7 @@ $Watchlist = $DB->to_array('UserID');
                                     [view]
                                 </a>
                             </td>
-                            <td class="center"><?=format_username($UserID, $Username, $IsDonor, $Warned, $Enabled, $ClassID, $CustomTitle, false)?></td>
+                            <td class="center"><?=format_username($UserID, $Username, $IsDonor, $Warned, $Enabled, $ClassID, false, false)?></td>
                             <td class="center"><?=time_diff($Time, 2, true, false, 1)?></td>
                             <td class="center"><?=format_username($StaffID, $Staffname)?></td>
                             <td class="center" title="<?=$Comment?>"><?=cut_string($Comment, 40)?></td>
@@ -324,7 +324,7 @@ list($TotalResults) = $DB->next_record();
 $DB->query("SELECT SQL_CALC_FOUND_ROWS
                             xbt.id, uid, Username, xbt.downloaded, remaining, t.Size, xbt.uploaded, 
                             upspeed, downspeed, timespent, peer_id, xbt.ip, tg.ID, fid, tg.Name, xbt.mtime,
-                             ui.Donor, ui.Warned, um.Enabled, um.PermissionID, um.Title
+                             ui.Donor, ui.Warned, um.Enabled, um.PermissionID
                           FROM xbt_peers_history AS xbt
                      LEFT JOIN users_main AS um ON um.ID=xbt.uid
                      LEFT JOIN users_info AS ui ON ui.UserID=xbt.uid
@@ -384,7 +384,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
                 foreach ($Records as $Record) {
                     list($ID, $UserID, $Username, $Downloaded, $Remaining, $Size, $Uploaded, $UpSpeed, $DownSpeed, 
                                        $Timespent, $ClientPeerID, $IP, $GroupID, $TorrentID, $Name, $Time,
-                                       $IsDonor, $Warned, $Enabled, $ClassID, $CustomTitle) = $Record;
+                                       $IsDonor, $Warned, $Enabled, $ClassID) = $Record;
                     $row = ($row === 'a' ? 'b' : 'a');
                     $ipcc = geoip($IP);
 ?> 
@@ -398,7 +398,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
                               <a onclick="remove_records('<?=$UserID?>');return false;" href="#" title="Remove all speed records belonging to <?=$Username?> from watchlist"><img src="static/common/symbols/disabled.png" alt="del records" /></a>
                          </td>
                         <td class="center">
-<?                          echo format_username($UserID, $Username, $IsDonor, $Warned, $Enabled, $ClassID, $CustomTitle, false);  ?>
+<?                          echo format_username($UserID, $Username, $IsDonor, $Warned, $Enabled, $ClassID, false, false);  ?>
                         </td>
                         <td class="center"><?=get_size($Remaining)?></td>
                         <td class="center"><img src="static/styles/<?= $LoggedUser['StyleName'] ?>/images/seeders.png" title="up"/> <?=size_span($Uploaded, get_size($Uploaded))?></td>
