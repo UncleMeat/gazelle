@@ -348,7 +348,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
     <div class="head"><?=" $NumResults / $TotalResults"?> records</div>
         <table>
             <tr class="colhead">
-                <td style="width:50px"></td>
+                <td style="width:66px"></td>
                 <td class="center"><a href="<?=header_link('Username') ?>">User</a></td>
                 <td class="center"><a href="<?=header_link('remaining') ?>">Remaining</a></td>
                 <td class="center"><a href="<?=header_link('uploaded') ?>">Uploaded</a></td>
