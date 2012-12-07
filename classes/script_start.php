@@ -443,7 +443,7 @@ function user_heavy_info($UserID) {
     }
     // add this here for implementation to live server (so logged in users dont get blank tags) 
     // but can move up a few lines to inside if statements at some point in the future.
-    if (!isset($HeavyInfo['MaxTags'])) $HeavyInfo['MaxTags'] = 16; 
+    if (!isset($HeavyInfo['MaxTags'])) $HeavyInfo['MaxTags'] = 100; 
     
     return $HeavyInfo;
 }

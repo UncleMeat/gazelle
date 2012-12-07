@@ -118,7 +118,7 @@ if ($SiteOptions) {
 } else { 
 	$SiteOptions = array();
 }
-if (!isset($SiteOptions['MaxTags'])) $SiteOptions['MaxTags'] = 16;
+if (!isset($SiteOptions['MaxTags'])) $SiteOptions['MaxTags'] = 100;
 
 include(SERVER_ROOT.'/classes/class_text.php');
 $Text = new TEXT;
