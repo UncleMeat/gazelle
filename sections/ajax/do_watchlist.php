@@ -13,7 +13,13 @@ if ( isset($_GET['userid']) && is_number($_GET['userid']) && $_GET['userid']>0 )
     error(0,true);
 }
 
-if ($_GET['action']=='watchlist_add') {
+if ($_GET['action']=='remove_records') {
+    if ($UserID) {
+        $DB->query("DELETE FROM xbt_peers_history WHERE uid='$UserID'");
+        list($Num) = $DB->affected_rows();
+        echo json_encode(array(true, "Removed $Num speed records of user $UserID from watchlist"));
+    }
+} elseif ($_GET['action']=='watchlist_add') {
     $Comment = db_string($_GET['comm']);
     if ($UserID) {
         $DB->query("INSERT IGNORE INTO users_watch_list ( UserID, StaffID, Time, Comment, KeepTorrents)

@@ -1,6 +1,23 @@
 
+
+function remove_records(user_id) {
+	ajax.get('ajax.php?action=remove_records&userid=' + user_id, function (response) {
+        var x = json.decode(response); 
+        if ( is_array(x)){
+            alert(x[1]);
+            if ( x[0] == true){
+               location.reload();
+            }
+        } else {    // error from ajax
+            alert(x);
+        } 
+	}); 
+}
+
+
 function watchlist_add(user_id, reload) {
     var comm = prompt('Enter a comment for adding this user to the watchlist');
+    if (!comm) return;
 	ajax.get('ajax.php?action=watchlist_add&userid=' + user_id + '&comm=' + comm, function (response) {
         var x = json.decode(response); 
         if ( is_array(x)){

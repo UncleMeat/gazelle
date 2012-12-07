@@ -83,6 +83,8 @@ switch ($_REQUEST['action']) {
             if ($DB->affected_rows()>0) {
                 write_user_log($UserID, "User removed from watchlist by $LoggedUser[Username]");
             }
+        } elseif ($_POST['submit']=='Delete records') {
+            $DB->query("DELETE FROM xbt_peers_history WHERE uid='$UserID'");
         } elseif ($_POST['submit']=='Save') {
             $KeepTorrents = $_POST['keeptorrent']=='1'?'1':'0';
             $DB->query("UPDATE users_watch_list SET KeepTorrents='$KeepTorrents' WHERE UserID='$UserID'");

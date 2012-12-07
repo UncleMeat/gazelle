@@ -69,9 +69,11 @@ show_header('Speed Reports','watchlist');
 
 //---------- user watch
 
-$DB->query("SELECT UserID, um.Username, StaffID, um2.Username AS Staffname, Time, wl.Comment, KeepTorrents
+$DB->query("SELECT wl.UserID, um.Username, StaffID, um2.Username AS Staffname, Time, wl.Comment, KeepTorrents,
+                             ui.Donor, ui.Warned, um.Enabled, um.PermissionID, um.Title
               FROM users_watch_list AS wl
          LEFT JOIN users_main AS um ON um.ID=wl.UserID
+         LEFT JOIN users_info AS ui ON ui.UserID=wl.UserID
          LEFT JOIN users_main AS um2 ON um2.ID=wl.StaffID
           ORDER BY Time DESC");
 $Watchlist = $DB->to_array('UserID');
@@ -93,7 +95,7 @@ $Watchlist = $DB->to_array('UserID');
                 <td class="center">added by</td>
                 <td class="center">comment</td>
                 <!--<td class="center" width="100px" title="keep torrent records related to this user">keep torrents</td>-->
-                <td class="center" width="100px"></td>
+                <td class="center" width="240px"></td>
             </tr>
 <?
             $row = 'a';
@@ -105,7 +107,8 @@ $Watchlist = $DB->to_array('UserID');
 <?
             } else {
                 foreach ($Watchlist as $Watched) {
-                    list($UserID, $Username, $StaffID, $Staffname, $Time, $Comment, $KeepTorrents) = $Watched;
+                    list($UserID, $Username, $StaffID, $Staffname, $Time, $Comment, $KeepTorrents,
+                                       $IsDonor, $Warned, $Enabled, $ClassID, $CustomTitle) = $Watched;
                     $row = ($row === 'b' ? 'a' : 'b');
 ?> 
     
@@ -120,7 +123,7 @@ $Watchlist = $DB->to_array('UserID');
                                     [view]
                                 </a>
                             </td>
-                            <td class="center"><?=format_username($UserID, $Username)?></td>
+                            <td class="center"><?=format_username($UserID, $Username, $IsDonor, $Warned, $Enabled, $ClassID, $CustomTitle, false)?></td>
                             <td class="center"><?=time_diff($Time, 2, true, false, 1)?></td>
                             <td class="center"><?=format_username($StaffID, $Staffname)?></td>
                             <td class="center" title="<?=$Comment?>"><?=cut_string($Comment, 40)?></td>
@@ -129,6 +132,7 @@ $Watchlist = $DB->to_array('UserID');
                             </td>-->
                             <td class="center">
                                 <!--<input type="submit" name="submit" value="Save" title="Save edited value" />-->
+                                <input type="submit" name="submit" value="Delete Records" title="Remove all of this users records from the watchlist" /> 
                                 <input type="submit" name="submit" value="Remove" title="Remove user from watchlist" /> 
                             </td>
                         </form>
@@ -319,9 +323,11 @@ list($TotalResults) = $DB->next_record();
 
 $DB->query("SELECT SQL_CALC_FOUND_ROWS
                             xbt.id, uid, Username, xbt.downloaded, remaining, t.Size, xbt.uploaded, 
-                            upspeed, downspeed, timespent, peer_id, xbt.ip, tg.ID, fid, tg.Name, xbt.mtime
+                            upspeed, downspeed, timespent, peer_id, xbt.ip, tg.ID, fid, tg.Name, xbt.mtime,
+                             ui.Donor, ui.Warned, um.Enabled, um.PermissionID, um.Title
                           FROM xbt_peers_history AS xbt
                      LEFT JOIN users_main AS um ON um.ID=xbt.uid
+                     LEFT JOIN users_info AS ui ON ui.UserID=xbt.uid
                      LEFT JOIN torrents AS t ON t.ID=xbt.fid
                      LEFT JOIN torrents_group AS tg ON tg.ID=t.GroupID
                          WHERE upspeed>='$ViewSpeed' $WHERE
@@ -377,7 +383,8 @@ $Pages=get_pages($Page,$NumResults,50,9);
             } else {
                 foreach ($Records as $Record) {
                     list($ID, $UserID, $Username, $Downloaded, $Remaining, $Size, $Uploaded, $UpSpeed, $DownSpeed, 
-                                                    $Timespent, $ClientPeerID, $IP, $GroupID, $TorrentID, $Name, $Time) = $Record;
+                                       $Timespent, $ClientPeerID, $IP, $GroupID, $TorrentID, $Name, $Time,
+                                       $IsDonor, $Warned, $Enabled, $ClassID, $CustomTitle) = $Record;
                     $row = ($row === 'a' ? 'b' : 'a');
                     $ipcc = geoip($IP);
 ?> 
@@ -386,11 +393,12 @@ $Pages=get_pages($Page,$NumResults,50,9);
 <?                          if ($_GET['userid']!=$UserID) {   
  ?>                           <a href="?action=cheats&viewspeed=0&userid=<?=$UserID?>" title="View records for just <?=$Username?>">[view]</a> <? 
  }                          if (!array_key_exists($UserID, $Watchlist)) {   
- ?>                           <a onclick="watchlist_add('<?=$UserID?>',true);" href="#" title="Add <?=$Username?> to watchlist"><img src="static/common/symbols/watched.png" alt="view" /></a><?
+ ?>                           <a onclick="watchlist_add('<?=$UserID?>',true);return false;" href="#" title="Add <?=$Username?> to watchlist"><img src="static/common/symbols/watched.png" alt="view" /></a><?
                             }  ?>
-                        </td>
+                              <a onclick="remove_records('<?=$UserID?>');return false;" href="#" title="Remove all speed records belonging to <?=$Username?> from watchlist"><img src="static/common/symbols/disabled.png" alt="del records" /></a>
+                         </td>
                         <td class="center">
-<?                          echo format_username($UserID, $Username);  ?>
+<?                          echo format_username($UserID, $Username, $IsDonor, $Warned, $Enabled, $ClassID, $CustomTitle, false);  ?>
                         </td>
                         <td class="center"><?=get_size($Remaining)?></td>
                         <td class="center"><img src="static/styles/<?= $LoggedUser['StyleName'] ?>/images/seeders.png" title="up"/> <?=size_span($Uploaded, get_size($Uploaded))?></td>

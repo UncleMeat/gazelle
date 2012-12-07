@@ -235,9 +235,9 @@ if (check_perms('users_manage_cheats', $Class)) {
     $DB->query("SELECT UserID FROM users_watch_list WHERE UserID='$UserID'"); ?>
     <span id="wl">
 <?  if($DB->record_count() > 0)  {?>    
-		[<a onclick="watchlist_remove('<?=$UserID?>')" href="#" title="Remove this user from the speed records user watchlist">Remove from watchlist</a>]
+		[<a onclick="watchlist_remove('<?=$UserID?>');return false;" href="#" title="Remove this user from the speed records user watchlist">Remove from watchlist</a>]
 <?  } else {?>    
-		[<a onclick="watchlist_add('<?=$UserID?>')" href="#" title="Add this user to the speed records user watchlist">Add to watchlist</a>]
+		[<a onclick="watchlist_add('<?=$UserID?>');return false;" href="#" title="Add this user to the speed records user watchlist">Add to watchlist</a>]
 <?  } ?>
     </span>
 <?
