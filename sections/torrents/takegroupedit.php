@@ -83,9 +83,10 @@ if ($OldCategoryID != $CategoryID) {
     $NewTag = $NewCategories[$CategoryID]['tag'];
     
     // Remove the old tag
-    $DB->query("DELETE tt
+    $DB->query("DELETE tt, ttv
                 FROM torrents_tags AS tt
                 INNER JOIN tags t ON tt.TagID=t.ID
+                LEFT JOIN torrents_tags_votes AS ttv ON ttv.TagID=tt.TagID AND ttv.GroupID='$GroupID'
                 WHERE t.name='$OldTag' AND tt.GroupID='$GroupID'");    
     
     $DB->query("UPDATE tags SET Uses=Uses-1 WHERE Name='$OldTag'");
@@ -98,12 +99,17 @@ if ($OldCategoryID != $CategoryID) {
             ");
 
     $TagID = $DB->inserted_id();
-
+                
+    $Vote = empty($LoggedUser['NotVoteUpTags'])?9:8;
     $DB->query("INSERT INTO torrents_tags
                 (TagID, GroupID, UserID, PositiveVotes) VALUES
-                ($TagID, $GroupID, $LoggedUser[ID], 10)
-                ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+1;
-            ");
+                ($TagID, $GroupID, $LoggedUser[ID], $Vote)
+                ON DUPLICATE KEY UPDATE PositiveVotes=PositiveVotes+1; ");
+     
+    if (empty($LoggedUser['NotVoteUpTags'])){
+        $DB->query("INSERT IGNORE INTO torrents_tags_votes (TagID, GroupID, UserID, Way) VALUES 
+                                ($TagID, $GroupID, $LoggedUser[ID], 'up');");
+    }
 }
 
 // There we go, all done!

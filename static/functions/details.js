@@ -46,7 +46,7 @@ function display_tag_response(response){
         $('#messagebar').html(x);
         $('#messagebar').show(); 
     }
-    $('#tags').raw().scrollIntoView();
+    //$('#tags').raw().scrollIntoView();
 }
 
 function Vote_Tag(tagname, tagid, groupid, way){
