@@ -86,8 +86,8 @@ if ($ConvID = (int)$_GET['id']) {
                 $UserInitiated = $UserID == $OwnerID;  
 ?> 
                 <div class="head">
-                    Status: <?=$Status; if($ResolverStr && $Status=='Resolved' ) echo " by $ResolverStr";
-                    if($UserInitiated){ ?>
+                    Status: <?=$Status; if($ResolverStr && $Status=='Resolved' ) echo " by $ResolverStr"; ?> 
+<?                  if($UserInitiated){ ?>
                         <span style="float:right"><em>Assigned to: <?=$Assigned?></em></span>    
 <?                  }  ?> 
                 </div>
@@ -97,6 +97,9 @@ if ($ConvID = (int)$_GET['id']) {
                         echo "sent by $SenderString&nbsp;&nbsp;"; ?>
                     </span>
                     Sent to  <?=$UserInitiated?'<strong>Staff</strong>':$UserStr;?> 
+                    <span style="float:right;margin-right:30%"> 
+                        Status: <?=$Status; ?>
+                    </span>
                 </div>
                 <br/>
 <?             
@@ -160,10 +163,12 @@ if ($ConvID = (int)$_GET['id']) {
 				<form action="staffpm.php" method="post" class="staffpm" id="messageform">
 					<input type="hidden" name="action" value="takepost" />
 					<input type="hidden" name="convid" value="<?=$ConvID?>" id="convid" />
-                            <? $Text->display_bbcode_assistant("quickpost", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
+<?              if ($Status != 'Resolved') {    ?>
+                       <? $Text->display_bbcode_assistant("quickpost", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
 					<textarea id="quickpost" name="message" class="long" rows="10"></textarea> 
                               <br />
 					<input type="button" id="previewbtn" value="Preview" style="margin-right: 40px;" onclick="PreviewMessage();" />
+<?              }   ?>
 <?
 	// Assign to
 	if ($IsStaff) {
@@ -240,7 +245,7 @@ if ($ConvID = (int)$_GET['id']) {
 					<input type="submit" value="Send message" />
 <?	} else { 
                   if ($UserInitiated || $IsFLS) {  ?> 
-					<input type="button" value="Unresolve" onClick="location.href='staffpm.php?action=unresolve&id=<?=$ConvID?>';" />
+					<input type="button" value="Unresolve" onClick="location.href='staffpm.php?action=unresolve&id=<?=$ConvID?>&return=1';" />
 <?			}  
  	}
 	if (check_perms('users_give_donor')) { ?>
