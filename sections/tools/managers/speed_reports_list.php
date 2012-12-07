@@ -132,7 +132,7 @@ $Watchlist = $DB->to_array('UserID');
                             </td>-->
                             <td class="center">
                                 <!--<input type="submit" name="submit" value="Save" title="Save edited value" />-->
-                                <input type="submit" name="submit" value="Delete Records" title="Remove all of this users records from the watchlist" /> 
+                                <input type="submit" name="submit" value="Delete records" title="Remove all of this users records from the watchlist" /> 
                                 <input type="submit" name="submit" value="Remove" title="Remove user from watchlist" /> 
                             </td>
                         </form>
