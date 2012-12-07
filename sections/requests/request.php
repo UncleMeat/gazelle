@@ -67,7 +67,10 @@ if($UserCanEdit || check_perms('users_mod')) { //check_perms('site_moderate_requ
 		<a href="upload.php?requestid=<?=$RequestID?><?=($GroupID?"&groupid=$GroupID":'')?>">[Upload Request]</a>
 <?  /* if(!$IsFilled && $CategoryID == 0) { ?>
 		<a href="reports.php?action=report&amp;type=request_update&amp;id=<?=$RequestID?>">[Request Update]</a>
-<? } */   ?>
+<? } */   
+    if (check_perms('users_mod')) { ?>
+		<a href="log.php?search=request+<?=$RequestID?>">[View logs]</a>
+<?  }   ?>
 	</div>
 	
 	<div class="sidebar">
