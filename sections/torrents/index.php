@@ -589,10 +589,10 @@ if(!empty($_REQUEST['action'])) {
                                 if($ConvID){ // possible if a new mark for deletion is made on a warned/pending/Okay(fixed) torrent
                                     // send message 
                                     send_message_reply($ConvID, $UserID, $LoggedUser['ID'], 
-                                        get_warning_message(true, true, $GroupID, $Name, $Description?$Description:$Reason, $KillTime), 'Open');
+                                        get_warning_message(true, true, $GroupID, $Name, $Description?$Description:$Reason, $KillTime, false, display_str($_POST['msg_extra']) ), 'Open');
                                 } else { 
                                     send_pm($UserID, 0, db_string("Important: Your upload has been marked for deletion!"), 
-                                                    get_warning_message(true, true, $GroupID, $Name, $Description?$Description:$Reason, $KillTime));
+                                                    get_warning_message(true, true, $GroupID, $Name, $Description?$Description:$Reason, $KillTime, false, display_str($_POST['msg_extra'])));
                                 }
                                 break;
                             case 'Rejected':

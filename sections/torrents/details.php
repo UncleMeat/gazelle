@@ -372,6 +372,8 @@ if(check_perms('torrents_review')){
                             <blockquote class="bbcode">
                                 <span id="message_insert"></span>
                                 <textarea id="reason_other" name="reason" class="hidden medium" style="vertical-align: middle;" rows="1" title="The reason entered here is also displayed in the warning notice, ie. keep it short and sweet"></textarea> 
+                                <br/><br/>add to message:
+                                <textarea id="msg_extra" name="msg_extra" class="medium" style="vertical-align: middle;" rows="1" title="Whatever you enter here is added to the message sent to the user"></textarea> 
 <?
                                 echo $Text->full_format(get_warning_message(false, true), true);
 ?>

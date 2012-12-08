@@ -16,7 +16,7 @@ function get_warning_time(){
 
 
 // message is in two parts so we can grab the bits around the reason for display etc.
-function get_warning_message($FirstPart = true, $LastPart = false, $GroupID=0, $TorrentName='', $Reason = null, $KillTime = '', $Rejected = false){
+function get_warning_message($FirstPart = true, $LastPart = false, $GroupID=0, $TorrentName='', $Reason = null, $KillTime = '', $Rejected = false, $ExtraMsg = ''){
     $Message = '';
     if ($FirstPart){
         if ($Rejected) $Message .= "[br]Unfortunately the fix you made for your upload is not good enough.[br]The following message still applies:[br]";
@@ -26,6 +26,7 @@ function get_warning_message($FirstPart = true, $LastPart = false, $GroupID=0, $
         $Message .= '[br][br][b]Reason: [/b]&nbsp;';
     }
     if ($Reason) $Message.= "[color=red][b]{$Reason}[/b][/color]";
+    if ($ExtraMsg) $Message.= "[br][br]{$ExtraMsg}";
     if ($LastPart){
         //$Message .= "[br][b]Time left: [/b]&nbsp; ". time_diff($KillTime, 2, false)." &nbsp;(".date('M d Y, H:i', strtotime($KillTime)).")";
         $Message .= '[br][br]Please make sure you read the [url=/articles.php?topic=upload]Upload Rules[/url]';
