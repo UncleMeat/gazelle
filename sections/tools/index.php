@@ -71,9 +71,13 @@ switch ($_REQUEST['action']) {
         break;
     
     
-    case 'cheats':
+    case 'speed_records':
         include(SERVER_ROOT . '/sections/tools/managers/speed_reports_list.php');
         break;
+    case 'speed_cheats':
+        include(SERVER_ROOT . '/sections/tools/managers/speed_cheats.php');
+        break;
+    
     case 'edit_userwl':
         if (!check_perms('users_manage_cheats')) error(403);
         if ( !isset($_POST['userid']) || !is_number($_POST['userid']) || $_POST['userid']==0 ) error(0);

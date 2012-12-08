@@ -2,16 +2,16 @@
  
 $Searchtext = trim($_REQUEST['searchtext']);
 
-$DB->query("SELECT SQL_CALC_FOUND_ROWS
-                        TopicID, Title, Description, Category, SubCat, MinClass
+$DB->query("SELECT TopicID, Title, Description, Category, SubCat, MinClass
                   FROM articles 
                  WHERE Category!='2'
                    AND MinClass<='$StaffClass' 
                    AND MATCH (Title,Description,Body) AGAINST ('".db_string($Searchtext)."' IN BOOLEAN MODE)"); // 
 $Articles = $DB->to_array();
-$DB->query("SELECT FOUND_ROWS()");
-list($NumResults) = $DB->next_record();
-    
+//$DB->query("SELECT FOUND_ROWS()");
+//list($NumResults) = $DB->next_record();
+$NumResults=count($Articles);
+
 show_header( "Articles>Search Results", 'browse,overlib,bbcode');
 ?>
 
@@ -72,3 +72,4 @@ show_header( "Articles>Search Results", 'browse,overlib,bbcode');
 
 <?
 show_footer();
+?>

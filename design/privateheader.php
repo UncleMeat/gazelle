@@ -561,7 +561,9 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
 <?                      } if (check_perms('admin_manage_languages')) { ?>
                             <li><a href="tools.php?action=languages">Site Languages</a></li> 
 <?                      } if (check_perms('users_manage_cheats')) { ?>
-                            <li><a href="tools.php?action=cheats">Speed Reports</a></li> 
+                            <li><a href="tools.php?action=speed_cheats">Speed Cheats</a></li> 
+<?                      } if (check_perms('users_manage_cheats')) { ?>
+                            <li><a href="tools.php?action=speed_records">Speed Reports</a></li> 
 <?                      } if (check_perms('admin_manage_permissions')) { ?>
                             <li><a href="tools.php?action=permissions">User Classes</a></li>
 <?                      } if (check_perms('users_groups')) { ?>

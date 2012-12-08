@@ -912,7 +912,7 @@ function gethostbyip($ip) {
 function get_host($IP) {
     static $ID = 0;
     ++$ID;
-    return '<span id="host_' . $ID . '">Resolving host...<script type="text/javascript">ajax.get(\'tools.php?action=get_host&ip=' . $IP . '\',function(host){$(\'#host_' . $ID . '\').raw().innerHTML=host;});</script></span>';
+    return '<span id="host_' . $ID . '">Resolving host ' . $IP . '...<script type="text/javascript">ajax.get(\'tools.php?action=get_host&ip=' . $IP . '\',function(host){$(\'#host_' . $ID . '\').raw().innerHTML=host;});</script></span>';
 }
 
 function lookup_ip($IP) {
@@ -931,7 +931,7 @@ function lookup_ip($IP) {
 }
 
 
-function display_ip($IP, $cc = '?') {
+function display_ip($IP, $cc = '?', $gethost = false) {
     global $DB, $Cache;
     //$cc = geoip($IP);
     if ($cc=='?') return 'unknown';
@@ -941,7 +941,9 @@ function display_ip($IP, $cc = '?') {
         list($country) = $DB->next_record();
         $Cache->cache_value('country_'.$cc, $country, 0);
     }
-    $Line = display_str($IP) . ' <span title="'.$country.'">('.$cc.')</span> ' . '<img style="margin-bottom:-3px;" title="'.$country.'" src="static/common/flags/iso16/'. strtolower($cc).'.png" alt="" /> ';
+    if($gethost) $Line = get_host($IP);
+    else $Line = display_str($IP);
+    $Line .= ' <span title="'.$country.'">('.$cc.')</span> ' . '<img style="margin-bottom:-3px;" title="'.$country.'" src="static/common/flags/iso16/'. strtolower($cc).'.png" alt="" /> ';
     $Line .= '[<a href="user.php?action=search&amp;ip_history=on&amp;ip=' . display_str($IP) . '&amp;matchtype=strict" title="Search">S</a>]';
 
     return $Line;

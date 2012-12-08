@@ -6,7 +6,7 @@ if (isset($_REQUEST['topic'])) {
     error(0);
 }
 
- 
+
 $DB->query("SELECT Category, Title, Body, Time, MinClass FROM articles WHERE TopicID='$CurrentTopicID'");
 if (!list($Category, $Title, $Body, $Time, $MinClass) = $DB->next_record()) {
     error(404);
@@ -18,7 +18,7 @@ if($MinClass>0){ // check permissions
         // should there be a way for FLS to see these... perm setting maybe?
     if ( $StaffClass < $MinClass ) error(403);
 }
-    
+
 $Articles = $Cache->get_value("articles_$Category");
 if($Articles===false){
         $DB->query("SELECT TopicID, Title, Description, SubCat, MinClass
@@ -28,7 +28,7 @@ if($Articles===false){
         $Articles = $DB->to_array();
         $Cache->cache_value("articles_$Category", $Articles);
 }
-    
+
 $PageTitle = empty($LoggedUser['ShortTitles'])?"{$ArticleCats[$Category]} > $Title":$Title ;
 $SubTitle = $ArticleCats[$Category] ." Articles";
 
@@ -109,3 +109,4 @@ show_header( $PageTitle, 'browse,overlib,bbcode');
 
 <?
 show_footer();
+?>
