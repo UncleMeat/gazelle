@@ -11,7 +11,7 @@ $DB->query("SELECT
 	um.Username 
 	FROM email_blacklist AS eb 
 	LEFT JOIN users_main AS um ON um.ID=eb.UserID
-	ORDER BY eb.Time DESC");
+	ORDER BY eb.Email");
 ?>
 <div class="thin">
 <h2>Email Blacklist</h2>
