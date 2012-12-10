@@ -24,7 +24,7 @@ $Result = $DB->query("SELECT SQL_CALC_FOUND_ROWS
 	xu.remaining,
 	xu.useragent,
       IF(xu.remaining=0,1,0) AS IsSeeder,
-	xu.mtime,
+	xu.timespent,
 	xu.upspeed,
 	xu.downspeed,
     xu.IP,
