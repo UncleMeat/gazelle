@@ -6,4 +6,9 @@ ALTER TABLE `gazelle`.`articles` ADD FULLTEXT (`Description`);
 ALTER TABLE `gazelle`.`articles` ADD FULLTEXT (`Body`);
 ALTER TABLE `gazelle`.`articles` ADD FULLTEXT (`Title`);
 
+ 
+REPAIR TABLE `articles` QUICK;
+
+
+
 

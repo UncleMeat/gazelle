@@ -60,23 +60,26 @@ CREATE TABLE IF NOT EXISTS `api_users` (
 -- Tabellstruktur `articles`
 --
 
+
 CREATE TABLE IF NOT EXISTS `articles` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Category` int(11) NOT NULL,
-  `SubCat` INT( 4 ) NOT NULL DEFAULT '1',
-  `TopicID` varchar(20) CHARACTER SET utf8 NOT NULL,  
-  `MinClass` SMALLINT(4) NOT NULL DEFAULT '0',
-  `Title` varchar(50) CHARACTER SET utf8 NOT NULL,
-  `Description` varchar(100) CHARACTER SET utf8 NOT NULL,
-  `Body` text CHARACTER SET utf8 NOT NULL,
+  `SubCat` int(4) NOT NULL DEFAULT '1',
+  `TopicID` varchar(20) NOT NULL,
+  `MinClass` smallint(4) NOT NULL DEFAULT '0',
+  `Title` varchar(50) NOT NULL,
+  `Description` varchar(100) NOT NULL,
+  `Body` text NOT NULL,
   `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `TopicID` (`TopicID`),
   KEY `Category` (`Category`),
   KEY `SubCat` (`SubCat`),
-  KEY `MinClass` (`MinClass`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
+  KEY `MinClass` (`MinClass`),
+  FULLTEXT KEY `Description` (`Description`),
+  FULLTEXT KEY `Body` (`Body`),
+  FULLTEXT KEY `Title` (`Title`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
 -- --------------------------------------------------------
