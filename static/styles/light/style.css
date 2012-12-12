@@ -190,10 +190,10 @@ ul.thin li { margin:0px 0px; padding:0px; }
 
 #logo {
     width: 180px; 
-    height: 34px;
+    height: 60px;   /* 34px; */
     background: url('images/xmaslogo.gif') no-repeat center center;
     position: absolute;
-    margin-top:-17px;
+    margin-top:-30px;
     top:50%; 
     margin-left:-90px;
     left: 10%;
