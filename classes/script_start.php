@@ -94,7 +94,7 @@ $Mobile = in_array($_SERVER['HTTP_HOST'], array('m.' . NONSSL_SITE_URL, 'm.' . N
 $Debug->set_flag('start user handling');
 
 // Get permissions
-list($Classes, $ClassLevels) = $Cache->get_value('classes');
+list($Classes, $ClassLevels, $ClassNames) = $Cache->get_value('classes');
 if (!$Classes || !$ClassLevels) {
     $DB->query("SELECT ID, Name, Level, Color, LOWER(REPLACE(Name,' ','')) AS ShortName FROM permissions WHERE IsUserClass='1' ORDER BY Level");
     $Classes = $DB->to_array('ID');
