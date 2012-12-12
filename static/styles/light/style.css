@@ -419,7 +419,6 @@ span.stat {
 }
 
 #searchbars {
-    padding: 6px 0px 0px 0px;
     text-align: center;
     height: 25px;
 }
@@ -428,8 +427,57 @@ span.stat {
     display: inline;
 }
 
+#searchbars .searchcontainer { 
+    display:inline-block;
+    background-color: #e4ebef;
+    border: 1px solid black;
+    color: #222;
+    position: relative;
+    width:10%; 
+    border-radius: 10px;        
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+#searchbars input.searchbox {
+    background-color: #e4ebef;
+    border: 0px;
+    margin: 0px auto 0px 0px ;
+    padding: 1px 1px 2px 5px;
+     
+    color: #222;
+    position: relative;
+    width:80%;
+    font-size: 0.9em;
+    
+    border-radius: 10px 0px 0px 10px;       /* FF9+ IE9+ */        
+    -moz-border-radius: 10px 0px 0px 10px;
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 0px;
+    -webkit-border-bottom-left-radius: 10px;
+    -webkit-border-bottom-right-radius: 0px;
+}
+
+#searchbars .searchbutton {
+    
+    background: #e4ebef url('images/mglass.png') no-repeat scroll 40% 0%;
+    border: 0px;
+    margin: 0px 0px 0px auto;
+    padding:0px;
+    
+    width:10%; 
+    cursor: pointer;
+    
+    border-radius: 0px 10px 10px 0px;       /* FF9+ IE9+ */
+    -moz-border-radius: 0px 10px 10px 0px;
+    -webkit-border-top-left-radius: 0px;
+    -webkit-border-top-right-radius: 10px;
+    -webkit-border-bottom-left-radius: 0px;
+    -webkit-border-bottom-right-radius: 10px;
+}
+
+/*
 #searchbars input {
-    /* background-color: #ffffff;       #F4F6FB; */
     background: white url('images/mglass.png') no-repeat scroll 98% 0%;
     border: 0px;
     padding: 1px 5px 1px 5px;
@@ -437,11 +485,12 @@ span.stat {
     font-size: 0.9em;
     color: #666;
     position: relative;
-    border-radius: 10px;       /* FF9+ IE9+ */
-    -moz-border-radius: 10px; /* for FF5 */
-    -webkit-border-radius: 10px; /* for opera */  
+    border-radius: 10px;
+    -moz-border-radius: 10px; 
+    -webkit-border-radius: 10px; 
     width:11%;  
 }
+*/
 
 #searchbars ul {
     display: block;
@@ -636,6 +685,7 @@ span.user_name a:hover {
 .GoodPerv { color:#3c3; }
 .SextremePerv { color:orange; }
 .SmutPeddler { color:#00f; }
+.EmpLegend { color:#CFB53B; }
 .ModPerv { color:#000; }
 .Admin { color:#606; }
 .Sysop { color:#8B0000; }  /* PINK: #b93dd6 */
