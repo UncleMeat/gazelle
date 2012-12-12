@@ -20,7 +20,7 @@ function confirmDelete(id) {
 <?
 //$DB->query("SELECT p.ID,p.Name,p.Level,COUNT(u.ID) FROM permissions AS p LEFT JOIN users_main AS u ON u.PermissionID=p.ID GROUP BY p.ID ORDER BY p.Level ASC");
 $DB->query("SELECT p.ID,p.Name,p.Level,p.DisplayStaff,p.MaxSigLength,p.MaxAvatarWidth,
-                   p.MaxAvatarHeight,COUNT(u.ID) 
+                   p.MaxAvatarHeight, p.Color, COUNT(u.ID) 
                    FROM permissions AS p LEFT JOIN users_main AS u ON u.PermissionID=p.ID 
                    WHERE p.IsUserClass='1'
                    GROUP BY p.ID 
@@ -29,24 +29,26 @@ if($DB->record_count()) {
 ?>
 	<table>
 		<tr class="colhead">
-			<td width="18%">Name</td>
-			<td width="10%">Level</td>
-			<td width="14%">Max Sig Length</td>
-			<td width="14%">Max Avatar Size</td>
-			<td width="14%">Display as Staff</td>
-			<td width="10%">User Count</td>
-			<td width="20%" class="center">Actions</td>
+			<td width="16%" class="center">Name</td>
+			<td width="10%" class="center">Level</td>
+			<td width="14%" class="center">Max Sig Length</td>
+			<td width="14%" class="center">Max Avatar Size</td>
+			<td width="8%" class="center">Color</td>
+			<td width="10%" class="center">Is Staff</td>
+			<td width="10%" class="center">User Count</td>
+			<td width="18%" class="center">Actions</td>
 		</tr>
-<?	while(list($ID,$Name,$Level,$DisplayStaff,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight,$UserCount)=$DB->next_record()) { 
+<?	while(list($ID,$Name,$Level,$DisplayStaff,$MaxSigLength,$MaxAvatarWidth,$MaxAvatarHeight,$Color,$UserCount)=$DB->next_record()) { 
              
 ?>
 		<tr>
-			<td><?=display_str($Name); ?></td>
-			<td><?=$Level; ?></td>
-			<td><?=$MaxSigLength; ?></td>
-			<td><?=($MaxAvatarWidth.' x '.$MaxAvatarHeight); ?></td>
-			<td><?=$DisplayStaff=='1'?'<strong>True</strong>':'False'; ?></td>
-			<td><?=number_format($UserCount); ?></td>
+			<td class="center"><span style="font-weight:bold;color: #<?=display_str($Color)?>"><?=display_str($Name); ?></span></td>
+			<td class="center"><?=$Level; ?></td>
+			<td class="center"><?=$MaxSigLength; ?></td>
+			<td class="center"><?=($MaxAvatarWidth.' x '.$MaxAvatarHeight); ?></td>
+            <td class="center"><span style="font-weight:bold;display:block;width:100%;height:100%;color:white;background-color: #<?=display_str($Color)?>">#<?=$Color?></span></td>
+			<td class="center"><?=$DisplayStaff=='1'?'<strong>True</strong>':'False'; ?></td>
+			<td class="center"><?=number_format($UserCount); ?></td>
 			<td class="center">[<a href="tools.php?action=permissions&amp;id=<?=$ID ?>">Edit</a> | <a href="#" onclick="return confirmDelete(<?=$ID?>)">Remove</a>]</td>
 		</tr>
 <?	} ?>

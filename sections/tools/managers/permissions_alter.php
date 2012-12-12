@@ -44,6 +44,10 @@ echo $Val->GenerateJS('permform');
                       <input type="text"  class="wid35" name="maxavatarheight" value="<?=(!empty($MaxAvatarHeight) ? display_str($MaxAvatarHeight) : '')?>" /></td>
 		</tr>
 		<tr>
+			<td class="label">Rank Color</td>
+			<td><input type="text" name="color" style="font-weight:bold;color: #<?=display_str($Color)?>" value="<?=(!empty($Color) ? display_str($Color) : '')?>" /></td>
+		</tr>
+		<tr>
 			<td class="label">Show on Staff page</td>
 			<td><input type="checkbox" name="displaystaff" value="1" <? if (!empty($DisplayStaff)) { ?>checked<? } ?> /></td>
 		</tr>

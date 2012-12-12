@@ -1192,23 +1192,15 @@ EXPLANATION OF PARSER LOGIC
 	
        
       function is_color_attrib(&$Attrib) {
-            static $ColorAttribs; static $ReplaceVals; static $ReplaceCols;
+          global $ClassNames;
+            static $ColorAttribs;  //static $ReplaceVals; static $ReplaceCols;
             if (!$ColorAttribs) { // only define it once per page  
                 $ColorAttribs = array('orange', 'aqua', 'aquamarine', 'magenta', 'darkmagenta', 'slategrey', 'pink', 'hotpink', 'black', 'wheat', 'midnightblue', 'forestgreen', 'blue', 'lightblue', 'fuchsia', 'lightgreen', 'green', 'grey', 'lightgrey', 'lime', 'maroon', 'navy', 'olive', 'khaki', 'darkkhaki', 'gold', 'goldenrod', 'darkgoldenrod', 'purple', 'violet', 'red', 'crimson', 'firebrick', 'gainsboro', 'silver', 'teal', 'linen', 'aliceblue', 'lavender', 'white', 'whitesmoke', 'lightyellow', 'yellow');
-                $ReplaceVals = array('goodperv','modperv','apprentice','sextremeperv','perv','smutpeddler','emplegend', 'admin','sysop');
-                $ReplaceCols = array('#3c3','#000','#92a5c2','orange','#4ec89b','#00f', '#CFB53B' , '#606','#8b0000');
-                /* 
-.Apprentice { color:#92a5c2; }
-.Perv { color:#4Ec89B; }
-.GoodPerv { color:#3c3; }
-.SextremePerv { color:orange; }
-.SmutPeddler { color:#00f; }
-.ModPerv { color:#000; }
-.Admin { color:#606; }
-.Sysop { color:#8B0000; } 
-      */
+                //$ReplaceVals = array('goodperv','modperv','apprentice','sextremeperv','perv','smutpeddler','emplegend', 'admin','sysop');
+                //$ReplaceCols = array('#3c3','#000','#92a5c2','orange','#4ec89b','#00f', '#cfb53b' , '#606','#8b0000');
             }
-            $Attrib = str_replace($ReplaceVals, $ReplaceCols, $Attrib);
+            //$Attrib = str_replace($ReplaceVals, $ReplaceCols, $Attrib);
+            if (isset($ClassNames[$Attrib]['Color'])) $Attrib = '#'.$ClassNames[$Attrib]['Color'];
             
             return (in_array($Attrib, $ColorAttribs) || preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/', $Attrib));
       }

@@ -96,10 +96,11 @@ $Debug->set_flag('start user handling');
 // Get permissions
 list($Classes, $ClassLevels) = $Cache->get_value('classes');
 if (!$Classes || !$ClassLevels) {
-    $DB->query("SELECT ID, Name, Level FROM permissions WHERE IsUserClass='1' ORDER BY Level");
+    $DB->query("SELECT ID, Name, Level, Color, LOWER(REPLACE(Name,' ','')) AS ShortName FROM permissions WHERE IsUserClass='1' ORDER BY Level");
     $Classes = $DB->to_array('ID');
     $ClassLevels = $DB->to_array('Level');
-    $Cache->cache_value('classes', array($Classes, $ClassLevels), 0);
+    $ClassNames = $DB->to_array('ShortName');
+    $Cache->cache_value('classes', array($Classes, $ClassLevels, $ClassNames), 0);
 }
 $Debug->set_flag('Loaded permissions');
 $NewCategories = $Cache->get_value('new_categories');
@@ -1531,7 +1532,9 @@ function make_class_string($ClassID, $Usespan = false) {
     if ($Usespan === false) {
         return $Classes[$ClassID]['Name'];
     } else {
-        return '<span alt="' . $ClassID . '" class="rank ' . str_replace(" ", "", $Classes[$ClassID]['Name']) . '">' . $Classes[$ClassID]['Name'] . '</span>';
+        return '<span alt="' . $ClassID . '" class="rank" style="color:#'. $Classes[$ClassID]['Color'] . '">' . $Classes[$ClassID]['Name'] . '</span>';
+    
+        //return '<span alt="' . $ClassID . '" class="rank ' . str_replace(" ", "", $Classes[$ClassID]['Name']) . '">' . $Classes[$ClassID]['Name'] . '</span>';
     }
 }
 

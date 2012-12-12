@@ -437,9 +437,9 @@ switch ($_REQUEST['action']) {
             if (is_numeric($_REQUEST['id'])) {
                 $JoinOn = ( $_POST['IsClass'] == 1) ? 'PermissionID' : 'GroupPermissionID';
                 $DB->query("SELECT p.ID,p.Name,p.Level,p.Values,p.DisplayStaff,p.IsUserClass,
-                                    p.MaxSigLength,p.MaxAvatarWidth,p.MaxAvatarHeight,COUNT(u.ID) 
+                                    p.MaxSigLength,p.MaxAvatarWidth,p.MaxAvatarHeight,p.Color,COUNT(u.ID) 
                                     FROM permissions AS p LEFT JOIN users_main AS u ON u.$JoinOn=p.ID WHERE p.ID='" . db_string($_REQUEST['id']) . "' GROUP BY p.ID");
-                list($ID, $Name, $Level, $Values, $DisplayStaff, $IsUserClass, $MaxSigLength, $MaxAvatarWidth, $MaxAvatarHeight, $UserCount) = $DB->next_record(MYSQLI_NUM, array(3));
+                list($ID, $Name, $Level, $Values, $DisplayStaff, $IsUserClass, $MaxSigLength, $MaxAvatarWidth, $MaxAvatarHeight,$Color, $UserCount) = $DB->next_record(MYSQLI_NUM, array(3));
 
                 if ($IsUserClass == '1' && ($Level > $LoggedUser['Class'] || $_REQUEST['level'] > $LoggedUser['Class'])) {
                     error(403);
@@ -459,6 +459,7 @@ switch ($_REQUEST['action']) {
                     $Val->SetFields('maxsiglength', true, 'number', 'You did not enter a valid number for MaxSigLength.');
                     $Val->SetFields('maxavatarwidth', true, 'number', 'You did not enter a valid number for MaxAvavtarWidth.');
                     $Val->SetFields('maxavatarheight', true, 'number', 'You did not enter a valid number for MaxAvavtarHeight.');
+                    $Val->SetFields('color', true, 'string', 'You did not enter a valid hex color.',array('minlength'=>6,'maxlength'=>6));
                     $Val->SetFields('maxcollages', true, 'number', 'You did not enter a valid number of personal collages.');
 
                     if (!is_numeric($_REQUEST['id'])) {
@@ -472,6 +473,7 @@ switch ($_REQUEST['action']) {
                     $MaxSigLength = $_REQUEST['maxsiglength'];
                     $MaxAvatarWidth = $_REQUEST['maxavatarwidth'];
                     $MaxAvatarHeight = $_REQUEST['maxavatarheight'];
+                    $Color = strtolower($_REQUEST['color']);
                     $Values['MaxCollages'] = $_REQUEST['maxcollages'];
                 } else {
                     if (!is_numeric($_REQUEST['id'])) { // new record
@@ -498,10 +500,10 @@ switch ($_REQUEST['action']) {
                 if (!$Err) {
                     if (!is_numeric($_REQUEST['id'])) {
                         $DB->query("INSERT INTO permissions 
-                                            (Level,Name,`Values`,DisplayStaff,IsUserClass,MaxSigLength,MaxAvatarWidth,MaxAvatarHeight) 
-                                     VALUES ('" . db_string($Level) . "','" . db_string($Name) . "','" . db_string(serialize($Values)) . "','" . db_string($DisplayStaff) . "','" . db_string($IsUserClass) . "','" . db_string($MaxSigLength) . "','" . db_string($MaxAvatarWidth) . "','" . db_string($MaxAvatarHeight) . "')");
+                                            (Level,Name,`Values`,DisplayStaff,IsUserClass,MaxSigLength,MaxAvatarWidth,MaxAvatarHeight,Color) 
+                                     VALUES ('" . db_string($Level) . "','" . db_string($Name) . "','" . db_string(serialize($Values)) . "','" . db_string($DisplayStaff) . "','" . db_string($IsUserClass) . "','" . db_string($MaxSigLength) . "','" . db_string($MaxAvatarWidth) . "','" . db_string($MaxAvatarHeight) . "','" . db_string($Color) . "')");
                     } else {
-                        $DB->query("UPDATE permissions SET Level='" . db_string($Level) . "',Name='" . db_string($Name) . "',`Values`='" . db_string(serialize($Values)) . "',DisplayStaff='" . db_string($DisplayStaff) . "',MaxSigLength='" . db_string($MaxSigLength) . "',MaxAvatarWidth='" . db_string($MaxAvatarWidth) . "',MaxAvatarHeight='" . db_string($MaxAvatarHeight) . "' WHERE ID='" . db_string($_REQUEST['id']) . "'");
+                        $DB->query("UPDATE permissions SET Level='" . db_string($Level) . "',Name='" . db_string($Name) . "',`Values`='" . db_string(serialize($Values)) . "',DisplayStaff='" . db_string($DisplayStaff) . "',MaxSigLength='" . db_string($MaxSigLength) . "',MaxAvatarWidth='" . db_string($MaxAvatarWidth) . "',MaxAvatarHeight='" . db_string($MaxAvatarHeight) . "',Color='" . db_string($Color) . "' WHERE ID='" . db_string($_REQUEST['id']) . "'");
                         $Cache->delete_value('perm_' . $_REQUEST['id']);
                     }
                     if ($IsUserClass)

@@ -825,6 +825,7 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   `MaxSigLength` smallint(4) unsigned NOT NULL DEFAULT '0',
   `MaxAvatarWidth` smallint(4) unsigned NOT NULL DEFAULT '100',
   `MaxAvatarHeight` smallint(4) unsigned NOT NULL DEFAULT '100',
+  `Color` char(6) CHARACTER SET utf8 NOT NULL DEFAULT '000000',
   `Values` text CHARACTER SET latin1 NOT NULL,
   `DisplayStaff` enum('0','1') CHARACTER SET latin1 NOT NULL DEFAULT '0',
   `IsUserClass` enum( '0', '1' ) NOT NULL DEFAULT '1',

@@ -747,7 +747,7 @@ span.user_name a:visited {
 .EmpLegend { color:#CFB53B; }
 .ModPerv { color:#000; }
 .Admin { color:#606; }
-.Sysop { color:#8B0000; }  /* PINK: #b93dd6 */
+.Sysop { color:#00ff00; }  /* PINK: #b93dd6 */
 .Donor { color:#DAA520; }  /* #F4E649; */
 
 span.user_title {
