@@ -13,12 +13,12 @@ if(strtotime($BannedUntil)<time() && !$BanID) {
 	}
 	if(isset($Err)) {
 ?>
-	<span class="warning"><?=$Err?><br /><br /></span>
+	<span class="warning"><?=$Err?></span><br /><br />
 <? } ?>
         <span style="font-size:2em">
           <!--<br/>this is not torrents.empornium.me but a test site and access is by invitation only, do not try to login unless you are meant to be here.
           <br/>Please use <a href="http://torrents.empornium.me">http://torrents.empornium.me</a> for all your pron related needs.<br/>-->
-            <br/>Welcome to empornium.me 
+            <br/>Welcome to <?=SITE_URL?> 
             <br/>
         </span>
         <br/><br/>

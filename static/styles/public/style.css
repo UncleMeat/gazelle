@@ -33,6 +33,18 @@ a {
     color: lightblue;
     font-weight: bold;
 }
+/*
+.warning {
+    color: white;
+    font-weight: bold;
+} */
+.warning {
+    background-color: lightblue;
+    padding: 1px 8px;
+    font-size: large;
+    color: darkred;
+    font-weight: bold;
+}
 
 a:hover {
     color: white;
@@ -125,7 +137,3 @@ input[type="text"]:invalid, input[type="password"]:invalid {
     font-weight: bold;
 }
 
-.warning {
-    color: white;
-    font-weight: bold;
-}

@@ -43,13 +43,20 @@ if(!empty($_REQUEST['confirm'])) {
 		if(!$Err) {
 			
 			$DB->query("SELECT COUNT(ID) FROM users_main WHERE Username LIKE '".db_string(trim($_POST['username']))."'");
-			list($UserCount)=$DB->next_record();
-			
+			list($UserCount)=$DB->next_record(); 
 			if($UserCount) {
 				$Err = "There is already someone registered with that username.";
 				$_REQUEST['username']='';
 			}
 			
+			$DB->query("SELECT COUNT(ID) FROM users_main WHERE Email LIKE '".db_string(trim($_POST['email']))."'");
+			list($UserCount)=$DB->next_record(); 
+			if($UserCount) {
+				$Err = 'There is already someone registered with that email address.'; //<br/><br/>
+                    //<a href="login.php?act=recover">If it is your account you can use email recovery to reset the password</a>
+				$_POST['email']='';
+			}
+            
 			if($_POST['invite']) {
 				$DB->query("SELECT InviterID, Email FROM invites WHERE InviteKey='".db_string($_REQUEST['invite'])."'");
 				if($DB->record_count() == 0) {
