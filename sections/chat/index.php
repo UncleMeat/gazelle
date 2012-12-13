@@ -2,6 +2,8 @@
 enforce_login();
 show_header('IRC');	
 
+include(SERVER_ROOT.'/classes/class_text.php');
+$Text = new TEXT;
 /*
 $DB->query("SELECT IRCKey FROM users_main WHERE ID = $LoggedUser[ID]");
 list($IRCKey) = $DB->next_record();
