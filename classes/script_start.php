@@ -582,7 +582,7 @@ function get_user_badges($UserID, $LimitRows = true) {     //, $Limit = 0){
     $UserID = (int)$UserID;
     if ($LimitRows) {
         $extra = "_limit";
-        $Limit = "LIMIT 6"; 
+        $Limit = "LIMIT 12"; 
     }
     $UserBadges = $Cache->get_value('user_badges_'.$UserID.$extra);
     if (!is_array($UserBadges)) {
