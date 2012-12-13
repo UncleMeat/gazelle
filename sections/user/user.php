@@ -1030,8 +1030,10 @@ foreach ($Collages as $CollageInfo) {
 // Linked accounts
 if(check_perms('users_mod')) {
         $CookieItems[] = 'linked';
+        $CookieItems[] = 'iplinked';
+        $CookieItems[] = 'elinked';
 	include(SERVER_ROOT.'/sections/user/linkedfunctions.php');
-	user_dupes_table($UserID);
+	user_dupes_table($UserID, $Username);
 }
 
 if ((check_perms('users_view_invites')) && $Invited > 0) {
@@ -1047,7 +1049,7 @@ if ((check_perms('users_view_invites')) && $Invited > 0) {
                 <div id="invitediv" class="">
 				<? $Tree->make_tree(); ?>
                 </div>
-		</div> 
+		</div>
 <?
 }
 
@@ -1076,7 +1078,7 @@ if (check_paranoia_here('requestsvoted_list')) {
                     <span style="float:left;">Requests</span>
                     <span style="float:right;"><a id="requestsbutton" href="#" onclick="return Toggle_view('requests');">(Hide)</a></span>&nbsp;
             </div>                
-            <div class="box">		
+            <div class="box">	
             <div id="requestsdiv" class="">
 				<table cellpadding="6" cellspacing="1" border="0" class="border shadow" width="100%">
 					<tr class="colhead_dark">

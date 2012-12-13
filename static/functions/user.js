@@ -77,7 +77,9 @@ function Toggle_view(elem_id) {
                         get_hidden_value('privilege'), 
                         get_hidden_value('session'),
                         get_hidden_value('submit'),
-                        get_hidden_value('loginwatch')]; 
+                        get_hidden_value('loginwatch'), 
+                        get_hidden_value('iplinked'), 
+                        get_hidden_value('elinked')]; 
             
     jQuery.cookie('userPageState', json.encode(t));
     return false;
@@ -168,6 +170,8 @@ function Load_User_Cookie()  {
       set_hidden_value('session', state[15]);
       set_hidden_value('submit', state[16]);
       set_hidden_value('loginwatch', state[17]);
+      set_hidden_value('iplinked', state[18]);
+      set_hidden_value('elinked', state[19]);
 }
 
 
