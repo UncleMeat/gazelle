@@ -24,7 +24,14 @@ if(empty($IRCKey)) {
 <div class="thin">
 	<div class="head">IRC Rules - Please read these carefully!</div>
 	<div class="box pad" style="padding:10px 10px 10px 20px;">
-		<ul>
+            <?
+        $Body=get_article('chatrules'); 
+        if (!$Body) $Body = "could not find article 'chatrules'"; 
+        echo $Text->full_format($Body, true);
+         
+        ?>
+		<!-- 
+        <ul>
 			<li>
 				Staff have the final decision, if they say stop and you continue, expect at least to be banned from the IRC server. 
 			</li>
@@ -70,7 +77,7 @@ if(empty($IRCKey)) {
 			<li>
 				<strong>Read the topic before asking questions.</strong>
 			</li>
-		</ul>
+		</ul> -->
 	</div>
     <form method="post" action="chat.php" onsubmit="return ($('#channel1').raw().checked || $('#channel2').raw().checked || $('#channel3').raw().checked);">
         <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
