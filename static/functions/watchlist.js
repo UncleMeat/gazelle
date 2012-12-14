@@ -1,4 +1,25 @@
 
+function prompt_before_multiban() {
+    var banspeed =  $('#banspeed').raw().options[$('#banspeed').raw().selectedIndex].value;
+    return confirm('Are you sure you want to ban and disable all users with a recorded max speed over '+get_size(banspeed)+'/s ?');
+}
+
+function change_view_reports(userid, torrentid){
+    var selSpeed=$('#viewspeed').raw().options[$('#viewspeed').raw().selectedIndex].value;
+    location.href = "tools.php?action=speed_records&viewspeed="+selSpeed+"&userid="+userid+"&torrentid="+torrentid;
+}
+        
+function change_view(){
+    var viewspeed=$('#viewspeed').raw().options[$('#viewspeed').raw().selectedIndex].value;
+    var banspeed =  $('#banspeed').raw().options[$('#banspeed').raw().selectedIndex].value;
+    location.href = "tools.php?action=speed_cheats&viewspeed="+viewspeed+"&banspeed="+banspeed;
+}
+        
+function preview_users() {
+    var speed =  $('#banspeed').raw().options[$('#banspeed').raw().selectedIndex].value;
+    window.location = location.protocol + '//' + location.host + 
+         "//tools.php?action=speed_cheats&banspeed="+ speed + "&viewspeed="+speed;
+}
 
 function remove_records(user_id) {
 	ajax.get('ajax.php?action=remove_records&userid=' + user_id, function (response) {

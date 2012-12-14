@@ -77,6 +77,12 @@ switch ($_REQUEST['action']) {
     case 'speed_cheats':
         include(SERVER_ROOT . '/sections/tools/managers/speed_cheats.php');
         break;
+    case 'ban_speed_cheat':
+        if (!check_perms('admin_manage_cheats')) error(403);
+        include(SERVER_ROOT . '/sections/tools/managers/speed_functions.php');
+        
+        header("Location: tools.php?action=speed_cheats&viewspeed=$_POST[banspeed]&banspeed=$_POST[banspeed]");
+        break;
     
     case 'edit_userwl':
         if (!check_perms('users_manage_cheats')) error(403);
@@ -93,7 +99,7 @@ switch ($_REQUEST['action']) {
             $KeepTorrents = $_POST['keeptorrent']=='1'?'1':'0';
             $DB->query("UPDATE users_watch_list SET KeepTorrents='$KeepTorrents' WHERE UserID='$UserID'");
         }
-        header("Location: tools.php?action=cheats&viewspeed=$_POST[viewspeed]");
+        header("Location: tools.php?action=speed_records&viewspeed=$_POST[viewspeed]");
         break;
     case 'edit_torrentwl':
         if (!check_perms('users_manage_cheats')) error(403);
@@ -109,7 +115,7 @@ switch ($_REQUEST['action']) {
                 write_group_log($GroupID, $TorrentID, $LoggedUser['ID'], "Torrent removed from watchlist", '1') ;
             }
         }
-        header("Location: tools.php?action=cheats&viewspeed=$_POST[viewspeed]");
+        header("Location: tools.php?action=speed_records&viewspeed=$_POST[viewspeed]");
         break;
     case 'save_records_options':
         if (!check_perms('admin_manage_cheats')) error(403);
@@ -118,7 +124,7 @@ switch ($_REQUEST['action']) {
         $KeepSpeed = (int)$_POST['keepspeed'];
         
         $DB->query("UPDATE site_options SET DeleteRecordsMins='$DelMins', KeepSpeed='$KeepSpeed'");
-        header("Location: tools.php?action=cheats&viewspeed=$_POST[viewspeed]");
+        header("Location: tools.php?action=speed_records&viewspeed=$_POST[viewspeed]");
         break;
     case 'delete_speed_records':
         if (!check_perms('users_manage_cheats')) error(403);
@@ -132,7 +138,7 @@ switch ($_REQUEST['action']) {
         $recordIDS = implode(',', $recordIDS); 
         $DB->query("DELETE FROM xbt_peers_history WHERE ID IN ($recordIDS)"); 
         
-        header("Location: tools.php?action=cheats&viewspeed=$_POST[viewspeed]");
+        header("Location: tools.php?action=speed_records&viewspeed=$_POST[viewspeed]");
         break;
         
     case 'test_delete_schedule':
@@ -181,9 +187,11 @@ switch ($_REQUEST['action']) {
         //Drop the original table:
         $DB->query("DROP TABLE temp_old");
         
-        header("Location: tools.php?action=cheats&viewspeed=$_POST[viewspeed]");
+        header("Location: tools.php?action=speed_records&viewspeed=$_POST[viewspeed]");
         break;
 
+        
+        
     case 'forum':
         include(SERVER_ROOT . '/sections/tools/managers/forum_list.php');
         break;

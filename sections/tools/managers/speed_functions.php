@@ -2,6 +2,131 @@
 <?
 
 
+function print_dupe_ips($UserID, $Username) {
+	global $DB, $LoggedUser;
+
+	if (!check_perms('users_mod')) error(403);
+	if (!is_number($UserID)) error(403);
+	
+	$DB->query("SELECT d.ID 
+				FROM dupe_groups AS d
+				JOIN users_dupes AS u ON u.GroupID = d.ID
+				WHERE u.UserID = $UserID");
+	if (list($GroupID ) = $DB->next_record()) {
+		$DB->query("SELECT m.ID
+					FROM users_main AS m
+					JOIN users_dupes AS d ON m.ID = d.UserID
+					WHERE d.GroupID = $GroupID
+					ORDER BY m.ID ASC");
+		$DupeCount = $DB->record_count();
+		$Dupes = $DB->to_array('ID');
+	} else {
+		$DupeCount = 0;
+		$Dupes = array();
+	}
+    
+    
+	$DB->query(" SELECT e.UserID AS UserID, um.IP, 'account', 'history' FROM users_main AS um JOIN users_history_ips AS e ON um.IP=e.IP 
+				 WHERE um.IP != '127.0.0.1' AND um.IP !='' AND e.UserID!= $UserID AND um.ID = $UserID
+                UNION
+                 SELECT e.ID AS UserID, um.IP, 'account', 'account' FROM users_main AS um JOIN users_main AS e ON um.IP=e.IP 
+				 WHERE um.IP != '127.0.0.1' AND um.IP !='' AND e.ID!= $UserID AND um.ID = $UserID
+                UNION
+                 SELECT um.ID AS UserID, um.IP, 'history', 'account' FROM users_main AS um JOIN users_history_ips AS e ON um.IP=e.IP 
+				 WHERE um.IP != '127.0.0.1' AND um.IP !='' AND e.UserID = $UserID AND um.ID != $UserID
+                UNION
+                 SELECT um.UserID AS UserID, um.IP, 'history', 'history' FROM users_history_ips AS um JOIN users_history_ips AS e ON um.IP=e.IP 
+				 WHERE um.IP != '127.0.0.1' AND um.IP !='' AND e.UserID = $UserID AND um.UserID != $UserID  
+                ORDER BY  UserID, IP   ");
+    $IPDupeCount = $DB->record_count();
+    $IPDupes = $DB->to_array();
+    if ($IPDupeCount>0) {
+?>
+        <div class="head">
+            <span style="float:left;"><?=$IPDupeCount?> Account<?=(($IPDupeCount == 1)?'':'s')?> with the same IP address</span>
+            <span style="float:right;">
+                <a href="#" onclick="$('#linkeddiv').toggle();this.innerHTML=this.innerHTML=='(hide)'?'(view)':'(hide)';return false;">(view)</a></span>
+        </div> 
+        <div class="box">
+            <table width="100%" id="linkeddiv" class="shadow">
+<?
+            $i = 0;
+            foreach($IPDupes AS $IPDupe) {
+                list($EUserID, $IP, $EType1, $EType2) = $IPDupe;
+                $i++;
+                $DupeInfo = user_info($EUserID);
+?> 
+            <tr>
+                <td align="left">
+                    <?=format_username($EUserID, $DupeInfo['Username'], $DupeInfo['Donor'], $DupeInfo['Warned'], $DupeInfo['Enabled'], $DupeInfo['PermissionID'])?>
+                </td>
+                <td align="left">
+                    <?=$IP?>
+                </td>
+                <td align="left">
+                    <?="$Username's $EType1 <-> $DupeInfo[Username]'s $EType2"?>
+                </td>
+                <td>
+<?
+                    if ( !array_key_exists($EUserID, $Dupes) ) {
+?>
+						[<a href="user.php?action=dupes&dupeaction=link&auth=<?=$LoggedUser['AuthKey']?>&userid=<?=$UserID?>&targetid=<?=$EUserID?>">link</a>]
+<?
+                    }
+?>
+                </td> 
+            </tr>
+<?
+            }
+?>
+            </table>
+        </div>
+<? 
+    }
+    
+      
+}
+
+
+function ban_users($overspeed) { 
+    $overspeed = (int)$overspeed;
+    $DB->query("SELECT uid, Username 
+                          FROM xbt_peers_history AS xbt
+                     LEFT JOIN users_main AS um ON um.ID=xbt.uid
+                     LEFT JOIN users_info AS ui ON ui.UserID=xbt.uid
+                         WHERE (xbt.upspeed)>='$overspeed' 
+                      GROUP BY xbt.uid ");
+
+
+    
+    
+}
+
+function ban_user($UserID){
+    disable_users(array($UserID), "Disabled for speeding", 2);
+}
+
+
+// instead of banning disables from leeching - resets passkey - and sends pm (in case its borderline?)
+function disable_cheat() {
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+function print_speed_option($speed, $selected_speed){
+?>
+    <option value="<?=$speed?>" <?=($selected_speed==$speed?' selected="selected"':'');?>>&nbsp;<?=get_size($speed);?>/s&nbsp;&nbsp;</option>
+<?
+}
 
 function print_user_watchlist() {
     global $DB;

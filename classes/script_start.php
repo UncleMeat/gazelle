@@ -314,7 +314,8 @@ function user_info($UserID) {
 			i.CatchupTime,
 			m.Visible,
                   m.Signature,
-			m.GroupPermissionID
+			m.GroupPermissionID,
+            m.ipcc
 			FROM users_main AS m
 			INNER JOIN users_info AS i ON i.UserID=m.ID
 			WHERE m.ID='$UserID'");
@@ -935,17 +936,22 @@ function lookup_ip($IP) {
 function display_ip($IP, $cc = '?', $gethost = false) {
     global $DB, $Cache;
     //$cc = geoip($IP);
-    if ($cc=='?') return 'unknown';
-    $country = $Cache->get_value('country_'.$cc);
-    if ($country===false) {
-        $DB->query("SELECT country FROM countries WHERE cc='$cc'");
-        list($country) = $DB->next_record();
-        $Cache->cache_value('country_'.$cc, $country, 0);
-    }
     if($gethost) $Line = get_host($IP);
     else $Line = display_str($IP);
-    $Line .= ' <span title="'.$country.'">('.$cc.')</span> ' . '<img style="margin-bottom:-3px;" title="'.$country.'" src="static/common/flags/iso16/'. strtolower($cc).'.png" alt="" /> ';
-    $Line .= '[<a href="user.php?action=search&amp;ip_history=on&amp;ip=' . display_str($IP) . '&amp;matchtype=strict" title="Search">S</a>]';
+    if ($cc=='?' || $cc=='') {
+        $cc=='?';
+        $country = 'unknown';
+    } else {
+        $country = $Cache->get_value('country_'.$cc);
+        if ($country===false) {
+            $DB->query("SELECT country FROM countries WHERE cc='$cc'");
+            list($country) = $DB->next_record();
+            $Cache->cache_value('country_'.$cc, $country, 0);
+        }
+        $Line .= ' <span title="'.$country.'">('.$cc.')</span> ' . '<img style="margin-bottom:-3px;" title="'.$country.'" src="static/common/flags/iso16/'. strtolower($cc).'.png" alt="" />';
+    }
+    $Line .= ' [<a href="user.php?action=search&amp;ip_history=on&amp;ip=' . display_str($IP) . '&amp;matchtype=fuzzy" title="Search IP History">S</a>]';
+    $Line .= ' [<a href="user.php?action=search&amp;tracker_ip=' . display_str($IP) . '&amp;matchtype=fuzzy" title="Search Tracker IP\'s">S</a>]';
 
     return $Line;
 }
@@ -2422,7 +2428,7 @@ function disable_users($UserIDs, $AdminComment, $BanReason = 1) {
     $DB->query("UPDATE users_info AS i JOIN users_main AS m ON m.ID=i.UserID
 		SET m.Enabled='2',
 		m.can_leech='0',
-		i.AdminComment = CONCAT('" . sqltime() . " - " . ($AdminComment ? $AdminComment : 'Disabled by system') . "\n\n', i.AdminComment),
+		i.AdminComment = CONCAT('" . sqltime() . " - " . ($AdminComment ? $AdminComment : 'Disabled by system') . "\n', i.AdminComment),
 		i.BanDate='" . sqltime() . "',
 		i.BanReason='" . $BanReason . "',
 		i.RatioWatchDownload=" . ($BanReason == 2 ? 'm.Downloaded' : "'0'") . "

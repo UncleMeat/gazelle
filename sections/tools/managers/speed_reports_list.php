@@ -284,7 +284,7 @@ show_header('Speed Reports','watchlist');
                 </td>
                 <td colspan="2" class="center">
                     <label for="viewspeed" title="View Speed">View records with upload speed over </label>
-                    <select id="viewspeed" name="viewspeed" title="Hide records under this speed" onchange="change_view('<?=$_GET['userid']?>','<?=$_GET['torrentid']?>')">
+                    <select id="viewspeed" name="viewspeed" title="Hide records under this speed" onchange="change_view_reports('<?=$_GET['userid']?>','<?=$_GET['torrentid']?>')">
                         <option value="0"<?=($ViewSpeed==0?' selected="selected"':'');?>>&nbsp;0&nbsp;&nbsp;</option>
                         <option value="262144"<?=($ViewSpeed==262144?' selected="selected"':'');?>>&nbsp;<?=get_size(262144);?>/s&nbsp;&nbsp;</option>
                         <option value="524288"<?=($ViewSpeed==524288?' selected="selected"':'');?>>&nbsp;<?=get_size(524288);?>/s&nbsp;&nbsp;</option>
@@ -309,13 +309,6 @@ show_header('Speed Reports','watchlist');
     </form>
 <? }  ?>
     </table>
-    <script type="text/javascript">
-        function change_view(userid, torrentid){
-            var selectObj = $('#viewspeed').raw();
-            var selSpeed=selectObj.options[selectObj.selectedIndex].value;
-            location.href = "tools.php?action=speed_records&viewspeed="+selSpeed+"&userid="+userid+"&torrentid="+torrentid;
-        }
-    </script>
     <br/>
 <?
 //---------- print records
