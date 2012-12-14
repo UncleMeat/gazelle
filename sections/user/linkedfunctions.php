@@ -160,7 +160,7 @@ function user_dupes_table($UserID, $Username) {
 	}
     
     
-    /*
+    
 	$DB->query(" SELECT e.UserID AS UserID, um.IP, 'account', 'history' FROM users_main AS um JOIN users_history_ips AS e ON um.IP=e.IP 
 				 WHERE um.IP != '127.0.0.1' AND um.IP !='' AND e.UserID!= $UserID AND um.ID = $UserID
                 UNION
@@ -172,8 +172,8 @@ function user_dupes_table($UserID, $Username) {
                 UNION
                  SELECT um.UserID AS UserID, um.IP, 'history', 'history' FROM users_history_ips AS um JOIN users_history_ips AS e ON um.IP=e.IP 
 				 WHERE um.IP != '127.0.0.1' AND um.IP !='' AND e.UserID = $UserID AND um.UserID != $UserID  
-                ORDER BY  UserID, IP   "); */
-    
+                ORDER BY  UserID, IP   "); 
+    /*
 	$DB->query(" SELECT e.UserID AS UserID, x.IP, 'tracker', 'account' FROM xbt_snatched AS x JOIN users_history_ips AS e ON x.IP=e.IP 
 				 WHERE x.IP != '127.0.0.1' AND x.IP !='' AND e.UserID!= $UserID AND x.uid = $UserID
                  GROUP BY x.uid
@@ -188,7 +188,7 @@ function user_dupes_table($UserID, $Username) {
                 UNION
                  SELECT e1.UserID AS UserID, e1.IP, 'account', 'account' FROM users_history_ips AS e1 JOIN users_history_ips AS e ON e1.IP=e.IP 
 				 WHERE e1.IP != '127.0.0.1' AND e1.IP !='' AND e.UserID = $UserID AND e1.UserID != $UserID  
-                ORDER BY  UserID, IP   ");
+                ORDER BY  UserID, IP   "); */
     $IPDupeCount = $DB->record_count();
     $IPDupes = $DB->to_array();
     if ($IPDupeCount>0) {
