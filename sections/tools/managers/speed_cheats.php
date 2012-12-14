@@ -100,7 +100,12 @@ show_header('Speed Cheats','watchlist');
                         <a href="tools.php?action=speed_records&viewspeed=<?=$ViewSpeed?>" title="Removes any user or torrent filters for viewing (still applies speed filter)">View All</a>
 <?                  } ?>
                 </td>
-                <td colspan="2" class="center">
+                <td class="center">
+                            <label for="viewbanned" title="Keep Speed">include disabled users </label>
+                        <input type="checkbox" value="1" onchange="change_view()"
+                               id="viewbanned" name="viewbanned" <? if (isset($_GET['viewbanned']) && $_GET['viewbanned'])echo' checked="checked"'?> />
+                </td>
+                <td class="center">
                     <label for="viewspeed" title="View Speed">View records with upload speed over </label>
                     <select id="viewspeed" name="viewspeed" title="Hide records under this speed" onchange="change_view()">
                         <option value="0"<?=($ViewSpeed==0?' selected="selected"':'');?>>&nbsp;0&nbsp;&nbsp;</option>
@@ -170,6 +175,13 @@ if ($OrderBy=="upspeed") $SQLOrderBy="MAX(xbt.upspeed)";
 elseif ($OrderBy=="mtime") $SQLOrderBy="MAX(xbt.mtime)"; 
 elseif ($OrderBy=="count") $SQLOrderBy="Count(xbt.id)";
 else $SQLOrderBy=$OrderBy;
+
+    if (isset($_GET['viewbanned']) && $_GET['viewbanned']){
+        $ViewInfo .= ' (all)';
+    } else {
+        $WHERE .= " AND (um.ID IS NULL OR um.Enabled='1')";
+        $ViewInfo .= ' (enabled only)';
+    }
     
 $DB->query("SELECT SQL_CALC_FOUND_ROWS
                              uid, Username, Count(xbt.id), MAX(upspeed), MAX(mtime), 
@@ -179,7 +191,7 @@ $DB->query("SELECT SQL_CALC_FOUND_ROWS
                           FROM xbt_peers_history AS xbt
                      LEFT JOIN users_main AS um ON um.ID=xbt.uid
                      LEFT JOIN users_info AS ui ON ui.UserID=xbt.uid
-                         WHERE (xbt.upspeed)>='$ViewSpeed' 
+                         WHERE (xbt.upspeed)>='$ViewSpeed' $WHERE
                       GROUP BY xbt.uid   
                       ORDER BY $SQLOrderBy $OrderWay 
                          LIMIT $Limit");

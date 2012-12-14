@@ -224,6 +224,12 @@ show_header('Speed Reports','watchlist');
     } else {
         $ViewInfo = 'all over speed specified';
     }
+    if (isset($_GET['viewbanned']) && $_GET['viewbanned']){
+        $ViewInfo .= ' (all)';
+    } else {
+        $WHERE .= " AND um.Enabled='1'";
+        $ViewInfo .= ' (enabled only)';
+    }
 
     $CanManage = check_perms('admin_manage_cheats');
 ?>
@@ -279,10 +285,15 @@ show_header('Speed Reports','watchlist');
                 <td class="center">
                     Viewing: <?=$ViewInfo?> &nbsp; (order: <?="$OrderBy $OrderWay"?>)
 <?                  if ($ViewInfo!='all over speed specified') { ?>
-                        <a href="?action=speed_records&viewspeed=<?=$ViewSpeed?>" title="Removes any user or torrent filters for viewing (still applies speed filter)">View All</a>
+                        <a href="?action=speed_records&viewspeed=<?=$ViewSpeed?>&viewbanned=<?=$_GET['viewbanned']?>" title="Removes any user or torrent filters for viewing (still applies speed filter)">View All</a>
 <?                  } ?>
                 </td>
-                <td colspan="2" class="center">
+                <td class="center">
+                            <label for="viewbanned" title="Keep Speed">include disabled users </label>
+                        <input type="checkbox" value="1" onchange="change_view_reports('<?=$_GET['userid']?>','<?=$_GET['torrentid']?>')"
+                               id="viewbanned" name="viewbanned" <? if (isset($_GET['viewbanned']) && $_GET['viewbanned'])echo' checked="checked"'?> />
+                </td>
+                <td class="center">
                     <label for="viewspeed" title="View Speed">View records with upload speed over </label>
                     <select id="viewspeed" name="viewspeed" title="Hide records under this speed" onchange="change_view_reports('<?=$_GET['userid']?>','<?=$_GET['torrentid']?>')">
                         <option value="0"<?=($ViewSpeed==0?' selected="selected"':'');?>>&nbsp;0&nbsp;&nbsp;</option>

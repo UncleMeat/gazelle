@@ -6,15 +6,15 @@ function prompt_before_multiban() {
 
 function change_view_reports(userid, torrentid){
     var selSpeed=$('#viewspeed').raw().options[$('#viewspeed').raw().selectedIndex].value;
-    location.href = "tools.php?action=speed_records&viewspeed="+selSpeed+"&userid="+userid+"&torrentid="+torrentid;
+    location.href = "tools.php?action=speed_records&viewspeed="+selSpeed+"&userid="+userid+"&torrentid="+torrentid+($('#viewbanned').raw().checked?'&viewbanned=1':'');
 }
         
 function change_view(){
     var viewspeed=$('#viewspeed').raw().options[$('#viewspeed').raw().selectedIndex].value;
     var banspeed =  $('#banspeed').raw().options[$('#banspeed').raw().selectedIndex].value;
-    location.href = "tools.php?action=speed_cheats&viewspeed="+viewspeed+"&banspeed="+banspeed;
+    location.href = "tools.php?action=speed_cheats&viewspeed="+viewspeed+"&banspeed="+banspeed+($('#viewbanned').raw().checked?'&viewbanned=1':'');
 }
-        
+
 function preview_users() {
     var speed =  $('#banspeed').raw().options[$('#banspeed').raw().selectedIndex].value;
     window.location = location.protocol + '//' + location.host + 
