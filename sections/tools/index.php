@@ -86,9 +86,9 @@ switch ($_REQUEST['action']) {
             
         } elseif ($_POST['banusers'] && is_number($_POST['banspeed']) && $_POST['banspeed']>0){
             
-            $DB->query("SELECT GROUP_CONCAT(DISTINCT uid SEPARATOR '|') 
-                          FROM xbt_peers_history 
-                         WHERE upspeed >='$_POST[banspeed]' 
+            $DB->query("SELECT GROUP_CONCAT(DISTINCT xbt.uid SEPARATOR '|') 
+                          FROM xbt_peers_history AS xbt JOIN users_main AS um ON um.ID=xbt.uid
+                         WHERE um.Enabled='1' AND xbt.upspeed >='$_POST[banspeed]' 
                        ");
             list($UserIDs) = $DB->next_record();
             $UserIDs = explode('|', $UserIDs);
