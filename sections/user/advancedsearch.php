@@ -207,9 +207,9 @@ if(count($_GET)){
 			um1.Enabled,
 			um1.IP,';
 		if(empty($_GET['tracker_ip'])){
-			$SQL .= "'' AS TrackerIP1,'' AS TrackerIP2,";
+			$SQL .= "'' AS TrackerIP1, ";
 		} else {
-			$SQL .= "xfu.ip AS TrackerIP1, xs.ip AS TrackerIP2 ,";
+			$SQL .= "xfu.ip AS TrackerIP1, ";
 		}
 		$SQL .= 'um1.Invites,
 			ui1.DisableInvites,
@@ -274,11 +274,11 @@ if(count($_GET)){
 
 		if(!empty($_GET['tracker_ip'])){
 				$Distinct = 'DISTINCT ';
-				//$Join['xfu']=' JOIN xbt_files_users AS xfu ON um1.ID=xfu.uid ';
-				//$Where[]= ' xfu.ip '.$Match.wrap($_GET['tracker_ip'], '', true);
-				$Join['xfu']=' LEFT JOIN xbt_files_users AS xfu ON um1.ID=xfu.uid ';
-				$Join['xs']=' LEFT JOIN xbt_snatched AS xs ON um1.ID=xs.uid ';
-				$Where[]= ' ((xs.ip '.$Match.wrap($_GET['tracker_ip'], '', true).') OR (xfu.ip '.$Match.wrap($_GET['tracker_ip'], '', true) .'))' ;
+				$Join['xfu']=' JOIN xbt_files_users AS xfu ON um1.ID=xfu.uid ';
+				$Where[]= ' xfu.ip '.$Match.wrap($_GET['tracker_ip'], '', true);
+				//$Join['xfu']=' LEFT JOIN xbt_files_users AS xfu ON um1.ID=xfu.uid ';
+				//$Join['xs']=' LEFT JOIN xbt_snatched AS xs ON um1.ID=xs.uid ';
+				//$Where[]= ' ((xs.ip '.$Match.wrap($_GET['tracker_ip'], '', true).') OR (xfu.ip '.$Match.wrap($_GET['tracker_ip'], '', true) .'))' ;
 		}
 
 //		if(!empty($_GET['tracker_ip'])){
@@ -705,14 +705,14 @@ echo $Pages;
 			<td title="invites">Inv's</td>
 		</tr>
 <?
-while(list($UserID, $Username, $Uploaded, $Downloaded, $Snatched, $Class, $Email, $Enabled, $IP, $trackerIP1, $trackerIP2, 
+while(list($UserID, $Username, $Uploaded, $Downloaded, $Snatched, $Class, $Email, $Enabled, $IP, $trackerIP1, 
                                         $Invites, $DisableInvites, $Warned, $Donor, $JoinDate, $LastAccess) = $DB->next_record()){ ?>
 		<tr>
 			<td><?=format_username($UserID, $Username, $Donor, $Warned, $Enabled, $Class)?></td>
 			<td><?=ratio($Uploaded, $Downloaded)?></td>
 			<td><?="<span title=\"account ip\">".display_ip($IP)."</span>";
                   if($trackerIP1) echo "<br/><span title=\"current tracker ip\">".display_ip($trackerIP1)."</span>";
-                  if($trackerIP2) echo "<br/><span title=\"tracker ip history\">".display_ip($trackerIP2)."</span>";
+                  //if($trackerIP2) echo "<br/><span title=\"tracker ip history\">".display_ip($trackerIP2)."</span>";
             ?>
             </td>
 			<td><?=display_str($Email)?></td>

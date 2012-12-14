@@ -223,7 +223,7 @@ $Pages=get_pages($Page,$NumResults,50,9);
                     
                     $PeerIDs = explode('|', $PeerIDs);
                     $IPs = explode('|', $IPs);
-                    
+                    /*
                     $DB->query(" SELECT e.UserID AS UserID, x.IP, 'tracker', 'account' FROM xbt_snatched AS x JOIN users_history_ips AS e ON x.IP=e.IP 
                                  WHERE x.IP != '127.0.0.1' AND x.IP !='' AND e.UserID!= $UserID AND x.uid = $UserID
                                  GROUP BY x.uid
@@ -238,7 +238,20 @@ $Pages=get_pages($Page,$NumResults,50,9);
                                 UNION
                                  SELECT e1.UserID AS UserID, e1.IP, 'account', 'account' FROM users_history_ips AS e1 JOIN users_history_ips AS e ON e1.IP=e.IP 
                                  WHERE e1.IP != '127.0.0.1' AND e1.IP !='' AND e.UserID = $UserID AND e1.UserID != $UserID  
-                                ORDER BY  UserID, IP   ");
+                                ORDER BY  UserID, IP   "); */
+                    
+	$DB->query(" SELECT e.UserID AS UserID, um.IP, 'account', 'history' FROM users_main AS um JOIN users_history_ips AS e ON um.IP=e.IP 
+				 WHERE um.IP != '127.0.0.1' AND um.IP !='' AND e.UserID!= $UserID AND um.ID = $UserID
+                UNION
+                 SELECT e.ID AS UserID, um.IP, 'account', 'account' FROM users_main AS um JOIN users_main AS e ON um.IP=e.IP 
+				 WHERE um.IP != '127.0.0.1' AND um.IP !='' AND e.ID!= $UserID AND um.ID = $UserID
+                UNION
+                 SELECT um.ID AS UserID, um.IP, 'history', 'account' FROM users_main AS um JOIN users_history_ips AS e ON um.IP=e.IP 
+				 WHERE um.IP != '127.0.0.1' AND um.IP !='' AND e.UserID = $UserID AND um.ID != $UserID
+                UNION
+                 SELECT um.UserID AS UserID, um.IP, 'history', 'history' FROM users_history_ips AS um JOIN users_history_ips AS e ON um.IP=e.IP 
+				 WHERE um.IP != '127.0.0.1' AND um.IP !='' AND e.UserID = $UserID AND um.UserID != $UserID  
+                ORDER BY  UserID, IP   ");
                     $IPDupeCount = $DB->record_count();
                     $IPDupes = $DB->to_array();
                     
@@ -279,13 +292,19 @@ $Pages=get_pages($Page,$NumResults,50,9);
                         </td>
                         <td class="center"><?=time_diff($LastTime, 2, true, false, 1)?></td>
                         <td class="center">
+<?
+                            if ($Enabled=='1'){
+?>
                             <form id="speedrecords" action="tools.php" method="post">
                                 <input type="hidden" name="action" value="ban_speed_cheat" />
                                 <input type="hidden" name="userid" value="<?=$UserID?>" />
                                 <input type="hidden" name="maxspeed" value="<?=$MaxUpSpeed?>" />
-                                <!-- <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" /> -->
+                                <input type="hidden" name="banspeed" value="<?=$BanSpeed?>" />
                                 <input type="submit" name="banuser" value="ban" title="ban this user for being a big fat cheat" />
                             </form>
+<?
+                            }
+?>
                         </td>
                     </tr>
 <?

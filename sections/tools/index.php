@@ -79,8 +79,24 @@ switch ($_REQUEST['action']) {
         break;
     case 'ban_speed_cheat':
         if (!check_perms('admin_manage_cheats')) error(403);
-        include(SERVER_ROOT . '/sections/tools/managers/speed_functions.php');
         
+        if ($_POST['banuser'] && is_number($_POST['userid'])){
+            
+            disable_users(array((int)$_POST['userid']), "Disabled for speeding", 2);
+            
+        } elseif ($_POST['banusers'] && is_number($_POST['banspeed']) && $_POST['banspeed']>0){
+            
+            $DB->query("SELECT GROUP_CONCAT(DISTINCT uid SEPARATOR '|') 
+                          FROM xbt_peers_history 
+                         WHERE upspeed >='$_POST[banspeed]' 
+                       ");
+            list($UserIDs) = $DB->next_record();
+            $UserIDs = explode('|', $UserIDs);
+            if ($UserIDs){
+                //error(print_r($UserIDs, true));
+                disable_users($UserIDs, "Disabled for speeding", 2);
+            }
+        }
         header("Location: tools.php?action=speed_cheats&viewspeed=$_POST[banspeed]&banspeed=$_POST[banspeed]");
         break;
     
