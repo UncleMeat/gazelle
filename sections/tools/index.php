@@ -82,7 +82,10 @@ switch ($_REQUEST['action']) {
         
         if ($_POST['banuser'] && is_number($_POST['userid'])){
             
-            disable_users(array((int)$_POST['userid']), "Disabled for speeding", 2);
+            $DB->query("SELECT MAX(upspeed) FROM xbt_peers_history WHERE uid='$_POST[userid]' ");
+            list($Maxspeed)= $DB->next_record();
+            disable_users(array($_POST['userid']), 
+                  "Disabled for speeding (maxspeed=".get_size($Maxspeed)."/s) by $LoggedUser[Username]", 2); 
             
         } elseif ($_POST['banusers'] && is_number($_POST['banspeed']) && $_POST['banspeed']>0){
             
@@ -94,7 +97,8 @@ switch ($_REQUEST['action']) {
             $UserIDs = explode('|', $UserIDs);
             if ($UserIDs){
                 //error(print_r($UserIDs, true));
-                disable_users($UserIDs, "Disabled for speeding", 2);
+                disable_users($UserIDs, 
+                    "Disabled for speeding (mass banned users with speed>".get_size($_POST['banspeed'])."/s) by $LoggedUser[Username]", 2);
             }
         }
         header("Location: tools.php?action=speed_cheats&viewspeed=$_POST[banspeed]&banspeed=$_POST[banspeed]");
