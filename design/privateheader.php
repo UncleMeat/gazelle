@@ -635,9 +635,9 @@ if (isset($ActiveDrive['ID']) ) {
 </div>
     <?php
 }
-if (!$LoggedUser['Donor']) { ?>
+if (!$LoggedUser['Donor'] && strlen(ADVERT_HTML)) { ?>
 <div id="adbar">
-    <script type="text/javascript" language="javascript" charset="utf-8" src="http://adspaces.ero-advertising.com/adspace/198208.js"></script>
+    <?php echo ADVERT_HTML ?>
 </div>
 <?php  } ?>
 <div id="content">
