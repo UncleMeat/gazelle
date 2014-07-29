@@ -636,7 +636,7 @@ if ($DisableRequests!=$Cur['DisableRequests'] && check_perms('users_disable_any'
     }
 }
 
-if ($DisableSig!=$Cur['DisableSig'] && check_perms('users_disable_any')) {
+if ($DisableSig!=$Cur['DisableSignature'] && check_perms('users_disable_any')) {
     $UpdateSet[]="DisableSignature='$DisableSig'";
     $EditSummary[]="Signature priviliges status changed";
     $HeavyUpdates['DisableSignature']=$DisableSig;
