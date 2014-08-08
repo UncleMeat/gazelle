@@ -971,7 +971,7 @@ class text
                 // Check if user is allowed to use moderator tags (different from Advanced, which is determined
                 // by the original post author).
                 // We're using ShowErrors as a proxy for figuring out if we're editing or just viewing
-                if ($this->ShowErrors && $this->AdvancedTagOnly[$TagName] && !check_perms('site_advanced_tags')) {
+                if ($this->ShowErrors && $this->AdvancedTagOnly[$TagName] && !check_perms('site_moderate_forums')) {
                     $this->Errors[] = "<span class=\"error_label\">illegal tag [$TagName]</span>";
                 }
 
