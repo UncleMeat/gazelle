@@ -32,4 +32,4 @@ if ($_POST['submit'] == 'Delete') { //Delete
 $Cache->delete_value('do_not_upload_list');
 
 // Go back
-header('Location: tools.php?action=dnu')
+header('Location: tools.php?action=dnu');
