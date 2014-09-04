@@ -16,13 +16,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
---
--- Database: `gazelle`
---
-CREATE DATABASE IF NOT EXISTS gazelle;
-
-USE gazelle;
-
 -- --------------------------------------------------------
 
 --
@@ -1188,14 +1181,15 @@ CREATE TABLE IF NOT EXISTS `site_options` (
   `AutoDelete` tinyint(1) NOT NULL,
   `DeleteRecordsMins` int(8) NOT NULL,
   `KeepSpeed` bigint(11) NOT NULL,
-  `FreeLeech` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
+  `FreeLeech` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `FullLogging` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `site_options`
 --
  
-INSERT INTO `site_options` VALUES (24,0,720,524288,'0000-00-00 00:00:00');
+INSERT INTO `site_options` VALUES (24,0,720,524288,'0000-00-00 00:00:00',0);
 
 
 -- --------------------------------------------------------
