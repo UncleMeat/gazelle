@@ -35,6 +35,12 @@ if (isset($_GET['viewbanned']) && $_GET['viewbanned']) {
     $ViewInfo .= ' (enabled only)';
 }
 
+if (isset($_GET['viewexcluded']) && $_GET['viewexcluded']) {
+    $EXCLUDED = "";
+} else {
+    $EXCLUDED = "AND nc.UserID IS NULL";
+}
+
 show_header('Speed Cheats','watchlist');
 
 ?>
@@ -66,10 +72,14 @@ show_header('Speed Cheats','watchlist');
                 <td class="center">
                     Viewing: <?=$ViewInfo?> &nbsp; (order: <?="$OrderBy $OrderWay"?>)
                 </td>
-                <td class="center">
-                            <label for="viewbanned" title="Keep Speed">include disabled users </label>
+                <td class="right">
+                            <label for="viewbanned" title="Keep Speed">show disabled users </label>
                         <input type="checkbox" value="1" onchange="change_view()"
                                id="viewbanned" name="viewbanned" <?php  if (isset($_GET['viewbanned']) && $_GET['viewbanned'])echo' checked="checked"'?> />
+			<br>
+                            <label for="viewexcluded" title="Keep Speed">show excluded users </label>
+                        <input type="checkbox" value="1" onchange="change_view()"
+                               id="viewexcluded" name="viewexcluded" <?php  if (isset($_GET['viewexcluded']) && $_GET['viewexcluded'])echo' checked="checked"'?> />
                 </td>
                 <td class="center">
                     <label for="viewspeed" title="View Speed">View records with upload speed over </label>
@@ -171,7 +181,7 @@ $DB->query("SELECT SQL_CALC_FOUND_ROWS
                      LEFT JOIN users_not_cheats AS nc ON nc.UserID=xbt.uid
                      LEFT JOIN users_watch_list AS w ON w.UserID=xbt.uid
                          WHERE (xbt.upspeed)>='$ViewSpeed'
-                           AND nc.UserID IS NULL $WHERE
+                           $EXCLUDED $WHERE
                       GROUP BY xbt.uid $GroupBy
                         $Having
                       ORDER BY $OrderBy $OrderWay

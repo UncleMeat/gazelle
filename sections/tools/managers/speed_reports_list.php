@@ -127,6 +127,11 @@ show_header('Speed Reports','watchlist');
         $WHERE .= " AND um.Enabled='1'";
         $ViewInfo .= ' (enabled only)';
     }
+    if (isset($_GET['viewexcluded']) && $_GET['viewexcluded'] || !isset($_GET['viewexcluded'])) {
+        $EXCLUDED = "";
+    } else {
+        $EXCLUDED = "AND nc.UserID IS NULL";
+    }
 
     $CanManage = check_perms('admin_manage_cheats');
 ?>
@@ -185,10 +190,14 @@ show_header('Speed Reports','watchlist');
                         <a href="?action=speed_records&viewspeed=<?=$ViewSpeed?>&viewbanned=<?=$_GET['viewbanned']?>&order_by=<?=$OrderBy?>&order_way=<?=$OrderWay?>" title="Removes any user or torrent filters for viewing (still applies speed filter)">View All</a>
 <?php                   } ?>
                 </td>
-                <td class="center">
-                            <label for="viewbanned" title="Keep Speed">include disabled users </label>
+                <td class="right">
+                            <label for="viewbanned" title="Keep Speed">show disabled users </label>
                         <input type="checkbox" value="1" onchange="change_view_reports('<?=$_GET['userid']?>','<?=$_GET['torrentid']?>')"
                                id="viewbanned" name="viewbanned" <?php  if (isset($_GET['viewbanned']) && $_GET['viewbanned'])echo' checked="checked"'?> />
+                            <br>
+                            <label for="viewexcluded" title="Keep Speed">show disabled users </label>
+                        <input type="checkbox" value="1" onchange="change_view_reports('<?=$_GET['userid']?>','<?=$_GET['torrentid']?>')"
+                               id="viewexcluded" name="viewexcluded" <?php  if (isset($_GET['viewexcluded']) && $_GET['viewexcluded'] || !isset($_GET['viewexcluded']))echo' checked="checked"'?> />
                 </td>
                 <td class="center">
                     <label for="viewspeed" title="View Speed">View records with upload speed over </label>
@@ -245,7 +254,7 @@ $DB->query("SELECT SQL_CALC_FOUND_ROWS
                      LEFT JOIN torrents_group AS tg ON tg.ID=t.GroupID
                      LEFT JOIN users_not_cheats AS nc ON nc.UserID=xbt.uid
                      LEFT JOIN users_watch_list AS w ON w.UserID=xbt.uid
-                         WHERE $WHERESTART $WHERE
+                         WHERE $WHERESTART $EXCLUDED $WHERE
                       ORDER BY $OrderBy $OrderWay
                          LIMIT $Limit");
 $Records = $DB->to_array();

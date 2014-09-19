@@ -57,7 +57,7 @@ show_header('Zero Stat Cheats','watchlist');
         <tr class="colhead"><td colspan="3">view settings: <span style="float:right;font-weight: normal"><?=$ViewInfo?> &nbsp; (order: <?="$OrderBy $OrderWay"?>)</span> </td></tr>
             <tr class="rowb">
                 <td class="center">
-                            <label for="viewbanned" title="Keep Speed">include disabled users </label>
+                            <label for="viewbanned" title="Keep Speed">show disabled users </label>
                         <input type="checkbox" value="1" onchange="change_zero_view()"
                                id="viewbanned" name="viewbanned" <?php  if (isset($_GET['viewbanned']) && $_GET['viewbanned'])echo' checked="checked"'?> />
                 </td>
