@@ -195,7 +195,7 @@ show_header('Speed Reports','watchlist');
                         <input type="checkbox" value="1" onchange="change_view_reports('<?=$_GET['userid']?>','<?=$_GET['torrentid']?>')"
                                id="viewbanned" name="viewbanned" <?php  if (isset($_GET['viewbanned']) && $_GET['viewbanned'])echo' checked="checked"'?> />
                             <br>
-                            <label for="viewexcluded" title="Keep Speed">show disabled users </label>
+                            <label for="viewexcluded" title="Keep Speed">show excluded users </label>
                         <input type="checkbox" value="1" onchange="change_view_reports('<?=$_GET['userid']?>','<?=$_GET['torrentid']?>')"
                                id="viewexcluded" name="viewexcluded" <?php  if (isset($_GET['viewexcluded']) && $_GET['viewexcluded'] || !isset($_GET['viewexcluded']))echo' checked="checked"'?> />
                 </td>
