@@ -207,8 +207,9 @@ if ($ThreadInfo['NoPoll'] == 0) {
         $TotalVotes = 0;
         $MaxVotes = 0;
     }
-
-    $RevealVoters = in_array($ForumID, $ForumsRevealVoters);
+    // This seems to be only partly implemented.
+    //$RevealVoters = in_array($ForumID, $ForumsRevealVoters);
+    $RevealVoters = check_perms('forums_polls_moderate');
     //Polls lose the you voted arrow thingy
     $DB->query("SELECT Vote FROM forums_polls_votes WHERE UserID='".$LoggedUser['ID']."' AND TopicID='$ThreadID'");
     list($UserResponse) = $DB->next_record();
@@ -311,7 +312,7 @@ if ($ThreadInfo['NoPoll'] == 0) {
                 <li><a href="forums.php?action=change_vote&amp;threadid=<?=$ThreadID?>&amp;auth=<?=$LoggedUser['AuthKey']?>&amp;vote=0">Blank</a> - <?=$StaffVotes[0]?>&nbsp;(<?=number_format(((float) $Votes[0]/$TotalVotes)*100, 2)?>%)</li>
             </ul>
 <?php
-            if ($ForumID == STAFF_FORUM) {
+            if ($ForumID == STAFF_FORUM_ID) {
 ?>
             <br />
             <strong>Votes:</strong> <?=number_format($TotalVotes)?> / <?=$StaffCount ?>
@@ -352,17 +353,17 @@ if ($ThreadInfo['NoPoll'] == 0) {
                             <input type="radio" name="vote" id="answer_0" value="0" /> <label for="answer_0">Blank - Show the results - note: counts as a vote</label><br />
                         </li>
                     </ul>
-<?php       if ($ForumID == STAFF_FORUM) { ?>
+<?php       if ($ForumID == STAFF_FORUM_ID) { ?>
                     <a href="#" onclick="AddPollOption(<?=$ThreadID?>); return false;">[+]</a>
                     <br />
                     <br />
 <?php       } ?>
-                    <input type="button" style="float: left;" onclick="ajax.post('index.php','polls',function (response) {$('#poll_results').raw().innerHTML = response;$('#poll_votes_container').remove()});" value="Vote">
+                    <input type="button" style="float: left;" onclick="ajax.post('index.php','polls',function (response) {$('#poll_results').raw().innerHTML = response;$('#poll_votes_container').remove(); location.reload();});" value="Vote">
                 </form>
             </div>
 <?php }
 
-    if (check_perms('forums_polls_moderate') && !$RevealVoters) {
+    if (check_perms('forums_polls_moderate')) {
 
         if (!$Featured || $Featured == '0000-00-00 00:00:00') { ?>
             <form action="forums.php" method="post">

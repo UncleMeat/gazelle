@@ -120,7 +120,7 @@ if (empty($_POST['question']) || empty($_POST['answers']) || !check_perms('forum
     $DB->query('INSERT INTO forums_polls (TopicID, Question, Answers) VALUES (\''.$TopicID.'\',\''.db_string($Question).'\',\''.db_string(serialize($Answers)).'\')');
     $Cache->cache_value('polls_'.$TopicID, array($Question,$Answers,$Votes,'0000-00-00 00:00:00','0'), 0);
 
-    if ($ForumID == STAFF_FORUM) {
+    if ($ForumID == STAFF_FORUM_ID) {
         send_irc("PRIVMSG ".ADMIN_CHAN." :!mod Poll created by ".$LoggedUser['Username'].": '".$Question."' http://".NONSSL_SITE_URL."/forums.php?action=viewthread&threadid=".$TopicID);
     }
 }

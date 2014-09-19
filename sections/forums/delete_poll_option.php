@@ -10,7 +10,7 @@ $PollOption = $_GET['vote'];
 if (is_number($ThreadID) && is_number($PollOption)) {
     $DB->query("SELECT ForumID FROM forums_topics WHERE ID = $ThreadID");
     list($ForumID) = $DB->next_record();
-    if (!in_array($ForumID, $ForumsRevealVoters)) {
+    if (!check_perms('forums_polls_moderate')) {
         error(403);
     }
 
