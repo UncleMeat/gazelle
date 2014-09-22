@@ -31,9 +31,13 @@ show_header(ucwords($Action)." Request");
                 <input type="hidden" name="action" value="take<?=$Action?>" />
                 <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
                 <input type="hidden" name="id" value="<?=$_GET['id']?>" />
-<?php  if ($Action == 'delete') { ?>
+<?php  if ($Action == 'delete') {
+           if (!check_perms("site_moderate_requests")) { ?>
                 <div class="warning">You will <strong>not</strong> get your bounty back if you delete this request.</div>
-<?php  } elseif ($Action == 'unfill') { ?>
+<?php      } else { ?>
+                <div class="warning">This will not return the user's bounty, staff should unfill all votes to delete the request and return bouty automatically.</div>
+<?php      }
+       } elseif ($Action == 'unfill') { ?>
                 <div class="warning">Unfilling a request without a valid, nontrivial reason will result in a warning.<br/>If in doubt please message the staff and ask for advice first.</div>
 <?php  } ?>
                 <strong>Reason:</strong>
