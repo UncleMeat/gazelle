@@ -63,5 +63,5 @@ if ($LoggedUser['BytesUploaded'] < $Amount) {
     $RequestVotes = get_votes_array($RequestID);
 
     echo json_encode(array( $voteaction, $Bounty,
-                            $RequestVotes['TotalBounty'], count($RequestVotes['Voters']), get_votes_html( $RequestVotes ) ) );
+                            $RequestVotes['TotalBounty'], count($RequestVotes['Voters']), get_votes_html( $RequestVotes, $RequestID ) ) );
 }

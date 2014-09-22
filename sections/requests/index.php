@@ -21,6 +21,9 @@ if (!isset($_REQUEST['action'])) {
         case 'takevote':
             include(SERVER_ROOT.'/sections/requests/takevote.php');
             break;
+        case 'delete_request_vote':
+            include(SERVER_ROOT.'/sections/requests/delete_request_vote.php');
+            break;
         case 'takefill':
             include(SERVER_ROOT.'/sections/requests/takefill.php');
             break;

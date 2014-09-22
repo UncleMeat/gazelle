@@ -38,7 +38,7 @@ function get_votes_array($RequestID)
     return $RequestVotes;
 }
 
-function get_votes_html($RequestVotes)
+function get_votes_html($RequestVotes, $RequestID)
 {
     global $LoggedUser;
 
@@ -62,6 +62,9 @@ function get_votes_html($RequestVotes)
                     </td>
                     <td>
                         <?=$Boldify?'<strong>':''?><?=get_size($User['Bounty'])?><?=$Boldify?'</strong>':''?>
+                    </td>
+                    <td>
+                        <a href="requests.php?action=delete_request_vote&amp;requestid=<?=$RequestID?>&amp;auth=<?=$LoggedUser['AuthKey']?>&amp;voterid=<?=$User['UserID']?>">[-]</a>
                     </td>
                 </tr>
 <?php 	}
