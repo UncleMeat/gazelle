@@ -10,7 +10,7 @@ if (!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
     $OrderWay = 'desc';
 }
 
-if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('Username', 'Staffname', 'Time','Comment'))) {
+if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('Username', 'Staffname', 'Time',  'Count', 'Comment'))) {
     $_GET['order_by'] = 'Time';
     $OrderBy = 'Time';
 } else {
@@ -33,9 +33,10 @@ show_header('Watchlist','watchlist');
     list($Page,$Limit) = page_limit(50);
 
     $DB->query("SELECT SQL_CALC_FOUND_ROWS
-                        wl.UserID, um.Username as Username, StaffID, um2.Username AS Staffname, Time, wl.Comment,
+                        wl.UserID, um.Username as Username, StaffID, um2.Username AS Staffname, Time, Count(xbt.id) as Count, wl.Comment,
                                  ui.Donor, ui.Warned, um.Enabled, um.PermissionID
                   FROM users_watch_list AS wl
+             LEFT JOIN xbt_peers_history AS xbt ON xbt.id
              LEFT JOIN users_main AS um ON um.ID=wl.UserID
              LEFT JOIN users_info AS ui ON ui.UserID=wl.UserID
              LEFT JOIN users_main AS um2 ON um2.ID=wl.StaffID

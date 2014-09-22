@@ -57,8 +57,9 @@ function print_user_list($Userlist,$ListType,$Title,$TitleIcon,$Help)
                 <td class="center"></td>
                 <td class="center"><a href="<?=header_link('Username') ?>">User</a></td>
                 <td class="center"><a href="<?=header_link('Time') ?>">Time added</a></td>
-                <td class="center"><a href="<?=header_link('Staffname') ?>">added by</a></td>
-                <td class="center"><a href="<?=header_link('Comment') ?>">comment</a></td>
+                <td class="center"><a href="<?=header_link('Staffname') ?>">Added by</a></td>
+                <td class="center"><a href="<?=header_link('Staffname') ?>">Record count</a></td>
+                <td class="center"><a href="<?=header_link('Comment') ?>">Comment</a></td>
                 <!--<td class="center" width="100px" title="keep torrent records related to this user">keep torrents</td>-->
                 <td class="center" width="120px"></td>
             </tr>
@@ -70,7 +71,7 @@ function print_user_list($Userlist,$ListType,$Title,$TitleIcon,$Help)
                     </tr>
 <?php             } else {
                 foreach ($Userlist as $Watched) {
-                    list($UserID, $Username, $StaffID, $Staffname, $Time, $Comment,
+                    list($UserID, $Username, $StaffID, $Staffname, $Time, $Count, $Comment,
                                        $IsDonor, $Warned, $Enabled, $ClassID) = $Watched;
                     $row = ($row === 'b' ? 'a' : 'b');
 ?>
@@ -85,6 +86,7 @@ function print_user_list($Userlist,$ListType,$Title,$TitleIcon,$Help)
                             <td class="center"><?=format_username($UserID, $Username, $IsDonor, $Warned, $Enabled, $ClassID, false, false)?></td>
                             <td class="center"><?=time_diff($Time, 2, true, false, 1)?></td>
                             <td class="center"><?=format_username($StaffID, $Staffname)?></td>
+                            <td class="center"><?=$Count?></td>
                             <td class="center" title="<?=$Comment?>"><?=cut_string($Comment, 40)?></td>
                             <!--<td class="center">
                                 <input type="checkbox" name="keeptorrent" <?if($KeepTorrents)echo'checked="checked"'?> value="1" title="if checked keep all torrent records this user is on as well" />
