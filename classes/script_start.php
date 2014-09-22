@@ -648,8 +648,8 @@ function get_user_badges($UserID, $LimitRows = true)
     $UserID = (int) $UserID;
     if ($LimitRows) {
         $extra = "_limit";
-        $RibbonLimit = "LIMIT 24";
         $BarLimit    = "LIMIT 12";
+        $RibbonLimit = "LIMIT 24";
         $MedalLimit  = "LIMIT 12";
     }
     $UserBadges = $Cache->get_value('user_badges_'.$UserID.$extra);
@@ -662,7 +662,7 @@ function get_user_badges($UserID, $LimitRows = true)
                     JOIN badges AS b ON b.ID = ub.BadgeID
                     LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
                     WHERE ub.UserID = $UserID AND b.Display=0
-                    ORDER BY b.Sort $RibbonLimit)
+                    ORDER BY b.Sort $BarLimit)
                 UNION
                     (SELECT
                         ub.ID, ub.BadgeID,  ub.Description,  b.Title, b.Image,
@@ -671,7 +671,7 @@ function get_user_badges($UserID, $LimitRows = true)
                     JOIN badges AS b ON b.ID = ub.BadgeID
                     LEFT JOIN badges_auto AS ba ON b.ID=ba.BadgeID
                     WHERE ub.UserID = $UserID AND b.Display=1
-                    ORDER BY b.Sort $BarLimit)
+                    ORDER BY b.Sort $RibbonLimit)
                 UNION
                     (SELECT
                         ub.ID, ub.BadgeID,  ub.Description,  b.Title, b.Image,
