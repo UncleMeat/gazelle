@@ -63,11 +63,13 @@ function get_votes_html($RequestVotes, $RequestID)
                     <td>
                         <?=$Boldify?'<strong>':''?><?=get_size($User['Bounty'])?><?=$Boldify?'</strong>':''?>
                     </td>
+<?php       if (check_perms("site_moderate_requests")) { ?>
                     <td>
                         <a href="requests.php?action=delete_request_vote&amp;requestid=<?=$RequestID?>&amp;auth=<?=$LoggedUser['AuthKey']?>&amp;voterid=<?=$User['UserID']?>">[-]</a>
                     </td>
                 </tr>
-<?php 	}
+<?php 	    }
+        }
     reset($RequestVotes['Voters']);
     if (!$ViewerVote) {
         foreach ($RequestVotes['Voters'] as $User) {
