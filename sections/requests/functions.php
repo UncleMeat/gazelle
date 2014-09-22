@@ -65,7 +65,7 @@ function get_votes_html($RequestVotes, $RequestID)
                     </td>
 <?php       if (check_perms("site_moderate_requests")) { ?>
                     <td>
-                        <a href="requests.php?action=delete_request_vote&amp;requestid=<?=$RequestID?>&amp;auth=<?=$LoggedUser['AuthKey']?>&amp;voterid=<?=$User['UserID']?>">[-]</a>
+                        <a href="requests.php?action=delete_vote&amp;id=<?=$RequestID?>&amp;auth=<?=$LoggedUser['AuthKey']?>&amp;voterid=<?=$User['UserID']?>">[-]</a>
                     </td>
                 </tr>
 <?php 	    }

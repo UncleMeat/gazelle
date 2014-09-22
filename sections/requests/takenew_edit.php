@@ -169,13 +169,13 @@ if ($NewRequest) {
     $DB->query("UPDATE users_main SET Uploaded = (Uploaded - ".$Bytes.") WHERE ID = ".$LoggedUser['ID']);
     $Cache->delete_value('user_stats_'.$LoggedUser['ID']);
 
-    write_user_log($LoggedUser['ID'], "Removed -". get_size($Bytes). " for new request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] with ". get_size($Bytes). " bounty.");
+    write_user_log($LoggedUser['ID'], "Removed -". get_size($Bytes). " for new request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url]");
 
     $Announce = "'".$Title."' - http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID." - ".implode(" ", $Tags);
 
     send_irc('PRIVMSG #'.NONSSL_SITE_URL.'-requests :'.$Announce);
 
-    write_log("Request $RequestID ($Title) created with " . get_size($Bytes). " bounty by ". $LoggedUser['Username']);
+    write_log("Request $RequestID ($Title) created with " . get_size($Bytes). " bounty by ".$LoggedUser['Username']);
 
 } else {
     $Cache->delete_value('request_'.$RequestID);

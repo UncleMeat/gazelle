@@ -100,14 +100,14 @@ foreach ($UserIDs as $User) {
 }
 
 $RequestVotes = get_votes_array($RequestID);
-write_log("Request ".$RequestID." (".$FullName.") was filled by user ".$FillerID." (".$FillerUsername.") with the torrent ".$TorrentID.", for a ".get_size($RequestVotes['TotalBounty'])." bounty.");
+write_log("Request $RequestID ($FullName) was filled by ".$LoggedUser['Username']." with the torrent ".$TorrentID.", for a ".get_size($RequestVotes['TotalBounty'])." bounty.");
 
 // Give bounty
 $DB->query("UPDATE users_main
             SET Uploaded = (Uploaded + ".$RequestVotes['TotalBounty'].")
             WHERE ID = ".$FillerID);
 
-write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']). " for filling [url=/requests.php?action=view&id={$RequestID}]Request $RequestID ({$Title})[/url] ");
+write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']). " for filling [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
 
 $Cache->delete_value('user_stats_'.$FillerID);
 $Cache->delete_value('request_'.$RequestID);
