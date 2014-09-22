@@ -49,7 +49,7 @@ function print_user_list($Userlist,$ListType,$Title,$TitleIcon,$Help)
         <div class="head"><?=$Title?> &nbsp;<img src="static/common/symbols/<?=$TitleIcon?>.png" alt="view" /><span style="float:right;"><a href="#" onclick="$('#<?=$ListType?>').toggle();this.innerHTML=this.innerHTML=='(hide)'?'(view)':'(hide)';">(hide)</a></span>&nbsp;</div>
         <table id="<?=$ListType?>" class="">
             <tr class="rowa">
-                <td colspan="6" style="text-align: left;color:grey">
+                <td colspan="7" style="text-align: left;color:grey">
                     <?=$Help?>
                 </td>
             </tr>
@@ -58,7 +58,7 @@ function print_user_list($Userlist,$ListType,$Title,$TitleIcon,$Help)
                 <td class="center"><a href="<?=header_link('Username') ?>">User</a></td>
                 <td class="center"><a href="<?=header_link('Time') ?>">Time added</a></td>
                 <td class="center"><a href="<?=header_link('Staffname') ?>">Added by</a></td>
-                <td class="center"><a href="<?=header_link('Staffname') ?>">Record count</a></td>
+                <td class="center"><a href="<?=header_link('Count') ?>">Count</a></td>
                 <td class="center"><a href="<?=header_link('Comment') ?>">Comment</a></td>
                 <!--<td class="center" width="100px" title="keep torrent records related to this user">keep torrents</td>-->
                 <td class="center" width="120px"></td>
