@@ -23,6 +23,20 @@ $Sneaky = ($UserID != $LoggedUser['ID']);
 
 $Data = $Cache->get_value('bookmarks_torrent_'.$UserID.'_full');
 
+if (!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
+    $OrderWay = 'asc'; // For header links
+} else {
+    $_GET['order_way'] = 'desc';
+    $OrderWay = 'desc';
+}
+
+if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('Title', 'Size', 'UploadDate', 'BookmarkDate', 'Snatched', 'Seeders', 'Leechers'))) {
+    $OrderBy = 'BookmarkDate';
+} else {
+    $OrderBy = $_GET['order_by'];
+}
+
+
 if ($Data) {
     $Data = unserialize($Data);
     list($K, list($TorrentList, $CollageDataList)) = each($Data);
@@ -32,11 +46,18 @@ if ($Data) {
         bt.GroupID,
         tg.Image,
         tg.NewCategoryID,
-        bt.Time
+        bt.Time as BookmarkDate,
+	tg.Time as UploadDate,
+        tg.Name as Title,
+	t.Snatched as Snatched,
+	t.Seeders as Seeders,
+	t.Leechers as Leechers,
+	t.Size as Size
         FROM bookmarks_torrents AS bt
         JOIN torrents_group AS tg ON tg.ID=bt.GroupID
+	JOIN torrents AS t ON t.ID=bt.GroupID
         WHERE bt.UserID='$UserID'
-        ORDER BY bt.Time");
+        ORDER BY $OrderBy $OrderWay");
 
     $GroupIDs = $DB->collect('GroupID');
     $CollageDataList=$DB->to_array('GroupID', MYSQLI_ASSOC);
@@ -67,7 +88,7 @@ $Tags = array();
 
 foreach ($TorrentList as $GroupID=>$Group) {
     list($GroupID, $GroupName, $TagList, $Torrents) = array_values($Group);
-    list($GroupID2, $Image, $NewCategoryID, $AddedTime) = array_values($CollageDataList[$GroupID]);
+    list($GroupID2, $Image, $NewCategoryID, $BookmarkDate, $UploadDate) = array_values($CollageDataList[$GroupID]);
 
     // Handle stats and stuff
     $NumGroups++;
@@ -122,7 +143,6 @@ foreach ($TorrentList as $GroupID=>$Group) {
                 <img src="<?= $CatImg ?>" alt="<?= $NewCategories[$NewCategoryID]['tag'] ?>" title="<?= $NewCategories[$NewCategoryID]['tag'] ?>"/>
         </td>
         <td>
-                    <?=$AddExtra?>
                 <strong><?=$DisplayName?></strong>
                 <?php if ($LoggedUser['HideTagsInLists'] !== 1) {
                         echo $TorrentTags;
@@ -130,9 +150,15 @@ foreach ($TorrentList as $GroupID=>$Group) {
 <?php if (!$Sneaky) { ?>
                 <span style="float:left;"><a href="#group_<?=$GroupID?>" onclick="Unbookmark('torrent', <?=$GroupID?>, '');return false;">Remove Bookmark</a></span>
 <?php } ?>
-                <span style="float:right;"><?=time_diff($AddedTime);?></span>
-
-        </td>
+	</td>
+	<td>
+		<?=$AddExtra?>
+		<br></br>
+		<span style="float:right;"><?=time_diff($BookmarkDate);?></span>
+	</td>
+	<td>
+		<span style="float:right;"><?=time_diff($UploadDate);?></span>
+	</td>
         <td class="nobr"><?=get_size($Torrent['Size'])?></td>
         <td><?=number_format($Torrent['Snatched'])?></td>
         <td<?=($Torrent['Seeders']==0)?' class="r00"':''?>><?=number_format($Torrent['Seeders'])?></td>
@@ -259,11 +285,13 @@ if ($CollageCovers != 0) { ?>
         <table class="torrent_table" id="torrent_table">
             <tr class="head">
                 <td><!-- Category --></td>
-                <td width="70%"><strong>Torrents</strong></td>
-                <td>Size</td>
-                <td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
-                <td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>
-                <td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/leechers.png" alt="Leechers" title="Leechers" /></td>
+                <td width="50%"><a href="<?=bookmarks_header_link('Title', 'asc') ?>">Torrents</a></td>
+		<td width="20%"><a href="<?=bookmarks_header_link('BookmarkDate') ?>" style="float:right">Bookmarked</a></td>
+		<td><a href="<?=bookmarks_header_link('UploadDate') ?>">Uploaded</a></td>
+		<td><a href="<?=bookmarks_header_link('Size') ?>">Size</a></td>
+                <td class="sign"><a href="<?=bookmarks_header_link('Snatches') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></a></td>
+                <td class="sign"><a href="<?=bookmarks_header_link('Seeders') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /></a></td>
+                <td class="sign"><a href="<?=bookmarks_header_link('Leechers') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/leechers.png" alt="Leechers" title="Leechers" /></a></td>
             </tr>
 <?=$TorrentTable?>
         </table>
