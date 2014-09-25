@@ -1,28 +1,7 @@
 <?php
 if (!check_perms('users_view_ips')) { error(403); }
+include(SERVER_ROOT . '/sections/common/functions.php');
 
-// The "order by x" links on columns headers
-
-/**
- *
- * @param $SortKey  'new_id', 'new_name', 'joindate', 'IP', 'b_id', 'b_name', 'bandate'
- * @param $DefaultWay 'desc' or 'asc'
- */
-function header_link($SortKey, $DefaultWay = "desc")
-{
-    global $OrderBy, $OrderWay;
-    if ($SortKey == $OrderBy) {
-        if ($OrderWay == "desc") {
-            $NewWay = "asc";
-        } else {
-            $NewWay = "desc";
-        }
-    } else {
-        $NewWay = $DefaultWay;
-    }
-
-    return "tools.php?action=banned_ip_users&amp;order_way=$NewWay&amp;order_by=$SortKey&amp;" . get_url(array('action', 'order_way', 'order_by'));
-}
 if (empty($_GET['order_way']) || $_GET['order_way'] == 'asc') {
     $OrderWay = 'desc'; // For header links
 } else {

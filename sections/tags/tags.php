@@ -1,22 +1,7 @@
 <?php
 define('RESULTS_PER_PAGE', 100);
 
-// The "order by x" links on columns headers
-function header_link($SortKey, $DefaultWay = "desc")
-{
-    global $OrderBy, $OrderWay;
-    if ($SortKey == $OrderBy) {
-        if ($OrderWay == "desc") {
-            $NewWay = "asc";
-        } else {
-            $NewWay = "desc";
-        }
-    } else {
-        $NewWay = $DefaultWay;
-    }
-
-    return "tags.php?order_way=$NewWay&amp;order_by=$SortKey&amp;" . get_url(array('action', 'order_way', 'order_by'));
-}
+include(SERVER_ROOT.'/sections/common/functions.php');
 
 if (!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
     $OrderWay = 'asc'; // For header links

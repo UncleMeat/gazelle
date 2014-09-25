@@ -1,25 +1,10 @@
 <?php
 enforce_login();
 
+include(SERVER_ROOT.'/sections/common/functions.php');
+
 if (!check_perms('admin_manage_site_options')) {
     error(403);
-}
-
-// The "order by x" links on columns headers
-function header_link($SortKey, $DefaultWay = "desc")
-{
-    global $OrderBy, $OrderWay;
-    if ($SortKey == $OrderBy) {
-        if ($OrderWay == "desc") {
-            $NewWay = "asc";
-        } else {
-            $NewWay = "desc";
-        }
-    } else {
-        $NewWay = $DefaultWay;
-    }
-
-    return "tools.php?action=page_log&amp;order_way=$NewWay&amp;order_by=$SortKey&amp;" . get_url(array('action', 'order_way', 'order_by'));
 }
 
 define('PAGELOG_ENTRIES_PER_PAGE', 100);

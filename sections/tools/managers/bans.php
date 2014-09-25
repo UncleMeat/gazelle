@@ -68,23 +68,7 @@ if (isset($_POST['submit'])) {
 }
 
 define('BANS_PER_PAGE', '50');
-
-// The "order by x" links on columns headers
-function header_link($SortKey, $DefaultWay = "desc")
-{
-    global $OrderBy, $OrderWay;
-    if ($SortKey == $OrderBy) {
-        if ($OrderWay == "desc") {
-            $NewWay = "asc";
-        } else {
-            $NewWay = "desc";
-        }
-    } else {
-        $NewWay = $DefaultWay;
-    }
-
-    return "tools.php?action=ip_ban&order_way=" . $NewWay . "&amp;order_by=" . $SortKey . "&amp;" . get_url(array('action', 'order_way', 'order_by'));
-}
+include(SERVER_ROOT . '/sections/common/functions.php');
 
 if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('FromIP', 'Username', 'Staffname', 'EndTime', 'Notes'  ))) {
     $_GET['order_by'] = 'FromIP';

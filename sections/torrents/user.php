@@ -1,26 +1,19 @@
 <?php
+
 if (!check_force_anon($_GET['userid'])) {
     // then you dont get to see any torrents for any uploader!
      error(403);
 }
 
+include(SERVER_ROOT . '/sections/common/functions.php');
 include(SERVER_ROOT . '/sections/bookmarks/functions.php');
 
 $Orders = array('Time', 'Name', 'Seeders', 'Leechers', 'Snatched', 'Size');
-$Ways = array('ASC'=>'Ascending', 'DESC'=>'Descending');
+$Ways = array('asc'=>'Ascending', 'desc'=>'Descending');
 
-// The "order by x" links on columns headers
-function header_link($SortKey,$DefaultWay="DESC")
-{
-    global $Order,$Way,$Document;
-    if ($SortKey==$Order) {
-        if ($Way=="DESC") { $NewWay="ASC"; } else { $NewWay="DESC"; }
-    } else { $NewWay=$DefaultWay; }
-
-    return "$Document.php?way=".$NewWay."&amp;order=".$SortKey."&amp;".get_url(array('way','order'))."#torrents";
-}
-
+$Type = $_GET['type'];
 $UserID = $_GET['userid'];
+
 if (!is_number($UserID)) { error(0); }
 
 if (isset($LoggedUser['TorrentsPerPage'])) {
@@ -37,16 +30,16 @@ if (!empty($_GET['page']) && is_number($_GET['page'])) {
     $Limit = $TorrentsPerPage;
 }
 
-if (!empty($_GET['order']) && in_array($_GET['order'], $Orders)) {
-    $Order = $_GET['order'];
+if (!empty($_GET['order_by']) && in_array($_GET['order_by'], $Orders)) {
+    $OrderBy = $_GET['order_by'];
 } else {
-    $Order = 'Time';
+    $OrderBy = 'Time';
 }
 
-if (!empty($_GET['way']) && array_key_exists($_GET['way'], $Ways)) {
-    $Way = $_GET['way'];
+if (!empty($_GET['order_way']) && array_key_exists($_GET['order_way'], $Ways)) {
+    $OrderWay = $_GET['order_way'];
 } else {
-    $Way = 'DESC';
+    $OrderWay = 'desc';
 }
 
 $SearchWhere = array();
@@ -139,13 +132,13 @@ if ($UserID!=$LoggedUser['ID'] && !check_perms('users_view_anon_uploaders')) {
     $ExtraWhere .= " AND t.Anonymous='0'";
 }
 
-if ((empty($_GET['search']) || trim($_GET['search']) == '') && $Order!='Name') {
+if ((empty($_GET['search']) || trim($_GET['search']) == '') && $OrderBy!='Name') {
     $SQL = "SELECT SQL_CALC_FOUND_ROWS t.GroupID, t.ID AS TorrentID, $Time AS Time, tg.NewCategoryID, tg.Image
         FROM $From
         JOIN torrents_group AS tg ON tg.ID=t.GroupID
         WHERE $UserField='$UserID' $ExtraWhere $SearchWhere
         GROUP BY ".$GroupBy."
-        ORDER BY $Order $Way LIMIT $Limit";
+        ORDER BY $OrderBy $OrderWay LIMIT $Limit";
 } else {
     $DB->query("CREATE TEMPORARY TABLE temp_sections_torrents_user (
         GroupID int(10) unsigned not null,
@@ -187,7 +180,7 @@ if ((empty($_GET['search']) || trim($_GET['search']) == '') && $Order!='Name') {
         WHERE Name LIKE '%".implode("%' AND Name LIKE '%", $Words)."%'";
     }
     $SQL .= "
-        ORDER BY $Order $Way LIMIT $Limit";
+        ORDER BY $OrderBy $OrderWay LIMIT $Limit";
 }
 
 $DB->query($SQL);
@@ -232,14 +225,14 @@ $Pages=get_pages($Page,$TorrentCount,$TorrentsPerPage,8,'#torrents');
                 <tr>
                     <td class="label"><strong>Order by</strong></td>
                     <td>
-                        <select name="order">
+                        <select name="order_by">
 <?php  foreach ($Orders as $OrderText) { ?>
-                            <option value="<?=$OrderText?>" <?php selected('order', $OrderText)?>><?=$OrderText?></option>
+                            <option value="<?=$OrderText?>" <?php selected('order_by', $OrderText)?>><?=$OrderText?></option>
 <?php  }?>
                         </select>&nbsp;
-                        <select name="way">
+                        <select name="order_way">
 <?php  foreach ($Ways as $WayKey=>$WayText) { ?>
-                            <option value="<?=$WayKey?>" <?php selected('way', $WayKey)?>><?=$WayText?></option>
+                            <option value="<?=$WayKey?>" <?php selected('order_way', $WayKey)?>><?=$WayText?></option>
 <?php  }?>
                         </select>
                     </td>
@@ -295,19 +288,19 @@ foreach ($NewCategories as $Cat) {
     <table class="torrent_table">
         <tr class="colhead">
             <td></td>
-            <td><a href="<?=header_link('Name', 'ASC')?>">Torrent</a></td>
+            <td><a href="<?=header_link('Name', 'asc', '#torrents')?>">Torrent</a></td>
                   <td class="center"><span title="Number of Files">F</span></td>
                   <td class="center"><span title="Number of Comments">c</span></td>
-            <td><a href="<?=header_link('Time')?>">Time</a></td>
-            <td><a href="<?=header_link('Size')?>">Size</a></td>
+            <td><a href="<?=header_link('Time', 'desc', '#torrents')?>">Time</a></td>
+            <td><a href="<?=header_link('Size', 'desc', '#torrents')?>">Size</a></td>
             <td class="sign">
-                <a href="<?=header_link('Snatched')?>"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/snatched.png" alt="Snatches" title="Snatches" /></a>
+                <a href="<?=header_link('Snatched', 'desc', '#torrents')?>"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/snatched.png" alt="Snatches" title="Snatches" /></a>
             </td>
             <td class="sign">
-                <a href="<?=header_link('Seeders')?>"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/seeders.png" alt="Seeders" title="Seeders" /></a>
+                <a href="<?=header_link('Seeders', 'desc', '#torrents')?>"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/seeders.png" alt="Seeders" title="Seeders" /></a>
             </td>
             <td class="sign">
-                <a href="<?=header_link('Leechers')?>"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/leechers.png" alt="Leechers" title="Leechers" /></a>
+                <a href="<?=header_link('Leechers', 'desc', '#torrents')?>"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/leechers.png" alt="Leechers" title="Leechers" /></a>
             </td>
         </tr>
 <?php

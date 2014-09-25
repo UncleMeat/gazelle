@@ -23,6 +23,8 @@ $Sneaky = ($UserID != $LoggedUser['ID']);
 
 $Data = $Cache->get_value('bookmarks_torrent_'.$UserID.'_full');
 
+$Type = $_GET['type'];
+
 if (!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
     $OrderWay = 'asc'; // For header links
 } else {
@@ -285,13 +287,13 @@ if ($CollageCovers != 0) { ?>
         <table class="torrent_table" id="torrent_table">
             <tr class="head">
                 <td><!-- Category --></td>
-                <td width="50%"><a href="<?=bookmarks_header_link('Title', 'asc') ?>">Torrents</a></td>
-		<td width="20%"><a href="<?=bookmarks_header_link('BookmarkDate') ?>" style="float:right">Bookmarked</a></td>
-		<td><a href="<?=bookmarks_header_link('UploadDate') ?>">Uploaded</a></td>
-		<td><a href="<?=bookmarks_header_link('Size') ?>">Size</a></td>
-                <td class="sign"><a href="<?=bookmarks_header_link('Snatches') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></a></td>
-                <td class="sign"><a href="<?=bookmarks_header_link('Seeders') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /></a></td>
-                <td class="sign"><a href="<?=bookmarks_header_link('Leechers') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/leechers.png" alt="Leechers" title="Leechers" /></a></td>
+                <td width="50%"><a href="<?=header_link('Title', 'asc') ?>">Torrents</a></td>
+		<td width="20%"><a href="<?=header_link('BookmarkDate') ?>" style="float:right">Bookmarked</a></td>
+		<td><a href="<?=header_link('UploadDate') ?>">Uploaded</a></td>
+		<td><a href="<?=header_link('Size') ?>">Size</a></td>
+                <td class="sign"><a href="<?=header_link('Snatches') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></a></td>
+                <td class="sign"><a href="<?=header_link('Seeders') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /></a></td>
+                <td class="sign"><a href="<?=header_link('Leechers') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/leechers.png" alt="Leechers" title="Leechers" /></a></td>
             </tr>
 <?=$TorrentTable?>
         </table>

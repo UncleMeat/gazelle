@@ -1,24 +1,11 @@
 <?php
 if (!check_perms('users_view_ips')) { error(403); }
 
+include(SERVER_ROOT . '/sections/common/functions.php');
+
 define('USERS_PER_PAGE', 50);
 define('IP_OVERLAPS', 5);
 
-function header_link($SortKey, $DefaultWay = "desc")
-{
-    global $OrderBy, $OrderWay;
-    if ($SortKey == $OrderBy) {
-        if ($OrderWay == "desc") {
-            $NewWay = "asc";
-        } else {
-            $NewWay = "desc";
-        }
-    } else {
-        $NewWay = $DefaultWay;
-    }
-
-    return "tools.php?action=dupe_ips&amp;order_way=$NewWay&amp;order_by=$SortKey&amp;" . get_url(array('action', 'order_way', 'order_by'));
-}
 if (empty($_GET['order_way']) || $_GET['order_way'] == 'asc') {
     $OrderWay = 'asc'; // For header links
 } else {

@@ -2,26 +2,10 @@
 define('COLLAGES_PER_PAGE', 25);
 
 include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
+include(SERVER_ROOT.'/sections/common/functions.php');
 $Text = new TEXT;
 
 list($Page,$Limit) = page_limit(COLLAGES_PER_PAGE);
-
-// The "order by x" links on columns headers
-function header_link($SortKey, $DefaultWay = "desc")
-{
-    global $OrderBy, $OrderWay;
-    if ($SortKey == $OrderBy) {
-        if ($OrderWay == "desc") {
-            $NewWay = "asc";
-        } else {
-            $NewWay = "desc";
-        }
-    } else {
-        $NewWay = $DefaultWay;
-    }
-
-    return "collages.php?order_way=" . $NewWay . "&amp;order_by=" . $SortKey . "&amp;" . get_url(array('order_way', 'order_by'));
-}
 
 if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('Name', 'NumTorrents', 'StartDate', 'LastDate', 'Username'  ))) {
     $_GET['order_by'] = 'LastDate';

@@ -4,22 +4,6 @@ function can_bookmark($Type)
     return in_array($Type, array('torrent', 'collage', 'request'));
 }
 
-function bookmarks_header_link($SortKey, $DefaultWay = "desc")
-{
-    global $Type, $OrderBy, $OrderWay;
-    if ($SortKey == $OrderBy) {
-        if ($OrderWay == "desc") {
-            $NewWay = "asc";
-        } else {
-            $NewWay = "desc";
-        }
-    } else {
-        $NewWay = $DefaultWay;
-    }
-
-    return "bookmarks.php?type=$Type&amp;order_way=$NewWay&amp;order_by=$SortKey&amp;" . get_url(array('action', 'order_way', 'order_by'));
-}
-
 // Recommended usage:
 // list($Table, $Col) = bookmark_schema('torrent');
 function bookmark_schema($Type)

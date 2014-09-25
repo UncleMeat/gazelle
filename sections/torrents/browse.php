@@ -20,25 +20,10 @@
  *
  * *********************************************************************** */
 
-include(SERVER_ROOT . '/sections/bookmarks/functions.php');
+include(SERVER_ROOT . '/sections/common/functions.php');
 include(SERVER_ROOT . '/sections/torrents/functions.php');
+include(SERVER_ROOT . '/sections/bookmarks/functions.php');
 
-// The "order by x" links on columns headers
-function header_link($SortKey, $DefaultWay = "desc")
-{
-    global $OrderBy, $OrderWay;
-    if ($SortKey == $OrderBy) {
-        if ($OrderWay == "desc") {
-            $NewWay = "asc";
-        } else {
-            $NewWay = "desc";
-        }
-    } else {
-        $NewWay = $DefaultWay;
-    }
-
-    return "torrents.php?order_way=" . $NewWay . "&amp;order_by=" . $SortKey . "&amp;" . get_url(array('order_way', 'order_by'));
-}
 
 if (isset($LoggedUser['TorrentsPerPage'])) {
     $TorrentsPerPage = $LoggedUser['TorrentsPerPage'];

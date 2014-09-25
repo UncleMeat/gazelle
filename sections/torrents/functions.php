@@ -1,4 +1,5 @@
 <?php
+
 function get_group_info($GroupID, $Return = true)
 {
     global $Cache, $DB;

@@ -1,7 +1,10 @@
 <?php
+
+include(SERVER_ROOT.'/sections/common/functions.php');
+
 $Includes = array('all','own','other');
-$Orders = array('None', 'TagID', 'TagName', 'AdderID', 'AddedBy', 'IsAdder', 'IsOwner', 'TorrentID', 'TorrentName','UploaderID','Uploader','Votes','Way');
-$Ways = array('ASC'=>'Ascending', 'DESC'=>'Descending');
+$Orders = array('TagID', 'TagName', 'AdderID', 'AddedBy', 'IsAdder', 'IsOwner', 'TorrentID', 'TorrentName','UploaderID','Uploader','Votes','Way');
+$Ways = array('asc'=>'Ascending', 'desc'=>'Descending');
 
 if (isset($_GET['userid'])) $UserID = $_GET['userid'];
 else $UserID = $LoggedUser['ID'];
@@ -13,16 +16,6 @@ $Perms = get_permissions($User['PermissionID']);
 $UserClass = $Perms['Class'];
 
 if (!check_force_anon($UserID) || !check_paranoia('tags', $User['Paranoia'], $UserClass, $UserID)) { error(PARANOIA_MSG); }
-
-function header_link($SortKey,$DefaultWay="DESC")
-{
-    global $Order,$Way,$Document;
-    if ($SortKey==$Order) {
-        if ($Way=="DESC") { $NewWay="ASC"; } else { $NewWay="DESC"; }
-    } else { $NewWay=$DefaultWay; }
-
-    return "$Document.php?way=".$NewWay."&amp;order=".$SortKey."&amp;".get_url(array('way','order'));
-}
 
 if (!empty($_GET['include']) && in_array($_GET['include'], $Includes)) {
     $Include = $_GET['include'];
@@ -48,21 +41,17 @@ if (!empty($_GET['page']) && is_number($_GET['page'])) {
     $Limit = $TorrentsPerPage;
 }
 
-if (!empty($_GET['order']) && in_array($_GET['order'], $Orders) ) {
-    $Order = $_GET['order'];
+if (empty($_GET['order_by']) || !in_array($_GET['order_by'], $Orders) ) {
+    $OrderBy = 'TagName';
 } else {
-    $Order = 'None';
-    $_GET['order'] = $Order;
+    $OrderBy = $_GET['order_by'];;
 }
 
-if (!empty($_GET['way']) && array_key_exists($_GET['way'], $Ways)) {
-    $Way = $_GET['way'];
+if (!empty($_GET['order_way']) && array_key_exists($_GET['order_way'], $Ways)) {
+    $OrderWay = $_GET['order_way'];
 } else {
-    $Way = 'DESC';
+    $OrderWay = 'desc';
 }
-
-if ($Order == 'None') $ORDERBY = '';
-else $ORDERBY = " ORDER BY $Order $Way ";
 
 if ($_GET['type']=='votes') {
     $TitleEnd = "'s voted on tags";
@@ -114,7 +103,7 @@ show_header( "$User[Username]$TitleEnd" );
                  LEFT JOIN users_main AS um2 ON um2.ID=t.UserID
                      WHERE ttv.UserID = '$UserID'
                         $AND_WHERE
-                        $ORDERBY
+                        ORDER BY $OrderBy $OrderWay
                         LIMIT $Limit");
     } else {
         $DB->query("SELECT SQL_CALC_FOUND_ROWS
@@ -131,7 +120,7 @@ show_header( "$User[Username]$TitleEnd" );
                  LEFT JOIN torrents_tags_votes AS ttv ON ttv.TagID=tags.ID AND ttv.GroupID=tt.GroupID AND ttv.UserID='$UserID'
                      WHERE tt.UserID = '$UserID'
                         $AND_WHERE
-                        $ORDERBY
+                        ORDER BY $OrderBy $OrderWay
                         LIMIT $Limit");
     }
 
@@ -148,7 +137,7 @@ show_header( "$User[Username]$TitleEnd" );
     <table>
         <tr class="colhead">
             <td>Tag <span style="margin-left:60px">
-                    <a href="<?=header_link('TagID')?>" title="sort by tag ID">(id)</a> <a href="<?=header_link('TagName', 'ASC')?>" title="sort by Tag Name">(az)</a>
+                    <a href="<?=header_link('TagID')?>" title="sort by tag ID">(id)</a> <a href="<?=header_link('TagName', 'asc')?>" title="sort by Tag Name">(az)</a>
                 </span>
             </td>
             <td class="right"><a href="<?=header_link('IsAdder')?>" title="sort by is tag adder">adder</a></td>
@@ -156,7 +145,7 @@ show_header( "$User[Username]$TitleEnd" );
             <td><a href="<?=header_link('Way')?>" title="sort by vote direction">Way</a></td>
             <td><a href="<?=header_link('Votes')?>" title="sort by number of votes">Votes</a></td>
             <td>Torrent <span style="margin-left:60px">
-                    <a href="<?=header_link('TorrentID')?>" title="sort by torrent ID">(id)</a> <a href="<?=header_link('TorrentName', 'ASC')?>" title="sort by torrent name">(az)</a>
+                    <a href="<?=header_link('TorrentID')?>" title="sort by torrent ID">(id)</a> <a href="<?=header_link('TorrentName', 'asc')?>" title="sort by torrent name">(az)</a>
                 </span>
             </td>
             <td class="right"><a href="<?=header_link('IsOwner')?>" title="sort by is torrent owner">owner</a></td>
