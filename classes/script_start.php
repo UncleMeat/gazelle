@@ -3004,6 +3004,7 @@ function get_symbol_url($image)
 $Debug->set_flag('ending function definitions');
 //Include /sections/*/index.php
 $Document = basename(parse_url($_SERVER['SCRIPT_FILENAME'], PHP_URL_PATH), '.php');
+if ($Document == 'details') $Document = 'torrents';
 if (!preg_match('/^[a-z0-9]+$/i', $Document)) {
     error(404);
 }
