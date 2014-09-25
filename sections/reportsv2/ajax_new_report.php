@@ -351,7 +351,7 @@ $DB->query("SELECT
                         </td>
                     </tr>
                     <tr>
-                        <td class="label"><strong>Extra</strong> Log Message:</td>
+                        <td class="label">SiteLog Message:</td>
                         <td>
                             <input type="text" name="log_message" id="log_message<?=$ReportID?>" class="long" <?php  if ($ExtraIDs) {
                                         $Extras = explode(" ", $ExtraIDs);
@@ -362,7 +362,7 @@ $DB->query("SELECT
                                         echo 'value="'.trim($Value).'"';
                                     } ?>/>
                         </td>
-                        <td class="label"><strong>Extra</strong> Staff Notes:</td>
+                        <td class="label">Extra Staff Notes:</td>
                         <td>
                             <input type="text" name="admin_message" id="admin_message<?=$ReportID?>" class="long" />
                         </td>
