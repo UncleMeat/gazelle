@@ -149,7 +149,7 @@ ul.thin li { margin:0px 0px; padding:0px; }
     min-width: 980px;
     max-width: 1200px;
     background-color: #060606;
-    margin: 0px auto 0px auto;
+    margin: 10px auto 0px auto;
     padding: 0.6em 0.6em 30px;
     border: 0px;
     overflow: hidden;
@@ -288,7 +288,7 @@ table.userinfo_stats td {
     padding: 2px 20px 4px;
     position: relative;
     height: 30px;
-    font-size: 1.3em;
+    font-size: 11px;
 }
 
 #footer_bottom {
