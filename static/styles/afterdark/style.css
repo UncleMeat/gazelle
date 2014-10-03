@@ -348,7 +348,7 @@ table.userinfo_stats td {
     top: 15px;
     left: 0px;
     background-color: #000000;
-    z-index: 10px;
+    z-index: 1;
 	box-shadow: 3px 3px 10px rgba(0,0,0,.5);
 }
 
@@ -1923,7 +1923,7 @@ a.bb_button {
     padding:3px 6px; 
     background:#111;
     cursor:pointer;
-    color: #333; 
+    color: #4169E1; 
     border: 1px solid #444;
 }
 
@@ -2655,6 +2655,7 @@ blockquote.bbcode.error code.error {
 }
 
 img[src$="leechers.png"] {
+	font-size: 0px;
 	width: 0px;
 	height: 0px;
 	padding: 15px 11px 0px 0px;
@@ -2664,6 +2665,7 @@ img[src$="leechers.png"] {
 }
 
 img[src$="seeders.png"] {
+	font-size: 0px;
 	width: 0px;
 	height: 0px;
 	padding: 15px 11px 0px 0px;
@@ -2673,6 +2675,7 @@ img[src$="seeders.png"] {
 }
 
 img[src$="snatched.png"] {
+	font-size: 0px;
 	width: 0px;
 	height: 0px;
 	padding: 15px 15px 0px 0px;
