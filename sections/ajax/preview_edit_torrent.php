@@ -23,5 +23,7 @@ echo '
                             <h3>Description</h3>
                             <br />
                             <div class="box pad">
+                            <div class="body">
             '.$Text->full_format($Content, get_permissions_advtags($AuthorID), true).'
+                            </div>
                             </div>';
