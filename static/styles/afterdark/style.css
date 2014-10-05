@@ -255,6 +255,10 @@ span.infinity {
     display:inline;
 }
 
+#header_bottom li > ul > li {
+	margin: 0px !important;
+}
+
 table.userinfo_stats {
     margin-top: 10px;
 }
