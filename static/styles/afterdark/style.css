@@ -1021,7 +1021,7 @@ table.boxstat td:first-child {
 }
 
 .details .middle_column {
-    margin: 0px 270px 0px 175px;
+    margin: 0px 270px 0px 0px;
 }
 .middle_column table {
     margin-top: 20px;
