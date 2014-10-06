@@ -79,6 +79,12 @@ switch ($_REQUEST['action']) {
     case 'get_response':
         require 'ajax_get_response.php';
         break;
+    case 'get_edit':
+        require 'ajax_get_edit.php';
+        break;
+    case 'get_message':
+        require 'get_message.php';
+        break;
     case 'delete_response':
         require 'ajax_delete_response.php';
         break;
@@ -87,6 +93,15 @@ switch ($_REQUEST['action']) {
         break;
     case 'preview':
         require 'ajax_preview_response.php';
+        break;
+    case 'mark_read':
+        require 'markread.php';
+        break;
+    case 'mark_unread':
+        require 'markunread.php';
+        break;
+    case 'takeedit':
+        require 'takeedit.php';
         break;
 
     case 'user_inbox': // so staff can access the user interface too

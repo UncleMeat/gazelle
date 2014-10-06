@@ -61,7 +61,7 @@ list($NumMy, $NumUnanswered, $NumOpen) = get_num_staff_pms($LoggedUser['ID'], $L
 <?php
 
 // List common responses
-$DB->query("SELECT ID, Message, Name FROM staff_pm_responses ORDER BY ID DESC");
+$DB->query("SELECT ID, Message, Name FROM staff_pm_responses ORDER BY Name ASC");
 while (list($ID, $Message, $Name) = $DB->next_record()) {
 
 ?>

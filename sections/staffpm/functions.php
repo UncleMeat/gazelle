@@ -1,4 +1,20 @@
 <?php
+function make_staffpm_note($Message, $ConvID)
+{
+        global $DB;
+        $DB->query("SELECT ID, Message FROM staff_pm_messages WHERE ConvID=$ConvID AND IsNotes");
+        if (list($ID, $Notes) = $DB->next_record()) {
+            $Notes = $Message."[br]".$Notes;
+            $DB->query("UPDATE staff_pm_messages SET Message='$Notes' WHERE ID=$ID AND IsNotes");
+        } else {
+            $DB->query("
+                INSERT INTO staff_pm_messages
+                    (UserID, SentDate, Message, ConvID, IsNotes)
+                VALUES
+                    (".$LoggedUser['ID'].", '".sqltime()."', '$Message', $ConvID, TRUE)"
+            );
+        }
+}
 function get_num_staff_pms($UserID, $UserLevel)
 {
         global $DB, $Cache;

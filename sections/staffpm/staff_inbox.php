@@ -129,12 +129,14 @@ if ($DB->record_count() == 0) {
         $UserInfo = user_info($UserID);
         $UserStr = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID']);
 
+        $AssignedStr = format_username();
+
         // Get assigned
         if ($AssignedToUser == '') {
             // Assigned to class
-            $Assigned = ($Level == 0) ? "First Line Support" : $ClassLevels[$Level]['Name'];
+            $Assigned = ($Level == 0) ? '<span class="rank" style="color:#49A5FF">First Line Support</span>' : make_class_string($ClassLevels[$Level]['ID'], TRUE);
             // No + on Sysops
-            if ($Assigned != 'Sysop') { $Assigned .= "+"; }
+            if ($Level != 1000) { $Assigned .= "+"; }
 
         } else {
             // Assigned to user
@@ -142,6 +144,8 @@ if ($DB->record_count() == 0) {
             $Assigned = format_username($AssignedToUser, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID']);
 
         }
+
+        $StatusStr = $Status == "Open" ? '<span style="color:green">Open</span>' : '<span style="color:red">Unanswered</span>';
 
         // Get resolver
         if ($ViewString == 'Resolved') {
@@ -162,7 +166,7 @@ if ($DB->record_count() == 0) {
 <?php 				if ($ViewString == 'Resolved') { ?>
                     <td><?=$ResolverStr?></td>
 <?php 				} else { ?>
-                              <td><?=$Status?></td>
+                              <td><?=$StatusStr?></td>
 <?php 				} ?>
                 </tr>
 <?php

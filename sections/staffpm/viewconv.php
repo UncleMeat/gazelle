@@ -12,6 +12,8 @@ if ($ConvID = (int) $_GET['id']) {
     $DB->query("SELECT Subject, UserID, Level, AssignedToUser, Unread, Status, ResolverID FROM staff_pm_conversations WHERE ID=$ConvID");
     list($Subject, $UserID, $Level, $AssignedToUser, $Unread, $Status, $ResolverID) = $DB->next_record();
 
+    $TargetUserID = $UserID;
+
     if (!(($UserID == $LoggedUser['ID']) || ($AssignedToUser == $LoggedUser['ID']) || (($Level > 0 && $Level <= $LoggedUser['Class']) || ($Level == 0 && $IsFLS)))) {
     // User is trying to view someone else's conversation
         error(403);
@@ -70,16 +72,16 @@ if ($ConvID = (int) $_GET['id']) {
 
 <?php
     // Get messages
-    $StaffPMs = $DB->query("SELECT UserID, SentDate, Message FROM staff_pm_messages WHERE ConvID=$ConvID ORDER BY SentDate");
+    $StaffPMs = $DB->query("SELECT ID, UserID, EditedUserID, EditedTime, SentDate, Message FROM staff_pm_messages WHERE ConvID=$ConvID AND NOT IsNotes ORDER BY SentDate");
 
-    while (list($UserID, $SentDate, $Message) = $DB->next_record()) {
+    while (list($ID, $UserID, $EditedUserID, $EditedTime, $SentDate, $Message) = $DB->next_record()) {
         // Set user string
+        $UserInfo = user_info($UserID);
         if ($UserID == $OwnerID) {
             // User, use prepared string
             $UserString = $UserStr;
         } else {
             // Staff/FLS
-            $UserInfo = user_info($UserID);
             $UserString = format_username($UserID, $UserInfo['Username'], $UserInfo['Donor'], $UserInfo['Warned'], $UserInfo['Enabled'], $UserInfo['PermissionID'], $UserInfo['Title'], true, $UserInfo['GroupPermissionID'], $IsFLS);
         }
             // determine if conversation was started by user or not (checks first record for userID)
@@ -108,17 +110,50 @@ if ($ConvID = (int) $_GET['id']) {
 ?>
             <div class="head">
                 <?=$UserString;?>
+                - <a href="#message" onclick="Quote('<?=$ID?>','<?=$UserInfo['Username']?>');">[Quote]</a>
+<?php if($EditedUserID) {
+          $LastUser['Class'] = get_permissions(user_info($EditedUserID)['PermissionID'])['Class'];
+          $LastUser['ID'] = $EditedUserID;
+      } else {
+          $LastUser['Class'] = get_permissions(user_info($UserID)['PermissionID'])['Class'];
+          $LastUser['ID'] = $UserID;
+      }
+      if ($IsStaff && (($LoggedUser['Class'] > $LastUser['Class'])||($LoggedUser['ID'] == $LastUser['ID']))) { ?>
+                - <a href="#message<?=$ID?>" onclick="Edit_Form('<?=$ID?>','<?=$Key?>');">[Edit]</a>
+<?php } ?>
                 <span class="small" style="float:right">
-                <?=time_diff($SentDate, 2, true);?>
+                    <span id="bar<?=$ID?>" style="padding-right: 3px></span>
+                    <?=time_diff($SentDate, 2, true);?>
                 </span>
             </div>
         <div class="box vertical_space">
-            <div class="body"><?=$Text->full_format($Message, get_permissions_advtags($UserID))?></div>
+            <div id="message<?=$ID?>">
+                <div class="body"><?=$Text->full_format($Message, get_permissions_advtags($UserID))?></div>
+<?php if ($EditedUserID) {
+    $EditedUserInfo = user_info($EditedUserID); ?>
+                    <div class="post_footer">
+<?php     if( $IsStaff) { ?>
+                    <a href="#message<?=$ID?>" onclick="LoadEdit(<?=$ID?>, 1); return false;">&laquo;</a>
+<?php     } ?>
+                    <span class="editedby">Last edited by
+                            <?=format_username($EditedUserID, $EditedUserInfo['Username']) ?> <?=time_diff($EditedTime,2,true,true)?>
+                            </span>
+                    </div>
+<?php   } ?>
+            </div>
         </div>
-        <div align="center" style="display: none"></div>
 <?php
         $DB->set_query_id($StaffPMs);
-    }
+    } ?>
+
+<?php   $DB->query("SELECT ID, Message FROM staff_pm_messages WHERE ConvID=$ConvID AND IsNotes");
+        if ((list($NoteID, $NotesMessage) = $DB->next_record()) && ($IsStaff || $IsFLS) && !($TargetUserID == $LoggedUser['ID'])) { ?>
+            <div class="head">StaffPM Notes</div>
+                <div class="box vertical_space">
+                    <div id="Notes" name="Notes" class="body"><?=$Text->full_format($NotesMessage, get_permissions_advtags($UserID))?></div>
+                </div>
+            <div align="center" style="display: none"></div>
+<?php   }
 
     // Common responses
     if ($IsFLS && $Status != 'Resolved') {
@@ -131,7 +166,7 @@ if ($ConvID = (int) $_GET['id']) {
                     <option id="first_common_response">Select a message</option>
 <?php
         // List common responses
-        $DB->query("SELECT ID, Name FROM staff_pm_responses");
+        $DB->query("SELECT ID, Name FROM staff_pm_responses ORDER BY Name ASC");
         while (list($ID, $Name) = $DB->next_record()) {
 ?>
                     <option value="<?=$ID?>"><?=$Name?></option>
@@ -174,7 +209,6 @@ if ($ConvID = (int) $_GET['id']) {
                        <?php  $Text->display_bbcode_assistant("message", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
                     <textarea id="message" name="message" class="long" rows="10"></textarea>
                     </div><br />
-                    <input type="button" id="previewbtn" value="Preview" style="margin-right: 40px;" onclick="PreviewMessage();" />
 <?php               }   ?>
 <?php
     // Assign to
@@ -233,7 +267,7 @@ if ($ConvID = (int) $_GET['id']) {
             $Selected = ($AssignedToUser == $ID) ? ' selected="selected"' : '';
 ?>
                             <option value="user_<?=$ID?>"<?=$Selected?>><?=$Name?></option>
-<?php 		} ?>
+<?php   } ?>
                         </optgroup>
                     </select>
                     <input type="button" onClick="Assign();" value="Assign" />
@@ -243,12 +277,24 @@ if ($ConvID = (int) $_GET['id']) {
 <?php 	}
 
     if ($Status != 'Resolved') {
-                  if ($UserInitiated || $IsFLS) { // as staff can now start a staff - user conversation check to see if user should be able to resolve  ?>
+                  if($Status == "Unanswered" && $IsStaff) {?>
+                      <input type="button" value="Mark as read" onClick="location.href='staffpm.php?action=mark_read&id=<?=$ConvID?>&return=1';"/>
+<?php             } else if ($Status == "Open" && $IsStaff) { ?>
+                      <input type="button" value="Mark as unread" onClick="location.href='staffpm.php?action=mark_unread&id=<?=$ConvID?>&return=1';"/>
+<?php             }
+                  if ($UserInitiated || $IsFLS) { // as staff can now start a staff - user conversation check to see if user should be able to resolve ?>
                     <input type="button" value="Resolve" onClick="location.href='staffpm.php?action=resolve&id=<?=$ConvID?>';" />
-<?php 			}
-                  if ($IsFLS) {  //Moved by request ?>
-                    <input type="button" value="Common answers" onClick="$('#common_answers').toggle();" />
-<?php 			} ?>
+<?php             } ?>
+                    <br><br/>
+<?php               if ($Status != 'Resolved') {    ?>
+                        <input type="button" id="previewbtn" value="Preview" style="margin-right: 40px;" onclick="PreviewMessage();" />
+<?php               }
+                    if ($IsFLS) { ?>
+                        <input type="button" value="Common answers" onClick="$('#common_answers').toggle();" />
+<?php               }
+                  if ($IsStaff) { ?>
+                    <input type="submit" name='note' value="Save as note" />
+<?php             } ?>
                     <input type="submit" value="Send message" />
 <?php 	} else {
             // if ($UserInitiated || $IsFLS) {  ?>

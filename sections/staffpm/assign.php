@@ -4,6 +4,8 @@ if (!($IsFLS)) {
     error(403);
 }
 
+include(SERVER_ROOT.'/sections/staffpm/functions.php');
+
 if ($ConvID = (int) $_GET['convid']) {
     // FLS, check level of conversation
     $DB->query("SELECT Level FROM staff_pm_conversations WHERE ID=$ConvID");
@@ -27,6 +29,8 @@ if ($ConvID = (int) $_GET['convid']) {
             }
 
             $DB->query("UPDATE staff_pm_conversations SET Status='Unanswered', Level=".$Level." WHERE ID=$ConvID");
+            $Message = sqltime()." - Assigned to ".$_GET['to']."  by ".$LoggedUser['Username'];
+            make_staffpm_note($Message, $ConvID);
             header('Location: staffpm.php');
         } else {
             error(404);
@@ -49,6 +53,8 @@ if ($ConvID = (int) $_GET['convid']) {
         if ($LevelType == 'class') {
             // Assign to class
             $DB->query("UPDATE staff_pm_conversations SET Status='Unanswered', Level=$NewLevel, AssignedToUser=NULL WHERE ID=$ConvID");
+            $Message = sqltime()." - Assigned to ".$ClassLevels[$NewLevel]['Name']."  by ".$LoggedUser['Username'];
+            make_staffpm_note($Message, $ConvID);
         } else {
             $UserInfo = user_info($NewLevel);
             $Level    = $Classes[$UserInfo['PermissionID']]['Level'];
@@ -58,6 +64,8 @@ if ($ConvID = (int) $_GET['convid']) {
 
             // Assign to user
             $DB->query("UPDATE staff_pm_conversations SET Status='Unanswered', AssignedToUser=$NewLevel, Level=$Level WHERE ID=$ConvID");
+            $Message = sqltime()." - Assigned to ".$UserInfo['Username']."  by ".$LoggedUser['Username'];
+            make_staffpm_note($Message, $ConvID);
 
         }
         echo '1';
