@@ -19,9 +19,11 @@ if ($ConvID = (int) $_GET['convid']) {
             switch ($_GET['to']) {
                 case 'staff' :  // in this context 'staff' == Mod Pervs
                     $Level = 500; //  650;
+                    $ClassName = 'Mods';
                     break;
                 case 'admin' :  // in this context 'admin' == Admins+
                     $Level = 600; // 700;
+                    $ClassName = 'Admins';
                     break;
                 default :
                     error(404);
@@ -29,7 +31,7 @@ if ($ConvID = (int) $_GET['convid']) {
             }
 
             $DB->query("UPDATE staff_pm_conversations SET Status='Unanswered', Level=".$Level." WHERE ID=$ConvID");
-            $Message = sqltime()." - Assigned to ".$_GET['to']."  by ".$LoggedUser['Username'];
+            $Message = sqltime()." - Assigned to ".$ClassName."  by ".$LoggedUser['Username'];
             make_staffpm_note($Message, $ConvID);
             header('Location: staffpm.php');
         } else {
@@ -53,7 +55,8 @@ if ($ConvID = (int) $_GET['convid']) {
         if ($LevelType == 'class') {
             // Assign to class
             $DB->query("UPDATE staff_pm_conversations SET Status='Unanswered', Level=$NewLevel, AssignedToUser=NULL WHERE ID=$ConvID");
-            $Message = sqltime()." - Assigned to ".$ClassLevels[$NewLevel]['Name']."  by ".$LoggedUser['Username'];
+            $ClassName = $NewLevel == 0 ? 'FLS' : $ClassLevels[$NewLevel]['Name'];
+            $Message = sqltime()." - Assigned to ".$ClassName."  by ".$LoggedUser['Username'];
             make_staffpm_note($Message, $ConvID);
         } else {
             $UserInfo = user_info($NewLevel);

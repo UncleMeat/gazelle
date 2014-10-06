@@ -11,7 +11,7 @@ function make_staffpm_note($Message, $ConvID)
                 INSERT INTO staff_pm_messages
                     (UserID, SentDate, Message, ConvID, IsNotes)
                 VALUES
-                    (".$LoggedUser['ID'].", '".sqltime()."', '$Message', $ConvID, TRUE)"
+                    (0, '".sqltime()."', '$Message', $ConvID, TRUE)"
             );
         }
 }

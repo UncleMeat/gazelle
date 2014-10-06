@@ -149,7 +149,7 @@ if ($ConvID = (int) $_GET['id']) {
 <?php   $DB->query("SELECT ID, Message FROM staff_pm_messages WHERE ConvID=$ConvID AND IsNotes");
         if ((list($NoteID, $NotesMessage) = $DB->next_record()) && ($IsStaff || $IsFLS) && !($TargetUserID == $LoggedUser['ID'])) { ?>
             <div class="head">StaffPM Notes</div>
-                <div class="box vertical_space">
+                <div class="box vertical_space scrollbox" style="max-height:200px;">
                     <div id="Notes" name="Notes" class="body"><?=$Text->full_format($NotesMessage, get_permissions_advtags($UserID))?></div>
                 </div>
             <div align="center" style="display: none"></div>
@@ -210,11 +210,21 @@ if ($ConvID = (int) $_GET['id']) {
                     <textarea id="message" name="message" class="long" rows="10"></textarea>
                     </div><br />
 <?php               }   ?>
+<?php             if ($Status != 'Resolved') {    ?>
+                    <input type="button" id="previewbtn" value="Preview" style="margin-right: 10px;" onclick="PreviewMessage();" />
+<?php             }
+                  if ($IsFLS) { ?>
+                    <input type="button" value="Common answers"  style="margin-right: 10px;" onClick="$('#common_answers').toggle();" />
+<?php             }
+                  if ($IsStaff) { ?>
+                    <input type="submit" name='note' value="Save as note"  style="margin-right: 10px;" />
+<?php             } ?>
+                    <input type="submit" value="Send message" />
+                    <br><br/>
 <?php
     // Assign to
     if ($IsStaff) {
-        // Staff assign dropdown
-?>
+        // Staff assign dropdown ?>
                     <select id="assign_to" name="assign">
                         <optgroup label="User classes">
 <?php 		// FLS "class"
@@ -270,33 +280,22 @@ if ($ConvID = (int) $_GET['id']) {
 <?php   } ?>
                         </optgroup>
                     </select>
-                    <input type="button" onClick="Assign();" value="Assign" />
+                    <input type="button"  style="margin-right: 10px;" onClick="Assign();" value="Assign" />
 <?php 	} elseif ($IsFLS) {	// FLS assign button ?>
-                    <input type="button" value="Assign to staff" onClick="location.href='staffpm.php?action=assign&to=staff&convid=<?=$ConvID?>';" />
-                    <input type="button" value="Assign to admins" onClick="location.href='staffpm.php?action=assign&to=admin&convid=<?=$ConvID?>';" />
+                    <input type="button" value="Assign to Mods"  style="margin-right: 10px;" onClick="location.href='staffpm.php?action=assign&to=staff&convid=<?=$ConvID?>';" />
+                    <input type="button" value="Assign to Admins"  style="margin-right: 10px;" onClick="location.href='staffpm.php?action=assign&to=admin&convid=<?=$ConvID?>';" />
 <?php 	}
 
     if ($Status != 'Resolved') {
                   if($Status == "Unanswered" && $IsStaff) {?>
-                      <input type="button" value="Mark as read" onClick="location.href='staffpm.php?action=mark_read&id=<?=$ConvID?>&return=1';"/>
+                      <input type="button" value="Mark as read"  style="margin-right: 10px;" onClick="location.href='staffpm.php?action=mark_read&id=<?=$ConvID?>&return=1';"/>
 <?php             } else if ($Status == "Open" && $IsStaff) { ?>
-                      <input type="button" value="Mark as unread" onClick="location.href='staffpm.php?action=mark_unread&id=<?=$ConvID?>&return=1';"/>
+                      <input type="button" value="Mark as unread"  style="margin-right: 10px;" onClick="location.href='staffpm.php?action=mark_unread&id=<?=$ConvID?>&return=1';"/>
 <?php             }
                   if ($UserInitiated || $IsFLS) { // as staff can now start a staff - user conversation check to see if user should be able to resolve ?>
                     <input type="button" value="Resolve" onClick="location.href='staffpm.php?action=resolve&id=<?=$ConvID?>';" />
-<?php             } ?>
-                    <br><br/>
-<?php               if ($Status != 'Resolved') {    ?>
-                        <input type="button" id="previewbtn" value="Preview" style="margin-right: 40px;" onclick="PreviewMessage();" />
-<?php               }
-                    if ($IsFLS) { ?>
-                        <input type="button" value="Common answers" onClick="$('#common_answers').toggle();" />
-<?php               }
-                  if ($IsStaff) { ?>
-                    <input type="submit" name='note' value="Save as note" />
-<?php             } ?>
-                    <input type="submit" value="Send message" />
-<?php 	} else {
+<?php             }
+    } else {
             // if ($UserInitiated || $IsFLS) {  ?>
                     <input type="button" value="Unresolve" onClick="location.href='staffpm.php?action=unresolve&id=<?=$ConvID?>&return=1';" />
 <?php 			// }

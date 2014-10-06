@@ -8,7 +8,7 @@ if ($Message = db_string($_POST['message'])) {
 
     if ($_POST['note'] && $IsStaff) {
         $ConvID = (int) $_POST['convid'];
-        $Message = sqltime()." - ".$Message." by ".$LoggedUser['Username'];
+        $Message = sqltime()." - Notes added by ".$LoggedUser['Username'].": ".$Message;
         make_staffpm_note($Message, $ConvID);
         header("Location: staffpm.php?action=viewconv&id=$ConvID");
     } else if ($Subject = db_string($_POST['subject'])) {
