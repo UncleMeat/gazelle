@@ -175,7 +175,7 @@ function Edit_Form(id,key) {
         $('#bar' + messageid).raw().cancel = $('#message' + messageid).raw().innerHTML;
         $('#bar' + messageid).raw().oldbar = $('#bar' + messageid).raw().innerHTML;
         $('#message' + messageid).raw().innerHTML = "<div id=\"preview" + messageid + "\" class=\"body\"></div><input type=\"hidden\" name=\"auth\" value=\"" + authkey + "\" /><input type=\"hidden\" id=\"key"+messageid+"\" name=\"key\" value=\"" + key + "\" /><input type=\"hidden\" name=\"post\" value=\"" + messageid + "\" /><div id=\"editcont" + messageid + "\"></div>";
-        $('#bar' + messageid).raw().innerHTML = "<input class=\"small\" type=\"button\" value=\"Preview\" onclick=\"Preview_Edit('" + messageid + "');\" /><input class=\"small\" type=\"button\" value=\"Save\" onclick=\"Save_Edit('" + messageid + "')\" /><input class=\"small\" type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" + messageid + "');\" />";
+        $('#bar' + messageid).raw().innerHTML = "<input type=\"button\" value=\"Preview\" onclick=\"Preview_Edit('" + messageid + "');\" /><input type=\"button\" value=\"Save\" onclick=\"Save_Edit('" + messageid + "')\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" + messageid + "');\" />";
         ajax.get("?action=get_message&message=" + messageid, function(response){
                 $('#editcont' + messageid).raw().innerHTML = response;
                 resize('editbox' + messageid);
@@ -194,7 +194,7 @@ function Preview_Edit(messageid) {
                 ToPost['key'] = $('#key'+messageid).raw().value;
                 ToPost['id'] = messageid;
                 ToPost['message'] = $('#editbox'+messageid).raw().value;
-        $('#bar' + messageid).raw().innerHTML = "<input class=\"small\" type=\"button\" value=\"Editor\" onclick=\"Cancel_Preview('" + messageid + "');\" /><input class=\"small\" type=\"button\" value=\"Save\" onclick=\"Save_Edit('" + messageid + "')\" /><input class=\"small\"type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" +messageid + "');\" />";
+        $('#bar' + messageid).raw().innerHTML = "<input type=\"button\" value=\"Editor\" onclick=\"Cancel_Preview('" + messageid + "');\" /><input type=\"button\" value=\"Save\" onclick=\"Save_Edit('" + messageid + "')\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" +messageid + "');\" />";
         ajax.post("ajax.php?action=preview_staffpm", ToPost, function(response){  // "form" + messageid
                 $('#preview' + messageid).raw().innerHTML = response;
                 $('#editcont' + messageid).hide();
@@ -202,7 +202,7 @@ function Preview_Edit(messageid) {
 }
 
 function Cancel_Preview(postid) {
-        $('#bar' + postid).raw().innerHTML = "<input class=\"small\" type=\"button\" value=\"Preview\" onclick=\"Preview_Edit('" + postid + "');\" /><input class=\"small\" type=\"button\" value=\"Save\" onclick=\"Save_Edit('" + postid + "')\" /><input class=\"small\" type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" + postid + "');\" />";
+        $('#bar' + postid).raw().innerHTML = "<input type=\"button\" value=\"Preview\" onclick=\"Preview_Edit('" + postid + "');\" /><input type=\"button\" value=\"Save\" onclick=\"Save_Edit('" + postid + "')\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" + postid + "');\" />";
         $('#preview' + postid).raw().innerHTML = "";
         $('#editcont' + postid).show();
 }
