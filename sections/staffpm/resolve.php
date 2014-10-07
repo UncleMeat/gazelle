@@ -8,7 +8,12 @@ if ($ID = (int) ($_GET['id'])) {
 
     if ($UserID == $LoggedUser['ID'] || $IsFLS || $AssignedToUser == $LoggedUser['ID']) {
         // Conversation belongs to user or user is staff, resolve it
-        $DB->query("UPDATE staff_pm_conversations SET Status='Resolved', ResolverID=".$LoggedUser['ID']." WHERE ID=$ID");
+        if($UserID == $LoggedUser['ID']) {
+            $Resolve = "'User Resolved'";
+        } else {
+            $Resolve = "'Resolved'";
+        }
+        $DB->query("UPDATE staff_pm_conversations SET Status=".$Resolve.", ResolverID=".$LoggedUser['ID']." WHERE ID=$ID");
         $Cache->delete_value('staff_pm_new_'.$LoggedUser['ID']);
 
         // Add a log message to the StaffPM

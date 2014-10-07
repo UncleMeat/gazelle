@@ -9,7 +9,7 @@ if ($ID = (int) ($_GET['id'])) {
     if ($UserID == $LoggedUser['ID'] || ($IsFLS && $Level == 0) ||
         $AssignedToUser == $LoggedUser['ID'] || ($IsStaff && $Level <= $LoggedUser['Class'])) {
 
-        // Conversation belongs to user or user is staff, unresolve it // changed from Unanswered to OPen on unresolve
+        // Conversation belongs to user or user is staff, unresolve it // changed from Unanswered to Open on unresolve
         $DB->query("UPDATE staff_pm_conversations SET Status='Open' WHERE ID=$ID");
         // Clear cache for user
         $Cache->delete_value('num_staff_pms_'.$LoggedUser['ID']);

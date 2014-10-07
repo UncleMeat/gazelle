@@ -48,17 +48,14 @@ if ($DB->record_count() == 0) {
 } else {
     // Messages, draw table
 ?>
-        <form method="post" action="staffpm.php" id="multiresolveform" onsubmit="return anyChecks('messageform')">
-            <input type="hidden" name="action" value="multiresolve" />
-            <h3>Open messages</h3>
-            <table>
-                <tr class="colhead">
-                    <td width="10"><input type="checkbox" onclick="toggleChecks('multiresolveform',this);" /></td>
-                    <td width="50%">Subject</td>
-                    <td>Date</td>
-                    <td width="15%">Assigned to</td>
-                              <td width="10%">Status</td>
-                </tr>
+        <h3>Open messages</h3>
+        <table>
+            <tr class="colhead">
+                <td width="50%">Subject</td>
+                <td>Date</td>
+                <td width="15%">Assigned to</td>
+                          <td width="10%">Status</td>
+            </tr>
 <?php
     // List messages
     $Row = 'a';
@@ -70,15 +67,13 @@ if ($DB->record_count() == 0) {
             $Row = ($Row === 'a') ? 'b' : 'a';
             $RowClass = 'row'.$Row;
         }
-
+        if ($Status == 'User Resolved') { $Status = 'Resolved'; }
         if ($Status == 'Resolved') { $ShowBox++; }
         if ($ShowBox == 2) {
         // First resolved PM
         // close multiresolve form  , end table, start new table for already resolved staff messages
 ?>
-            </table>
-            <input type="submit" value="Resolve selected" />
-        </form>
+        </table>
 
             <br />
             <h3>Resolved messages</h3>
@@ -100,8 +95,6 @@ if ($DB->record_count() == 0) {
         // Table row
 ?>
                 <tr class="<?=$RowClass?>">
-                    <?php  // if we are still in first table it is appropriate to draw resolve checkbox
-                    if ($ShowBox == 1) echo '<td class="center"><input type="checkbox" name="id[]" value="<?=$ID?>" /></td>';?>
                     <td><a href="staffpm.php?action=viewconv&amp;id=<?=$ID?>"><?=display_str($Subject)?></a></td>
                     <td><?=time_diff($Date, 2, true)?></td>
                     <td><?=$Assigned?></td>

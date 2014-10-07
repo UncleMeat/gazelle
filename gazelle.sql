@@ -1392,7 +1392,7 @@ CREATE TABLE IF NOT EXISTS `staff_pm_conversations` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Subject` text,
   `UserID` int(11) DEFAULT NULL,
-  `Status` enum('Open','Unanswered','Resolved') DEFAULT NULL,
+  `Status` enum('Open','User Resolved','Unanswered','Resolved') DEFAULT NULL,
   `Level` int(11) DEFAULT NULL,
   `AssignedToUser` int(11) DEFAULT NULL,
   `Date` datetime DEFAULT NULL,
