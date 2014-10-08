@@ -13,8 +13,7 @@ $DB->query("SELECT
     i.Warned
     FROM users_main AS m
     LEFT JOIN users_info AS i ON i.UserID=m.ID
-    WHERE m.CustomPermissions != ''
-    AND m.CustomPermissions != 'a:0:{}'");
+    WHERE m.CustomPermissions != ''");
 if ($DB->record_count()) {
 ?>
     <table width="100%">

@@ -30,12 +30,18 @@ if (isset($_POST['action'])) {
         }
     }
     if (!is_number($_POST['maxcollages']) && !empty($_POST['maxcollages'])) { error("Please enter a valid number of extra personal collages"); }
-    $Delta['MaxCollages'] = $_POST['maxcollages'];
+    if ($_POST['maxcollages'] != 0) { $Delta['MaxCollages'] = $_POST['maxcollages']; }
 
     $Cache->begin_transaction('user_info_heavy_'.$UserID);
     $Cache->update_row(false, array('CustomPermissions' => $Delta));
     $Cache->commit_transaction(0);
-    $DB->query("UPDATE users_main SET CustomPermissions='".db_string(serialize($Delta))."' WHERE ID='$UserID'");
+
+    // Save on a != WHERE clause in the DB query later on.
+    if (!empty($Delta)){
+        $DB->query("UPDATE users_main SET CustomPermissions='".db_string(serialize($Delta))."' WHERE ID='$UserID'");
+    } else {
+        $DB->query("UPDATE users_main SET CustomPermissions='' WHERE ID='$UserID'");
+    }
 } elseif (!empty($Customs)) {
     $Delta = unserialize($Customs);
 }
