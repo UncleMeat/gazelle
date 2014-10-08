@@ -94,6 +94,8 @@ define('USER_FLOOD_POST_TIME', 10); // 10 secs between posts (flood control)
 define('THREAD_CATALOGUE', 500); // Limit to THREAD_CATALOGUE posts per cache key.
 
 // IRC settings
+define('CHAT_URL', '');
+define('HELP_URL', '');
 define('BOT_NICK', '');
 define('BOT_SERVER', ''); // IRC server address. Used for onsite chat tool.
 define('BOT_PORT', 6667);
