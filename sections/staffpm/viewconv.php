@@ -216,7 +216,7 @@ if ($ConvID = (int) $_GET['id']) {
                   if ($IsFLS) { ?>
                     <input type="button" value="Common answers"  style="margin-right: 10px;" onClick="$('#common_answers').toggle();" />
 <?php             }
-                  if ($IsStaff) { ?>
+                  if ($IsStaff && ($TargetUserID != $LoggedUser['ID'])) { ?>
                     <input type="submit" name='note' value="Save as note"  style="margin-right: 10px;" />
 <?php             } ?>
                     <input type="submit" value="Send message" />
