@@ -1410,8 +1410,8 @@ CREATE TABLE IF NOT EXISTS `staff_pm_conversations` (
 CREATE TABLE IF NOT EXISTS `staff_pm_messages` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `UserID` int(11) DEFAULT NULL,
-  `EditUserID` int(11) DEFAULT NULL,
-  `EditTime` datetime DEFAULT NULL,
+  `EditedUserID` int(11) DEFAULT NULL,
+  `EditedTime` datetime DEFAULT NULL,
   `SentDate` datetime DEFAULT NULL,
   `Message` text,
   `IsNotes` boolean DEFAULT FALSE,
