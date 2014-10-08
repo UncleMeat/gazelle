@@ -71,7 +71,7 @@
 <div class="thin">
     <div class="head">IRC</div>
     <div class="box pad center">
-                <iframe src="https://webchat.digitalirc.org/?prompt=1&uio=MTY9ZmFsc2U67&nick=<?=$nick?>&channels=<?=$channels?>" width="98%" height="600"></iframe>
+                <iframe src="<?=CHAT_URL?>&nick=<?=$nick?>&channels=<?=$channels?>" width="98%" height="600"></iframe>
     </div>
 </div>
 <?php
