@@ -57,14 +57,16 @@ show_header('Forums > '.$Forum['Name'].' > New Topic','comments,bbcode,jquery');
                 </td>
             </tr>
             <tr>
+            <?php if (empty($HeavyInfo['DisableAvatars'])) {   ?>
                 <td class="avatar" valign="top">
-            <?php if (!empty($LoggedUser['Avatar'])) {
+                <?php if (!empty($LoggedUser['Avatar'])) {
                               $PermissionsInfo = get_permissions($LoggedUser['PermissionID']) ; ?>
                     <img src="<?=$LoggedUser['Avatar']?>" class="avatar" style="<?=get_avatar_css($PermissionsInfo['MaxAvatarWidth'], $PermissionsInfo['MaxAvatarHeight'])?>" alt="<?=$LoggedUser['Username']?>'s avatar" />
-            <?php } else { ?>
+                <?php } else { ?>
                     <img src="<?=STATIC_SERVER?>common/avatars/default.png" class="avatar" style="<?=get_avatar_css(100, 120)?>" alt="Default avatar" />
-            <?php } ?>
+                <?php } ?>
                 </td>
+            <?php } ?>
                 <td class="body" valign="top">
                     <div id="contentpreview" style="text-align:left;"></div>
                 </td>
