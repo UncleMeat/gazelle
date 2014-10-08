@@ -41,7 +41,7 @@ show_header('Start Conversation', 'inbox,staffpm,bbcode,jquery');
                         <option id="first_common_response">Select a message</option>
                         <?php
                         // List common responses
-                        $DB->query("SELECT ID, Name FROM staff_pm_responses");
+                        $DB->query("SELECT ID, Name FROM staff_pm_responses ORDER BY Name ASC");
                         while (list($ID, $Name) = $DB->next_record()) {
                             ?>
                             <option value="<?= $ID ?>"><?= $Name ?></option>

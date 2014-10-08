@@ -2,10 +2,16 @@
 if ($Message = db_string($_POST['message'])) {
 
       include(SERVER_ROOT.'/classes/class_text.php');
+      include(SERVER_ROOT.'/sections/staffpm/functions.php');
       $Text = new TEXT;
       $Text->validate_bbcode($_POST['message'],  get_permissions_advtags($LoggedUser['ID']));
 
-    if ($Subject = db_string($_POST['subject'])) {
+    if ($_POST['note'] && $IsStaff) {
+        $ConvID = (int) $_POST['convid'];
+        $Message = sqltime()." - Notes added by ".$LoggedUser['Username'].": ".$Message;
+        make_staffpm_note($Message, $ConvID);
+        header("Location: staffpm.php?action=viewconv&id=$ConvID");
+    } else if ($Subject = db_string($_POST['subject'])) {
         // New staff pm conversation
         $Level = db_string($_POST['level']);
         $DB->query("
@@ -19,9 +25,9 @@ if ($Message = db_string($_POST['message'])) {
         $ConvID = $DB->inserted_id();
         $DB->query("
             INSERT INTO staff_pm_messages
-                (UserID, SentDate, Message, ConvID)
+                (UserID, SentDate, Message, ConvID, IsNotes)
             VALUES
-                (".$LoggedUser['ID'].", '".sqltime()."', '$Message', $ConvID)"
+                (".$LoggedUser['ID'].", '".sqltime()."', '$Message', $ConvID, FALSE)"
         );
 
         header('Location: staffpm.php?action=user_inbox');
@@ -35,9 +41,9 @@ if ($Message = db_string($_POST['message'])) {
             // Response to existing conversation
             $DB->query("
                 INSERT INTO staff_pm_messages
-                    (UserID, SentDate, Message, ConvID)
+                    (UserID, SentDate, Message, ConvID, IsNotes)
                 VALUES
-                    (".$LoggedUser['ID'].", '".sqltime()."', '$Message', $ConvID)"
+                    (".$LoggedUser['ID'].", '".sqltime()."', '$Message', $ConvID, FALSE)"
             );
 
             // Update conversation
@@ -62,7 +68,6 @@ if ($Message = db_string($_POST['message'])) {
     } else {
         // Message but no subject or conversation id
         header("Location: staffpm.php?action=viewconv&id=$ConvID");
-
     }
 } elseif ($ConvID = (int) $_POST['convid']) {
     // No message, but conversation id

@@ -4,6 +4,8 @@ if (!($IsFLS)) {
     error(403);
 }
 
+include(SERVER_ROOT.'/sections/staffpm/functions.php');
+
 if ($ConvID = (int) $_GET['convid']) {
     // FLS, check level of conversation
     $DB->query("SELECT Level FROM staff_pm_conversations WHERE ID=$ConvID");
@@ -17,9 +19,11 @@ if ($ConvID = (int) $_GET['convid']) {
             switch ($_GET['to']) {
                 case 'staff' :  // in this context 'staff' == Mod Pervs
                     $Level = 500; //  650;
+                    $ClassName = 'Mods';
                     break;
                 case 'admin' :  // in this context 'admin' == Admins+
                     $Level = 600; // 700;
+                    $ClassName = 'Admins';
                     break;
                 default :
                     error(404);
@@ -27,6 +31,8 @@ if ($ConvID = (int) $_GET['convid']) {
             }
 
             $DB->query("UPDATE staff_pm_conversations SET Status='Unanswered', Level=".$Level." WHERE ID=$ConvID");
+            $Message = sqltime()." - Assigned to ".$ClassName."  by ".$LoggedUser['Username'];
+            make_staffpm_note($Message, $ConvID);
             header('Location: staffpm.php');
         } else {
             error(404);
@@ -49,6 +55,9 @@ if ($ConvID = (int) $_GET['convid']) {
         if ($LevelType == 'class') {
             // Assign to class
             $DB->query("UPDATE staff_pm_conversations SET Status='Unanswered', Level=$NewLevel, AssignedToUser=NULL WHERE ID=$ConvID");
+            $ClassName = $NewLevel == 0 ? 'FLS' : $ClassLevels[$NewLevel]['Name'];
+            $Message = sqltime()." - Assigned to ".$ClassName."  by ".$LoggedUser['Username'];
+            make_staffpm_note($Message, $ConvID);
         } else {
             $UserInfo = user_info($NewLevel);
             $Level    = $Classes[$UserInfo['PermissionID']]['Level'];
@@ -58,6 +67,8 @@ if ($ConvID = (int) $_GET['convid']) {
 
             // Assign to user
             $DB->query("UPDATE staff_pm_conversations SET Status='Unanswered', AssignedToUser=$NewLevel, Level=$Level WHERE ID=$ConvID");
+            $Message = sqltime()." - Assigned to ".$UserInfo['Username']."  by ".$LoggedUser['Username'];
+            make_staffpm_note($Message, $ConvID);
 
         }
         echo '1';

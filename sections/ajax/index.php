@@ -45,6 +45,9 @@ switch ($_GET['action']) {
     case 'preview':
         require 'preview.php';
         break;
+    case 'preview_staffpm':
+        require 'preview_staffpm.php';
+        break;
     case 'preview_article':
         require 'preview_article.php';
         break;
