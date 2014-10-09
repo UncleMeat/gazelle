@@ -222,7 +222,7 @@ if (check_perms('users_mod')) {
 if ($LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1) {
     $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations
                  WHERE (AssignedToUser={$LoggedUser['ID']} OR Level <={$LoggedUser['Class']})
-                   AND Status = 'Unanswered'");
+                   AND Status IN ('Unanswered', 'User Resolved')");
     list($NumUnansweredStaffPMs) = $DB->next_record();
     $DB->query("SELECT COUNT(ID) FROM staff_pm_conversations
                  WHERE (AssignedToUser={$LoggedUser['ID']} OR Level <={$LoggedUser['Class']})

@@ -16,7 +16,7 @@ $StaffPMs = $DB->query("
         Unread
     FROM staff_pm_conversations
     WHERE UserID=".$LoggedUser['ID']."
-    ORDER BY Status, Date DESC"
+    ORDER BY FIELD(Status, 'Unanswered','Open','User Resolved','Resolved'), Date DESC"
 );
 
 // Start page
