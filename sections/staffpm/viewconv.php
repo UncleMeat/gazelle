@@ -190,6 +190,7 @@ if ($ConvID = (int) $_GET['id']) {
         <div class="head">
                 <strong>Reply</strong> <?php
                 if (!$IsFLS) {
+                    if ($Status == 'User Resolved') { $Status = 'Resolved'; }
                     if ($Status != 'Resolved') {
                         if ($UserInitiated) echo " &nbsp; <em>(click resolve to close the conversation if you are happy with the answer given)</em>";
                     } else {
