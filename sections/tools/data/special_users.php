@@ -10,7 +10,8 @@ $DB->query("SELECT
     m.PermissionID,
     m.Enabled,
     i.Donor,
-    i.Warned
+    i.Warned,
+    m.GroupPermissionID
     FROM users_main AS m
     LEFT JOIN users_info AS i ON i.UserID=m.ID
     WHERE m.CustomPermissions != ''");
@@ -22,10 +23,10 @@ if ($DB->record_count()) {
             <td>Access</td>
         </tr>
 <?php
-    while (list($UserID, $Username, $PermissionID, $Enabled, $Donor, $Warned)=$DB->next_record()) {
+    while (list($UserID, $Username, $PermissionID, $Enabled, $Donor, $Warned,$GroupPermissionID)=$DB->next_record()) {
 ?>
         <tr>
-            <td><?=format_username($UserID, $Username, $Donor, $Warned, $Enabled, $PermissionID)?></td>
+            <td><?=format_username($UserID, $Username, $Donor, $Warned, $Enabled, $PermissionID, '', false, $GroupPermissionID, true)?></td>
             <td><a href="user.php?action=permissions&amp;userid=<?=$UserID?>">Manage</a></td>
         </tr>
 <?php } ?>
