@@ -26,7 +26,7 @@ list($Filled) = $DB->next_record();
 if(!isset($Filled))error("This request has been deleted!", true);
 if($Filled>0) error("This torrent is already filled!", true);
 
-if ($LoggedUser['BytesUploaded'] < $Amount) {
+if (($LoggedUser['BytesUploaded'] - $LoggedUser['BytesDownloaded']) < $Amount) {
 
     echo json_encode(array( 'bankrupt', $Bounty, 0, 0, false ));
 
