@@ -122,6 +122,13 @@ foreach ($AutoActions as $AutoAction) {
                      GROUP BY u.ID
                     HAVING Count(r.ID)>=$Value";
             break;
+        case 'AccountAge': // num of days since the account was registered.
+            $SQL = "SELECT u.ID FROM users_main AS u INNER JOIN users_info AS i ON i.UserID=u.ID
+                     WHERE u.Enabled='1'
+                       AND $NOTIN
+                     GROUP BY u.ID
+                    HAVING DATEDIFF(CURDATE(), i.joindate)>=$Value";
+            break;
     }
 
     if ($SQL) {
