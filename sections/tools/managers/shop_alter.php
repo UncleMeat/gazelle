@@ -35,7 +35,12 @@ if ($_POST['submit'] == 'Delete') {
             $Div = ',';
             $Sort++;
       }
-      $DB->query($SQL);
+      // Be safe, don't insert if there's nothing to insert!
+      $DB->query("SELECT COUNT(ID) FROM badges WHERE Type='Shop'");
+      list($Count)=$DB->next_record();
+      if ($Count > 0) {
+          $DB->query($SQL);
+      }
       $Cache->delete_value('shop_items');
       $Cache->delete_value('shop_items_other');
       $Cache->delete_value('shop_items_ufl');

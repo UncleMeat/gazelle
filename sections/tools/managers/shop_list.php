@@ -70,13 +70,20 @@ function Select_Action(element_id)
         <input type="hidden" name="autosynch" value="autosynch" />
         <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
 
-            <label for="sort" style="margin-left:40px">Add sort values starting from this number</label>
-            <input size="3" type="text" name="sort" value="100" />
-
-            <input class="medium" style="margin-left:40px"  type="checkbox" value="1" name="delete" checked="checked" title="If checked all current badge items will be removed from the shop before adding items from badge table" />
-            <label for="delete">Delete current badges before insertion</label>
-
-        <input type="submit" style="margin-left:40px" value="Auto synchronise shop items from badges table" />
+        <div style="margin-left: auto; margin-right: auto; max-width: 700px;">
+            <span style="float: left">
+                <label for="sort">Add sort values starting from this number</label>
+                <input size="3" type="text" name="sort" value="100" />
+            </span>
+            <span style="float: right">
+                <input type="checkbox" value="1" name="delete" checked="checked" title="If checked all current badge items will be removed from the shop before adding items from badge table" />
+                <label for="delete">Delete current badges before insertion</label>
+            </span>
+        </div>
+        <br /><br />
+        <div style="text-align: center;">
+            <input type="submit" value="Auto synchronise shop items from badges table" />
+        </div>
     </form>
 </div><br/>
 <div class="head">Manage Shop Items</div>
