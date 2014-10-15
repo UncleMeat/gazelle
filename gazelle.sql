@@ -123,7 +123,7 @@ CREATE TABLE `badges` (
 CREATE TABLE IF NOT EXISTS `badges_auto` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
   `BadgeID` int(10) NOT NULL,
-  `Action` enum('NumPosts','NumComments','NumUploaded','NumNewTags','NumTags','NumTagVotes','RequestsFilled','UploadedTB','DownloadedTB','MaxSnatches','NumBounties') NOT NULL,
+  `Action` enum('NumPosts','NumComments','NumUploaded','NumNewTags','NumTags','NumTagVotes','RequestsFilled','UploadedTB','DownloadedTB','MaxSnatches','NumBounties','AccountAge') NOT NULL,
   `Active` tinyint(1) NOT NULL DEFAULT '0',
   `SendPM` tinyint(1) NOT NULL,
   `Value` int(10) NOT NULL,
