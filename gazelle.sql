@@ -511,7 +511,7 @@ CREATE TABLE IF NOT EXISTS `forums_categories` (
 -- Dumping data for table `forums_categories`
 --
 
-INSERT INTO `forums_categories` VALUES (1,'Site',2),(5,'Community',5),(10,'Help',10),(15,'Archive',15),(16,'Testing',1);
+INSERT IGNORE INTO `forums_categories` VALUES (1,'Site',2),(5,'Community',5),(10,'Help',10),(15,'Archive',15),(16,'Testing',1);
  
 
 -- --------------------------------------------------------
@@ -1151,7 +1151,7 @@ CREATE TABLE IF NOT EXISTS `review_reasons` (
 -- Dumping data for table `review_reasons`
 --
 
-INSERT INTO `review_reasons` VALUES (1,2,'Screenshots','Not enough screenshots.'),(2,4,'Description','Lack of text description.'),(3,8,'Screenshots & Description','Not enough screenshots, lack of text description.');
+INSERT IGNORE INTO `review_reasons` VALUES (1,2,'Screenshots','Not enough screenshots.'),(2,4,'Description','Lack of text description.'),(3,8,'Screenshots & Description','Not enough screenshots, lack of text description.');
 
 
 -- --------------------------------------------------------
@@ -1170,7 +1170,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
 -- Dumping data for table `schedule`
 --
 
-INSERT INTO `schedule` VALUES (15,29,8);
+INSERT IGNORE INTO `schedule` VALUES (15,29,8);
 
 
 
@@ -1193,7 +1193,7 @@ CREATE TABLE IF NOT EXISTS `site_options` (
 -- Dumping data for table `site_options`
 --
  
-INSERT INTO `site_options` VALUES (24,0,720,524288,'0000-00-00 00:00:00',0);
+INSERT IGNORE INTO `site_options` VALUES (24,0,720,524288,'0000-00-00 00:00:00',0);
 
 
 -- --------------------------------------------------------
@@ -1357,18 +1357,6 @@ CREATE TABLE IF NOT EXISTS `staff_blog` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
-
---
--- Tabellstruktur `staff_blog_visits`
---
-
-CREATE TABLE IF NOT EXISTS `staff_blog_visits` (
-  `UserID` int(10) unsigned NOT NULL,
-  `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  UNIQUE KEY `UserID` (`UserID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 
 --
 -- Table structure for table `staff_checking`
@@ -1961,19 +1949,6 @@ CREATE TABLE IF NOT EXISTS `users_downloads` (
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `users_dupes`
---
-
-CREATE TABLE IF NOT EXISTS `users_dupes` (
-  `GroupID` int(10) unsigned NOT NULL,
-  `UserID` int(10) unsigned NOT NULL,
-  UNIQUE KEY `UserID` (`UserID`),
-  KEY `GroupID` (`GroupID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- table structure `users_freeleeches`
 --
  
@@ -2207,6 +2182,44 @@ CREATE TABLE IF NOT EXISTS `users_main` (
   KEY `RequiredRatio` (`RequiredRatio`),
   KEY `SeedHoursDaily` (`SeedHoursDaily`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- -------------------------------------------------------- --
+-- Place after users_main to avoid errors with the          --
+-- constraints.                                             --
+-- -------------------------------------------------------- --
+
+--
+-- Tabellstruktur `staff_blog_visits`
+--
+
+CREATE TABLE IF NOT EXISTS `staff_blog_visits` (
+  `UserID` int(10) unsigned NOT NULL,
+  `Time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  UNIQUE KEY `UserID` (`UserID`),
+  CONSTRAINT `staff_blog_visits_ibfk_1`
+    FOREIGN KEY (`UserID`)
+    REFERENCES `users_main` (`ID`)
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Tabellstruktur `users_dupes`
+--
+
+CREATE TABLE IF NOT EXISTS `users_dupes` (
+  `GroupID` int(10) unsigned NOT NULL,
+  `UserID` int(10) unsigned NOT NULL,
+  UNIQUE KEY `UserID` (`UserID`),
+  KEY `GroupID` (`GroupID`),
+  CONSTRAINT `users_dupes_ibfk_1`
+    FOREIGN KEY (`UserID`)
+    REFERENCES `users_main` (`ID`)
+    ON DELETE CASCADE,
+  CONSTRAINT `users_dupes_ibfk_2`
+    FOREIGN KEY (`GroupID`)
+    REFERENCES `dupe_groups` (`ID`)
+  ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -2574,7 +2587,7 @@ CREATE TABLE IF NOT EXISTS `xbt_files_users` (
 -- Table structure `xbt_peers_history`
 --
 
-CREATE TABLE `xbt_peers_history` (  
+CREATE TABLE IF NOT EXISTS `xbt_peers_history` (  
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
   `downloaded` bigint(20) NOT NULL,
@@ -2648,19 +2661,6 @@ CREATE TABLE IF NOT EXISTS `xbt_users` (
 --
 -- Restriktioner för dumpade tabeller
 --
-
---
--- Restriktioner för tabell `staff_blog_visits`
---
-ALTER TABLE `staff_blog_visits`
-  ADD CONSTRAINT `staff_blog_visits_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `users_main` (`ID`) ON DELETE CASCADE;
-
---
--- Restriktioner för tabell `users_dupes`
---
-ALTER TABLE `users_dupes`
-  ADD CONSTRAINT `users_dupes_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `users_main` (`ID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `users_dupes_ibfk_2` FOREIGN KEY (`GroupID`) REFERENCES `dupe_groups` (`ID`) ON DELETE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
