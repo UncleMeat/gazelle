@@ -790,10 +790,14 @@ CREATE TABLE IF NOT EXISTS `ip_bans` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `FromIP` int(11) unsigned NOT NULL,
   `ToIP` int(11) unsigned NOT NULL,
+  `UserID` int(11) NOT NULL DEFAULT '0',
+  `StaffID` int(11) NOT NULL DEFAULT '0',
+  `Endtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `Reason` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `FromIP` (`FromIP`,`ToIP`),
-  KEY `ToIP` (`ToIP`)
+  KEY `ToIP` (`ToIP`),
+  KEY `Endtime` (`Endtime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
