@@ -2,27 +2,26 @@
 enforce_login();
 
 include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
+include(SERVER_ROOT.'/sections/torrents/functions.php'); // Edit report etc.
 $Text = new TEXT;
 
-if (!empty($_REQUEST['action'])) {
-    if ($_REQUEST['action'] == 'my_torrents') {
-        $MyTorrents = true;
-    }
+if (!empty($_REQUEST['my_torrents']) && $_REQUEST['my_torrents'] == '1') {
+    $MyTorrents = true;
 } else {
     $MyTorrents = false;
 }
 
-if (isset($_GET['id'])) {
-    $UserID = $_GET['id'];
+if (isset($_GET['userid'])) {
+    $UserID = $_GET['userid'];
     if (!is_number($UserID)) {
         error(404);
     }
     $UserInfo = user_info($UserID);
     $Username = $UserInfo['Username'];
     if ($LoggedUser['ID'] == $UserID) {
-        $Self = true;
+        $ViewingOwn = true;
     } else {
-        $Self = false;
+        $ViewingOwn = false;
     }
     $Perms = get_permissions($UserInfo['PermissionID']);
     $UserClass = $Perms['Class'];
@@ -31,10 +30,10 @@ if (isset($_GET['id'])) {
 } else {
     $UserID = $LoggedUser['ID'];
     $Username = $LoggedUser['Username'];
-    $Self = true;
+    $ViewingOwn = true;
 }
 
-show_header($MyTorrents?"Comments left on $Username's torrents":"Comment history for $Username",'bbcode');
+show_header($MyTorrents?"Comments left on $Username's torrents":"Comment history for $Username",'comments,bbcode');
 
 if (isset($LoggedUser['PostsPerPage'])) {
     $PerPage = $LoggedUser['PostsPerPage'];
@@ -49,12 +48,12 @@ if ($MyTorrents) {
     $Conditions = "WHERE t.UserID = $UserID AND tc.AuthorID != t.UserID AND tc.AddedTime > t.Time";
     $Title = 'Comments left on your torrents';
     $Header = 'Comments left on your uploads';
-    if($Self) $OtherLink = '<a href="comments.php">Display comments you\'ve made</a>';
+    if($ViewingOwn) $OtherLink = '<a href="userhistory.php?action=comments">Display comments you\'ve made</a>';
 } else {
     $Conditions = "WHERE tc.AuthorID = $UserID";
-    $Title = 'Comments made by '.($Self?'you':$Username);
-    $Header = 'Torrent comments left by '.($Self?'you':format_username($UserID, $Username)).'';
-    if($Self) $OtherLink = '<a href="comments.php?action=my_torrents">Display comments left on your uploads</a>';
+    $Title = 'Comments made by '.($ViewingOwn?'you':$Username);
+    $Header = 'Torrent comments left by '.($ViewingOwn?'you':format_username($UserID, $Username)).'';
+    if($ViewingOwn) $OtherLink = '<a href="userhistory.php?action=comments&amp;my_torrents=1">Display comments left on your uploads</a>';
 }
 
 $Comments = $DB->query("SELECT
@@ -64,7 +63,7 @@ $Comments = $DB->query("SELECT
     m.PermissionID,
     m.GroupPermissionID,
     m.Enabled,
-            m.CustomPermissions,
+    m.CustomPermissions,
 
     i.Avatar,
     i.Donor,
@@ -114,8 +113,12 @@ $DB->set_query_id($Comments);
     <h2><?=$Header?></h2>
     <div class="linkbox">
     <?=$OtherLink?>&nbsp;&nbsp;&nbsp;
-            <a href="userhistory.php?action=posts&amp;userid=<?=$LoggedUser['ID']?>">Go to post history</a>&nbsp;&nbsp;&nbsp;
-            <a href="userhistory.php?action=subscriptions">Go to subscriptions</a>
+<?php       if (!$ViewingOwn) { ?>
+                <a href="userhistory.php?action=posts&amp;userid=<?=$UserID?>&amp;group=0">Go to post history</a>
+<?php       } else { ?>
+                <a href="userhistory.php?action=posts&amp;group=0&amp;showunread=0">Go to post history</a>&nbsp;&nbsp;&nbsp;
+                <a href="userhistory.php?action=subscriptions">Go to subscriptions</a>
+<?php       } ?>
     <br /><br />
     <?=$Pages?>
     </div>
@@ -123,7 +126,7 @@ $DB->set_query_id($Comments);
 
      $Posts = $DB->to_array(false,MYSQLI_ASSOC,array('CustomPermissions'));
 
-foreach ($Posts as $Post) {
+foreach ($Posts as $Key => $Post) {
     list($UserID, $Username, $Class, $GroupPermID, $Enabled, $CustomPermissions, $Avatar, $Donor, $Warned, $TorrentID, $GroupID, $Title, $PostID, $Body, $AddedTime, $EditedTime, $EditorID, $EditorUsername) = array_values($Post);
 
     $AuthorPermissions = get_permissions($Class);
@@ -132,9 +135,24 @@ foreach ($Posts as $Post) {
     <table class='forum_post box vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>' id="post<?=$PostID?>">
         <tr class='smallhead'>
             <td  colspan="2">
-                <span style="float:left;"><a href='torrents.php?id=<?=$GroupID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>'>#<?=$PostID?></a>
-                    by <?=format_username($UserID, $Username, $Donor, $Warned, $Enabled, $Class, false, true, $GroupPermID)?> <?=time_diff($AddedTime) ?>
-                    on <a href="torrents.php?id=<?=$GroupID?>"><?=$Title?></a>
+                <span style="float:left;">
+<?php               if (!$ViewingOwn) { ?>
+                        by <?=format_username($UserID, $Username, $Donor, $Warned, $Enabled, $Class, false, true, $GroupPermID)?>
+<?php               } ?>
+                    <?=time_diff($AddedTime) ?>
+                    on <a href="torrents.php?id=<?=$GroupID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>"><?=cut_string($Title, 75)?></a>
+                </span>
+                <span style="float:left;padding-left:5px;">
+<?php   if (can_edit_comment($AuthorID, $EditedUserID, $AddedTime, $EditedTime)) { ?>
+         <a href="#post<?=$PostID?>" onclick="Edit_Form('comments','<?=$PostID?>','<?=$Key++?>');">[Edit]</a>
+<?php   }
+        if (check_perms('site_admin_forums')) { ?>
+        - <a href="#post<?=$PostID?>" onclick="Delete('<?=$PostID?>');" title="permenantly delete this comment">[Delete]</a>
+<?php   } ?>
+                </span>
+
+                <span id="bar<?=$PostID?>" style="float:right;">
+                    <a href="reports.php?action=report&amp;type=torrents_commenthistory&amp;id=<?=$PostID?>">[Report]</a>
                 </span>
             </td>
         </tr>
@@ -151,17 +169,19 @@ if (empty($HeavyInfo['DisableAvatars'])) {
 <?php               }               ?>
             </td>
 <?php } ?>
-            <td class='body' valign="top">
-                <?=$Text->full_format($Body, get_permissions_advtags($UserID, unserialize($CustomPermissions), $AuthorPermissions)) ?>
+            <td class='postbody' valign="top">
+                <div id="content<?=$PostID?>" class="post_container">
+                    <?=$Text->full_format($Body, get_permissions_advtags($UserID, unserialize($CustomPermissions), $AuthorPermissions)) ?>
 <?php
                 if ($EditorID) {
 ?>
-                <br /><br />
-                Last edited by
-                <?=format_username($EditorID, $EditorUsername) ?> <?=time_diff($EditedTime)?>
+                    <br /><br />
+                    Last edited by
+                    <?=format_username($EditorID, $EditorUsername) ?> <?=time_diff($EditedTime)?>
 <?php
                 }
 ?>
+                </div>
             </td>
         </tr>
     </table>

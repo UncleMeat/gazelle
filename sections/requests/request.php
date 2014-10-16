@@ -303,9 +303,9 @@ foreach ($Thread as $Key => $Post) {
         <td colspan="2">
             <span style="float:left;"><a href='#post<?=$PostID?>'>#<?=$PostID?></a>
                 <?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled, $PermissionID,$UserTitle,true,$GroupPermissionID,true)?> <?=time_diff($AddedTime)?>
-                - <a href="#quickpost" onclick="Quote('<?=$PostID?>','r<?=$RequestID?>','<?=$Username?>');">[Quote]</a>
+                - <a href="#quickpost" onclick="Quote('requests','<?=$PostID?>','r<?=$RequestID?>','<?=$Username?>');">[Quote]</a>
 <?if (can_edit_comment($AuthorID, $EditedUserID, $AddedTime, $EditedTime)) { ?>
-                        - <a href="#post<?=$PostID?>" onclick="Edit_Form('<?=$PostID?>','<?=$Key?>');">[Edit]</a><?php }
+                        - <a href="#post<?=$PostID?>" onclick="Edit_Form('requests','<?=$PostID?>','<?=$Key?>');">[Edit]</a><?php }
 if (check_perms('site_admin_forums')) { ?>
                         - <a href="#post<?=$PostID?>" onclick="Delete('<?=$PostID?>');">[Delete]</a> <?php } ?>
             </span>

@@ -25,7 +25,7 @@ if ($ConvID = (int) $_GET['id']) {
         $Cache->delete_value('staff_pm_new_'.$LoggedUser['ID']);
     }
 
-    show_header('Staff PM', 'staffpm,bbcode,jquery');
+    show_header('Staff PM', 'comments,staffpm,bbcode,jquery');
 
     $OwnerInfo = user_info($UserID);
     $UserInfo = $OwnerInfo;
@@ -73,7 +73,7 @@ if ($ConvID = (int) $_GET['id']) {
 <?php
     // Get messages
     $StaffPMs = $DB->query("SELECT ID, UserID, EditedUserID, EditedTime, SentDate, Message FROM staff_pm_messages WHERE ConvID=$ConvID AND NOT IsNotes ORDER BY SentDate");
-
+    $Key = 0;
     while (list($ID, $UserID, $EditedUserID, $EditedTime, $SentDate, $Message) = $DB->next_record()) {
         // Set user string
         $UserInfo = user_info($UserID);
@@ -110,7 +110,9 @@ if ($ConvID = (int) $_GET['id']) {
 ?>
             <div class="head">
                 <?=$UserString;?>
-                - <a href="#message" onclick="Quote('<?=$ID?>','<?=$UserInfo['Username']?>');">[Quote]</a>
+<?php if($Status != 'Resolved') { ?>
+                - <a href="#quickpost" onclick="Quote('staffpm','<?=$ID?>','','<?=$UserInfo['Username']?>');">[Quote]</a>
+<?php } ?>
 <?php if($EditedUserID) {
           $LastUser['Class'] = get_permissions(user_info($EditedUserID)['PermissionID'])['Class'];
           $LastUser['ID'] = $EditedUserID;
@@ -119,7 +121,7 @@ if ($ConvID = (int) $_GET['id']) {
           $LastUser['ID'] = $UserID;
       }
       if ($IsStaff && (($LoggedUser['Class'] > $LastUser['Class'])||($LoggedUser['ID'] == $LastUser['ID']))) { ?>
-                - <a href="#message<?=$ID?>" onclick="Edit_Form('<?=$ID?>','<?=$Key?>');">[Edit]</a>
+                - <a href="#content<?=$ID?>" onclick="Edit_Form('staffpm','<?=$ID?>','<?=$Key++?>');">[Edit]</a>
 <?php } ?>
                 <span class="small" style="float:right">
                     <span id="bar<?=$ID?>" style="padding-right: 3px></span>
@@ -127,13 +129,13 @@ if ($ConvID = (int) $_GET['id']) {
                 </span>
             </div>
         <div class="box vertical_space">
-            <div id="message<?=$ID?>">
+            <div id="content<?=$ID?>">
                 <div class="body"><?=$Text->full_format($Message, get_permissions_advtags($UserID))?></div>
 <?php if ($EditedUserID) {
     $EditedUserInfo = user_info($EditedUserID); ?>
                     <div class="post_footer">
 <?php     if( $IsStaff) { ?>
-                    <a href="#message<?=$ID?>" onclick="LoadEdit(<?=$ID?>, 1); return false;">&laquo;</a>
+                    <a href="#content<?=$ID?>" onclick="LoadEdit('staffpm', <?=$ID?>, 1); return false;">&laquo;</a>
 <?php     } ?>
                     <span class="editedby">Last edited by
                             <?=format_username($EditedUserID, $EditedUserInfo['Username']) ?> <?=time_diff($EditedTime,2,true,true)?>
@@ -206,10 +208,9 @@ if ($ConvID = (int) $_GET['id']) {
                     <input type="hidden" name="action" value="takepost" />
                     <input type="hidden" name="convid" value="<?=$ConvID?>" id="convid" />
 <?php               if ($Status != 'Resolved') {    ?>
-                    <div id="quickpost">
-                       <?php  $Text->display_bbcode_assistant("message", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
-                    <textarea id="message" name="message" class="long" rows="10"></textarea>
-                    </div><br />
+                    <?php  $Text->display_bbcode_assistant("quickpost", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
+                    <textarea id="quickpost" name="message" class="long" rows="10"></textarea>
+                    <br />
 <?php               }   ?>
 <?php             if ($Status != 'Resolved') {    ?>
                     <input type="button" id="previewbtn" value="Preview" style="margin-right: 10px;" onclick="PreviewMessage();" />

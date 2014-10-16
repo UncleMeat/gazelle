@@ -158,3 +158,76 @@ function PreviewMessage() {
 	}
 }
 
+function Quote(id,user) {
+        username = user;
+        messageid = id;
+        ajax.get("?action=get_message&body=1&message=" + messageid, function(response){
+            var s = "[quote="+username+"]" +  html_entity_decode(response) + "[/quote]";
+            if ( $('#message').raw().value != '')   s = "\n" + s + "\n";
+            insert( s, 'message');
+                resize('message');
+        });
+}
+
+
+function Edit_Form(id,key) {
+        messageid = id;
+        $('#bar' + messageid).raw().cancel = $('#message' + messageid).raw().innerHTML;
+        $('#bar' + messageid).raw().oldbar = $('#bar' + messageid).raw().innerHTML;
+        $('#message' + messageid).raw().innerHTML = "<div id=\"preview" + messageid + "\" class=\"body\"></div><input type=\"hidden\" name=\"auth\" value=\"" + authkey + "\" /><input type=\"hidden\" id=\"key"+messageid+"\" name=\"key\" value=\"" + key + "\" /><input type=\"hidden\" name=\"post\" value=\"" + messageid + "\" /><div id=\"editcont" + messageid + "\"></div>";
+        $('#bar' + messageid).raw().innerHTML = "<input type=\"button\" value=\"Preview\" onclick=\"Preview_Edit('" + messageid + "');\" /><input type=\"button\" value=\"Save\" onclick=\"Save_Edit('" + messageid + "')\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" + messageid + "');\" />";
+        ajax.get("?action=get_message&message=" + messageid, function(response){
+                $('#editcont' + messageid).raw().innerHTML = response;
+                resize('editbox' + messageid);
+        });
+}
+
+
+function Cancel_Edit(messageid) {
+        $('#bar' + messageid).raw().innerHTML = $('#bar' + messageid).raw().oldbar;
+        $('#message' + messageid).raw().innerHTML = $('#bar' + messageid).raw().cancel;
+}
+
+function Preview_Edit(messageid) {
+                var ToPost = [];
+                ToPost['auth'] = authkey;
+                ToPost['key'] = $('#key'+messageid).raw().value;
+                ToPost['id'] = messageid;
+                ToPost['message'] = $('#editbox'+messageid).raw().value;
+        $('#bar' + messageid).raw().innerHTML = "<input type=\"button\" value=\"Editor\" onclick=\"Cancel_Preview('" + messageid + "');\" /><input type=\"button\" value=\"Save\" onclick=\"Save_Edit('" + messageid + "')\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" +messageid + "');\" />";
+        ajax.post("ajax.php?action=preview_staffpm", ToPost, function(response){  // "form" + messageid
+                $('#preview' + messageid).raw().innerHTML = response;
+                $('#editcont' + messageid).hide();
+        });
+}
+
+function Cancel_Preview(postid) {
+        $('#bar' + postid).raw().innerHTML = "<input type=\"button\" value=\"Preview\" onclick=\"Preview_Edit('" + postid + "');\" /><input type=\"button\" value=\"Save\" onclick=\"Save_Edit('" + postid + "')\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" + postid + "');\" />";
+        $('#preview' + postid).raw().innerHTML = "";
+        $('#editcont' + postid).show();
+}
+
+
+function Save_Edit(messageid) {
+    var ToPost = [];
+    ToPost['auth'] = authkey;
+    ToPost['key'] = $('#key'+messageid).raw().value;
+    ToPost['id'] = messageid;
+    ToPost['message'] = $('#editbox'+messageid).raw().value;
+    ajax.post("staffpm.php?action=takeedit",ToPost, function (response) {
+        $('#bar' + messageid).raw().innerHTML = "";
+        $('#preview' + messageid).remove();
+	$('#message' + messageid).raw().innerHTML = response;
+        $('#editcont' + messageid).hide();
+        $('#editcont' + messageid).raw().innerHTML = '';
+    });
+}
+
+function LoadEdit(messageid, depth) {
+        ajax.get("staffpm.php?action=get_edit&id=" + messageid + "&depth=" + depth, function(response) {
+                        $('#message' + messageid).raw().innerHTML = response;
+                }
+        );
+}
+
+

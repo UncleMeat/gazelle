@@ -70,7 +70,7 @@ switch ($_REQUEST['action']) {
         require(SERVER_ROOT.'/sections/collages/delete_comment.php');
         break;
     case 'get_post':
-        require(SERVER_ROOT.'/sections/collages/get_post.php');
+        require(SERVER_ROOT.'/sections/common/get_post.php');
         break;
     case 'download':
         require(SERVER_ROOT.'/sections/collages/download.php');

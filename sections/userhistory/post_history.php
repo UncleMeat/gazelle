@@ -9,6 +9,7 @@ if (!empty($LoggedUser['DisableForums'])) {
 }
 
 include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
+//include(SERVER_ROOT.'/sections/forums/functions.php'); // Forum functions
 $Text = new TEXT;
 
 $UserID = empty($_GET['userid']) ? $LoggedUser['ID'] : $_GET['userid'];
@@ -96,6 +97,7 @@ if ($ShowGrouped) {
             p.EditedTime,
             ed.Username,
             p.TopicID,
+            t.ForumID,
             t.Title,
             t.LastPostID,
             l.PostID AS LastRead,
@@ -126,6 +128,7 @@ if ($ShowGrouped) {
         p.EditedTime,
         ed.Username,
         p.TopicID,
+        t.ForumID,
         t.Title,
         t.LastPostID,';
     if ($UserID == $LoggedUser['ID']) {
@@ -189,14 +192,14 @@ if ($ShowGrouped) {
 
     <div class="linkbox">
 <?php
-if ($ViewingOwn) {
-    if (($UserSubscriptions = $Cache->get_value('subscriptions_user_'.$LoggedUser['ID'])) === FALSE) {
-        $DB->query("SELECT TopicID FROM users_subscriptions WHERE UserID = '$LoggedUser[ID]'");
-        $UserSubscriptions = $DB->collect(0);
-        $Cache->cache_value('subscriptions_user_'.$LoggedUser['ID'],$UserSubscriptions,0);
-        $DB->set_query_id($Posts);
-    }
+if (($UserSubscriptions = $Cache->get_value('subscriptions_user_'.$LoggedUser['ID'])) === FALSE) {
+    $DB->query("SELECT TopicID FROM users_subscriptions WHERE UserID = '$LoggedUser[ID]'");
+    $UserSubscriptions = $DB->collect(0);
+    $Cache->cache_value('subscriptions_user_'.$LoggedUser['ID'],$UserSubscriptions,0);
+    $DB->set_query_id($Posts);
+}
 
+if ($ViewingOwn) {
     if (!$ShowUnread) { ?>
         <br /><br />
         <?php  if ($ShowGrouped) { ?>
@@ -217,10 +220,13 @@ if ($ViewingOwn) {
     }
 ?>
             <a href="userhistory.php?action=subscriptions">Go to subscriptions</a>&nbsp;&nbsp;&nbsp;
-            <a href="comments.php">Go to comment history</a>
+            <a href="userhistory.php?action=comments">Go to comment history</a>
+<?php
+} else {
+?>
+            <a href="userhistory.php?action=comments&amp;userid=<?=$UserID?>">Go to comment history</a>
 <?php
 }
-
 ?>
     </div>
 <?php
@@ -239,7 +245,8 @@ if (empty($Results)) {
 ?>
     </div>
 <?php
-    while (list($PostID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $TopicID, $ThreadTitle, $LastPostID, $LastRead, $Locked, $Sticky) = $DB->next_record()) {
+    $Key = 0;
+    while (list($PostID, $AddedTime, $Body, $EditedUserID, $EditedTime, $EditedUsername, $TopicID, $ForumID, $ThreadTitle, $LastPostID, $LastRead, $Locked, $Sticky) = $DB->next_record()) {
 ?>
     <table class='forum_post vertical_margin<?=$HeavyInfo['DisableAvatars'] ? ' noavatar' : ''?>' id='post<?=$PostID ?>'>
         <tr class='smallhead'>
@@ -247,29 +254,42 @@ if (empty($Results)) {
                 <span style="float:left;">
                     <?=time_diff($AddedTime) ?>
                     in <a href="forums.php?action=viewthread&amp;threadid=<?=$TopicID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>" title="<?=display_str($ThreadTitle)?>"><?=cut_string($ThreadTitle, 75)?></a>
+                </span>
 <?php
         if ($ViewingOwn) {
             if ((!$Locked  || $Sticky) && (!$LastRead || $LastRead < $LastPostID)) { ?>
                     <span class="newstatus">(New!)</span>
 <?php
             }
-?>
-                </span>
-<?php 			if (!empty($LastRead)) { ?>
+            if (!empty($LastRead)) { ?>
                 <span style="float:left;" class="last_read" title="Jump to last read">
                     <a href="forums.php?action=viewthread&amp;threadid=<?=$TopicID?>&amp;postid=<?=$LastRead?>#post<?=$LastRead?>"></a>
                 </span>
-<?php 			}
-        } else {
+<?php       }
+        } ?>
+                <span style="float:left;padding-left:5px;">
+<?php   if ((((!$ThreadInfo['IsLocked'] && check_forumperm($TopicID, 'Write')) && can_edit_comment($AuthorID, $EditedUserID, $AddedTime, $EditedTime)) || check_perms('site_moderate_forums')) && !$ShowGrouped) {
 ?>
+         <a href="#post<?=$PostID?>" onclick="Edit_Form('forums','<?=$PostID?>','<?=$Key++?>');">[Edit]</a>
+<?php   }
+        if ($ForumID != TRASH_FORUM_ID && check_perms('site_moderate_forums') && !$ShowGrouped) {
+?>
+         - <a href="#post<?=$PostID?>" onclick="Trash('<?=$TopicID?>','<?=$PostID?>');" title="moves this post to the trash forum">[Trash]</a>
+<?php   }
+        if (check_perms('site_admin_forums') && !$ShowGrouped) {
+?>
+        - <a href="#post<?=$PostID?>" onclick="Delete('<?=$PostID?>');" title="permenantly delete this post">[Delete]</a>
+<?php   } ?>
                 </span>
-<?php 		}
+
+                <span id="bar<?=$PostID?>" style="float:right;">
+<?php
+        if (!$ShowGrouped) {
 ?>
-                <span id="bar<?=$PostID ?>" style="float:right;">
-<?php  		if ($ViewingOwn && !in_array($TopicID, $UserSubscriptions)) { ?>
-                    <a href="#" onclick="Subscribe(<?=$TopicID?>);$('.subscribelink<?=$TopicID?>').remove();return false;" class="subscribelink<?=$TopicID?>">[Subscribe]</a>
+                    <a href="reports.php?action=report&amp;type=posthistory&amp;id=<?=$PostID?>">[Report]</a> -
+<?php   } ?>
+                    <a href="#" onclick="Subscribe(<?=$TopicID?>);return false;" class="subscribelink<?=$TopicID?>">[<?=(in_array($TopicID, $UserSubscriptions) ? 'Unsubscribe' : 'Subscribe')?>]</a>
                     &nbsp;
-<?php  		} ?>
                     <a href="#">&uarr;</a>
                 </span>
             </td>
@@ -294,7 +314,7 @@ if (empty($Results)) {
 <?php
             }
 ?>
-            <td class='body' valign="top">
+            <td class='postbody' valign="top">
                 <div id="content<?=$PostID?>">
                     <?=$Text->full_format($Body, isset($PermissionsInfo['site_advanced_tags']) &&  $PermissionsInfo['site_advanced_tags'] );?>
 <?php 			if ($EditedUserID) { ?>

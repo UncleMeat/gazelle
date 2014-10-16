@@ -79,11 +79,11 @@ switch ($_REQUEST['action']) {
     case 'get_response':
         require 'ajax_get_response.php';
         break;
-    case 'get_edit':
-        require 'ajax_get_edit.php';
+    case 'ajax_get_edit':
+        require(SERVER_ROOT.'/sections/common/ajax_get_edit.php');
         break;
-    case 'get_message':
-        require 'get_message.php';
+    case 'get_post':
+        require(SERVER_ROOT.'/sections/common/get_post.php');
         break;
     case 'delete_response':
         require 'ajax_delete_response.php';

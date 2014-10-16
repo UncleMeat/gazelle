@@ -659,7 +659,7 @@ list($UniqueGroups) = $DB->next_record();
 ?>
 <?php  if (check_force_anon($UserID) && check_paranoia_here('torrentcomments')) { ?>
                 <li>Forum Posts: <?=number_format($ForumPosts)?> [<a href="userhistory.php?action=posts&amp;userid=<?=$UserID?>" title="View all forum posts by <?=$Username?>">View</a>]</li>
-                <li>Torrent Comments: <?=number_format($NumComments)?> [<a href="comments.php?id=<?=$UserID?>" title="View all torrent comments by <?=$Username?>">View</a>]</li>
+                <li>Torrent Comments: <?=number_format($NumComments)?> [<a href="userhistory.php?action=comments&amp;userid=<?=$UserID?>" title="View all torrent comments by <?=$Username?>">View</a>]</li>
 <?php  } elseif (check_paranoia_here('torrentcomments+')) { ?>
                 <li>Forum Posts: <?=number_format($ForumPosts)?></li>
                 <li>Torrent Comments: <?=number_format($NumComments)?></li>

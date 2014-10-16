@@ -1,10 +1,10 @@
 var username;
 var postid;
 
-function Quote(post, place, user) {
+function Quote(section, post, place, user) {
 	username = user;
 	postid = post;
-	ajax.get("?action=get_post&body=1&post=" + postid, function(response){
+	ajax.get("?action=get_post&section=" + section + "&body=1&post=" + postid, function(response){
             var params = place != '' ? ","+place+","+postid : '';
             var s = "[quote="+username+params+"]" +  html_entity_decode(response) + "[/quote]";
             if ( $('#quickpost').raw().value != '')   s = "\n" + s + "\n";
@@ -13,13 +13,13 @@ function Quote(post, place, user) {
 	});
 }
 
-function Edit_Form(post,key) {
+function Edit_Form(section, post, key) {
 	postid = post;
 	$('#bar' + postid).raw().cancel = $('#content' + postid).raw().innerHTML;
 	$('#bar' + postid).raw().oldbar = $('#bar' + postid).raw().innerHTML;
 	$('#content' + postid).raw().innerHTML = "<div id=\"preview" + postid + "\"></div><input type=\"hidden\" name=\"auth\" value=\"" + authkey + "\" /><input type=\"hidden\" id=\"key"+postid+"\" name=\"key\" value=\"" + key + "\" /><input type=\"hidden\" name=\"post\" value=\"" + postid + "\" /><div id=\"editcont" + postid + "\"></div>";
 	$('#bar' + postid).raw().innerHTML = "<input type=\"button\" value=\"Preview\" onclick=\"Preview_Edit('" + postid + "');\" /><input type=\"button\" value=\"Post\" onclick=\"Save_Edit('" + postid + "')\" /><input type=\"button\" value=\"Cancel\" onclick=\"Cancel_Edit('" + postid + "');\" />";
-	ajax.get("?action=get_post&post=" + postid, function(response){
+	ajax.get("?action=get_post&section=" + section + "&post=" + postid, function(response){
 		$('#editcont' + postid).raw().innerHTML = response;   
 		resize('editbox' + postid);
 	});
@@ -55,36 +55,43 @@ function Cancel_Preview(postid) {
 function Save_Edit(postid) {
 		var ToPost = [];
 		ToPost['auth'] = authkey;
-		ToPost['key'] = $('#key'+postid).raw().value;
+		ToPost['key']  = $('#key'+postid).raw().value;
 		ToPost['post'] = postid;
 		ToPost['body'] = $('#editbox'+postid).raw().value;
-	if (location.href.match(/forums\.php/)) {
+	if (location.href.match(/forums\.php/) || location.href.match(/userhistory\.php\?action\=posts/)) {
 		ajax.post("forums.php?action=takeedit",ToPost, function (response) {
-			$('#bar' + postid).raw().innerHTML = "";
-			$('#preview' + postid).raw().innerHTML = response;
-                  $('#editcont' + postid).hide();
-                  $('#editcont' + postid).raw().innerHTML = '';
+                    $('#bar' + postid).raw().innerHTML = $('#bar' + postid).raw().oldbar;
+                    $('#preview' + postid).raw().innerHTML = response;
+                    $('#editcont' + postid).hide();
+                    $('#editcont' + postid).raw().innerHTML = '';
 		});
 	} else if (location.href.match(/collages?\.php/)) {
 		ajax.post("collages.php?action=takeedit_comment",ToPost, function (response) {
-			$('#bar' + postid).raw().innerHTML = "";
-			$('#preview' + postid).raw().innerHTML = response;
-			$('#editcont' + postid).hide();
-                  $('#editcont' + postid).raw().innerHTML = '';
+                    $('#bar' + postid).raw().innerHTML = $('#bar' + postid).raw().oldbar;
+                    $('#preview' + postid).raw().innerHTML = response;
+                    $('#editcont' + postid).hide();
+                    $('#editcont' + postid).raw().innerHTML = '';
 		});
 	} else if (location.href.match(/requests\.php/)) {
 		ajax.post("requests.php?action=takeedit_comment",ToPost, function (response) {
-			$('#bar' + postid).raw().innerHTML = "";
-			$('#preview' + postid).raw().innerHTML = response;
-			$('#editcont' + postid).hide();
-                  $('#editcont' + postid).raw().innerHTML = '';
+                    $('#bar' + postid).raw().innerHTML = $('#bar' + postid).raw().oldbar;
+                    $('#preview' + postid).raw().innerHTML = response;
+                    $('#editcont' + postid).hide();
+                    $('#editcont' + postid).raw().innerHTML = '';
 		});
+        } else if (location.href.match(/staffpm\.php/)) {
+                ajax.post("staffpm.php?action=takeedit",ToPost, function (response) {
+                    $('#bar' + postid).raw().innerHTML = $('#bar' + postid).raw().oldbar;
+                    $('#preview' + postid).raw().innerHTML = response;
+                    $('#editcont' + postid).hide();
+                    $('#editcont' + postid).raw().innerHTML = '';
+                });
 	} else {
 		ajax.post("torrents.php?action=takeedit_post",ToPost, function (response) {
-			$('#bar' + postid).raw().innerHTML = "";
-			$('#preview' + postid).raw().innerHTML = response;
-                  $('#editcont' + postid).hide();
-                  $('#editcont' + postid).raw().innerHTML = '';
+                    $('#bar' + postid).raw().innerHTML = $('#bar' + postid).raw().oldbar;
+                    $('#preview' + postid).raw().innerHTML = response;
+                    $('#editcont' + postid).hide();
+                    $('#editcont' + postid).raw().innerHTML = '';
 		});
 	}
 }
@@ -110,7 +117,7 @@ function SetSplitInterface() {
 }
 
 function Trash(threadid, postid) {
-    var reason = prompt('Move this post to the Trash forum\n                                                             \nComment:');
+    var reason = prompt('Move this post to the Trash forum\n\nComment:');
 	if (reason && reason != '') {
 		var ToPost = [];
         ToPost['action']= 'trash_post';
@@ -136,7 +143,7 @@ function Trash(threadid, postid) {
 function Delete(post) {
 	postid = post;
 	if (confirm('Are you sure you wish to delete this post?') == true) {
-		if (location.href.match(/forums\.php/)) {
+		if (location.href.match(/forums\.php/) || location.href.match(/userhistory\.php\?action\=posts/)) {
 			ajax.get("forums.php?action=delete&auth=" + authkey + "&postid=" + postid, function () {
 				$('#post' + postid).hide();
 			});
@@ -221,7 +228,7 @@ function Newthread_Preview(mode) {
 }
 
 function LoadEdit(type, post, depth) {
-	ajax.get("forums.php?action=ajax_get_edit&postid=" + post + "&depth=" + depth + "&type=" + type, function(response) {
+	ajax.get("?action=ajax_get_edit&postid=" + post + "&depth=" + depth + "&type=" + type, function(response) {
 			$('#content' + post).raw().innerHTML = response;
 		}
 	);

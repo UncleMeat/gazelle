@@ -8,6 +8,14 @@ function Subscribe(topicid) {
 				subscribeLink.firstChild.nodeValue = "Unsubscribe";
 			}
 		}
+                var subscribeLink = $(".subscribelink" + topicid).raw();
+                if(subscribeLink) {
+                        if(subscribeLink.firstChild.nodeValue.substr(1,2) == 'U') {
+                                subscribeLink.firstChild.nodeValue = "[Subscribe]";
+                        } else {
+                                subscribeLink.firstChild.nodeValue = "[Unsubscribe]";
+                        } 
+		}
 	});
 }
 

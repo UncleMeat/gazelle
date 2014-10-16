@@ -91,7 +91,7 @@ foreach ($Messages as $Message) {
     <div class="head">
         <?=$Users[$SenderID]['UserStr'].' '.time_diff($SentDate);
         if ($SenderID!=0) {
-        ?>  - <a href="#quickpost" onclick="Quote('<?=$MessageID?>','','<?=$Users[$SenderID]['Username']?>');">[Quote]</a>
+        ?>  - <a href="#quickpost" onclick="Quote('pm','<?=$MessageID?>','','<?=$Users[$SenderID]['Username']?>');">[Quote]</a>
         <?php  }
         ?>  - <a href="#quickpost" title="Forward just this message" onclick="Foward_To('<?=$MessageID?>');">[Forward message]</a>
     </div>
