@@ -101,13 +101,13 @@ if (isset($_REQUEST['act']) && $_REQUEST['act']=="recover") {
                 $DB->query("SELECT
                     ID,
                     Username,
-                    Email
+                    Email,
+                    Enabled
                     FROM users_main
-                    WHERE Email='".db_string($_REQUEST['email'])."'
-                    AND Enabled='1'");
-                list($UserID,$Username,$Email)=$DB->next_record();
+                    WHERE Email='".db_string($_REQUEST['email'])."'");
+                list($UserID,$Username,$Email,$Enabled)=$DB->next_record();
 
-                if ($UserID) {
+                if ($UserID && ($Enabled == '1')) {
                     // Email exists in the database
                     // Set ResetKey, send out email, and set $Sent to 1 to show success page
                     $ResetKey=make_secret();
@@ -115,6 +115,7 @@ if (isset($_REQUEST['act']) && $_REQUEST['act']=="recover") {
                         ResetKey='".db_string($ResetKey)."',
                         ResetExpires='".time_plus(60*60)."'
                         WHERE UserID='$UserID'");
+
 
                     require(SERVER_ROOT.'/classes/class_templates.php');
                     $TPL=NEW TEMPLATE;
@@ -141,7 +142,9 @@ if (isset($_REQUEST['act']) && $_REQUEST['act']=="recover") {
                     }
                     $DB->query("UPDATE users_sessions SET Active = 0 WHERE UserID='$UserID' AND Active = 1");
 
-
+                } else if ($UserID && ($Enabled != '1')) {
+                    require 'disabled.php';
+                    die();
                 } else {
                     $Err="There is no user with that email address.";
                 }
