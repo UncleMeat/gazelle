@@ -5,6 +5,7 @@ show_header('Disabled');
 <p class="warning">
     Your account has been disabled.<br />
     This is either due to inactivity or rule violation.<br />
+    To reenable your account contact staff via IRC.<br />
 </p>
 <?php
 
@@ -48,7 +49,6 @@ if ((empty($_POST['submit']) || empty($_POST['username'])) && !isset($Username))
     <div class="thin">
           <h3 id="general">Disabled IRC</h3>
         <div class="">
-              <div class="head">IRC</div>
               <div class="box pad center">
                         <iframe src="<?=HELP_URL?>nick=<?=$nick?>&channels=empornium-help" width="98%" height="600"></iframe>
               </div>

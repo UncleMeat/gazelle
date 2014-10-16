@@ -5,7 +5,7 @@ if (empty($_POST['submit']) || empty($_POST['username'])) {
         echo $Validate->GenerateJS('recoverform');
         ?>
         <form name="recoverform" id="recoverform" method="post" action="" onsubmit="return formVal();">
-              <div style="width:320px;">
+              <div>
                     <font class="titletext">Reset your password - Step 1</font><br /><br />
         <?php
         if (empty($Sent) || (!empty($Sent) && $Sent!=1)) {
@@ -16,8 +16,11 @@ if (empty($_POST['submit']) || empty($_POST['username'])) {
               An email will be sent to your email address with information on how to reset your password<br />
               (check your spam folder if you haven't recieved it within a few minutes)<br /><br />
               <label for="email">Email&nbsp;</label>
-              <input type="text" name="email" id="email" class="inputtext" />
-              <input type="submit" name="reset" value="Reset!" class="submit" />
+              <br />
+              <span>
+                  <input type="text" name="email" id="email" class="inputtext" />
+                  <input type="submit" name="reset" value="Reset!" class="submit" />
+              </span>
 
         <?php  } else { ?>
               An email has been sent to you, please follow the directions in that email to reset your password.<br />
