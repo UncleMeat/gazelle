@@ -1,10 +1,16 @@
 <?php
 show_header('Disabled');
+
+?>
+<p class="warning">
+    Your account has been disabled.<br />
+    This is either due to inactivity or rule violation.<br />
+</p>
+<?php
+
 if ((empty($_POST['submit']) || empty($_POST['username'])) && !isset($Username)) {
     ?>
     <p class="warning">
-    Your account has been disabled.<br />
-    This is either due to inactivity or rule violation.<br />
     To discuss this come to our IRC at: <?=BOT_SERVER?><br />
     And join <?=BOT_DISABLED_CHAN?><br /><br />
     Be honest - at this point, lying will get you nowhere.<br /><br />
@@ -20,6 +26,12 @@ if ((empty($_POST['submit']) || empty($_POST['username'])) && !isset($Username))
     </form>
     <?php
 } else {
+    ?>
+    <p class="warning">
+    Be honest - at this point, lying will get you nowhere.<br /><br />
+    </p>
+    <?php
+
     if (isset($Username)) {
         $nick = $Username;
     } else {
@@ -29,7 +41,8 @@ if ((empty($_POST['submit']) || empty($_POST['username'])) && !isset($Username))
     if (strlen($nick) == 0) {
         $nick = "EmpGuest?";
     }
-      $nick = "disabled_$nick";
+
+    $nick = "disabled_$nick";
 
     ?>
     <div class="thin">

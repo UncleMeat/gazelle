@@ -142,7 +142,7 @@ if (isset($_REQUEST['act']) && $_REQUEST['act']=="recover") {
                     }
                     $DB->query("UPDATE users_sessions SET Active = 0 WHERE UserID='$UserID' AND Active = 1");
 
-                } else if ($UserID && ($Enabled != '1')) {
+                } else if ($UserID && ($Enabled == '2')) {
                     require 'disabled.php';
                     die();
                 } else {
@@ -242,6 +242,7 @@ else {
             // Passes preliminary validation (username and password "look right")
             $DB->query("SELECT
                 ID,
+                Username,
                 PermissionID,
                 CustomPermissions,
                 PassHash,
@@ -249,7 +250,7 @@ else {
                 Enabled
                 FROM users_main WHERE Username='".db_string($_POST['username'])."'
                 AND Username<>''");
-            list($UserID,$PermissionID,$CustomPermissions,$PassHash,$Secret,$Enabled)=$DB->next_record(MYSQLI_NUM, array(2));
+            list($UserID,$Username,$PermissionID,$CustomPermissions,$PassHash,$Secret,$Enabled)=$DB->next_record(MYSQLI_NUM, array(2));
             if (strtotime($BannedUntil)<time()) {
                             //die("{$_POST['password']}, PassHash: $PassHash, Secret: $Secret, Generated PassHash:".make_hash($_POST['password'],$Secret));
                 if ($UserID && $PassHash==make_hash($_POST['password'],$Secret)) {
@@ -309,8 +310,8 @@ else {
                     } else {
                         log_attempt($UserID);
                         if ($Enabled==2) {
-
-                            header('location:login.php?action=disabled');
+                            require 'disabled.php';
+                            die();
                         } elseif ($Enabled==0) {
                             $Err="Your account has not been confirmed.<br />Please check your email.";
                         }
