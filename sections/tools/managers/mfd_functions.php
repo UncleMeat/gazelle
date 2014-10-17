@@ -102,6 +102,9 @@ function get_num_overdue_torrents($WhereStatus = 'warned')
     global $DB;
 
     switch ($WhereStatus) {
+        case 'unmarked':
+            return 0;
+            break;
         case 'pending':
             $WHERE= "tr.Status = 'Pending' ";
             break;

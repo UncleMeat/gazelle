@@ -425,6 +425,7 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                 <tr>
                     <td class="label" style="width:140px">Order by:</td>
                     <td colspan="<?= ($AdvancedSearch) ? '3' : '1' ?>">
+                        <span style="float:left">
                         <select name="order_by" style="width:auto;">
                             <option value="time"<?php  selected('order_by', 'time') ?>>Time added</option>
                             <option value="size"<?php  selected('order_by', 'size') ?>>Size</option>
@@ -437,13 +438,21 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                             <option value="desc"<?php  selected('order_way', 'desc') ?>>Descending</option>
                             <option value="asc" <?php  selected('order_way', 'asc') ?>>Ascending</option>
                         </select>
+                        </span>
+                        <span style="float:left">
                         <label style="margin-left: 20px;" for="filter_freeleech" title="Limit results to ONLY freeleech torrents"><strong>Include only freeleech torrents.</strong></label>
                         <input type="checkbox" name="filter_freeleech" value="1" <?php  selected('filter_freeleech', 1, 'checked') ?>/>
                     <?php  if (check_perms('site_search_many')) { ?>
                             <label style="margin-left:20px;" for="limit_matches" title="Limit results to the first 100 matches"><strong>Limit results (max 100):</strong></label>
                             <input type="checkbox" value="1" name="limit_matches" <?php  selected('limit_matches', 1, 'checked') ?> />
                     <?php  } ?>
-                <span style="float:right"><a href="#" onclick="$('.on_cat_change').toggle();$('.non_cat_change').toggle(); if (this.innerHTML=='(View Categories)') {this.innerHTML='(Hide Categories)';} else {this.innerHTML='(View Categories)';}; return false;"><?= (!empty($LoggedUser['HideCats'])) ? '(View Categories)' : '(Hide Categories)' ?></a></span>
+                    <?php  if (check_perms('torrents_review')) { ?>
+                            <br />
+                            <label style="margin-left:16px;" for="filter_unmarked" title="Limit results to unmarked torrents only"><strong>Include only unmarked torrents.</strong></label>
+                            <input type="checkbox" value="1" name="filter_unmarked" <?php  selected('filter_unmarked', 1, 'checked') ?> />
+                    <?php  } ?>
+                    </span>
+                    <span style="float:right"><a href="#" onclick="$('.on_cat_change').toggle();$('.non_cat_change').toggle(); if (this.innerHTML=='(View Categories)') {this.innerHTML='(Hide Categories)';} else {this.innerHTML='(View Categories)';}; return false;"><?= (!empty($LoggedUser['HideCats'])) ? '(View Categories)' : '(Hide Categories)' ?></a></span> 
 
                     <input class="non_cat_change <?php  if (empty($LoggedUser['HideCats'])) { ?>hidden<?php  } ?>" style="float:right;position:relative;right:2px;top:45px;"
                            type="submit" value="Filter Torrents" />
@@ -642,6 +651,9 @@ $Bookmarks = all_bookmarks('torrent');
         list($TorrentID, $Data) = each($Torrents);
 
         $Review = get_last_review($GroupID);
+        if(isset($_GET['filter_unmarked']) && $_GET['filter_unmarked'] == 1 && $Review['Status']){
+             continue;
+        }
 
         $day = date('j', strtotime($Data['Time'])  - $LoggedUser['TimeOffset']);
         if ($AllTorrents && $LoggedUser['SplitByDays'] && $lastday !== $day) {
