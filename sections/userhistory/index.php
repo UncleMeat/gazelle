@@ -12,8 +12,6 @@ non members.
 //Include all the basic stuff...
 enforce_login();
 
-include(SERVER_ROOT.'/sections/forums/functions.php');
-
 if ($_GET['action']) {
     switch ($_GET['action']) {
         case 'tag_history':

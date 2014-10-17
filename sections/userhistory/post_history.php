@@ -9,7 +9,7 @@ if (!empty($LoggedUser['DisableForums'])) {
 }
 
 include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
-//include(SERVER_ROOT.'/sections/forums/functions.php'); // Forum functions
+include_once(SERVER_ROOT.'/sections/forums/functions.php'); // Forum functions
 $Text = new TEXT;
 
 $UserID = empty($_GET['userid']) ? $LoggedUser['ID'] : $_GET['userid'];
