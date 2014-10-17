@@ -131,18 +131,37 @@ function get_num_overdue_torrents($WhereStatus = 'warned')
  // passing an array of ints as last param makes the where clause ignores the first 2 params
 function get_torrents_under_review($ViewStatus = 'warned', $ReturnOverdueOnly = true, $InGroupIDs = false)
 {
-      global $DB;
+    global $DB;
 
-      if ($InGroupIDs !== false && is_array($InGroupIDs)) {
-          $WHERE = 't.GroupID IN (';
-          $Sep = '';
-          foreach ($InGroupIDs as &$ID) {
-                $ID = (int) $ID;
-                $WHERE .= "$Sep $ID";
-                $Sep = ',';
-          }
-          $WHERE .= ' ) ';
-      } else {
+    if ($InGroupIDs !== false && is_array($InGroupIDs)) {
+        $WHERE = 't.GroupID IN (';
+        $Sep = '';
+        foreach ($InGroupIDs as &$ID) {
+            $ID = (int) $ID;
+            $WHERE .= "$Sep $ID";
+            $Sep = ',';
+        }
+        $WHERE .= ' ) ';
+    } else if ($ViewStatus == 'unmarked') {
+        $DB->query("SELECT t.ID,
+                           t.GroupID,
+                           tg.Name,
+                           'Unmarked',
+                           0,
+                           t.Time,
+                           'Awaiting review' AS Reason,
+                           t.UserID,
+                           um.Username
+              FROM torrents AS t
+                    JOIN torrents_group AS tg ON tg.ID = t.GroupID
+               LEFT JOIN users_main AS um ON um.ID=t.UserID
+               LEFT JOIN torrents_reviews AS tr ON tr.GroupID=t.GroupID
+                   WHERE tr.GroupID IS NULL AND t.Time > '2013-01-01 00:00:00'");
+
+    $Torrents = $DB->to_array();
+
+      return $Torrents;
+    } else {
           switch ($ViewStatus) {
               case 'pending':
                   $WHERE= "tr.Status = 'Pending' ";
@@ -156,7 +175,7 @@ function get_torrents_under_review($ViewStatus = 'warned', $ReturnOverdueOnly = 
                   break;
           }
           if ($ReturnOverdueOnly) $WHERE .=  "AND tr.KillTime < '".sqltime()."' ";
-      }
+
 
       $DB->query("SELECT t.ID,
                          t.GroupID,
@@ -179,7 +198,7 @@ function get_torrents_under_review($ViewStatus = 'warned', $ReturnOverdueOnly = 
                 ORDER BY KillTime");
 
     $Torrents = $DB->to_array();
-
+    }
       return $Torrents;
 }
 
