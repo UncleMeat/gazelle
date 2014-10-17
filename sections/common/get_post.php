@@ -27,7 +27,9 @@ switch ($_REQUEST['section']) {
             FROM forums_posts as p JOIN forums_topics as t on p.TopicID = t.ID
             WHERE p.ID='$PostID'");
         list($Body, $ForumID) = $DB->next_record(MYSQLI_NUM);
+
         // Is the user allowed to view the post?
+        include_once(SERVER_ROOT.'/sections/forums/functions.php'); // Forum functions
         if (!check_forumperm($ForumID)) {
             error(0);
         }
