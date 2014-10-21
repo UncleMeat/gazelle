@@ -238,63 +238,63 @@ if ($DB->affected_rows() > 0 || !$Report) {
             WHERE UserID=".$UploaderID);
     }
 
-      if ($Bounty && $ReporterID) {
-          $Bounty = (int) $ResolveType['resolve_options']['bounty'];
-          if ($Bounty>0) {
+    if ($Bounty && $ReporterID) {
+        $Bounty = (int) $ResolveType['resolve_options']['bounty'];
+        if ($Bounty>0) {
 
-                $SET = "m.Credits=(m.Credits+$Bounty)";
-                $Summary = sqltime()." - User received a bounty payment of $Bounty credits.";
-                $SET .=",i.AdminComment=CONCAT_WS( '\n', '".db_string($Summary)."', i.AdminComment)";
-                $Summary = sqltime()." | +$Bounty credits | You got a bounty payment.";
-                $SET .=",i.BonusLog=CONCAT_WS( '\n', '".db_string($Summary)."', i.BonusLog)";
+              $SET = "m.Credits=(m.Credits+$Bounty)";
+              $Summary = sqltime()." - User received a bounty payment of $Bounty credits.";
+              $SET .=",i.AdminComment=CONCAT_WS( '\n', '".db_string($Summary)."', i.AdminComment)";
+              $Summary = sqltime()." | +$Bounty credits | You got a bounty payment.";
+              $SET .=",i.BonusLog=CONCAT_WS( '\n', '".db_string($Summary)."', i.BonusLog)";
 
-                $DB->query("UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET $SET WHERE m.ID='$ReporterID'");
-                $Cache->delete_value('user_stats_'.$ReporterID);
+              $DB->query("UPDATE users_main AS m JOIN users_info AS i ON m.ID=i.UserID SET $SET WHERE m.ID='$ReporterID'");
+              $Cache->delete_value('user_stats_'.$ReporterID);
 
-                $Body = "Thank-you for your {$ResolveType['title']} report re: [url=http://".NONSSL_SITE_URL."/torrents.php?torrentid=$TorrentID]{$RawName}[/url]\n\nYou received a bounty payment of $Bounty credits.";
+              $Body = "Thank-you for your {$ResolveType['title']} report re: [url=http://".NONSSL_SITE_URL."/torrents.php?torrentid=$TorrentID]{$RawName}[/url]\n\nYou received a bounty payment of $Bounty credits.";
 
-                send_pm($ReporterID, 0, "Received Bounty Payment", db_string($Body));
-          }
-      }
+              send_pm($ReporterID, 0, "Received Bounty Payment", db_string($Body));
+        }
+    }
 
     if ($Warning > 0) {
         $WarnLength = $Warning * (7*24*60*60);
-        $Reason = "Uploader of torrent (".$TorrentID.") ".$RawName." which was resolved with the preset: ".$ResolveType['title'].".";
-        if ($Escaped['admin_message']) {
-            $Reason .= " (".$Escaped['admin_message'].").";
-        }
+        $Reason = "Uploader of torrent [url=/torrents.php?id=".$TorrentID."]".$RawName."[/url] which was reported (ID: ".$ReportID.") as ".$ResolveType['title'].".";
         if ($Upload) {
-            $Reason .= " (Upload privileges Removed).";
+            $Reason .= " Upload privileges Disabled.";
+        }
+        if ($Escaped['admin_message']) {
+            $Reason .= " Notes: ".$Escaped['admin_message'];
         }
 
         warn_user($UploaderID, $WarnLength, $Reason);
     } else {
         //This is a bitch for people that don't warn but do other things, it makes me sad.
-        $AdminComment = "";
+        $StaffNote = "";
         if ($Upload) {
             //They removed upload
-            $AdminComment .= "Upload privileges removed by ".$LoggedUser['Username'];
-            $AdminComment .= "\nReason: Uploader of torrent (".$TorrentID.") ".db_string($RawName)." which was resolved with the preset: ".$ResolveType['title'].". (Report ID: $ReportID)";
+            $StaffNote .= "Upload privileges Disabled by ".$LoggedUser['Username'];
+            $StaffNote .= "\nReason: Uploader of torrent [url=/torrents.php?id=".$TorrentID."]".$RawName."[/url] which was reported (ID: ".$ReportID.") as ".$ResolveType['title'].".";
         }
         if ($Escaped['admin_message']) {
             //They did nothing of note, but still want to mark it (Or upload and mark)
-            $AdminComment .= " (".$Escaped['admin_message'].")";
+            if ($StaffNote) {
+                $StaffNote .= " Notes: ".$Escaped['admin_message'];
+            } else {
+                $StaffNote .= "Notes added by ".$LoggedUser['Username']."\nReason: Uploader of torrent [url=/torrents.php?id=".$TorrentID."]".$RawName."[/url] which was reported (ID: ".$ReportID.") as ".$ResolveType['title'].". Notes: ".$Escaped['admin_message'];
+            }
         }
-        if ($AdminComment) {
-            $AdminComment = date("Y-m-d").' - '.$AdminComment."\n\n";
-
-            $DB->query("UPDATE users_info SET
-                AdminComment=CONCAT('".db_string($AdminComment)."',AdminComment)
-                WHERE UserID='".db_string($UploaderID)."'");
+        if ($StaffNote) {
+            write_user_log($UploaderID, $StaffNote);
         }
     }
 
     //PM
     if ($Escaped['uploader_pm'] || $Warning > 0 || isset($Escaped['delete']) || $SendPM) {
         if (isset($Escaped['delete'])) {
-            $PM = "[url=http://".NONSSL_SITE_URL."/torrents.php?torrentid=".$TorrentID."]Your above torrent[/url] was reported and has been deleted.\n\n";
+            $PM = "[url=/torrents.php?torrentid=".$TorrentID."]Your above torrent[/url] was reported and has been deleted.\n\n";
         } else {
-            $PM = "[url=http://".NONSSL_SITE_URL."/torrents.php?torrentid=".$TorrentID."]Your above torrent[/url] was reported but not deleted.\n\n";
+            $PM = "[url=/torrents.php?torrentid=".$TorrentID."]Your above torrent[/url] was reported but not deleted.\n\n";
         }
 
         $Preset = $ResolveType['resolve_options']['pm'];
@@ -319,7 +319,7 @@ if ($DB->affected_rows() > 0 || !$Report) {
             $PM .= "\nMessage from ".$LoggedUser['Username'].": ".$PMMessage;
         }
 
-        $PM .= "\n\nReport was handled by [user]".$LoggedUser['Username']."[/user].";
+        $PM .= "\n\nReport was handled by [url=/staff.php?]".$LoggedUser['Username']."[/url].";
 
         send_pm($UploaderID, 0, db_string($Escaped['raw_name']), db_string($PM));
     }
