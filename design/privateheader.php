@@ -561,11 +561,11 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
 <?php  } ?>
                 <ul id="userinfo_username">
                           <li id="nav_upload" class="brackets"><a href="upload.php">Upload</a></li>
-                 <li id="nav_userinfo" class="<?=($NewMessages||$NumAnsweredStaffPMs||$NumOpenStaffPMs||$NewStaffPMs||$NewNotifications||$NewSubscriptions)? 'highlight' : 'normal'?>"><a href="user.php?id=<?=$LoggedUser['ID']?>" class="username"><?=$LoggedUser['Username']?></a>
+                 <li id="nav_userinfo" class="<?=($NewMessages||$NumUnansweredStaffPMs||$NewStaffPMs||$NewNotifications||$NewSubscriptions)? 'highlight' : 'normal'?>"><a href="user.php?id=<?=$LoggedUser['ID']?>" class="username"><?=$LoggedUser['Username']?></a>
                           <ul>
                                 <li id="nav_inbox" class="<?=$NewMessages ? 'highlight' : 'normal'?>"><a onmousedown="Stats('inbox');" href="inbox.php">Inbox<?=$NewMessages ? "($NewMessages)" : ''?></a></li>
     <?php  if ($LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1) {  ?>
-                      <li id="nav_staffinbox" class="<?=($NumUnansweredStaffPMs||$NumOpenStaffPMs)? 'highlight' : 'normal'?>">
+                      <li id="nav_staffinbox" class="<?=($NumUnansweredStaffPMs)? 'highlight' : 'normal'?>">
                           <a onmousedown="Stats('staffinbox');" href="staffpm.php?action=staff_inbox&amp;view=open">Staff Inbox <?="($NumUnansweredStaffPMs) ($NumOpenStaffPMs)"?></a>
                       </li>
     <?php  } ?>
