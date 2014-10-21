@@ -194,7 +194,7 @@ foreach ($TorrentList as $GroupID=>$Group) {
 
 ?>
         <li class="image_group_<?=$GroupID?>">
-            <a href="#group_<?=$GroupID?>">
+            <a href="torrents.php?id=<?=$GroupID?>">
 <?php	if ($Image) {
         if (check_perms('site_proxy_images')) {
             $Image = 'http'.($SSL?'s':'').'://'.SITE_URL.'/image.php?i='.urlencode($Image);
