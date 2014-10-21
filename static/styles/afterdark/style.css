@@ -1788,11 +1788,10 @@ div.modcomment { /*mcom */
 	/*float:left;*/
     text-align: left;
     margin: 12px auto;
-	padding-top: 10px;
+    padding-top: 10px;
     padding-bottom: 25px;
     padding-right: 10px;
     padding-left: 10px;
-    /*padding: 10px;*/
     border: 2px solid #600;
     color: black;
     font-size: 9pt;
