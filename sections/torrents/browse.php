@@ -419,9 +419,6 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                 <tr>
                     <td colspan="7" style="text-align:right">
 
-                    <input style="float:right;position:relative;left:-32px;bottom:-116px;" class="on_cat_change <?php  if (!empty($LoggedUser['HideCats'])) { ?>hidden<?php  } ?>"
-                           type="submit" value="Filter Torrents" />
-
                         <input type="button" value="Reset" onclick="location.href='torrents.php?action=<?php  if (isset($_GET['action']) && $_GET['action'] == "advanced") { ?>advanced<?php  } else { ?>basic<?php  } ?>'" />
                 &nbsp;&nbsp;
                 <?php  if (count($Queries) > 0 || count($SS->Filters) > 0) { ?>
@@ -527,30 +524,38 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                         <textarea id="tags" name="taglist" cols="50" rows="1" class="inputtext" onkeyup="resize('tags');"  title="Supports full boolean search" ><?= str_replace('_', '.', form('taglist', true)) ?></textarea>&nbsp;
 
                 <?php  } else { // BASIC SEARCH ?>
-
-                        <input type="text" size="40" id="tags" name="taglist" class="inputtext" title="Use 'Any' or 'All' option to determine whether search is AND or OR" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />&nbsp;
+                        <input type="text" size="40" id="tags" name="taglist" class="inputtext" title="Use 'Any' or 'All' option to determine whether search is AND or OR" value="<?= str_replace('_', '.', form('taglist', true)) ?>" />
                         <input type="radio" name="tags_type" id="tags_type0" value="0" <?php  selected('tags_type', 0, 'checked') ?> /><label for="tags_type0"> Any</label>&nbsp;&nbsp;
                         <input type="radio" name="tags_type" id="tags_type1" value="1"  <?php  selected('tags_type', 1, 'checked') ?> /><label for="tags_type1"> All</label>&nbsp;&nbsp;
 
                 <?php  } ?>
                         <div class="autoresults">
-                            <input type="text" id="torrentssearch" value="search tags"
-                                        onfocus="if (this.value == 'search tags') this.value='';"
-                                        onblur="if (this.value == '') this.value='search tags';"
-                                        onkeyup="return autocomp.keyup(event);"
-                                        onkeydown="return autocomp.keydown(event);"
-                                        autocomplete="off"
-                                        title="enter text to search for tags, click (or enter) to select a tag from the drop-down (BETA)" />
-                            <ul id="torrentscomplete"></ul>
+                            <span style="float:left">
+                                <div id="tag_search">
+                                    <input type="text" id="torrentssearch" value="search tags"
+                                           onfocus="if (this.value == 'search tags') this.value='';"
+                                           onblur="if (this.value == '') this.value='search tags';"
+                                           onkeyup="return autocomp.keyup(event);"
+                                           onkeydown="return autocomp.keydown(event);"
+                                           autocomplete="off"
+                                           title="enter text to search for tags, click (or enter) to select a tag from the drop-down (BETA)" />
+                                    <ul id="torrentscomplete"></ul>
+                                </div>
+                                <span style="float:right;padding-right:5px">
+                                    <a href="#" onclick="$('#taglist').toggle(); if (this.innerHTML=='(View Tags)') {this.innerHTML='(Hide Tags)';} else {this.innerHTML='(View Tags)';}; return false;"><?= (empty($LoggedUser['ShowTags'])) ? '(View Tags)' : '(Hide Tags)' ?></a>
+                                </span>
+                            </span>
+                            <span style="float:right;padding-left:5px">
+                                <input style="float:right;"
+                                       class="on_cat_change <?php  if (!empty($LoggedUser['HideCats'])) { ?>hidden<?php  } ?>"
+                                       type="submit"
+                                       value="Filter Torrents" />
+                            </span>
                         </div>
                     </td>
                 </tr>
-        </div>
-            </table>
-            <div>
-                <span style="float:left;margin-left:80%;"><a href="#" onclick="$('#taglist').toggle(); if (this.innerHTML=='(View Tags)') {this.innerHTML='(Hide Tags)';} else {this.innerHTML='(View Tags)';}; return false;"><?= (empty($LoggedUser['ShowTags'])) ? '(View Tags)' : '(Hide Tags)' ?></a></span>
-                <br/>
             </div>
+            </table>
             <table width="100%" class="taglist <?php  if (empty($LoggedUser['ShowTags'])) { ?>hidden<?php  } ?>" id="taglist">
                 <tr class="row<?=$row?>">
                     <?php
