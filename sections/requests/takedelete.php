@@ -31,7 +31,8 @@ if ($UserID != $LoggedUser['ID']) {
     send_pm($UserID, 0, db_string("A request you created has been deleted"), db_string("The request '".$FullName."' was deleted by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url] for the reason: ".$_POST['reason']));
 }
 
-write_log("Request $RequestID ($FullName) was deleted by user ".$LoggedUser['ID']." (".$LoggedUser['Username'].") for the reason: ".$_POST['reason']);
+write_log("Request $RequestID ($FullName) was deleted by ".$LoggedUser['Username']." for the reason: ".$_POST['reason']);
+write_user_log($UserID, "Request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was deleted and the bounty was not returned by".$LoggedUser['Username']." \nReason: ".$_POST['reason']);
 
 $Cache->delete_value('request_'.$RequestID);
 $Cache->delete_value('request_votes_'.$RequestID);

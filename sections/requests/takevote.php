@@ -54,7 +54,9 @@ if ($LoggedUser['BytesUploaded'] < $Amount) {
 
     // Subtract amount from user
     $DB->query("UPDATE users_main SET Uploaded = (Uploaded - ".$Amount.") WHERE ID = ".$LoggedUser['ID']);
-    write_user_log($LoggedUser['ID'], "Removed -". get_size($Amount). " for vote on [url=/requests.php?action=view&id={$RequestID}]Request {$RequestID}[/url] ");
+    $DB->query("SELECT Title FROM requests WHERE ID = ".$RequestID);
+    list($Title)=$DB->next_record();
+    write_user_log($LoggedUser['ID'], "Removed -". get_size($Amount). " for vote on [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url]");
 
     $Cache->delete_value('user_stats_'.$LoggedUser['ID']);
 
@@ -63,5 +65,5 @@ if ($LoggedUser['BytesUploaded'] < $Amount) {
     $RequestVotes = get_votes_array($RequestID);
 
     echo json_encode(array( $voteaction, $Bounty,
-                            $RequestVotes['TotalBounty'], count($RequestVotes['Voters']), get_votes_html( $RequestVotes ) ) );
+                            $RequestVotes['TotalBounty'], count($RequestVotes['Voters']), get_votes_html( $RequestVotes, $RequestID ) ) );
 }

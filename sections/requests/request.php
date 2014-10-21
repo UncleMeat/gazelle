@@ -101,7 +101,7 @@ show_header('View request: '.$FullName, 'comments,requests,bbcode,jquery,jquery.
         <div class="head"><strong>Top Contributors</strong></div>
         <table class="box box_votes" id="request_votes">
 <?php
-    echo get_votes_html($RequestVotes);
+    echo get_votes_html($RequestVotes, $RequestID);
 ?>
         </table><br/>
     </div>

@@ -30,6 +30,7 @@ if (!isset($_REQUEST['action'])) {
             break;
         case 'delete':
         case 'unfill':
+	case 'delete_vote':
             include(SERVER_ROOT.'/sections/requests/interim.php');
             break;
         case 'takeunfill':
@@ -37,6 +38,9 @@ if (!isset($_REQUEST['action'])) {
             break;
         case 'takedelete':
             include(SERVER_ROOT.'/sections/requests/takedelete.php');
+            break;
+        case 'takedelete_vote':
+            include(SERVER_ROOT.'/sections/requests/takedelete_vote.php');
             break;
         case 'view':
         case 'viewrequest':
