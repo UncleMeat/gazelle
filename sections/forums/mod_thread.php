@@ -314,12 +314,17 @@ if (isset($_POST['split'])) {
 
     $SET_NUMPOSTS = '';
 
-    if (isset($_POST['trash'])) {
-        $ForumID = TRASH_FORUM_ID;
-        $Title = "Trashed Thread - from \"$OldTitle\"";
-
-        $SystemPost = "[quote=the system]This thread moved from [b][url=/forums.php?action=viewforum&forumid=$OldForumID]{$OldForumName}[/url][/b] forum.[/quote]";
-        $SystemPost .= "[b]$LoggedUser[Username] trashed this thread ($sqltime) because:[/b][br][br]{$_POST[comment]}";
+    if (isset($_POST['trash']) || ($ForumID!=$OldForumID)) {
+        $DB->query("SELECT Name FROM forums WHERE ID='$ForumID'");
+        list($ForumName) = $DB->next_record();
+        $SystemPost = "[quote=the system]This thread moved from the [b][url=/forums.php?action=viewforum&forumid=$OldForumID]{$OldForumName}[/url][/b] forum to the [b][url=/forums.php?action=viewforum&forumid=$ForumID]{$ForumName}[/url][/b] forum.[/quote]";
+        if (isset($_POST['trash'])) {
+            $ForumID = TRASH_FORUM_ID;
+            $Title = "Trashed Thread - from \"$OldTitle\"";
+            $SystemPost .= "[b]$LoggedUser[Username] trashed this thread ($sqltime) because:[/b][br][br]{$_POST[comment]}";
+        } else {
+            $SystemPost .= "[b]$LoggedUser[Username] moved this thread ($sqltime)[/b]";
+        }
 
         $DB->query("SELECT Count(ID), Min(AddedTime) FROM forums_posts WHERE TopicID='$TopicID'");
         list($NumPosts, $FirstAddedTime) = $DB->next_record();
