@@ -21,8 +21,6 @@ if (!empty($_GET['userid'])) {
 
 $Sneaky = ($UserID != $LoggedUser['ID']);
 
-$Data = $Cache->get_value('bookmarks_torrent_'.$UserID.'_full');
-
 $Type = $_GET['type'];
 
 if (!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
@@ -38,6 +36,7 @@ if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('Title', 'Siz
     $OrderBy = $_GET['order_by'];
 }
 
+$Data = $Cache->get_value('bookmarks_torrent_'.$UserID.'_full'.$OrderBy.'_'.$OrderWay);
 
 if ($Data) {
     $Data = unserialize($Data);
@@ -301,4 +300,4 @@ if ($CollageCovers != 0) { ?>
 </div>
 <?php
 show_footer();
-$Cache->cache_value('bookmarks_torrent_'.$UserID.'_full', serialize(array(array($TorrentList, $CollageDataList))), 3600);
+$Cache->cache_value('bookmarks_torrent_'.$UserID.'_full'.$OrderBy.'_'.$OrderWay, serialize(array(array($TorrentList, $CollageDataList))), 3600);
