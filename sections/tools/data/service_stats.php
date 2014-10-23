@@ -15,10 +15,8 @@ show_header("Service Stats");
 </div>
 <div class="permissions">
     <div class="permission_container">
+        <div class="head">Service</div>
         <table>
-            <tr>
-                <td colspan="2" class="colhead">Service</td>
-            </tr>
             <tr><td colspan="2"><strong>Threads (Active)</strong></td></tr>
             <tr>
                 <td>Cache:</td>
@@ -68,10 +66,8 @@ show_header("Service Stats");
         </table>
     </div>
     <div class="permission_container">
+        <div class="head">Activity</div>
         <table>
-            <tr>
-                <td colspan="2" class="colhead">Activity</td>
-            </tr>
             <tr><td colspan="2"><strong>Total Reads</strong></td></tr>
             <tr>
                 <td>Cache:</td>
@@ -172,10 +168,8 @@ show_header("Service Stats");
         </table>
     </div>
     <div class="permission_container">
+        <div class="head">Concurrency</div>
         <table>
-            <tr>
-                <td colspan="2" class="colhead">Concurrency</td>
-            </tr>
             <tr><td colspan="2"><strong>Total Reads</strong></td></tr>
             <tr>
                 <td<?php  if (($MemStats['cmd_get']/$MemStats['uptime'])*5 < $DBStats['Com_select']['Value']/$DBStats['Uptime']['Value']) { echo ' class="invalid" '; } ?>>Cache:</td>
@@ -275,6 +269,8 @@ show_header("Service Stats");
             </tr>
         </table>
     </div>
+    <div class="clear"></div>
 </div>
 <?php
 show_footer();
+?>
