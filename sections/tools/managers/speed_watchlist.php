@@ -40,7 +40,7 @@ show_header('Watchlist','watchlist');
              LEFT JOIN users_info AS ui ON ui.UserID=wl.UserID
              LEFT JOIN users_main AS um2 ON um2.ID=wl.StaffID
              LEFT JOIN xbt_peers_history AS xbt ON xbt.uid=wl.UserID
-                 GROUP BY xbt.uid
+                 GROUP BY wl.UserID
               ORDER BY $OrderBy $OrderWay
                  LIMIT $Limit");
 
