@@ -8,7 +8,7 @@ Using $_GET['userid'] allows a mod to see any user's token history.
 Nonmods and empty userid show $LoggedUser['ID']'s history
 ************************************************************************/
 
-include(SERVER_ROOT.'/sections/common/functions.php');
+include(SERVER_ROOT.'/common/functions.php');
 
 if (!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
     $OrderWay = 'asc'; // For header links

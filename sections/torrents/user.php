@@ -5,7 +5,7 @@ if (!check_force_anon($_GET['userid'])) {
      error(403);
 }
 
-include(SERVER_ROOT . '/sections/common/functions.php');
+include(SERVER_ROOT . '/common/functions.php');
 include(SERVER_ROOT . '/sections/bookmarks/functions.php');
 
 $Orders = array('Time', 'Name', 'Seeders', 'Leechers', 'Snatched', 'Size');

@@ -1,6 +1,6 @@
 <?php
 enforce_login();
-include(SERVER_ROOT.'/sections/common/functions.php');
+include(SERVER_ROOT.'/common/functions.php');
 include(SERVER_ROOT.'/sections/bookmarks/functions.php');
 
 // Number of users per page

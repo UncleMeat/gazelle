@@ -1,7 +1,7 @@
 <?php
 define('RESULTS_PER_PAGE', 100);
 
-include(SERVER_ROOT.'/sections/common/functions.php');
+include(SERVER_ROOT.'/common/functions.php');
 
 if (!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
     $OrderWay = 'asc'; // For header links

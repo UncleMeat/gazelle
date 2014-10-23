@@ -1,6 +1,6 @@
 <?php
 
-include(SERVER_ROOT . '/sections/common/functions.php');
+include(SERVER_ROOT . '/common/functions.php');
 
 function format_torrentid($torrentID, $name, $maxlen = 20)
 {

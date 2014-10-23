@@ -1,6 +1,6 @@
 <?php
 
-include(SERVER_ROOT . '/sections/common/functions.php');
+include(SERVER_ROOT . '/common/functions.php');
 
 if (!check_perms('admin_login_watch')) { error(403); }
 

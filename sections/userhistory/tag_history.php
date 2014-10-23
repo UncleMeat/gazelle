@@ -1,6 +1,6 @@
 <?php
 
-include(SERVER_ROOT.'/sections/common/functions.php');
+include(SERVER_ROOT.'/common/functions.php');
 
 $Includes = array('all','own','other');
 $Orders = array('TagID', 'TagName', 'AdderID', 'AddedBy', 'IsAdder', 'IsOwner', 'TorrentID', 'TorrentName','UploaderID','Uploader','Votes','Way');

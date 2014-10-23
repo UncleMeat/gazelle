@@ -68,7 +68,7 @@ if (isset($_POST['submit'])) {
 }
 
 define('BANS_PER_PAGE', '50');
-include(SERVER_ROOT . '/sections/common/functions.php');
+include(SERVER_ROOT . '/common/functions.php');
 
 if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('FromIP', 'Username', 'Staffname', 'EndTime', 'Notes'  ))) {
     $_GET['order_by'] = 'FromIP';

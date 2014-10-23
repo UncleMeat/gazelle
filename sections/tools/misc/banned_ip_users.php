@@ -1,6 +1,6 @@
 <?php
 if (!check_perms('users_view_ips')) { error(403); }
-include(SERVER_ROOT . '/sections/common/functions.php');
+include(SERVER_ROOT . '/common/functions.php');
 
 if (empty($_GET['order_way']) || $_GET['order_way'] == 'asc') {
     $OrderWay = 'desc'; // For header links

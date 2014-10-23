@@ -1,7 +1,7 @@
 <?php
 if (!check_perms('users_view_ips')) { error(403); }
 
-include(SERVER_ROOT . '/sections/common/functions.php');
+include(SERVER_ROOT . '/common/functions.php');
 
 define('USERS_PER_PAGE', 50);
 define('IP_OVERLAPS', 5);
