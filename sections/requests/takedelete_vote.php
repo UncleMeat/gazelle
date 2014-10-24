@@ -17,7 +17,7 @@ if (is_number($RequestID) && is_number($VoterID)) {
     $DB->query("UPDATE users_main SET UPLOADED = (UPLOADED + $Bounty) WHERE ID = ".$VoterID);
     $DB->query("SELECT Title FROM requests WHERE ID = ".$RequestID);
     list($Title)=$DB->next_record();
-    write_user_log($VoterID, "Added +". get_size($Bounty). " for deleted vote on [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] by $LoggedUser[Username]\nReason: ".$_POST['reason']);
+    write_user_log($VoterID, "Added +". get_size($Bounty). " for deleted vote on request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] by $LoggedUser[Username]\nReason: ".$_POST['reason']);
 
     $DB->query("DELETE FROM requests_votes WHERE UserID = ".$VoterID." AND RequestID = ".$RequestID);
 

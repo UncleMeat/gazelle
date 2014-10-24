@@ -107,7 +107,7 @@ $DB->query("UPDATE users_main
             SET Uploaded = (Uploaded + ".$RequestVotes['TotalBounty'].")
             WHERE ID = ".$FillerID);
 
-write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']). " for filling [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
+write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']). " for filling request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
 
 $Cache->delete_value('user_stats_'.$FillerID);
 $Cache->delete_value('request_'.$RequestID);
