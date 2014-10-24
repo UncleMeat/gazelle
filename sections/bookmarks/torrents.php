@@ -36,7 +36,7 @@ if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('Title', 'Siz
     $OrderBy = $_GET['order_by'];
 }
 
-$Data = $Cache->get_value('bookmarks_torrent_'.$UserID.'_full'.$OrderBy.'_'.$OrderWay);
+$Data = $Cache->get_value('bookmarks_torrent_'.$UserID.'_full');
 
 if ($Data) {
     $Data = unserialize($Data);
@@ -87,8 +87,10 @@ $TorrentTable = '';
 $NumGroups = 0;
 $Tags = array();
 
-foreach ($TorrentList as $GroupID=>$Group) {
-    list($GroupID, $GroupName, $TagList, $Torrents) = array_values($Group);
+$CollageDataList = array_sort($CollageDataList, $OrderBy, $OrderWay);
+
+foreach ($CollageDataList as $GroupID=>$Group) {
+    list($GroupID, $GroupName, $TagList, $Torrents) = array_values($TorrentList[$GroupID]);
     list($GroupID2, $Image, $NewCategoryID, $BookmarkDate, $UploadDate) = array_values($CollageDataList[$GroupID]);
 
     // Handle stats and stuff
@@ -300,4 +302,4 @@ if ($CollageCovers != 0) { ?>
 </div>
 <?php
 show_footer();
-$Cache->cache_value('bookmarks_torrent_'.$UserID.'_full'.$OrderBy.'_'.$OrderWay, serialize(array(array($TorrentList, $CollageDataList))), 3600);
+$Cache->cache_value('bookmarks_torrent_'.$UserID.'_full', serialize(array(array($TorrentList, $CollageDataList))), 3600);
