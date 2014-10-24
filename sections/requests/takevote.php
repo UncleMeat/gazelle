@@ -23,6 +23,7 @@ $Bounty = $Amount;
 
 $DB->query('SELECT TorrentID FROM requests WHERE ID='.$RequestID);
 list($Filled) = $DB->next_record();
+if(!isset($Filled))error("This request has been deleted!", true);
 if($Filled>0) error("This torrent is already filled!", true);
 
 if ($LoggedUser['BytesUploaded'] < $Amount) {
