@@ -64,7 +64,7 @@ if (isset($_POST['subscribe'])) {
 //Now lets handle the special case of merging posts, we can skip bumping the thread and all that fun
 if ($ThreadInfo['LastPostAuthorID'] == $LoggedUser['ID'] && ((!check_perms('site_forums_double_post') && !in_array($ForumID, $ForumsDoublePost)) || isset($_POST['merge']))) {
     //Get the id for this post in the database to append
-    $DB->query("SELECT ID, Body FROM forums_posts WHERE TopicID='$TopicID' AND AuthorID='".$LoggedUser['ID']."' ORDER BY ID DESC LIMIT 1");
+    $DB->query("SELECT ID, Body FROM forums_posts WHERE TopicID='$TopicID' AND AuthorID='".$LoggedUser['ID']."' ORDER BY AddedTime DESC LIMIT 1");
     list($PostID, $OldBody) = $DB->next_record();
 
     //Edit the post
@@ -89,14 +89,15 @@ if ($ThreadInfo['LastPostAuthorID'] == $LoggedUser['ID'] && ((!check_perms('site
             'Body'=>$OldBody."\n\n".$Body,
             'EditedUserID'=>$LoggedUser['ID'],
             'EditedTime'=>$sqltime,
-            'Username'=>$LoggedUser['Username']
+             'Username'=>$LoggedUser['Username']
             ));
     $Cache->commit_transaction(0);
+//      $Cache->delete_value('thread_'.$TopicID.'_catalogue_'.$CatalogueID);
 
-      $DB->query("INSERT INTO comments_edits (Page, PostID, EditUser, EditTime, Body)
-                           VALUES ('forums', $PostID, $LoggedUser[ID], '$sqltime', '".db_string($OldBody)."')");
+    $DB->query("INSERT INTO comments_edits (Page, PostID, EditUser, EditTime, Body)
+                         VALUES ('forums', $PostID, $LoggedUser[ID], '$sqltime', '".db_string($OldBody)."')");
 
-      $Cache->delete_value("forums_edits_$PostID");
+    $Cache->delete_value("forums_edits_$PostID");
 
 //Now we're dealing with a normal post
 } else {

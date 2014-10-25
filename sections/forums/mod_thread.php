@@ -312,8 +312,6 @@ if (isset($_POST['split'])) {
 } else {
     if ($_POST['title'] == '') { error(0); }
 
-    $SET_NUMPOSTS = '';
-
     if (isset($_POST['trash']) || ($ForumID!=$OldForumID)) {
         $DB->query("SELECT Name FROM forums WHERE ID='$ForumID'");
         list($ForumName) = $DB->next_record();
@@ -332,8 +330,7 @@ if (isset($_POST['split'])) {
         $DB->query("INSERT INTO forums_posts (TopicID, AuthorID, AddedTime, Body)
                         VALUES ('$TopicID', '$LoggedUser[ID]', '".sqltime(strtotime($FirstAddedTime)-10)."', '".db_string($SystemPost)."')");
         $PrePostID = $DB->inserted_id();
-
-        $SET_NUMPOSTS = " , NumPosts=(NumPosts+1) " ;
+        $NumPosts=$NumPosts+1;
 
         $Cache->delete_value('forums_'.$ForumID);
         $CatalogueID = floor(($NumPosts+1)/THREAD_CATALOGUE);
@@ -348,9 +345,9 @@ if (isset($_POST['split'])) {
         'IsSticky'=>$Sticky,
         'IsLocked'=>$Locked,
         'Title'=>cut_string($Title, 150, 1, 0),
-        'ForumID'=>$ForumID
+        'ForumID'=>$ForumID,
+        'Posts'=>$NumPosts
         );
-    if ($SET_NUMPOSTS != '') $UpdateArray['NumPosts'] = '+1';
     $Cache->update_row(false, $UpdateArray);
     $Cache->commit_transaction(0);
 
@@ -358,8 +355,8 @@ if (isset($_POST['split'])) {
         IsSticky = '$Sticky',
         IsLocked = '$Locked',
         Title = '".db_string($Title)."',
-        ForumID ='$ForumID'
-        $SET_NUMPOSTS
+        ForumID ='$ForumID',
+        NumPosts='$NumPosts'
         WHERE ID='$TopicID'");
 
     if ($ForumID!=$OldForumID) { // If we're moving a thread, change the forum stats
