@@ -405,6 +405,6 @@ if (isset($_POST['split'])) {
         $DB->query('UPDATE forums_polls SET Closed=\'0\' WHERE TopicID=\''.$TopicID.'\'');
         $Cache->delete_value('polls_'.$TopicID);
     }
-      update_latest_topics();
+    update_latest_topics();
     header('Location: forums.php?action=viewthread&threadid='.$TopicID.'&page='.$Page);
 }
