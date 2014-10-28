@@ -232,6 +232,8 @@ if (isset($_POST['split'])) {
         header("Location: forums.php?action=viewthread&threadid=$TopicID&postid=$PostPostID#post$PostPostID");
     }
 
+    update_latest_topics();
+
 // If we're merging a thread
 } elseif (isset($_POST['merge'])) {
     if(!check_perms('site_moderate_forums')) error(403);
