@@ -739,11 +739,10 @@ function get_latest_forum_topics($PermissionID, $ExcludeGames = true)
     if ($LatestTopics === false) {
         $Level = $Classes[$PermissionID]['Level'];
 
-        $DB->query("SELECT ft.ID AS ThreadID, fp.ID AS PostID, ft.Title, um.Username, fp.AddedTime
+        $DB->query("SELECT ft.ID AS ThreadID, ft.LastPostID as LastPostID, fp.ID AS PostID, ft.Title, um.Username, fp.AddedTime
                       FROM forums_topics AS ft
                       JOIN forums AS f ON f.ID=ft.ForumID
-                      JOIN ( SELECT TopicID, ID as LastPostID, AddedTime FROM forums_posts  WHERE (AddedTime) IN( SELECT Max(AddedTime) from forums_posts GROUP BY TopicID) ) AS x ON x.TopicID=ft.ID
-                      JOIN forums_posts AS fp ON fp.ID=x.LastPostID
+                      JOIN forums_posts AS fp ON fp.ID=ft.LastPostID
                       JOIN users_main AS um ON um.ID=fp.AuthorID
                      WHERE f.MinClassRead<='$Level' $ANDWHERE
                   GROUP BY ThreadID
