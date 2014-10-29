@@ -72,7 +72,7 @@ if ($_GET['action']) {
             break;
         case 'ajax_get_edit':
             // Page that switches edits for mods
-            require(SERVER_ROOT.'/sections/common/ajax_get_edit.php');
+            require(SERVER_ROOT.'/common/ajax_get_edit.php');
             break;
         case 'takeedit':
             // Edit posts
@@ -80,7 +80,7 @@ if ($_GET['action']) {
             break;
         case 'get_post':
             // Get posts
-            require(SERVER_ROOT.'/sections/common/get_post.php');
+            require(SERVER_ROOT.'/common/get_post.php');
             break;
         default:
             //You trying to mess with me query string? To the home page with you!

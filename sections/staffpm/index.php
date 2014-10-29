@@ -80,10 +80,10 @@ switch ($_REQUEST['action']) {
         require 'ajax_get_response.php';
         break;
     case 'ajax_get_edit':
-        require(SERVER_ROOT.'/sections/common/ajax_get_edit.php');
+        require(SERVER_ROOT.'/common/ajax_get_edit.php');
         break;
     case 'get_post':
-        require(SERVER_ROOT.'/sections/common/get_post.php');
+        require(SERVER_ROOT.'/common/get_post.php');
         break;
     case 'delete_response':
         require 'ajax_delete_response.php';
