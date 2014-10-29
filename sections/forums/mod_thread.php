@@ -315,6 +315,9 @@ if (isset($_POST['split'])) {
     if ($_POST['title'] == '') { error(0); }
 
     if (isset($_POST['trash']) || ($ForumID!=$OldForumID)) {
+        if (isset($_POST['trash'])) {
+            $ForumID = TRASH_FORUM_ID;
+        }
         $DB->query("SELECT Name FROM forums WHERE ID='$ForumID'");
         list($ForumName) = $DB->next_record();
         $SystemPost = "[quote=the system]This thread moved from the [b][url=/forums.php?action=viewforum&forumid=$OldForumID]{$OldForumName}[/url][/b] forum to the [b][url=/forums.php?action=viewforum&forumid=$ForumID]{$ForumName}[/url][/b] forum.[/quote]";
