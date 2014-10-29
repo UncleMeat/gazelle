@@ -75,6 +75,7 @@ FROM
     users_info AS ui
 WHERE
     um.PermissionID = p.ID
+    AND um.Enabled = '1'
     AND ui.UserID = um.ID
     AND p.IsUserClass = '1'
 GROUP BY
