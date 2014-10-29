@@ -35,26 +35,32 @@ $DB->query("UPDATE requests SET
 
 $FullName = $Title;
 
-$RequestVotes = get_votes_array($RequestID);
+$Reason = $_POST['reason'];
 
+$RequestVotes = get_votes_array($RequestID);
+if (!empty($Reason)){
+    $Reason = "\nReason: ".$Reason;
+} else {
+    $Reason = '';
+}
 if ($RequestVotes['TotalBounty'] > $Uploaded) {
     // If we can't take it all out of upload, zero that out and add whatever is left as download.
     $DB->query("UPDATE users_main SET Uploaded = 0 WHERE ID = ".$FillerID);
     $DB->query("UPDATE users_main SET Downloaded = Downloaded + ".($RequestVotes['TotalBounty']-$Uploaded)." WHERE ID = ".$FillerID);
 
-    write_user_log($FillerID, "Removed -". get_size($Uploaded). " from Download AND added +". get_size(($RequestVotes['TotalBounty']-$Uploaded)). " to Upload because request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was unfilled.");
+    write_user_log($FillerID, "Removed -". get_size($Uploaded). " from Download AND added +". get_size(($RequestVotes['TotalBounty']-$Uploaded)). " to Upload because request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was unfilled.".$Reason);
 } else {
     $DB->query("UPDATE users_main SET Uploaded = Uploaded - ".$RequestVotes['TotalBounty']." WHERE ID = ".$FillerID);
 
-    write_user_log($FillerID, "Removed -". get_size($RequestVotes['TotalBounty']). " because request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was unfilled.");
+    write_user_log($FillerID, "Removed -". get_size($RequestVotes['TotalBounty']). " because request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was unfilled.".$Reason);
 }
 
-send_pm($FillerID, 0, db_string("A request you filled has been unfilled"), db_string("The request '[url=http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]' was unfilled by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url] for the reason: ".$_POST['reason']));
+send_pm($FillerID, 0, db_string("A request you filled has been unfilled"), db_string("The request '[url=http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]' was unfilled by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url].".$Reason));
 
 $Cache->delete_value('user_stats_'.$FillerID);
 
 if ($UserID != $LoggedUser['ID']) {
-    send_pm($UserID, 0, db_string("A request you created has been unfilled"), db_string("The request '[url=http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]' was unfilled by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url] for the reason: ".$_POST['reason']));
+    send_pm($UserID, 0, db_string("A request you created has been unfilled"), db_string("The request '[url=http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]' was unfilled by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url].".$Reason));
 }
 
 write_log("Request $RequestID ($FullName), with a ".get_size($RequestVotes['TotalBounty'])." bounty, was un-filled by ".$LoggedUser['Username']." for the reason: ".$_POST['reason']);
