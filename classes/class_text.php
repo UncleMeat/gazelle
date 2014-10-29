@@ -1636,7 +1636,7 @@ class text
                     while (ends_with($innerhtml, "\n")) {
                         $innerhtml = substr($innerhtml, 0, -strlen("\n"));
                     }
-                    $Str.='<div class="modcomment">' . $innerhtml . '<div class="after">[ <a href="articles.php?topic=tutorials">Help</a> | <a href="articles.php?topic=rules">Rules</a> ]</div></div>'; // <div class="clear"></div>
+                    $Str.='<div class="modcomment">' . $innerhtml . '<div class="after">[ <a href="articles.php?topic=tutorials">Help</a> | <a href="articles.php?topic=rules">Rules</a> ]</div><div class="clear"></div></div>';
                     break;
 
                 case 'table':
