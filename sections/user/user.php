@@ -863,7 +863,7 @@ if (check_perms('admin_login_watch',$Class)) {
 ?>
                 <tr class="row<?=$Row?>">
                     <td>
-                        <?=$loginIP?>
+                        <?=display_ip($loginIP)?>
                     </td>
                     <td>
                         <?=$Attempts?>
