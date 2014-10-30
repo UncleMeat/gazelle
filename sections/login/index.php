@@ -181,10 +181,17 @@ else {
                 if ($UserID > 0) {
                     $DB->query("SELECT Username FROM users_main WHERE ID='$UserID'");
                     list($Username) = $DB->next_record(MYSQLI_BOTH, false);
+                    $Subject = urlencode("Account access attempt.");
+                    $Message = urlencode("{$_SERVER['REMOTE_ADDR']} has made an unsucessful attempt to access my account,\n".
+                                         "I believe this to be an attempt to hack into my account.\n\n".
+                                         "Regards,\n".
+                                         "{$Username}.");
                     send_pm($UserID, 0, db_string('Security Alert'), db_string(
                             "Somebody (probably you, $Username) tried to login but failed!\n".
                             "Their IP Address was : {$_SERVER['REMOTE_ADDR']}\n".
-                            "If this wasn't you please report this event to a staff member\n".
+                            "We suggest that you ensure you have a strong password for your account.\n".
+                            "If you think this was an attempt to hack your account please report this event to".
+                            " [url=/staffpm.php?action=user_inbox&show=1&assign=mod&sub={$Subject}&msg={$Message}][b]staff[/b][/url].\n".
                             "- Thank you."));
                 }
 
