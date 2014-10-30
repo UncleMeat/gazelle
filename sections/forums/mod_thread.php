@@ -314,6 +314,9 @@ if (isset($_POST['split'])) {
 } else {
     if ($_POST['title'] == '') { error(0); }
 
+    $DB->query("SELECT Count(ID), Min(AddedTime) FROM forums_posts WHERE TopicID='$TopicID'");
+    list($NumPosts, $FirstAddedTime) = $DB->next_record();
+
     if (isset($_POST['trash']) || ($ForumID!=$OldForumID)) {
         if (isset($_POST['trash'])) {
             $ForumID = TRASH_FORUM_ID;
@@ -328,9 +331,6 @@ if (isset($_POST['split'])) {
         } else {
             $SystemPost .= "[b]$LoggedUser[Username] moved this thread ($sqltime)[/b]";
         }
-
-        $DB->query("SELECT Count(ID), Min(AddedTime) FROM forums_posts WHERE TopicID='$TopicID'");
-        list($NumPosts, $FirstAddedTime) = $DB->next_record();
 
         $DB->query("INSERT INTO forums_posts (TopicID, AuthorID, AddedTime, Body)
                         VALUES ('$TopicID', '$LoggedUser[ID]', '".sqltime(strtotime($FirstAddedTime)-10)."', '".db_string($SystemPost)."')");
