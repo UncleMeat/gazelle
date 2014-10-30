@@ -142,6 +142,9 @@ foreach ($Posts as $Key => $Post) {
                     <?=time_diff($AddedTime) ?>
                     on <a href="torrents.php?id=<?=$GroupID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>"><?=cut_string($Title, 75)?></a>
                 </span>
+                <span style="float:left;" class="last_read" title="Jump to last read">
+                    <a href="torrents.php?id=<?=$GroupID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>"></a>
+                </span>
                 <span style="float:left;padding-left:5px;">
 <?php   if (can_edit_comment($AuthorID, $EditedUserID, $AddedTime, $EditedTime)) { ?>
          <a href="#post<?=$PostID?>" onclick="Edit_Form('comments','<?=$PostID?>','<?=$Key++?>');">[Edit]</a>
