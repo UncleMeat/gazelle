@@ -403,7 +403,9 @@ $Pages = get_pages($Page, $TorrentCount, $TorrentsPerPage);
                 </tr>
                 <tr>
                     <td colspan="7" style="text-align:right">
-
+                        <?php // We need this hidden button to determine the default behavior when
+                              // the user types something in and hits return. ?>
+                        <input class="hidden" type="submit" value="Filter Torrents" />
                         <input type="button" value="Reset" onclick="location.href='torrents.php?action=<?php  if (isset($_GET['action']) && $_GET['action'] == "advanced") { ?>advanced<?php  } else { ?>basic<?php  } ?>'" />
                 &nbsp;&nbsp;
                 <?php  if (count($Queries) > 0 || count($SS->Filters) > 0) { ?>
