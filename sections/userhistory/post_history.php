@@ -265,7 +265,15 @@ if (empty($Results)) {
                 <span style="float:left;" class="last_read" title="Jump to last read">
                     <a href="forums.php?action=viewthread&amp;threadid=<?=$TopicID?>&amp;postid=<?=$LastRead?>#post<?=$LastRead?>"></a>
                 </span>
-<?php       }
+<?php       } else {
+                <span style="float:left;" class="last_read" title="Jump to last read">
+                    <a href="forums.php?action=viewthread&amp;threadid=<?=$TopicID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>"></a>
+                </span>
+            }
+        } else { ?>
+            <span style="float:left;" class="last_read" title="Jump to last read">
+                <a href="forums.php?action=viewthread&amp;threadid=<?=$TopicID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>"></a>
+            </span>
         } ?>
                 <span style="float:left;padding-left:5px;">
 <?php   if ((((!$ThreadInfo['IsLocked'] && check_forumperm($TopicID, 'Write')) && can_edit_comment($AuthorID, $EditedUserID, $AddedTime, $EditedTime)) || check_perms('site_moderate_forums')) && !$ShowGrouped) {
