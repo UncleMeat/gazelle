@@ -34,19 +34,21 @@ if ($Locked == 1) {
 
 $DB->query("SELECT
     t.ForumID,
-          t.Title,
+    t.Title,
     f.MinClassWrite,
     COUNT(p.ID) AS Posts,
-          Max(p.ID) AS LastPostID,
-            t.StickyPostID,
-        f.Name
+    t.LastPostID,
+    t.LastPostTime,
+    t.LastPostAuthorID,
+    t.StickyPostID,
+    f.Name
     FROM forums_topics AS t
     LEFT JOIN forums_posts AS p ON p.TopicID=t.ID
     LEFT JOIN forums AS f ON f.ID=.t.ForumID
     WHERE t.ID='$TopicID'
     GROUP BY p.TopicID");
 if ($DB->record_count()==0) error("Error: Could not find thread with id=$TopicID");
-list($OldForumID, $OldTitle, $MinClassWrite, $Posts, $OldLastPostID, $OldStickyPostID, $OldForumName) = $DB->next_record();
+list($OldForumID, $OldTitle, $MinClassWrite, $Posts, $OldLastPostID, $OldLastPostTime, $OldLastPostAuthorID, $OldStickyPostID, $OldForumName) = $DB->next_record();
 
 if ( !check_forumperm($OldForumID, 'Write') ) { error(403); }
 
@@ -247,26 +249,32 @@ if (isset($_POST['split'])) {
           t.Title,
           f.MinClassWrite,
           COUNT(p.ID) AS Posts,
-          Max(p.ID) AS LastPostID
+          t.LastPostID,
+          t.LastPostTime,
+          t.LastPostAuthorID
           FROM forums_topics AS t
           LEFT JOIN forums_posts AS p ON p.TopicID=t.ID
           LEFT JOIN forums AS f ON f.ID= t.ForumID
           WHERE t.ID='$MergeTopicID'
           GROUP BY p.TopicID");
     if ($DB->record_count()==0) error("Merge failed: Could not find thread with id=$MergeTopicID");
-    list($NewForumID, $MergeTitle, $NFMinClassWrite, $NFPosts, $NFLastPostID) = $DB->next_record();
+    list($NewForumID, $MergeTitle, $NFMinClassWrite, $NFPosts, $NFLastPostID, $NFLastPostTime, $NFLastPostAuthorID) = $DB->next_record();
 
     if ( !check_forumperm($NewForumID, 'Write') ) { error(403); }
 
     $MergeTitle = "$MergeTitle (merged with $OldTitle)";
-    if($OldLastPostID>$NFLastPostID) $NFLastPostID = $OldLastPostID;
+    if($OldLastPostID>$NFLastPostID){
+        $NFLastPostID       = $OldLastPostID;
+        $NFLastPostTime     = $OldLastPostTime;
+        $NFLastPostAuthorID = $OldLastPostAuthorID;
+    }
     $Posts += $NFPosts;
 
     $DB->query("UPDATE forums_polls SET TopicID='$MergeTopicID' WHERE TopicID='$TopicID'");
     $DB->query("UPDATE forums_polls_votes SET TopicID='$MergeTopicID' WHERE TopicID='$TopicID'");
 
     $DB->query("UPDATE forums_posts SET TopicID='$MergeTopicID', Body=CONCAT_WS( '\n\n', Body, '[align=right][size=0][i]merged from thread[/i][br]\'$OldTitle\'[/size][/align]') WHERE TopicID='$TopicID'");
-    $DB->query("UPDATE forums_topics SET Title='$MergeTitle',LastPostID='$NFLastPostID',NumPosts='$Posts' WHERE ID='$MergeTopicID'");
+    $DB->query("UPDATE forums_topics SET Title='$MergeTitle',LastPostID='$NFLastPostID',LastPostTime='$NFLastPostTime',LastPostAuthorID='$NFLastPostAuthorID',NumPosts='$Posts' WHERE ID='$MergeTopicID'");
 
     $DB->query("DELETE FROM forums_topics WHERE ID='$TopicID'");
 
