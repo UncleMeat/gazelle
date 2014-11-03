@@ -34,12 +34,13 @@ show_header('Exclude list','watchlist');
     list($Page,$Limit) = page_limit(50);
 
     $DB->query("SELECT SQL_CALC_FOUND_ROWS
-                       wl.UserID, um.Username as Username, StaffID, um2.Username AS Staffname, Time, wl.Comment,
+                       wl.UserID, um.Username as Username, StaffID, um2.Username AS Staffname, Time, Count(xbt.uid) as Count, wl.Comment,
                                  ui.Donor, ui.Warned, um.Enabled, um.PermissionID
                   FROM users_not_cheats AS wl
              LEFT JOIN users_main AS um ON um.ID=wl.UserID
              LEFT JOIN users_info AS ui ON ui.UserID=wl.UserID
              LEFT JOIN users_main AS um2 ON um2.ID=wl.StaffID
+             LEFT JOIN xbt_peers_history AS xbt ON xbt.uid=wl.UserID
               ORDER BY $OrderBy $OrderWay
                  LIMIT $Limit");
 
