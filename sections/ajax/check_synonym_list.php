@@ -62,7 +62,7 @@ foreach ($ListInput as $item) {
         $Tag = substr($Tag, 1);
         $StartingNewList = true;
 
-        process_taglist($ParentTag, $TagInfos, &$Result);
+        process_taglist($ParentTag, $TagInfos, $Result);
 
         $TagInfos = array();
         $ParentTag = '';
@@ -122,7 +122,7 @@ foreach ($ListInput as $item) {
     }
 }
 
-process_taglist($ParentTag, $TagInfos, &$Result);
+process_taglist($ParentTag, $TagInfos, $Result);
 
 $Result = "<div class=\"box pad\"><span style=\"font-weight:bold\">valid: $numparents parents, $numtags synonyms</span></div>$Result";
 echo json_encode(array($numtags, $Result));
