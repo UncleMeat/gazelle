@@ -284,6 +284,7 @@ if ($CollageCovers != 0) { ?>
         </script>
 <?php	}
 } ?>
+        </div>
         <br />
         <table class="torrent_table" id="torrent_table">
             <tr class="head">
@@ -292,14 +293,14 @@ if ($CollageCovers != 0) { ?>
 		<td width="20%"><a href="<?=header_link('BookmarkDate') ?>" style="float:right">Bookmarked</a></td>
 		<td><a href="<?=header_link('UploadDate') ?>">Uploaded</a></td>
 		<td><a href="<?=header_link('Size') ?>">Size</a></td>
-                <td class="sign"><a href="<?=header_link('Snatches') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></a></td>
+                <td class="sign"><a href="<?=header_link('Snatched') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/snatched.png" alt="Snatches" title="Snatches" /></a></td>
                 <td class="sign"><a href="<?=header_link('Seeders') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/seeders.png" alt="Seeders" title="Seeders" /></a></td>
                 <td class="sign"><a href="<?=header_link('Leechers') ?>"><img src="static/styles/<?=$LoggedUser['StyleName'] ?>/images/leechers.png" alt="Leechers" title="Leechers" /></a></td>
             </tr>
 <?=$TorrentTable?>
         </table>
     </div>
-</div>
+
 <?php
 show_footer();
 $Cache->cache_value('bookmarks_torrent_'.$UserID.'_full', serialize(array(array($TorrentList, $CollageDataList))), 3600);
