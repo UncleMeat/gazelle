@@ -113,13 +113,13 @@ write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']). " f
 } else {
     // Give bounty to filler
     $DB->query("UPDATE users_main
-                SET Uploaded = (Uploaded + ".$RequestVotes['TotalBounty']/2.")
+                SET Uploaded = (Uploaded + ".($RequestVotes['TotalBounty']/2).")
                 WHERE ID = ".$FillerID);
 write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']/2). " for filling request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
 
     // Give bounty to uploader
     $DB->query("UPDATE users_main
-                SET Uploaded = (Uploaded + ".$RequestVotes['TotalBounty']/2.")
+                SET Uploaded = (Uploaded + ".($RequestVotes['TotalBounty']/2).")
                 WHERE ID = ".$UploaderID);
 write_user_log($UploaderID, "Added +". get_size($RequestVotes['TotalBounty']/2). " for uploading torrent used to fill request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
 }

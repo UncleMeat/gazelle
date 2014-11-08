@@ -121,6 +121,18 @@ show_header('View request: '.$FullName, 'comments,requests,bbcode,jquery,jquery.
                 <td class="label">Total Bounty</td>
                 <td id="formatted_bounty" style="font-size: 1.8em;"><?=get_size($RequestVotes['TotalBounty'])?></td>
             </tr>
+            <tr id="fillerbounty">
+                <td class="label">Filler's Bounty</td>
+                <td id="formatted_bounty" style="font-size: 1.4em;"><?=get_size($RequestVotes['TotalBounty']/2)?></td>
+            </tr>
+            <tr id="uploaderbounty">
+                <td class="label">Uploader's Bounty</td>
+                <td id="formatted_bounty" style="font-size: 1.4em;"><?=get_size($RequestVotes['TotalBounty']/2)?></td>
+            </tr>
+            <tr>
+                <td class="label"></td>
+                <td title="If you fill this request with another's torrent you will receive half of the bounty (<?=get_size($RequestVotes['TotalBounty']/2)?>) and the uploader will recieve the other half.">If you fill this request with your own torrent you will receive the full bounty of <strong><?=get_size($RequestVotes['TotalBounty'])?></strong></td>
+            </tr>
             <tr>
                 <td class="label">Created</td>
                 <td>
