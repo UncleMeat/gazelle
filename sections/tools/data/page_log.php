@@ -1,7 +1,7 @@
 <?php
 enforce_login();
 
-include(SERVER_ROOT.'/common/functions.php');
+include_once(SERVER_ROOT.'/common/functions.php');
 
 if (!check_perms('admin_manage_site_options')) {
     error(403);
