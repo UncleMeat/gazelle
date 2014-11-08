@@ -12,14 +12,17 @@ if (!is_number($RequestID)) {
 $DB->query("SELECT
         r.UserID,
         r.FillerID,
+        r.UploaderID,
         r.Title,
         u.Uploaded,
+        f.Uploaded,
         r.TorrentID,
         r.GroupID
     FROM requests AS r
-        LEFT JOIN users_main AS u ON u.ID=FillerID
+        LEFT JOIN users_main AS u ON u.ID=UploaderID
+        LEFT JOIN users_main AS f ON f.ID=FillerID
     WHERE r.ID= ".$RequestID);
-list($UserID, $FillerID, $Title, $Uploaded, $TorrentID, $GroupID) = $DB->next_record();
+list($UserID, $FillerID, $UploaderID, $Title, $UploaderUploaded, $FillerUploaded, $TorrentID, $GroupID) = $DB->next_record();
 
 if ((($LoggedUser['ID'] != $UserID && $LoggedUser['ID'] != $FillerID) && !check_perms('site_moderate_requests')) || $FillerID == 0) {
         error(403);
@@ -29,6 +32,7 @@ if ((($LoggedUser['ID'] != $UserID && $LoggedUser['ID'] != $FillerID) && !check_
 $DB->query("UPDATE requests SET
             TorrentID = 0,
             FillerID = 0,
+            UploaderID = 0,
             TimeFilled = '0000-00-00 00:00:00',
             Visible = 1
             WHERE ID = ".$RequestID);
@@ -43,21 +47,52 @@ if (!empty($Reason)){
 } else {
     $Reason = '';
 }
-if ($RequestVotes['TotalBounty'] > $Uploaded) {
-    // If we can't take it all out of upload, zero that out and add whatever is left as download.
-    $DB->query("UPDATE users_main SET Uploaded = 0 WHERE ID = ".$FillerID);
-    $DB->query("UPDATE users_main SET Downloaded = Downloaded + ".($RequestVotes['TotalBounty']-$Uploaded)." WHERE ID = ".$FillerID);
+if ( $FillerID == $UploaderID || $UploaderID=0) {
+    if ($RequestVotes['TotalBounty'] > $FillerUploaded) {
+        // If we can't take it all out of upload, zero that out and add whatever is left as download.
+        $DB->query("UPDATE users_main SET Uploaded = 0 WHERE ID = ".$FillerID);
+        $DB->query("UPDATE users_main SET Downloaded = Downloaded + ".($RequestVotes['TotalBounty']-$FillerUploaded)." WHERE ID = ".$FillerID);
 
-    write_user_log($FillerID, "Removed -". get_size($Uploaded). " from Download AND added +". get_size(($RequestVotes['TotalBounty']-$Uploaded)). " to Upload because request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was unfilled.".$Reason);
+        write_user_log($FillerID, "Removed -". get_size($FillerUploaded). " from Download AND added +". get_size(($RequestVotes['TotalBounty']-$FillerUploaded)). " to Upload because request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was unfilled.".$Reason);
+    } else {
+        $DB->query("UPDATE users_main SET Uploaded = Uploaded - ".$RequestVotes['TotalBounty']." WHERE ID = ".$FillerID);
+
+        write_user_log($FillerID, "Removed -". get_size($RequestVotes['TotalBounty']). " because request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was unfilled.".$Reason);
+    }
+    send_pm($FillerID, 0, db_string("A request you filled has been unfilled"), db_string("The request '[url=http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]' was unfilled by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url].".$Reason));
+    $Cache->delete_value('user_stats_'.$FillerID);
 } else {
-    $DB->query("UPDATE users_main SET Uploaded = Uploaded - ".$RequestVotes['TotalBounty']." WHERE ID = ".$FillerID);
+    // Remove from filler
+    if (($RequestVotes['TotalBounty']/2) > $FillerUploaded) {
+        // If we can't take it all out of upload, zero that out and add whatever is left as download.
+        $DB->query("UPDATE users_main SET Uploaded = 0 WHERE ID = ".$FillerID);
+        $DB->query("UPDATE users_main SET Downloaded = Downloaded + ".(($RequestVotes['TotalBounty']/2)-$FillerUploaded)." WHERE ID = ".$FillerID);
 
-    write_user_log($FillerID, "Removed -". get_size($RequestVotes['TotalBounty']). " because request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was unfilled.".$Reason);
+        write_user_log($FillerID, "Removed -". get_size($FillerUploaded). " from Download AND added +". get_size((($RequestVotes['TotalBounty']/2)-$FillerUploaded)). " to Upload because request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was unfilled.".$Reason);
+    } else {
+        $DB->query("UPDATE users_main SET Uploaded = Uploaded - ".($RequestVotes['TotalBounty']/2)." WHERE ID = ".$FillerID);
+
+        write_user_log($FillerID, "Removed -". get_size(($RequestVotes['TotalBounty'])/2). " because request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was unfilled.".$Reason);
+    }
+
+    // Remove from uploader
+    if (($RequestVotes['TotalBounty']/2) > $UploaderUploaded) {
+        // If we can't take it all out of upload, zero that out and add whatever is left as download.
+        $DB->query("UPDATE users_main SET Uploaded = 0 WHERE ID = ".$UploaderID);
+        $DB->query("UPDATE users_main SET Downloaded = Downloaded + ".(($RequestVotes['TotalBounty']/2)-$UploaderUploaded)." WHERE ID = ".$UploaderID);
+
+        write_user_log($UploaderID, "Removed -". get_size($UploaderUploaded). " from Download AND added +". get_size((($RequestVotes['TotalBounty']/2)-$UploaderUploaded)). " to Upload because request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was unfilled.".$Reason);
+    } else {
+        $DB->query("UPDATE users_main SET Uploaded = Uploaded - ".($RequestVotes['TotalBounty']/2)." WHERE ID = ".$UploaderID);
+
+        write_user_log($UploaderID, "Removed -". get_size(($RequestVotes['TotalBounty']/2)). " because request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] was unfilled.".$Reason);
+    }
+
+    send_pm($FillerID, 0, db_string("A request you filled has been unfilled"), db_string("The request '[url=http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]' was unfilled by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url].".$Reason));
+    send_pm($UploaderID, 0, db_string("A request which was filled with one of your torrents has been unfilled"), db_string("The request '[url=http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]' was unfilled by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url].".$Reason));
+    $Cache->delete_value('user_stats_'.$FillerID);
+    $Cache->delete_value('user_stats_'.$UploaderID);
 }
-
-send_pm($FillerID, 0, db_string("A request you filled has been unfilled"), db_string("The request '[url=http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]' was unfilled by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url].".$Reason));
-
-$Cache->delete_value('user_stats_'.$FillerID);
 
 if ($UserID != $LoggedUser['ID']) {
     send_pm($UserID, 0, db_string("A request you created has been unfilled"), db_string("The request '[url=http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]' was unfilled by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url].".$Reason));
