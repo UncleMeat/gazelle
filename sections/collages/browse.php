@@ -2,7 +2,7 @@
 define('COLLAGES_PER_PAGE', 25);
 
 include(SERVER_ROOT.'/classes/class_text.php'); // Text formatting class
-include(SERVER_ROOT.'/common/functions.php');
+include_once(SERVER_ROOT.'/common/functions.php');
 $Text = new TEXT;
 
 list($Page,$Limit) = page_limit(COLLAGES_PER_PAGE);
