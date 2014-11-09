@@ -94,10 +94,7 @@ if ( $FillerID == $UploaderID || $UploaderID == 0) {
     $Cache->delete_value('user_stats_'.$UploaderID);
 }
 
-if ($UserID != $LoggedUser['ID']) {
-    send_pm($UserID, 0, db_string("A request you created has been unfilled"), db_string("The request '[url=http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]' was unfilled by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url].".$Reason));
-}
-
+send_pm($UserID, 0, db_string("A request you created has been unfilled"), db_string("The request '[url=http://".NONSSL_SITE_URL."/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]' was unfilled by [url=http://".NONSSL_SITE_URL."/user.php?id=".$LoggedUser['ID']."]".$LoggedUser['Username']."[/url].".$Reason));
 write_log("Request $RequestID ($FullName), with a ".get_size($RequestVotes['TotalBounty'])." bounty, was un-filled by ".$LoggedUser['Username']." for the reason: ".$_POST['reason']);
 
 $Cache->delete_value('request_'.$RequestID);
