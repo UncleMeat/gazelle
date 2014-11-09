@@ -108,20 +108,23 @@ if ( $UploaderID == $FillerID ) {
     $DB->query("UPDATE users_main
                 SET Uploaded = (Uploaded + ".$RequestVotes['TotalBounty'].")
                 WHERE ID = ".$FillerID);
-write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']). " for filling request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
+    write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']). " for filling request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
+    send_pm($FillerID, 0, db_string("You filled the request '".$FullName."'"), db_string("You filled the request - [url=/requests.php?action=view&id=".$RequestID."]".$FullName."[/url] for a bounty of ".get_size($RequestVotes['TotalBounty'])."\nThis bounty has been added to your upload statistic."), '');
 
 } else {
     // Give bounty to filler
     $DB->query("UPDATE users_main
                 SET Uploaded = (Uploaded + ".($RequestVotes['TotalBounty']/2).")
                 WHERE ID = ".$FillerID);
-write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']/2). " for filling request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
+    write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']/2). " for filling request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
+    send_pm($FillerID, 0, db_string("You filled the request '".$FullName."'"), db_string("You filled the request - [url=/requests.php?action=view&id=".$RequestID."]".$FullName."[/url] for a bounty of ".get_size($RequestVotes['TotalBounty']/2)."\nThis bounty has been added to your upload statistic."), '');
 
     // Give bounty to uploader
     $DB->query("UPDATE users_main
                 SET Uploaded = (Uploaded + ".($RequestVotes['TotalBounty']/2).")
                 WHERE ID = ".$UploaderID);
-write_user_log($UploaderID, "Added +". get_size($RequestVotes['TotalBounty']/2). " for uploading torrent used to fill request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
+    write_user_log($UploaderID, "Added +". get_size($RequestVotes['TotalBounty']/2). " for uploading torrent used to fill request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
+    send_pm($UploaderID, 0, db_string("Your torrent was used to fill the request '".$FullName."'"), db_string("Your torrent was used to fill the request - [url=/requests.php?action=view&id=".$RequestID."]".$FullName."[/url] for a bounty of ".get_size($RequestVotes['TotalBounty']/2)."\nThis bounty has been added to your upload statistic."), '');
 }
 
 $Cache->delete_value('user_stats_'.$FillerID);

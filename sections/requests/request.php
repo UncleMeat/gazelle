@@ -22,7 +22,7 @@ if (empty($Request)) {
 }
 
 list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Image, $Description,
-     $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID) = $Request;
+     $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID, $TorrentTitle, $UploaderID, $UploaderName, $AnonUpload) = $Request;
 
 //Convenience variables
 $NowTime = time();
@@ -202,12 +202,15 @@ show_header('View request: '.$FullName, 'comments,requests,bbcode,jquery,jquery.
             <tr>
                 <td class="label">Filled</td>
                 <td>
-                    <strong><a href="torrents.php?torrentid=<?=$TorrentID?>">Yes</a></strong>,
-                    by user <?=format_username($FillerID, $FillerName)?>
+                    <strong><a href="torrents.php?id=<?=$TorrentID?>"><?php echo ($TorrentTitle == '') ? "(torrent deleted)" : $TorrentTitle; ?></a></strong>
 <?php 		if( ( $TimeExpires>$NowTime &&  ($LoggedUser['ID'] == $RequestorID || $LoggedUser['ID'] == $FillerID) )
                 || check_perms('site_moderate_requests')) { ?>
-                        <strong><a href="requests.php?action=unfill&amp;id=<?=$RequestID?>">(Unfill)</a></strong> Unfilling a request without a valid, nontrivial reason will result in a warning.
+                        - <span title="Unfilling a request without a valid, nontrivial reason will result in a warning."><a href="requests.php?action=unfill&amp;id=<?=$RequestID?>">[Unfill]</a></span>
 <?php 		} ?>
+                   <br/>Filled by <?=format_username($FillerID, $FillerName)?>
+<?php           if ( $UploaderID != 0 && $TorrentTitle != '' ) {
+                    echo ", uploaded by ".torrent_username($UploaderID, $UploaderName, $AnonUpload);
+                } ?>
                 </td>
             </tr>
 <?php 	} elseif ($TimeExpires > $NowTime) { ?>
