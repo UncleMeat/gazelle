@@ -1,6 +1,6 @@
 <?php
 
-function get_group_info($GroupID, $Return = true)
+function get_group_info($GroupID, $Return = true, $ShowLog = true)
 {
     global $Cache, $DB;
 
@@ -83,7 +83,7 @@ function get_group_info($GroupID, $Return = true)
             ORDER BY t.ID");
 
         $TorrentList = $DB->to_array();
-        if (count($TorrentList) == 0) {
+        if (count($TorrentList) == 0 && $ShowLog) {
             if (isset($_GET['torrentid']) && is_number($_GET['torrentid'])) {
                 header("Location: log.php?search=Torrent+".$_GET['torrentid']);
             } else {

@@ -25,7 +25,7 @@ list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryI
      $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID, $UploaderID, $UploaderName) = $Request;
 
 include(SERVER_ROOT.'/sections/torrents/functions.php');
-$TorrentCache = get_group_info($TorrentID, true);
+$TorrentCache = get_group_info($TorrentID, true, false);
 
 $TorrentDetails = $TorrentCache[0];
 $TorrentList = $TorrentCache[1];
