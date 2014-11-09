@@ -22,7 +22,17 @@ if (empty($Request)) {
 }
 
 list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Image, $Description,
-     $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID, $TorrentTitle, $UploaderID, $UploaderName, $AnonUpload) = $Request;
+     $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID, $UploaderID, $UploaderName) = $Request;
+
+include(SERVER_ROOT.'/sections/torrents/functions.php');
+$TorrentCache = get_group_info($TorrentID, true);
+
+$TorrentDetails = $TorrentCache[0];
+$TorrentList = $TorrentCache[1];
+
+list(,,, $TorrentTitle) = array_shift($TorrentDetails);
+
+list(,,,,,,,,,,,,,,,,,,,, $IsAnon) = $TorrentList[0];
 
 //Convenience variables
 $NowTime = time();
@@ -209,7 +219,7 @@ show_header('View request: '.$FullName, 'comments,requests,bbcode,jquery,jquery.
 <?php 		} ?>
                    <br/>Filled by <?=format_username($FillerID, $FillerName)?>
 <?php           if ( $UploaderID != 0 && $TorrentTitle != '' ) {
-                    echo ", uploaded by ".torrent_username($UploaderID, $UploaderName, $AnonUpload);
+                    echo ", uploaded by ".torrent_username($UploaderID, $UploaderName, $IsAnon);
                 } ?>
                 </td>
             </tr>
