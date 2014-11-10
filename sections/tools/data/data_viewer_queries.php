@@ -60,6 +60,25 @@ GROUP BY
 ORDER BY
     IP_count DESC"
     ),
+    'users_useragentcount' => array(
+        'title' => 'Users: Active Useragents',
+        'description' => 'This query shows active IP count per user. Particularly high numbers are suspicious.',
+        'sql' => "
+SELECT SQL_CALC_FOUND_ROWS
+    CONCAT('<a href=\"/user.php?id=', xfu.uid, '\">', um.username, '</a>') AS User,
+    COUNT(DISTINCT xfu.ip) AS IP_count,
+    COUNT(DISTINCT xfu.useragent) AS Useragent_count,
+    xfu.useragent AS Sample_useragent
+FROM
+    xbt_files_users AS xfu,
+    users_main AS um
+WHERE
+    um.ID = xfu.uid
+GROUP BY
+    xfu.uid
+ORDER BY
+    Useragent_count DESC"
+    ),
     'users_classes' => array(
         'title' => 'Users: Class stats',
         'description' => "This query shows various total and average stats per user class.",
