@@ -402,7 +402,7 @@ echo $Val->GenerateJS('userform');
                 <td class="label"><strong>Avatar URL</strong></td>
                 <td>
                     <input class="long" type="text" name="avatar" id="avatar" value="<?=display_str($Avatar)?>" />
-                    <p class="min_padding">Maximum Size: <?=$MaxAvatarWidth?>x<?=$MaxAvatarHeight?> pixels (will be resized if necessary)</p>
+                    <p class="min_padding">Maximum Size: <?=$MaxAvatarWidth?>x<?=$MaxAvatarHeight?> pixels and 1 MB</p>
                 </td>
             </tr>
             <tr>
@@ -517,7 +517,7 @@ echo $Val->GenerateJS('userform');
             </tr>
             <tr class="colhead">
                 <td colspan="2">
-                    <strong>Signature </strong> &nbsp;(max <?=$MaxSigLength?> chars) <span style="text-decoration: underline">max total size</span> <?=SIG_MAX_WIDTH?> px * <?=SIG_MAX_HEIGHT?> px
+                    <strong>Signature </strong> &nbsp;(max <?=$MaxSigLength?> chars) <span style="text-decoration: underline">max total (all images and text) size </span> 1MB and <?=SIG_MAX_WIDTH?> px * <?=SIG_MAX_HEIGHT?> px
                 </td>
             </tr>
             <tr>
