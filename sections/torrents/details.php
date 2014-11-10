@@ -860,10 +860,11 @@ if (count($PersonalCollages)>0) {
     $Thanks = $Cache->get_value('torrent_thanks_'.$GroupID);
     if ($Thanks === false) {
           $DB->query("SELECT Thanks FROM torrents WHERE GroupID = '$GroupID'");
-          list($Thanks) = $DB->next_record();
+          list($Thanks['names']) = $DB->next_record();
+          $Thanks['count'] = str_word_count($Thanks['names']);
           $Cache->cache_value('torrent_thanks_'.$GroupID, $Thanks);
     }
-    if (!$IsUploader && (!$Thanks || strpos($Thanks, $LoggedUser['Username'])===false )) {
+    if (!$IsUploader && (!$Thanks || strpos($Thanks['names'], $LoggedUser['Username'])===false )) {
 ?>
                 <form action="torrents.php" method="post" id="thanksform">
                     <input type="hidden" name="action" value="thank" />
@@ -872,8 +873,8 @@ if (count($PersonalCollages)>0) {
                     <input id="thanksbutton" type="button" onclick="Say_Thanks()" value="Thank the uploader!" class=" center" style="font-weight:bold;font-size:larger;" />
                </form>
 <?php   }   ?>
-                <div  id="thanksdiv" class="pad<?php if(!$Thanks)echo' hidden';?>" style="text-align:left">
-                    <p><strong>The following people said thanks!</strong> &nbsp;<span id="thankstext"><?=$Thanks?></span></p>
+                <div  id="thanksdiv" class="pad<?php if(!$Thanks['names'])echo' hidden';?>" style="text-align:left">
+                    <p><strong>The following <?=$Thanks['count']?> people said thanks!</strong> &nbsp;<span id="thankstext"><?=$Thanks['names']?></span></p>
                 </div>
         </div>
 <?php
