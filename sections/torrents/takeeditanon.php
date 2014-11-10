@@ -19,6 +19,7 @@ $IsAnon = ($IsAnon==1) ? '1' : '0' ;
 
 $DB->query("UPDATE torrents SET Anonymous='$IsAnon' WHERE GroupID='$GroupID'");
 $Cache->delete_value('torrents_details_'.$GroupID);
+$Cache->delete_value('torrent_group_'.$GroupID);
 
 //Fix Recent Uploads/Downloads for anon change
 $DB->query("SELECT DISTINCT UserID
