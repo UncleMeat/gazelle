@@ -85,7 +85,7 @@ $Debug->set_flag('start user handling');
 // Get permissions
 list($Classes, $ClassLevels, $ClassNames) = $Cache->get_value('classes');
 if (!$Classes || !$ClassLevels) {
-    $DB->query("SELECT ID, Name, Level, Color, LOWER(REPLACE(Name,' ','')) AS ShortName, IsUserClass FROM permissions ORDER BY IsUserClass, Level"); //WHERE IsUserClass='1'
+    $DB->query("SELECT ID, Name, Description, Level, Color, LOWER(REPLACE(Name,' ','')) AS ShortName, IsUserClass FROM permissions ORDER BY IsUserClass, Level"); //WHERE IsUserClass='1'
     $Classes = $DB->to_array('ID');
     $ClassLevels = $DB->to_array('Level');
     $ClassNames = $DB->to_array('ShortName');
@@ -1854,7 +1854,7 @@ function make_groupperm_string($GroupPermID, $Usespan = false)
     if ($Usespan === false) {
         return $Classes[$GroupPermID]['Name'];
     } else {
-        return '<span alt="' . $GroupPermID . '" class="groupperm" style="color:#'. $Classes[$GroupPermID]['Color'] . '">' . $Classes[$GroupPermID]['Name'] . '</span>';
+        return '<span alt="' . $GroupPermID . '" class="groupperm" style="color:#' . $Classes[$GroupPermID]['Color'] . '" title="' . $Classes[$GroupPermID]['Description'] . '">' . $Classes[$GroupPermID]['Name'] . '</span>';
     }
 }
 

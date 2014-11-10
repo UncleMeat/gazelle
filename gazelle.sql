@@ -902,6 +902,7 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Level` int(10) unsigned NOT NULL,
   `Name` varchar(25) CHARACTER SET latin1 NOT NULL,
+  `Description` varchar(32) CHARACTER SET latin1,
   `MaxSigLength` smallint(4) unsigned NOT NULL DEFAULT '0',
   `MaxAvatarWidth` smallint(4) unsigned NOT NULL DEFAULT '100',
   `MaxAvatarHeight` smallint(4) unsigned NOT NULL DEFAULT '100',

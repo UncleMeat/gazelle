@@ -66,7 +66,7 @@ if ($DB->record_count()) {
     </div>
 
 <?php
-$DB->query("SELECT p.ID,p.Name,p.IsUserClass,p.Color, COUNT(u.ID)
+$DB->query("SELECT p.ID,p.Name,p.Description,p.IsUserClass,p.Color, COUNT(u.ID)
                    FROM permissions AS p LEFT JOIN users_main AS u ON u.GroupPermissionID=p.ID
                    WHERE p.IsUserClass='0'
                    GROUP BY p.ID
@@ -76,13 +76,15 @@ if ($DB->record_count()) {
     <table style="width:50%;margin:0px auto;">
         <tr class="colhead">
             <td width="18%">Name</td>
+            <td width="18%">Description</td>
             <td width="10%">User Count</td>
             <td width="8%" class="center">Color</td>
             <td width="20%" class="center">Actions</td>
         </tr>
-<?php 	while (list($ID,$Name,$IsUserClass,$Color,$UserCount)=$DB->next_record()) {  ?>
+<?php 	while (list($ID,$Name,$Description,$IsUserClass,$Color,$UserCount)=$DB->next_record()) {  ?>
         <tr>
             <td><?=display_str($Name); ?></td>
+            <td><?=display_str($Description); ?></td>
             <td><?=number_format($UserCount); ?></td>
             <td class="center"><span style="font-weight:bold;display:block;width:100%;height:100%;color:white;background-color: #<?=display_str($Color)?>">#<?=$Color?></span></td>
             <td class="center">[<a href="tools.php?action=permissions&amp;id=<?=$ID ?>">Edit</a> | <a href="#" onclick="return confirmDelete(<?=$ID?>)">Remove</a>]</td>
