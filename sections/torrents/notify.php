@@ -1,7 +1,22 @@
 <?php
 if (!check_perms('site_torrents_notify')) { error(403); }
 
+include(SERVER_ROOT . '/sections/common/functions.php');
 include(SERVER_ROOT . '/sections/bookmarks/functions.php');
+
+if (!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
+    $OrderWay = 'asc'; // For header links
+} else {
+    $_GET['order_way'] = 'desc';
+    $OrderWay = 'desc';
+}
+
+if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('Title', 'Files', 'Time', 'Size', 'Snatched', 'Seeders', 'Leechers'))) {
+    $OrderBy = 'Time';
+} else {
+    $OrderBy = $_GET['order_by'];
+}
+
 
 $Bookmarks = all_bookmarks('torrent');
 
@@ -18,15 +33,15 @@ if (empty($TokenTorrents)) {
 $Results = $DB->query("SELECT SQL_CALC_FOUND_ROWS
         t.ID,
         g.ID,
-        g.Name,
+        g.Name as Title,
         g.NewCategoryID,
         g.TagList,
-        t.Size,
-        t.FileCount,
-        t.Snatched,
-        t.Seeders,
-        t.Leechers,
-        t.Time,
+        t.Size as Size,
+        t.FileCount as Files,
+        t.Snatched as Snatched,
+        t.Seeders as Seeders,
+        t.Leechers as Leechers,
+        t.Time as Time,
         t.FreeTorrent,
                 t.double_seed,
         tln.TorrentID AS LogInDB,
@@ -40,14 +55,14 @@ $Results = $DB->query("SELECT SQL_CALC_FOUND_ROWS
         LEFT JOIN torrents_logs_new AS tln ON tln.TorrentID=t.ID
         WHERE unt.UserID='$LoggedUser[ID]'
         GROUP BY t.ID
-        ORDER BY t.ID DESC LIMIT $Limit");
+        ORDER BY $OrderBy $OrderWay LIMIT $Limit");
 $DB->query('SELECT FOUND_ROWS()');
 list($TorrentCount) = $DB->next_record();
 
 //Clear before header but after query so as to not have the alert bar on this page load
 $DB->query("UPDATE users_notify_torrents SET UnRead='0' WHERE UserID=".$LoggedUser['ID']);
 $Cache->delete_value('notifications_new_'.$LoggedUser['ID']);
-show_header('My notifications','notifications');
+show_header('My notifications','notifications,overlib');
 
 $DB->set_query_id($Results);
 
@@ -97,13 +112,13 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
           <tr class="colhead">
                 <td style="text-align: center"><input type="checkbox" name="toggle" onClick="ToggleBoxes(this.form, this.checked)" /></td>
                 <td class="small cats_col"></td>
-                <td style="width:100%;">Torrent</td>
-                <td>Files</td>
-                <td>Time</td>
-                <td>Size</td>
-                <td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/snatched.png" alt="Snatches" title="Snatches" /></td>
-                <td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/seeders.png" alt="Seeders" title="Seeders" /></td>
-                <td class="sign"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/leechers.png" alt="Leechers" title="Leechers" /></td>
+                <td style="width:100%;"><a href="<?=header_link('Title', 'asc') ?>">Torrent</a></td>
+                <td><a href="<?=header_link('Files') ?>">Files</a></td>
+                <td><a href="<?=header_link('Time') ?>">Time</a></td>
+                <td><a href="<?=header_link('Size') ?>">Size</a></td>
+                <td class="sign"><a href="<?=header_link('Snatches') ?>"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/snatched.png" alt="Snatches" title="Snatches" /></a></td>
+                <td class="sign"><a href="<?=header_link('Seeders') ?>"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/seeders.png" alt="Seeders" title="Seeders" /></a></td>
+                <td class="sign"><a href="<?=header_link('Leechers') ?>"><img src="static/styles/<?=$LoggedUser['StyleName']?>/images/leechers.png" alt="Leechers" title="Leechers" /></a></td>
           </tr>
 <?php
         unset($FilterResults['FilterLabel']);
@@ -114,7 +129,7 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 
             $Review = get_last_review($GroupID);
 
-            $DisplayName = '<a href="torrents.php?id='.$GroupID.'" title="View Torrent">'.$GroupName.'</a>'; // &amp;torrentid='.$TorrentID.'
+            $DisplayName = '<a href="torrents.php?id='.$GroupID.'" onmouseover="return overlib(overlay'.$GroupID.', FULLHTML);" onmouseout="return nd();">'.$GroupName.'</a>'; // &amp;torrentid='.$TorrentID.'
 
             $TagLinks=array();
             if ($TorrentTags!='') {
@@ -139,6 +154,12 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
                 <div title="<?=$NewCategories[$GroupCategoryID]['tag']?>"><img src="<?='static/common/caticons/'.$NewCategories[$GroupCategoryID]['image']?>" /></div>
                 </td>
                 <td>
+<?php               if (!$LoggedUser['HideFloat']) {
+                        $Overlay = get_overlay_html($GroupName, $TorrentUsername, $Image, $Data['Seeders'], $Data['Leechers'], $Data['Size'], $Data['Snatched']); ?>
+                        <script>
+                            var overlay<?=$GroupID?> = <?=json_encode($Overlay)?>
+                        </script>
+<?php               } ?>
                     <?=$Icons?>
                     <?=$DisplayName?>
                     <?php  if ($UnRead) { echo '<strong>New!</strong>'; } ?>
