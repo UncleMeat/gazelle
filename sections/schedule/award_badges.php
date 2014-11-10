@@ -115,12 +115,19 @@ foreach ($AutoActions as $AutoAction) {
             break;
 
         case 'NumBounties': // num of dupes this user reported where they got the credit
-            //
             $SQL = "SELECT u.ID FROM users_main AS u LEFT JOIN reportsv2 AS r ON r.Type='dupe' AND r.Credit='1' AND r.ReporterID=u.ID
                      WHERE u.Enabled='1'
                        AND $NOTIN
                      GROUP BY u.ID
                     HAVING Count(r.ID)>=$Value";
+            break;
+
+        case 'AccountAge': // num of days since the account was registered.
+            $SQL = "SELECT u.ID, i.JoinDate FROM users_main AS u INNER JOIN users_info AS i ON i.UserID=u.ID
+                     WHERE u.Enabled='1'
+                       AND $NOTIN
+                     GROUP BY u.ID
+                    HAVING DATEDIFF(CURDATE(), i.JoinDate)>=$Value";
             break;
     }
 
