@@ -78,7 +78,7 @@ foreach ($FailedLogins as $Item) {
 ?>
     <tr class="row<?=$Row?>">
             <td>
-                <?=$IP?>
+                <?=display_ip($IP)?>
             </td>
             <td>
                 <?php  if ($UserID != 0) { echo format_username($UserID, $Username, $Donor, $Warned, $Enabled, $PermissionID); } ?>
