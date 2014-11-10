@@ -177,16 +177,25 @@ else {
     {
         global $DB, $Cache, $AttemptID, $Attempts, $Bans, $BannedUntil, $Time;
 
-                // The user exists in the database, inform the user about the failed login attempt.
-                if ($UserID > 0) {
-                    $DB->query("SELECT Username FROM users_main WHERE ID='$UserID'");
-                    list($Username) = $DB->next_record(MYSQLI_BOTH, false);
-                    send_pm($UserID, 0, db_string('Security Alert'), db_string(
-                            "Somebody (probably you, $Username) tried to login but failed!\n".
-                            "Their IP Address was : {$_SERVER['REMOTE_ADDR']}\n".
-                            "If this wasn't you please report this event to a staff member\n".
-                            "- Thank you."));
-                }
+        // The user exists in the database, inform the user about the failed login attempt.
+        if ($UserID > 0) {
+            $DB->query("SELECT Username FROM users_main WHERE ID='$UserID'");
+            list($Username) = $DB->next_record(MYSQLI_BOTH, false);
+            $Subject = urlencode("I received a Security Alert");
+            $Message = urlencode("Someone has made an unsucessful attempt to access my account.\n".
+                                 "I believe this to be an attempt to hack into my account.\n"
+                                 "IP: {$_SERVER['REMOTE_ADDR']}\n"
+                                 "Date: TIMESTAMP\n\n".
+                                 "Custom message:\n");
+            send_pm($UserID, 0, db_string('Security Alert'), db_string(
+                    "Somebody (probably you, $Username) tried to login to this account but failed!\n".
+                    "Their IP Address was : {$_SERVER['REMOTE_ADDR']}\n".
+                    "We suggest that you ensure you have a strong password for your account.\n".
+                    "In most cases this message is generated when another user with similar username accidentally types in yours.\n".
+                    "If you think this was an attempt to hack your account please".
+                    " [url=/staffpm.php?action=user_inbox&show=1&assign=mod&sub={$Subject}&msg={$Message}][u]report this event to staff[/u][/url].\n".
+                    "- Thank you."));
+        }
 
         if ($AttemptID) { // User has attempted to log in recently
             $Attempts++;
