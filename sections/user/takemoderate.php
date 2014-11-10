@@ -478,7 +478,10 @@ if ($Invites!=$Cur['Invites'] && check_perms('users_edit_invites')) {
 }
 
 if ($Warned == 1 && $Cur['Warned']=='0000-00-00 00:00:00' && check_perms('users_warn')) {
-    send_pm($UserID,0,db_string('You have received a warning'),db_string("You have been [url=/articles.php?topic=rules]warned for $WarnLength week(s)[/url] by [url=/user.php?id={$LoggedUser['ID']}]{$LoggedUser['Username']}[/url]. The reason given was: $WarnReason"));
+    send_pm($UserID,0,db_string('You have received a warning'),
+            db_string("You have been warned for $WarnLength week(s) by [url=/staff.php?]{$LoggedUser['Username']}[/url].\n".
+                      "The reason given was: $WarnReason\n\n".
+                      "[url=/articles.php?topic=rules]Read site rules here.[/url]"));
     $UpdateSet[]="Warned='".sqltime()."' + INTERVAL $WarnLength WEEK";
     $Msg = "warned for $WarnLength week(s)";
     if ($WarnReason) { $Msg.=" for $WarnReason"; }
@@ -492,7 +495,10 @@ if ($Warned == 1 && $Cur['Warned']=='0000-00-00 00:00:00' && check_perms('users_
 
 } elseif ($Warned == 1 && $ExtendWarning!='---' && check_perms('users_warn')) {
 
-    send_pm($UserID,0,db_string('Your warning has been extended'),db_string("Your warning has been extended by $ExtendWarning week(s) by [url=/user.php?id={$LoggedUser['ID']}]{$LoggedUser['Username']}[/url]. The reason given was: $WarnReason"));
+    send_pm($UserID,0,db_string('Your warning has been extended'),
+            db_string("Your warning has been extended by $ExtendWarning week(s) by [url=/staff.php?]{$LoggedUser['Username']}[/url].\n".
+                      "The reason given was: $WarnReason\n\n".
+                      "[url=/articles.php?topic=rules]Read site rules here.[/url]"));
 
     $UpdateSet[]="Warned=Warned + INTERVAL $ExtendWarning WEEK";
     $Msg = "warning extended by $ExtendWarning week(s)";
