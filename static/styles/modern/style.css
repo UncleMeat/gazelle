@@ -1175,6 +1175,7 @@ table.boxstat a, table.boxstat a:visited {
 
 .main_column {
     margin: 0px 290px 10px 0px;
+    overflow: auto;
    /* display:inline;
      width: 590px; */
 }
@@ -3117,6 +3118,6 @@ div.error {
 
 .anon_name {
     font-weight: normal;
-    vertical-align: middle;
+    vertical-align: midle;
     text-align: center;
 }

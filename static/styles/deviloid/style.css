@@ -1070,6 +1070,7 @@ div.body {
 
 .main_column {
     margin: 0px 290px 10px 0px;
+    overflow: auto;
    /* display:inline;
      width: 590px; */
 }
@@ -2771,6 +2772,5 @@ blockquote.bbcode.error code.error {
 
 .anon_name {
     font-weight: normal;
-    vertical-align: middle;
     text-align: center;
 }
