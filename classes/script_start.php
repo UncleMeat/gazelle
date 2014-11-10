@@ -2506,10 +2506,13 @@ function get_requests($RequestIDs, $Return = true)
                     filler.Username,
                     r.TorrentID,
                     r.TimeFilled,
-                    r.GroupID
+                    r.GroupID,
+                    r.UploaderID,
+                    uploader.Username
                 FROM requests AS r
                     LEFT JOIN users_main AS u ON u.ID=r.UserID
                     LEFT JOIN users_main AS filler ON filler.ID=FillerID AND FillerID!=0
+                    LEFT JOIN users_main AS uploader ON uploader.ID=r.UploaderID AND r.UploaderID!=0
                 WHERE r.ID IN (" . $IDs . ")
                 ORDER BY ID");
 

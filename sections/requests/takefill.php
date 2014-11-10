@@ -40,7 +40,8 @@ $DB->query("SELECT
                     t.ID,
                     t.UserID,
                     t.Time,
-                    tg.NewCategoryID
+                    tg.NewCategoryID,
+                    tg.Name
             FROM torrents AS t
                     LEFT JOIN torrents_group AS tg ON t.GroupID=tg.ID
             WHERE $Where
@@ -50,7 +51,7 @@ $DB->query("SELECT
 if ($DB->record_count() < 1) {
     error(404);
 }
-list($TorrentID, $UploaderID, $UploadTime, $TorrentCategoryID) = $DB->next_record();
+list($TorrentID, $UploaderID, $UploadTime, $TorrentCategoryID, $TorrentTitle) = $DB->next_record();
 
 $FillerID = $LoggedUser['ID'];
 $FillerUsername = $LoggedUser['Username'];
@@ -86,6 +87,7 @@ if (!empty($Err)) {
 //We're all good! Fill!
 $DB->query("UPDATE requests SET
                 FillerID = ".$FillerID.",
+                UploaderID = ".$UploaderID.",
                 TorrentID = ".$TorrentID.",
                 TimeFilled = '".sqltime()."'
             WHERE ID = ".$RequestID);
@@ -96,27 +98,45 @@ $DB->query("SELECT UserID FROM requests_votes WHERE RequestID = ".$RequestID);
 $UserIDs = $DB->to_array();
 foreach ($UserIDs as $User) {
     list($VoterID) = $User;
-    send_pm($VoterID, 0, db_string("The request '".$FullName."' has been filled"), db_string("One of your requests - [url=/requests.php?action=view&id=".$RequestID."]".$FullName."[/url] - has been filled. You can view it at [url=/torrents.php?torrentid=".$TorrentID."]http://".NONSSL_SITE_URL."/torrents.php?torrentid=".$TorrentID."[/url]"), '');
+    send_pm($VoterID, 0, db_string("The request '".$FullName."' has been filled"), db_string("One of your requests - [url=/requests.php?action=view&id=".$RequestID."]".$FullName."[/url] - has been filled.\nYou can view it at [url=/torrents.php?id=".$TorrentID."]http://".NONSSL_SITE_URL."/torrents.php?id=".$TorrentID."[/url]"), '');
 }
 
 $RequestVotes = get_votes_array($RequestID);
-write_log("Request $RequestID ($FullName) was filled by ".$LoggedUser['Username']." with the torrent ".$TorrentID.", for a ".get_size($RequestVotes['TotalBounty'])." bounty.");
+write_log("Request $RequestID ($FullName) was filled by ".$LoggedUser['Username']." with the torrent ".$TorrentID.", uploaded by $UploaderID for a ".get_size($RequestVotes['TotalBounty'])." bounty.");
 
-// Give bounty
-$DB->query("UPDATE users_main
-            SET Uploaded = (Uploaded + ".$RequestVotes['TotalBounty'].")
-            WHERE ID = ".$FillerID);
+if ( $UploaderID == $FillerID ) {
+    // Give bounty to filler
+    $DB->query("UPDATE users_main
+                SET Uploaded = (Uploaded + ".$RequestVotes['TotalBounty'].")
+                WHERE ID = ".$FillerID);
+    write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']). " for filling request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
+    send_pm($FillerID, 0, db_string("You filled the request '".$FullName."'"), db_string("You filled the request - [url=/requests.php?action=view&id=".$RequestID."]".$FullName."[/url] for a bounty of ".get_size($RequestVotes['TotalBounty'])."\nThis bounty has been added to your upload stats."), '');
 
-write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']). " for filling request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
+} else {
+    // Give bounty to filler
+    $DB->query("UPDATE users_main
+                SET Uploaded = (Uploaded + ".($RequestVotes['TotalBounty']/2).")
+                WHERE ID = ".$FillerID);
+    write_user_log($FillerID, "Added +". get_size($RequestVotes['TotalBounty']/2). " for filling request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
+    send_pm($FillerID, 0, db_string("You filled the request '".$FullName."'"), db_string("You filled the request - [url=/requests.php?action=view&id=".$RequestID."]".$FullName."[/url] with torrent [url=/torrents.php?id=".$TorrentID."]".$TorrentTitle."[/url]\n The filler's bounty of ".get_size($RequestVotes['TotalBounty']/2)." has been added to your upload stats."), '');
+
+    // Give bounty to uploader
+    $DB->query("UPDATE users_main
+                SET Uploaded = (Uploaded + ".($RequestVotes['TotalBounty']/2).")
+                WHERE ID = ".$UploaderID);
+    write_user_log($UploaderID, "Added +". get_size($RequestVotes['TotalBounty']/2). " for uploading torrent used to fill request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
+    send_pm($UploaderID, 0, db_string("One of your torrents was used to fill request '".$FullName."'"), db_string("One of your torrents - [url=/torrents.php&id=".$TorrentID."]".$TorrentTitle."[/url] was used to fill request - [url=/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]\nThe uploader's bounty of ".get_size($RequestVotes['TotalBounty']/2)." has been added to your upload stats."), '');
+}
 
 $Cache->delete_value('user_stats_'.$FillerID);
+$Cache->delete_value('user_stats_'.$UploaderID);
 $Cache->delete_value('request_'.$RequestID);
 $Cache->delete_value('requests_torrent_'.$TorrentID);
 if ($GroupID) {
     $Cache->delete_value('requests_group_'.$GroupID);
 }
 
-$SS->UpdateAttributes('requests', array('torrentid','fillerid'), array($RequestID => array((int) $TorrentID,(int) $FillerID)));
+$SS->UpdateAttributes('requests', array('torrentid','fillerid',uploaderid), array($RequestID => array((int) $TorrentID,(int) $FillerID, (int) $UploaderID)));
 update_sphinx_requests($RequestID);
 
 header('Location: requests.php?action=view&id='.$RequestID);

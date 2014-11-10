@@ -22,7 +22,17 @@ if (empty($Request)) {
 }
 
 list($RequestID, $RequestorID, $RequestorName, $TimeAdded, $LastVote, $CategoryID, $Title, $Image, $Description,
-     $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID) = $Request;
+     $FillerID, $FillerName, $TorrentID, $TimeFilled, $GroupID, $UploaderID, $UploaderName) = $Request;
+
+include(SERVER_ROOT.'/sections/torrents/functions.php');
+$TorrentCache = get_group_info($TorrentID, true, false);
+
+$TorrentDetails = $TorrentCache[0];
+$TorrentList = $TorrentCache[1];
+
+list(,,, $TorrentTitle) = array_shift($TorrentDetails);
+
+list(,,,,,,,,,,,,,,,,,,,, $IsAnon) = $TorrentList[0];
 
 //Convenience variables
 $NowTime = time();
@@ -121,6 +131,18 @@ show_header('View request: '.$FullName, 'comments,requests,bbcode,jquery,jquery.
                 <td class="label">Total Bounty</td>
                 <td id="formatted_bounty" style="font-size: 1.8em;"><?=get_size($RequestVotes['TotalBounty'])?></td>
             </tr>
+            <tr id="fillerbounty">
+                <td class="label">Filler's Bounty</td>
+                <td id="formatted_bounty" style="font-size: 1.4em;"><?=get_size($RequestVotes['TotalBounty']/2)?></td>
+            </tr>
+            <tr id="uploaderbounty">
+                <td class="label">Uploader's Bounty</td>
+                <td id="formatted_bounty" style="font-size: 1.4em;"><?=get_size($RequestVotes['TotalBounty']/2)?></td>
+            </tr>
+            <tr>
+                <td class="label"></td>
+                <td title="If you fill this request with another's torrent you will receive half of the bounty (<?=get_size($RequestVotes['TotalBounty']/2)?>) and the uploader will recieve the other half.">If you fill this request with your own torrent you will receive the full bounty of <strong><?=get_size($RequestVotes['TotalBounty'])?></strong></td>
+            </tr>
             <tr>
                 <td class="label">Created</td>
                 <td>
@@ -190,12 +212,15 @@ show_header('View request: '.$FullName, 'comments,requests,bbcode,jquery,jquery.
             <tr>
                 <td class="label">Filled</td>
                 <td>
-                    <strong><a href="torrents.php?torrentid=<?=$TorrentID?>">Yes</a></strong>,
-                    by user <?=format_username($FillerID, $FillerName)?>
+                    <strong><a href="torrents.php?id=<?=$TorrentID?>"><?php echo ($TorrentTitle == '') ? "(torrent deleted)" : $TorrentTitle; ?></a></strong>
 <?php 		if( ( $TimeExpires>$NowTime &&  ($LoggedUser['ID'] == $RequestorID || $LoggedUser['ID'] == $FillerID) )
                 || check_perms('site_moderate_requests')) { ?>
-                        <strong><a href="requests.php?action=unfill&amp;id=<?=$RequestID?>">(Unfill)</a></strong> Unfilling a request without a valid, nontrivial reason will result in a warning.
+                        - <span title="Unfilling a request without a valid, nontrivial reason will result in a warning."><a href="requests.php?action=unfill&amp;id=<?=$RequestID?>">[Unfill]</a></span>
 <?php 		} ?>
+                   <br/>Filled by <?=format_username($FillerID, $FillerName)?>
+<?php           if ( $UploaderID != 0 && $TorrentTitle != '' ) {
+                    echo ", uploaded by ".torrent_username($UploaderID, $UploaderName, $IsAnon);
+                } ?>
                 </td>
             </tr>
 <?php 	} elseif ($TimeExpires > $NowTime) { ?>
