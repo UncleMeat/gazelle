@@ -46,7 +46,9 @@ $Response[1] = '<br/>
           </div>
           <div class="head">Description</div>
           <div class="box pad">
+          <div class="body">
                ' . $Text->full_format($Content, get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions']), true) . '
+          </div>
           </div><br/>';
 
 echo json_encode($Response);

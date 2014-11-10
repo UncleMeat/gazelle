@@ -20,7 +20,10 @@ show_header('Sandbox', 'bbcode');
                 <br/>
                 <div id="preview" class="hidden"><br/>
                     <h3 class="left">Preview:</h3>
-                    <div id="preview_content" class="box pad"></div>
+                    <div class="box pad">
+                    <div id="preview_content" class="body">
+                    </div>
+                    </div>
                 </div>
                 <?php  $Text->display_bbcode_assistant("body",get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
                 <textarea id="body" name="body" class="long" rows="10" onkeyup="resize('body');" ></textarea>
