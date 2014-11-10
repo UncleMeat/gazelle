@@ -101,6 +101,11 @@ if (!empty($_REQUEST['action'])) {
                   } else echo 'err';
             break;
 
+        case 'ajax_get_edit':
+            // Page that switches edits for mods
+            require(SERVER_ROOT.'/common/ajax_get_edit.php');
+            break;
+
         case 'grouplog':
             enforce_login();
             include(SERVER_ROOT.'/sections/torrents/grouplog.php');
@@ -338,25 +343,7 @@ if (!empty($_REQUEST['action'])) {
             break;
 
         case 'get_post':
-            enforce_login();
-            if (!$_GET['post'] || !is_number($_GET['post'])) { error(0); }
-                  $PostID = (int) $_GET['post'];
-            $DB->query("SELECT Body FROM torrents_comments WHERE ID='$PostID'");
-            list($Body) = $DB->next_record(MYSQLI_NUM);
-
-                  include(SERVER_ROOT.'/classes/class_text.php');
-                  $Text = new TEXT;
-                  $Body = $Text->clean_bbcode($Body, get_permissions_advtags($LoggedUser['ID']));
-
-                  if (isset($_REQUEST['body']) && $_REQUEST['body']==1) {
-                      echo trim($Body);
-                  } else {
-                      $Text->display_bbcode_assistant("editbox$PostID", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions']));
-
-?>	 <textarea id="editbox<?=$PostID?>" class="long" onkeyup="resize('editbox<?=$PostID?>');" name="body" rows="10"><?=display_str($Body)?></textarea>
- <?php
-                  }
-
+            require(SERVER_ROOT.'/common/get_post.php');
             break;
 
         case 'takeedit_post':

@@ -41,8 +41,12 @@ if ($_GET['action']) {
             include(SERVER_ROOT.'/sections/userhistory/passkey_history.php');
             break;
         case 'posts':
-            //Load ratio history page
+            //Load post history page
             include(SERVER_ROOT.'/sections/userhistory/post_history.php');
+            break;
+        case 'comments':
+            //Load comment history page
+            include(SERVER_ROOT.'/sections/userhistory/comment_history.php');
             break;
         case 'subscriptions':
             // View subscriptions
@@ -63,9 +67,20 @@ if ($_GET['action']) {
         case 'catchup_collages':
             include(SERVER_ROOT.'/sections/userhistory/catchup_collages.php');
             break;
-
         case 'token_history':
             include(SERVER_ROOT.'/sections/userhistory/token_history.php');
+            break;
+        case 'ajax_get_edit':
+            // Page that switches edits for mods
+            require(SERVER_ROOT.'/common/ajax_get_edit.php');
+            break;
+        case 'takeedit':
+            // Edit posts
+            require(SERVER_ROOT.'/sections/forums/takeedit.php');
+            break;
+        case 'get_post':
+            // Get posts
+            require(SERVER_ROOT.'/common/get_post.php');
             break;
         default:
             //You trying to mess with me query string? To the home page with you!

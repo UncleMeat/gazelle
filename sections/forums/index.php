@@ -52,7 +52,7 @@ if (!empty($_POST['action'])) {
             break;
         case 'ajax_get_edit':
             // Page that switches edits for mods
-            require(SERVER_ROOT.'/sections/forums/ajax_get_edit.php');
+            require(SERVER_ROOT.'/common/ajax_get_edit.php');
             break;
         case 'new':
             // Create a new thread
@@ -64,7 +64,7 @@ if (!empty($_POST['action'])) {
             break;
         case 'get_post':
             // Get posts
-            require(SERVER_ROOT.'/sections/forums/get_post.php');
+            require(SERVER_ROOT.'/common/get_post.php');
             break;
         case 'delete':
             // Delete posts

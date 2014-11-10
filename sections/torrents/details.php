@@ -940,9 +940,9 @@ foreach ($Thread as $Key => $Post) {
         <td colspan="2">
             <span style="float:left;"><a class="post_id" href='torrents.php?id=<?=$GroupID?>&amp;postid=<?=$PostID?>#post<?=$PostID?>'>#<?=$PostID?></a>
                 <?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled, $PermissionID, $UserTitle, true, $GroupPermissionID, true)?> <?=time_diff($AddedTime)?>
-                - <a href="#quickpost" onclick="Quote('<?=$PostID?>','t<?=$GroupID?>','<?=$Username?>');">[Quote]</a>
+                - <a href="#quickpost" onclick="Quote('comments','<?=$PostID?>','t<?=$GroupID?>','<?=$Username?>');">[Quote]</a>
 <?php if (can_edit_comment($AuthorID, $EditedUserID, $AddedTime, $EditedTime)) { ?>
-                        - <a href="#post<?=$PostID?>" onclick="Edit_Form('<?=$PostID?>','<?=$Key?>');">[Edit]</a><?php }
+                        - <a href="#post<?=$PostID?>" onclick="Edit_Form('comments','<?=$PostID?>','<?=$Key?>');">[Edit]</a><?php }
     if (check_perms('site_admin_forums')) { ?>
                         - <a href="#post<?=$PostID?>" onclick="Delete('<?=$PostID?>');">[Delete]</a> <?php } ?>
             </span>

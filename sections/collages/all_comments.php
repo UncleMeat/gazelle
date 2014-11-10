@@ -80,8 +80,8 @@ foreach ($Thread as $Post) {
         <td colspan="2">
             <span style="float:left;"><a href='#post<?=$PostID?>'>#<?=$PostID?></a>
                 <?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled, $PermissionID, $UserTitle, true, $GroupPermissionID, true)?> <?=time_diff($AddedTime)?>
-<?php if (!$ThreadInfo['IsLocked']) { ?>				- <a href="#quickpost" onclick="Quote('<?=$PostID?>','c<?=$CollageID?>','<?=$Username?>');">[Quote]</a><?php }
-if (can_edit_comment($AuthorID, null, $AddedTime, $AddedTime)) { ?>				- <a href="#post<?=$PostID?>" onclick="Edit_Form('<?=$PostID?>');">[Edit]</a><?php }
+<?php if (!$ThreadInfo['IsLocked']) { ?>				- <a href="#quickpost" onclick="Quote('collages','<?=$PostID?>','c<?=$CollageID?>','<?=$Username?>');">[Quote]</a><?php }
+if (can_edit_comment($AuthorID, null, $AddedTime, $AddedTime)) { ?>				- <a href="#post<?=$PostID?>" onclick="Edit_Form('collages','<?=$PostID?>');">[Edit]</a><?php }
 if (check_perms('site_moderate_forums')) { ?>				- <a href="#post<?=$PostID?>" onclick="Delete('<?=$PostID?>');">[Delete]</a> <?php } ?>
             </span>
             <span id="bar<?=$PostID?>" style="float:right;">

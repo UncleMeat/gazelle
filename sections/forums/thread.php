@@ -418,10 +418,10 @@ foreach ($Thread as $Key => $Post) {
                 <?=format_username($AuthorID, $Username, $Donor, $Warned, $Enabled, $PermissionID, $UserTitle, true, $GroupPermissionID, true)?>
                         <?=time_diff($AddedTime,2)?>
 <?php if (!$ThreadInfo['IsLocked'] || check_perms('site_moderate_forums')) { ?>
-                - <a href="#quickpost" onclick="Quote('<?=$PostID?>','f<?=$ThreadID?>','<?=$Username?>');">[Quote]</a>
+                - <a href="#quickpost" onclick="Quote('forums','<?=$PostID?>','f<?=$ThreadID?>','<?=$Username?>');">[Quote]</a>
 <?php }
 if (((!$ThreadInfo['IsLocked'] && check_forumperm($ForumID, 'Write')) && can_edit_comment($AuthorID, $EditedUserID, $AddedTime, $EditedTime)) || check_perms('site_moderate_forums')) { ?>
-                - <a href="#post<?=$PostID?>" onclick="Edit_Form('<?=$PostID?>','<?=$Key?>');">[Edit]</a>
+                - <a href="#post<?=$PostID?>" onclick="Edit_Form('forums','<?=$PostID?>','<?=$Key?>');">[Edit]</a>
 <?php }
 if ($ForumID != TRASH_FORUM_ID && check_perms('site_moderate_forums') && $ThreadInfo['Posts'] > 1) { ?>
                 - <a href="#post<?=$PostID?>" onclick="Trash('<?=$ThreadID?>','<?=$PostID?>');" title="moves this post to the trash forum">[Trash]</a>

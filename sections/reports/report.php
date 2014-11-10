@@ -5,10 +5,23 @@ if (empty($_GET['type']) || empty($_GET['id']) || !is_number($_GET['id'])) {
     error(0);
 }
 
-if (!array_key_exists($_GET['type'], $Types)) {
+switch($_GET['type']) {
+    case 'posthistory' :
+        $Short = 'post';
+        break;
+
+    case 'torrents_commenthistory' :
+        $Short = 'torrents_comment';
+        break;
+
+    default :
+        $Short = $_GET['type'];
+        break;
+}
+
+if (!array_key_exists($Short, $Types)) {
     error(403);
 }
-$Short = $_GET['type'];
 $Type = $Types[$Short];
 
 $ID = $_GET['id'];

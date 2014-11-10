@@ -15,7 +15,7 @@ if (!isset($_GET['depth']) || !is_number($_GET['depth'])) {
 
 $Depth = $_GET['depth'];
 
-if (empty($_GET['type']) || !in_array($_GET['type'], array('forums', 'collages', 'requests', 'torrents'))) {
+if (empty($_GET['type']) || !in_array($_GET['type'], array('forums', 'collages', 'requests', 'torrents', 'staffpm'))) {
     die();
 }
 $Type = $_GET['type'];
@@ -44,22 +44,31 @@ if ($Depth != 0) {
             //Get from normal forum stuffs
             $DB->query("SELECT Body
                     FROM forums_posts
-                    WHERE ID = ".$PostID);
+                    WHERE ID=$PostID");
             list($Body) = $DB->next_record();
+            $Container='post_content';
             break;
         case 'collages' :
         case 'requests' :
         case 'torrents' :
             $DB->query("SELECT Body
                     FROM ".$Type."_comments
-                    WHERE ID = ".$PostID);
+                    WHERE ID=$PostID");
             list($Body) = $DB->next_record();
+            $Container='post_content';
+            break;
+        case 'staffpm' :
+            $DB->query("SELECT Message
+                    FROM staff_pm_messages
+                    WHERE ID=$PostID");
+            list($Body) = $DB->next_record();
+            $Container='body';
             break;
     }
 }
 ?>
 
-                <div class="post_content"><?=$Text->full_format($Body, true)?></div>
+                <div class="<?=$Container?>"><?=$Text->full_format($Body, true)?></div>
                         <div class="post_footer">
 <?php if ($Depth < count($Edits)) { ?>
                     <a href="#edit_info_<?=$PostID?>" onclick="LoadEdit('<?=$Type?>', <?=$PostID?>, <?=($Depth + 1)?>); return false;">&laquo;</a>
