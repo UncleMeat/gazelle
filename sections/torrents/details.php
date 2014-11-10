@@ -859,6 +859,7 @@ if (count($PersonalCollages)>0) {
 
     $Thanks = $Cache->get_value('torrent_thanks_'.$GroupID);
     if ($Thanks === false) {
+          $Thanks = [];
           $DB->query("SELECT Thanks FROM torrents WHERE GroupID = '$GroupID'");
           list($Thanks['names']) = $DB->next_record();
           $Thanks['count'] = str_word_count($Thanks['names']);
