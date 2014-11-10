@@ -2,7 +2,7 @@
 if (!check_perms('torrents_review')) { error(403); }
 
 $ViewStatus = isset($_REQUEST['viewstatus'])?$_REQUEST['viewstatus']:'both';
-$ViewStatus = in_array($ViewStatus, array('warned','pending','both'))?$ViewStatus:'pending';
+$ViewStatus = in_array($ViewStatus, array('warned','pending','both','unmarked'))?$ViewStatus:'pending';
 $OverdueOnly = (isset($_REQUEST['overdue']) && $_REQUEST['overdue'])?1:0;
 
 $DB->query("SELECT ReviewHours, AutoDelete FROM site_options LIMIT 1");
@@ -74,9 +74,12 @@ show_header('Manage torrents marked for deletion');
 <?php       }
         if ($ViewStatus!='both') {   ?>
           [<a href="tools.php?action=marked_for_deletion&amp;viewstatus=both&amp;overdue=<?=$OverdueOnly?>"> View pending and warned </a>] &nbsp;&nbsp;&nbsp;
+<?php       }
+        if ($ViewStatus!='unmarked') {   ?>
+          [<a href="tools.php?action=marked_for_deletion&amp;viewstatus=unmarked&amp;overdue=<?=$OvrdueOnly?>"> View unmarked only </a>] &nbsp;&nbsp;&nbsp;
 <?php       }       ?>
 
-<?php       if ($NumOverdue) {
+<?php       if ($NumOverdue && $ViewStatus!='unmarked') {
             if ($OverdueOnly) {  ?>
           [<a href="tools.php?action=marked_for_deletion&amp;viewstatus=<?=$ViewStatus?>&amp;overdue=0"> View due and overdue </a>] &nbsp;&nbsp;&nbsp;
 <?php           } else {     ?>
@@ -89,7 +92,7 @@ show_header('Manage torrents marked for deletion');
 <?php
         $Torrents = get_torrents_under_review($ViewStatus, $OverdueOnly);
         $NumTorrents = count($Torrents);
-
+        if ($ViewStatus!='unmarked') {
 ?>
         <form method="post" action="tools.php" id="reviewform">
             <div class="head">Marked for Deletion Mass Actions</div>
@@ -113,13 +116,28 @@ show_header('Manage torrents marked for deletion');
             <div class="head">Torrents Marked for Deletion</div>
             <table>
                 <tr class="colhead">
-<?php  if ($NumOverdue && $CanManage) { ?><td width="8px"><input type="checkbox" onclick="toggleChecks('reviewform',this)" /></td><?php  } ?>
+<?php  if ($NumOverdue && $CanManage) { ?><td width="8px"><input type="checkbox" onclick="toggleChecks('reviewform',this)" /></td><?php } ?>
                     <td>Torrent</td>
                     <td width="40px"><strong>Status</strong></td>
                     <td>time till nuke</td>
                     <td><strong>Reason</strong>
                     <td>Username</td>
                 </tr>
+<?php
+        } else {
+?>
+            <div class="head">Torrents Awating Review</div>
+            <table>
+                <tr class="colhead">
+                    <td>Torrent</td>
+                    <td width="40px"><strong>Status</strong></td>
+                    <td>Time</td>
+                    <td><strong>Reason</strong>
+                    <td>Username</td>
+                </tr>
+<?php
+        }
+?>
 <?php
     if ($NumTorrents==0) { //
 ?>
@@ -135,8 +153,10 @@ show_header('Manage torrents marked for deletion');
 
             $IsOverdue = strtotime($KillTime)<time();
 ?>
+<?php  if ($Status!='Unmarked') { ?>
                 <tr class="<?=($IsOverdue?($Status=='Pending'?'orangebar':'redbar'):"row$Row")?>">
-<?php  if ($NumOverdue && $CanManage) { ?><td class="center"><?=$IsOverdue?'<input type="checkbox" name="id[]" value="'.$GroupID.'" />':''?></td><?php  } ?>
+<?php  }
+       if ($NumOverdue && $CanManage && $ViewStatus != 'unmarked') { ?><td class="center"><?=$IsOverdue?'<input type="checkbox" name="id[]" value="'.$GroupID.'" />':''?></td><?php  } ?>
                     <td><a href="torrents.php?id=<?=$GroupID?>"><?=$TorrentName?></a></td>
                     <td><?=$Status?></td>
                     <td><?=time_diff($KillTime)?></td>
