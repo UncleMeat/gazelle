@@ -10,7 +10,7 @@ if (!empty($_GET['order_way']) && $_GET['order_way'] == 'asc') {
     $OrderWay = 'desc';
 }
 
-if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('Username', 'Staffname', 'Time','Comment'))) {
+if (empty($_GET['order_by']) || !in_array($_GET['order_by'], array('Username', 'Staffname', 'Time', 'Count', 'Comment'))) {
     $_GET['order_by'] = 'Time';
     $OrderBy = 'Time';
 } else {
@@ -34,13 +34,14 @@ show_header('Exclude list','watchlist');
     list($Page,$Limit) = page_limit(50);
 
     $DB->query("SELECT SQL_CALC_FOUND_ROWS
-                       wl.UserID, um.Username as Username, StaffID, um2.Username AS Staffname, Time, Count(xbt.uid) as Count, wl.Comment,
+                        wl.UserID, um.Username as Username, StaffID, um2.Username AS Staffname, Time, Count(xbt.uid) as Count, wl.Comment,
                                  ui.Donor, ui.Warned, um.Enabled, um.PermissionID
                   FROM users_not_cheats AS wl
              LEFT JOIN users_main AS um ON um.ID=wl.UserID
              LEFT JOIN users_info AS ui ON ui.UserID=wl.UserID
              LEFT JOIN users_main AS um2 ON um2.ID=wl.StaffID
              LEFT JOIN xbt_peers_history AS xbt ON xbt.uid=wl.UserID
+                 GROUP BY wl.UserID
               ORDER BY $OrderBy $OrderWay
                  LIMIT $Limit");
 
