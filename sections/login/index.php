@@ -183,8 +183,8 @@ else {
             list($Username) = $DB->next_record(MYSQLI_BOTH, false);
             $Subject = urlencode("I received a Security Alert");
             $Message = urlencode("Someone has made an unsucessful attempt to access my account.\n".
-                                 "I believe this to be an attempt to hack into my account.\n"
-                                 "IP: {$_SERVER['REMOTE_ADDR']}\n"
+                                 "I believe this to be an attempt to hack into my account.\n".
+                                 "IP: {$_SERVER['REMOTE_ADDR']}\n".
                                  "Date: TIMESTAMP\n\n".
                                  "Custom message:\n");
             send_pm($UserID, 0, db_string('Security Alert'), db_string(
