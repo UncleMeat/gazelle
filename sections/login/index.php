@@ -185,7 +185,7 @@ else {
             $Message = urlencode("Someone has made an unsucessful attempt to access my account.\n".
                                  "I believe this to be an attempt to hack into my account.\n".
                                  "IP: {$_SERVER['REMOTE_ADDR']}\n".
-                                 "Date: TIMESTAMP\n\n".
+                                 "Date: ".sqltime()."\n\n".
                                  "Custom message:\n");
             send_pm($UserID, 0, db_string('Security Alert'), db_string(
                     "Somebody (probably you, $Username) tried to login to this account but failed!\n".
