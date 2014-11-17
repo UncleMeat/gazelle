@@ -33,6 +33,7 @@ if (empty($TokenTorrents)) {
 $Results = $DB->query("SELECT SQL_CALC_FOUND_ROWS
         t.ID,
         g.ID,
+        g.Image,
         g.Name as Title,
         g.NewCategoryID,
         g.TagList,
@@ -43,13 +44,16 @@ $Results = $DB->query("SELECT SQL_CALC_FOUND_ROWS
         t.Leechers as Leechers,
         t.Time as Time,
         t.FreeTorrent,
-                t.double_seed,
+        t.double_seed,
+        t.Anonymous,
+        u.Username,
         tln.TorrentID AS LogInDB,
         unt.UnRead,
         unt.FilterID,
         unf.Label
         FROM users_notify_torrents AS unt
         JOIN torrents AS t ON t.ID=unt.TorrentID
+	JOIN users_main AS u ON u.ID = t.UserID
         JOIN torrents_group AS g ON g.ID = t.GroupID
         LEFT JOIN users_notify_filters AS unf ON unf.ID=unt.FilterID
         LEFT JOIN torrents_logs_new AS tln ON tln.TorrentID=t.ID
@@ -123,9 +127,9 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
 <?php
         unset($FilterResults['FilterLabel']);
         foreach ($FilterResults as $Result) {
-            list($TorrentID, $GroupID, $GroupName, $GroupCategoryID, $TorrentTags, $Size, $FileCount,
+            list($TorrentID, $GroupID, $Image, $GroupName, $GroupCategoryID, $TorrentTags, $Size, $FileCount,
                 $Snatched, $Seeders,
-                $Leechers, $NotificationTime, $FreeTorrent, $DoubleSeed, $LogInDB, $UnRead, $FilterLabel, $FilterLabel) = $Result;
+                $Leechers, $NotificationTime, $FreeTorrent, $DoubleSeed, $IsAnon, $Username, $LogInDB, $UnRead, $FilterLabel, $FilterLabel) = $Result;
 
             $Review = get_last_review($GroupID);
 
@@ -154,8 +158,9 @@ $Pages=get_pages($Page,$TorrentCount,NOTIFICATIONS_PER_PAGE,9);
                 <div title="<?=$NewCategories[$GroupCategoryID]['tag']?>"><img src="<?='static/common/caticons/'.$NewCategories[$GroupCategoryID]['image']?>" /></div>
                 </td>
                 <td>
-<?php               if (!$LoggedUser['HideFloat']) {
-                        $Overlay = get_overlay_html($GroupName, $TorrentUsername, $Image, $Data['Seeders'], $Data['Leechers'], $Data['Size'], $Data['Snatched']); ?>
+<?php               $TorrentUsername = anon_username($Username, $IsAnon);
+                    if (!$LoggedUser['HideFloat']) {
+                        $Overlay = get_overlay_html($GroupName, $TorrentUsername, $Image, $Seeders, $Leechers, $Size, $Snatched); ?>
                         <script>
                             var overlay<?=$GroupID?> = <?=json_encode($Overlay)?>
                         </script>
