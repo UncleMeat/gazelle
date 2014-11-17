@@ -875,7 +875,7 @@ if (count($PersonalCollages)>0) {
                </form>
 <?php   }   ?>
                 <div  id="thanksdiv" class="pad<?php if(!$Thanks['names'])echo' hidden';?>" style="text-align:left">
-                    <p><strong>The following <?=$Thanks['count']?> people said thanks!</strong> &nbsp;<span id="thankstext"><?=$Thanks['names']?></span></p>
+                    <p><strong id="thanksdigest">The following <?=$Thanks['count']?> people said thanks!</strong> &nbsp;<span id="thankstext"><?=$Thanks['names']?></span></p>
                 </div>
         </div>
 <?php
