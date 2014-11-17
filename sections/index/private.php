@@ -302,7 +302,7 @@ if ($TopicID) {
             $Votes[$Key] = $Value;
         }
 
-        for ($i = 1, $il = count($Answers); $i <= $il; ++$i) {
+        foreach (array_keys($Answers) as $i) {
             if (!isset($Votes[$i])) {
                 $Votes[$i] = 0;
             }
@@ -333,8 +333,8 @@ if ($TopicID) {
                 <p><strong><?=display_str($Question)?></strong></p>
 <?php 	if ($UserResponse !== null || $Closed) { ?>
                 <ul class="poll nobullet">
-<?php 		for ($i = 1, $il = count($Answers); $i <= $il; $i++) {
-            if ($TotalVotes > 0) {
+<?php 		foreach ($Answers as $i => $Answer) {
+            if (!empty($Votes[$i]) && $TotalVotes > 0) {
                 $Ratio = $Votes[$i]/$MaxVotes;
                 $Percent = $Votes[$i]/$TotalVotes;
             } else {
@@ -357,7 +357,7 @@ if ($TopicID) {
                     <input type="hidden" name="action" value="poll"/>
                     <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>"/>
                     <input type="hidden" name="topicid" value="<?=$TopicID?>" />
-<?php  		for ($i = 1, $il = count($Answers); $i <= $il; $i++) { ?>
+<?php  		foreach ($Answers as $i => $Answer) { ?>
                     <input type="radio" name="vote" id="answer_<?=$i?>" value="<?=$i?>" />
                     <label for="answer_<?=$i?>"><?=display_str($Answers[$i])?></label><br />
 <?php  		} ?>
