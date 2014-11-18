@@ -97,6 +97,7 @@ foreach ($Messages as $Message) {
     </div>
     <div class="box vertical_space">
         <div class="body" id="message<?=$MessageID?>">
+            <br />
             <?=$Text->full_format($Body, $Users[(int) $SenderID]['AdvTags'])?>
         </div>
     </div>

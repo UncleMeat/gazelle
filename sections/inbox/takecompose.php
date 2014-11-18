@@ -63,7 +63,7 @@ $Text = new TEXT;
 $Text->validate_bbcode($_POST['body'],  get_permissions_advtags($LoggedUser['ID']));
 
 if (isset($_POST['forwardbody'])) {
-    $_POST['body'] = "$_POST[forwardbody][br]$_POST[body]";
+    $_POST['body'] = "$_POST[forwardbody]$_POST[body]";
 }
 
 $ConvID = send_pm($ToID,$LoggedUser['ID'],db_string($Subject),db_string($_POST['body']),$ConvID);
