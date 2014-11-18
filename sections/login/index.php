@@ -182,7 +182,7 @@ else {
             $DB->query("SELECT Username FROM users_main WHERE ID='$UserID'");
             list($Username) = $DB->next_record(MYSQLI_BOTH, false);
             $Subject = urlencode("I received a Security Alert");
-            $Message = urlencode("Someone has made an unsucessful attempt to access my account.\n".
+            $Message = urlencode("Someone has made an unsuccessful attempt to access my account.\n".
                                  "I believe this to be an attempt to hack into my account.\n".
                                  "IP: {$_SERVER['REMOTE_ADDR']}\n".
                                  "Date: ".sqltime()."\n\n".
