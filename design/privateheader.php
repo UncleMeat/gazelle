@@ -572,9 +572,9 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                                 <li id="nav_staffmessages" class="<?=$NewStaffPMs ? 'highlight' : 'normal'?>"><a onmousedown="Stats('staffpm');" href="staffpm.php?action=user_inbox">Message Staff<?=$NewStaffPMs ? "($NewStaffPMs)" : ''?></a></li>
 
                                 <li id="nav_uploaded" class="normal"><a onmousedown="Stats('uploads');" href="torrents.php?type=uploaded&amp;userid=<?=$LoggedUser['ID']?>">Uploads</a></li>
-
+<?php  if (check_perms('site_submit_requests')) { ?>
                                 <li id="nav_requests" class="normal"><a onmousedown="Stats('requests');" href="requests.php?type=created">My Requests</a></li>
-
+<?php  } ?>
                                 <li id="nav_bookmarks" class="normal"><a onmousedown="Stats('bookmarks');" href="bookmarks.php?type=torrents">Bookmarks</a></li>
 <?php  if (check_perms('site_torrents_notify')) { ?>
                                 <li id="nav_notifications" class="<?=$NewNotifications ? 'highlight' : 'normal'?>"><a onmousedown="Stats('notifications');" href="torrents.php?action=notify">Notifications<?=$NewNotifications ? "($NewNotifications)" : ''?></a></li>
