@@ -82,7 +82,9 @@ if (!$bbErrors) {
           WHERE ID='$PostID'");
 
     $CatalogueID = floor((POSTS_PER_PAGE*$Page-POSTS_PER_PAGE)/THREAD_CATALOGUE);
-    $Cache->begin_transaction('thread_'.$TopicID.'_catalogue_'.$CatalogueID);
+    $Cache->delete('thread_'.$TopicID.'_catalogue_'.$CatalogueID);
+
+/*    $Cache->begin_transaction('thread_'.$TopicID.'_catalogue_'.$CatalogueID);
     if ($Cache->MemcacheDBArray[$Key]['ID'] != $PostID) {
           $Cache->cancel_transaction();
           $Cache->delete('thread_'.$TopicID.'_catalogue_'.$CatalogueID); //just clear the cache for would be cache-screwer-uppers
@@ -98,6 +100,7 @@ if (!$bbErrors) {
                       ));
           $Cache->commit_transaction(3600*24*5);
     }
+*/
 
     $DB->query("INSERT INTO comments_edits (Page, PostID, EditUser, EditTime, Body)
                                                     VALUES ('forums', ".$PostID.", ".$UserID.", '".sqltime()."', '".db_string($OldBody)."')");

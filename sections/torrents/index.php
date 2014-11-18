@@ -386,7 +386,9 @@ if (!empty($_REQUEST['action'])) {
 
             // Update the cache
             $CatalogueID = floor((TORRENT_COMMENTS_PER_PAGE*$Page-TORRENT_COMMENTS_PER_PAGE)/THREAD_CATALOGUE);
-            $Cache->begin_transaction('torrent_comments_'.$GroupID.'_catalogue_'.$CatalogueID);
+            $Cache->delete('torrent_comments_'.$GroupID.'_catalogue_'.$CatalogueID);
+
+/*            $Cache->begin_transaction('torrent_comments_'.$GroupID.'_catalogue_'.$CatalogueID);
 
             $Cache->update_row($_POST['key'], array(
                 'ID'=>$_POST['post'],
@@ -398,6 +400,7 @@ if (!empty($_REQUEST['action'])) {
                 'Username'=>$LoggedUser['Username']
             ));
             $Cache->commit_transaction(0);
+ */
 
             $DB->query("INSERT INTO comments_edits (Page, PostID, EditUser, EditTime, Body)
                                     VALUES ('torrents', ".db_string($_POST['post']).", ".db_string($LoggedUser['ID']).", '".sqltime()."', '".db_string($OldBody)."')");
