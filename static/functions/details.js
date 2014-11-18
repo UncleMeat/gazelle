@@ -346,7 +346,7 @@ function Load_Details_Cookie()  {
         } else {
             if($('#thankstext').raw().innerHTML!='') response = ', ' + response;
             $('#thankstext').raw().innerHTML += response;
-            $('#thanksdigest').raw().innerHTML = 'The following '+response.split(' ').length+' people said thanks!';
+            $('#thanksdigest').raw().innerHTML = 'The following '+$('#thankstext').raw().innerHTML.split(' ').length+' people said thanks!';
             $('#thanksform').hide();
             $('#thanksdiv').show();
         }
