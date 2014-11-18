@@ -323,7 +323,7 @@ if (empty($Results)) {
             }
 ?>
             <td class='postbody' valign="top">
-                <div id="content<?=$PostID?>">
+                <div id="content<?=$PostID?>" class="post_container">
                     <?=$Text->full_format($Body, isset($PermissionsInfo['site_advanced_tags']) &&  $PermissionsInfo['site_advanced_tags'] );?>
 <?php 			if ($EditedUserID) { ?>
                     <br />
@@ -331,8 +331,9 @@ if (empty($Results)) {
 <?php 				if (check_perms('site_moderate_forums')) { ?>
                     <a href="#content<?=$PostID?>" onclick="LoadEdit('forums', <?=$PostID?>, 1)">&laquo;</a>
 <?php  				} ?>
-                    Last edited by
+                    <span class="editedby">Last edited by
                     <?=format_username($EditedUserID, $EditedUsername) ?> <?=time_diff($EditedTime,2,true,true)?>
+                    </span>
 <?php 			} ?>
                 </div>
             </td>
