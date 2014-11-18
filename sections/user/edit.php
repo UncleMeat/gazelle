@@ -517,7 +517,7 @@ echo $Val->GenerateJS('userform');
             </tr>
             <tr class="colhead">
                 <td colspan="2">
-                    <strong>Signature </strong> &nbsp;(max <?=$MaxSigLength?> chars) <span style="text-decoration: underline">max total (all images and text) size </span> 1MB and <?=SIG_MAX_WIDTH?> px * <?=SIG_MAX_HEIGHT?> px
+                    <strong>Signature </strong> &nbsp;(max <?=$MaxSigLength?> chars) <span style="text-decoration: underline">max total size</span> (all images and text combined) 1MB and <?=SIG_MAX_WIDTH?> px * <?=SIG_MAX_HEIGHT?> px
                 </td>
             </tr>
             <tr>
