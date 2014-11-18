@@ -1895,7 +1895,7 @@ div.bbcode { /* bg tag */
 }
 
 table.bbcode {
-    background-color: inherit; 
+    background-color: transparent; 
     text-align: inherit;
     margin: 0px auto;
 }
