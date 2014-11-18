@@ -131,7 +131,7 @@ foreach ($ListInput as $item) {
         $StartingNewList = true;
 
         // if parenttag and tags are set then add them
-        Add_Synonyms($ParentTag, $TagInfos, &$Result);
+        Add_Synonyms($ParentTag, $TagInfos, $Result);
 
         $TagInfos = array();
         $ParentTag = '';
@@ -198,7 +198,7 @@ foreach ($ListInput as $item) {
     }
 }
 
-Add_Synonyms($ParentTag, $TagInfos, &$Result);
+Add_Synonyms($ParentTag, $TagInfos, $Result);
 
 $Cache->delete_value('all_synomyns');
 
