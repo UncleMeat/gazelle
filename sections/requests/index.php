@@ -14,11 +14,11 @@ if (!isset($_REQUEST['action'])) {
     include(SERVER_ROOT.'/sections/requests/requests.php');
 } else {
     switch ($_REQUEST['action']) {
-        case 'new':
         case 'ajax_get_edit':
             // Page that switches edits for mods
             require(SERVER_ROOT.'/common/ajax_get_edit.php');
             break;
+        case 'new':
         case 'edit':
             include(SERVER_ROOT.'/sections/requests/new_edit.php');
             break;
