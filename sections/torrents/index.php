@@ -401,7 +401,7 @@ if (!empty($_REQUEST['action'])) {
             ));
             $Cache->commit_transaction(0);
  */
-
+            $Cache->delete('torrents_edits_'.$_POST['post']);
             $DB->query("INSERT INTO comments_edits (Page, PostID, EditUser, EditTime, Body)
                                     VALUES ('torrents', ".db_string($_POST['post']).", ".db_string($LoggedUser['ID']).", '".sqltime()."', '".db_string($OldBody)."')");
 

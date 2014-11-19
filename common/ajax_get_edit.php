@@ -46,7 +46,6 @@ if ($Depth != 0) {
                     FROM forums_posts
                     WHERE ID=$PostID");
             list($Body) = $DB->next_record();
-            $Container='post_content';
             break;
         case 'collages' :
         case 'requests' :
@@ -55,17 +54,29 @@ if ($Depth != 0) {
                     FROM ".$Type."_comments
                     WHERE ID=$PostID");
             list($Body) = $DB->next_record();
-            $Container='post_content';
             break;
         case 'staffpm' :
             $DB->query("SELECT Message
                     FROM staff_pm_messages
                     WHERE ID=$PostID");
             list($Body) = $DB->next_record();
-            $Container='body';
             break;
     }
 }
+// Set container separately in case we read from cache
+    switch ($Type) {
+        case 'forums' :
+            $Container='post_content';
+            break;
+        case 'collages' :
+        case 'requests' :
+        case 'torrents' :
+            $Container='post_content';
+            break;
+        case 'staffpm' :
+            $Container='body';
+            break;
+    }
 ?>
 
                 <div class="<?=$Container?>"><?=$Text->full_format($Body, true)?></div>
@@ -76,7 +87,7 @@ if ($Depth != 0) {
                     <?=format_username($UserID, $Username) ?> <?=time_diff($Time,2,true,true)?>
                               </span>
 <?php } else { ?>
-                    <em>Original Post</em>
+                                  <em>Original Post</em>
 <?php }
 
 if ($Depth > 0) { ?>
