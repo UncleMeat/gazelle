@@ -174,17 +174,21 @@ if (empty($HeavyInfo['DisableAvatars'])) {
 <?php } ?>
             <td class='postbody' valign="top">
                 <div id="content<?=$PostID?>" class="post_container">
-                    <?=$Text->full_format($Body, get_permissions_advtags($UserID, unserialize($CustomPermissions), $AuthorPermissions)) ?>
+                    <div class="post_content">
+                        <?=$Text->full_format($Body, get_permissions_advtags($UserID, unserialize($CustomPermissions), $AuthorPermissions)) ?>
 <?php                   if ($EditorID) { ?>
-                    <br />
-                    <br />
+                            <br />
+                            <br />
+                    </div>
+                    <div class="post_footer">
 <?php                           if (check_perms('site_moderate_forums')) { ?>
-                    <a href="#content<?=$PostID?>" onclick="LoadEdit('torrents', <?=$PostID?>, 1)">&laquo;</a>
+                            <a href="#content<?=$PostID?>" onclick="LoadEdit('torrents', <?=$PostID?>, 1)">&laquo;</a>
 <?php                           } ?>
-                    <span class="editedby">Last edited by
-                    <?=format_username($EditorID, $EditorUsername) ?> <?=time_diff($EditedTime,2,true,true)?>
-                    </span>
+                            <span class="editedby">Last edited by
+                                <?=format_username($EditorID, $EditorUsername) ?> <?=time_diff($EditedTime,2,true,true)?>
+                            </span>
 <?php                    } ?>
+                    </div>
                 </div>
             </td>
         </tr>
