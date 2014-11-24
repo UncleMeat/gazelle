@@ -125,7 +125,7 @@ if ( $UploaderID == $FillerID ) {
                 SET Uploaded = (Uploaded + ".($RequestVotes['TotalBounty']/2).")
                 WHERE ID = ".$UploaderID);
     write_user_log($UploaderID, "Added +". get_size($RequestVotes['TotalBounty']/2). " for uploading torrent used to fill request [url=/requests.php?action=view&id={$RequestID}]{$Title}[/url] ");
-    send_pm($UploaderID, 0, db_string("One of your torrents was used to fill request '".$FullName."'"), db_string("One of your torrents - [url=/torrents.php&id=".$TorrentID."]".$TorrentTitle."[/url] was used to fill request - [url=/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]\nThe uploader's bounty of ".get_size($RequestVotes['TotalBounty']/2)." has been added to your upload stats."), '');
+    send_pm($UploaderID, 0, db_string("One of your torrents was used to fill request '".$FullName."'"), db_string("One of your torrents - [url=/torrents.php?id=".$TorrentID."]".$TorrentTitle."[/url] was used to fill request - [url=/requests.php?action=view&id=".$RequestID."]".$FullName."[/url]\nThe uploader's bounty of ".get_size($RequestVotes['TotalBounty']/2)." has been added to your upload stats."), '');
 }
 
 $Cache->delete_value('user_stats_'.$FillerID);
