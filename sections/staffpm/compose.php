@@ -65,7 +65,7 @@ show_header('Start Conversation', 'inbox,staffpm,bbcode,jquery');
                 <div id="preview" class="box pad hidden"></div>
 
                 <form action="staffpm.php" method="post" id="messageform">
-                    <div id="quickpost" >
+                    <div id="StaffPM" >
                         <input type="hidden" name="auth" value="<?= $LoggedUser['AuthKey'] ?>" />
                         <input type="hidden" name="action" value="takenewpost" />
                         <input type="hidden" name="prependtitle" value="Staff PM - " />
@@ -92,7 +92,7 @@ show_header('Start Conversation', 'inbox,staffpm,bbcode,jquery');
 
                         <label for="message"><h3>Message</h3></label>
                         <?php  $Text->display_bbcode_assistant("message$ReportID"); ?>
-                        <textarea rows="6" class="long" name="message" id="message"><?= display_str($Message) ?></textarea>
+                        <textarea rows="6" class="long" name="message" id="quickpost"><?= display_str($Message) ?></textarea>
                         <br />
 
                     </div>
