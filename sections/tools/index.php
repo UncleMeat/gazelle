@@ -590,7 +590,7 @@ switch ($_REQUEST['action']) {
                 $DB->query("SELECT p.ID,p.Name,p.Description,p.Level,p.Values,p.DisplayStaff,p.IsUserClass,
                                     p.MaxSigLength,p.MaxAvatarWidth,p.MaxAvatarHeight,p.Color
                                     FROM permissions AS p WHERE p.ID='" . db_string($_REQUEST['id']) . "' ");
-                list($ID, $Name, $Description, $Level, $Values, $DisplayStaff, $IsUserClass, $MaxSigLength, $MaxAvatarWidth, $MaxAvatarHeight, $Color) = $DB->next_record(MYSQLI_NUM, array(3));
+                list($ID, $Name, $Description, $Level, $Values, $DisplayStaff, $IsUserClass, $MaxSigLength, $MaxAvatarWidth, $MaxAvatarHeight, $Color) = $DB->next_record(MYSQLI_NUM, array(4));
 
                 if ($IsUserClass == '1' && ($Level > $LoggedUser['Class'] || $_REQUEST['level'] > $LoggedUser['Class'])) {
                     error(403);
