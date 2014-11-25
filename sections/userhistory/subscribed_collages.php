@@ -165,7 +165,7 @@ $CollageSubs = $DB->to_array();
                 <tr class="colhead_dark">
                     <td>
                         <span style="float:left;">
-                            <strong><a href="collage.php?id=<?= $CollageID ?>"><?= $CollageName ?></a></strong> (<?= $NewTorrentCount ?> new torrent<?= ($NewTorrentCount == 1 ? '' : 's') ?>)
+                            <strong><a href="collages.php?id=<?= $CollageID ?>"><?= $CollageName ?></a></strong> (<?= $NewTorrentCount ?> new torrent<?= ($NewTorrentCount == 1 ? '' : 's') ?>)
                         </span>&nbsp;
                         <span style="float:right;">
                             <a href="#" onclick="$('#discog_table_<?= $CollageID ?>').toggle(); this.innerHTML=(this.innerHTML=='[Hide]'?'[Show]':'[Hide]'); return false;"><?= $ShowAll ? '[Show]' : '[Hide]' ?></a>&nbsp;&nbsp;&nbsp;[<a href="userhistory.php?action=catchup_collages&auth=<?= $LoggedUser['AuthKey'] ?>&collageid=<?= $CollageID ?>">Catch up</a>]&nbsp;&nbsp;&nbsp;<a href="#" onclick="CollageSubscribe(<?= $CollageID ?>); return false;" id="subscribelink<?= $CollageID ?>">[Unsubscribe]</a>
