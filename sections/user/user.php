@@ -625,9 +625,7 @@ list($UniqueGroups) = $DB->next_record();
             list($NumVotesOwn) = $DB->next_record(MYSQL_NUM);
 
             $DB->query("SELECT COUNT(ttv.TagID) FROM torrents_tags_votes AS ttv
-                         JOIN torrents AS t ON t.GroupID=ttv.GroupID JOIN torrents_group AS tg ON tg.ID=ttv.GroupID
-                          JOIN tags ON ttv.TagID=tags.ID
-                          JOIN torrents_tags AS tt ON tt.TagID=ttv.TagID AND tt.GroupID=ttv.GroupID
+                         JOIN torrents AS t ON t.GroupID=ttv.GroupID
                          WHERE ttv.UserID = '$UserID'
                            AND t.UserID != '$UserID'");
             list($NumVotesOthers) = $DB->next_record(MYSQL_NUM);
