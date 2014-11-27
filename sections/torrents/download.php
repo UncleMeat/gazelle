@@ -204,5 +204,7 @@ if ($DownloadAlt) {
     header('Content-Type: application/x-bittorrent; charset=utf-8');
 }
 header('Content-disposition: attachment; filename="'.$FileName.'"');
+$torrentdata = $Tor->enc();
+header('Content-length: '.strlen($torrentdata));
 
-echo $Tor->enc();
+echo $torrentdata;
