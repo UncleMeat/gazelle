@@ -144,7 +144,7 @@ function PreviewResponse(id) {
 function PreviewMessage() {
 	if ($('#preview').has_class('hidden')) {
 		var ToPost = [];
-		ToPost['message'] = document.getElementById('message').value;
+		ToPost['message'] = document.getElementById('quickpost').value;
 		ajax.post('?action=preview', ToPost, function (data) {
 			document.getElementById('preview').innerHTML = data;
 			$('#preview').toggle();
