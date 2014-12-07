@@ -58,6 +58,9 @@ $CollageSubs = $DB->to_array();
         }
         ?>
         [<a href="userhistory.php?action=catchup_collages&auth=<?= $LoggedUser['AuthKey'] ?>">Catch up</a>]&nbsp;&nbsp;&nbsp;
+        <a href="userhistory.php?action=subscriptions">Go to forum subscriptions</a>&nbsp;&nbsp;&nbsp;
+        <a href="userhistory.php?action=posts&amp;group=0&amp;showunread=0">Go to post history</a>&nbsp;&nbsp;&nbsp;
+        <a href="userhistory.php?action=comments&amp;userid=<?=$LoggedUser['ID']?>">Go to comment history</a>
     </div>
     <?php
     if (!$NumResults) {

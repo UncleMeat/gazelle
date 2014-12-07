@@ -110,6 +110,7 @@ if ($NumResults) {
 }
 ?>
             <a href="userhistory.php?action=catchup&amp;auth=<?=$LoggedUser['AuthKey']?>">Catch up</a>&nbsp;&nbsp;&nbsp;
+            <a href="userhistory.php?action=subscribed_collages">Go to collage subscriptions</a>&nbsp;&nbsp;&nbsp;
             <a href="userhistory.php?action=posts&amp;group=0&amp;showunread=0">Go to post history</a>&nbsp;&nbsp;&nbsp;
             <a href="userhistory.php?action=comments&amp;userid=<?=$LoggedUser['ID']?>">Go to comment history</a>
     </div>

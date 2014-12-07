@@ -219,7 +219,8 @@ if ($ViewingOwn) {
         }
     }
 ?>
-            <a href="userhistory.php?action=subscriptions">Go to subscriptions</a>&nbsp;&nbsp;&nbsp;
+            <a href="userhistory.php?action=subscriptions">Go to forum subscriptions</a>&nbsp;&nbsp;&nbsp;
+            <a href="userhistory.php?action=subscribed_collages">Go to collage subscriptions</a>&nbsp;&nbsp;&nbsp;
             <a href="userhistory.php?action=comments">Go to comment history</a>
 <?php
 } else {

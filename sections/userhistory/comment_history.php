@@ -116,8 +116,9 @@ $DB->set_query_id($Comments);
 <?php       if (!$ViewingOwn) { ?>
                 <a href="userhistory.php?action=posts&amp;userid=<?=$UserID?>&amp;group=0">Go to post history</a>
 <?php       } else { ?>
-                <a href="userhistory.php?action=posts&amp;group=0&amp;showunread=0">Go to post history</a>&nbsp;&nbsp;&nbsp;
-                <a href="userhistory.php?action=subscriptions">Go to subscriptions</a>
+                <a href="userhistory.php?action=subscriptions">Go to forum subscriptions</a>&nbsp;&nbsp;&nbsp;
+                <a href="userhistory.php?action=subscribed_collages">Go to collage subscriptions</a>&nbsp;&nbsp;&nbsp;
+                <a href="userhistory.php?action=posts&amp;group=0&amp;showunread=0">Go to post history</a>
 <?php       } ?>
     <br /><br />
     <?=$Pages?>
