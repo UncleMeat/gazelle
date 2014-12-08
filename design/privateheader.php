@@ -587,7 +587,9 @@ if (check_perms('users_mod') || $LoggedUser['SupportFor'] !="" || $LoggedUser['D
                                 <li id="nav_mydonations" class="normal"><a href="donate.php?action=my_donations">My Donations</a></li>
 
                                 <li id="nav_bonus" class="normal" title="Spend your credits in the bonus shop"><a href="bonus.php">Bonus Shop</a></li>
-
+<?php           if ( check_perms('site_give_specialgift') ) {  ?>
+                                <li id="nav_gift" class="normal" title="Give a gift of credits to a perv in need"><a href="bonus.php?action=gift">Special Gift</a></li>
+<?php           } ?>
                                 <li id="nav_sandbox" class="normal"><a href="sandbox.php">Sandbox</a></li>
 
 <?php           if ( check_perms('site_play_slots') ) {  ?>

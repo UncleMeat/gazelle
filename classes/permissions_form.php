@@ -73,6 +73,7 @@
     'site_debug' => 'Developer access.',
     'site_proxy_images' => 'Image proxy & Anti-Canary.',
     'site_search_many' => 'Can go past low limit of search results.',
+    'site_give_specialgift' => 'Can give a special gift.',
     'site_play_slots' => 'Can play the slot machine.',
     'site_set_language' => 'Can set own user language(s) in settings',
 
@@ -173,6 +174,7 @@
     'admin_manage_wiki' => 'Can manage wiki access.',
     'admin_update_geoip' => 'Can update geoip data.',
     'admin_data_viewer' => 'Can access data viewer.',
+    'admin_stealth_resolve' => 'Can stealth resolve.',
     'site_collages_manage' => 'Can manage any collage.',
     'site_collages_recover' => 'Can recover \'deleted\' collages.',
     'edit_unknowns' => 'Can edit unknown release information.',
@@ -250,6 +252,7 @@ function permissions_form() { ?>
                     <?php display_perm('site_collages_recover', 'Can recover \'deleted\' collages'); ?>
                     <?php display_perm('site_forums_double_post', 'Can double post in the forums'); ?>
                     <?php display_perm('project_team', 'Part of the project team'); ?>
+                    <?php display_perm('site_give_specialgift', 'Can give a special gift.'); ?>
                     <?php display_perm('site_play_slots', 'Can play the slot machine'); ?>
                     <?php display_perm('site_set_language', 'Can set own user language(s)', 'Can set own user language(s) on settings page.'); ?>
                     <?php display_perm('site_torrent_signature', 'Can set and use a torrent signature'); ?>
@@ -385,6 +388,8 @@ function permissions_form() { ?>
                     <?php display_perm('admin_manage_wiki', 'Can manage wiki access.'); ?>
                     <?php display_perm('admin_update_geoip', 'Can update geoip data.'); ?>
                     <?php display_perm('admin_data_viewer', 'Can access data viewer.'); ?>
+                    <?php display_perm('admin_stealth_resolve', 'Can stealth resolve.'); ?>
+
                 </td>
             </tr>
         </table>

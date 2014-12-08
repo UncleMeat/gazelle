@@ -1194,7 +1194,7 @@ CREATE TABLE IF NOT EXISTS `site_options` (
 -- Dumping data for table `site_options`
 --
  
-INSERT IGNORE INTO `site_options` VALUES (24,0,720,524288,'0000-00-00 00:00:00',0);
+-- INSERT IGNORE INTO `site_options` VALUES (24,0,720,524288,'0000-00-00 00:00:00',0);
 
 
 -- --------------------------------------------------------
@@ -2220,6 +2220,23 @@ CREATE TABLE IF NOT EXISTS `users_dupes` (
     FOREIGN KEY (`GroupID`)
     REFERENCES `dupe_groups` (`ID`)
   ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_special_gifts`
+--
+
+CREATE TABLE IF NOT EXISTS `users_special_gifts` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `UserID` int(10) unsigned NOT NULL,
+  `CreditsGiven` double(11,2) NOT NULL DEFAULT '0.00',
+  `Recipient` int(10) unsigned NOT NULL,
+  UNIQUE KEY `ID` (`ID`),
+   KEY `UserID` (`UserID`),
+  KEY `CreditsGiven` (`CreditsGiven`),
+  KEY `Recipient` (`Recipient`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

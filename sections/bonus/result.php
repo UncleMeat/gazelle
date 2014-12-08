@@ -5,7 +5,7 @@ show_header('Shop result');
     <div class="thin">
         <div class="head">result</div>
         <div class="box pad ">
-                    <h3 class="center"><?=display_str($_REQUEST['result'])?></h3>
+                    <h3 class="center body" style="white-space:pre"><?=display_str($_REQUEST['result'])?></h3>
         </div>
 
         <div class="head">return</div>
@@ -26,7 +26,10 @@ show_header('Shop result');
                         list($Tname) = $DB->next_record();    ?>
                         <a href="torrents.php?id=<?=$_REQUEST['rett']?>" title="Bonus Shop">Return to <?=$Tname?></a><br />
 <?php               }
-                }   ?>
+                }
+                if (isset($_REQUEST['retsg'])) { ?>
+                        <a href="bonus.php?action=gift">Return to Special Gift Page</a><br />
+<?php           } ?>
         </div>
     </div>
 <?php

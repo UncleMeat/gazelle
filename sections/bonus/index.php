@@ -25,6 +25,12 @@ if (!isset($_REQUEST['action'])) {
         case 'msg':
             include(SERVER_ROOT.'/sections/bonus/result.php');
             break;
+        case 'gift':
+            include(SERVER_ROOT.'/sections/bonus/gift.php');
+            break;
+        case 'givegift':
+            include(SERVER_ROOT.'/sections/bonus/takegift.php');
+            break;
         default:
             include(SERVER_ROOT.'/sections/bonus/bonus.php');
             break;

@@ -159,4 +159,21 @@ ON
     joined.year = banned.year
     AND joined.month = banned.month"
     ),
+    'users_special_gifts' => array(
+        'title' => 'Users: Special Gifts',
+        'description' => 'This query shows Special Gifts given by users.',
+        'sql' => "
+SELECT SQL_CALC_FOUND_ROWS
+    CONCAT('<a href=\"/user.php?id=', usg.UserID, '\">', (SELECT username FROM users_main WHERE ID = usg.UserID), '</a>') AS User,
+    SUM(CreditsGiven) AS CreditsGiven,
+    CONCAT('<a href=\"/user.php?id=', usg.Recipient, '\">', (SELECT username FROM users_main WHERE ID = usg.Recipient), '</a>') AS Recipient
+FROM
+    users_special_gifts AS usg
+GROUP BY
+    usg.UserID,
+    usg.Recipient
+ORDER BY
+    CreditsGiven DESC"
+    ),
+
 );
