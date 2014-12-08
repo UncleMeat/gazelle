@@ -7,11 +7,31 @@ if ( !check_perms('site_give_specialgift') ) {
 }
 
 /* We should validate these.*/
-$DONATE   = (int) $_POST['donate'];
-$CLASS    = (int) $_POST['class'];
-$RATIO    = $_POST['ratio'];
-$CREDITS  = $_POST['credits'];
-$LASTSEEN = $_POST['last_seen'];
+if (empty($_POST['donate']) || !in_array($_POST['donate'], array('600', '3000', '6000'))) {
+    $DONATE   = 300;
+} else {
+    $DONATE   = (int) $_POST['donate'];
+}
+if (empty($_POST['donate']) || !in_array($_POST['donate'], array('6', '1', '2', '3'))) {
+    $CLASS    = 6;
+} else {
+    $CLASS    = (int) $_POST['class'];
+}
+if (empty($_POST['ratio']) || !in_array($_POST['ratio'], array('> 0.0', '< 0.5', '< 1.0', '> 1.0', '> 5.0'))) {
+    $RATIO    = '> 0.0';
+} else {
+    $RATIO    = $_POST['ratio'];
+}
+if (empty($_POST['credits']) || !in_array($_POST['credits'], array('>= 0', '< 3000', '< 12000', '> 12000'))) {
+    $CREDITS  = '>= 0';
+} else {
+    $CREDITS  = $_POST['credits'];
+}
+if (empty($_POST['last_seen']) || !in_array($_POST['last_seen'], array('1', '24', '3*24', '7*24'))) {
+    $LASTSEEN = '1';
+} else {
+    $LASTSEEN = $_POST['last_seen'];
+}
 
 
 $DB->query("SELECT
@@ -20,7 +40,7 @@ $DB->query("SELECT
                 users_main
             WHERE
                 PermissionID <= $CLASS
-                AND (Uploaded / Downloaded) $RATIO
+                AND IFNULL((Uploaded / Downloaded), ~0) $RATIO
                 AND Credits $CREDITS
                 AND LastAccess >= DATE_SUB(NOW(), INTERVAL $LASTSEEN HOUR)
                 AND Enabled = '1'");
