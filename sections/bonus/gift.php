@@ -62,10 +62,12 @@ if ($LoggedUser['TotalCredits'] >= 600) { ?>
                 </td>
                 <td>
         <select name="class">
-                    <option value=<?=SMUT_PEDDLER?>>any</option>
-                    <option value=<?=APPRENTICE?>>Apprentice</option>
-                    <option value=<?=PERV?>>Perv or lower</option>
-                    <option value=<?=GOOD_PERV?>>Good Perv or lower</option>
+                    <option value="<= ".<?=SMUT_PEDDLER?>>any</option>
+                    <option value="<= ".<?=APPRENTICE?>>Apprentice</option>
+                    <option value="<= ".<?=PERV?>>Perv or lower</option>
+                    <option value="<= ".<?=GOOD_PERV?>>Good Perv or lower</option>
+                    <option value=">= ".<?=GOOD_PERV?>>Good Perv or higher</option>
+                    <option value=">= ".<?=SEXTREME_PERV?>>Sextreme Perv or higher</option>
         </select>
                 </td>
                 <td>

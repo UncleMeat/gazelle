@@ -12,8 +12,8 @@ if (empty($_POST['donate']) || !in_array($_POST['donate'], array('600', '3000', 
 } else {
     $DONATE   = (int) $_POST['donate'];
 }
-if (empty($_POST['donate']) || !in_array($_POST['donate'], array('6', '1', '2', '3'))) {
-    $CLASS    = 6;
+if (empty($_POST['donate']) || !in_array($_POST['donate'], array("<= ".SMUT_PEDDLER, "<= ".APPRENTICE, "<= ".PERV, "<= ".GOOD_PERV, ">= ".GOOD_PERV, ">= ".SEXTREME_PERV))) {
+    $CLASS    = "<= ".SMUT_PEDDLER;
 } else {
     $CLASS    = (int) $_POST['class'];
 }
@@ -39,7 +39,7 @@ $DB->query("SELECT
             FROM
                 users_main
             WHERE
-                PermissionID <= $CLASS
+                PermissionID $CLASS
                 AND IFNULL((Uploaded / Downloaded), ~0) $RATIO
                 AND Credits $CREDITS
                 AND LastAccess >= DATE_SUB(NOW(), INTERVAL $LASTSEEN HOUR)
@@ -60,7 +60,7 @@ if(empty($Recipient)) {
 
 $DB->query("SELECT
                 PermissionID as Current_Class,
-                (Uploaded / Downloaded) AS Current_Ratio,
+                IFNULL((Uploaded / Downloaded), '&infin;') AS Current_Ratio,
                 Credits AS Current_Credits,
                 LastAccess AS Current_LastAccess
             FROM

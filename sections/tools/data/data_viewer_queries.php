@@ -160,7 +160,7 @@ ON
     AND joined.month = banned.month"
     ),
     'users_special_gifts' => array(
-        'title' => 'Users: Special Gifts',
+        'title' => 'Users: Special Gifts - Donors & Recipients',
         'description' => 'This query shows Special Gifts given by users.',
         'sql' => "
 SELECT SQL_CALC_FOUND_ROWS
@@ -175,5 +175,32 @@ GROUP BY
 ORDER BY
     CreditsGiven DESC"
     ),
-
+'users_special_gifts_donors' => array(
+        'title' => 'Users: Special Gifts - Donors',
+        'description' => 'This query shows Special Gifts given by users.',
+        'sql' => "
+SELECT SQL_CALC_FOUND_ROWS
+    CONCAT('<a href=\"/user.php?id=', usg.UserID, '\">', (SELECT username FROM users_main WHERE ID = usg.UserID), '</a>') AS User,
+    SUM(CreditsGiven) AS CreditsGiven
+FROM
+    users_special_gifts AS usg
+GROUP BY
+    usg.UserID
+ORDER BY
+    CreditsGiven DESC"
+    ),
+'users_special_gifts_recipients' => array(
+        'title' => 'Users: Special Gifts - Recipients',
+        'description' => 'This query shows Special Gifts received by users.',
+        'sql' => "
+SELECT SQL_CALC_FOUND_ROWS
+    CONCAT('<a href=\"/user.php?id=', usg.Recipient, '\">', (SELECT username FROM users_main WHERE ID = usg.Recipient), '</a>') AS Recipient,
+    SUM(CreditsGiven) AS CreditsGiven
+FROM
+    users_special_gifts AS usg
+GROUP BY
+    usg.Recipient
+ORDER BY
+    CreditsGiven DESC"
+    ),
 );
