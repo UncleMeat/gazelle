@@ -15,6 +15,7 @@ if ($TotalCredits != $LoggedUser['TotalCredits']) {
 
 enforce_login();
 show_header('Bonus Shop','bonus,bbcode');
+global $Classes;
 
 ?>
 <div class="thin">
@@ -62,12 +63,12 @@ if ($LoggedUser['TotalCredits'] >= 600) { ?>
                 </td>
                 <td>
         <select name="class">
-                    <option value="<= ".<?=SMUT_PEDDLER?>>any</option>
-                    <option value="<= ".<?=APPRENTICE?>>Apprentice</option>
-                    <option value="<= ".<?=PERV?>>Perv or lower</option>
-                    <option value="<= ".<?=GOOD_PERV?>>Good Perv or lower</option>
-                    <option value=">= ".<?=GOOD_PERV?>>Good Perv or higher</option>
-                    <option value=">= ".<?=SEXTREME_PERV?>>Sextreme Perv or higher</option>
+                    <option value="<= ".<?=$Classes[SMUT_PEDDLER]['Level']?>>any</option>
+                    <option value="<= ".<?=$Classes[APPRENTICE]['Level']?>>Apprentice</option>
+                    <option value="<= ".<?=$Classes[PERV]['Level']?>>Perv or lower</option>
+                    <option value="<= ".<?=$Classes[GOOD_PERV]['Level']?>>Good Perv or lower</option>
+                    <option value=">= ".<?=$Classes[GOOD_PERV]['Level']?>>Good Perv or higher</option>
+                    <option value=">= ".<?=$Classes[SEXTREME_PERV]['Level']?>>Sextreme Perv or higher</option>
         </select>
                 </td>
                 <td>

@@ -1,5 +1,5 @@
 <?php
-global $DB;
+global $DB, $Classes;
 enforce_login();
 authorize();
 if ( !check_perms('site_give_specialgift') ) {
@@ -12,8 +12,8 @@ if (empty($_POST['donate']) || !in_array($_POST['donate'], array('600', '3000', 
 } else {
     $DONATE   = (int) $_POST['donate'];
 }
-if (empty($_POST['donate']) || !in_array($_POST['donate'], array("<= ".SMUT_PEDDLER, "<= ".APPRENTICE, "<= ".PERV, "<= ".GOOD_PERV, ">= ".GOOD_PERV, ">= ".SEXTREME_PERV))) {
-    $CLASS    = "<= ".SMUT_PEDDLER;
+if (empty($_POST['class']) || !in_array($_POST['class'], array("<= ".$Classes[SMUT_PEDDLER]['Level'], "<= ".$Classes[APPRENTICE]['Level'], "<= ".$Classes[PERV]['Level'], "<= ".$Classes[GOOD_PERV]['Level'], ">= ".$Classes[GOOD_PERV]['Level'], ">= ".$Classes[SEXTREME_PERV]['Level']))) {
+    $CLASS    = "<= ".$Classes[SMUT_PEDDLER]['Level'];
 } else {
     $CLASS    = (int) $_POST['class'];
 }
@@ -35,26 +35,21 @@ if (empty($_POST['last_seen']) || !in_array($_POST['last_seen'], array('1', '24'
 
 
 $DB->query("SELECT
-                ID AS UserID
+                um.ID AS UserID
             FROM
-                users_main
+                users_main as um
+            LEFT JOIN
+                permissions AS perm ON um.PermissionID=perm.ID
             WHERE
-                PermissionID $CLASS
-                AND IFNULL((Uploaded / Downloaded), ~0) $RATIO
-                AND Credits $CREDITS
-                AND LastAccess >= DATE_SUB(NOW(), INTERVAL $LASTSEEN HOUR)
-                AND Enabled = '1'");
+                perm.Level $CLASS
+                AND IFNULL((um.Uploaded / um.Downloaded), ~0) $RATIO
+                AND um.Credits $CREDITS
+                AND um.LastAccess >= DATE_SUB(NOW(), INTERVAL $LASTSEEN HOUR)
+                AND um.Enabled = '1'");
 $Eligible_Users = array_column($DB->to_array(), 'UserID');
 $Recipient = array_rand($Eligible_Users,1);
 $Recipient = $Eligible_Users[$Recipient];
 if(empty($Recipient)) {
-/*    echo '<div class ="box pad">';
-    echo "Eligible Users: ";
-    print_r($Eligible_Users);
-    echo "<br />";
-    echo "Recipient: ";
-    print_r($Recipient);
-    echo "</div>";*/
     error("No users match this criteria");
 }
 
