@@ -91,7 +91,7 @@ show_header('Start Conversation', 'inbox,staffpm,bbcode,jquery');
                         <br />
 
                         <label for="message"><h3>Message</h3></label>
-                        <?php  $Text->display_bbcode_assistant("message$ReportID"); ?>
+                        <?php  $Text->display_bbcode_assistant("quickpost$ReportID"); ?>
                         <textarea rows="6" class="long" name="message" id="quickpost"><?= display_str($Message) ?></textarea>
                         <br />
 
