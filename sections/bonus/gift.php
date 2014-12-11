@@ -1,5 +1,8 @@
 <?php
 include(SERVER_ROOT.'/classes/class_text.php');
+
+global $Classes, $DB;
+
 if ( !check_perms('site_give_specialgift') ) {
     error(404);
 }
@@ -15,7 +18,6 @@ if ($TotalCredits != $LoggedUser['TotalCredits']) {
 
 enforce_login();
 show_header('Special Gift','bonus,bbcode');
-global $Classes;
 
 ?>
 <div class="thin">
@@ -70,16 +72,12 @@ $BonusCredits = $LoggedUser['TotalCredits'];
            </div>
         </div>
     <div class="head">Special Gift</div>
-<?php
-if ($LoggedUser['TotalCredits'] >= 600) { ?>
-    <form method="post" action="bonus.php" method="post" class="bonusshop" id="giftform">
-        <input type="hidden" name="action" value="givegift" />
-        <input type="hidden" name="UserID" value="<?=$LoggedUser['ID']?>" />
-         <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
-
+        <form method="post" action="bonus.php" method="post" class="bonusshop" id="giftform">
+            <input type="hidden" name="action" value="givegift" />
+            <input type="hidden" name="UserID" value="<?=$LoggedUser['ID']?>" />
+            <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
         <table class="bonusshop">
             <tr class="smallhead">
-                <td>Donation</td>
                 <td>Class</td>
                 <td>Ratio</td>
                 <td>Credits</td>
@@ -87,66 +85,74 @@ if ($LoggedUser['TotalCredits'] >= 600) { ?>
             </tr>
             <tr>
                 <td>
-        <select name="donate">
-                    <option value="600">600</option>
-<?php     if ($LoggedUser['TotalCredits'] >= 3000) { ?>
-                    <option value="3000">3000</option>
-<?php     } if ($LoggedUser['TotalCredits'] >= 6000) { ?>
-                    <option value="6000">6000</option>
-<?php     } ?>
-        </select>
+                    <select name="class">
+                        <option value="<= ".<?=$Classes[SMUT_PEDDLER]['Level']?>>any</option>
+                        <option value="<= ".<?=$Classes[APPRENTICE]['Level']?>>Apprentice</option>
+                        <option value="<= ".<?=$Classes[PERV]['Level']?>>Perv or lower</option>
+                        <option value="<= ".<?=$Classes[GOOD_PERV]['Level']?>>Good Perv or lower</option>
+                        <option value=">= ".<?=$Classes[GOOD_PERV]['Level']?>>Good Perv or higher</option>
+                        <option value=">= ".<?=$Classes[SEXTREME_PERV]['Level']?>>Sextreme Perv or higher</option>
+                    </select>
                 </td>
                 <td>
-        <select name="class">
-                    <option value="<= ".<?=$Classes[SMUT_PEDDLER]['Level']?>>any</option>
-                    <option value="<= ".<?=$Classes[APPRENTICE]['Level']?>>Apprentice</option>
-                    <option value="<= ".<?=$Classes[PERV]['Level']?>>Perv or lower</option>
-                    <option value="<= ".<?=$Classes[GOOD_PERV]['Level']?>>Good Perv or lower</option>
-                    <option value=">= ".<?=$Classes[GOOD_PERV]['Level']?>>Good Perv or higher</option>
-                    <option value=">= ".<?=$Classes[SEXTREME_PERV]['Level']?>>Sextreme Perv or higher</option>
-        </select>
+                    <select name="ratio">
+                        <option value="> 0.0">any</option>
+                        <option value="< 0.5">very low (below 0.5)</option>
+                        <option value="< 1.0">low (below 1.0)</option>
+                        <option value="> 1.0">good (above 1.0)</option>
+                        <option value="> 5.0">excellent (above 5.0)</option>
+                    </select>
                 </td>
                 <td>
-        <select name="ratio">
-                    <option value="> 0.0">any</option>
-                    <option value="< 0.5">very low (below 0.5)</option>
-                    <option value="< 1.0">low (below 1.0)</option>
-                    <option value="> 1.0">good (above 1.0)</option>
-                    <option value="> 5.0">excellent (above 5.0)</option>
-        </select>
+                    <select name="credits">
+                        <option value=">= 0">any</option>
+                        <option value="< 3000">poor (3,000 or less)</option>
+                        <option value="< 12000">has some (12,000 or less)</option>
+                        <option value="> 12000">rich (12,000 or more)</option>
+                    </select>
                 </td>
                 <td>
-        <select name="credits">
-                    <option value=">= 0">any</option>
-                    <option value="< 3000">poor (3,000 or less)</option>
-                    <option value="< 12000">has some (12,000 or less)</option>
-                    <option value="> 12000">rich (12,000 or more)</option>
-        </select>
-                </td>
-                <td>
-        <select name="last_seen">
-                    <option value="1">now (within the last hour)</option>
-                    <option value="24">today (within the last 24 hours)</option>
-                    <option value="3*24">recently (within the last 3 days)</option>
-                    <option value="7*24">not too long ago (within the last week)</option>
-        </select>
+                    <select name="last_seen">
+                        <option value="1">now (within the last hour)</option>
+                        <option value="24">today (within the last 24 hours)</option>
+                        <option value="3*24">recently (within the last 3 days)</option>
+                        <option value="7*24">not too long ago (within the last week)</option>
+                    </select>
                 </td>
             </tr>
             <tr>
-                <td colspan=5>
-                    <div class="box pad cener" style="text-align:center;">
-                        <input type="submit" class=" center" style="font-weight:bold;font-size:1.8em;" value="  Give Gift  " />
-                    </div>
+                <td colspan=4, class="center">
+                    <br />
+                    <strong>Send a gift to a random perv matching your selected criteria</strong>
                 </td>
             </tr>
         </table>
-        </form>
+        <table>
+            <tr class="smallhead">
+                <td width="120px">Title</td>
+                <td width="530px" colspan="2">Description</td>
+                <td width="90px" colspan="2">Price</td>
+            </tr>
 
-<?php } else { ?>
-        <div class="box pad shadow">
-            <strong>You have insufficient credits to give a gift.</strong>
-        </div>
-<?php } ?>
+<?php   $Row = 'b';
+$Gifts = get_shop_items_gifts();
+        foreach($Gifts as $Gift) {
+            list($ItemID, $Title, $Description, $Action, $Value, $Cost) = $Gift;
+            $Row     = ($Row == 'a') ? 'b' : 'a';
+            $CanBuy  = is_float((float) $LoggedUser['TotalCredits']) ? $LoggedUser['TotalCredits'] >= $Cost: false;
+            $BGClass = ($CanBuy?' itembuy' :' itemnotbuy');
+?>
+            <tr class="row<?=$Row.$BGClass?>">
+                <td width="160px"><strong><?=display_str($Title) ?></strong></td>
+                <td style="border-right:none;"><?=display_str($Description)?></td>
+                <td width="60px" style="text-align: center;"><strong><?=number_format($Cost) ?>c</strong></td>
+                <td width="60px" style="text-align: center;">
+                        <button class="shopbutton<?=($CanBuy ? ' itembuy' : ' itemnotbuy')?>" type="submit" name="itemid" value="<?=$ItemID?>" <?=($CanBuy ? '' : ' disabled="disabled"')?>><?=($CanBuy?'Buy':'x')?></button>
+                </td>
+            </tr>
+<?php   } ?>
+        </table>
+        </form>
     </div>
 <?php
 show_footer();

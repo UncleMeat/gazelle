@@ -165,7 +165,9 @@ ON
         'sql' => "
 SELECT SQL_CALC_FOUND_ROWS
     CONCAT('<a href=\"/user.php?id=', usg.UserID, '\">', (SELECT username FROM users_main WHERE ID = usg.UserID), '</a>') AS User,
+    SUM(CreditsSpent) AS CreditsSpent,
     SUM(CreditsGiven) AS CreditsGiven,
+    SUM(GBsGiven) AS GBsGiven,
     CONCAT('<a href=\"/user.php?id=', usg.Recipient, '\">', (SELECT username FROM users_main WHERE ID = usg.Recipient), '</a>') AS Recipient
 FROM
     users_special_gifts AS usg
@@ -181,7 +183,8 @@ ORDER BY
         'sql' => "
 SELECT SQL_CALC_FOUND_ROWS
     CONCAT('<a href=\"/user.php?id=', usg.UserID, '\">', (SELECT username FROM users_main WHERE ID = usg.UserID), '</a>') AS User,
-    SUM(CreditsGiven) AS CreditsGiven
+    SUM(CreditsGiven) AS CreditsGiven,
+    SUM(GBsGiven) AS GBsGiven
 FROM
     users_special_gifts AS usg
 GROUP BY
@@ -195,7 +198,8 @@ ORDER BY
         'sql' => "
 SELECT SQL_CALC_FOUND_ROWS
     CONCAT('<a href=\"/user.php?id=', usg.Recipient, '\">', (SELECT username FROM users_main WHERE ID = usg.Recipient), '</a>') AS Recipient,
-    SUM(CreditsGiven) AS CreditsGiven
+    SUM(CreditsGiven) AS CreditsReceived,
+    SUM(GBsGiven) AS GBsReceived
 FROM
     users_special_gifts AS usg
 GROUP BY

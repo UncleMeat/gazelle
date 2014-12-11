@@ -15,7 +15,7 @@ function Select_Action(element_id)
 <h2>Manage Shop</h2>
 <table>
     <tr class="head">
-        <td colspan="7">Add shop item</td>
+        <td colspan="8">Add shop item</td>
     </tr>
     <tr class="colhead">
         <td width="120px">Name</td>
@@ -24,6 +24,7 @@ function Select_Action(element_id)
         <td width="80px">Action</td>
         <td width="60px">Value</td>
         <td width="70px">Cost</td>
+        <td width="70px">S.Gift</td>
         <td width="120px"></td>
     </tr>
     <tr class="rowa">
@@ -51,6 +52,9 @@ function Select_Action(element_id)
         </td>
         <td>
             <input class="medium" type="text" name="cost" id="cost0" value="10000" />
+        </td>
+        <td>
+            <input class="medium" type="checkbox" name="gift" id="gift0" value="1" />
         </td>
         <td>
             <input type="submit" value="Create" />
@@ -95,6 +99,7 @@ function Select_Action(element_id)
         <td width="80px">Action</td>
         <td width="60px">Value</td>
         <td width="70px">Cost</td>
+        <td width="70px">S.Gift</td>
         <td width="120px"></td>
     </tr>
 <?php
@@ -106,12 +111,13 @@ $DB->query("SELECT
                         s.Action,
                         s.Value,
                         IF(Action='badge',b.Cost,s.Cost) AS Cost,
-                        s.Sort
+                        s.Sort,
+                        s.Gift
             FROM bonus_shop_actions AS s
                     LEFT JOIN badges AS b ON b.ID=s.Value
             ORDER BY s.Sort");
 $Row = 'b';
-while (list($ID, $Title, $Description, $ShopAction, $Value, $Cost, $Sort) = $DB->next_record()) {
+while (list($ID, $Title, $Description, $ShopAction, $Value, $Cost, $Sort, $Gift) = $DB->next_record()) {
     $Row = ($Row === 'a' ? 'b' : 'a');
 ?>
     <tr class="row<?=$Row?>">
@@ -142,6 +148,10 @@ while (list($ID, $Title, $Description, $ShopAction, $Value, $Cost, $Sort) = $DB-
         <td>
             <input class="medium" type="text" name="cost" id="cost<?=$ID?>" value="<?=$Cost?>"<?=($ShopAction=='badge'?' disabled="disabled" title="Cost is defined in badges" ':'')?> />
         </td>
+        <td>
+            <input class="medium" type="checkbox" name="gift" id="gift<?=$ID?>" value="1" <?= ($Gift == 1)? 'checked' : '' ?>/>
+        </td>
+
         <td>
                 <input type="submit" name="submit" value="Edit" />
                 <input type="submit" name="submit" value="Delete" />

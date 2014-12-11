@@ -10,6 +10,7 @@ if ($_POST['submit'] == 'Delete') {
       $Cache->delete_value('shop_items');
       $Cache->delete_value('shop_items_other');
       $Cache->delete_value('shop_items_ufl');
+      $Cache->delete_value('shop_items_gifts');
       $Cache->delete_value('shop_item_'.$_POST['id']);
 
 } elseif ($_POST['autosynch'] == 'autosynch') {
@@ -44,6 +45,7 @@ if ($_POST['submit'] == 'Delete') {
       $Cache->delete_value('shop_items');
       $Cache->delete_value('shop_items_other');
       $Cache->delete_value('shop_items_ufl');
+      $Cache->delete_value('shop_items_gifts');
 
 } else {
 
@@ -59,6 +61,13 @@ if ($_POST['submit'] == 'Delete') {
       $Value=(int) $_POST['value'];
       $Cost=(int) $_POST['cost'];
       $Sort=(int) $_POST['sort'];
+      if ($_POST['gift']=='1' &&
+         ($Action == 'givegb') ||
+         ($Action == 'givecredits')) {
+          $Gift = 1;
+      } else {
+          $Gift = 0;
+      }
 
     if ($_POST['submit'] == 'Edit') { //Edit
         if (!is_number($_POST['id']) || $_POST['id'] == '') { error(0); }
@@ -68,13 +77,14 @@ if ($_POST['submit'] == 'Delete') {
                               Action='$Action',
                               Value='$Value',
                               Cost='$Cost',
-                              Sort='$Sort'
+                              Sort='$Sort',
+                              Gift='$Gift'
                               WHERE ID='{$_POST['id']}'");
            $Cache->delete_value('shop_item_'.$_POST['id']);
     } else { //Create
         $DB->query("INSERT INTO bonus_shop_actions
-            (Title, Description, Action, Value, Cost, Sort) VALUES
-            ('$Name','$Desc','$Action','$Value','$Cost','$Sort')");
+            (Title, Description, Action, Value, Cost, Sort, Gift) VALUES
+            ('$Name','$Desc','$Action','$Value','$Cost','$Sort','$Gift')");
     }
     $Cache->delete_value('shop_items');
     $Cache->delete_value('shop_items_other');

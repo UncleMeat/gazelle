@@ -205,6 +205,7 @@ CREATE TABLE IF NOT EXISTS `bonus_shop_actions` (
   `Value` int(10) NOT NULL DEFAULT '0',
   `Cost` int(9) unsigned NOT NULL,
   `Sort` int(6) NOT NULL,
+  `Gift` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`),
   KEY `Sort` (`Sort`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -2231,7 +2232,9 @@ CREATE TABLE IF NOT EXISTS `users_dupes` (
 CREATE TABLE IF NOT EXISTS `users_special_gifts` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `UserID` int(10) unsigned NOT NULL,
+  `CreditsSpent` double(11,2) NOT NULL DEFAULT '0.00',
   `CreditsGiven` double(11,2) NOT NULL DEFAULT '0.00',
+  `GBsGiven` bigint(20) NOT NULL DEFAULT '0',
   `Recipient` int(10) unsigned NOT NULL,
   UNIQUE KEY `ID` (`ID`),
    KEY `UserID` (`UserID`),

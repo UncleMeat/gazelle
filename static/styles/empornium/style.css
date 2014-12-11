@@ -1133,7 +1133,7 @@ tr.itemnotbuy {
 tr.itemduplicate {
      background: #ccc url("images/bgfade.png") repeat scroll 0% 0%;  
 }
-input.shopbutton {
+.shopbutton {
     width: 60px;
     background-color: white;
     padding: 2px 10px 2px;
