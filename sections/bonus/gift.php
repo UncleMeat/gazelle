@@ -14,7 +14,7 @@ if ($TotalCredits != $LoggedUser['TotalCredits']) {
 }
 
 enforce_login();
-show_header('Bonus Shop','bonus,bbcode');
+show_header('Special Gift','bonus,bbcode');
 global $Classes;
 
 ?>
@@ -26,14 +26,49 @@ global $Classes;
                 if($creditinfo) echo $Text->full_format($creditinfo, true);
 ?>
             </div>
-            <div class="box pad shadow" id="bonusdiv">
-                <h3 class="center">Credits: <?=number_format($LoggedUser['TotalCredits'],2)?></h3>
-            </div>
- <?php      if (!empty($_REQUEST['result'])) {  ?>
+<?php       if (!empty($_REQUEST['result'])) {  ?>
                 <div class="box pad shadow">
                     <h3 class="center"><?=display_str($_REQUEST['result'])?></h3>
                 </div>
-<?php       } ?>
+<?php       }
+$DB->query("SELECT BonusLog from users_info WHERE UserID = '".$LoggedUser['ID']."'");
+list($BonusLog) = $DB->next_record();
+$BonusCredits = $LoggedUser['TotalCredits'];
+?>
+
+        <div class="head">
+            <span style="float:left;">Bonus Credits</span>
+        </div>
+        <div class="box">
+            <div class="pad" id="bonusdiv">
+                <h4 class="center">Credits: <?=(!$BonusCredits ? '0.00' : number_format($BonusCredits,2))?></h4>
+                <span style="float:right;"><a href="#" onclick="$('#bonuslogdiv').toggle(); this.innerHTML=(this.innerHTML=='(Show Log)'?'(Hide Log)':'(Show Log)'); return false;">(Show Log)</a></span>&nbsp;
+
+                <div class="hidden" id="bonuslogdiv" style="padding-top: 10px;">
+                    <div id="bonuslog" class="box pad scrollbox">
+                        <?=(!$BonusLog ? 'no bonus history' :$Text->full_format($BonusLog))?>
+                    </div>
+<?php
+                    $UserResults = $Cache->get_value('sm_sum_history_'.$UserID);
+                    if ($UserResults === false) {
+                        $DB->query("SELECT Count(ID), SUM(Spins), SUM(Won),SUM(Bet*Spins),(SUM(Won)/SUM(Bet*Spins))
+                                  FROM sm_results WHERE UserID = $UserID");
+                        $UserResults = $DB->next_record();
+                        $Cache->cache_value('sm_sum_history_'.$UserID, $UserResults, 86400);
+                    }
+                    if (is_array($UserResults) && $UserResults[0] > 0) {
+
+                        list($Num, $NumSpins, $TotalWon, $TotalBet, $TotalReturn) = $UserResults;
+?>
+                        <div class="box pad" title="<?="spins: $NumSpins ($Num) | -$TotalBet | +$TotalWon | return: $TotalReturn"?>">
+                            <strong>Slot Machine:</strong> <?= ($TotalWon-$TotalBet)?> credits
+                        </div>
+<?php
+                    }
+?>
+                </div>
+           </div>
+        </div>
     <div class="head">Special Gift</div>
 <?php
 if ($LoggedUser['TotalCredits'] >= 600) { ?>
@@ -100,8 +135,7 @@ if ($LoggedUser['TotalCredits'] >= 600) { ?>
             <tr>
                 <td colspan=5>
                     <div class="box pad cener" style="text-align:center;">
-                        <br />
-                        <input type="submit" class=" center" style="font-weight:bold;font-size:larger;" value="Give Gift" />
+                        <input type="submit" class=" center" style="font-weight:bold;font-size:1.8em;" value="  Give Gift  " />
                     </div>
                 </td>
             </tr>
