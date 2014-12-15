@@ -1,4 +1,4 @@
 <?php
 namespace gazelle\errors;
 
-class Error { };
+class Error extends \Exception { };

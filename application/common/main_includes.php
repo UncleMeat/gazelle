@@ -1,7 +1,7 @@
 <?php
 
 require_once(SERVER_ROOT . '/common/main_functions.php');
-require_once(SERVER_ROOT . '/classes/config.php');
+#require_once(SERVER_ROOT . '/classes/config.php');
 require_once(SERVER_ROOT . '/classes/class_debug.php'); //Require the debug class
 require_once(SERVER_ROOT . '/classes/class_mysql.php'); //Require the database wrapper
 require_once(SERVER_ROOT . '/classes/class_cache.php'); //Require the caching class

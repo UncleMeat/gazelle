@@ -10,6 +10,7 @@ class Master {
         $this->application_dir = $application_dir;
         $this->superglobals = $superglobals;
         $this->server = $this->superglobals['server'];
+        $this->settings = new Settings($this, $this->application_dir . '/settings.ini');
     }
 
     public function handle_request() {
