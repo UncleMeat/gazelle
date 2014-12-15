@@ -86,12 +86,12 @@ $BonusCredits = $LoggedUser['TotalCredits'];
             <tr>
                 <td>
                     <select name="class">
-                        <option value="<= ".<?=$Classes[SMUT_PEDDLER]['Level']?>>any</option>
-                        <option value="<= ".<?=$Classes[APPRENTICE]['Level']?>>Apprentice</option>
-                        <option value="<= ".<?=$Classes[PERV]['Level']?>>Perv or lower</option>
-                        <option value="<= ".<?=$Classes[GOOD_PERV]['Level']?>>Good Perv or lower</option>
-                        <option value=">= ".<?=$Classes[GOOD_PERV]['Level']?>>Good Perv or higher</option>
-                        <option value=">= ".<?=$Classes[SEXTREME_PERV]['Level']?>>Sextreme Perv or higher</option>
+                        <option value="<= <?=$Classes[SMUT_PEDDLER]['Level']?>">any</option>
+                        <option value="= <?=$Classes[APPRENTICE]['Level']?>">Apprentice</option>
+                        <option value="<= <?=$Classes[PERV]['Level']?>">Perv or lower</option>
+                        <option value="<= <?=$Classes[GOOD_PERV]['Level']?>">Good Perv or lower</option>
+                        <option value=">= <?=$Classes[GOOD_PERV]['Level']?>">Good Perv or higher</option>
+                        <option value=">= <?=$Classes[SEXTREME_PERV]['Level']?>">Sextreme Perv or higher</option>
                     </select>
                 </td>
                 <td>

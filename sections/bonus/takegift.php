@@ -6,10 +6,10 @@ if ( !check_perms('site_give_specialgift') ) {
 }
 
 /* We should validate these.*/
-if (empty($_POST['class']) || !in_array($_POST['class'], array("<= ".$Classes[SMUT_PEDDLER]['Level'], "<= ".$Classes[APPRENTICE]['Level'], "<= ".$Classes[PERV]['Level'], "<= ".$Classes[GOOD_PERV]['Level'], ">= ".$Classes[GOOD_PERV]['Level'], ">= ".$Classes[SEXTREME_PERV]['Level']))) {
+if (empty($_POST['class']) || !in_array($_POST['class'], array("<= ".$Classes[SMUT_PEDDLER]['Level'], "= ".$Classes[APPRENTICE]['Level'], "<= ".$Classes[PERV]['Level'], "<= ".$Classes[GOOD_PERV]['Level'], ">= ".$Classes[GOOD_PERV]['Level'], ">= ".$Classes[SEXTREME_PERV]['Level']))) {
     $REQUIRED_CLASS    = "<= ".$Classes[SMUT_PEDDLER]['Level'];
 } else {
-    $REQUIRED_CLASS    = (int) $_POST['class'];
+    $REQUIRED_CLASS    = $_POST['class'];
 }
 if (empty($_POST['ratio']) || !in_array($_POST['ratio'], array('> 0.0', '< 0.5', '< 1.0', '> 1.0', '> 5.0'))) {
     $REQUIRED_RATIO    = '> 0.0';
