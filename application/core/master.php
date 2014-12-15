@@ -6,7 +6,8 @@ class Master {
     public $superglobals;
     public $legacy_handler_needed = false;
 
-    public function __construct(array $superglobals) {
+    public function __construct($application_dir, array $superglobals) {
+        $this->application_dir = $application_dir;
         $this->superglobals = $superglobals;
         $this->server = $this->superglobals['server'];
     }

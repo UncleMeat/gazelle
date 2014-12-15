@@ -26,7 +26,7 @@ $superglobals = [
     'env' => $_ENV
 ];
 
-$master = new \gazelle\core\Master($superglobals);
+$master = new \gazelle\core\Master(SERVER_ROOT, $superglobals);
 $master->handle_request();
 
 if ($master->legacy_handler_needed) {
