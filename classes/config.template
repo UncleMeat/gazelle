@@ -71,6 +71,7 @@ define('GOOD_PERV',	'4');
 define('DONOR',		'20');
 define('SEXTREME_PERV',	'5');
 define('SMUT_PEDDLER',  '6');
+define('MOD_PERV',	'11');
 define('ADMIN',		'1');
 define('SYSOP',		'15');
 

@@ -976,7 +976,7 @@ CREATE TABLE IF NOT EXISTS `pm_messages` (
 --
 
 CREATE TABLE IF NOT EXISTS `systempm_templates` (
-  `ID` int(12) NOT NULL AUTO_INCREMENT,
+  `ID` int(12) NOT NULL,
   `Help` text,
   `Body` text,
   PRIMARY KEY (`ID`)
