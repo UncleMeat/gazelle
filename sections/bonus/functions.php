@@ -133,3 +133,17 @@ function get_user_stats($UserID)
 
       return $UserStats;
 }
+
+function get_gift_pm()
+{
+    global $Cache, $DB;
+    $PMText = $Cache->get_value('systempm_template_1');
+    if ($PMText === false) {
+        $DB->query("SELECT Body, Help
+                      FROM systempm_templates
+                     WHERE ID=1");
+        $PMText = $DB->next_record();
+        $Cache->cache_value('systempm_template_1', $PMText, 86400);
+    }
+    return $PMText;
+}

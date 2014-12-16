@@ -183,6 +183,7 @@ ORDER BY
         'sql' => "
 SELECT SQL_CALC_FOUND_ROWS
     CONCAT('<a href=\"/user.php?id=', usg.UserID, '\">', (SELECT username FROM users_main WHERE ID = usg.UserID), '</a>') AS User,
+    SUM(CreditsSpent) AS CreditsSpent,
     SUM(CreditsGiven) AS CreditsGiven,
     SUM(GBsGiven) AS GBsGiven
 FROM
@@ -190,7 +191,7 @@ FROM
 GROUP BY
     usg.UserID
 ORDER BY
-    CreditsGiven DESC"
+    CreditsSpent DESC"
     ),
 'users_special_gifts_recipients' => array(
         'title' => 'Users: Special Gifts - Recipients',
@@ -205,6 +206,6 @@ FROM
 GROUP BY
     usg.Recipient
 ORDER BY
-    CreditsGiven DESC"
+    CreditsReceived DESC, GBsReceived DESC"
     ),
 );

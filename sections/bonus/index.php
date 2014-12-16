@@ -31,6 +31,9 @@ if (!isset($_REQUEST['action'])) {
         case 'givegift':
             include(SERVER_ROOT.'/sections/bonus/takegift.php');
             break;
+        case 'takecompose_giftpm':
+            include(SERVER_ROOT.'/sections/bonus/takegiftpm.php');
+            break;
         default:
             include(SERVER_ROOT.'/sections/bonus/bonus.php');
             break;

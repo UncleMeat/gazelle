@@ -17,8 +17,7 @@ if ($TotalCredits != $LoggedUser['TotalCredits']) {
 }
 
 enforce_login();
-show_header('Special Gift','bonus,bbcode');
-
+show_header('Special Gift','specialgift,bonus,bbcode,jquery');
 ?>
 <div class="thin">
     <h2>Special Gift</h2>
@@ -71,6 +70,26 @@ $BonusCredits = $LoggedUser['TotalCredits'];
                 </div>
            </div>
         </div>
+<?php   if($Classes[$LoggedUser['PermissionID']]['Level'] >= LEVEL_ADMIN) {
+$PMText = get_gift_pm();
+?>
+            <div class="head">Gift PM</div>
+            <div class="box pad">
+                <div class="smallhead"><?=$PMText['Help']?></div>
+                <form action="bonus.php" method="post" id="messageform">
+                <input type="hidden" name="action" value="takecompose_giftpm" />
+                <input type="hidden" name="UserID" value="<?=$LoggedUser['ID']?>" />
+                <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
+                <?php  $Text->display_bbcode_assistant("quickpost", get_permissions_advtags($LoggedUser['ID'], $LoggedUser['CustomPermissions'])); ?>
+                <textarea id="quickpost" name="body" class="long" rows="10"><?=$PMText['Body']?></textarea> <br />
+                <div id="preview" class="box vertical_space body hidden"></div>
+                <div id="buttons" class="center">
+                    <input type="button" value="Preview" onclick="Quick_Preview();" />
+                    <input type="submit" value="Save PM" />
+                </div>
+                </form>
+            </div>
+<?php   }?>
     <div class="head">Special Gift</div>
         <form method="post" action="bonus.php" method="post" class="bonusshop" id="giftform">
             <input type="hidden" name="action" value="givegift" />

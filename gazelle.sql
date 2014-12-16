@@ -972,6 +972,19 @@ CREATE TABLE IF NOT EXISTS `pm_messages` (
 -- --------------------------------------------------------
 
 --
+-- Tabellstruktur `systempm_templates`
+--
+
+CREATE TABLE IF NOT EXISTS `systempm_templates` (
+  `ID` int(12) NOT NULL AUTO_INCREMENT,
+  `Help` text,
+  `Body` text,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellstruktur `reports`
 --
 

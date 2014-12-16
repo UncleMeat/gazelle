@@ -34,6 +34,8 @@ if (!empty($ShopItem) && is_array($ShopItem)) {
     list($ItemID, $Title, $Description, $Action, $Value, $Cost) = $ShopItem;
 }
 
+$Max = $Classes[MOD_PERV]['Level'];
+
 $DB->query("SELECT
                 um.ID AS UserID
             FROM
@@ -42,6 +44,7 @@ $DB->query("SELECT
                 permissions AS perm ON um.PermissionID=perm.ID
             WHERE
                 perm.Level $REQUIRED_CLASS
+                AND perm.Level <= $Max
                 AND IFNULL((um.Uploaded / um.Downloaded), ~0) $REQUIRED_RATIO
                 AND um.Credits $REQUIRED_CREDITS
                 AND um.LastAccess >= DATE_SUB(NOW(), INTERVAL $REQUIRED_LASTSEEN HOUR)
@@ -79,11 +82,6 @@ if ($OtherID && ($Cost <= $Credits)) {
     Switch($Action){  // atm hardcoded in db:  givecredits, givegb, gb, slot, title, badge
         case 'givecredits':
             $CreditsGiven = $Value;
-            $Summary = sqltime().' - '.ucfirst("user gave a gift of ".number_format ($Value)." credits to {$P['othername']} Cost: $Cost credits");
-            $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
-
-            $Summary = sqltime().' - '.ucfirst("user received a gift of ".number_format ($Value)." credits from {$LoggedUser['Username']}");
-            $UpdateSetOther[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
 
             $Summary = sqltime().' | +'.ucfirst(number_format($Value)." credits | You received a special gift of ".number_format($DONATE)." credits from an anonymous perv");
             $UpdateSetOther[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
@@ -93,8 +91,7 @@ if ($OtherID && ($Cost <= $Credits)) {
             $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
             $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
 
-            send_pm($OtherID, 0, "Special Gift - You received an anonymous gift of credits",
-                                 "[br]You received a gift of ".number_format ($Value)." credits from an anonymous user.");
+            $_1 = number_format ($Value)." credits";
 
             $ResultMessage="Your gift has been given and gratefully received.\n\n".
                            "The recipient has the rank of ".$Classes[$Current_Class]['Name']." and a ratio of $Current_Ratio,\n".
@@ -104,11 +101,6 @@ if ($OtherID && ($Cost <= $Credits)) {
 
         case 'givegb':  // no test if user had download to remove as this could violate privacy settings
             $GBsGiven = $Value;
-            $Summary = sqltime().' - '.ucfirst("user gave a gift of -$Value gb to {$P['othername']} Cost: $Cost credits");
-            $UpdateSet[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
-
-            $Summary = sqltime().' - '.ucfirst("user received a gift of -$Value gb from {$LoggedUser['Username']}.");
-            $UpdateSetOther[]="i.AdminComment=CONCAT_WS( '\n', '$Summary', i.AdminComment)";
 
             $Summary = sqltime()." | ".ucfirst("you received a special gift of -$Value gb from an anonymous perv");
             $UpdateSetOther[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
@@ -117,11 +109,10 @@ if ($OtherID && ($Cost <= $Credits)) {
             $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
             $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
 
-            send_pm($OtherID, 0, "Special Gift - You received an anonymous gift of credits",
-                                 "[br]You received a gift of - $Value gb from an anonymous user.");
+            $ValueBytes = get_bytes($Value.'gb');
+            $UpdateSetOther[]="m.Downloaded=(m.Downloaded-'$ValueBytes')";
 
-            $Value = get_bytes($Value.'gb');
-            $UpdateSetOther[]="m.Downloaded=(m.Downloaded-'$Value')";
+            $_1 = "- $Value gb";
 
             $ResultMessage="Your gift has been given and gratefully received.\n\n".
                            "The recipient has the rank of ".$Classes[$Current_Class]['Name']." and a ratio of $Current_Ratio,\n".
@@ -153,6 +144,10 @@ if ($OtherID && ($Cost <= $Credits)) {
         $Cache->delete_value('user_info_' . $UserID);
     }
 }
+
+$PMText = get_gift_pm()['Body'];
+$PMText = str_replace('[$1]', $_1, $PMText);
+send_pm($OtherID, 0, 'xxx', $PMText);
 
 $DB->query("INSERT INTO users_special_gifts (UserID, CreditsSpent, CreditsGiven, GBsGiven, Recipient)
                                     VALUES('$UserID', '$Cost', '$CreditsGiven', '$GBsGiven', '$OtherID')");
