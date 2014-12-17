@@ -6,13 +6,18 @@ use gazelle\errors\CLIError;
 class Master {
 
     public $superglobals;
-    public $legacy_handler_needed = false;
+    public $legacy_handler;
 
     public function __construct($application_dir, array $superglobals) {
         $this->application_dir = $application_dir;
         $this->superglobals = $superglobals;
         $this->server = $this->superglobals['server'];
         $this->settings = new Settings($this, $this->application_dir . '/settings.ini');
+    }
+
+    public function handle_legacy_request($section) {
+        $this->legacy_handler = new \gazelle\core\LegacyHandler($this);
+        $this->legacy_handler->handle_legacy_request($section);
     }
 
     public function handle_request() {
@@ -35,8 +40,7 @@ class Master {
                 define('MEMORY_EXCEPTION', true);
                 define('TIME_EXCEPTION', true);
                 define('ERROR_EXCEPTION', true);
-                $this->active_section = $section;
-                $this->legacy_handler_needed = true;
+                $this->handle_legacy_request($section);
                 break;
             default:
                 throw new CLIError("Invalid section for CLI usage: {$section}");
@@ -46,8 +50,7 @@ class Master {
     public function handle_http_request() {
         $base = basename(parse_url($this->server['SCRIPT_NAME'], PHP_URL_PATH), '.php');
         if (!preg_match('/^[a-z0-9]+$/i', $base)) {
-            $this->active_section = null;
-            return;
+            $this->handle_legacy_request(null);
         }
 
         switch ($base) {
@@ -63,20 +66,17 @@ class Master {
             case 'collage':
                 $_SERVER['SCRIPT_FILENAME'] = 'collages.php'; // PHP CLI fix
                 define('ERROR_EXCEPTION', true);
-                $this->active_section = 'collages';
-                $this->legacy_handler_needed = true;
+                $this->handle_legacy_request('collages');
                 break;
 
             case 'details':
-                $this->active_section = 'torrents';
-                $this->legacy_handler_needed = true;
+                $this->handle_legacy_request('torrents');
                 break;
 
             case 'irc':
             case 'tools':
                 $_SERVER['SCRIPT_FILENAME'] = $base.'.php'; // PHP CLI fix
-                $this->active_section = $base;
-                $this->legacy_handler_needed = true;
+                $this->handle_legacy_request($base);
                 break;
 
             case 'schedule':
@@ -85,8 +85,7 @@ class Master {
                 define('TIME_EXCEPTION', true);
                 define('ERROR_EXCEPTION', true);
                 $_SERVER['SCRIPT_FILENAME'] = $base.'.php'; // CLI Fix
-                $this->active_section = $base;
-                $this->legacy_handler_needed = true;
+                $this->handle_legacy_request($base);
                 break;
 
             case 'signup':
@@ -115,8 +114,7 @@ class Master {
             case 'user':
             case 'wiki':
                 define('ERROR_EXCEPTION', true); # Not sure why this is done only some of the time
-                $this->active_section = $base;
-                $this->legacy_handler_needed = true;
+                $this->handle_legacy_request($base);
                 break;
                 
             case 'ajax':
@@ -144,11 +142,10 @@ class Master {
             case 'stats':
             case 'top10':
             case 'watchlist':
-                $this->active_section = $base;
-                $this->legacy_handler_needed = true;
+                $this->handle_legacy_request($base);
                 break;
             default:
-                $this->active_section = null;
+                $this->handle_legacy_request(null);
         }
     }
 

@@ -26,19 +26,5 @@ $superglobals = [
     'env' => $_ENV
 ];
 
-$master = new \gazelle\core\Master(SERVER_ROOT, $superglobals);
+$master = new \gazelle\core\Master(__DIR__, $superglobals);
 $master->handle_request();
-
-if ($master->legacy_handler_needed) {
-    $master->settings->set_legacy_constants();
-    require_once(SERVER_ROOT .'/common/main_includes.php');
-    $legacy_handler = new \gazelle\core\LegacyHandler($master);
-    # We have to do this here since the section includes won't work inside a class/function context
-    if ($master->active_section) {
-        $legacy_handler->script_start();
-        require(SERVER_ROOT . '/sections/' . $master->active_section . '/index.php');
-        $legacy_handler->script_finish();
-    } else {
-        error(404);
-    }
-}
