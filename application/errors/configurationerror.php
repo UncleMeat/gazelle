@@ -1,4 +1,4 @@
 <?php
 namespace gazelle\errors;
 
-class ConfigurationError extends Error{ };
+class ConfigurationError extends AdminError{ };
