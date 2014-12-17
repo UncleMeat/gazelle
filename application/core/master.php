@@ -2,6 +2,7 @@
 namespace gazelle\core;
 
 use gazelle\errors\CLIError;
+use gazelle\services\Settings;
 
 class Master {
 

@@ -1,7 +1,8 @@
 <?php
-namespace gazelle\core;
+namespace gazelle\services;
 
 use gazelle\errors\ConfigurationError;
+use gazelle\core\Master;
 
 class Settings {
 
