@@ -1,6 +1,8 @@
 <?php
 namespace gazelle\core;
 
+use gazelle\errors\CLIError;
+
 class Master {
 
     public $superglobals;
@@ -14,6 +16,34 @@ class Master {
     }
 
     public function handle_request() {
+        if (array_key_exists('argv', $this->server)) {
+            return $this->handle_cli_request();
+        } else {
+            return $this->handle_http_request();
+        }
+    }
+
+    public function handle_cli_request() {
+        $arguments = array_slice($this->server['argv'], 1);
+        if (count($arguments) == 0) {
+            throw new CLIError("No section specified.");
+        }
+        $section = $arguments[0];
+        switch ($section) {
+            case 'peerupdate':
+            case 'schedule':
+                define('MEMORY_EXCEPTION', true);
+                define('TIME_EXCEPTION', true);
+                define('ERROR_EXCEPTION', true);
+                $this->active_section = $section;
+                $this->legacy_handler_needed = true;
+                break;
+            default:
+                throw new CLIError("Invalid section for CLI usage: {$section}");
+        }
+    }
+
+    public function handle_http_request() {
         $base = basename(parse_url($this->server['SCRIPT_NAME'], PHP_URL_PATH), '.php');
         if (!preg_match('/^[a-z0-9]+$/i', $base)) {
             $this->active_section = null;

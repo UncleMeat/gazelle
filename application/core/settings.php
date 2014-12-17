@@ -298,7 +298,7 @@ class Settings {
             $this->settings['main']['announce_url'] = 'http://' . $this->settings['main']['nonssl_site_url'] . ':' . $this->settings['tracker']['port'];
         }
 
-        $is_ssl = (intval($this->master->server['SERVER_PORT']) != 80);
+        $is_ssl = (array_key_exists('SERVER_PORT', $this->master->server) && intval($this->master->server['SERVER_PORT']) != 80);
         if (is_null($this->settings['main']['site_url'])) {
             $this->settings['main']['site_url'] = ($is_ssl) ? $this->settings['main']['ssl_site_url'] : $this->settings['main']['nonssl_site_url'];
         }
