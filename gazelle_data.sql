@@ -38,7 +38,7 @@ CREATE TABLE `stylesheets` (
 
 LOCK TABLES `stylesheets` WRITE;
 /*!40000 ALTER TABLE `stylesheets` DISABLE KEYS */;
-INSERT INTO `stylesheets` VALUES (1,'empornium','The default empornium stylesheet','0'),(2,'light','The default stylesheet','0'),(3,'modern','modern','1'),(4,'afterdark','b0rk\'s dark style css','0'),(5,'deviloid','deviloid','0');
+INSERT INTO `stylesheets` VALUES (1,'empornium','The default empornium stylesheet','0'),(2,'light','The default stylesheet','0'),(3,'modern','modern','1'),(4,'afterdark','b0rk\'s dark style css','0'),(5,'deviloid','deviloid','0'),(6,'modern_red','A red hued version of the modern style','0');
 /*!40000 ALTER TABLE `stylesheets` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
