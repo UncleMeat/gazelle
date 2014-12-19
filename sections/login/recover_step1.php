@@ -58,7 +58,7 @@ if (empty($_POST['submit']) || empty($_POST['username'])) {
             <div class="">
                   <div class="head">IRC</div>
                   <div class="box pad center">
-                            <iframe src="<?=HELP_URL?>&nick=<?=$nick?>&channels=empornium-help" width="98%" height="600"></iframe>
+                            <iframe src="<?=HELP_URL?>nick=<?=$nick?><?=BOT_DISABLED_CHAN?>" width="98%" height="600"></iframe>
                   </div>
             </div>
         </div>

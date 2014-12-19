@@ -57,21 +57,21 @@
             $channels='';
             $div='';
             if (isset($_POST["emp"])) {
-                $channels='empornium';
-                $div='%2c';
+                $channels='#empornium';
+                $div=',';
             }
             if (isset($_POST["help"])) {
-                $channels .= "{$div}empornium-help";
-                $div='%2c';
+                $channels .= "{$div}#empornium-help";
+                $div=',';
             }
             if(isset($_POST["staff"]))
                 if ( $LoggedUser['SupportFor'] !="" || $LoggedUser['DisplayStaff'] == 1 )
-                    $channels .= "{$div}empornium-staff";
+                    $channels .= "{$div}#empornium-staff";
 ?>
 <div class="thin">
     <div class="head">IRC</div>
     <div class="box pad center">
-                <iframe src="<?=CHAT_URL?>&nick=<?=$nick?>&channels=<?=$channels?>" width="98%" height="600"></iframe>
+                <iframe src="<?=CHAT_URL?>nick=<?=$nick?><?=$channels?>" width="98%" height="600"></iframe>
     </div>
 </div>
 <?php

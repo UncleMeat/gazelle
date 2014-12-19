@@ -42,7 +42,7 @@ if ((empty($_POST['submit']) || empty($_POST['username'])) && !isset($Username))
           <h3 id="general">Disabled IRC</h3>
         <div class="">
               <div class="box pad center">
-                        <iframe src="<?=HELP_URL?>nick=<?=$nick?>&channels=<?=BOT_DISABLED_CHAN?>" width="98%" height="600"></iframe>
+                        <iframe src="<?=HELP_URL?>nick=<?=$nick?><?=BOT_DISABLED_CHAN?>" width="98%" height="600"></iframe>
               </div>
         </div>
     </div>
