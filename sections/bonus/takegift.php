@@ -83,11 +83,11 @@ if ($OtherID && ($Cost <= $Credits)) {
         case 'givecredits':
             $CreditsGiven = $Value;
 
-            $Summary = sqltime().' | +'.ucfirst(number_format($Value)." credits | You received a special gift of ".number_format($DONATE)." credits from an anonymous perv");
+            $Summary = sqltime().' | +'.ucfirst(number_format($Value)." credits | You received a special gift of ".number_format($Value)." credits from an anonymous perv");
             $UpdateSetOther[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
             $UpdateSetOther[]="m.Credits=(m.Credits+'$Value')";
 
-            $Summary = sqltime().' | - '.ucfirst(number_format($Cost)." credits | You gave a special gift of ".number_format($DONATE)." credits to an anonymous perv");
+            $Summary = sqltime().' | - '.ucfirst(number_format($Cost)." credits | You gave a special gift of ".number_format($Value)." credits to an anonymous perv");
             $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
             $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
 

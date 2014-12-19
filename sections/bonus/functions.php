@@ -42,7 +42,7 @@ function get_shop_items_other()
 function get_shop_items_gifts()
 {
     global $Cache, $DB;
-    if (($ShopItems = $Cache->get_value('shop_items_other')) === false) {
+    if (($ShopItems = $Cache->get_value('shop_items_gifts')) === false) {
         $DB->query("SELECT ID,
                            Title,
                            Description,
