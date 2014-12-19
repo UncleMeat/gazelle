@@ -62,8 +62,8 @@ if ($_POST['submit'] == 'Delete') {
       $Cost=(int) $_POST['cost'];
       $Sort=(int) $_POST['sort'];
       if ($_POST['gift']=='1' &&
-         ($Action == 'givegb') ||
-         ($Action == 'givecredits')) {
+         (($Action == 'givegb') ||
+         ($Action == 'givecredits'))) {
           $Gift = 1;
       } else {
           $Gift = 0;

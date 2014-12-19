@@ -91,8 +91,6 @@ if ($OtherID && ($Cost <= $Credits)) {
             $UpdateSet[]="i.BonusLog=CONCAT_WS( '\n', '$Summary', i.BonusLog)";
             $UpdateSet[]="m.Credits=(m.Credits-'$Cost')";
 
-            $_1 = number_format ($Value)." credits";
-
             $ResultMessage="Your gift has been given and gratefully received.\n\n".
                            "The recipient has the rank of ".$Classes[$Current_Class]['Name']." and a ratio of $Current_Ratio,\n".
                            "he had $Current_Credits credits and was last seen at $Current_LastAccess";
@@ -111,8 +109,6 @@ if ($OtherID && ($Cost <= $Credits)) {
 
             $ValueBytes = get_bytes($Value.'gb');
             $UpdateSetOther[]="m.Downloaded=(m.Downloaded-'$ValueBytes')";
-
-            $_1 = "- $Value gb";
 
             $ResultMessage="Your gift has been given and gratefully received.\n\n".
                            "The recipient has the rank of ".$Classes[$Current_Class]['Name']." and a ratio of $Current_Ratio,\n".
@@ -146,8 +142,8 @@ if ($OtherID && ($Cost <= $Credits)) {
 }
 
 $PMText = get_gift_pm()['Body'];
-$PMText = str_replace('[$1]', $_1, $PMText);
-send_pm($OtherID, 0, 'xxx', $PMText);
+$PMText = str_replace('[$1]', $Title, $PMText);
+send_pm($OtherID, 0, 'You received a Special Gift', $PMText);
 
 $DB->query("INSERT INTO users_special_gifts (UserID, CreditsSpent, CreditsGiven, GBsGiven, Recipient)
                                     VALUES('$UserID', '$Cost', '$CreditsGiven', '$GBsGiven', '$OtherID')");
