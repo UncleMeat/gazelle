@@ -54,12 +54,12 @@ class Master {
     }
 
     public function handle_http_request() {
-        $base = basename(parse_url($this->server['SCRIPT_NAME'], PHP_URL_PATH), '.php');
-        if (!preg_match('/^[a-z0-9]+$/i', $base)) {
+        $section = basename(parse_url($this->server['SCRIPT_NAME'], PHP_URL_PATH), '.php');
+        if (!preg_match('/^[a-z0-9]+$/i', $section)) {
             $this->handle_legacy_request(null);
         }
 
-        switch ($base) {
+        switch ($section) {
             case 'announce':
             case 'scrape':
                 print("d14:failure reason40:Invalid .torrent, try downloading again.e\n");
@@ -79,21 +79,6 @@ class Master {
                 $this->handle_legacy_request('torrents');
                 break;
 
-            case 'irc':
-            case 'tools':
-                $_SERVER['SCRIPT_FILENAME'] = $base.'.php'; // PHP CLI fix
-                $this->handle_legacy_request($base);
-                break;
-
-            case 'schedule':
-            case 'peerupdate':
-                define('MEMORY_EXCEPTION', true);
-                define('TIME_EXCEPTION', true);
-                define('ERROR_EXCEPTION', true);
-                $_SERVER['SCRIPT_FILENAME'] = $base.'.php'; // CLI Fix
-                $this->handle_legacy_request($base);
-                break;
-
             case 'signup':
                 header('Location: register.php');
                 exit;
@@ -102,56 +87,13 @@ class Master {
                 header('Location: articles.php?topic=clients');
                 exit;
 
-            case 'artist':
-            case 'better':
-            case 'bookmarks':
-            case 'collages':
-            case 'comments':
-            case 'delays':
-            case 'details':
-            case 'forums':
-            case 'friends':
-            case 'groups':
-            case 'staffblog':
-            case 'tags':
-            case 'torrents':
-            case 'upload':
-            case 'userhistory':
-            case 'user':
-            case 'wiki':
-                define('ERROR_EXCEPTION', true); # Not sure why this is done only some of the time
-                $this->handle_legacy_request($base);
-                break;
-                
-            case 'ajax':
-            case 'articles':
-            case 'blog':
-            case 'bonus':
-            case 'captcha':
-            case 'chat':
-            case 'cheaters':
-            case 'donate':
-            case 'error':
-            case 'inbox':
-            case 'index':
-            case 'login':
-            case 'logout':
-            case 'log':
-            case 'register':
-            case 'reports':
-            case 'reportsv2':
-            case 'requests':
-            case 'rules':
-            case 'sandbox':
-            case 'staff':
-            case 'staffpm':
-            case 'stats':
-            case 'top10':
-            case 'watchlist':
-                $this->handle_legacy_request($base);
-                break;
             default:
-                $this->handle_legacy_request(null);
+                if (file_exists($this->application_dir . '/sections/' . $section . '/index.php')) {
+                    define('ERROR_EXCEPTION', true);
+                    $this->handle_legacy_request($section);
+                } else {
+                    $this->handle_legacy_request(null);
+                }
         }
     }
 
