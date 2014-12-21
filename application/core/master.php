@@ -4,11 +4,13 @@ namespace gazelle\core;
 use gazelle\errors\CLIError;
 use gazelle\services\Profiler;
 use gazelle\services\Settings;
+use gazelle\services\Cache;
 
 class Master {
 
     public $superglobals;
     public $legacy_handler;
+    public $cache;
 
     public function __construct($application_dir, array $superglobals, $start_time = null) {
         $this->profiler = new Profiler($start_time);
@@ -19,6 +21,7 @@ class Master {
         if (!$this->settings->modes->profiler) {
             $this->profiler->disable();
         }
+        $this->cache = new Cache($this->settings->memcached->host, $this->settings->memcached->port);
     }
 
     public function handle_legacy_request($section) {

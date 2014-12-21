@@ -1,4 +1,5 @@
 <?php
+namespace gazelle\services;
 /*************************************************************************|
 |--------------- Caching class -------------------------------------------|
 |*************************************************************************|
@@ -24,11 +25,7 @@ memcached -d -m 8192 -l 10.10.0.1 -t8 -C
 
 |*************************************************************************/
 
-if (!extension_loaded('memcache')) {
-    error('Memcache Extension not loaded.');
-}
-
-class cache extends Memcache
+class Cache extends \Memcache
 {
     public $CacheHits = array();
     public $MemcacheDBArray = array();
@@ -43,9 +40,9 @@ class cache extends Memcache
 
     public $CanClear = false;
 
-    public function __construct()
+    public function __construct($host, $port)
     {
-        $this->pconnect(MEMCACHED_HOST, MEMCACHED_PORT);
+        $this->pconnect($host, $port);
     }
 
     //---------- Caching functions ----------//
