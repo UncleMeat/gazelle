@@ -1,6 +1,8 @@
 <?php
 namespace gazelle;
 
+$start_time = microtime(true);
+
 function gazelle_autoloader($class_name) {
     $path = explode('\\', $class_name);
     if ($path[0] == 'gazelle') {
@@ -26,5 +28,5 @@ $superglobals = [
     'env' => $_ENV
 ];
 
-$master = new \gazelle\core\Master(__DIR__, $superglobals);
+$master = new \gazelle\core\Master(__DIR__, $superglobals, $start_time);
 $master->handle_request();

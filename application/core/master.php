@@ -2,6 +2,7 @@
 namespace gazelle\core;
 
 use gazelle\errors\CLIError;
+use gazelle\services\Profiler;
 use gazelle\services\Settings;
 
 class Master {
@@ -9,23 +10,27 @@ class Master {
     public $superglobals;
     public $legacy_handler;
 
-    public function __construct($application_dir, array $superglobals) {
+    public function __construct($application_dir, array $superglobals, $start_time = null) {
+        $this->profiler = new Profiler($start_time);
         $this->application_dir = $application_dir;
         $this->superglobals = $superglobals;
         $this->server = $this->superglobals['server'];
         $this->settings = new Settings($this, $this->application_dir . '/settings.ini');
+        if (!$this->settings->modes->profiler) {
+            $this->profiler->disable();
+        }
     }
 
     public function handle_legacy_request($section) {
-        $this->legacy_handler = new \gazelle\core\LegacyHandler($this);
+        $this->legacy_handler = new LegacyHandler($this);
         $this->legacy_handler->handle_legacy_request($section);
     }
 
     public function handle_request() {
         if (array_key_exists('argv', $this->server)) {
-            return $this->handle_cli_request();
+            $this->handle_cli_request();
         } else {
-            return $this->handle_http_request();
+            $this->handle_http_request();
         }
     }
 

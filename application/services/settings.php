@@ -20,6 +20,9 @@ class Settings {
             'additional_domains' => 'somelinkedsite.com,anotherlinkedsite.com',
             'internal_urls_regex' => null
         ],
+        'modes' => [
+            'profiler' => false
+        ],
         'keys' => [
             'enckey' => '',
             'schedule_key' => '',
