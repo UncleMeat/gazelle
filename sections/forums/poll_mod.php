@@ -27,10 +27,14 @@ if (!list($Question,$Answers,$Votes,$Featured,$Closed) = $Cache->get_value('poll
 }
 
 if (isset($_POST['feature'])) {
-    if (!$Featured || $Featured == '0000-00-00 00:00:00') {
-        $Featured = sqltime();
+    if (($FPollID = $Cache->get_value('polls_featured')) === false) {
+        $DB->query("SELECT TopicID FROM forums_polls ORDER BY Featured DESC LIMIT 1");
+        list($FPollID) = $DB->next_record();
+        $Cache->cache_value('polls_featured',$FPollID,0);
+    }
+    if (!$Featured || $FPollID != $TopicID) {
         $Cache->cache_value('polls_featured',$TopicID,0);
-        $DB->query('UPDATE forums_polls SET Featured=\''.sqltime().'\' WHERE TopicID=\''.$TopicID.'\'');
+        $DB->query('UPDATE forums_polls SET Featured=NOW() WHERE TopicID=\''.$TopicID.'\'');
     }
 }
 

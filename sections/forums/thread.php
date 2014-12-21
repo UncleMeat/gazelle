@@ -179,6 +179,11 @@ echo $Pages;
 
 <?php
 if ($ThreadInfo['NoPoll'] == 0) {
+    if (($FPollID = $Cache->get_value('polls_featured')) === false) {
+        $DB->query("SELECT TopicID FROM forums_polls ORDER BY Featured DESC LIMIT 1");
+        list($FPollID) = $DB->next_record();
+        $Cache->cache_value('polls_featured',$FPollID,0);
+    }
     if (!list($Question,$Answers,$Votes,$Featured,$Closed) = $Cache->get_value('polls_'.$ThreadID)) {
         $DB->query("SELECT Question, Answers, Featured, Closed FROM forums_polls WHERE TopicID='".$ThreadID."'");
         list($Question, $Answers, $Featured, $Closed) = $DB->next_record(MYSQLI_NUM, array(1));
@@ -223,7 +228,7 @@ if ($ThreadInfo['NoPoll'] == 0) {
 
 ?>
     <div class="box clear">
-        <div class="colhead_dark"><strong>Poll<?php if ($Closed) { echo ' [Closed]'; } ?><?php if ($Featured && $Featured !== '0000-00-00 00:00:00') { echo ' [Featured]'; } ?></strong>
+        <div class="colhead_dark"><strong>Poll<?php if ($Closed) { echo ' [Closed]'; } ?><?php if ($FPollID == $ThreadID){ echo ' [Featured]'; } else if ($Featured && $Featured !== '0000-00-00 00:00:00') { echo ' <strike>[Featured]</strike>'; } ?></strong>
                 <a href="#" onclick="$('#threadpoll').toggle(); this.innerHTML=(this.innerHTML=='(Hide)'?'(View)':'(Hide)'); return false;"><?=( $ThreadInfo['IsLocked']?'(View)':'(Hide)')?></a>
             </div>
         <div class="pad<?php if ($ThreadInfo['IsLocked']) { echo ' hidden'; } ?>" id="threadpoll">
@@ -365,7 +370,7 @@ if ($ThreadInfo['NoPoll'] == 0) {
 
     if (check_perms('forums_polls_moderate')) {
 
-        if (!$Featured || $Featured == '0000-00-00 00:00:00') { ?>
+        if (!$Featured || $FPollID != $ThreadID) { ?>
             <form action="forums.php" method="post">
                 <input type="hidden" name="action" value="poll_mod"/>
                 <input type="hidden" name="auth" value="<?=$LoggedUser['AuthKey']?>" />
