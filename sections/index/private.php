@@ -43,6 +43,13 @@ show_header('News','bbcode');
         <a style="float:left;margin-top:4px" href="feeds.php?feed=feed_news&amp;user=<?=$LoggedUser['ID']?>&amp;auth=<?=$LoggedUser['RSS_Auth']?>&amp;passkey=<?=$LoggedUser['torrent_pass']?>&amp;authkey=<?=$LoggedUser['AuthKey']?>" title="<?=SITE_NAME?> : News" ><img src="<?=STATIC_SERVER?>/common/symbols/rss.png" alt="RSS feed" /></a>
     <?=SITE_NAME?> <?=((strtolower(substr( SITE_NAME,0,1))===substr( SITE_NAME,0,1))?'news':'News'); ?></h2>
 
+<?php if (isset($_GET['nosnow'])) { ?>
+          <div class="linkbox" style="padding-bottom:20px"><a href="index.php" style="float:right">[enable snow]</a></div>
+<?php } else { ?>
+          <script src="static/functions/snowstorm.js"></script>
+          <div class="linkbox" style="padding-bottom:20px"><a href="index.php?nosnow" style="float:right">[disable snow]</a></div>
+<?php } ?>
+
 <?php  print_latest_forum_topics(); ?>
 
     <div class="sidebar">
