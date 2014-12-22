@@ -37,10 +37,6 @@ function next_hour()
     return date('H', $Hour);
 }
 
-if ((!isset($argv[1]) || $argv[1]!=SCHEDULE_KEY) && !check_perms('admin_schedule')) { // authorization, Fix to allow people with perms hit this page.
-    error(403);
-}
-
 if (check_perms('admin_schedule')) {
     authorize();
     show_header();
