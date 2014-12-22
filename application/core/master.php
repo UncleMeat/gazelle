@@ -18,9 +18,12 @@ class Master {
     public function __construct($application_dir, array $superglobals, $start_time = null) {
         $this->profiler = new Profiler($start_time);
         $this->application_dir = $application_dir;
+
         $this->superglobals = $superglobals;
         $this->server = $this->superglobals['server'];
         $this->cookie = $this->superglobals['cookie'];
+        $this->request = $this->superglobals['request'];
+
         $this->settings = new Settings($this, $this->application_dir . '/settings.ini');
         if (!$this->settings->modes->profiler) {
             $this->profiler->disable();
@@ -63,18 +66,26 @@ class Master {
         }
     }
 
+    public function handle_trivial_cases() {
+        //Deal with dumbasses
+        if (isset($this->request['info_hash']) && isset($this->request['peer_id'])) {
+            die('d14:failure reason40:Invalid .torrent, try downloading again.e');
+        }
+        $url_path = basename(parse_url($this->server['SCRIPT_NAME'], PHP_URL_PATH));
+        if ($url_path == 'announce.php' || $url_path == 'scrape.php') {
+            print("d14:failure reason40:Invalid .torrent, try downloading again.e\n");
+            exit;
+        }
+    }
+
     public function handle_http_request() {
+        $this->handle_trivial_cases();
         $section = basename(parse_url($this->server['SCRIPT_NAME'], PHP_URL_PATH), '.php');
         if (!preg_match('/^[a-z0-9]+$/i', $section)) {
             $this->handle_legacy_request(null);
         }
 
         switch ($section) {
-            case 'announce':
-            case 'scrape':
-                print("d14:failure reason40:Invalid .torrent, try downloading again.e\n");
-                exit;
-
             case 'browse':
                 header('Location: torrents.php');
                 exit;

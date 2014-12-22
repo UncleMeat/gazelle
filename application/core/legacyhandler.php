@@ -46,10 +46,6 @@ class LegacyHandler {
         require_once(SERVER_ROOT . '/classes/class_paranoia.php'); //Require the paranoia check_paranoia function
         require_once(SERVER_ROOT . '/classes/regex.php');
 
-        //Deal with dumbasses
-        if (isset($_REQUEST['info_hash']) && isset($_REQUEST['peer_id'])) {
-            die('d14:failure reason40:Invalid .torrent, try downloading again.e');
-        }
 
         require(SERVER_ROOT . '/classes/class_proxies.php');
         if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']) && proxyCheck($_SERVER['REMOTE_ADDR'])) {
