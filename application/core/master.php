@@ -7,6 +7,7 @@ use gazelle\services\Settings;
 use gazelle\services\Cache;
 use gazelle\services\ClientIdentifier;
 use gazelle\services\OldDB;
+use gazelle\services\Auth;
 
 class Master {
 
@@ -19,6 +20,7 @@ class Master {
         $this->application_dir = $application_dir;
         $this->superglobals = $superglobals;
         $this->server = $this->superglobals['server'];
+        $this->cookie = $this->superglobals['cookie'];
         $this->settings = new Settings($this, $this->application_dir . '/settings.ini');
         if (!$this->settings->modes->profiler) {
             $this->profiler->disable();
@@ -26,6 +28,7 @@ class Master {
         $this->cache = new Cache($this->settings->memcached->host, $this->settings->memcached->port);
         $this->clientidentifier = new ClientIdentifier();
         $this->olddb = new OldDB($this);
+        $this->auth = new Auth($this);
     }
 
     public function handle_legacy_request($section) {

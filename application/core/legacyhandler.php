@@ -135,50 +135,10 @@ class LegacyHandler {
         // Enabled - if the user's enabled or not
         // Permissions
 
-        if (isset($_COOKIE['session'])) {
-            $LoginCookie = $Enc->decrypt($_COOKIE['session']);
-        }
-        if (isset($LoginCookie)) {
-            list($SessionID, $LoggedUser['ID']) = explode("|~|", $Enc->decrypt($LoginCookie));
-            $LoggedUser['ID'] = (int) $LoggedUser['ID'];
-
-            $UserID = $LoggedUser['ID']; //TODO: UserID should not be LoggedUser
-
-            if (!$LoggedUser['ID'] || !$SessionID) {
-                logout();
-            }
-
-            $UserSessions = $Cache->get_value('users_sessions_' . $UserID);
-            if (!is_array($UserSessions)) {
-                $DB->query("SELECT
-                    SessionID,
-                    Browser,
-                    OperatingSystem,
-                    IP,
-                    LastUpdate
-                    FROM users_sessions
-                    WHERE UserID='$UserID'
-                    AND Active = 1
-                    ORDER BY LastUpdate DESC");
-                $UserSessions = $DB->to_array('SessionID', MYSQLI_ASSOC);
-                $Cache->cache_value('users_sessions_' . $UserID, $UserSessions, 0);
-            }
-
-            if (!array_key_exists($SessionID, $UserSessions)) {
-                logout();
-            }
-
-            // Check if user is enabled
-            $Enabled = $Cache->get_value('enabled_' . $LoggedUser['ID']);
-            if ($Enabled === false) {
-                $DB->query("SELECT Enabled FROM users_main WHERE ID='$LoggedUser[ID]'");
-                list($Enabled) = $DB->next_record();
-                $Cache->cache_value('enabled_' . $LoggedUser['ID'], $Enabled, 0);
-            }
-            if ($Enabled == 2) {
-
-                logout();
-            }
+        $auth = $this->master->auth;
+        list($UserID, $SessionID, $UserSessions, $Enabled) = $auth->load_session();
+        if ($UserID) {
+            $LoggedUser['ID'] = $UserID;
 
             // Up/Down stats
             $UserStats = $Cache->get_value('user_stats_' . $LoggedUser['ID']);
@@ -223,22 +183,8 @@ class LegacyHandler {
             if (check_perms('site_disable_ip_history')) {
                 $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
             }
-
-            // Update LastUpdate every 10 minutes
-            if (strtotime($UserSessions[$SessionID]['LastUpdate']) + 600 < time()) {
-                $DB->query("UPDATE users_main SET LastAccess='" . sqltime() . "' WHERE ID='$LoggedUser[ID]'");
-                $DB->query("UPDATE users_sessions SET IP='" . $_SERVER['REMOTE_ADDR'] . "', Browser='" . $Browser . "', OperatingSystem='" . $OperatingSystem . "', LastUpdate='" . sqltime() . "' WHERE UserID='$LoggedUser[ID]' AND SessionID='" . db_string($SessionID) . "'");
-                $Cache->begin_transaction('users_sessions_' . $UserID);
-                $Cache->delete_row($SessionID);
-                $Cache->insert_front($SessionID, array(
-                    'SessionID' => $SessionID,
-                    'Browser' => $Browser,
-                    'OperatingSystem' => $OperatingSystem,
-                    'IP' => $_SERVER['REMOTE_ADDR'],
-                    'LastUpdate' => sqltime()
-                ));
-                $Cache->commit_transaction(0);
-            }
+            
+            $auth->session_update($this->master->server['REMOTE_ADDR'], $Browser, $OperatingSystem);
 
             // Notifications
             if (isset($LoggedUser['Permissions']['site_torrents_notify'])) {
@@ -286,7 +232,7 @@ class LegacyHandler {
             $LoggedUser['StyleName'] = $Stylesheets[$LoggedUser['StyleID']]['Name'];
 
             if (empty($LoggedUser['Username'])) {
-                logout(); // Ghost
+                $auth->logout(); // Ghost
             }
         }
 
