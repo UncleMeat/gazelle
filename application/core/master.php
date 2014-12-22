@@ -5,6 +5,7 @@ use gazelle\errors\CLIError;
 use gazelle\services\Profiler;
 use gazelle\services\Settings;
 use gazelle\services\Cache;
+use gazelle\services\ClientIdentifier;
 
 class Master {
 
@@ -22,6 +23,7 @@ class Master {
             $this->profiler->disable();
         }
         $this->cache = new Cache($this->settings->memcached->host, $this->settings->memcached->port);
+        $this->clientidentifier = new ClientIdentifier();
     }
 
     public function handle_legacy_request($section) {

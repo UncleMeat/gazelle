@@ -42,7 +42,6 @@ class LegacyHandler {
         require_once(SERVER_ROOT . '/classes/class_debug.php'); //Require the debug class
         require_once(SERVER_ROOT . '/classes/class_mysql.php'); //Require the database wrapper
         require_once(SERVER_ROOT . '/classes/class_encrypt.php'); //Require the encryption class
-        require_once(SERVER_ROOT . '/classes/class_useragent.php'); //Require the useragent class
         require_once(SERVER_ROOT . '/classes/class_time.php'); //Require the time class
         require_once(SERVER_ROOT . '/classes/class_search.php'); //Require the searching class
         require_once(SERVER_ROOT . '/classes/class_paranoia.php'); //Require the paranoia check_paranoia function
@@ -96,7 +95,7 @@ class LegacyHandler {
         $DB = new \DB_MYSQL;
         $Cache = $this->master->cache;
         $Enc = new \CRYPT;
-        $UA = new \USER_AGENT;
+        $UA = $this->master->clientidentifier;
         $SS = new \SPHINX_SEARCH;
 
         //Begin browser identification

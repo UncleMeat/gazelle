@@ -1,6 +1,8 @@
 <?php
-class USER_AGENT
-{
+namespace gazelle\services;
+
+class ClientIdentifier {
+
     public $Browsers = array(
         //Less popular
         'Shiira'			=> 'Shiira',
