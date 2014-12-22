@@ -6,6 +6,7 @@ use gazelle\services\Profiler;
 use gazelle\services\Settings;
 use gazelle\services\Cache;
 use gazelle\services\ClientIdentifier;
+use gazelle\services\OldDB;
 
 class Master {
 
@@ -24,6 +25,7 @@ class Master {
         }
         $this->cache = new Cache($this->settings->memcached->host, $this->settings->memcached->port);
         $this->clientidentifier = new ClientIdentifier();
+        $this->olddb = new OldDB($this);
     }
 
     public function handle_legacy_request($section) {

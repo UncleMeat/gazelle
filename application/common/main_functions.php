@@ -1,9 +1,39 @@
 <?php
 
-# This code was originally part of script_start.php
+# This code was originally part of script_start.php and class_mysql.php
+
+//Handles escaping
+function db_string($String,$DisableWildcards=false)
+{
+    global $DB;
+    //Escape
+    $String = $DB->escape_str($String);
+    //Remove user input wildcards
+    if ($DisableWildcards) {
+        $String = str_replace(array('%','_'), array('\%','\_'), $String);
+    }
+
+    return $String;
+}
+
+function db_array($Array, $DontEscape = array(), $Quote = false)
+{
+    foreach ($Array as $Key => $Val) {
+        if (!in_array($Key, $DontEscape)) {
+            if ($Quote) {
+                $Array[$Key] = '\''.db_string(trim($Val)).'\'';
+            } else {
+                $Array[$Key] = db_string(trim($Val));
+            }
+        }
+    }
+
+    return $Array;
+}
 
 // Get cached user info, is used for the user loading the page and usernames all over the site
 // AND for looking up advanced tags permissions
+
 function user_info($UserID)
 {
     global $DB, $Cache;

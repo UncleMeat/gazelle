@@ -1,148 +1,12 @@
 <?php
-//-----------------------------------------------------------------------------------
-/////////////////////////////////////////////////////////////////////////////////////
-/*//-- MySQL wrapper class ----------------------------------------------------------
+namespace gazelle\services;
 
-This class provides an interface to mysqli. You should always use this class instead
-of the mysql/mysqli functions, because this class provides debugging features and a
-bunch of other cool stuff.
+use gazelle\errors\SystemError;
 
-Everything returned by this class is automatically escaped for output. This can be
-turned off by setting $Escape to false in next_record or to_array.
+class OldDB {
 
-//--------- Basic usage -------------------------------------------------------------
+    protected $master;
 
-* Creating the object.
-
-require(SERVER_ROOT.'/classes/class_mysql.php');
-$DB=NEW DB_MYSQL;
------
-
-* Making a query
-
-$DB->query("SELECT * FROM table...");
-    Is functionally equivalent to using mysqli_query("SELECT * FROM table...")
-    Stores the result set in $this->QueryID
-    Returns the result set, so you can save it for later (see set_query_id())
------
-
-* Getting data from a query
-
-$array = $DB->next_record();
-    Is functionally equivalent to using mysqli_fetch_array($ResultSet)
-    You do not need to specify a result set - it uses $this-QueryID
------
-
-* Escaping a string
-
-db_string($str);
-    Is a wrapper for $DB->escape_str(), which is a wrapper for
-    mysqli_real_escape_string(). The db_string() function exists so that you
-    don't have to keep calling $DB->escape_str().
-
-    USE THIS FUNCTION EVERY TIME YOU USE AN UNVALIDATED USER-SUPPLIED VALUE IN
-    A DATABASE QUERY!
-
-
-//--------- Advanced usage ---------------------------------------------------------
-
-* The conventional way of retrieving a row from a result set is as follows:
-
-list($All,$Columns,$That,$You,$Select)=$DB->next_record();
------
-
-* This is how you loop over the result set:
-
-while (list($All,$Columns,$That,$You,$Select)=$DB->next_record()) {
-    echo "Do stuff with ".$All." of the ".$Columns.$That.$You.$Select;
-}
------
-
-* There are also a couple more mysqli functions that have been wrapped. They are:
-
-record_count()
-    Wrapper to mysqli_num_rows()
-
-affected_rows()
-    Wrapper to mysqli_affected_rows()
-
-inserted_id()
-    Wrapper to mysqli_insert_id()
-
-close
-    Wrapper to mysqli_close()
------
-
-* And, of course, a few handy custom functions.
-
-to_array($Key = false)
-    Transforms an entire result set into an array (useful in situations where you
-    can't order the rows properly in the query).
-
-    If $Key is set, the function uses $Key as the index (good for looking up a
-    field). Otherwise, it uses an iterator.
-
-    For an example of this function in action, check out forum.php.
-
-collect($Key)
-    Loops over the result set, creating an array from one of the fields ($Key).
-    For an example, see forum.php.
-
-set_query_id($ResultSet)
-    This class can only hold one result set at a time. Using set_query_id allows
-    you to set the result set that the class is using to the result set in
-    $ResultSet. This result set should have been obtained earlier by using
-    $DB-query().
-
-    Example:
-
-    $FoodRS = $DB->query("SELECT * FROM food");
-    $DB->query("SELECT * FROM drink");
-    $Drinks = $DB->next_record();
-    $DB->set_query_id($FoodRS);
-    $Food = $DB->next_record();
-
-    Of course, this example is contrived, but you get the point.
-
--------------------------------------------------------------------------------------
-*///---------------------------------------------------------------------------------
-
-if (!extension_loaded('mysqli')) {
-    error('Mysqli Extension not loaded.');
-}
-
-//Handles escaping
-function db_string($String,$DisableWildcards=false)
-{
-    global $DB;
-    //Escape
-    $String = $DB->escape_str($String);
-    //Remove user input wildcards
-    if ($DisableWildcards) {
-        $String = str_replace(array('%','_'), array('\%','\_'), $String);
-    }
-
-    return $String;
-}
-
-function db_array($Array, $DontEscape = array(), $Quote = false)
-{
-    foreach ($Array as $Key => $Val) {
-        if (!in_array($Key, $DontEscape)) {
-            if ($Quote) {
-                $Array[$Key] = '\''.db_string(trim($Val)).'\'';
-            } else {
-                $Array[$Key] = db_string(trim($Val));
-            }
-        }
-    }
-
-    return $Array;
-}
-
-//TODO: revisit access levels once Drone is replaced by ZeRobot
-class DB_MYSQL
-{
     public $LinkID = false;
     protected $QueryID = false;
     protected $Record = array();
@@ -153,25 +17,14 @@ class DB_MYSQL
     public $Queries = array();
     public $Time = 0.0;
 
-    protected $Database = '';
-    protected $Server = '';
-    protected $User = '';
-    protected $Pass = '';
-    protected $Port = 0;
-    protected $Socket = '';
-
-    public function __construct($Database = SQLDB, $User = SQLLOGIN, $Pass = SQLPASS, $Server = SQLHOST, $Port = SQLPORT, $Socket = SQLSOCK)
-    {
-        $this->Database = $Database;
-        $this->Server = $Server;
-        $this->User = $User;
-        $this->Pass = $Pass;
-        $this->Port = $Port;
-        $this->Socket = $Socket;
+    public function __construct($master) {
+        if (!extension_loaded('mysqli')) {
+            throw new SystemException('Mysqli Extension not loaded.');
+        }
+        $this->master = $master;
     }
 
-    public function halt($Msg)
-    {
+    public function halt($Msg) {
         global $LoggedUser, $Cache, $Debug, $argv;
         $DBError='MySQL: '.strval($Msg).' SQL error: '.strval($this->Errno).' ('.strval($this->Error).')';
         if ($this->Errno == 1194) {
@@ -189,14 +42,14 @@ class DB_MYSQL
         }
     }
 
-    public function connect()
-    {
+    public function connect() {
         if (!$this->LinkID) {
-            $this->LinkID = mysqli_connect($this->Server, $this->User, $this->Pass, $this->Database, $this->Port, $this->Socket); // defined in config.php
+            $dbc = $this->master->settings->database;
+            $this->LinkID = mysqli_connect($dbc->host, $dbc->username, $dbc->password, $dbc->db, $dbc->port, $dbc->socket);
             if (!$this->LinkID) {
                 $this->Errno = mysqli_connect_errno();
                 $this->Error = mysqli_connect_error();
-                $this->halt('Connection failed (host:'.$this->Server.':'.$this->Port.')');
+                $this->halt('Connection failed (host:'.$dbc->host.':'.$dbc->port.')');
             }
         }
     }

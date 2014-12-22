@@ -40,7 +40,6 @@ class LegacyHandler {
 
         require_once(SERVER_ROOT . '/common/main_functions.php');
         require_once(SERVER_ROOT . '/classes/class_debug.php'); //Require the debug class
-        require_once(SERVER_ROOT . '/classes/class_mysql.php'); //Require the database wrapper
         require_once(SERVER_ROOT . '/classes/class_encrypt.php'); //Require the encryption class
         require_once(SERVER_ROOT . '/classes/class_time.php'); //Require the time class
         require_once(SERVER_ROOT . '/classes/class_search.php'); //Require the searching class
@@ -92,7 +91,7 @@ class LegacyHandler {
         $Debug->handle_errors();
         $Debug->set_flag('Debug constructed');
 
-        $DB = new \DB_MYSQL;
+        $DB = $this->master->olddb;
         $Cache = $this->master->cache;
         $Enc = new \CRYPT;
         $UA = $this->master->clientidentifier;
