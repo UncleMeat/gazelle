@@ -30,7 +30,7 @@ function get_shop_items_other()
                            Value,
                            Cost
                       FROM bonus_shop_actions
-                     WHERE Action = 'givegb' OR Action = 'givecredits' AND Gift = '0'
+                     WHERE (Action = 'givegb' OR Action = 'givecredits') AND Gift = '0'
                   ORDER BY Sort");
         $ShopItems = $DB->to_array(false, MYSQLI_BOTH);
         $Cache->cache_value('shop_items_other', $ShopItems);
