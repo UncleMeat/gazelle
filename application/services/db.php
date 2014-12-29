@@ -3,10 +3,11 @@ namespace gazelle\services;
 
 use gazelle\errors\SystemError;
 use gazelle\core\Master;
+use gazelle\services\db\LegacyWrapper;
 
 class DB extends Service {
 
-    protected $pdo;
+    public $pdo;
 
     public function connect() {
         if (is_null($this->pdo)) {
@@ -23,6 +24,14 @@ class DB extends Service {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($parameters);
         return $stmt;
+    }
+
+    public function legacy_query($sql) {
+        $this->connect();
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $wrapper = new LegacyWrapper($stmt);
+        return $wrapper;
     }
 
 }

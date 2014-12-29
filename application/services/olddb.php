@@ -18,39 +18,12 @@ class OldDB extends Service {
 
     public function __construct(Master $master) {
         parent::__construct($master);
-        if (!extension_loaded('mysqli')) {
-            throw new SystemException('Mysqli Extension not loaded.');
-        }
-    }
-
-    public function halt($Msg) {
-        global $LoggedUser, $Cache, $Debug, $argv;
-        $DBError='MySQL: '.strval($Msg).' SQL error: '.strval($this->Errno).' ('.strval($this->Error).')';
-        if ($this->Errno == 1194) {
-            send_irc('PRIVMSG '.ADMIN_CHAN.' :'.$this->Error);
-        }
-        $Debug->analysis('!dev DB Error',$DBError,3600*24);
-        if (DEBUG_MODE || check_perms('site_debug') || isset($argv[1])) {
-            echo '<pre>'.display_str($DBError).'</pre>';
-            if (DEBUG_MODE || check_perms('site_debug')) {
-                print_r($this->Queries);
-            }
-            die();
-        } else {
-            error('-1');
-        }
+        $this->newdb = $master->db;
     }
 
     public function connect() {
-        if (!$this->LinkID) {
-            $dbc = $this->master->settings->database;
-            $this->LinkID = mysqli_connect($dbc->host, $dbc->username, $dbc->password, $dbc->db, $dbc->port, $dbc->socket);
-            if (!$this->LinkID) {
-                $this->Errno = mysqli_connect_errno();
-                $this->Error = mysqli_connect_error();
-                $this->halt('Connection failed (host:'.$dbc->host.':'.$dbc->port.')');
-            }
-        }
+        $this->newdb->connect();
+        $this->LinkID = true;
     }
 
     public function query($Query,$AutoHandle=1)
@@ -60,28 +33,22 @@ class OldDB extends Service {
         $this->connect();
         //In the event of a mysql deadlock, we sleep allowing mysql time to unlock then attempt again for a maximum of 5 tries
         for ($i=1; $i<6; $i++) {
-            $this->QueryID = mysqli_query($this->LinkID,$Query);
-            if (!in_array(mysqli_errno($this->LinkID), array(1213, 1205))) {
-                break;
+            try {
+                $this->QueryID = $this->newdb->legacy_query($Query);
+            } catch (\PDOException $e) {
+                if (!in_array($e->errorInfo[1], array(1213, 1205))) {
+                    throw $e;
+                }
+                $Debug->analysis('Non-Fatal Deadlock:',$Query,3600*24);
+                trigger_error("Database deadlock, attempt $i");
+                sleep($i*rand(2, 5)); // Wait longer as attempts increase
+                continue;
             }
-            $Debug->analysis('Non-Fatal Deadlock:',$Query,3600*24);
-            trigger_error("Database deadlock, attempt $i");
-            sleep($i*rand(2, 5)); // Wait longer as attempts increase
+            break;
         }
         $QueryEndTime=microtime(true);
         $this->Queries[]=array(display_str($Query),($QueryEndTime-$QueryStartTime)*1000);
         $this->Time+=($QueryEndTime-$QueryStartTime)*1000;
-
-        if (!$this->QueryID) {
-            $this->Errno = mysqli_errno($this->LinkID);
-            $this->Error = mysqli_error($this->LinkID);
-
-            if ($AutoHandle) {
-                $this->halt('Invalid Query: '.$Query);
-            } else {
-                return $this->Errno;
-            }
-        }
 
         $QueryType = substr($Query,0, 6);
         $this->Row = 0;
@@ -90,6 +57,8 @@ class OldDB extends Service {
 
     public function query_unb($Query)
     {
+        error_log("OldDB::query_unb() no longer works, sorry");
+        exit;
         $this->connect();
         mysqli_real_query($this->LinkID,$Query);
     }
@@ -97,13 +66,13 @@ class OldDB extends Service {
     public function inserted_id()
     {
         if ($this->LinkID) {
-            return mysqli_insert_id($this->LinkID);
+            return $this->newdb->pdo->lastInsertId();
         }
     }
 
     public function next_record($Type=MYSQLI_BOTH, $Escape = true) { // $Escape can be true, false, or an array of keys to not escape
         if ($this->LinkID) {
-            $this->Record = mysqli_fetch_array($this->QueryID,$Type);
+            $this->Record = $this->QueryID->fetch($Type);
             $this->Row++;
             if (!is_array($this->Record)) {
                 $this->QueryID = FALSE;
@@ -118,9 +87,6 @@ class OldDB extends Service {
     public function close()
     {
         if ($this->LinkID) {
-            if (!mysqli_close($this->LinkID)) {
-                $this->halt('Cannot close connection or connection did not open.');
-            }
             $this->LinkID = FALSE;
         }
     }
@@ -128,14 +94,14 @@ class OldDB extends Service {
     public function record_count()
     {
         if ($this->QueryID) {
-            return mysqli_num_rows($this->QueryID);
+            return $this->QueryID->record_count();
         }
     }
 
     public function affected_rows()
     {
         if ($this->LinkID) {
-            return mysqli_affected_rows($this->LinkID);
+            return $this->LinkID->stmt->rowCount();
         }
     }
 
@@ -147,14 +113,14 @@ class OldDB extends Service {
     // You should use db_string() instead.
     public function escape_str($Str)
     {
-        $this->connect(0);
+        $this->connect();
         if (is_array($Str)) {
             trigger_error('Attempted to escape array.');
 
             return '';
         }
-
-        return mysqli_real_escape_string($this->LinkID,$Str);
+        $escaped = $this->newdb->pdo->quote($Str);
+        return substr($escaped, 1, -1);
     }
 
     // Creates an array from a result set
@@ -163,7 +129,7 @@ class OldDB extends Service {
     public function to_array($Key = false, $Type = MYSQLI_BOTH, $Escape = true)
     {
         $Return = array();
-        while ($Row = mysqli_fetch_array($this->QueryID,$Type)) {
+        while ($Row = $this->QueryID->fetch($Type)) {
             if ($Escape!==FALSE) {
                 $Row = display_array($Row, $Escape);
             }
@@ -173,7 +139,7 @@ class OldDB extends Service {
                 $Return[]=$Row;
             }
         }
-        mysqli_data_seek($this->QueryID, 0);
+        $this->QueryID->rewind();
 
         return $Return;
     }
@@ -182,10 +148,10 @@ class OldDB extends Service {
     public function collect($Key, $Escape = true)
     {
         $Return = array();
-        while ($Row = mysqli_fetch_array($this->QueryID)) {
+        while ($Row = $this->QueryID->fetch()) {
             $Return[] = $Escape ? display_str($Row[$Key]) : $Row[$Key];
         }
-        mysqli_data_seek($this->QueryID, 0);
+        $this->QueryID->rewind();
 
         return $Return;
     }
@@ -198,7 +164,7 @@ class OldDB extends Service {
 
     public function beginning()
     {
-        mysqli_data_seek($this->QueryID, 0);
+        $this->QueryID->rewind();
     }
 
 }
