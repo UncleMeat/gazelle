@@ -14,22 +14,22 @@ use gazelle\services\Auth;
 class Master {
 
     public $profiler;
-    public $application_dir;
+    public $application_path;
     public $superglobals;
     public $legacy_handler;
 
-    public function __construct($application_dir, array $superglobals, $start_time = null) {
+    public function __construct($application_path, array $superglobals, $start_time = null) {
         $this->profiler = new Profiler($start_time);
-        $this->application_dir = $application_dir;
-        $this->base_dir = dirname($this->application_dir);
-        $this->library_dir = $this->base_dir . '/library';
+        $this->application_path = $application_path;
+        $this->base_path = dirname($this->application_path);
+        $this->library_path = $this->base_path . '/library';
 
         $this->superglobals = $superglobals;
         $this->server = $this->superglobals['server'];
         $this->cookie = $this->superglobals['cookie'];
         $this->request = $this->superglobals['request'];
 
-        $this->settings = new Settings($this, $this->application_dir . '/settings.ini');
+        $this->settings = new Settings($this, $this->application_path . '/settings.ini');
         if (!$this->settings->modes->profiler) {
             $this->profiler->disable();
         }
@@ -133,7 +133,7 @@ class Master {
                 exit;
 
             default:
-                if (file_exists($this->application_dir . '/sections/' . $section . '/index.php')) {
+                if (file_exists($this->application_path . '/sections/' . $section . '/index.php')) {
                     define('ERROR_EXCEPTION', true);
                     $this->handle_legacy_request($section);
                 } else {

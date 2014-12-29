@@ -8,9 +8,9 @@ class TPL extends Service {
 
     public function __construct(Master $master) {
         parent::__construct($master);
-        require_once($master->library_dir . '/Twig/Autoloader.php');
+        require_once($master->library_path . '/Twig/Autoloader.php');
         \Twig_Autoloader::register();
-        $loader = new \Twig_Loader_Filesystem($master->application_dir . '/templates');
+        $loader = new \Twig_Loader_Filesystem($master->application_path . '/templates');
         $this->twig = new \Twig_Environment($loader);
     }
 
