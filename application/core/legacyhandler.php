@@ -24,8 +24,10 @@ class LegacyHandler {
         global $SSL, $ScriptStartTime, $Debug, $DB, $Cache, $Enc, $UA, $SS, $Browser, $OperatingSystem,
             $Mobile, $Classes, $ClassLevels, $ClassNames, $NewCategories, $LoginCookie, $SessionID,
             $LoggedUser, $UserID, $UserSessions, $Enabled, $UserStats, $LightInfo, $HeavyInfo, $Permissions,
-            $CurIP, $NewIP, $ipcc, $Stylesheets, $Sitewide_Freeleech, $FullLogging, $TorrentUserStatus;
+            $CurIP, $NewIP, $ipcc, $Stylesheets, $Sitewide_Freeleech, $FullLogging, $TorrentUserStatus,
+            $Document;
 
+        $Document = $section;
         require(SERVER_ROOT . '/sections/' . $section . '/index.php');
     }
 
