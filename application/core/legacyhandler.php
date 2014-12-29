@@ -54,7 +54,7 @@ class LegacyHandler {
             $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
         }
 
-        $SSL = (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+        $SSL = $this->master->ssl;
 
         if (!isset($argv) && !empty($_SERVER['HTTP_HOST'])) { //Skip this block if running from cli or if the browser is old and shitty
             if (!$SSL && $_SERVER['HTTP_HOST'] == 'www.' . NONSSL_SITE_URL) {
@@ -99,8 +99,7 @@ class LegacyHandler {
 
         $Browser = $UA->browser($_SERVER['HTTP_USER_AGENT']);
         $OperatingSystem = $UA->operating_system($_SERVER['HTTP_USER_AGENT']);
-        //$Mobile = $UA->mobile($_SERVER['HTTP_USER_AGENT']);
-        $Mobile = in_array($_SERVER['HTTP_HOST'], array('m.' . NONSSL_SITE_URL, 'm.' . NONSSL_SITE_URL));
+        $Mobile = $this->master->mobile;
 
         $Debug->set_flag('start user handling');
 

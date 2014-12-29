@@ -17,6 +17,8 @@ class Master {
     public $application_path;
     public $superglobals;
     public $legacy_handler;
+    public $ssl;
+    public $mobile;
 
     public function __construct($application_path, array $superglobals, $start_time = null) {
         $this->profiler = new Profiler($start_time);
@@ -33,6 +35,8 @@ class Master {
         if (!$this->settings->modes->profiler) {
             $this->profiler->disable();
         }
+        $this->ssl = (isset($this->server['SERVER_PORT']) && $this->server['SERVER_PORT'] == 443);
+        $this->mobile = ($this->server['HTTP_HOST'] == 'm.' . $this->settings->main->nonssl_site_url);
     }
 
     public function __get($name) {
@@ -100,6 +104,26 @@ class Master {
             print("d14:failure reason40:Invalid .torrent, try downloading again.e\n");
             exit;
         }
+        $http_host = $this->server['HTTP_HOST'];
+        $request_uri = $this->server['REQUEST_URI'];
+        $nonssl_url = $this->settings->site->nonssl_site_url;
+        $ssl_url = $this->settings->site->ssl_site_url;
+
+        if (!$this->ssl && $http_host == "www.{$nonssl_url}") {
+            $this->redirect("http://{$nonssl_url}{$request_uri}");
+        }
+        if ($this->ssl && $http_host == "www.{$nonssl_url}") {
+            $this->redirect("https://{$ssl_url}{$request_uri}");
+        }
+        if ($ssl_url != $nonssl_url && (
+            (!$this->ssl && $http_host == $ssl_url) ||
+            ($this->ssl && $http_host == $nonssl_url)
+        )) {
+            $this->redirect("https://{$ssl_url}{$request_uri}");
+        }
+        if ($http_host == "www.m.{$nonssl_url}") {
+            $this->redirect("http://m.{$nonssl_url}{$request_uri}");
+        }
     }
 
     public function handle_http_request() {
@@ -111,25 +135,24 @@ class Master {
 
         switch ($section) {
             case 'browse':
-                header('Location: torrents.php');
-                exit;
+                $this->redirect('/torrents.php');
+                break;
 
             case 'collage':
-                $_SERVER['SCRIPT_FILENAME'] = 'collages.php'; // PHP CLI fix
-                define('ERROR_EXCEPTION', true);
-                $this->handle_legacy_request('collages');
+                $this->redirect('/collages.php', $this->request);
                 break;
 
             case 'details':
-                $this->handle_legacy_request('torrents');
+                $this->redirect('/torrents.php', $this->request);
                 break;
 
             case 'signup':
-                header('Location: register.php');
-                exit;
+                $this->redirect('/register.php');
+                break;
 
             case 'whitelist':
-                header('Location: articles.php?topic=clients');
+                $this->redirect('/articles.php?topic=clients');
+                break;
                 exit;
 
             default:
@@ -140,6 +163,18 @@ class Master {
                     $this->handle_legacy_request(null);
                 }
         }
+    }
+
+    public function redirect($target, $parameters = null, $status = 301) {
+        if (is_array($parameters)) {
+            $query_string = '?' . http_build_query($parameters);
+        } elseif (strlen($parameters)) {
+            $query_string = '?' . strval($parameters);
+        } else {
+            $query_string = '';
+        }
+        header('Location: ' . $target . $query_string, true, $status);
+        exit();
     }
 
 }
