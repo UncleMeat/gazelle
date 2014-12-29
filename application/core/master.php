@@ -8,6 +8,7 @@ use gazelle\services\Settings;
 use gazelle\services\Cache;
 use gazelle\services\ClientIdentifier;
 use gazelle\services\OldDB;
+use gazelle\services\TPL;
 use gazelle\services\Auth;
 
 class Master {
@@ -20,6 +21,8 @@ class Master {
     public function __construct($application_dir, array $superglobals, $start_time = null) {
         $this->profiler = new Profiler($start_time);
         $this->application_dir = $application_dir;
+        $this->base_dir = dirname($this->application_dir);
+        $this->library_dir = $this->base_dir . '/library';
 
         $this->superglobals = $superglobals;
         $this->server = $this->superglobals['server'];
@@ -41,6 +44,9 @@ class Master {
             case 'olddb':
                 $this->olddb = new OldDB($this);
                 return $this->olddb;
+            case 'tpl':
+                $this->tpl = new TPL($this);
+                return $this->tpl;
             case 'auth':
                 $this->auth = new Auth($this);
                 return $this->auth;
