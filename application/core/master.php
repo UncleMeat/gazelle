@@ -110,8 +110,8 @@ class Master {
         }
         $http_host = $this->server['HTTP_HOST'];
         $request_uri = $this->server['REQUEST_URI'];
-        $nonssl_url = $this->settings->site->nonssl_site_url;
-        $ssl_url = $this->settings->site->ssl_site_url;
+        $nonssl_url = $this->settings->main->nonssl_site_url;
+        $ssl_url = $this->settings->main->ssl_site_url;
 
         if (!$this->ssl && $http_host == "www.{$nonssl_url}") {
             $this->redirect("http://{$nonssl_url}{$request_uri}");
