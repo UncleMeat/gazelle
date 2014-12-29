@@ -2,6 +2,7 @@
 namespace gazelle\core;
 
 use gazelle\errors\CLIError;
+use gazelle\errors\InternalError;
 use gazelle\services\Profiler;
 use gazelle\services\Settings;
 use gazelle\services\Cache;
@@ -11,9 +12,10 @@ use gazelle\services\Auth;
 
 class Master {
 
+    public $profiler;
+    public $application_dir;
     public $superglobals;
     public $legacy_handler;
-    public $cache;
 
     public function __construct($application_dir, array $superglobals, $start_time = null) {
         $this->profiler = new Profiler($start_time);
@@ -28,10 +30,26 @@ class Master {
         if (!$this->settings->modes->profiler) {
             $this->profiler->disable();
         }
-        $this->cache = new Cache($this->settings->memcached->host, $this->settings->memcached->port);
-        $this->clientidentifier = new ClientIdentifier();
-        $this->olddb = new OldDB($this);
-        $this->auth = new Auth($this);
+    }
+
+    public function __get($name) {
+        # Cheap way to get lazy loading Services
+        switch ($name) {
+            case 'cache':
+                $this->cache = new Cache($this->settings->memcached->host, $this->settings->memcached->port);
+                return $this->cache;
+            case 'olddb':
+                $this->olddb = new OldDB($this);
+                return $this->olddb;
+            case 'auth':
+                $this->auth = new Auth($this);
+                return $this->auth;
+            case 'clientidentifier':
+                $this->clientidentifier = new ClientIdentifier();
+                return $this->clientidentifier;
+            default:
+                throw new InternalError("Attempt to access undefined \$master->{$name}");
+        }
     }
 
     public function handle_legacy_request($section) {
