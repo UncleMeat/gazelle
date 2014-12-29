@@ -1,24 +1,24 @@
 <?php
 namespace gazelle\services;
 
+use gazelle\core\Master;
 use gazelle\errors\ConfigurationError;
 
-class Auth {
+class Auth extends Service {
 
-    protected $master;
     protected $encryption_key;
     protected $UserID = null;
     protected $SessionID = null;
     protected $UserSessions = null;
 
-    public function __construct($master) {
+    public function __construct(Master $master) {
+        parent::__construct($master);
         if (!extension_loaded('mcrypt')) {
             throw new SystemError('Mcrypt Extension not loaded.');
         }
-        $this->master = $master;
-        $this->cache = $master->cache;
-        $this->olddb = $master->olddb;
-        $this->encryption_key = $master->settings->keys->enckey;
+        $this->cache = $this->master->cache;
+        $this->olddb = $this->master->olddb;
+        $this->encryption_key = $this->master->settings->keys->enckey;
         if (!strlen($this->encryption_key)) {
             throw new ConfigurationError('No encryption key set!');
         }

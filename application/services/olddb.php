@@ -1,11 +1,10 @@
 <?php
 namespace gazelle\services;
 
+use gazelle\core\Master;
 use gazelle\errors\SystemError;
 
-class OldDB {
-
-    protected $master;
+class OldDB extends Service {
 
     public $LinkID = false;
     protected $QueryID = false;
@@ -17,11 +16,11 @@ class OldDB {
     public $Queries = array();
     public $Time = 0.0;
 
-    public function __construct($master) {
+    public function __construct(Master $master) {
+        parent::__construct($master);
         if (!extension_loaded('mysqli')) {
             throw new SystemException('Mysqli Extension not loaded.');
         }
-        $this->master = $master;
     }
 
     public function halt($Msg) {

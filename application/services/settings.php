@@ -1,10 +1,10 @@
 <?php
 namespace gazelle\services;
 
-use gazelle\errors\ConfigurationError;
 use gazelle\core\Master;
+use gazelle\errors\ConfigurationError;
 
-class Settings {
+class Settings extends Service {
 
     protected $defaults = [
         'main' => [
@@ -239,11 +239,10 @@ class Settings {
 
     ];
 
-    protected $master;
     protected $settings;
 
     public function __construct(Master $master, $settings_file) {
-        $this->master = $master;
+        parent::__construct($master);
         $this->settings = $this->defaults;
         $this->read_settings_file($settings_file);
         $this->fill_settings();

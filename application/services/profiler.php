@@ -1,5 +1,4 @@
 <?php
-
 namespace gazelle\services;
 
 use gazelle\errors\InternalError;
