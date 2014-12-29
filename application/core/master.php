@@ -7,6 +7,7 @@ use gazelle\services\Profiler;
 use gazelle\services\Settings;
 use gazelle\services\Cache;
 use gazelle\services\ClientIdentifier;
+use gazelle\services\DB;
 use gazelle\services\OldDB;
 use gazelle\services\TPL;
 use gazelle\services\Auth;
@@ -45,6 +46,9 @@ class Master {
             case 'cache':
                 $this->cache = new Cache($this->settings->memcached->host, $this->settings->memcached->port);
                 return $this->cache;
+            case 'db':
+                $this->db = new DB($this);
+                return $this->db;
             case 'olddb':
                 $this->olddb = new OldDB($this);
                 return $this->olddb;
