@@ -180,15 +180,17 @@ if (!$AdvancedSearch) {
     if (!empty($_GET['taglist'])) {
         // do synomyn replacement and skip <2 length tags
         // Keep extended search signs.
-        $TagList = preg_split("/([!&|]| -| )/", $_GET['taglist'], NULL, PREG_SPLIT_DELIM_CAPTURE);
+        $TagList = $_GET['taglist'];
+        $TagList = preg_replace(array('/ not /', '/ or /', '/ and /'), array(' -', ' | ', ' & '), $TagList);
+        $TagList = preg_split("/([!&|()]| -| )/", $TagList, NULL, PREG_SPLIT_DELIM_CAPTURE);
 
         foreach ($TagList as $Key => &$Tag) {
-            $Tag = strtolower(trim($Tag)) ;
 
-            if ($Tag == '-' || $Tag == '!' || $Tag == '|' || $Tag == '&' || $Tag == '(' || $Tag == ')') {
+            if ($Tag == ' ' || $Tag == ' -' || $Tag == '!' || $Tag == '|' || $Tag == '&' || $Tag == '(' || $Tag == ')') {
                 continue;
             }
 
+            $Tag = strtolower($Tag);
             if (strlen($Tag) >= 2) {
                 $Tag = get_tag_synonym($Tag, false);
                 $Tag = str_replace('.', '_', $Tag);
@@ -198,12 +200,8 @@ if (!$AdvancedSearch) {
             }
         }
         unset($Tag);
-        $TagList = implode(' ', $TagList);
-        $TagList = preg_replace(array('/ not /', '/ or /', '/ and /'), array(' -', ' | ', ' & '), $TagList);
-        $TagList = trim($TagList);
-
+        $TagList = implode('', $TagList);
         $Queries[] = '@taglist ' . $TagList;
-
     }
 }
 
